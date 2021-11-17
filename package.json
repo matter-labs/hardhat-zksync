@@ -19,9 +19,8 @@
       "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
       "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
       "clean": "wsrun --exclude-missing clean",
-      "lint": "wsrun --exclude-missing --stages lint && yarn prettier --check",
-      "lint:fix": "wsrun --exclude-missing --stages lint:fix && yarn prettier --write",
-      "prettier": "prettier *.md \"{docs,.github}/**/*.{md,yml}\" \"scripts/**/*.js\""
+      "lint": "wsrun --exclude-missing --stages lint",
+      "lint:fix": "wsrun --exclude-missing --stages lint:fix"
     },
     "dependencies": {},
     "resolutions": {
