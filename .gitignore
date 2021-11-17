@@ -16,15 +16,15 @@ tags
 *.orig
 
 # Node modules
-/node_modules
+node_modules
 
 # Compilation output
-/build-test/
-/dist
+build-test/
+dist
 
 # Code coverage artifacts
-/coverage
-/.nyc_output
+coverage
+.nyc_output
 
 # Below is Github's node gitignore template,
 # ignoring the node_modules part, as it'd ignore every node_modules, and we have some for testing
