@@ -24,7 +24,7 @@ export async function compile(
   for (const file of files) {
     const pathFromCWD = path.relative(process.cwd(), file);
     const sourceName = await localPathToSourceName(paths.root, file);
-    const contractName = pathToContractName(sourceName);
+    const contractName = artifactIdToContractName(sourceName);
 
     // TODO: Don't recompile the file if it was already compiled.
 
@@ -33,12 +33,18 @@ export async function compile(
     const processResult = compileWithBinary(file, zksolcConfig);
 
     if (processResult.status === 0) {
-      // TODO: Currently, in the output JSON contract entry is `/path/to/contract/ContractName.sol:ContractName`.
-      const zksolcOutput = JSON.parse(processResult.stdout.toString("utf8"))["contracts"][`${file}:${contractName}`];
+      const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
+      const builtContracts = compilerOutput["contracts"];
 
-      const artifact = getArtifactFromZksolcOutput(sourceName, zksolcOutput);
+      for (const artifactId in builtContracts) {
+        console.log(`Adding artifact ${artifactId}`);
+        const zksolcOutput = builtContracts[artifactId];
 
-      await artifacts.saveArtifactAndDebugFile(artifact);
+        const contractName = artifactIdToContractName(artifactId);
+        const artifact = getArtifactFromZksolcOutput(pathFromCWD, contractName, zksolcOutput);
+
+        await artifacts.saveArtifactAndDebugFile(artifact);
+      }
     } else {
       console.error("stdout:")
       console.error(processResult.stdout.toString("utf8").trim(), "\n");
@@ -72,23 +78,24 @@ async function getSoliditySources(paths: ProjectPathsConfig) {
   return solFiles;
 }
 
-function pathToContractName(file: string) {
+function artifactIdToContractName(file: string) {
   const sourceName = path.basename(file);
-  return sourceName.substring(0, sourceName.indexOf("."));
+  return sourceName.substring(sourceName.indexOf(":") + 1);
 }
 
 function getArtifactFromZksolcOutput(
-  sourceName: string,
+  pathFromCWD: string,
+  contractName: string,
   output: any
 ): Artifact {
-  const contractName = pathToContractName(sourceName);
+  console.log(`Contract name: ${contractName}`);
 
   // TODO: Probably we need to add information about contract CREATE dependencies here
   //       (also check whether it's OK with hardhat approach).
   return {
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
     contractName,
-    sourceName,
+    sourceName: pathFromCWD,
     abi: output["abi"],
     bytecode: add0xPrefixIfNecessary(output["bin"]),
     deployedBytecode: add0xPrefixIfNecessary(output["bin-runtime"]),
