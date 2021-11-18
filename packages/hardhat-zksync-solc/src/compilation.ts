@@ -23,21 +23,26 @@ export async function compile(
 
   for (const file of files) {
     const pathFromCWD = path.relative(process.cwd(), file);
+    const sourceName = await localPathToSourceName(paths.root, file);
+    const contractName = pathToContractName(sourceName);
 
     // TODO: Don't recompile the file if it was already compiled.
 
     console.log("Compiling", pathFromCWD);
 
-    const processResult = await compileWithBinary(file, zksolcConfig);
+    const processResult = compileWithBinary(file, zksolcConfig);
 
-    if (processResult.statusCode === 0) {
-      const zksolcOutput = JSON.parse(processResult.stdout.toString("utf8"));
+    if (processResult.status === 0) {
+      // TODO: Currently, in the output JSON contract entry is `/path/to/contract/ContractName.sol:ContractName`.
+      const zksolcOutput = JSON.parse(processResult.stdout.toString("utf8"))["contracts"][`${file}:${contractName}`];
 
-      const sourceName = await localPathToSourceName(paths.root, file);
       const artifact = getArtifactFromZksolcOutput(sourceName, zksolcOutput);
 
       await artifacts.saveArtifactAndDebugFile(artifact);
     } else {
+      console.error("stdout:")
+      console.error(processResult.stdout.toString("utf8").trim(), "\n");
+      console.error("stderr:")
       console.error(processResult.stderr.toString("utf8").trim(), "\n");
       someContractFailed = true;
     }
@@ -48,16 +53,16 @@ export async function compile(
   }
 }
 
-async function compileWithBinary(
+function compileWithBinary(
   filePath: string,
   config: ZkSolcConfig
-): Promise<any> {
-  const zksolcArguments = ["--combined-json", "abi,bin,bin-runtime"];
+): any {
+  const zksolcArguments = [filePath, "--combined-json", "abi,bin,bin-runtime"];
   if (config.settings.optimizer.enabled) {
     zksolcArguments.push("--optimize");
   }
 
-  return spawn("zksolc", zksolcArguments);
+  return spawnSync("zksolc", zksolcArguments);
 }
 
 async function getSoliditySources(paths: ProjectPathsConfig) {
@@ -84,9 +89,9 @@ function getArtifactFromZksolcOutput(
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
     contractName,
     sourceName,
-    abi: output.abi,
-    bytecode: add0xPrefixIfNecessary(output.bin),
-    deployedBytecode: add0xPrefixIfNecessary(output.bin_runtime),
+    abi: output["abi"],
+    bytecode: add0xPrefixIfNecessary(output["bin"]),
+    deployedBytecode: add0xPrefixIfNecessary(output["bin-runtime"]),
     linkReferences: {},
     deployedLinkReferences: {},
   };
