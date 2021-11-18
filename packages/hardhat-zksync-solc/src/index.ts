@@ -5,7 +5,15 @@ import { TASK_COMPILE_ZKSOLC } from "./task-names";
 import "./type-extensions";
 
 extendConfig((config) => {
-  const defaultConfig = { version: "latest" };
+  const defaultConfig = {
+    version: "latest",
+    compilerSource: "binary",
+    settings: {
+      optimizer: { 
+        enabled: false,
+      }
+    }
+  };
   config.zksolc = { ...defaultConfig, ...config.zksolc };
 });
 

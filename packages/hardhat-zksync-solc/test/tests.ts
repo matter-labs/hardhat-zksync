@@ -32,41 +32,24 @@ describe("zksolc plugin", async function () {
       );
     });
   });
+  
+  describe("Nested", async function () {
+    useEnvironment("nested");
 
-//   describe("Partial compilation", async function () {
-//     useEnvironment("partial-compilation");
-
-//     it("Should successfully compile the contract", async function () {
-//       try {
-//         await this.env.run(TASK_COMPILE);
-//       } catch (error) {
-//         assert.instanceOf(error, NomicLabsHardhatPluginError);
-//         assert.include("compilation failed", error.message.toLowerCase());
-//         assert.equal(
-//           this.env.artifacts.readArtifactSync("test").contractName,
-//           "test"
-//         );
-
-//         return;
-//       }
-
-//       assert.fail("Should have failed");
-//     });
-//   });
-
-//   describe("Mixed language", async function () {
-//     useEnvironment("mixed-language");
-
-//     it("Should successfully compile the contracts", async function () {
-//       await this.env.run(TASK_COMPILE);
-//       assert.equal(
-//         this.env.artifacts.readArtifactSync("test").contractName,
-//         "test"
-//       );
-//       assert.equal(
-//         this.env.artifacts.readArtifactSync("Greeter").contractName,
-//         "Greeter"
-//       );
-//     });
-//   });
+    it("Should successfully compile the contracts", async function () {
+      await this.env.run(TASK_COMPILE);
+      assert.equal(
+        this.env.artifacts.readArtifactSync("Foo").contractName,
+        "Foo"
+      );
+      assert.equal(
+        this.env.artifacts.readArtifactSync("Bar").contractName,
+        "Foo"
+      );
+      assert.equal(
+        this.env.artifacts.readArtifactSync("Import").contractName,
+        "Import"
+      );
+    });
+  });
 });
