@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 pragma abicoder v2;
 
 // import Foo.sol and Bar.sol from nested directories
@@ -7,11 +7,11 @@ import "./libraries/Foo.sol";
 import "./libraries/more_libraries/Bar.sol";
 
 contract Import {
-    // Initialize Foo.sol
-    Foo public foo = new Foo();
-
-    // Test Foo.sol by getting it's name.
-    function getFooName() public view returns (string memory) {
-        return foo.name();
+    function getFooName() public pure returns (string memory) {
+        return Foo.name;
+    }
+    
+    function getBarName() public pure returns (string memory) {
+        return Bar.name;
     }
 }
