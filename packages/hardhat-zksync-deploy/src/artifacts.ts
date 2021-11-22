@@ -5,7 +5,7 @@ import { readFileSync } from "fs";
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 
 // Loads artifacts for compiled contracts and validates them.
-async function loadArtifacts(artifactsFolder?: string): Promise<any> {
+export async function loadArtifacts(artifactsFolder?: string): Promise<any> {
   const folder = artifactsFolder ?? path.join(process.cwd(), "artifacts");
   const artifacts = await loadJsonFiles(folder);
 
@@ -21,7 +21,7 @@ async function loadArtifacts(artifactsFolder?: string): Promise<any> {
 }
 
 // Loads all the JSON files from the artifacts folder.
-async function loadJsonFiles(artifactsFolder: string) {
+export async function loadJsonFiles(artifactsFolder: string) {
   const glob = await import("glob");
   const jsonFiles = glob.sync(path.join(artifactsFolder, "**", "*.json"));
 

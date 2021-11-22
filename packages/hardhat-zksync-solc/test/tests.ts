@@ -8,7 +8,7 @@ describe("zksolc plugin", async function () {
   describe("Successful compilation", async function () {
     useEnvironment("successful-compilation");
 
-    it("Should successfully compile the contract", async function () {
+    it("Should successfully compile the simple contract", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
         this.env.artifacts.readArtifactSync("Greeter").contractName,
@@ -20,7 +20,7 @@ describe("zksolc plugin", async function () {
   describe("Multi-file", async function () {
     useEnvironment("multi-file");
 
-    it("Should successfully compile the contracts", async function () {
+    it("Should successfully compile the multi-file contracts", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
         this.env.artifacts.readArtifactSync("Foo").contractName,
@@ -36,7 +36,7 @@ describe("zksolc plugin", async function () {
   describe("Nested", async function () {
     useEnvironment("nested");
 
-    it("Should successfully compile the contracts", async function () {
+    it("Should successfully compile nested contracts", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
         this.env.artifacts.readArtifactSync("Foo").contractName,
@@ -56,7 +56,7 @@ describe("zksolc plugin", async function () {
   describe("Factory", async function () {
     useEnvironment("factory");
 
-    it("Should successfully compile the contracts", async function () {
+    it("Should successfully compile the factory contract", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
         this.env.artifacts.readArtifactSync("contracts/Factory.sol:Factory")
