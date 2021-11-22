@@ -1,21 +1,15 @@
-import { loadArtifacts, loadJsonFiles } from "../src/artifacts";
-import * as path from "path";
-
-import { useEnvironment, artifactsFolder } from "./helpers";
+import { useEnvironment } from "./helpers";
+import { assert } from "chai";
 
 
 describe("Helper functionality", async function () {
-    it("Should load JSON files", async function () {
-        // useEnvironment("successful-compilation");
-        const folder = artifactsFolder("successful-compilation");
-        console.log(`Folder is ${folder}`);
-        const files = await loadJsonFiles(folder);
+    describe("successful-compilation artifact", async function () {
+        useEnvironment("successful-compilation");
 
-        console.log(`Files: ${files}`);
+        it("Should load artifacts", async function () {
+            // console.log(`Artifacts: ${JSON.stringify(this.env.artifacts)}`);
+            const artifactExists = await this.env.artifacts.artifactExists("Greeter");
+            assert(artifactExists, "Greeter artifact doesn't exist");
+        })
     })
-
-    it("Should load artifacts", async function () {
-        
-    })
-
 })

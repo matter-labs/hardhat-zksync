@@ -23,7 +23,3 @@ export function useEnvironment(
     resetHardhatContext();
   });
 }
-
-export function artifactsFolder(folder: string): string {
-    return path.join(process.cwd(), "test", "fixture-projects", folder, "artifacts")
-}
