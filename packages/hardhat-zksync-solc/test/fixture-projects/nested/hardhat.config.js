@@ -6,7 +6,7 @@ module.exports = {
     compilerSource: "binary",
     settings: {
       optimizer: {
-        enabled: false,
+        enabled: true,
       }
     }
   },
