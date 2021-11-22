@@ -1,7 +1,6 @@
 import { NomicLabsHardhatPluginError } from "hardhat/plugins";
 import { Artifact, Artifacts, ProjectPathsConfig } from "hardhat/types";
-import { localPathToSourceName } from "hardhat/utils/source-names";
-import { spawnSync, spawn } from "child_process";
+import { spawnSync } from "child_process";
 import path from "path";
 
 import { ZkSolcConfig } from "./types";
@@ -23,8 +22,6 @@ export async function compile(
 
   for (const file of files) {
     const pathFromCWD = path.relative(process.cwd(), file);
-    const sourceName = await localPathToSourceName(paths.root, file);
-    const contractName = artifactIdToContractName(sourceName);
 
     // TODO: Don't recompile the file if it was already compiled.
 
@@ -34,21 +31,25 @@ export async function compile(
 
     if (processResult.status === 0) {
       const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
-      const builtContracts = compilerOutput["contracts"];
+      const builtContracts = compilerOutput.contracts;
 
       for (const artifactId in builtContracts) {
         console.log(`Adding artifact ${artifactId}`);
         const zksolcOutput = builtContracts[artifactId];
 
         const contractName = artifactIdToContractName(artifactId);
-        const artifact = getArtifactFromZksolcOutput(pathFromCWD, contractName, zksolcOutput);
+        const artifact = getArtifactFromZksolcOutput(
+          pathFromCWD,
+          contractName,
+          zksolcOutput
+        );
 
         await artifacts.saveArtifactAndDebugFile(artifact);
       }
     } else {
-      console.error("stdout:")
+      console.error("stdout:");
       console.error(processResult.stdout.toString("utf8").trim(), "\n");
-      console.error("stderr:")
+      console.error("stderr:");
       console.error(processResult.stderr.toString("utf8").trim(), "\n");
       someContractFailed = true;
     }
@@ -59,10 +60,7 @@ export async function compile(
   }
 }
 
-function compileWithBinary(
-  filePath: string,
-  config: ZkSolcConfig
-): any {
+function compileWithBinary(filePath: string, config: ZkSolcConfig): any {
   const zksolcArguments = [filePath, "--combined-json", "abi,bin,bin-runtime"];
   if (config.settings.optimizer.enabled) {
     zksolcArguments.push("--optimize");
@@ -96,8 +94,8 @@ function getArtifactFromZksolcOutput(
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
     contractName,
     sourceName: pathFromCWD,
-    abi: output["abi"],
-    bytecode: add0xPrefixIfNecessary(output["bin"]),
+    abi: output.abi,
+    bytecode: add0xPrefixIfNecessary(output.bin),
     deployedBytecode: add0xPrefixIfNecessary(output["bin-runtime"]),
     linkReferences: {},
     deployedLinkReferences: {},

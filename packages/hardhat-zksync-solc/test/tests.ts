@@ -16,7 +16,7 @@ describe("zksolc plugin", async function () {
       );
     });
   });
-  
+
   describe("Multi-file", async function () {
     useEnvironment("multi-file");
 
@@ -32,7 +32,7 @@ describe("zksolc plugin", async function () {
       );
     });
   });
-  
+
   describe("Nested", async function () {
     useEnvironment("nested");
 
@@ -52,18 +52,20 @@ describe("zksolc plugin", async function () {
       );
     });
   });
-  
+
   describe("Factory", async function () {
     useEnvironment("factory");
 
     it("Should successfully compile the contracts", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
-        this.env.artifacts.readArtifactSync("contracts/Factory.sol:Factory").contractName,
+        this.env.artifacts.readArtifactSync("contracts/Factory.sol:Factory")
+          .contractName,
         "Factory"
       );
       assert.equal(
-        this.env.artifacts.readArtifactSync("contracts/Factory.sol:Dep").contractName,
+        this.env.artifacts.readArtifactSync("contracts/Factory.sol:Dep")
+          .contractName,
         "Dep"
       );
     });

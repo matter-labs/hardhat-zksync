@@ -1,4 +1,7 @@
-import { TASK_COMPILE_GET_COMPILATION_TASKS, TASK_COMPILE_SOLIDITY } from "hardhat/builtin-tasks/task-names";
+import {
+  TASK_COMPILE_GET_COMPILATION_TASKS,
+  TASK_COMPILE_SOLIDITY,
+} from "hardhat/builtin-tasks/task-names";
 import { extendConfig, subtask } from "hardhat/internal/core/config/config-env";
 
 import { TASK_COMPILE_ZKSOLC } from "./task-names";
@@ -9,10 +12,10 @@ extendConfig((config) => {
     version: "latest",
     compilerSource: "binary",
     settings: {
-      optimizer: { 
+      optimizer: {
         enabled: false,
-      }
-    }
+      },
+    },
   };
   config.zksolc = { ...defaultConfig, ...config.zksolc };
 });
@@ -21,7 +24,9 @@ subtask(
   TASK_COMPILE_GET_COMPILATION_TASKS,
   async (_, __, runSuper): Promise<string[]> => {
     // Filter out task to compile solidity, as we replace it.
-    const otherTasks = (await runSuper()).filter((task: string) => task !== TASK_COMPILE_SOLIDITY);
+    const otherTasks = (await runSuper()).filter(
+      (task: string) => task !== TASK_COMPILE_SOLIDITY
+    );
 
     return [...otherTasks, TASK_COMPILE_ZKSOLC];
   }
