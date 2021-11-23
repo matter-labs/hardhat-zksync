@@ -1,5 +1,6 @@
 {
   "_format": "hh-zksolc-artifact-1",
+  "_additionalKey": "some_value",
   "contractName": "Greeter",
   "sourceName": "contracts/Greeter.sol",
   "abi": [
