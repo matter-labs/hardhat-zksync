@@ -3,7 +3,7 @@ import { Artifact, Artifacts, ProjectPathsConfig } from "hardhat/types";
 import { spawnSync } from "child_process";
 import path from "path";
 
-import { ZkSolcConfig } from "./types";
+import { ZkSolcConfig, FactoryDeps, ZkSyncArtifact } from "./types";
 import { add0xPrefixIfNecessary } from "./utils";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
@@ -85,11 +85,10 @@ function getArtifactFromZksolcOutput(
   pathFromCWD: string,
   contractName: string,
   output: any
-): Artifact {
+): ZkSyncArtifact {
   console.log(`Contract name: ${contractName}`);
 
-  // TODO: Probably we need to add information about contract CREATE dependencies here
-  //       (also check whether it's OK with hardhat approach).
+  // TODO: We need to add information about contract CREATE dependencies.
   return {
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
     contractName,
@@ -99,6 +98,10 @@ function getArtifactFromZksolcOutput(
     deployedBytecode: add0xPrefixIfNecessary(output["bin-runtime"]),
     linkReferences: {},
     deployedLinkReferences: {},
+
+    // zkSync-specific fields.
+    factoryDeps: {"a": "b"},
+    sourceMapping: "",
   };
 }
 
