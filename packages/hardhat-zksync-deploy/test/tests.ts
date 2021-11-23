@@ -1,8 +1,9 @@
+
 import { useEnvironment } from "./helpers";
 import { assert } from "chai";
-import { callDeployScripts, findDeployScripts } from "../src";
+import { callDeployScripts, findDeployScripts } from "../src/plugin";
 import * as path from "path";
-
+import { TASK_DEPLOY_ZKSYNC } from "../src/task-names";
 
 describe("Plugin tests", async function () {
     describe("successful-compilation artifact", async function () {
@@ -28,6 +29,10 @@ describe("Plugin tests", async function () {
 
         it("Should call deploy scripts", async function() {
             await callDeployScripts(this.env);
+        })
+
+        it("Should call deploy scripts through HRE", async function() {
+            await this.env.run(TASK_DEPLOY_ZKSYNC);
         })
     })
 })

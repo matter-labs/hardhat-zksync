@@ -1,31 +1,25 @@
-import { existsSync, fstat } from 'fs';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as path from 'path';
-import * as glob from "glob";
+import { extendConfig, task } from "hardhat/config";
 
-import { pluginError } from "./helpers";
+import { TASK_DEPLOY_ZKSYNC } from "./task-names";
+import "./type-extensions";
+import { callDeployScripts } from './plugin';
 
 export * from './deployer';
 
-export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
-    const workDir = hre.config.paths.root;
-    const deployScriptsDir = path.join(workDir, 'deploy');
+extendConfig((config) => {
+    const defaultConfig = {
+      zkSyncRpc: "unknown",
+      l1Network: "unknown",
+    };
+    config.zkSyncDeploy = { ...defaultConfig, ...config.zkSyncDeploy };
+  });
 
-    if (!existsSync(deployScriptsDir)) {
-        throw pluginError("No deploy folder was found");
+task(
+    TASK_DEPLOY_ZKSYNC,
+    "Runs the deploy scripts for zkSync network",
+    async function (taskArguments, hre) {
+        // TODO: Which task arguments do we need? For example, the exact script to run?
+        callDeployScripts(hre);
     }
+);
   
-    const tsFiles = glob.sync(path.join(deployScriptsDir, "**", "*.ts"));
-
-    return tsFiles;
-}
-
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment) {
-    const scripts = findDeployScripts(hre);
-
-    for (const script of scripts) {
-        const deployFn = require(script).default;
-
-        await deployFn(hre);
-    }
-}

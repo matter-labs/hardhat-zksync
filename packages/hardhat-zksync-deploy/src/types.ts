@@ -2,8 +2,8 @@ import { Artifact } from "hardhat/types";
 
 
 export interface ZkDeployConfig {
-    zkSyncRpc: string,
-    l1Network: string,
+    zkSyncRpc: string;
+    l1Network: string;
   }
 
 /**
@@ -12,13 +12,13 @@ export interface ZkDeployConfig {
  */
  export interface FactoryDeps {
     // A mapping from the contract hash to the contract bytecode.
-    [contractHash: string]: string,
+    [contractHash: string]: string;
   }
   
   export interface ZkSyncArtifact extends Artifact {
     // List of factory dependencies of a contract.
-    factoryDeps: FactoryDeps,
+    factoryDeps: FactoryDeps;
     // Mapping from the bytecode to the zkEVM assembly (used for tracing).
-    sourceMapping: string,
+    sourceMapping: string;
   }
   

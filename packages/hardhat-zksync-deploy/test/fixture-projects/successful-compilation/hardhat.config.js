@@ -1,13 +1,8 @@
 require("../../../src/index");
 
 module.exports = {
-  zksolc: {
-    version: "0.1.0",
-    compilerSource: "binary",
-    settings: {
-      optimizer: {
-        enabled: true,
-      },
-    },
+  zkSyncDeploy: {
+    zkSyncRpc: "http://127.0.0.1:8087",
+    l1Network: "http://127.0.0.1:8086",
   },
 };
