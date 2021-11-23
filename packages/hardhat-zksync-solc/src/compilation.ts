@@ -1,9 +1,9 @@
 import { NomicLabsHardhatPluginError } from "hardhat/plugins";
-import { Artifact, Artifacts, ProjectPathsConfig } from "hardhat/types";
+import { Artifacts, ProjectPathsConfig } from "hardhat/types";
 import { spawnSync } from "child_process";
 import path from "path";
 
-import { ZkSolcConfig, FactoryDeps, ZkSyncArtifact } from "./types";
+import { ZkSolcConfig, ZkSyncArtifact } from "./types";
 import { add0xPrefixIfNecessary } from "./utils";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
@@ -33,7 +33,7 @@ export async function compile(
       const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
       const builtContracts = compilerOutput.contracts;
 
-      for (const artifactId in builtContracts) {
+      for (const artifactId in compilerOutput.contracts) {
         console.log(`Adding artifact ${artifactId}`);
         const zksolcOutput = builtContracts[artifactId];
 
@@ -100,7 +100,7 @@ function getArtifactFromZksolcOutput(
     deployedLinkReferences: {},
 
     // zkSync-specific fields.
-    factoryDeps: {"a": "b"},
+    factoryDeps: { a: "b" },
     sourceMapping: "",
   };
 }

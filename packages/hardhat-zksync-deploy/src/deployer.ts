@@ -1,5 +1,6 @@
 import { NomicLabsHardhatPluginError } from "hardhat/plugins";
 import { Artifact, HardhatRuntimeEnvironment } from "hardhat/types";
+import { ZkSyncArtifact } from "./types";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 
@@ -26,14 +27,14 @@ export class Deployer {
    *
    * @throws Throws an error if an artifact was not compiled by `zksolc`.
    */
-    public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<Artifact> {
+    public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact> {
         const artifact = await this.hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
         
         // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
         if (artifact._format != ARTIFACT_FORMAT_VERSION) {
             throw pluginError(`Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc`);
         }
-        return artifact;
+        return artifact as ZkSyncArtifact;
     }
 
     /**

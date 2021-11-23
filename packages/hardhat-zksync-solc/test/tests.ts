@@ -1,6 +1,5 @@
 import { assert } from "chai";
 import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
-import { NomicLabsHardhatPluginError } from "hardhat/plugins";
 import { ZkSyncArtifact } from "../src/types";
 
 import { useEnvironment } from "./helpers";
@@ -12,16 +11,23 @@ describe("zksolc plugin", async function () {
     it("Should successfully compile the simple contract", async function () {
       await this.env.run(TASK_COMPILE);
 
-      const artifact = this.env.artifacts.readArtifactSync("Greeter") as ZkSyncArtifact;
-
-      assert.equal(
-        artifact.contractName,
+      const artifact = this.env.artifacts.readArtifactSync(
         "Greeter"
-      );
+      ) as ZkSyncArtifact;
+
+      assert.equal(artifact.contractName, "Greeter");
 
       // Check that zkSync-specific artifact information was added.
-      assert.deepEqual(artifact.factoryDeps, {"a": "b"}, "Factory deps info was not added");
-      assert.equal(artifact.sourceMapping, "", "Source mapping info was not added");
+      assert.deepEqual(
+        artifact.factoryDeps,
+        { a: "b" },
+        "Factory deps info was not added"
+      );
+      assert.equal(
+        artifact.sourceMapping,
+        "",
+        "Source mapping info was not added"
+      );
     });
   });
 
