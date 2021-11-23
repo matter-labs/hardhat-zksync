@@ -1,6 +1,11 @@
 import { Artifact } from "hardhat/types";
 
 
+export interface ZkDeployConfig {
+    zkSyncRpc: string,
+    l1Network: string,
+  }
+
 /**
  * Description of the factory dependencies of a contract.
  * Dependencies are contracts that can be deployed by this contract via `CREATE` operation.

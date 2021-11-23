@@ -1,5 +1,7 @@
 import { useEnvironment } from "./helpers";
 import { assert } from "chai";
+import { callDeployScripts, findDeployScripts } from "../src";
+import * as path from "path";
 
 
 describe("Plugin tests", async function () {
@@ -11,10 +13,21 @@ describe("Plugin tests", async function () {
             assert(artifactExists, "Greeter artifact doesn't exist");
 
             const artifact = await this.env.artifacts.readArtifact("Greeter");
-            assert(artifact._format == "hh-zksolc-artifact-1", "Incorrect artifact build");
+            assert.equal(artifact._format, "hh-zksolc-artifact-1", "Incorrect artifact build");
 
             // Check that we can load an additional key (it turns that we can which is great).
-            assert((artifact as any)["_additionalKey"] == "some_value", "Additional key not loaded!");
+            assert.equal((artifact as any)["_additionalKey"], "some_value", "Additional key not loaded!");
+        })
+
+        it("Should find deploy scripts", async function() {
+            const baseDir = this.env.config.paths.root;
+            const files = findDeployScripts(this.env);
+
+            assert.deepEqual(files, [path.join(baseDir, "deploy", "001_deploy.ts")], "Incorrect deploy script list");
+        })
+
+        it("Should call deploy scripts", async function() {
+            await callDeployScripts(this.env);
         })
     })
 })

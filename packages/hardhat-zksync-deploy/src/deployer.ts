@@ -1,6 +1,7 @@
-import { NomicLabsHardhatPluginError } from "hardhat/plugins";
 import { Artifact, HardhatRuntimeEnvironment } from "hardhat/types";
 import { ZkSyncArtifact } from "./types";
+
+import { pluginError } from "./helpers";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 
@@ -39,25 +40,21 @@ export class Deployer {
 
     /**
      * Sends a deploy transaction to the zkSync network.
+     * For now, it will use defaults for the transaction parameters:
+     * - fee token is ETH.
+     * - fee amount is requested automatically from the zkSync server.
      * 
      * @param artifact The previously loaded artifact object.
+     * @param constructorArguments List of arguments to be passed to the contract constructor.
      * 
      * @returns A handle for the deploy transaction.
     */
-    public async deploy(artifact: Artifact): Promise<any> {
+    public async deploy(artifact: Artifact, constructorArguments: any[]): Promise<any> {
+        const contractBytecode = artifact.bytecode;
+
         // TODO:
         // - Form the transaction.
         // - Send it via Web3.
         // - Return a transaction handle.
     }
 }
-
-
-// Returns a built plugin exception object.
-function pluginError(message: string): NomicLabsHardhatPluginError {
-    return new NomicLabsHardhatPluginError(
-      "@matterlabs/hardhat-zksync-solc",
-      message
-    );
-  }
-  
