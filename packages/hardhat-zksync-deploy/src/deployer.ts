@@ -1,5 +1,5 @@
-import { Artifact, HardhatRuntimeEnvironment } from "hardhat/types";
-import { Wallet } from "zksync-web3";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { Wallet, types as zksyncTypes } from "zksync-web3";
 
 import { ZkSyncArtifact } from "./types";
 import { pluginError } from "./helpers";
@@ -61,7 +61,7 @@ export class Deployer {
   public async deploy(
     artifact: ZkSyncArtifact,
     _constructorArguments: any[]
-  ): Promise<any> {
+  ): Promise<zksyncTypes.TransactionResponse> {
     const contractBytecode = Uint8Array.from(
       Buffer.from(artifact.bytecode.substr(2), "hex")
     );
@@ -74,6 +74,7 @@ export class Deployer {
       dependencies[dependencyHash] = dependencyBytecode;
     }
 
+    // TODO 0: Use contract factory.
     // TODO 1: SDK will change.
     // TODO 2: We need to pass the constructor arguments.
     // TODO 3: We need to pass the contract CREATE dependencies.
