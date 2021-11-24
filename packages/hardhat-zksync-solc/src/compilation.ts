@@ -102,11 +102,11 @@ function getArtifactFromZksolcOutput(
     deployedLinkReferences: {},
 
     // zkSync-specific fields.
-    factoryDeps: normalizeFactoryDeps(output["factory-deps"]),
+    factoryDeps: normalizeFactoryDeps(pathFromCWD, output["factory-deps"]),
   };
 }
 
-function normalizeFactoryDeps(factoryDeps: {
+function normalizeFactoryDeps(pathFromCWD: string, factoryDeps: {
   [key: string]: string;
 }): FactoryDeps {
   // Normalize factory-deps.
@@ -114,7 +114,14 @@ function normalizeFactoryDeps(factoryDeps: {
   // Also we need to add `0x` prefixes to the hashes.
   const normalizedDeps: FactoryDeps = {};
   Object.keys(factoryDeps).forEach((contractHash) => {
-    normalizedDeps[factoryDeps[contractHash]] =
+    // `SomeDep` part of `SomeContract.sol:SomeDep`.
+    const contractName = factoryDeps[contractHash].split(':')[1];
+
+    // All the dependency artifacts will be placed in the same artifact folder as the current contract.
+    // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path returned by the compiler
+    // with the path to the "factory" contract itself.
+    const newKey = `${pathFromCWD}:${contractName}`;
+    normalizedDeps[newKey] =
       add0xPrefixIfNecessary(contractHash);
   });
 

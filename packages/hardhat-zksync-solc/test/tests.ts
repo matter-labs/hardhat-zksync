@@ -64,7 +64,7 @@ describe("zksolc plugin", async function () {
       // Factory contract should have one dependency.
       // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
       // Instead we only check that it's a hash indeed.
-      const depName = "Factory.sol:Dep";
+      const depName = "contracts/Factory.sol:Dep";
       assert(
         depName in factoryArtifact.factoryDeps,
         "No required dependency in the artifact"
@@ -106,8 +106,8 @@ describe("zksolc plugin", async function () {
       // Factory contract should have one dependency.
       // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
       // Instead we only check that it's a hash indeed.
-      const fooDepName = "Bar.sol:BarDep";
-      const barDepName = "Foo.sol:FooDep";
+      const fooDepName = "contracts/NestedFactory.sol:FooDep";
+      const barDepName = "contracts/NestedFactory.sol:BarDep";
       for (const depName of [fooDepName, barDepName]) {
         assert(
           depName in factoryArtifact.factoryDeps,
@@ -129,6 +129,12 @@ describe("zksolc plugin", async function () {
           "Unexpected factory-deps for a dependency contract"
         );
       }
+
+      // Each factory dependency should be accessible through `readArtifact` without changing it's identifier.
+      const fooDepArtifactFromFactoryDeps = this.env.artifacts.readArtifactSync(fooDepName);
+      assert.equal(fooDepArtifactFromFactoryDeps.contractName, fooDepArtifact.contractName, "Artifacts do not match");
+      assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, "Artifacts do not match");
+      assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, "Artifacts do not match");
     });
   });
 });
