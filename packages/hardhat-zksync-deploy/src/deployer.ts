@@ -59,15 +59,24 @@ export class Deployer {
    * @returns A handle for the deploy transaction.
    */
   public async deploy(
-    artifact: Artifact,
+    artifact: ZkSyncArtifact,
     _constructorArguments: any[]
   ): Promise<any> {
     const contractBytecode = Uint8Array.from(
       Buffer.from(artifact.bytecode.substr(2), "hex")
     );
 
+    // Load all the dependency bytecodes.
+    const dependencies: { [depHash: string]: string } = {};
+    for (const dependencyHash in artifact.factoryDeps) {
+      const dependencyContract = artifact.factoryDeps[dependencyHash];
+      const dependencyBytecode = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
+      dependencies[dependencyHash] = dependencyBytecode;
+    }
+
     // TODO 1: SDK will change.
     // TODO 2: We need to pass the constructor arguments.
+    // TODO 3: We need to pass the contract CREATE dependencies.
     const sentTx = await this.zkWallet.deployContract({
       bytecode: contractBytecode,
       feeToken: "ETH",

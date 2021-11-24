@@ -64,16 +64,18 @@ describe("zksolc plugin", async function () {
       // Factory contract should have one dependency.
       // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
       // Instead we only check that it's a hash indeed.
-      const depName = "contracts/Factory.sol:Dep";
-      assert(
-        depName in factoryArtifact.factoryDeps,
-        "No required dependency in the artifact"
-      );
-      const depHash = factoryArtifact.factoryDeps[depName];
+      const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
       const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
       assert(
         depHash.startsWith("0x") && depHash.length === expectedLength,
         "Contract hash is malformed"
+      );
+      
+      const depName = "contracts/Factory.sol:Dep";
+      assert.equal(
+        depName,
+        factoryArtifact.factoryDeps[depHash],
+        "No required dependency in the artifact"
       );
 
       // For the dependency contract should be no further dependencies.
@@ -110,10 +112,11 @@ describe("zksolc plugin", async function () {
       const barDepName = "contracts/NestedFactory.sol:BarDep";
       for (const depName of [fooDepName, barDepName]) {
         assert(
-          depName in factoryArtifact.factoryDeps,
-          "No required dependency in the artifact"
+          Object.values(factoryArtifact.factoryDeps).includes(depName),
+          `No required dependency in the artifact: ${depName}`
         );
-        const depHash = factoryArtifact.factoryDeps[depName];
+      }
+      for (const depHash in factoryArtifact.factoryDeps) {
         const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
         assert(
           depHash.startsWith("0x") && depHash.length === expectedLength,

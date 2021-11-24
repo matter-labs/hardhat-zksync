@@ -110,7 +110,7 @@ function normalizeFactoryDeps(pathFromCWD: string, factoryDeps: {
   [key: string]: string;
 }): FactoryDeps {
   // Normalize factory-deps.
-  // Compiler outputs entries as `hash` -> `contractId`, but we need `contractId` -> `hash`.
+  // We need to replace the contract IDs with ones we can easily reference as artifacts.
   // Also we need to add `0x` prefixes to the hashes.
   const normalizedDeps: FactoryDeps = {};
   Object.keys(factoryDeps).forEach((contractHash) => {
@@ -120,9 +120,9 @@ function normalizeFactoryDeps(pathFromCWD: string, factoryDeps: {
     // All the dependency artifacts will be placed in the same artifact folder as the current contract.
     // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path returned by the compiler
     // with the path to the "factory" contract itself.
-    const newKey = `${pathFromCWD}:${contractName}`;
-    normalizedDeps[newKey] =
-      add0xPrefixIfNecessary(contractHash);
+    const newContractId = `${pathFromCWD}:${contractName}`;
+    const prefixedContractHash = add0xPrefixIfNecessary(contractHash);
+    normalizedDeps[prefixedContractHash] = newContractId;
   });
 
   return normalizedDeps;
