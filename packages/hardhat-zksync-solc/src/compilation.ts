@@ -34,17 +34,19 @@ export async function compile(
       const builtContracts = compilerOutput.contracts;
 
       for (const artifactId in compilerOutput.contracts) {
-        console.log(`Adding artifact ${artifactId}`);
-        const zksolcOutput = builtContracts[artifactId];
+        if (compilerOutput.contracts.hasOwnProperty(artifactId)) {
+          console.log(`Adding artifact ${artifactId}`);
+          const zksolcOutput = builtContracts[artifactId];
 
-        const contractName = artifactIdToContractName(artifactId);
-        const artifact = getArtifactFromZksolcOutput(
-          pathFromCWD,
-          contractName,
-          zksolcOutput
-        );
+          const contractName = artifactIdToContractName(artifactId);
+          const artifact = getArtifactFromZksolcOutput(
+            pathFromCWD,
+            contractName,
+            zksolcOutput
+          );
 
-        await artifacts.saveArtifactAndDebugFile(artifact);
+          await artifacts.saveArtifactAndDebugFile(artifact);
+        }
       }
     } else {
       console.error("stdout:");
@@ -88,8 +90,6 @@ function getArtifactFromZksolcOutput(
 ): ZkSyncArtifact {
   console.log(`Contract name: ${contractName}`);
 
-
-
   // TODO: We need to add information about contract CREATE dependencies.
   return {
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
@@ -106,13 +106,16 @@ function getArtifactFromZksolcOutput(
   };
 }
 
-function normalizeFactoryDeps(factoryDeps: { [key: string]: string}): FactoryDeps {
+function normalizeFactoryDeps(factoryDeps: {
+  [key: string]: string;
+}): FactoryDeps {
   // Normalize factory-deps.
   // Compiler outputs entries as `hash` -> `contractId`, but we need `contractId` -> `hash`.
   // Also we need to add `0x` prefixes to the hashes.
   const normalizedDeps: FactoryDeps = {};
-  Object.keys(factoryDeps).forEach(contractHash => {
-    normalizedDeps[factoryDeps[contractHash]] = add0xPrefixIfNecessary(contractHash);
+  Object.keys(factoryDeps).forEach((contractHash) => {
+    normalizedDeps[factoryDeps[contractHash]] =
+      add0xPrefixIfNecessary(contractHash);
   });
 
   return normalizedDeps;

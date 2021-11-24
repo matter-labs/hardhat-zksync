@@ -49,17 +49,15 @@ describe("zksolc plugin", async function () {
     it("Should successfully compile the factory contract", async function () {
       await this.env.run(TASK_COMPILE);
 
-      const factoryArtifact = this.env.artifacts.readArtifactSync("contracts/Factory.sol:Factory") as ZkSyncArtifact;
-      const depArtifact = this.env.artifacts.readArtifactSync("contracts/Factory.sol:Dep") as ZkSyncArtifact;
+      const factoryArtifact = this.env.artifacts.readArtifactSync(
+        "contracts/Factory.sol:Factory"
+      ) as ZkSyncArtifact;
+      const depArtifact = this.env.artifacts.readArtifactSync(
+        "contracts/Factory.sol:Dep"
+      ) as ZkSyncArtifact;
 
-      assert.equal(
-        factoryArtifact.contractName,
-        "Factory"
-      );
-      assert.equal(
-        depArtifact.contractName,
-        "Dep"
-      );
+      assert.equal(factoryArtifact.contractName, "Factory");
+      assert.equal(depArtifact.contractName, "Dep");
 
       // Check that zkSync-specific artifact information was added.
 
@@ -67,13 +65,23 @@ describe("zksolc plugin", async function () {
       // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
       // Instead we only check that it's a hash indeed.
       const depName = "Factory.sol:Dep";
-      assert(depName in factoryArtifact.factoryDeps, "No required dependency in the artifact");
+      assert(
+        depName in factoryArtifact.factoryDeps,
+        "No required dependency in the artifact"
+      );
       const depHash = factoryArtifact.factoryDeps[depName];
       const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
-      assert(depHash.startsWith("0x") && depHash.length == expectedLength, "Contract hash is malformed");
+      assert(
+        depHash.startsWith("0x") && depHash.length === expectedLength,
+        "Contract hash is malformed"
+      );
 
       // For the dependency contract should be no further dependencies.
-      assert.deepEqual(depArtifact.factoryDeps, {}, "Unexpected factory-deps for a dependency contract");
+      assert.deepEqual(
+        depArtifact.factoryDeps,
+        {},
+        "Unexpected factory-deps for a dependency contract"
+      );
     });
   });
 
@@ -83,9 +91,15 @@ describe("zksolc plugin", async function () {
     it("Should successfully compile nested contracts", async function () {
       await this.env.run(TASK_COMPILE);
 
-      const factoryArtifact = this.env.artifacts.readArtifactSync("NestedFactory") as ZkSyncArtifact;
-      const fooDepArtifact = this.env.artifacts.readArtifactSync("contracts/deps/Foo.sol:FooDep") as ZkSyncArtifact;
-      const barDepArtifact = this.env.artifacts.readArtifactSync("contracts/deps/more_deps/Bar.sol:BarDep") as ZkSyncArtifact;
+      const factoryArtifact = this.env.artifacts.readArtifactSync(
+        "NestedFactory"
+      ) as ZkSyncArtifact;
+      const fooDepArtifact = this.env.artifacts.readArtifactSync(
+        "contracts/deps/Foo.sol:FooDep"
+      ) as ZkSyncArtifact;
+      const barDepArtifact = this.env.artifacts.readArtifactSync(
+        "contracts/deps/more_deps/Bar.sol:BarDep"
+      ) as ZkSyncArtifact;
 
       // Check that zkSync-specific artifact information was added.
 
@@ -95,15 +109,25 @@ describe("zksolc plugin", async function () {
       const fooDepName = "Bar.sol:BarDep";
       const barDepName = "Foo.sol:FooDep";
       for (const depName of [fooDepName, barDepName]) {
-        assert(depName in factoryArtifact.factoryDeps, "No required dependency in the artifact");
+        assert(
+          depName in factoryArtifact.factoryDeps,
+          "No required dependency in the artifact"
+        );
         const depHash = factoryArtifact.factoryDeps[depName];
         const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
-        assert(depHash.startsWith("0x") && depHash.length == expectedLength, "Contract hash is malformed");
+        assert(
+          depHash.startsWith("0x") && depHash.length === expectedLength,
+          "Contract hash is malformed"
+        );
       }
 
       // For the dependency contract should be no further dependencies.
       for (const depArtifact of [fooDepArtifact, barDepArtifact]) {
-        assert.deepEqual(depArtifact.factoryDeps, {}, "Unexpected factory-deps for a dependency contract");
+        assert.deepEqual(
+          depArtifact.factoryDeps,
+          {},
+          "Unexpected factory-deps for a dependency contract"
+        );
       }
     });
   });
