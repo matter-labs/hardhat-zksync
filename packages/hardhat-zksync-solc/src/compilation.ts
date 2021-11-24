@@ -3,7 +3,7 @@ import { Artifacts, ProjectPathsConfig } from "hardhat/types";
 import { spawnSync } from "child_process";
 import path from "path";
 
-import { ZkSolcConfig, ZkSyncArtifact } from "./types";
+import { FactoryDeps, ZkSolcConfig, ZkSyncArtifact } from "./types";
 import { add0xPrefixIfNecessary } from "./utils";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
@@ -88,6 +88,8 @@ function getArtifactFromZksolcOutput(
 ): ZkSyncArtifact {
   console.log(`Contract name: ${contractName}`);
 
+
+
   // TODO: We need to add information about contract CREATE dependencies.
   return {
     _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
@@ -100,9 +102,20 @@ function getArtifactFromZksolcOutput(
     deployedLinkReferences: {},
 
     // zkSync-specific fields.
-    factoryDeps: { a: "b" },
-    sourceMapping: "",
+    factoryDeps: normalizeFactoryDeps(output["factory-deps"]),
   };
+}
+
+function normalizeFactoryDeps(factoryDeps: { [key: string]: string}): FactoryDeps {
+  // Normalize factory-deps.
+  // Compiler outputs entries as `hash` -> `contractId`, but we need `contractId` -> `hash`.
+  // Also we need to add `0x` prefixes to the hashes.
+  const normalizedDeps: FactoryDeps = {};
+  Object.keys(factoryDeps).forEach(contractHash => {
+    normalizedDeps[factoryDeps[contractHash]] = add0xPrefixIfNecessary(contractHash);
+  });
+
+  return normalizedDeps;
 }
 
 // Checks whether compiler source is supported.
