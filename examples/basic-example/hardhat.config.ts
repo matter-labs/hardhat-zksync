@@ -12,8 +12,8 @@ module.exports = {
     },
   },
   zkSyncDeploy: {
-    zkSyncRpc: "http://127.0.0.1:3050",
-    l1Network: "http://127.0.0.1:8545",
+    zkSyncNetwork: "http://127.0.0.1:3050",
+    ethNetwork: "http://127.0.0.1:8545",
   },
   solidity: {
     version: "0.8.10"

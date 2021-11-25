@@ -1,0 +1,28 @@
+# zkSync 2.0 deploy environment example
+
+This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
+
+## Prerequisites
+
+- node.js 14.x or later.
+- yarn.
+
+## Configuration
+
+Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
+You should only change the zkSync network configuration.
+
+For `ethNetwork`, you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`).
+For `zkSyncNetwork`, you should use the URL of the zkSync network RPC.
+
+## Usage
+
+```sh
+yarn
+yarn hardhat compile
+yarn hardhat deploy-zksync
+```
+
+## Adding and changing deploy scripts
+
+TODO

@@ -1,9 +1,21 @@
 import { Artifact } from "hardhat/types";
 
-// TODO: `zkSyncRpc` / `l1Network`: obscure and not consistent.
+/**
+ * Configuration for zkSync deploy plugin.
+ */
 export interface ZkDeployConfig {
-  zkSyncRpc: string;
-  l1Network: string;
+  /**
+   * Identifier of the zkSync network.
+   * Can be set to the RPC address of network (e.g. `http://127.0.0.1:3030`).
+   * Network IDs like `mainnet` or `rinkeby` will be supported in the future.
+   */
+  zkSyncNetwork: string;
+  /**
+   * Identifier of the Ethereum network.
+   * Can be set either to the RPC address of network (e.g. `http://127.0.0.1:3030`) 
+   * or the network ID (e.g. `mainnet` or `rinkeby`).
+   */
+  ethNetwork: string;
 }
 
 /**

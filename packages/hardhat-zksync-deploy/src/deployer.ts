@@ -1,20 +1,35 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { Wallet, ContractFactory, Contract, utils as zkUtils } from "zksync-web3";
+import * as zk from "zksync-web3";
+import * as ethers from "ethers";
 
 import { ZkSyncArtifact } from "./types";
 import { pluginError } from "./helpers";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
+const SUPPORTED_L1_TESTNETS = ["mainnet", "rinkeby", "ropsten", "kovan"];
 
 /**
  * An entity capable of deploying contracts to the zkSync network.
  */
 export class Deployer {
   public hre: HardhatRuntimeEnvironment;
-  public zkWallet: Wallet;
+  public ethWallet: ethers.Wallet;
+  public zkWallet: zk.Wallet;
 
-  constructor(hre: HardhatRuntimeEnvironment, zkWallet: Wallet) {
+  constructor(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
     this.hre = hre;
+
+    // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2). We will need both.
+    const ethNetwork = hre.config.zkSyncDeploy.ethNetwork;
+    const ethWeb3Provider = SUPPORTED_L1_TESTNETS.includes(ethNetwork)
+      ? ethers.getDefaultProvider(ethNetwork)
+      : new ethers.providers.JsonRpcProvider(ethNetwork);
+    const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+
+    // Create a zkSync wallet using the Ethereum wallet created above.
+    const zkWallet = new zk.Wallet(ethWallet.privateKey, zkWeb3Provider, ethWeb3Provider);
+
+    this.ethWallet = ethWallet;
     this.zkWallet = zkWallet;
   }
 
@@ -61,7 +76,7 @@ export class Deployer {
   public async deploy(
     artifact: ZkSyncArtifact,
     constructorArguments: any[]
-  ): Promise<Contract> {
+  ): Promise<zk.Contract> {
     // Load all the dependency bytecodes.
     const dependencies: { [depHash: string]: string } = {};
     for (const dependencyHash in artifact.factoryDeps) {
@@ -74,10 +89,10 @@ export class Deployer {
     // TODO 2: We need to pass the constructor arguments.
     // TODO 3: We need to pass the contract CREATE dependencies.
 
-    const factory = new ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
     const contract = await factory.deploy(
       ...constructorArguments,
-      { feeToken: zkUtils.ETH_ADDRESS }
+      { feeToken: zk.utils.ETH_ADDRESS }
     );
     await contract.deployed();
 

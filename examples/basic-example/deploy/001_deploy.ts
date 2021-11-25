@@ -11,24 +11,18 @@ export default async function(hre: HardhatRuntimeEnvironment) {
     const testMnemonic = "stuff slice staff easily soup parent arm payment cotton trade scatter struggle";
     const ethWallet = ethers.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
 
-    // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2). We will need both.
-    const ethWeb3Provider = new ethers.providers.JsonRpcProvider(hre.config.zkSyncDeploy.l1Network);
-    const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncRpc);
-
-    // Create a zkSync wallet using the Ethereum wallet created above.
-    const zkWallet = new zk.Wallet(ethWallet.privateKey, zkWeb3Provider, ethWeb3Provider);
+    // Create deployer object and load desired artifact.
+    const deployer = new Deployer(hre, ethWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
     // const depositAmount = ethers.utils.parseEther("0.001"); // TODO: Why parseEther doesn't work?
-    const depositHandle = await zkWallet.deposit({
-        to: zkWallet.address,
+    const depositHandle = await deployer.zkWallet.deposit({
+        to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
         amount: "1000000000000000000", // TODO: Why parseEther doesn't work?
     });
     await depositHandle.wait();
 
-    // Create deployer object and load desired artifact.
-    const deployer = new Deployer(hre, zkWallet);
     const artifact = await deployer.loadArtifact("Greeter");
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
