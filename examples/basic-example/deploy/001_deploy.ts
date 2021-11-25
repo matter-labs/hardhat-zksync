@@ -23,12 +23,15 @@ export default async function(hre: HardhatRuntimeEnvironment) {
     });
     await depositHandle.wait();
 
+    // Load the artifact we want to deploy.
     const artifact = await deployer.loadArtifact("Greeter");
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
+    // `greeting` is an argument for contract constructor.
     const greeting = "Hi there!";
     const greeterContract = await deployer.deploy(artifact, [greeting]);
 
+    // Show the contract info.
     const contractAddress = greeterContract.address;
     console.log(`${artifact.contractName} was deployed to ${contractAddress}!`);
 
