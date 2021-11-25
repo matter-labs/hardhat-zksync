@@ -1,5 +1,6 @@
 import { Artifact } from "hardhat/types";
 
+// TODO: `zkSyncRpc` / `l1Network`: obscure and not consistent.
 export interface ZkDeployConfig {
   zkSyncRpc: string;
   l1Network: string;

@@ -1,7 +1,18 @@
 {
-  "extends": "../../config/typescript/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist"
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist"
   },
-  "exclude": ["./dist", "./node_modules"]
+  "include": [
+    "./hardhat.config.ts",
+    "./scripts",
+    "./deploy",
+    "./test",
+    "typechain/**/*"
+  ]
 }

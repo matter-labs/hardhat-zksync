@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { Wallet, types as zksyncTypes } from "zksync-web3";
+import { Wallet, ContractFactory, Contract, utils as zkUtils } from "zksync-web3";
 
 import { ZkSyncArtifact } from "./types";
 import { pluginError } from "./helpers";
@@ -56,16 +56,12 @@ export class Deployer {
    * @param artifact The previously loaded artifact object.
    * @param constructorArguments List of arguments to be passed to the contract constructor.
    *
-   * @returns A handle for the deploy transaction.
+   * @returns A contract object.
    */
   public async deploy(
     artifact: ZkSyncArtifact,
-    _constructorArguments: any[]
-  ): Promise<zksyncTypes.TransactionResponse> {
-    const contractBytecode = Uint8Array.from(
-      Buffer.from(artifact.bytecode.substr(2), "hex")
-    );
-
+    constructorArguments: any[]
+  ): Promise<Contract> {
     // Load all the dependency bytecodes.
     const dependencies: { [depHash: string]: string } = {};
     for (const dependencyHash in artifact.factoryDeps) {
@@ -74,15 +70,17 @@ export class Deployer {
       dependencies[dependencyHash] = dependencyBytecode;
     }
 
-    // TODO 0: Use contract factory.
     // TODO 1: SDK will change.
     // TODO 2: We need to pass the constructor arguments.
     // TODO 3: We need to pass the contract CREATE dependencies.
-    const sentTx = await this.zkWallet.deployContract({
-      bytecode: contractBytecode,
-      feeToken: "ETH",
-    });
 
-    return sentTx;
+    const factory = new ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+    const contract = await factory.deploy(
+      ...constructorArguments,
+      { feeToken: zkUtils.ETH_ADDRESS }
+    );
+    await contract.deployed();
+
+    return contract;
   }
 }

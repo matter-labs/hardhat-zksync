@@ -22,7 +22,11 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment) {
   const scripts = findDeployScripts(hre);
 
   for (const script of scripts) {
-    const deployFn = require(script).default;
+    delete require.cache[script];
+    let deployFn = require(script);
+    if ((deployFn as any).default) {
+      deployFn = (deployFn as any).default;
+    }
 
     await deployFn(hre);
   }
