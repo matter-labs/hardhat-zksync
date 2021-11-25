@@ -18,16 +18,34 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
   return tsFiles;
 }
 
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment) {
+export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
   const scripts = findDeployScripts(hre);
 
-  for (const script of scripts) {
-    delete require.cache[script];
-    let deployFn = require(script);
-    if ((deployFn as any).default) {
-      deployFn = (deployFn as any).default;
+  if (targetScript == "") {
+    // Target script not specified, run everything.
+    for (const script of scripts) {
+      await runScript(hre, script);
     }
-
-    await deployFn(hre);
+  } else {
+    // TODO: Not efficient.
+    let found = false;
+    for (const script of scripts) {
+      if (script.includes(targetScript)) {
+        await runScript(hre, script);
+        found = true;
+        break;
+      }
+    }
+    console.error(`Script ${targetScript} was not found, no scripts were run`);
   }
+}
+
+async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
+  delete require.cache[script];
+  let deployFn = require(script);
+  if ((deployFn as any).default) {
+    deployFn = (deployFn as any).default;
+  }
+
+  await deployFn(hre);
 }

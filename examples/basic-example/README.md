@@ -22,7 +22,3 @@ yarn
 yarn hardhat compile
 yarn hardhat deploy-zksync
 ```
-
-## Adding and changing deploy scripts
-
-TODO

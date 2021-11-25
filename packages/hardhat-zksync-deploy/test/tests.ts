@@ -39,7 +39,7 @@ describe("Plugin tests", async function () {
     });
 
     it("Should call deploy scripts", async function () {
-      await callDeployScripts(this.env);
+      await callDeployScripts(this.env, "");
     });
 
     it("Should call deploy scripts through HRE", async function () {

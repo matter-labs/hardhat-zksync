@@ -14,11 +14,9 @@ extendConfig((config) => {
   config.zkSyncDeploy = { ...defaultConfig, ...config.zkSyncDeploy };
 });
 
-task(
-  TASK_DEPLOY_ZKSYNC,
-  "Runs the deploy scripts for zkSync network",
-  async function (taskArguments, hre) {
-    // TODO: Which task arguments do we need? For example, the exact script to run?
-    await callDeployScripts(hre);
-  }
-);
+task(TASK_DEPLOY_ZKSYNC, "Runs the deploy scripts for zkSync network")
+  .addParam("script", "A certain deploy script to be launched", "")
+  .setAction(async function (taskArgs, hre) {
+    await callDeployScripts(hre, taskArgs.script);
+  })
+;
