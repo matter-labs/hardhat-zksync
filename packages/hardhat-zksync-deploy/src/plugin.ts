@@ -36,7 +36,9 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
         break;
       }
     }
-    console.error(`Script ${targetScript} was not found, no scripts were run`);
+    if (!found) {
+      console.error(`Script ${targetScript} was not found, no scripts were run`);
+    }
   }
 }
 
