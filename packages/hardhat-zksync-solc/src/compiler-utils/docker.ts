@@ -10,6 +10,7 @@ import {
   } from "@nomiclabs/hardhat-docker";
 import { ProjectPathsConfig } from "hardhat/types";
 import path from "path";
+import { ZkSolcConfig } from "../types";
 
 import { pluginError } from "../utils";
 
@@ -84,13 +85,18 @@ export async function compileWithDocker(
   filePath: string,
   docker: HardhatDocker,
   dockerImage: Image,
+  config: ZkSolcConfig,
   paths: ProjectPathsConfig
 ): Promise<ProcessResult> {
   const pathFromSources = path.relative(paths.sources, filePath);
+  const zksolcCommand = ["zksolc", pathFromSources, "--combined-json", "abi,bin,bin-runtime"];
+  if (config.settings.optimizer.enabled) {
+    zksolcCommand.push("--optimize");
+  }
 
   return handleCommonErrors(docker.runContainer(
     dockerImage,
-    ["vyper", "-f", "combined_json", pathFromSources],
+    zksolcCommand,
     {
       binds: {
         [paths.sources]: "/code",

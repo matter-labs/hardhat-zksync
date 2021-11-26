@@ -48,8 +48,8 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(filePath: string, _config: ZkSolcConfig, paths: ProjectPathsConfig): Promise<ProcessOutcome> {
-        const outcome = await compileWithDocker(filePath, this.docker, this.dockerImage, paths);
+    public async compile(filePath: string, config: ZkSolcConfig, paths: ProjectPathsConfig): Promise<ProcessOutcome> {
+        const outcome = await compileWithDocker(filePath, this.docker, this.dockerImage, config, paths);
         
         return {
             status: outcome.statusCode,
