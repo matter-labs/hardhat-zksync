@@ -1,10 +1,9 @@
-import { NomicLabsHardhatPluginError } from "hardhat/plugins";
 import { Artifacts, ProjectPathsConfig } from "hardhat/types";
-import { spawnSync } from "child_process";
 import path from "path";
 
 import { FactoryDeps, ZkSolcConfig, ZkSyncArtifact } from "./types";
-import { add0xPrefixIfNecessary } from "./utils";
+import { add0xPrefixIfNecessary, pluginError } from "./utils";
+import { BinaryCompiler, DockerCompiler, ICompiler } from "./compiler";
 
 const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 
@@ -13,21 +12,25 @@ export async function compile(
   paths: ProjectPathsConfig,
   artifacts: Artifacts
 ) {
-  checkCompilerSource(zksolcConfig);
-  checkZksolcBinary();
-
+    // TODO: Don't recompile the file if it was already compiled.
+    let compiler: ICompiler | undefined = undefined;
+    if (zksolcConfig.compilerSource == "binary") {
+      compiler = await BinaryCompiler.initialize()
+    } else if (zksolcConfig.compilerSource == "docker") {
+      compiler = await DockerCompiler.initialize(zksolcConfig);
+    } else {
+      throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+    }
+  
   const files = await getSoliditySources(paths);
 
   let someContractFailed = false;
 
   for (const file of files) {
     const pathFromCWD = path.relative(process.cwd(), file);
-
-    // TODO: Don't recompile the file if it was already compiled.
-
     console.log("Compiling", pathFromCWD);
 
-    const processResult = compileWithBinary(file, zksolcConfig);
+    const processResult = await compiler.compile(pathFromCWD, zksolcConfig, paths);
 
     if (processResult.status === 0) {
       const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
@@ -60,15 +63,6 @@ export async function compile(
   if (someContractFailed) {
     throw pluginError("Compilation failed");
   }
-}
-
-function compileWithBinary(filePath: string, config: ZkSolcConfig): any {
-  const zksolcArguments = [filePath, "--combined-json", "abi,bin,bin-runtime"];
-  if (config.settings.optimizer.enabled) {
-    zksolcArguments.push("--optimize");
-  }
-
-  return spawnSync("zksolc", zksolcArguments);
 }
 
 async function getSoliditySources(paths: ProjectPathsConfig) {
@@ -126,31 +120,4 @@ function normalizeFactoryDeps(pathFromCWD: string, factoryDeps: {
   });
 
   return normalizedDeps;
-}
-
-// Checks whether compiler source is supported.
-function checkCompilerSource(config: ZkSolcConfig) {
-  if (config.compilerSource !== "binary") {
-    throw pluginError(
-      `Only 'binary' compile source currently supported, but ${config.compilerSource} is selected`
-    );
-  }
-}
-
-// Checks whether `zksolc` is available in `$PATH`.
-function checkZksolcBinary() {
-  const inPath = spawnSync("which", ["zksolc"]).status === 0;
-  if (!inPath) {
-    throw pluginError(
-      "`zksolc` binary is either not installed or not in $PATH"
-    );
-  }
-}
-
-// Returns a built plugin exception object.
-function pluginError(message: string): NomicLabsHardhatPluginError {
-  return new NomicLabsHardhatPluginError(
-    "@matterlabs/hardhat-zksync-solc",
-    message
-  );
 }

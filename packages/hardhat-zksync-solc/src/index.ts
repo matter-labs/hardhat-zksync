@@ -16,6 +16,9 @@ extendConfig((config) => {
         enabled: false,
       },
     },
+    experimental: {
+      dockerImage: null,
+    }
   };
   config.zksolc = { ...defaultConfig, ...config.zksolc };
 });

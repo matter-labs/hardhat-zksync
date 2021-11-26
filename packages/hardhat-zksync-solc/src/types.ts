@@ -2,11 +2,14 @@ import { Artifact } from "hardhat/types";
 
 export interface ZkSolcConfig {
   version: string; // Currently ignored.
-  compilerSource: "binary"; // Later "docker" variant will also be supported.
+  compilerSource: "binary" | "docker"; // Docker support is currently in an early experimental state.
   settings: {
     optimizer: {
       enabled: boolean;
     };
+    experimental: {
+      dockerImage?: string;
+    }
   };
 }
 
