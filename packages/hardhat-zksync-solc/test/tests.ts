@@ -26,22 +26,25 @@ describe("zksolc plugin", async function () {
     });
   });
 
-  // TODO: restore once compiler supports libraries.
-  // describe("Multi-file", async function () {
-  //   useEnvironment("multi-file");
+  describe("Library inlining", async function () {
+    useEnvironment("library-inline");
 
-  //   it("Should successfully compile the multi-file contracts", async function () {
-  //     await this.env.run(TASK_COMPILE);
-  //     assert.equal(
-  //       this.env.artifacts.readArtifactSync("Foo").contractName,
-  //       "Foo"
-  //     );
-  //     assert.equal(
-  //       this.env.artifacts.readArtifactSync("Import").contractName,
-  //       "Import"
-  //     );
-  //   });
-  // });
+    it("Should successfully compile the contract with inlined library", async function () {
+      await this.env.run(TASK_COMPILE);
+      assert.equal(
+        this.env.artifacts.readArtifactSync("contracts/Foo.sol:Foo").contractName,
+        "Foo"
+      );
+      assert.equal(
+        this.env.artifacts.readArtifactSync("contracts/Import.sol:Foo").contractName,
+        "Foo"
+      );
+      assert.equal(
+        this.env.artifacts.readArtifactSync("contracts/Import.sol:Import").contractName,
+        "Import"
+      );
+    });
+  });
 
   describe("Factory", async function () {
     useEnvironment("factory");
