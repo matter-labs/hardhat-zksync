@@ -137,15 +137,14 @@ export class Deployer {
    * 
    * @returns Factory dependencies in the format expected by SDK.
    */
-  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<Uint8Array[]> {
+  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
     // Load all the dependency bytecodes.
     // We transform it into an array of bytecodes.
-    const factoryDeps: Uint8Array[] = [];
+    const factoryDeps: string[] = [];
     for (const dependencyHash in artifact.factoryDeps) {
       const dependencyContract = artifact.factoryDeps[dependencyHash];
       const dependencyBytecodeString = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
-      const dependencyBytecode = ethers.utils.arrayify(dependencyBytecodeString);
-      factoryDeps.push(dependencyBytecode);
+      factoryDeps.push(dependencyBytecodeString);
     }
 
     return factoryDeps;

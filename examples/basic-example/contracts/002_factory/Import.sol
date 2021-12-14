@@ -6,7 +6,7 @@ pragma abicoder v2;
 // import Foo.sol from current directory
 import "./Foo.sol";
 
-contract Factory {
+contract Import {
     // Initialize Foo.sol
     Foo public foo = new Foo();
 

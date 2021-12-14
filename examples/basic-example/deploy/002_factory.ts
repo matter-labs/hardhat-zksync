@@ -19,7 +19,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const deployer = new Deployer(hre, ethWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositAmount = ethers.utils.parseEther("0.001");
+    const depositAmount = ethers.utils.parseEther("0.01");
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
@@ -28,18 +28,18 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     await depositHandle.wait();
 
     // Load the artifact we want to deploy.
-    const artifact = await deployer.loadArtifact("002_factory/Factory");
+    const artifact = await deployer.loadArtifact("Import");
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // This contract has no constructor arguments.
-    const greeterContract = await deployer.deploy(artifact, []);
+    const factoryContract = await deployer.deploy(artifact, []);
 
     // Show the contract info.
-    const contractAddress = greeterContract.address;
+    const contractAddress = factoryContract.address;
     console.log(`${artifact.contractName} was deployed to ${contractAddress}!`);
 
     // Call the deployed contract.
-    const greetingFromContract = await greeterContract.getFooName();
+    const greetingFromContract = await factoryContract.getFooName();
     if (greetingFromContract == "Foo") {
         console.log(`Factory contract deployed!`);
     } else {
