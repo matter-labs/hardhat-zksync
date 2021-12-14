@@ -63,39 +63,91 @@ export class Deployer {
   }
 
   /**
+   * Estimates the price of calling a deploy transaction in a certain fee token.
+   *
+   * @param artifact The previously loaded artifact object.
+   * @param constructorArguments List of arguments to be passed to the contract constructor.
+   * @param feeToken Address of the token to pay fees in. If not provided, defaults to ETH.
+   *
+   * @returns Calculated fee in wei of the corresponding fee token.
+   */
+  public async estimateDeployFee(
+    artifact: ZkSyncArtifact,
+    constructorArguments: any[],
+    feeToken?: string,
+  ): Promise<ethers.BigNumber> {
+    const factoryDeps = await this.extractFactoryDeps(artifact);
+    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+
+    // Encode deploy transaction so it can be estimated.
+    const deployTx = await factory.getDeployTransaction(
+      ...constructorArguments,
+      {
+        customData: {
+          factoryDeps,
+          feeToken: feeToken ?? zk.utils.ETH_ADDRESS
+        }
+      }
+    );
+
+    const gas = await this.zkWallet.provider.estimateGas(deployTx);
+    const gasPrice = await this.zkWallet.provider.estimateGasPrice(deployTx);
+
+    return gas.mul(gasPrice);
+  }
+
+  /**
    * Sends a deploy transaction to the zkSync network.
    * For now, it will use defaults for the transaction parameters:
-   * - fee token is ETH.
    * - fee amount is requested automatically from the zkSync server.
    *
    * @param artifact The previously loaded artifact object.
    * @param constructorArguments List of arguments to be passed to the contract constructor.
+   * @param feeToken Address of the token to pay fees in. If not provided, defaults to ETH.
    *
    * @returns A contract object.
    */
   public async deploy(
     artifact: ZkSyncArtifact,
-    constructorArguments: any[]
+    constructorArguments: any[],
+    feeToken?: string,
   ): Promise<zk.Contract> {
-    // Load all the dependency bytecodes.
-    const dependencies: { [depHash: string]: string } = {};
-    for (const dependencyHash in artifact.factoryDeps) {
-      const dependencyContract = artifact.factoryDeps[dependencyHash];
-      const dependencyBytecode = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
-      dependencies[dependencyHash] = dependencyBytecode;
-    }
-
-    // TODO 1: SDK will change.
-    // TODO 2: We need to pass the constructor arguments.
-    // TODO 3: We need to pass the contract CREATE dependencies.
-
+    const factoryDeps = await this.extractFactoryDeps(artifact);
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+
+    // Encode and send the deploy transaction providing both fee token and factory dependencies.
     const contract = await factory.deploy(
       ...constructorArguments,
-      { feeToken: zk.utils.ETH_ADDRESS }
+      {
+        customData: {
+          factoryDeps,
+          feeToken: feeToken ?? zk.utils.ETH_ADDRESS
+        }
+      }
     );
     await contract.deployed();
 
     return contract;
+  }
+
+  /**
+   * Extracts factory dependencies from the artifact.
+   * 
+   * @param artifact Artifact to extract dependencies from
+   * 
+   * @returns Factory dependencies in the format expected by SDK.
+   */
+  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<Uint8Array[]> {
+    // Load all the dependency bytecodes.
+    // We transform it into an array of bytecodes.
+    const factoryDeps: Uint8Array[] = [];
+    for (const dependencyHash in artifact.factoryDeps) {
+      const dependencyContract = artifact.factoryDeps[dependencyHash];
+      const dependencyBytecodeString = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
+      const dependencyBytecode = ethers.utils.arrayify(dependencyBytecodeString);
+      factoryDeps.push(dependencyBytecode);
+    }
+
+    return factoryDeps;
   }
 }
