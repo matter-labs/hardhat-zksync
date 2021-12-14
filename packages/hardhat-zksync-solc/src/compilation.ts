@@ -12,16 +12,16 @@ export async function compile(
   paths: ProjectPathsConfig,
   artifacts: Artifacts
 ) {
-    // TODO: Don't recompile the file if it was already compiled.
-    let compiler: ICompiler | undefined = undefined;
-    if (zksolcConfig.compilerSource == "binary") {
-      compiler = await BinaryCompiler.initialize()
-    } else if (zksolcConfig.compilerSource == "docker") {
-      compiler = await DockerCompiler.initialize(zksolcConfig);
-    } else {
-      throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
-    }
-  
+  // TODO: Don't recompile the file if it was already compiled.
+  let compiler: ICompiler | undefined = undefined;
+  if (zksolcConfig.compilerSource == "binary") {
+    compiler = await BinaryCompiler.initialize()
+  } else if (zksolcConfig.compilerSource == "docker") {
+    compiler = await DockerCompiler.initialize(zksolcConfig);
+  } else {
+    throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+  }
+
   const files = await getSoliditySources(paths);
 
   let someContractFailed = false;
@@ -84,9 +84,10 @@ function getArtifactFromZksolcOutput(
 ): ZkSyncArtifact {
   console.log(`Contract name: ${contractName}`);
 
-  // TODO: We need to add information about contract CREATE dependencies.
+  // `factory-deps` field may be absent for certain compiled contracts.
+  const factoryDeps = output["factory-deps"] ? normalizeFactoryDeps(pathFromCWD, output["factory-deps"]) : {};
   return {
-    _format: ARTIFACT_FORMAT_VERSION, // TODO: Check whether we need it.
+    _format: ARTIFACT_FORMAT_VERSION,
     contractName,
     sourceName: pathFromCWD,
     abi: output.abi,
@@ -96,7 +97,7 @@ function getArtifactFromZksolcOutput(
     deployedLinkReferences: {},
 
     // zkSync-specific fields.
-    factoryDeps: normalizeFactoryDeps(pathFromCWD, output["factory-deps"]),
+    factoryDeps,
   };
 }
 
