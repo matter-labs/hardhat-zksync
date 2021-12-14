@@ -15,11 +15,11 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const deployer = new Deployer(hre, ethWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    // const depositAmount = ethers.utils.parseEther("0.001"); // TODO: Why parseEther doesn't work?
+    const depositAmount = ethers.utils.parseEther("0.001");
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
-        amount: "1000000000000000000", // TODO: Why parseEther doesn't work?
+        amount: depositAmount.toString(), // TODO: Why parseEther doesn't work?
     });
     await depositHandle.wait();
 
