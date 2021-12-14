@@ -3,9 +3,13 @@ import * as ethers from "ethers";
 import * as zk from "zksync-web3";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 
-// An example of a deploy script which will deploy and call a simple contract.
+// An example of a deploy script which will deploy and call a factory-like contract (meaning that the main contract
+// may deploy other contracts).
+//
+// In terms of presentation it's mostly copied from `001_deploy.ts`, so this example acts more like an integration test
+// for plugins/server capabilities.
 export default async function (hre: HardhatRuntimeEnvironment) {
-    console.log(`Running deploy script for the Greeter contract`);
+    console.log(`Running deploy script for the Factory contract`);
 
     // Initialize an Ethereum wallet.
     const testMnemonic = "stuff slice staff easily soup parent arm payment cotton trade scatter struggle";
@@ -24,21 +28,20 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     await depositHandle.wait();
 
     // Load the artifact we want to deploy.
-    const artifact = await deployer.loadArtifact("001_deploy/Greeter");
+    const artifact = await deployer.loadArtifact("002_factory/Factory");
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
-    // `greeting` is an argument for contract constructor.
-    const greeting = "Hi there!";
-    const greeterContract = await deployer.deploy(artifact, [greeting]);
+    // This contract has no constructor arguments.
+    const greeterContract = await deployer.deploy(artifact, []);
 
     // Show the contract info.
     const contractAddress = greeterContract.address;
     console.log(`${artifact.contractName} was deployed to ${contractAddress}!`);
 
     // Call the deployed contract.
-    const greetingFromContract = await greeterContract.greet();
-    if (greetingFromContract == greeting) {
-        console.log(`Contract greets us!`);
+    const greetingFromContract = await greeterContract.getFooName();
+    if (greetingFromContract == "Foo") {
+        console.log(`Factory contract deployed!`);
     } else {
         console.error(`Contract said something unexpected: ${greetingFromContract}`);
     }
