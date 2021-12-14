@@ -4,7 +4,7 @@ import * as zk from "zksync-web3";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 
 // An example of a deploy script which will deploy and call a simple contract.
-export default async function(hre: HardhatRuntimeEnvironment) {
+export default async function (hre: HardhatRuntimeEnvironment) {
     console.log(`Running deploy script for the Greeter contract`);
 
     // Initialize an Ethereum wallet.
