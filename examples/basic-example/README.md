@@ -17,8 +17,23 @@ For `zkSyncNetwork`, you should use the URL of the zkSync network RPC.
 
 ## Usage
 
+Before using plugins, you need to build them first
+
 ```sh
+# Run the following in the *root* of the repo.
+yarn
+yarn build
+```
+
+After that you should be able to run plugins:
+
+```sh
+# Run the following in `examples/basic-example` folder.
 yarn
 yarn hardhat compile
 yarn hardhat deploy-zksync
 ```
+
+- `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
+- `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
+    - To run a specific script, add the `--script` argument, e.g. `--script 001_deploy.ts`.
