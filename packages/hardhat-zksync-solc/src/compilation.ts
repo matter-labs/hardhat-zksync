@@ -22,7 +22,7 @@ export async function compile(
     throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
   }
 
-  const files = await getSoliditySources(paths);
+  const files = await getSoliditySources(paths.sources);
 
   let someContractFailed = false;
 
@@ -65,9 +65,9 @@ export async function compile(
   }
 }
 
-async function getSoliditySources(paths: ProjectPathsConfig) {
+export async function getSoliditySources(p: string) {
   const glob = await import("glob");
-  const solFiles = glob.sync(path.join(paths.sources, "**", "*.sol"));
+  const solFiles = glob.sync(path.join(p, "**", "*.sol"));
 
   return solFiles;
 }
