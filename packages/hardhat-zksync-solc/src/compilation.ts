@@ -72,6 +72,13 @@ export async function getSoliditySources(p: string) {
   return solFiles;
 }
 
+export async function getSoliditySourcesNonRecursive(p: string) {
+  const glob = await import("glob");
+  const solFiles = glob.sync(path.join(p, "*.sol"));
+
+  return solFiles;
+}
+
 function artifactIdToContractName(file: string) {
   const sourceName = path.basename(file);
   return sourceName.substring(sourceName.indexOf(":") + 1);
