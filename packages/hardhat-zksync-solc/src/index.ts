@@ -63,40 +63,6 @@ function getSubunits(files: string[], base: string) {
   return results
 }
 
-subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
-  const { compile, getSoliditySources } = await import("./compilation");
-
-  // save file to temporary dir, or cleanup after the last time
-  const fs = await import('fs');
-  const path = await import('path');
-  const dir = path.join(config.paths.sources, "tmp");
-  if (fs.existsSync(dir)){
-    rimraf.sync(dir);
-  }
-
-  const files = await getSoliditySources(config.paths.sources);
-  const [flattened, warnings] = await dedup(files, run);
-  for (const warning of warnings) {
-    console.warn(warning);
-  }
-
-  fs.mkdirSync(dir);
-
-  const fileName = path.join(dir, "Flattened.sol");
-  if (fs.existsSync(fileName)){
-    fs.unlinkSync(fileName);
-  }
-
-  await fs.promises.writeFile(fileName, flattened, "utf8");
-
-  // update path
-  config.paths.sources = dir;
-
-  // This plugin is experimental, so this task isn't split into multiple
-  // subtasks yet.
-  await compile(config.zksolc, config.paths, artifacts);
-});
-
 // subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
 //   const { compile, getSoliditySources } = await import("./compilation");
 
@@ -109,27 +75,19 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
 //   }
 
 //   const files = await getSoliditySources(config.paths.sources);
-//   const subunits = getSubunits(files, config.paths.sources);
+//   const [flattened, warnings] = await dedup(files, run);
+//   for (const warning of warnings) {
+//     console.warn(warning);
+//   }
 
 //   fs.mkdirSync(dir);
 
-//   for (const [subunit, _] of subunits) {
-//     const subunitPath = path.join(config.paths.sources, subunit);
-//     const subunitFiles = await getSoliditySources(subunitPath);
-//     const [flattened, warnings] = await dedup(subunitFiles, run);
-//     for (const warning of warnings) {
-//       console.warn(warning);
-//     }
-
-//     const subunitDir = path.join(dir, subunit);
-//     fs.mkdirSync(subunitDir);
-//     const fileName = path.join(subunitDir, "Flattened.sol");
-//     if (fs.existsSync(fileName)){
-//       fs.unlinkSync(fileName);
-//     }
-
-//     await fs.promises.writeFile(fileName, flattened, "utf8");
+//   const fileName = path.join(dir, "Flattened.sol");
+//   if (fs.existsSync(fileName)){
+//     fs.unlinkSync(fileName);
 //   }
+
+//   await fs.promises.writeFile(fileName, flattened, "utf8");
 
 //   // update path
 //   config.paths.sources = dir;
@@ -138,6 +96,56 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
 //   // subtasks yet.
 //   await compile(config.zksolc, config.paths, artifacts);
 // });
+
+subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
+  const { compile, getSoliditySources, getSoliditySourcesNonRecursive } = await import("./compilation");
+
+  // save file to temporary dir, or cleanup after the last time
+  const fs = await import('fs');
+  const path = await import('path');
+  const dir = path.join(config.paths.sources, "tmp");
+  if (fs.existsSync(dir)){
+    rimraf.sync(dir);
+  }
+
+  const files = await getSoliditySources(config.paths.sources);
+  console.log(files);
+  const subunits = getSubunits(files, config.paths.sources);
+  console.log(subunits);
+
+  fs.mkdirSync(dir);
+
+  for (const [subunit, _] of subunits) {
+    const subunitPath = path.join(config.paths.sources, subunit);
+    let subunitFiles = await getSoliditySources(subunitPath);
+    if (subunit === "") {
+      // do not walk over subfolders
+      subunitFiles = await getSoliditySourcesNonRecursive(subunitPath);
+    }
+    const [flattened, warnings] = await dedup(subunitFiles, run);
+    for (const warning of warnings) {
+      console.warn(warning);
+    }
+
+    const subunitDir = path.join(dir, subunit);
+    if (!fs.existsSync(subunitDir)){
+      fs.mkdirSync(subunitDir);
+    }
+    const fileName = path.join(subunitDir, "Flattened.sol");
+    if (fs.existsSync(fileName)){
+      fs.unlinkSync(fileName);
+    }
+
+    await fs.promises.writeFile(fileName, flattened, "utf8");
+  }
+
+  // update path
+  config.paths.sources = dir;
+
+  // This plugin is experimental, so this task isn't split into multiple
+  // subtasks yet.
+  await compile(config.zksolc, config.paths, artifacts);
+});
 
 async function dedup(files: string[], run: RunTaskFunction): Promise<[string, string[]]> {
     const dependencyGraph: DependencyGraph = await run(
