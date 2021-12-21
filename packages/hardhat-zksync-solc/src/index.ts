@@ -1,6 +1,6 @@
-import { fstat } from "fs";
 const rimraf = require("rimraf");
 import path from "path";
+import fs from "fs"
 import {
   TASK_COMPILE_GET_COMPILATION_TASKS,
   TASK_COMPILE_SOLIDITY,
@@ -63,12 +63,22 @@ function getSubunits(files: string[], base: string) {
   return results
 }
 
+function makeDirComplex(base: string, subdirPath: string) {
+  const pp = subdirPath.split(path.sep);
+  let current = base;
+  for (const p of pp) {
+    const ppp = path.join(current, p);
+    if (!fs.existsSync(ppp)){
+      fs.mkdirSync(ppp);
+    }
+    current = ppp;
+  }
+}
+
 // subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
 //   const { compile, getSoliditySources } = await import("./compilation");
 
 //   // save file to temporary dir, or cleanup after the last time
-//   const fs = await import('fs');
-//   const path = await import('path');
 //   const dir = path.join(config.paths.sources, "tmp");
 //   if (fs.existsSync(dir)){
 //     rimraf.sync(dir);
@@ -101,8 +111,6 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
   const { compile, getSoliditySources, getSoliditySourcesNonRecursive } = await import("./compilation");
 
   // save file to temporary dir, or cleanup after the last time
-  const fs = await import('fs');
-  const path = await import('path');
   const dir = path.join(config.paths.sources, "tmp");
   if (fs.existsSync(dir)){
     rimraf.sync(dir);
@@ -128,9 +136,7 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
     }
 
     const subunitDir = path.join(dir, subunit);
-    if (!fs.existsSync(subunitDir)){
-      fs.mkdirSync(subunitDir);
-    }
+    makeDirComplex(dir, subunit);
     const fileName = path.join(subunitDir, "Flattened.sol");
     if (fs.existsSync(fileName)){
       fs.unlinkSync(fileName);
