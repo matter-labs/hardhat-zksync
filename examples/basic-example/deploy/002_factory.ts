@@ -13,10 +13,10 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Initialize an Ethereum wallet.
     const testMnemonic = "stuff slice staff easily soup parent arm payment cotton trade scatter struggle";
-    const ethWallet = ethers.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
+    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
 
     // Create deployer object and load desired artifact.
-    const deployer = new Deployer(hre, ethWallet);
+    const deployer = new Deployer(hre, zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
     const depositAmount = ethers.utils.parseEther("0.01");

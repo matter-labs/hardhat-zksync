@@ -27,7 +27,7 @@ export class Deployer {
     const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
 
     this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);  
-    this.ethWallet = zkWallet.ethWallet();
+    this.ethWallet = this.zkWallet.ethWallet();
   }
 
   static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
