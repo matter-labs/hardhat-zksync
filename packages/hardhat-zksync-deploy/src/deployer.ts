@@ -112,7 +112,6 @@ export class Deployer {
     artifact: ZkSyncArtifact,
     constructorArguments: any[],
     feeToken?: string,
-    fee?: ethers.BigNumber
   ): Promise<zk.Contract> {
     const factoryDeps = await this.extractFactoryDeps(artifact);
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
@@ -124,8 +123,7 @@ export class Deployer {
         customData: {
           factoryDeps,
           feeToken: feeToken ?? zk.utils.ETH_ADDRESS
-        },
-        gasLimit: fee
+        }
       }
     );
     await contract.deployed();
