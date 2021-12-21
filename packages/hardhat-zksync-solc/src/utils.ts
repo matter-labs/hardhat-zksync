@@ -28,7 +28,7 @@ export function getFileWithoutImports(fileContent: string) {
 
 export function getLicense(resolvedFile: ResolvedFile) {
   const LicenseRegex =
-    /\s*\/\/(\s+)SPDX-License-Identifier:(\s+)([a-zA-Z0-9._-]+)/gm;
+    /\s*\/\/(\s*)SPDX-License-Identifier:(\s+)([a-zA-Z0-9._-]+)/gm;
   const match = resolvedFile.content.rawContent.match(LicenseRegex);
   return match ? match[0] : "";
 }
