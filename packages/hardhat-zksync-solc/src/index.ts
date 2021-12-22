@@ -117,9 +117,7 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run}, __) => {
   }
 
   const files = await getSoliditySources(config.paths.sources);
-  console.log(files);
   const subunits = getSubunits(files, config.paths.sources);
-  console.log(subunits);
 
   fs.mkdirSync(dir);
 
