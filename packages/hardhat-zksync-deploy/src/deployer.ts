@@ -16,7 +16,7 @@ export class Deployer {
   public ethWallet: ethers.Wallet;
   public zkWallet: zk.Wallet;
 
-  constructor(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
+  constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet) {
     this.hre = hre;
 
     // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2). We will need both.
@@ -26,11 +26,12 @@ export class Deployer {
       : new ethers.providers.JsonRpcProvider(ethNetwork);
     const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
 
-    // Create a zkSync wallet using the Ethereum wallet created above.
-    const zkWallet = new zk.Wallet(ethWallet.privateKey, zkWeb3Provider, ethWeb3Provider);
+    this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);  
+    this.ethWallet = this.zkWallet.ethWallet();
+  }
 
-    this.ethWallet = ethWallet;
-    this.zkWallet = zkWallet;
+  static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
+    return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
   }
 
   /**
