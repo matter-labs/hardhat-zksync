@@ -92,7 +92,7 @@ export class Deployer {
     );
 
     const gas = await this.zkWallet.provider.estimateGas(deployTx);
-    const gasPrice = await this.zkWallet.provider.estimateGasPrice(deployTx);
+    const gasPrice = await this.zkWallet.provider.getGasPrice();
 
     return gas.mul(gasPrice);
   }
