@@ -24,13 +24,20 @@ export class Deployer {
     const ethWeb3Provider = SUPPORTED_L1_TESTNETS.includes(ethNetwork)
       ? ethers.getDefaultProvider(ethNetwork)
       : new ethers.providers.JsonRpcProvider(ethNetwork);
-    const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+    const zkWeb3Provider = new zk.Provider(
+      hre.config.zkSyncDeploy.zkSyncNetwork
+    );
 
-    this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);  
+    this.zkWallet = zkWallet
+      .connect(zkWeb3Provider)
+      .connectToL1(ethWeb3Provider);
     this.ethWallet = this.zkWallet.ethWallet();
   }
 
-  static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
+  static fromEthWallet(
+    hre: HardhatRuntimeEnvironment,
+    ethWallet: ethers.Wallet
+  ) {
     return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
   }
 
@@ -75,10 +82,14 @@ export class Deployer {
   public async estimateDeployFee(
     artifact: ZkSyncArtifact,
     constructorArguments: any[],
-    feeToken?: string,
+    feeToken?: string
   ): Promise<ethers.BigNumber> {
     const factoryDeps = await this.extractFactoryDeps(artifact);
-    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+    const factory = new zk.ContractFactory(
+      artifact.abi,
+      artifact.bytecode,
+      this.zkWallet
+    );
 
     // Encode deploy transaction so it can be estimated.
     const deployTx = await factory.getDeployTransaction(
@@ -86,8 +97,8 @@ export class Deployer {
       {
         customData: {
           factoryDeps,
-          feeToken: feeToken ?? zk.utils.ETH_ADDRESS
-        }
+          feeToken: feeToken ?? zk.utils.ETH_ADDRESS,
+        },
       }
     );
 
@@ -111,21 +122,22 @@ export class Deployer {
   public async deploy(
     artifact: ZkSyncArtifact,
     constructorArguments: any[],
-    feeToken?: string,
+    feeToken?: string
   ): Promise<zk.Contract> {
     const factoryDeps = await this.extractFactoryDeps(artifact);
-    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+    const factory = new zk.ContractFactory(
+      artifact.abi,
+      artifact.bytecode,
+      this.zkWallet
+    );
 
     // Encode and send the deploy transaction providing both fee token and factory dependencies.
-    const contract = await factory.deploy(
-      ...constructorArguments,
-      {
-        customData: {
-          factoryDeps,
-          feeToken: feeToken ?? zk.utils.ETH_ADDRESS
-        }
-      }
-    );
+    const contract = await factory.deploy(...constructorArguments, {
+      customData: {
+        factoryDeps,
+        feeToken: feeToken ?? zk.utils.ETH_ADDRESS,
+      },
+    });
     await contract.deployed();
 
     return contract;
@@ -133,9 +145,9 @@ export class Deployer {
 
   /**
    * Extracts factory dependencies from the artifact.
-   * 
+   *
    * @param artifact Artifact to extract dependencies from
-   * 
+   *
    * @returns Factory dependencies in the format expected by SDK.
    */
   async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
@@ -144,7 +156,9 @@ export class Deployer {
     const factoryDeps: string[] = [];
     for (const dependencyHash in artifact.factoryDeps) {
       const dependencyContract = artifact.factoryDeps[dependencyHash];
-      const dependencyBytecodeString = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
+      const dependencyBytecodeString = (
+        await this.hre.artifacts.readArtifact(dependencyContract)
+      ).bytecode;
       factoryDeps.push(dependencyBytecodeString);
     }
 

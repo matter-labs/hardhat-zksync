@@ -18,5 +18,4 @@ task(TASK_DEPLOY_ZKSYNC, "Runs the deploy scripts for zkSync network")
   .addParam("script", "A certain deploy script to be launched", "")
   .setAction(async function (taskArgs, hre) {
     await callDeployScripts(hre, taskArgs.script);
-  })
-;
+  });

@@ -1,5 +1,5 @@
 import { NomicLabsHardhatPluginError } from "hardhat/plugins";
-import { ResolvedFile, ResolvedFilesMap } from "hardhat/internal/solidity/resolver";
+import { ResolvedFile } from "hardhat/internal/solidity/resolver";
 
 export function add0xPrefixIfNecessary(hex: string): string {
   hex = hex.toLowerCase();
@@ -12,7 +12,10 @@ export function add0xPrefixIfNecessary(hex: string): string {
 }
 
 // Returns a built plugin exception object.
-export function pluginError(message: string, parent?: any): NomicLabsHardhatPluginError {
+export function pluginError(
+  message: string,
+  parent?: any
+): NomicLabsHardhatPluginError {
   return new NomicLabsHardhatPluginError(
     "@matterlabs/hardhat-zksync-solc",
     message,
@@ -46,7 +49,10 @@ export function combineLicenses(licenses: Map<string, string>) {
   }
 }
 
-export function combinePragmas(pragmas: Map<string, string>, warnings : string[]) {
+export function combinePragmas(
+  pragmas: Map<string, string>,
+  warnings: string[]
+) {
   const uniquePragmas = [...new Set(Array.from(pragmas.values()))];
 
   for (const value of pragmas.values()) {

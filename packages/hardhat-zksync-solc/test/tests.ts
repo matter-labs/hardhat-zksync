@@ -32,15 +32,18 @@ describe("zksolc plugin", async function () {
     it("Should successfully compile the contract with inlined library", async function () {
       await this.env.run(TASK_COMPILE);
       assert.equal(
-        this.env.artifacts.readArtifactSync("contracts/Foo.sol:Foo").contractName,
+        this.env.artifacts.readArtifactSync("contracts/Foo.sol:Foo")
+          .contractName,
         "Foo"
       );
       assert.equal(
-        this.env.artifacts.readArtifactSync("contracts/Import.sol:Foo").contractName,
+        this.env.artifacts.readArtifactSync("contracts/Import.sol:Foo")
+          .contractName,
         "Foo"
       );
       assert.equal(
-        this.env.artifacts.readArtifactSync("contracts/Import.sol:Import").contractName,
+        this.env.artifacts.readArtifactSync("contracts/Import.sol:Import")
+          .contractName,
         "Import"
       );
     });
@@ -73,7 +76,7 @@ describe("zksolc plugin", async function () {
         depHash.startsWith("0x") && depHash.length === expectedLength,
         "Contract hash is malformed"
       );
-      
+
       const depName = "contracts/Factory.sol:Dep";
       assert.equal(
         depName,
@@ -137,10 +140,23 @@ describe("zksolc plugin", async function () {
       }
 
       // Each factory dependency should be accessible through `readArtifact` without changing it's identifier.
-      const fooDepArtifactFromFactoryDeps = this.env.artifacts.readArtifactSync(fooDepName);
-      assert.equal(fooDepArtifactFromFactoryDeps.contractName, fooDepArtifact.contractName, "Artifacts do not match");
-      assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, "Artifacts do not match");
-      assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, "Artifacts do not match");
+      const fooDepArtifactFromFactoryDeps =
+        this.env.artifacts.readArtifactSync(fooDepName);
+      assert.equal(
+        fooDepArtifactFromFactoryDeps.contractName,
+        fooDepArtifact.contractName,
+        "Artifacts do not match"
+      );
+      assert.equal(
+        fooDepArtifactFromFactoryDeps.bytecode,
+        fooDepArtifact.bytecode,
+        "Artifacts do not match"
+      );
+      assert.deepEqual(
+        fooDepArtifactFromFactoryDeps.abi,
+        fooDepArtifact.abi,
+        "Artifacts do not match"
+      );
     });
   });
 });

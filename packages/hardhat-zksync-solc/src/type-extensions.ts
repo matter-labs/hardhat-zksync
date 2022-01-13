@@ -10,4 +10,12 @@ declare module "hardhat/types/config" {
   interface HardhatConfig {
     zksolc: ZkSolcConfig;
   }
+
+  interface ProjectPathsUserConfig {
+    flattened?: string;
+  }
+
+  interface ProjectPathsConfig {
+    flattened: string;
+  }
 }

@@ -9,7 +9,7 @@ export interface ZkSolcConfig {
     };
     experimental: {
       dockerImage?: string;
-    }
+    };
   };
 }
 

@@ -1,13 +1,13 @@
 import {
-    DockerBadGatewayError,
-    DockerHubConnectionError,
-    DockerNotRunningError,
-    DockerServerError,
-    HardhatDocker,
-    Image,
-    ImageDoesntExistError,
-    ProcessResult,
-  } from "@nomiclabs/hardhat-docker";
+  DockerBadGatewayError,
+  DockerHubConnectionError,
+  DockerNotRunningError,
+  DockerServerError,
+  HardhatDocker,
+  Image,
+  ImageDoesntExistError,
+  ProcessResult,
+} from "@nomiclabs/hardhat-docker";
 import { ProjectPathsConfig } from "hardhat/types";
 import path from "path";
 import { ZkSolcConfig } from "../types";
@@ -24,8 +24,8 @@ export function dockerImage(imageName?: string): Image {
 
   return {
     repository: imageName,
-    tag: "latest"
-  }
+    tag: "latest",
+  };
 }
 
 export async function validateDockerIsInstalled() {
@@ -37,9 +37,8 @@ Please install it by following the instructions on https://www.docker.com/get-st
   }
 }
 
-
 export async function createDocker(): Promise<HardhatDocker> {
-  return await handleCommonErrors(HardhatDocker.create());
+  return handleCommonErrors(HardhatDocker.create());
 }
 
 export async function pullImageIfNecessary(
@@ -49,10 +48,7 @@ export async function pullImageIfNecessary(
   await handleCommonErrors(pullImageIfNecessaryInner(docker, image));
 }
 
-async function pullImageIfNecessaryInner(
-  docker: HardhatDocker,
-  image: Image,
-) {
+async function pullImageIfNecessaryInner(docker: HardhatDocker, image: Image) {
   if (!(await docker.hasPulledImage(image))) {
     console.log(
       `Pulling Docker image ${HardhatDocker.imageToRepoTag(image)}...`
@@ -66,10 +62,7 @@ async function pullImageIfNecessaryInner(
   }
 }
 
-async function checkForImageUpdates(
-  docker: HardhatDocker,
-  image: Image
-) {
+async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
   if (!(await docker.isImageUpToDate(image))) {
     console.log(
       `Updating Docker image ${HardhatDocker.imageToRepoTag(image)}...`
@@ -84,26 +77,29 @@ async function checkForImageUpdates(
 export async function compileWithDocker(
   filePath: string,
   docker: HardhatDocker,
-  dockerImage: Image,
+  dockerImageName: Image,
   config: ZkSolcConfig,
   paths: ProjectPathsConfig
 ): Promise<ProcessResult> {
-  const pathFromSources = path.relative(paths.sources, filePath);
-  const zksolcCommand = ["zksolc", pathFromSources, "--combined-json", "abi,bin,bin-runtime"];
+  const pathFromSources = path.relative(paths.flattened, filePath);
+  const zksolcCommand = [
+    "zksolc",
+    pathFromSources,
+    "--combined-json",
+    "abi,bin,bin-runtime",
+  ];
   if (config.settings.optimizer.enabled) {
     zksolcCommand.push("--optimize");
   }
 
-  return handleCommonErrors(docker.runContainer(
-    dockerImage,
-    zksolcCommand,
-    {
+  return handleCommonErrors(
+    docker.runContainer(dockerImageName, zksolcCommand, {
       binds: {
         [paths.sources]: "/code",
       },
       workingDirectory: "/code",
-    }
-  ));
+    })
+  );
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
@@ -129,10 +125,7 @@ Please check your internet connection.`,
     }
 
     if (error instanceof DockerServerError) {
-      throw pluginError(
-        "Docker error",
-        error
-      );
+      throw pluginError("Docker error", error);
     }
 
     if (error instanceof ImageDoesntExistError) {

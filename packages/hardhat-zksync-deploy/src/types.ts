@@ -12,7 +12,7 @@ export interface ZkDeployConfig {
   zkSyncNetwork: string;
   /**
    * Identifier of the Ethereum network.
-   * Can be set either to the RPC address of network (e.g. `http://127.0.0.1:3030`) 
+   * Can be set either to the RPC address of network (e.g. `http://127.0.0.1:3030`)
    * or the network ID (e.g. `mainnet` or `rinkeby`).
    */
   ethNetwork: string;

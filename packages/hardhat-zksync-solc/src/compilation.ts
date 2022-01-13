@@ -1,6 +1,7 @@
 import { Artifacts, ProjectPathsConfig } from "hardhat/types";
 import path from "path";
 
+import { ResolvedFile } from "hardhat/internal/solidity/resolver";
 import { FactoryDeps, ZkSolcConfig, ZkSyncArtifact } from "./types";
 import { add0xPrefixIfNecessary, pluginError } from "./utils";
 import { BinaryCompiler, DockerCompiler, ICompiler } from "./compiler";
@@ -10,27 +11,28 @@ const ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 export async function compile(
   zksolcConfig: ZkSolcConfig,
   paths: ProjectPathsConfig,
+  files: ResolvedFile[],
   artifacts: Artifacts
 ) {
-  // TODO: Don't recompile the file if it was already compiled.
-  let compiler: ICompiler | undefined = undefined;
-  if (zksolcConfig.compilerSource == "binary") {
-    compiler = await BinaryCompiler.initialize()
-  } else if (zksolcConfig.compilerSource == "docker") {
+  let compiler: ICompiler | undefined;
+  if (zksolcConfig.compilerSource === "binary") {
+    compiler = await BinaryCompiler.initialize();
+  } else if (zksolcConfig.compilerSource === "docker") {
     compiler = await DockerCompiler.initialize(zksolcConfig);
   } else {
-    throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+    throw pluginError(
+      `Incorrect compiler source: ${zksolcConfig.compilerSource}`
+    );
   }
 
-  const files = await getSoliditySources(paths.sources);
-
-  let someContractFailed = false;
+  const failures = [];
 
   for (const file of files) {
-    const pathFromCWD = path.relative(process.cwd(), file);
-    console.log("Compiling", pathFromCWD);
-
-    const processResult = await compiler.compile(pathFromCWD, zksolcConfig, paths);
+    const processResult = await compiler.compile(
+      file.sourceName,
+      zksolcConfig,
+      paths
+    );
 
     if (processResult.status === 0) {
       const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
@@ -43,7 +45,7 @@ export async function compile(
 
           const contractName = artifactIdToContractName(artifactId);
           const artifact = getArtifactFromZksolcOutput(
-            pathFromCWD,
+            file.sourceName,
             contractName,
             zksolcOutput
           );
@@ -56,27 +58,13 @@ export async function compile(
       console.error(processResult.stdout.toString("utf8").trim(), "\n");
       console.error("stderr:");
       console.error(processResult.stderr.toString("utf8").trim(), "\n");
-      someContractFailed = true;
+      failures.push(file.sourceName);
     }
   }
 
-  if (someContractFailed) {
-    throw pluginError("Compilation failed");
+  if (failures.length > 0) {
+    throw pluginError(`Compilation failed ${failures}`);
   }
-}
-
-export async function getSoliditySources(p: string) {
-  const glob = await import("glob");
-  const solFiles = glob.sync(path.join(p, "**", "*.sol"));
-
-  return solFiles;
-}
-
-export async function getSoliditySourcesNonRecursive(p: string) {
-  const glob = await import("glob");
-  const solFiles = glob.sync(path.join(p, "*.sol"));
-
-  return solFiles;
 }
 
 function artifactIdToContractName(file: string) {
@@ -92,7 +80,9 @@ function getArtifactFromZksolcOutput(
   console.log(`Contract name: ${contractName}`);
 
   // `factory-deps` field may be absent for certain compiled contracts.
-  const factoryDeps = output["factory-deps"] ? normalizeFactoryDeps(pathFromCWD, output["factory-deps"]) : {};
+  const factoryDeps = output["factory-deps"]
+    ? normalizeFactoryDeps(pathFromCWD, output["factory-deps"])
+    : {};
   return {
     _format: ARTIFACT_FORMAT_VERSION,
     contractName,
@@ -108,16 +98,19 @@ function getArtifactFromZksolcOutput(
   };
 }
 
-function normalizeFactoryDeps(pathFromCWD: string, factoryDeps: {
-  [key: string]: string;
-}): FactoryDeps {
+function normalizeFactoryDeps(
+  pathFromCWD: string,
+  factoryDeps: {
+    [key: string]: string;
+  }
+): FactoryDeps {
   // Normalize factory-deps.
   // We need to replace the contract IDs with ones we can easily reference as artifacts.
   // Also we need to add `0x` prefixes to the hashes.
   const normalizedDeps: FactoryDeps = {};
   Object.keys(factoryDeps).forEach((contractHash) => {
     // `SomeDep` part of `SomeContract.sol:SomeDep`.
-    const contractName = factoryDeps[contractHash].split(':')[1];
+    const contractName = factoryDeps[contractHash].split(":")[1];
 
     // All the dependency artifacts will be placed in the same artifact folder as the current contract.
     // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path returned by the compiler

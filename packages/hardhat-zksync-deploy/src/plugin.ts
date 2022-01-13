@@ -18,7 +18,10 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
   return tsFiles;
 }
 
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
+export async function callDeployScripts(
+  hre: HardhatRuntimeEnvironment,
+  targetScript: string
+) {
   const scripts = findDeployScripts(hre);
 
   if (targetScript == "") {
@@ -37,7 +40,9 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
       }
     }
     if (!found) {
-      console.error(`Script ${targetScript} was not found, no scripts were run`);
+      console.error(
+        `Script ${targetScript} was not found, no scripts were run`
+      );
     }
   }
 }
