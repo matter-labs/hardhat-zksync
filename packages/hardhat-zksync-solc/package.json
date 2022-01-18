@@ -20,7 +20,7 @@
     "lint:fix": "yarn prettier --write && yarn eslint --fix",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier \"**/*.{js,md,json}\"",
-    "test": "mocha --recursive \"test/**/*.ts\" --exit",
+    "test": "mocha --extension ts --recursive \"test/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -50,7 +50,7 @@
     "eslint-plugin-import": "2.24.1",
     "eslint-plugin-prettier": "3.4.0",
     "hardhat": "^2.0.0",
-    "mocha": "^7.1.2",
+    "mocha": "^8.2.1",
     "prettier": "2.3.2",
     "rimraf": "^3.0.2",
     "ts-node": "^8.1.0",
