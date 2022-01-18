@@ -125,6 +125,7 @@ Please check your internet connection.`,
     }
 
     if (error instanceof DockerServerError) {
+      console.log(error);
       throw pluginError("Docker error", error);
     }
 

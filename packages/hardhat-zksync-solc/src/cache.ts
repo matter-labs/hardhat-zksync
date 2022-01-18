@@ -1,12 +1,18 @@
 import fsExtra from "fs-extra";
+import path from "path";
 import * as t from "io-ts";
 
-const FORMAT_VERSION = "hh-sol-cache-2";
+import type { ProjectPathsConfig } from "hardhat/types/config";
+
+import { CACHE_FORMAT_VERSION, ZKSOLC_FILES_CACHE_FILENAME } from "./constants";
+import type { ZkSolcConfig } from "./types";
 
 const CacheEntryCodec = t.type({
   lastModificationDate: t.number,
   contentHash: t.string,
   sourceName: t.string,
+  zkSolcConfig: t.any,
+  artifacts: t.array(t.string),
 });
 
 const CacheCodec = t.type({
@@ -18,6 +24,8 @@ export interface CacheEntry {
   lastModificationDate: number;
   contentHash: string;
   sourceName: string;
+  zkSolcConfig: ZkSolcConfig;
+  artifacts: string[];
 }
 
 export interface Cache {
@@ -28,7 +36,7 @@ export interface Cache {
 export class ZkFilesCache {
   public static createEmpty(): ZkFilesCache {
     return new ZkFilesCache({
-      _format: FORMAT_VERSION,
+      _format: CACHE_FORMAT_VERSION,
       files: {},
     });
   }
@@ -37,7 +45,7 @@ export class ZkFilesCache {
     zkFilesCachePath: string
   ): Promise<ZkFilesCache> {
     let cacheRaw: Cache = {
-      _format: FORMAT_VERSION,
+      _format: CACHE_FORMAT_VERSION,
       files: {},
     };
     if (fsExtra.existsSync(zkFilesCachePath)) {
@@ -53,7 +61,7 @@ export class ZkFilesCache {
     }
 
     return new ZkFilesCache({
-      _format: FORMAT_VERSION,
+      _format: CACHE_FORMAT_VERSION,
       files: {},
     });
   }
@@ -105,4 +113,8 @@ export class ZkFilesCache {
 
     return false;
   }
+}
+
+export function getZkFilesCachePath(paths: ProjectPathsConfig): string {
+  return path.join(paths.cache, ZKSOLC_FILES_CACHE_FILENAME);
 }

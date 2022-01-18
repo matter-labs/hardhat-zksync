@@ -23,17 +23,15 @@ import {
 } from "hardhat/internal/solidity/resolver";
 import { glob } from "hardhat/internal/util/glob";
 import { localPathToSourceName } from "hardhat/utils/source-names";
+import { getFullyQualifiedName } from "hardhat/utils/contract-names";
 import { HardhatError } from "hardhat/internal/core/errors";
 import { ERRORS } from "hardhat/internal/core/errors-list";
-import {
-  getSolidityFilesCachePath,
-  SolidityFilesCache,
-} from "hardhat/builtin-tasks/utils/solidity-files-cache";
+import { SolidityFilesCache } from "hardhat/builtin-tasks/utils/solidity-files-cache";
 import {
   HardhatConfig,
   HardhatUserConfig,
-  ProjectPathsConfig,
   RunTaskFunction,
+  Artifacts,
 } from "hardhat/types";
 
 import {
@@ -45,6 +43,7 @@ import {
 } from "./task-names";
 
 import "./type-extensions";
+import { FactoryDeps, ZkSyncArtifact } from "./types";
 import {
   getPragmaAbiEncoder,
   getLicense,
@@ -52,10 +51,13 @@ import {
   combineLicenses,
   combinePragmas,
   getPragmaSolidityVersion,
+  add0xPrefixIfNecessary,
+  pluginError,
 } from "./utils";
+import { BinaryCompiler, DockerCompiler, ICompiler } from "./compiler";
 
-import { compile } from "./compilation";
-import { ZkFilesCache } from "./compiler-utils/zk-files-cache";
+import { ARTIFACT_FORMAT_VERSION } from "./constants";
+import { ZkFilesCache, getZkFilesCachePath } from "./cache";
 
 extendConfig(
   (config: HardhatConfig, userConfig: Readonly<HardhatUserConfig>) => {
@@ -201,9 +203,9 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run }, __) => {
   });
 
   const zkFilesCachePath = getZkFilesCachePath(config.paths);
-  const zkFilesCache = await ZkFilesCache.readFromFile(zkFilesCachePath);
+  let zkFilesCache = await ZkFilesCache.readFromFile(zkFilesCachePath);
 
-  const compilationFiles: ResolvedFile[] = await run(
+  const resolvedFiles: ResolvedFile[] = await run(
     TASK_COMPILE_ZK_GET_RESOLVED_FILES,
     {
       sourceNames,
@@ -211,28 +213,71 @@ subtask(TASK_COMPILE_ZKSOLC, async (_, { config, artifacts, run }, __) => {
     }
   );
 
-  const neededCompilationFiles = compilationFiles.filter((file) =>
+  zkFilesCache = await invalidateCacheMissingArtifacts(
+    zkFilesCache,
+    artifacts,
+    resolvedFiles
+  );
+
+  const neededCompilationFiles = resolvedFiles.filter((file) =>
     needsCompilation(file, zkFilesCache)
   );
 
+  let compiler: ICompiler | undefined;
+  if (config.zksolc.compilerSource === "binary") {
+    compiler = await BinaryCompiler.initialize();
+  } else if (config.zksolc.compilerSource === "docker") {
+    compiler = await DockerCompiler.initialize(config.zksolc);
+  } else {
+    throw pluginError(
+      `Incorrect compiler source: ${config.zksolc.compilerSource}`
+    );
+  }
+
   for (const file of neededCompilationFiles) {
-    zkFilesCache.addFile(file.absolutePath, {
-      lastModificationDate: file.lastModificationDate.valueOf(),
-      contentHash: file.contentHash,
-      sourceName: file.sourceName,
-    });
+    const processResult = await compiler.compile(
+      file.sourceName,
+      config.zksolc,
+      config.paths
+    );
+
+    if (processResult.status === 0) {
+      const compilerOutput = JSON.parse(processResult.stdout.toString("utf8"));
+      const builtContracts = compilerOutput.contracts;
+
+      for (const artifactId in compilerOutput.contracts) {
+        if (compilerOutput.contracts.hasOwnProperty(artifactId)) {
+          console.log(`Adding artifact ${artifactId}`);
+          const zksolcOutput = builtContracts[artifactId];
+
+          const contractName = artifactIdToContractName(artifactId);
+          const artifact = getArtifactFromZksolcOutput(
+            file.sourceName,
+            contractName,
+            zksolcOutput
+          );
+
+          await artifacts.saveArtifactAndDebugFile(artifact);
+
+          zkFilesCache.addFile(file.absolutePath, {
+            lastModificationDate: file.lastModificationDate.valueOf(),
+            contentHash: file.contentHash,
+            sourceName: file.sourceName,
+            zkSolcConfig: config.zksolc,
+            artifacts: [contractName],
+          });
+        }
+      }
+    } else {
+      console.error("stdout:");
+      console.error(processResult.stdout.toString("utf8").trim(), "\n");
+      console.error("stderr:");
+      console.error(processResult.stderr.toString("utf8").trim(), "\n");
+    }
   }
 
   await zkFilesCache.writeToFile(zkFilesCachePath);
-
-  // This plugin is experimental, so this task isn't split into multiple
-  // subtasks yet.
-  await compile(config.zksolc, config.paths, neededCompilationFiles, artifacts);
 });
-
-export function getZkFilesCachePath(paths: ProjectPathsConfig): string {
-  return path.join(paths.cache, "zk-files-cache.json");
-}
 
 /**
  * Checks if the given compilation job needs to be done.
@@ -348,4 +393,92 @@ function getSortedFiles(dependenciesGraph: DependencyGraph) {
 
     throw error;
   }
+}
+
+async function invalidateCacheMissingArtifacts(
+  zkFilesCache: ZkFilesCache,
+  artifacts: Artifacts,
+  resolvedFiles: ResolvedFile[]
+): Promise<ZkFilesCache> {
+  for (const file of resolvedFiles) {
+    const cacheEntry = zkFilesCache.getEntry(file.absolutePath);
+
+    if (cacheEntry === undefined) {
+      continue;
+    }
+
+    const { artifacts: emittedArtifacts } = cacheEntry;
+
+    for (const emittedArtifact of emittedArtifacts) {
+      const artifactExists = await artifacts.artifactExists(
+        getFullyQualifiedName(file.sourceName, emittedArtifact)
+      );
+
+      if (!artifactExists) {
+        console.log(
+          `Invalidate cache for '${file.absolutePath}' because artifact '${emittedArtifact}' doesn't exist`
+        );
+        zkFilesCache.removeEntry(file.absolutePath);
+        break;
+      }
+    }
+  }
+
+  return zkFilesCache;
+}
+
+function artifactIdToContractName(file: string) {
+  const sourceName = path.basename(file);
+  return sourceName.substring(sourceName.indexOf(":") + 1);
+}
+
+function getArtifactFromZksolcOutput(
+  pathFromCWD: string,
+  contractName: string,
+  output: any
+): ZkSyncArtifact {
+  console.log(`Contract name: ${contractName}`);
+
+  // `factory-deps` field may be absent for certain compiled contracts.
+  const factoryDeps = output["factory-deps"]
+    ? normalizeFactoryDeps(pathFromCWD, output["factory-deps"])
+    : {};
+  return {
+    _format: ARTIFACT_FORMAT_VERSION,
+    contractName,
+    sourceName: pathFromCWD,
+    abi: output.abi,
+    bytecode: add0xPrefixIfNecessary(output.bin),
+    deployedBytecode: add0xPrefixIfNecessary(output["bin-runtime"]),
+    linkReferences: {},
+    deployedLinkReferences: {},
+
+    // zkSync-specific fields.
+    factoryDeps,
+  };
+}
+
+function normalizeFactoryDeps(
+  pathFromCWD: string,
+  factoryDeps: {
+    [key: string]: string;
+  }
+): FactoryDeps {
+  // Normalize factory-deps.
+  // We need to replace the contract IDs with ones we can easily reference as artifacts.
+  // Also we need to add `0x` prefixes to the hashes.
+  const normalizedDeps: FactoryDeps = {};
+  Object.keys(factoryDeps).forEach((contractHash) => {
+    // `SomeDep` part of `SomeContract.sol:SomeDep`.
+    const contractName = factoryDeps[contractHash].split(":")[1];
+
+    // All the dependency artifacts will be placed in the same artifact folder as the current contract.
+    // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path returned by the compiler
+    // with the path to the "factory" contract itself.
+    const newContractId = `${pathFromCWD}:${contractName}`;
+    const prefixedContractHash = add0xPrefixIfNecessary(contractHash);
+    normalizedDeps[prefixedContractHash] = newContractId;
+  });
+
+  return normalizedDeps;
 }
