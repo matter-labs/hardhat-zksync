@@ -8,7 +8,7 @@ import {
     ImageDoesntExistError,
     ProcessResult,
   } from "@nomiclabs/hardhat-docker";
-import { ProjectPathsConfig } from "hardhat/types";
+import { ProjectPathsConfig, CompilerInput } from "hardhat/types";
 import path from "path";
 import { ZkSolcConfig } from "../types";
 
@@ -19,7 +19,7 @@ import { pluginError } from "../utils";
 
 export function dockerImage(imageName?: string): Image {
   if (!imageName) {
-    throw pluginError("Docker source was chosed but no image was specified");
+    throw pluginError("Docker source was chosen but no image was specified");
   }
 
   return {
@@ -82,27 +82,20 @@ async function checkForImageUpdates(
 }
 
 export async function compileWithDocker(
-  filePath: string,
+  input: CompilerInput,
   docker: HardhatDocker,
   dockerImage: Image,
   config: ZkSolcConfig,
-  paths: ProjectPathsConfig
-): Promise<ProcessResult> {
-  const pathFromSources = path.relative(paths.sources, filePath);
-  const zksolcCommand = ["zksolc", pathFromSources, "--combined-json", "abi,bin,bin-runtime"];
-  if (config.settings.optimizer.enabled) {
+): Promise<any> {
+  const zksolcCommand = ["zksolc", "--standard-json"];
+  if (config?.settings?.optimizer?.enabled) {
     zksolcCommand.push("--optimize");
   }
+  // TODO: pass the input into docker
 
-  return handleCommonErrors(docker.runContainer(
+  const result = handleCommonErrors(docker.runContainer(
     dockerImage,
     zksolcCommand,
-    {
-      binds: {
-        [paths.sources]: "/code",
-      },
-      workingDirectory: "/code",
-    }
   ));
 }
 

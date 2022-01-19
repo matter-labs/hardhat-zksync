@@ -2,16 +2,10 @@ import { ZkSolcConfig } from "./types";
 import { checkZksolcBinary, compileWithBinary } from "./compiler-utils/bin";
 import { HardhatDocker, Image } from "@nomiclabs/hardhat-docker";
 import { validateDockerIsInstalled, createDocker, pullImageIfNecessary, dockerImage, compileWithDocker } from "./compiler-utils/docker";
-import { ProjectPathsConfig } from "hardhat/types";
-
-export interface ProcessOutcome { 
-    status: number,
-    stdout: Buffer,
-    stderr: Buffer,
-}
+import { ProjectPathsConfig, CompilerInput } from "hardhat/types";
 
 export interface ICompiler {
-    compile(filePath: string, config: ZkSolcConfig, paths: ProjectPathsConfig): Promise<ProcessOutcome>;
+    compile(input: CompilerInput, config: ZkSolcConfig): Promise<any>;
 }
 
 export class BinaryCompiler implements ICompiler {
@@ -19,13 +13,13 @@ export class BinaryCompiler implements ICompiler {
         checkZksolcBinary();
         return new BinaryCompiler();
     }
-    public async compile(filePath: string, config: ZkSolcConfig, _paths: ProjectPathsConfig): Promise<ProcessOutcome> {
-        const outcome = compileWithBinary(filePath, config);
-        return {
-            status: outcome.status,
-            stdout: outcome.stdout,
-            stderr: outcome.stderr,
-        }
+    public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
+        return await compileWithBinary(input, config);
+        // return {
+        //     status: outcome.status,
+        //     stdout: outcome.stdout,
+        //     stderr: outcome.stderr,
+        // }
     }
 }
 
@@ -48,13 +42,8 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(filePath: string, config: ZkSolcConfig, paths: ProjectPathsConfig): Promise<ProcessOutcome> {
-        const outcome = await compileWithDocker(filePath, this.docker, this.dockerImage, config, paths);
+    public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
+        return await compileWithDocker(input, this.docker, this.dockerImage, config);
         
-        return {
-            status: outcome.statusCode,
-            stdout: outcome.stdout,
-            stderr: outcome.stderr,
-        }
     }
 }
