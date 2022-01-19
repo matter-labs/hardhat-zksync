@@ -1,8 +1,14 @@
-import { ZkSolcConfig } from "./types";
-import { checkZksolcBinary, compileWithBinary } from "./compiler-utils/bin";
-import { HardhatDocker, Image } from "@nomiclabs/hardhat-docker";
-import { validateDockerIsInstalled, createDocker, pullImageIfNecessary, dockerImage, compileWithDocker } from "./compiler-utils/docker";
-import { ProjectPathsConfig, CompilerInput } from "hardhat/types";
+import { ZkSolcConfig } from './types';
+import { checkZksolcBinary, compileWithBinary } from './compiler-utils/bin';
+import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
+import {
+    validateDockerIsInstalled,
+    createDocker,
+    pullImageIfNecessary,
+    dockerImage,
+    compileWithDocker,
+} from './compiler-utils/docker';
+import { ProjectPathsConfig, CompilerInput } from 'hardhat/types';
 
 export interface ICompiler {
     compile(input: CompilerInput, config: ZkSolcConfig): Promise<any>;
@@ -27,7 +33,7 @@ export class DockerCompiler implements ICompiler {
     dockerImage: Image;
     docker: HardhatDocker;
 
-    private constructor(dockerImage: Image, docker: HardhatDocker){
+    private constructor(dockerImage: Image, docker: HardhatDocker) {
         this.dockerImage = dockerImage;
         this.docker = docker;
     }
@@ -44,6 +50,5 @@ export class DockerCompiler implements ICompiler {
 
     public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
         return await compileWithDocker(input, this.docker, this.dockerImage, config);
-        
     }
 }
