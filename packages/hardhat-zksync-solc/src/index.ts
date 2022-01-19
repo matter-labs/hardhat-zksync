@@ -6,7 +6,10 @@ import { extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { CompilerInput } from 'hardhat/types';
 import './type-extensions';
 import { ZkSyncArtifact } from './types';
-import { ARTIFACT_FORMAT_VERSION, compile } from './compilation';
+import { compile } from './compile';
+import { add0xPrefixIfNecessary } from './utils';
+
+const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
 extendConfig((config) => {
     const defaultConfig = {
@@ -38,9 +41,7 @@ subtask(
         let bytecode: string =
             contractOutput.evm?.bytecode?.object || contractOutput.evm?.deployedBytecode?.object || '';
 
-        if (bytecode.slice(0, 2).toLowerCase() !== '0x') {
-            bytecode = `0x${bytecode}`;
-        }
+        bytecode = add0xPrefixIfNecessary(bytecode);
 
         return {
             _format: ARTIFACT_FORMAT_VERSION,

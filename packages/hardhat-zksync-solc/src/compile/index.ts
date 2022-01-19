@@ -1,5 +1,5 @@
-import { ZkSolcConfig } from './types';
-import { checkZksolcBinary, compileWithBinary } from './compiler-utils/bin';
+import { ZkSolcConfig } from '../types';
+import { checkZksolcBinary, compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import {
     validateDockerIsInstalled,
@@ -7,8 +7,22 @@ import {
     pullImageIfNecessary,
     dockerImage,
     compileWithDocker,
-} from './compiler-utils/docker';
-import { ProjectPathsConfig, CompilerInput } from 'hardhat/types';
+} from './docker';
+import { CompilerInput } from 'hardhat/types';
+import { pluginError } from '../utils';
+
+export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput) {
+    let compiler: ICompiler | undefined = undefined;
+    if (zksolcConfig.compilerSource == 'binary') {
+        compiler = await BinaryCompiler.initialize();
+    } else if (zksolcConfig.compilerSource == 'docker') {
+        compiler = await DockerCompiler.initialize(zksolcConfig);
+    } else {
+        throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+    }
+
+    return await compiler.compile(input, zksolcConfig);
+}
 
 export interface ICompiler {
     compile(input: CompilerInput, config: ZkSolcConfig): Promise<any>;
@@ -21,11 +35,6 @@ export class BinaryCompiler implements ICompiler {
     }
     public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
         return await compileWithBinary(input, config);
-        // return {
-        //     status: outcome.status,
-        //     stdout: outcome.stdout,
-        //     stderr: outcome.stderr,
-        // }
     }
 }
 
