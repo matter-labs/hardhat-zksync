@@ -25,6 +25,13 @@ extendConfig((config) => {
         },
     };
     config.zksolc = { ...defaultConfig, ...config.zksolc };
+
+    // TODO: If solidity optimizer is not enabled, we have to manually pass libraries into zksolc.
+    // So for now we force the optimization.
+    config.solidity.compilers.forEach(compiler => {
+        let settings = compiler.settings || {};
+        compiler.settings = { optimizer: { enabled: true }, ...settings };
+    });
 });
 
 subtask(
@@ -46,10 +53,8 @@ subtask(
         let entries: [string, string][] = Object.entries(contractOutput.factoryDependencies || {});
         for (const [hash, dependency] of entries) {
             const dependencyName = dependency.split(':')[1];
-            // All the dependency artifacts will be placed in the same artifact folder as the current contract.
-            // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path
-            // returned by the compiler with the path to the "factory" contract itself.
-            factoryDeps[add0xPrefixIfNecessary(hash)] = `${sourceName}:${dependencyName}`;
+            // TODO: make it a fully-qualified name
+            factoryDeps[add0xPrefixIfNecessary(hash)] = dependencyName;
         }
         // TODO: verify that this works
         // TODO: run tests (make sure they pass)
@@ -72,7 +77,6 @@ subtask(
     }
 );
 
-// TODO: if solidity optimizer is not enabled, we have to manually pass libraries (verify)
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
     // TODO: fix docker compilation
     // This plugin is experimental, so this task isn't split into multiple
