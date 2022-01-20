@@ -5,7 +5,7 @@ import {
 import { extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { CompilerInput } from 'hardhat/types';
 import './type-extensions';
-import { ZkSyncArtifact } from './types';
+import { ZkSyncArtifact, FactoryDeps } from './types';
 import { compile } from './compile';
 import { add0xPrefixIfNecessary } from './utils';
 
@@ -40,8 +40,19 @@ subtask(
     }): Promise<ZkSyncArtifact> => {
         let bytecode: string =
             contractOutput.evm?.bytecode?.object || contractOutput.evm?.deployedBytecode?.object || '';
-
         bytecode = add0xPrefixIfNecessary(bytecode);
+
+        let factoryDeps: FactoryDeps = {};
+        let entries: [string, string][] = Object.entries(contractOutput.factoryDependencies || {});
+        for (const [hash, dependency] of entries) {
+            const dependencyName = dependency.split(':')[1];
+            // All the dependency artifacts will be placed in the same artifact folder as the current contract.
+            // So to avoid finding it in the hierarchy of all the artifacts, we just replace the contract path
+            // returned by the compiler with the path to the "factory" contract itself.
+            factoryDeps[add0xPrefixIfNecessary(hash)] = `${sourceName}:${dependencyName}`;
+        }
+        // TODO: verify that this works
+        // TODO: run tests (make sure they pass)
 
         return {
             _format: ARTIFACT_FORMAT_VERSION,
@@ -56,12 +67,11 @@ subtask(
             deployedLinkReferences: {},
 
             // zkSync-specific field
-            factoryDeps: contractOutput.factoryDependencies, // TODO: normalize factory deps
+            factoryDeps,
         };
     }
 );
 
-// TODO: run prettier
 // TODO: if solidity optimizer is not enabled, we have to manually pass libraries (verify)
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
     // TODO: fix docker compilation

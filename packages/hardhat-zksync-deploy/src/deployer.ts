@@ -81,7 +81,7 @@ export class Deployer {
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
 
     // Encode deploy transaction so it can be estimated.
-    const deployTx = await factory.getDeployTransaction(
+    const deployTx = factory.getDeployTransaction(
       ...constructorArguments,
       {
         customData: {
