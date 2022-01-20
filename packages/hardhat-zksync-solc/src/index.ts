@@ -26,11 +26,11 @@ extendConfig((config) => {
     };
     config.zksolc = { ...defaultConfig, ...config.zksolc };
 
-    // TODO: If solidity optimizer is not enabled, we have to manually pass libraries into zksolc.
-    // So for now we force the optimization.
+    // TODO: If solidity optimizer is not enabled, the libraries are not inlined and
+    // we have to manually pass them into zksolc. So for now we force the optimization.
     config.solidity.compilers.forEach(compiler => {
         let settings = compiler.settings || {};
-        compiler.settings = { optimizer: { enabled: true }, ...settings };
+        compiler.settings = { ...settings, optimizer: { enabled: true } };
     });
 });
 
@@ -52,12 +52,8 @@ subtask(
         let factoryDeps: FactoryDeps = {};
         let entries: [string, string][] = Object.entries(contractOutput.factoryDependencies || {});
         for (const [hash, dependency] of entries) {
-            const dependencyName = dependency.split(':')[1];
-            // TODO: make it a fully-qualified name
-            factoryDeps[add0xPrefixIfNecessary(hash)] = dependencyName;
+            factoryDeps[add0xPrefixIfNecessary(hash)] = dependency;
         }
-        // TODO: verify that this works
-        // TODO: run tests (make sure they pass)
 
         return {
             _format: ARTIFACT_FORMAT_VERSION,
@@ -77,8 +73,8 @@ subtask(
     }
 );
 
+// TODO: fix docker compilation
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
-    // TODO: fix docker compilation
     // This plugin is experimental, so this task isn't split into multiple
     // subtasks yet.
     return await compile(config.zksolc, input);
