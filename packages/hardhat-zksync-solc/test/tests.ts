@@ -80,8 +80,8 @@ describe('zksolc plugin', async function () {
             // Factory contract should have one dependency.
             // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
             // Instead we only check that it's a hash indeed.
-            const fooDepName = "contracts/deps/Foo.sol:FooDep";
-            const barDepName = "contracts/deps/more_deps/Bar.sol:BarDep";
+            const fooDepName = 'contracts/deps/Foo.sol:FooDep';
+            const barDepName = 'contracts/deps/more_deps/Bar.sol:BarDep';
             for (const depName of [fooDepName, barDepName]) {
                 assert(
                     Object.values(factoryArtifact.factoryDeps).includes(depName),

@@ -28,7 +28,7 @@ extendConfig((config) => {
 
     // TODO: If solidity optimizer is not enabled, the libraries are not inlined and
     // we have to manually pass them into zksolc. So for now we force the optimization.
-    config.solidity.compilers.forEach(compiler => {
+    config.solidity.compilers.forEach((compiler) => {
         let settings = compiler.settings || {};
         compiler.settings = { ...settings, optimizer: { enabled: true } };
     });
@@ -73,7 +73,6 @@ subtask(
     }
 );
 
-// TODO: fix docker compilation
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
     // This plugin is experimental, so this task isn't split into multiple
     // subtasks yet.
