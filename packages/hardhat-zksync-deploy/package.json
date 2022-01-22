@@ -17,10 +17,11 @@
   ],
   "scripts": {
     "lint": "yarn prettier --check && yarn eslint",
-    "lint:fix": "yarn prettier --write && yarn eslint --fix",
-    "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts' --ignore-pattern 'test/fixture-projects/**/*.ts'",
-    "prettier": "prettier \"**/*.{js,md,json}\"",
-    "test": "mocha --recursive \"test/**/*.ts\" --exit",
+    "lint:fix": "yarn eslint --fix",
+    "fmt": "yarn prettier --write",
+    "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
+    "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
+    "test": "mocha test/tests.ts --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -58,5 +59,12 @@
     "ethers": "~5.5.2",
     "hardhat": "^2.0.0",
     "zksync-web3": "^0.2.3"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 120,
+    "parser": "typescript",
+    "singleQuote": true,
+    "bracketSpacing": true
   }
 }

@@ -1,7 +1,7 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import * as ethers from "ethers";
-import * as zk from "zksync-web3";
-import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import * as ethers from 'ethers';
+import * as zk from 'zksync-web3';
+import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 
 // An example of a deploy script which will deploy and call a factory-like contract (meaning that the main contract
 // may deploy other contracts).
@@ -12,14 +12,14 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.log(`Running deploy script for the Factory contract`);
 
     // Initialize an Ethereum wallet.
-    const testMnemonic = "stuff slice staff easily soup parent arm payment cotton trade scatter struggle";
+    const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
 
     // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositAmount = ethers.utils.parseEther("0.01");
+    const depositAmount = ethers.utils.parseEther('0.01');
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
@@ -28,7 +28,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     await depositHandle.wait();
 
     // Load the artifact we want to deploy.
-    const artifact = await deployer.loadArtifact("Import");
+    const artifact = await deployer.loadArtifact('Import');
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // This contract has no constructor arguments.
@@ -40,7 +40,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Call the deployed contract.
     const greetingFromContract = await factoryContract.getFooName();
-    if (greetingFromContract == "Foo") {
+    if (greetingFromContract == 'Foo') {
         console.log(`Factory contract deployed!`);
     } else {
         console.error(`Contract said something unexpected: ${greetingFromContract}`);
