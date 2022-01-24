@@ -1,5 +1,6 @@
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { TASK_CLEAN } from 'hardhat/builtin-tasks/task-names';
 import path from 'path';
 
 declare module 'mocha' {
@@ -14,6 +15,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'localh
         process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
+        this.env.run(TASK_CLEAN);
     });
 
     afterEach('Resetting hardhat', function () {

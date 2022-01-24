@@ -1,13 +1,13 @@
-import "hardhat/types/config";
+import 'hardhat/types/config';
 
-import { ZkDeployConfig } from "./types";
+import { ZkDeployConfig } from './types';
 
-declare module "hardhat/types/config" {
-  interface HardhatUserConfig {
-    zkSyncDeploy?: Partial<ZkDeployConfig>;
-  }
+declare module 'hardhat/types/config' {
+    interface HardhatUserConfig {
+        zkSyncDeploy?: Partial<ZkDeployConfig>;
+    }
 
-  interface HardhatConfig {
-    zkSyncDeploy: ZkDeployConfig;
-  }
+    interface HardhatConfig {
+        zkSyncDeploy: ZkDeployConfig;
+    }
 }
