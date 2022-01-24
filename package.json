@@ -1,30 +1,26 @@
 {
-    "name": "root",
-    "version": "0.0.0",
-    "author": "Matter Labs",
-    "license": "MIT",
-    "private": true,
-    "workspaces": [
-      "packages/*",
-      "docs"
-    ],
-    "devDependencies": {
-      "@changesets/cli": "^2.16.0",
-      "prettier": "2.3.2",
-      "shelljs": "^0.8.3",
-      "typescript": "~4.0.3",
-      "wsrun": "^5.2.2"
-    },
-    "scripts": {
-      "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
-      "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
-      "clean": "wsrun --exclude-missing clean",
-      "lint": "wsrun --exclude-missing --stages lint",
-      "lint:fix": "wsrun --exclude-missing --stages lint:fix"
-    },
-    "dependencies": {},
-    "resolutions": {
-      "**/antlr4": "4.7.1"
-    }
-  }
-  
+  "name": "root",
+  "version": "0.0.0",
+  "author": "Matter Labs",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/basic-example"
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.19.0",
+    "prettier": "2.5.1",
+    "shelljs": "^0.8.5",
+    "typescript": "~4.5.4",
+    "wsrun": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
+    "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-solc",
+    "clean": "wsrun --exclude-missing clean",
+    "lint": "wsrun --exclude-missing --stages lint",
+    "lint:fix": "wsrun --exclude-missing --stages lint:fix"
+  },
+  "dependencies": {}
+}
