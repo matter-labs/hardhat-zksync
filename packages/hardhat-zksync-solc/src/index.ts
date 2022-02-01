@@ -1,6 +1,7 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
+    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { CompilerInput } from 'hardhat/types';
@@ -50,7 +51,7 @@ subtask(
         bytecode = add0xPrefixIfNecessary(bytecode);
 
         let factoryDeps: FactoryDeps = {};
-        let entries: [string, string][] = Object.entries(contractOutput.factoryDependencies || {});
+        let entries: Array<[string, string]> = Object.entries(contractOutput.factoryDependencies || {});
         for (const [hash, dependency] of entries) {
             factoryDeps[add0xPrefixIfNecessary(hash)] = dependency;
         }
@@ -74,7 +75,19 @@ subtask(
 );
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
-    // This plugin is experimental, so this task isn't split into multiple
-    // subtasks yet.
+    // This plugin is experimental, so this task isn't split into multiple subtasks yet.
     return await compile(config.zksolc, input);
+});
+
+// This task searches for the required solc version in the system and downloads it if not found.
+// zksolc currently uses solc found in $PATH so this task is not needed for the most part.
+// It is overriden to prevent unnecessary downloads.
+subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }) => {
+    // return dummy value, it's not used anywhere anyway
+    return {
+        compilerPath: '',
+        isSolsJs: false,
+        version: args.solcVersion,
+        longVersion: args.solcVersion,
+    };
 });
