@@ -8,7 +8,7 @@ import { CompilerInput } from 'hardhat/types';
 import './type-extensions';
 import { ZkSyncArtifact, FactoryDeps } from './types';
 import { compile } from './compile';
-import { add0xPrefixIfNecessary } from './utils';
+import { zeroxlify } from './utils';
 
 const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
@@ -48,12 +48,12 @@ subtask(
     }): Promise<ZkSyncArtifact> => {
         let bytecode: string =
             contractOutput.evm?.bytecode?.object || contractOutput.evm?.deployedBytecode?.object || '';
-        bytecode = add0xPrefixIfNecessary(bytecode);
+        bytecode = zeroxlify(bytecode);
 
         let factoryDeps: FactoryDeps = {};
         let entries: Array<[string, string]> = Object.entries(contractOutput.factoryDependencies || {});
         for (const [hash, dependency] of entries) {
-            factoryDeps[add0xPrefixIfNecessary(hash)] = dependency;
+            factoryDeps[zeroxlify(hash)] = dependency;
         }
 
         return {

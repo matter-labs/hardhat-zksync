@@ -5,10 +5,10 @@ import { ZkSyncArtifact } from '../src/types';
 import { useEnvironment } from './helpers';
 
 describe('zksolc plugin', async function () {
-    describe('Successful compilation', async function () {
-        useEnvironment('successful-compilation');
+    describe('Simple', async function () {
+        useEnvironment('simple');
 
-        it('Should successfully compile the simple contract', async function () {
+        it('Should successfully compile a simple contract', async function () {
             await this.env.run(TASK_COMPILE);
 
             const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
