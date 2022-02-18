@@ -20,10 +20,20 @@ describe('zksolc plugin', async function () {
         });
     });
 
-    describe('Library', async function () {
+    describe('Inlined library', async function () {
         useEnvironment('library');
 
-        it('Should successfully compile the contract with library', async function () {
+        it('Should successfully compile the contract with inlined library', async function () {
+            await this.env.run(TASK_COMPILE);
+            assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
+            assert.equal(this.env.artifacts.readArtifactSync('contracts/Import.sol:Import').contractName, 'Import');
+        });
+    });
+
+    describe('Linked library', async function () {
+        useEnvironment('linked');
+
+        it('Should successfully compile the contract with linked library', async function () {
             await this.env.run(TASK_COMPILE);
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Import.sol:Import').contractName, 'Import');
