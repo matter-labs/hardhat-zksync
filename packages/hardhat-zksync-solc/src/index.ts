@@ -20,12 +20,12 @@ extendConfig((config) => {
             optimizer: {
                 enabled: false,
             },
-        },
-        experimental: {
-            dockerImage: null,
+            experimental: {},
+            libraries: {}
         },
     };
     config.zksolc = { ...defaultConfig, ...config.zksolc };
+    config.zksolc.settings = { ...defaultConfig.settings, ...config.zksolc.settings };
 
     // TODO: If solidity optimizer is not enabled, the libraries are not inlined and
     // we have to manually pass them into zksolc. So for now we force the optimization.
@@ -65,6 +65,8 @@ subtask(
             // but both fields are included just in case
             bytecode,
             deployedBytecode: bytecode,
+            // zksolc does not support unlinked objects,
+            // all external libraries are either linked during compilation or inlined
             linkReferences: {},
             deployedLinkReferences: {},
 
@@ -75,7 +77,9 @@ subtask(
 );
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
-    // This plugin is experimental, so this task isn't split into multiple subtasks yet.
+    if (config.zksolc.settings.libraries) {
+        input.settings.libraries = config.zksolc.settings.libraries;
+    }
     return await compile(config.zksolc, input);
 });
 

@@ -7,7 +7,13 @@ export interface ZkSolcConfig {
         optimizer: {
             enabled: boolean;
         };
-        experimental: {
+        // addresses of external libraries
+        libraries?: {
+            [file: string]: {
+                [library: string]: string;
+            };
+        }
+        experimental?: {
             dockerImage?: string;
         };
     };
