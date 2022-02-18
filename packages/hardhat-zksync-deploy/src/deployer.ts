@@ -6,7 +6,7 @@ import { ZkSyncArtifact } from './types';
 import { pluginError } from './helpers';
 
 const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
-const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan'];
+const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
 /**
  * An entity capable of deploying contracts to the zkSync network.
