@@ -52,6 +52,7 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
         stream: true,
         stdin: true,
         stdout: true,
+        stderr: true,
         hijack: true,
     });
 
@@ -60,7 +61,12 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
     dockerStream.end(input);
     await container.wait();
 
-    return JSON.parse(output.toString('utf8'));
+    const compilerOutput = output.toString('utf8');
+    try {
+        return JSON.parse(compilerOutput);
+    } catch (e) {
+        throw pluginError(compilerOutput);
+    }
 }
 
 // Notice: contents of this file were mostly copy-pasted from the official Hardhat Vyper plugin
