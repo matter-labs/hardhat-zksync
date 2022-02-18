@@ -64,7 +64,7 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
     const compilerOutput = output.toString('utf8');
     try {
         return JSON.parse(compilerOutput);
-    } catch (e) {
+    } catch {
         throw pluginError(compilerOutput);
     }
 }
