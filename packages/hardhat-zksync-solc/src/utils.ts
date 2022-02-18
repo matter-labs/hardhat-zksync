@@ -1,6 +1,6 @@
 import { NomicLabsHardhatPluginError } from 'hardhat/plugins';
 
-export function add0xPrefixIfNecessary(hex: string): string {
+export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
     return hex.slice(0, 2) === '0x' ? hex : `0x${hex}`;
 }

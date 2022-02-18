@@ -50,7 +50,7 @@ export class DockerCompiler implements ICompiler {
     public static async initialize(config: ZkSolcConfig): Promise<ICompiler> {
         await validateDockerIsInstalled();
 
-        const image = dockerImage(config.settings.experimental.dockerImage);
+        const image = dockerImage(config.settings.experimental?.dockerImage);
         const docker = await createDocker();
         await pullImageIfNecessary(docker, image);
 
