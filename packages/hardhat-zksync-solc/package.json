@@ -42,7 +42,7 @@
     "@types/node": "^17.0.19",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",
-    "chai": "^4.2.0",
+    "chai": "^4.3.6",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.24.1",
