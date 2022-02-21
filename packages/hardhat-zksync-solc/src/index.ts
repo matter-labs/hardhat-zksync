@@ -21,7 +21,6 @@ extendConfig((config) => {
                 enabled: false,
             },
             experimental: {},
-            libraries: {}
         },
     };
     config.zksolc = { ...defaultConfig, ...config.zksolc };
