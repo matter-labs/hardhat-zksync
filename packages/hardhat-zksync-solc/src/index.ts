@@ -1,38 +1,37 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
-    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
-import { CompilerInput } from 'hardhat/types';
+import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
-import { ZkSyncArtifact, FactoryDeps } from './types';
+import { FactoryDeps, ZkSolcConfig } from './types';
+import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
 import { zeroxlify } from './utils';
 
-const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
+const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
-extendConfig((config) => {
-    const defaultConfig = {
-        version: 'latest',
-        compilerSource: 'binary',
-        settings: {
-            optimizer: {
-                enabled: false,
-            },
-            experimental: {},
-        },
-    };
-    config.zksolc = { ...defaultConfig, ...config.zksolc };
-    config.zksolc.settings = { ...defaultConfig.settings, ...config.zksolc.settings };
+extendEnvironment((hre) => {
 
-    // TODO: If solidity optimizer is not enabled, the libraries are not inlined and
-    // we have to manually pass them into zksolc. So for now we force the optimization.
-    config.solidity.compilers.forEach((compiler) => {
-        let settings = compiler.settings || {};
-        compiler.settings = { ...settings, optimizer: { enabled: true } };
-    });
-});
+    if (hre.network.config.zksync ) {
+        hre.network.zksync = hre.network.config.zksync;
+  
+        let artifactsPath = hre.config.paths.artifacts
+        if (!artifactsPath.endsWith('-zk')) {
+            artifactsPath = artifactsPath + '-zk'
+        }
+    
+        let cachePath = hre.config.paths.cache
+        if (!cachePath.endsWith('-zk')) {
+            cachePath = cachePath + '-zk'
+        }
+    
+        // Forcibly update the artifacts object.
+        hre.config.paths.artifacts = artifactsPath;
+        hre.config.paths.cache = cachePath;
+        (hre as any).artifacts = new Artifacts(artifactsPath);
+    }
+})
 
 subtask(
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
@@ -44,7 +43,14 @@ subtask(
         sourceName: string;
         contractName: string;
         contractOutput: any;
-    }): Promise<ZkSyncArtifact> => {
+    }, hre): Promise<any> => {
+        if (hre.network.zksync !== true) {
+            return getArtifactFromContractOutput(
+                sourceName,
+                contractName,
+                contractOutput
+            );
+        }
         let bytecode: string =
             contractOutput.evm?.bytecode?.object || contractOutput.evm?.deployedBytecode?.object || '';
         bytecode = zeroxlify(bytecode);
@@ -56,7 +62,7 @@ subtask(
         }
 
         return {
-            _format: ARTIFACT_FORMAT_VERSION,
+            _format: ZK_ARTIFACT_FORMAT_VERSION,
             contractName,
             sourceName,
             abi: contractOutput.abi,
@@ -75,22 +81,27 @@ subtask(
     }
 );
 
-subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async ({ input }: { input: CompilerInput }, { config }) => {
-    if (config.zksolc.settings.libraries) {
-        input.settings.libraries = config.zksolc.settings.libraries;
+subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: string }, hre, runSuper) => {
+    if (hre.network.zksync !== true) {
+        return runSuper(args)
     }
-    return await compile(config.zksolc, input);
-});
 
-// This task searches for the required solc version in the system and downloads it if not found.
-// zksolc currently uses solc found in $PATH so this task is not needed for the most part.
-// It is overriden to prevent unnecessary downloads.
-subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }) => {
-    // return dummy value, it's not used anywhere anyway
-    return {
-        compilerPath: '',
-        isSolsJs: false,
-        version: args.solcVersion,
-        longVersion: args.solcVersion,
+    const defaultConfig : ZkSolcConfig = {
+        version: 'latest',
+        compilerSource: 'binary',
+        settings: {
+            optimizer: {
+                enabled: true,
+            },
+            experimental: {},
+        },
     };
+
+    const zksolc = { ...defaultConfig, ...hre.config.zksync };
+
+    if (hre.config?.zksync?.settings.libraries) {
+        args.input.settings.libraries = hre.config.zksync.settings.libraries;
+    }
+  
+    return await compile(zksolc, args.input);
 });
