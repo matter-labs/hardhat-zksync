@@ -4,11 +4,11 @@ import { ZkSolcConfig } from './types';
 
 declare module 'hardhat/types/config' {
     interface HardhatUserConfig {
-        zksync?: Partial<ZkSolcConfig>;
+        zksolc?: Partial<ZkSolcConfig>;
     }
 
     interface HardhatConfig {
-        zksync?: ZkSolcConfig;
+        zksolc?: ZkSolcConfig;
     }
 
     interface HardhatNetworkUserConfig {

@@ -97,11 +97,15 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
         },
     };
 
-    const zksolc = { ...defaultConfig, ...hre.config.zksync };
+    const zksolc = { ...defaultConfig, ...hre.config.zksolc };
 
-    if (hre.config?.zksync?.settings.libraries) {
-        args.input.settings.libraries = hre.config.zksync.settings.libraries;
+    if (hre.config?.zksolc?.settings.libraries) {
+        args.input.settings.libraries = hre.config.zksolc.settings.libraries;
     }
-  
+    
+    // TODO: If solidity optimizer is not enabled, the libraries are not inlined and
+    // we have to manually pass them into zksolc. So for now we force the optimization.
+    args.input.settings.optimizer.enabled = true
+
     return await compile(zksolc, args.input);
 });
