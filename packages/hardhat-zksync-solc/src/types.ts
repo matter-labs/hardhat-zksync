@@ -12,7 +12,7 @@ export interface ZkSolcConfig {
             [file: string]: {
                 [library: string]: string;
             };
-        }
+        };
         experimental?: {
             dockerImage?: string;
         };
