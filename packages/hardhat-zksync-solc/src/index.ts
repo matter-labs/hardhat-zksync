@@ -1,6 +1,7 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
+    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
@@ -108,4 +109,20 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
     args.input.settings.optimizer.enabled = true
 
     return await compile(zksolc, args.input);
+});
+
+// This task searches for the required solc version in the system and downloads it if not found.
+// zksolc currently uses solc found in $PATH so this task is not needed for the most part.
+// It is overriden to prevent unnecessary downloads.
+subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
+    if (hre.network.zksync !== true) {
+        return runSuper(args)
+    }
+    // return dummy value, it's not used anywhere anyway
+    return {
+        compilerPath: '',
+        isSolsJs: false,
+        version: args.solcVersion,
+        longVersion: args.solcVersion,
+    };
 });
