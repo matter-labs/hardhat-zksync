@@ -21,6 +21,8 @@ node_modules
 # Compilation output
 build-test/
 dist
+artifacts-zk/
+cache-zk/
 
 # Code coverage artifacts
 coverage

@@ -8,6 +8,28 @@ declare module 'hardhat/types/config' {
     }
 
     interface HardhatConfig {
-        zksolc: ZkSolcConfig;
+        zksolc?: ZkSolcConfig;
+    }
+
+    interface HardhatNetworkUserConfig {
+        zksync?: boolean;
+    }
+
+    interface HttpNetworkUserConfig {
+        zksync: boolean;
+    }
+
+    interface HardhatNetworkConfig {
+        zksync: boolean;
+    }
+
+    interface HttpNetworkConfig {
+        zksync: boolean;
+    }
+}
+
+declare module 'hardhat/types/runtime' {
+    interface Network {
+        zksync: boolean;
     }
 }

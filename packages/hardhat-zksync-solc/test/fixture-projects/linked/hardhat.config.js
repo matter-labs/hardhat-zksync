@@ -18,6 +18,11 @@ module.exports = {
       }
     },
   },
+  networks: {
+    localhost: {
+      zksync: true,
+    },
+  },
   solidity: {
       version: "0.8.11"
   }
