@@ -15,6 +15,11 @@ module.exports = {
     zkSyncNetwork: "http://127.0.0.1:3050",
     ethNetwork: "http://127.0.0.1:8545",
   },
+  networks: {
+    hardhat: {
+      zksync: true,
+    },
+  },
   solidity: {
     version: "0.8.11"
   }

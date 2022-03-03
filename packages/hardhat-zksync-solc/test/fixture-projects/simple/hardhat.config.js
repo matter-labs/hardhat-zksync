@@ -14,7 +14,7 @@ module.exports = {
     },
   },
   networks: {
-    localhost: {
+    hardhat: {
       zksync: true,
     },
   },

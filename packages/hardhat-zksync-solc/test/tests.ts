@@ -71,7 +71,7 @@ describe('zksolc plugin', async function () {
         });
     });
 
-    describe('NestedFacroty', async function () {
+    describe('Nested Factory', async function () {
         useEnvironment('nested');
 
         it('Should successfully compile nested contracts', async function () {
