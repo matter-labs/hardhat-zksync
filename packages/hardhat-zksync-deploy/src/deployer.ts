@@ -81,6 +81,7 @@ export class Deployer {
                 feeToken: feeToken ?? zk.utils.ETH_ADDRESS,
             },
         });
+        deployTx.from = this.zkWallet.address;
 
         const gas = await this.zkWallet.provider.estimateGas(deployTx);
         const gasPrice = await this.zkWallet.provider.getGasPrice();
