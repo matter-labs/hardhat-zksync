@@ -14,8 +14,11 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     }
 
     const tsFiles = glob.sync(path.join(deployScriptsDir, '**', '*.ts'));
+    const jsFiles = glob.sync(path.join(deployScriptsDir, '**', '*.js'));
+    const files = tsFiles.concat(jsFiles);
+    files.sort();
 
-    return tsFiles;
+    return files;
 }
 
 export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
@@ -44,9 +47,9 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
 
 async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     delete require.cache[script];
-    let deployFn = require(script);
-    if ((deployFn as any).default) {
-        deployFn = (deployFn as any).default;
+    let deployFn: any = require(script);
+    if (deployFn.default) {
+        deployFn = deployFn.default;
     }
 
     await deployFn(hre);
