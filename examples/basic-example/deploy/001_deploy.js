@@ -1,10 +1,9 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as ethers from 'ethers';
-import * as zk from 'zksync-web3';
-import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
+const ethers = require('ethers');
+const zk = require('zksync-web3');
+const { Deployer } = require('@matterlabs/hardhat-zksync-deploy');
 
 // An example of a deploy script which will deploy and call a simple contract.
-export default async function (hre: HardhatRuntimeEnvironment) {
+module.exports = async function (hre) {
     console.log(`Running deploy script for the Greeter contract`);
 
     // Initialize an Ethereum wallet.
@@ -15,11 +14,10 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const deployer = new Deployer(hre, zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositAmount = ethers.utils.parseEther('0.001');
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
-        amount: depositAmount.toString(), // TODO: Why parseEther doesn't work?
+        amount: ethers.utils.parseEther('0.001'),
     });
     await depositHandle.wait();
 
