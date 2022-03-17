@@ -115,7 +115,7 @@ export class Deployer {
         const contract = await factory.deploy(...constructorArguments, {
             ..._overrides,
             customData: {
-                ...(customData ?? {}),
+                ...customData,
                 factoryDeps,
                 feeToken: feeToken ?? customData?.feeToken ?? zk.utils.ETH_ADDRESS,
             },
