@@ -3,13 +3,14 @@ import { extendConfig, task } from 'hardhat/config';
 import { TASK_DEPLOY_ZKSYNC } from './task-names';
 import './type-extensions';
 import { callDeployScripts } from './plugin';
+import { ZkDeployConfig } from './types';
 
 export * from './deployer';
 
 extendConfig((config) => {
-    const defaultConfig = {
-        zkSyncRpc: 'unknown',
-        l1Network: 'unknown',
+    const defaultConfig: ZkDeployConfig = {
+        zkSyncNetwork: 'unknown',
+        ethNetwork: 'unknown'
     };
     config.zkSyncDeploy = { ...defaultConfig, ...config.zkSyncDeploy };
 });

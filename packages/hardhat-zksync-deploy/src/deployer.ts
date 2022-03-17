@@ -8,6 +8,8 @@ import { pluginError } from './helpers';
 const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
+export type Overrides = ethers.Overrides & { feeToken?: string };
+
 /**
  * An entity capable of deploying contracts to the zkSync network.
  */
@@ -96,23 +98,26 @@ export class Deployer {
      *
      * @param artifact The previously loaded artifact object.
      * @param constructorArguments List of arguments to be passed to the contract constructor.
-     * @param feeToken Address of the token to pay fees in. If not provided, defaults to ETH.
+     * @param overrides Optional object with additional deploy transaction parameters.
      *
      * @returns A contract object.
      */
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[],
-        feeToken?: string
+        overrides?: Overrides
     ): Promise<zk.Contract> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+        const { feeToken, customData, ..._overrides } = overrides ?? {};
 
         // Encode and send the deploy transaction providing both fee token and factory dependencies.
         const contract = await factory.deploy(...constructorArguments, {
+            ..._overrides,
             customData: {
+                ...customData,
                 factoryDeps,
-                feeToken: feeToken ?? zk.utils.ETH_ADDRESS,
+                feeToken: feeToken ?? customData?.feeToken ?? zk.utils.ETH_ADDRESS,
             },
         });
         await contract.deployed();
