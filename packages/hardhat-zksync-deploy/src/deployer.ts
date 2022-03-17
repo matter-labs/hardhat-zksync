@@ -98,7 +98,7 @@ export class Deployer {
      *
      * @param artifact The previously loaded artifact object.
      * @param constructorArguments List of arguments to be passed to the contract constructor.
-     * @param overrides Optional object with additional deploy transaction properties.
+     * @param overrides Optional object with additional deploy transaction parameters.
      *
      * @returns A contract object.
      */
