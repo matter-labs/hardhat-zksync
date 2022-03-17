@@ -1,19 +1,12 @@
-import { exec, spawnSync } from 'child_process';
+import { exec } from 'child_process';
 import { ZkSolcConfig } from '../types';
-import { pluginError } from '../utils';
 
-// Checks whether `zksolc` is available in `$PATH`.
-export function checkZksolcBinary() {
-    const inPath = spawnSync('which', ['zksolc']).status === 0;
-    if (!inPath) {
-        throw pluginError('`zksolc` binary is either not installed or not in $PATH');
-    }
-}
-
-export async function compileWithBinary(input: any, config: ZkSolcConfig): Promise<any> {
+export async function compileWithBinary(input: any, config: ZkSolcConfig, solcPath: string): Promise<any> {
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
-            `zksolc --standard-json ${config?.settings?.optimizer?.enabled ? '--optimize' : ''}`,
+            `${config.settings.compilerPath} --standard-json --solc ${solcPath} ${
+                config.settings.optimizer?.enabled ? '--optimize' : ''
+            }`,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },

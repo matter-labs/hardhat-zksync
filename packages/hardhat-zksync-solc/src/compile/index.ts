@@ -1,5 +1,5 @@
 import { ZkSolcConfig } from '../types';
-import { checkZksolcBinary, compileWithBinary } from './binary';
+import { compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import {
     validateDockerIsInstalled,
@@ -11,10 +11,13 @@ import {
 import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 
-export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput) {
-    let compiler: ICompiler | undefined = undefined;
+export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
+    let compiler: ICompiler;
     if (zksolcConfig.compilerSource == 'binary') {
-        compiler = await BinaryCompiler.initialize();
+        if (solcPath == null) {
+            throw pluginError('solc executable is not specified');
+        }
+        compiler = new BinaryCompiler(solcPath);
     } else if (zksolcConfig.compilerSource == 'docker') {
         compiler = await DockerCompiler.initialize(zksolcConfig);
     } else {
@@ -29,23 +32,15 @@ export interface ICompiler {
 }
 
 export class BinaryCompiler implements ICompiler {
-    public static async initialize(): Promise<ICompiler> {
-        checkZksolcBinary();
-        return new BinaryCompiler();
-    }
+    constructor(public solcPath: string) {}
+
     public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
-        return await compileWithBinary(input, config);
+        return await compileWithBinary(input, config, this.solcPath);
     }
 }
 
 export class DockerCompiler implements ICompiler {
-    dockerImage: Image;
-    docker: HardhatDocker;
-
-    private constructor(dockerImage: Image, docker: HardhatDocker) {
-        this.dockerImage = dockerImage;
-        this.docker = docker;
-    }
+    protected constructor(public dockerImage: Image, public docker: HardhatDocker) {}
 
     public static async initialize(config: ZkSolcConfig): Promise<ICompiler> {
         await validateDockerIsInstalled();

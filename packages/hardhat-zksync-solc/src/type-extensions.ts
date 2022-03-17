@@ -8,7 +8,7 @@ declare module 'hardhat/types/config' {
     }
 
     interface HardhatConfig {
-        zksolc?: ZkSolcConfig;
+        zksolc: ZkSolcConfig;
     }
 
     interface HardhatNetworkUserConfig {
