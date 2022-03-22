@@ -48,8 +48,13 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
 async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     delete require.cache[script];
     let deployFn: any = require(script);
-    if (deployFn.default) {
+
+    if (typeof deployFn.default === 'function') {
         deployFn = deployFn.default;
+    }
+
+    if (typeof deployFn !== 'function') {
+        throw pluginError('Deploy function does not exist or exported invalidly');
     }
 
     await deployFn(hre);
