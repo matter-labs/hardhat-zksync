@@ -99,15 +99,20 @@ export class Deployer {
      * @param artifact The previously loaded artifact object.
      * @param constructorArguments List of arguments to be passed to the contract constructor.
      * @param overrides Optional object with additional deploy transaction parameters.
+     * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
      *
      * @returns A contract object.
      */
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[],
-        overrides?: Overrides
+        overrides?: Overrides,
+        additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
-        const factoryDeps = await this.extractFactoryDeps(artifact);
+        const baseDeps = await this.extractFactoryDeps(artifact);
+        const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val)) : [];
+        const factoryDeps = [...baseDeps, ...additionalDeps];
+
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
         const { feeToken, customData, ..._overrides } = overrides ?? {};
 
