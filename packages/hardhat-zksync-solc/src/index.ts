@@ -13,7 +13,7 @@ import { spawnSync } from 'child_process';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
-extendConfig((config) => {
+extendConfig((config, userConfig) => {
     const defaultConfig = {
         version: 'latest',
         compilerSource: 'binary',
@@ -26,8 +26,8 @@ extendConfig((config) => {
         },
     };
 
-    config.zksolc = { ...defaultConfig, ...config.zksolc };
-    config.zksolc.settings = { ...defaultConfig.settings, ...config.zksolc.settings };
+    config.zksolc = { ...defaultConfig, ...userConfig?.zksolc };
+    config.zksolc.settings = { ...defaultConfig.settings, ...userConfig?.zksolc?.settings };
 });
 
 extendEnvironment((hre) => {
