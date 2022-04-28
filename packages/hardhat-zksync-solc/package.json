@@ -33,13 +33,15 @@
   ],
   "dependencies": {
     "@nomiclabs/hardhat-docker": "^2.0.0",
-    "dockerode": "^3.3.1"
+    "dockerode": "^3.3.1",
+    "semver": "^7.3.7"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
     "@types/dockerode": "^3.3.3",
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.21",
+    "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "5.13.0",
     "@typescript-eslint/parser": "5.13.0",
     "chai": "^4.3.6",
