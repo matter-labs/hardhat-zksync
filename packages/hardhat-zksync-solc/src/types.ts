@@ -18,6 +18,7 @@ export interface ZkSolcConfig {
         };
         experimental?: {
             dockerImage?: string;
+            tag?: string;
         };
     };
 }
