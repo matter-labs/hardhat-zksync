@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "exclude": ["./dist", "./node_modules", "./test/fixture-projects"]
+  "exclude": ["./dist", "./node_modules", "./test"]
 }
