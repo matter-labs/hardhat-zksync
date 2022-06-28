@@ -7,7 +7,7 @@ export interface ZkSolcConfig {
         // Path to zksolc binary. If compilerSource == "docker", this option is ignored.
         // By default, zksolc in $PATH is used.
         compilerPath: string;
-        optimizer: {
+        optimizer?: {
             enabled: boolean;
         };
         // addresses of external libraries
