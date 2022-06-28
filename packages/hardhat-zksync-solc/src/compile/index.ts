@@ -12,6 +12,10 @@ import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
+    if (zksolcConfig.settings.optimizer) {
+        console.warn('Settings for optimizer are deprecated, optimizer is enabled in any case.');
+    }
+
     let compiler: ICompiler;
     if (zksolcConfig.compilerSource == 'binary') {
         if (solcPath == null) {

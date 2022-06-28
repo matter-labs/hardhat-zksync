@@ -4,9 +4,7 @@ import { ZkSolcConfig } from '../types';
 export async function compileWithBinary(input: any, config: ZkSolcConfig, solcPath: string): Promise<any> {
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
-            `${config.settings.compilerPath} --standard-json --solc ${solcPath} ${
-                config.settings.optimizer?.enabled ? '--optimize' : ''
-            }`,
+            `${config.settings.compilerPath} --standard-json --solc ${solcPath}`,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },

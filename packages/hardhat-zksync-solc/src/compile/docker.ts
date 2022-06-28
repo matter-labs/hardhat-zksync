@@ -129,9 +129,6 @@ export async function compileWithDocker(
     config: ZkSolcConfig
 ): Promise<any> {
     const command = ['zksolc', '--standard-json'];
-    if (config?.settings?.optimizer?.enabled) {
-        command.push('--optimize');
-    }
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
