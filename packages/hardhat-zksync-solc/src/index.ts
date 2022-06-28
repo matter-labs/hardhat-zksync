@@ -141,7 +141,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     const compilerPath = hre.config.zksolc.settings.compilerPath;
 
     const versionOutput = spawnSync(compilerPath, ['--version']);
-    const version = versionOutput.stdout.toString().match(/\d+\.\d+\.\d+/)?.toString();
+    const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
 
     if (versionOutput.status !== 0 || version == null) {
         throw pluginError(`Specified zksolc binary is not found or invalid`);
