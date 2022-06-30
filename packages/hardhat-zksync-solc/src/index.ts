@@ -5,7 +5,7 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
-import { FactoryDeps } from './types';
+import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
 import { zeroxlify, pluginError } from './utils';
@@ -14,21 +14,22 @@ import semver from 'semver';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
-extendConfig((config) => {
-    const defaultConfig = {
+extendConfig((config, userConfig) => {
+    const defaultConfig: ZkSolcConfig = {
         version: 'latest',
         compilerSource: 'binary',
         settings: {
             compilerPath: 'zksolc',
-            optimizer: {
-                enabled: false,
-            },
             experimental: {},
         },
     };
 
-    config.zksolc = { ...defaultConfig, ...config.zksolc };
-    config.zksolc.settings = { ...defaultConfig.settings, ...config.zksolc.settings };
+    if (userConfig?.zksolc?.settings?.optimizer) {
+        console.warn('`optimizer` setting is deprecated, optimizer is always enabled');
+    }
+
+    config.zksolc = { ...defaultConfig, ...userConfig?.zksolc };
+    config.zksolc.settings = { ...defaultConfig.settings, ...userConfig?.zksolc?.settings };
 });
 
 extendEnvironment((hre) => {
@@ -51,7 +52,7 @@ extendEnvironment((hre) => {
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
         // If solidity optimizer is not enabled, the libraries are not inlined and
-        // we have to manually pass them into zksolc. So for now we force the optimization.
+        // we have to manually pass them into zksolc. That's why we force the optimization.
         hre.config.solidity.compilers.forEach((compiler) => {
             let settings = compiler.settings || {};
             compiler.settings = { ...settings, optimizer: { enabled: true } };
@@ -140,7 +141,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     const solcBuild = await runSuper(args);
     const compilerPath = hre.config.zksolc.settings.compilerPath;
 
-    const versionOutput = spawnSync(compilerPath, ['--version']);
+    const versionOutput = spawnSync(compilerPath!, ['--version']);
     const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
 
     if (versionOutput.status !== 0 || version == null) {

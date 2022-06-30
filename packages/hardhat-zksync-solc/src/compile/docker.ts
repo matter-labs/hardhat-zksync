@@ -126,8 +126,7 @@ export async function compileWithDocker(
     input: CompilerInput,
     docker: HardhatDocker,
     image: Image,
-    config: ZkSolcConfig
-): Promise<any> {
+) {
     const command = ['zksolc', '--standard-json'];
 
     // @ts-ignore
