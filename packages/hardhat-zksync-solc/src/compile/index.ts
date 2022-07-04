@@ -12,10 +12,6 @@ import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
-    if (zksolcConfig.settings.optimizer) {
-        console.warn('Settings for optimizer are deprecated, optimizer is enabled in any case.');
-    }
-
     let compiler: ICompiler;
     if (zksolcConfig.compilerSource == 'binary') {
         if (solcPath == null) {
@@ -38,7 +34,7 @@ export interface ICompiler {
 export class BinaryCompiler implements ICompiler {
     constructor(public solcPath: string) {}
 
-    public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
+    public async compile(input: CompilerInput, config: ZkSolcConfig) {
         return await compileWithBinary(input, config, this.solcPath);
     }
 }
@@ -56,7 +52,7 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(input: CompilerInput, config: ZkSolcConfig): Promise<any> {
-        return await compileWithDocker(input, this.docker, this.dockerImage, config);
+    public async compile(input: CompilerInput, _config: ZkSolcConfig) {
+        return await compileWithDocker(input, this.docker, this.dockerImage);
     }
 }
