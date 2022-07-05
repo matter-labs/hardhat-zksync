@@ -31,7 +31,7 @@
     "ethers": "~5.5.4",
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
-    "zksync-web3": "^0.7.8"
+    "zksync-web3": "^0.7.9"
   },
   "prettier": {
     "tabWidth": 4,
