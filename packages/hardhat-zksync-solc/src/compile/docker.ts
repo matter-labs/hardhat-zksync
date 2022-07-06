@@ -9,7 +9,6 @@ import {
 } from '@nomiclabs/hardhat-docker';
 import Docker, { ContainerCreateOptions } from 'dockerode';
 import { CompilerInput } from 'hardhat/types';
-import { ZkSolcConfig } from '../types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 
