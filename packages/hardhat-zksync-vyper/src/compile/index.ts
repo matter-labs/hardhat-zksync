@@ -18,8 +18,8 @@ export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[]
             throw pluginError('solc executable is not specified');
         }
         compiler = new BinaryCompiler(vyperPath);
-    // } else if (zkvyperConfig.compilerSource == 'docker') {
-    //     compiler = await DockerCompiler.initialize(zkvyperConfig);
+    } else if (zkvyperConfig.compilerSource == 'docker') {
+        compiler = await DockerCompiler.initialize(zkvyperConfig);
     } else {
         throw pluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
@@ -39,21 +39,20 @@ export class BinaryCompiler implements ICompiler {
     }
 }
 
-// TODO: IDK if this will be needed at all
-// export class DockerCompiler implements ICompiler {
-//     protected constructor(public dockerImage: Image, public docker: HardhatDocker) {}
-//
-//     public static async initialize(config: ZkVyperConfig): Promise<ICompiler> {
-//         await validateDockerIsInstalled();
-//
-//         const image = dockerImage(config.settings.experimental?.dockerImage, config.settings.experimental?.tag);
-//         const docker = await createDocker();
-//         await pullImageIfNecessary(docker, image);
-//
-//         return new DockerCompiler(image, docker);
-//     }
-//
-//     public async compile(input: CompilerInput, _config: ZkVyperConfig) {
-//         return await compileWithDocker(input, this.docker, this.dockerImage);
-//     }
-// }
+export class DockerCompiler implements ICompiler {
+    protected constructor(public dockerImage: Image, public docker: HardhatDocker) {}
+
+    public static async initialize(config: ZkVyperConfig): Promise<ICompiler> {
+        await validateDockerIsInstalled();
+
+        const image = dockerImage(config.settings.experimental?.dockerImage, config.settings.experimental?.tag);
+        const docker = await createDocker();
+        await pullImageIfNecessary(docker, image);
+
+        return new DockerCompiler(image, docker);
+    }
+
+    public async compile(inputPaths: string[], config: ZkVyperConfig) {
+        return await compileWithDocker(inputPaths, this.docker, this.dockerImage);
+    }
+}

@@ -68,9 +68,6 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
     }
 }
 
-// Notice: contents of this file were mostly copy-pasted from the official Hardhat Vyper plugin
-// https://github.com/nomiclabs/hardhat/tree/master/packages/hardhat-vyper
-
 export function dockerImage(imageName?: string, imageTag?: string): Image {
     if (!imageName) {
         throw pluginError('Docker source was chosen but no image was specified');

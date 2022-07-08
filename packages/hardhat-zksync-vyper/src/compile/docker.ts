@@ -8,11 +8,10 @@ import {
     ImageDoesntExistError,
 } from '@nomiclabs/hardhat-docker';
 import Docker, { ContainerCreateOptions } from 'dockerode';
-import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 
-async function runZksolcContainer(docker: Docker, image: Image, command: string[], input: string) {
+async function runZksolcContainer(docker: Docker, image: Image, command: string[]) {
     const createOptions: ContainerCreateOptions = {
         Tty: false,
         AttachStdin: true,
@@ -49,7 +48,6 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
 
     const dockerStream = await container.attach({
         stream: true,
-        stdin: true,
         stdout: true,
         stderr: true,
         hijack: true,
@@ -57,7 +55,7 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
 
     dockerStream.pipe(stream);
     await container.start();
-    dockerStream.end(input);
+    dockerStream.end();
     await container.wait();
 
     const compilerOutput = output.toString('utf8');
@@ -67,9 +65,6 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
         throw pluginError(compilerOutput);
     }
 }
-
-// Notice: contents of this file were mostly copy-pasted from the official Hardhat Vyper plugin
-// https://github.com/nomiclabs/hardhat/tree/master/packages/hardhat-vyper
 
 export function dockerImage(imageName?: string, imageTag?: string): Image {
     if (!imageName) {
@@ -122,15 +117,15 @@ async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
 }
 
 export async function compileWithDocker(
-    input: CompilerInput,
+    inputPaths: string[],
     docker: HardhatDocker,
     image: Image,
 ) {
-    const command = ['zksolc', '--standard-json'];
+    const command = ['zkvyper', '-f', 'combined_json', inputPaths.join(' ')];
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, command, JSON.stringify(input)));
+    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, command));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
