@@ -9,7 +9,6 @@ import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
 import { pluginError } from './utils';
 import { spawnSync } from 'child_process';
-import semver from 'semver';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkVyperConfig = {
@@ -82,13 +81,6 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
 
     if (versionOutput.status !== 0 || version == null) {
         throw pluginError(`Specified zkvyper binary is not found or invalid`);
-    }
-
-    if (!semver.gte(version, vyperBuild.version)) {
-        throw pluginError(
-            `Specified vyper version is incompatible with installed zkvyper. ` +
-                `Found: ${vyperBuild.version}, expected: <=${version}`
-        );
     }
 
     return vyperBuild;
