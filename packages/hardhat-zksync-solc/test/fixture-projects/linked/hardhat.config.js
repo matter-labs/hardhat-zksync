@@ -1,26 +1,9 @@
-require("../../../src/index");
+const config = require('../../common.config').default;
 
-module.exports = {
-  zksolc: {
-    version: "0.1.0",
-    compilerSource: "docker",
-    settings: {
-      experimental: {
-        dockerImage: "matterlabs/zksolc"
-      },
-      libraries: {
-        'contracts/Foo.sol': {
-            'Foo': '0x0123456789abcdef0123456789abcdef01234567'
-        }
-      }
-    },
-  },
-  networks: {
-    hardhat: {
-      zksync: true,
-    },
-  },
-  solidity: {
-      version: "0.8.11"
-  }
-};
+config.zksolc.settings.libraries = {
+    'contracts/Foo.sol': {
+        'Foo': '0x0123456789abcdef0123456789abcdef01234567'
+    }
+}
+
+module.exports = config;
