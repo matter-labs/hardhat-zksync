@@ -19,7 +19,12 @@ jobs:
         run: |
           yarn install
 
-      - name: Test compiler plugin
+      - name: Test zksolc compiler plugin
         run: |
           cd packages/hardhat-zksync-solc
+          yarn test
+
+      - name: Test zkvyper compiler plugin
+        run: |
+          cd packages/hardhat-zksync-vyper
           yarn test
