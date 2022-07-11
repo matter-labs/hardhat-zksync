@@ -57,7 +57,6 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
     }
 
     const compilerOutput = await compile(hre.config.zkvyper, args.inputPaths, hre.config.paths.sources, args.vyperPath);
-    console.log(Object.keys(compilerOutput));
     (hre.artifacts as ZkArtifacts).compilerOutput = compilerOutput;
 
     return compilerOutput;

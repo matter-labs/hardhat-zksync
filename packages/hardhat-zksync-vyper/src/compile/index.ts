@@ -23,7 +23,6 @@ export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[]
         throw pluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
-    console.log('INPUT PATHS', inputPaths);
     return await compiler.compile({ 
         inputPaths, 
         sourcesPath, 

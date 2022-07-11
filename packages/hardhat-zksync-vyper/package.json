@@ -6,8 +6,8 @@
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
   "author": "Matter Labs",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "keywords": [
     "ethereum",
     "smart-contracts",
@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --no-timeout --exit",
+    "test": "mocha -r ts-node/register test/tests.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },

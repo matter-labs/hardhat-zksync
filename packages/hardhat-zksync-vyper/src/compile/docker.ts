@@ -29,8 +29,6 @@ async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerO
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
-    console.log(createOptions.Cmd);
-
     const container = await docker.createContainer(createOptions);
 
     let output = Buffer.from('');
