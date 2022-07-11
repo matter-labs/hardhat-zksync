@@ -34,3 +34,11 @@ export interface ZkSyncArtifact extends Artifact {
     // List of factory dependencies of a contract.
     factoryDeps: FactoryDeps;
 }
+
+// Internal interface used for compilation
+export interface CompilerOptions {
+    inputPaths: string[],
+    compilerPath?: string,
+    sourcesPath?: string,
+}
+

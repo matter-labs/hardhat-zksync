@@ -2,6 +2,7 @@ import {
     TASK_COMPILE_VYPER_RUN_BINARY,
     TASK_COMPILE_VYPER_GET_BUILD
 } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
+import { TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { ZkVyperConfig } from './types';
@@ -42,15 +43,21 @@ extendEnvironment((hre) => {
         hre.config.paths.artifacts = artifactsPath;
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new ZkArtifacts(artifactsPath);
+
+        // TODO: set a default FORWARDER_CONTRACT_BYTECODE_HASH env variable
     }
 });
+
+// If there're no .sol files to compile - that's ok.
+subtask(TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE, async () => {});
 
 subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vyperPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
 
-    const compilerOutput = await compile(hre.config.zkvyper, args.inputPaths, args.vyperPath);
+    const compilerOutput = await compile(hre.config.zkvyper, args.inputPaths, hre.config.paths.sources, args.vyperPath);
+    console.log(Object.keys(compilerOutput));
     (hre.artifacts as ZkArtifacts).compilerOutput = compilerOutput;
 
     return compilerOutput;

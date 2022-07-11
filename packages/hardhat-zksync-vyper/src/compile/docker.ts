@@ -7,11 +7,15 @@ import {
     Image,
     ImageDoesntExistError,
 } from '@nomiclabs/hardhat-docker';
+import { CompilerOptions } from '../types';
 import Docker, { ContainerCreateOptions } from 'dockerode';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
+import path from 'path';
 
-async function runZksolcContainer(docker: Docker, image: Image, command: string[]) {
+async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerOptions) {
+    const relativeSourcesPath = path.relative(process.cwd(), paths.sourcesPath!);
+
     const createOptions: ContainerCreateOptions = {
         Tty: false,
         AttachStdin: true,
@@ -19,10 +23,13 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
         StdinOnce: true,
         HostConfig: {
             AutoRemove: true,
+            Binds: [ `${paths.sourcesPath!}:/${relativeSourcesPath}` ]
         },
-        Cmd: command,
+        Cmd: ['zkvyper', '-f', 'combined_json', ...paths.inputPaths.map(p => path.relative(process.cwd(), p))],
         Image: HardhatDocker.imageToRepoTag(image),
     };
+
+    console.log(createOptions.Cmd);
 
     const container = await docker.createContainer(createOptions);
 
@@ -117,15 +124,13 @@ async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
 }
 
 export async function compileWithDocker(
-    inputPaths: string[],
+    paths: CompilerOptions,
     docker: HardhatDocker,
     image: Image,
 ) {
-    const command = ['zkvyper', '-f', 'combined_json', inputPaths.join(' ')];
-
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, command));
+    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, paths));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
@@ -150,7 +155,7 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof ImageDoesntExistError) {
             throw pluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
-                    'Make sure you chose a valid zksolc version.'
+                    'Make sure you chose a valid zkvyper version.'
             );
         }
 

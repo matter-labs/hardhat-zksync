@@ -8,7 +8,13 @@ const config: HardhatUserConfig = {
     compilerSource: "binary",
   },
   zkvyper: {
-    compilerSource: "binary",
+    compilerSource: "docker",
+    settings: {
+      experimental: {
+        dockerImage: "matterlabs/zkvyper",
+        tag: "latest"
+      }
+    }
   },
   networks: {
     hardhat: {
@@ -19,7 +25,7 @@ const config: HardhatUserConfig = {
     version: "0.3.2"
   },
   solidity: {
-    version: "0.8.0"
+    version: "0.8.12"
   }
 };
 

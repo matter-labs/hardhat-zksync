@@ -1,4 +1,4 @@
-import { ZkVyperConfig } from '../types';
+import { ZkVyperConfig, CompilerOptions } from '../types';
 import { compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import {
@@ -8,14 +8,13 @@ import {
     dockerImage,
     compileWithDocker,
 } from './docker';
-import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 
-export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[], vyperPath?: string) {
+export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[], sourcesPath: string, vyperPath?: string) {
     let compiler: ICompiler;
     if (zkvyperConfig.compilerSource == 'binary') {
         if (vyperPath == null) {
-            throw pluginError('solc executable is not specified');
+            throw pluginError('vyper executable is not specified');
         }
         compiler = new BinaryCompiler(vyperPath);
     } else if (zkvyperConfig.compilerSource == 'docker') {
@@ -24,18 +23,23 @@ export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[]
         throw pluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
-    return await compiler.compile(inputPaths, zkvyperConfig);
+    console.log('INPUT PATHS', inputPaths);
+    return await compiler.compile({ 
+        inputPaths, 
+        sourcesPath, 
+        compilerPath: zkvyperConfig.settings.compilerPath
+    });
 }
 
 export interface ICompiler {
-    compile(inputPaths: string[], config: ZkVyperConfig): Promise<any>;
+    compile(paths: CompilerOptions): Promise<any>;
 }
 
 export class BinaryCompiler implements ICompiler {
-    constructor(public solcPath: string) {}
+    constructor(public vyperPath: string) {}
 
-    public async compile(inputPaths: string[], config: ZkVyperConfig) {
-        return await compileWithBinary(inputPaths, config, this.solcPath);
+    public async compile(paths: CompilerOptions) {
+        return await compileWithBinary(paths, this.vyperPath);
     }
 }
 
@@ -52,7 +56,7 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(inputPaths: string[], config: ZkVyperConfig) {
-        return await compileWithDocker(inputPaths, this.docker, this.dockerImage);
+    public async compile(paths: CompilerOptions) {
+        return await compileWithDocker(paths, this.docker, this.dockerImage);
     }
 }

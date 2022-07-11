@@ -1,10 +1,10 @@
 import { exec } from 'child_process';
-import { ZkVyperConfig } from '../types';
+import { CompilerOptions } from '../types';
 
-export async function compileWithBinary(inputPaths: string[], config: ZkVyperConfig, vyperPath: string): Promise<any> {
+export async function compileWithBinary(paths: CompilerOptions, vyperPath: string): Promise<any> {
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
-            `${config.settings.compilerPath} -f combined_json ${inputPaths.join(' ')} --vyper ${vyperPath}`,
+            `${paths.compilerPath} -f combined_json ${paths.inputPaths.join(' ')} --vyper ${vyperPath}`,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },
