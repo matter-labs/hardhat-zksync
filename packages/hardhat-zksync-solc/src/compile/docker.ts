@@ -12,7 +12,7 @@ import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 
-async function runZksolcContainer(docker: Docker, image: Image, command: string[], input: string) {
+async function runZksolcContainer(docker: Docker, image: Image, input: string) {
     const createOptions: ContainerCreateOptions = {
         Tty: false,
         AttachStdin: true,
@@ -21,7 +21,7 @@ async function runZksolcContainer(docker: Docker, image: Image, command: string[
         HostConfig: {
             AutoRemove: true,
         },
-        Cmd: command,
+        Cmd: ['zksolc', '--standard-json'],
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
@@ -123,11 +123,9 @@ export async function compileWithDocker(
     docker: HardhatDocker,
     image: Image,
 ) {
-    const command = ['zksolc', '--standard-json'];
-
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, command, JSON.stringify(input)));
+    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, JSON.stringify(input)));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
