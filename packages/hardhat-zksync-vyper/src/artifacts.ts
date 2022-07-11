@@ -13,7 +13,7 @@ export class ZkArtifacts extends Artifacts {
                 ...artifact,
                 _format: ZK_ARTIFACT_FORMAT_VERSION,
                 // @ts-ignore
-                factoryDeps: this.compilerOutput == null ? {} : this.compilerOutput[artifact.sourceName].factory_deps
+                factoryDeps: this.compilerOutput[artifact.sourceName]?.factory_deps ?? {}
             }, pathToBuildInfo);
         }
         return await super.saveArtifactAndDebugFile(artifact, pathToBuildInfo);
