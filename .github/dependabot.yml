@@ -20,3 +20,10 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "production"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/hardhat-zksync-vyper"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "production"
