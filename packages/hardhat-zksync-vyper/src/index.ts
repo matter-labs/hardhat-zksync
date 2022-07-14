@@ -43,8 +43,6 @@ extendEnvironment((hre) => {
         hre.config.paths.artifacts = artifactsPath;
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new ZkArtifacts(artifactsPath);
-
-        // TODO: set a default FORWARDER_CONTRACT_BYTECODE_HASH env variable
     }
 });
 
@@ -57,6 +55,10 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
     }
 
     const compilerOutput = await compile(hre.config.zkvyper, args.inputPaths, hre.config.paths.sources, args.vyperPath);
+    if (compilerOutput.__VYPER_FORWARDER_CONTRACT) {
+        (hre.artifacts as ZkArtifacts).forwarderOutput = compilerOutput.__VYPER_FORWARDER_CONTRACT;
+        delete compilerOutput.__VYPER_FORWARDER_CONTRACT;
+    }
     (hre.artifacts as ZkArtifacts).compilerOutput = compilerOutput;
 
     return compilerOutput;
