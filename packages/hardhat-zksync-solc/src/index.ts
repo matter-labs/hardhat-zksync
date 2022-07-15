@@ -10,7 +10,6 @@ import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artif
 import { compile } from './compile';
 import { zeroxlify, pluginError } from './utils';
 import { spawnSync } from 'child_process';
-import semver from 'semver';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 
@@ -146,13 +145,6 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
     if (versionOutput.status !== 0 || version == null) {
         throw pluginError(`Specified zksolc binary is not found or invalid`);
-    }
-
-    if (!semver.gte(version, solcBuild.version)) {
-        throw pluginError(
-            `Specified solc version is incompatible with installed zksolc. ` +
-                `Found: ${solcBuild.version}, expected: <=${version}`
-        );
     }
 
     return solcBuild;

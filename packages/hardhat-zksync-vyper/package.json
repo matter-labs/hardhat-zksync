@@ -1,9 +1,9 @@
 {
-  "name": "@matterlabs/hardhat-zksync-solc",
-  "version": "0.3.6",
-  "description": "Hardhat plugin to compile smart contracts for the zkSync network",
+  "name": "@matterlabs/hardhat-zksync-vyper",
+  "version": "0.1.0",
+  "description": "Hardhat plugin to compile Vyper smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
-  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-solc",
+  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -13,7 +13,8 @@
     "smart-contracts",
     "hardhat",
     "hardhat-plugin",
-    "zkSync"
+    "zkSync",
+    "vyper"
   ],
   "scripts": {
     "lint": "yarn prettier --check && yarn eslint",
@@ -21,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --no-timeout --exit",
+    "test": "mocha -r ts-node/register test/tests.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -36,7 +37,9 @@
     "dockerode": "^3.3.1"
   },
   "devDependencies": {
+    "@nomiclabs/hardhat-vyper": "^3.0.0",
     "@types/chai": "^4.2.0",
+    "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.21",
@@ -56,6 +59,7 @@
     "typescript": "~4.6.2"
   },
   "peerDependencies": {
+    "@nomiclabs/hardhat-vyper": "^3.0.0",
     "hardhat": "^2.9.0"
   },
   "prettier": {

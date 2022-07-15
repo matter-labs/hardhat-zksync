@@ -1,15 +1,16 @@
+import "@nomiclabs/hardhat-vyper";
+import "@matterlabs/hardhat-zksync-vyper";
 import "@matterlabs/hardhat-zksync-deploy";
-import "@matterlabs/hardhat-zksync-solc";
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
-  zksolc: {
+  zkvyper: {
     version: "0.1.0",
     compilerSource: "docker",
     settings: {
       experimental: {
-        dockerImage: "matterlabs/zksolc",
-        tag: "v1.1.2"
+        dockerImage: "matterlabs/zkvyper",
+        tag: "latest"
       }
     },
   },
@@ -22,11 +23,10 @@ const config: HardhatUserConfig = {
       zksync: true,
     },
   },
-  // Docker image only works for solidity ^0.8.0.
-  // For earlier versions you need to use binary releases of zksolc.
-  solidity: {
-    version: "0.8.12"
-  }
+  // Currently, only Vyper ^0.3.3 is supported.
+  vyper: {
+    version: "0.3.3"
+  },
 };
 
 export default config;

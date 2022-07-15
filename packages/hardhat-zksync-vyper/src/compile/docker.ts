@@ -7,12 +7,15 @@ import {
     Image,
     ImageDoesntExistError,
 } from '@nomiclabs/hardhat-docker';
+import { CompilerOptions } from '../types';
 import Docker, { ContainerCreateOptions } from 'dockerode';
-import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
+import path from 'path';
 
-async function runZksolcContainer(docker: Docker, image: Image, input: string) {
+async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerOptions) {
+    const relativeSourcesPath = path.relative(process.cwd(), paths.sourcesPath!);
+
     const createOptions: ContainerCreateOptions = {
         Tty: false,
         AttachStdin: true,
@@ -20,8 +23,9 @@ async function runZksolcContainer(docker: Docker, image: Image, input: string) {
         StdinOnce: true,
         HostConfig: {
             AutoRemove: true,
+            Binds: [ `${paths.sourcesPath!}:/${relativeSourcesPath}` ]
         },
-        Cmd: ['zksolc', '--standard-json'],
+        Cmd: ['zkvyper', '-f', 'combined_json', ...paths.inputPaths.map(p => path.relative(process.cwd(), p))],
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
@@ -49,7 +53,6 @@ async function runZksolcContainer(docker: Docker, image: Image, input: string) {
 
     const dockerStream = await container.attach({
         stream: true,
-        stdin: true,
         stdout: true,
         stderr: true,
         hijack: true,
@@ -57,7 +60,7 @@ async function runZksolcContainer(docker: Docker, image: Image, input: string) {
 
     dockerStream.pipe(stream);
     await container.start();
-    dockerStream.end(input);
+    dockerStream.end();
     await container.wait();
 
     const compilerOutput = output.toString('utf8');
@@ -119,13 +122,13 @@ async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
 }
 
 export async function compileWithDocker(
-    input: CompilerInput,
+    paths: CompilerOptions,
     docker: HardhatDocker,
     image: Image,
 ) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, JSON.stringify(input)));
+    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, paths));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
@@ -150,7 +153,7 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof ImageDoesntExistError) {
             throw pluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
-                    'Make sure you chose a valid zksolc version.'
+                    'Make sure you chose a valid zkvyper version.'
             );
         }
 

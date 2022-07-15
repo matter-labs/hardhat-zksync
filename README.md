@@ -8,6 +8,10 @@ It contains the following plugins:
 
 An adapter for `zksolc` compiler.
 
+## `hardhat-zksync-vyper`
+
+An adapter for `zkvyper` compiler.
+
 ## `hardhat-zksync-deploy`
 
 Plugin capable of deploying compiled contracts to the zkSync network.

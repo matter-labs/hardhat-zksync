@@ -12,14 +12,19 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
           cache: 'yarn'
 
       - name: Setup environment
         run: |
           yarn install
 
-      - name: Test compiler plugin
+      - name: Test zksolc compiler plugin
         run: |
           cd packages/hardhat-zksync-solc
+          yarn test
+
+      - name: Test zkvyper compiler plugin
+        run: |
+          cd packages/hardhat-zksync-vyper
           yarn test
