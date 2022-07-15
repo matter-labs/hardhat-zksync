@@ -5,7 +5,8 @@ import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';
 import { pluginError } from './helpers';
 
-const ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
+const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
+const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
 export type Overrides = ethers.Overrides & { feeToken?: string };
@@ -53,8 +54,8 @@ export class Deployer {
         const artifact = await this.hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
 
         // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
-        if (artifact._format !== ARTIFACT_FORMAT_VERSION) {
-            throw pluginError(`Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc`);
+        if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
+            throw pluginError(`Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`);
         }
         return artifact as ZkSyncArtifact;
     }
@@ -105,7 +106,7 @@ export class Deployer {
      */
     public async deploy(
         artifact: ZkSyncArtifact,
-        constructorArguments: any[],
+        constructorArguments: any[] = [],
         overrides?: Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {

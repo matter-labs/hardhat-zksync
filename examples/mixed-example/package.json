@@ -1,5 +1,5 @@
 {
-  "name": "harhat-zksync-example-vyper",
+  "name": "harhat-zksync-example-mixed",
   "version": "0.1.0",
   "author": "Matter Labs",
   "license": "MIT",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
+    "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
     "@nomiclabs/hardhat-vyper": "^3.0.0",
     "ethers": "~5.5.4",

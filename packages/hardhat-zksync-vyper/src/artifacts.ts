@@ -28,7 +28,10 @@ export class ZkArtifacts extends Artifacts {
             // @ts-ignore
             let entries: Array<[string, string]> = Object.entries(this.compilerOutput[artifact.sourceName]?.factory_deps ?? {});
             for (const [hash, dependency] of entries) {
-                factoryDeps[zeroxlify(hash)] = dependency;
+                factoryDeps[zeroxlify(hash)] = 
+                    dependency == "__VYPER_FORWARDER_CONTRACT" 
+                        ? ".__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT" 
+                        : dependency;
             }
 
             return await super.saveArtifactAndDebugFile({
