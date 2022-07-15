@@ -41,9 +41,7 @@ describe('zkvyper plugin', async function () {
             const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
             const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
             assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
-
-            const depName = 'contracts/DeployMe.vy:DeployMe';
-            assert.equal("__VYPER_FORWARDER_CONTRACT", factoryArtifact.factoryDeps[depHash], 'No required dependency in the artifact');
+            assert.equal(".__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT", factoryArtifact.factoryDeps[depHash], 'No required dependency in the artifact');
 
             // For the dependency contract should be no further dependencies.
             assert.deepEqual(depArtifact.factoryDeps, {}, 'Unexpected factory-deps for a dependency contract');
