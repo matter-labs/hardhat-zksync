@@ -1,0 +1,42 @@
+name: Publish all plugins
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: yarn && yarn build
+
+      - name: Publish zkvyper plugin
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          package: packages/hardhat-zksync-vyper/package.json
+          token: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+          access: public
+          greater-version-only: true
+
+      - name: Publish zksolc plugin
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          package: packages/hardhat-zksync-solc/package.json
+          token: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+          access: public
+          greater-version-only: true
+
+      - name: Publish deploy plugin
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          package: packages/hardhat-zksync-deploy/package.json
+          token: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+          access: public
+          greater-version-only: true
