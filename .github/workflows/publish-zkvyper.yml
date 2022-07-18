@@ -1,0 +1,36 @@
+name: Publish zkvyper plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: choice
+        description: package tag
+        default: latest
+        options: 
+          - latest
+          - next
+          - beta
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+          scope: '@matterlabs'
+
+      - name: Setup environment
+        run: yarn && yarn build
+
+      - name: Publish
+        run: yarn --cwd packages/hardhat-zksync-vyper publish --access public --tag ${{ inputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+
