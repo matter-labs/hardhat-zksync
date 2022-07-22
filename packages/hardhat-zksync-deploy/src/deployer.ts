@@ -9,8 +9,6 @@ const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
-export type Overrides = ethers.Overrides & { feeToken?: string };
-
 /**
  * An entity capable of deploying contracts to the zkSync network.
  */
@@ -61,18 +59,16 @@ export class Deployer {
     }
 
     /**
-     * Estimates the price of calling a deploy transaction in a certain fee token.
+     * Estimates the price of calling a deploy transaction in ETH.
      *
      * @param artifact The previously loaded artifact object.
      * @param constructorArguments List of arguments to be passed to the contract constructor.
-     * @param feeToken Address of the token to pay fees in. If not provided, defaults to ETH.
      *
-     * @returns Calculated fee in wei of the corresponding fee token.
+     * @returns Calculated fee in ETH wei
      */
     public async estimateDeployFee(
         artifact: ZkSyncArtifact,
-        constructorArguments: any[],
-        feeToken?: string
+        constructorArguments: any[]
     ): Promise<ethers.BigNumber> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
@@ -81,7 +77,6 @@ export class Deployer {
         const deployTx = factory.getDeployTransaction(...constructorArguments, {
             customData: {
                 factoryDeps,
-                feeToken: feeToken ?? zk.utils.ETH_ADDRESS,
             },
         });
         deployTx.from = this.zkWallet.address;
@@ -107,7 +102,7 @@ export class Deployer {
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
-        overrides?: Overrides,
+        overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
         const baseDeps = await this.extractFactoryDeps(artifact);
@@ -115,15 +110,14 @@ export class Deployer {
         const factoryDeps = [...baseDeps, ...additionalDeps];
 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
-        const { feeToken, customData, ..._overrides } = overrides ?? {};
+        const { customData, ..._overrides } = overrides ?? {};
 
-        // Encode and send the deploy transaction providing both fee token and factory dependencies.
+        // Encode and send the deploy transaction providing factory dependencies.
         const contract = await factory.deploy(...constructorArguments, {
             ..._overrides,
             customData: {
                 ...customData,
                 factoryDeps,
-                feeToken: feeToken ?? customData?.feeToken ?? zk.utils.ETH_ADDRESS,
             },
         });
         await contract.deployed();
