@@ -484,13 +484,13 @@
   version "0.3.6"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
-    dockerode "^3.3.1"
+    dockerode "^3.3.3"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
   version "0.1.0"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
-    dockerode "^3.3.1"
+    dockerode "^3.3.3"
 
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
@@ -1733,10 +1733,10 @@ dockerode@^2.5.8:
     docker-modem "^1.0.8"
     tar-fs "~1.16.3"
 
-dockerode@^3.3.1:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-3.3.2.tgz#f3545700d2f7f86141b58843a755eeb21e38d5cd"
-  integrity sha512-oXN+1XVH2TeyE0Jj9Ci6Fim8ZIDxyqeJrkx9qhEOaRiA+nhLihKfd3M2L+Aqrj5C2ObPw8RVN2zPWvvk0x2dwg==
+dockerode@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-3.3.3.tgz#7504db10d23866c6f267e7b0b7b4a75fc2203e8d"
+  integrity sha512-lvKV6/NGf2/CYLt5V4c0fd6Fl9XZSCo1Z2HBT9ioKrKLMB2o+gA62Uza8RROpzGvYv57KJx2dKu+ZwSpB//OIA==
   dependencies:
     docker-modem "^3.0.0"
     tar-fs "~2.0.1"
