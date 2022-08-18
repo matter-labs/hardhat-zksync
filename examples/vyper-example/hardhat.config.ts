@@ -5,7 +5,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
   zkvyper: {
-    version: "0.1.0",
+    version: "1.1.2",
     compilerSource: "docker",
     settings: {
       experimental: {

@@ -1,10 +1,12 @@
 import { exec } from 'child_process';
 import { ZkSolcConfig } from '../types';
+import { getZksolcPath } from '../utils';
 
 export async function compileWithBinary(input: any, config: ZkSolcConfig, solcPath: string): Promise<any> {
+    const compilerPath = config.settings.compilerPath || await getZksolcPath(config.version);
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
-            `${config.settings.compilerPath} --standard-json --solc ${solcPath}`,
+            `${compilerPath} --standard-json --solc ${solcPath}`,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },
