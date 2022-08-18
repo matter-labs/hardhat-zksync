@@ -2,6 +2,7 @@ import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
+    TASK_COMPILE_SOLIDITY_COMPILE_JOBS
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
@@ -58,6 +59,19 @@ extendEnvironment((hre) => {
         });
     }
 });
+
+// This override is needed to invalidate cache when zksolc config is changed
+// (e.g. version, compilerSource, settings).
+subtask(
+    TASK_COMPILE_SOLIDITY_COMPILE_JOBS,
+    async (args, hre, runSuper) => {
+        const { artifactsEmittedPerJob } = await runSuper(args);
+        artifactsEmittedPerJob.forEach((artifact: any) => {
+            artifact.compilationJob.solidityConfig.zksolcConfig = hre.config.zksolc;
+        })
+        return { artifactsEmittedPerJob };
+    }
+);
 
 subtask(
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
