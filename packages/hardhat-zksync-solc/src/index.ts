@@ -9,17 +9,20 @@ import './type-extensions';
 import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, pluginError } from './utils';
+import { zeroxlify, pluginError, getZksolcPath, getZksolcUrl } from './utils';
 import { spawnSync } from 'child_process';
+import { download } from 'hardhat/internal/util/download';
+import fs from 'fs';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
+const LATEST_VERSION = '1.1.5';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkSolcConfig = {
-        version: 'latest',
+        version: LATEST_VERSION,
         compilerSource: 'binary',
         settings: {
-            compilerPath: 'zksolc',
+            compilerPath: '',
             experimental: {},
         },
     };
@@ -134,8 +137,8 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
 
 // This task is overriden to:
 // - prevent unnecessary solc downloads when using docker
+// - download zksolc binary if needed
 // - validate zksolc binary
-// - validate solc version required by zksolc
 subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
@@ -152,13 +155,27 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     }
 
     const solcBuild = await runSuper(args);
-    const compilerPath = hre.config.zksolc.settings.compilerPath;
+    let compilerPath = hre.config.zksolc.settings.compilerPath;
 
-    const versionOutput = spawnSync(compilerPath!, ['--version']);
-    const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
+    if (compilerPath) {
+        const versionOutput = spawnSync(compilerPath, ['--version']);
+        const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
 
-    if (versionOutput.status !== 0 || version == null) {
-        throw pluginError(`Specified zksolc binary is not found or invalid`);
+        if (versionOutput.status !== 0 || version == null) {
+            throw pluginError(`Specified zksolc binary is not found or invalid`);
+        }
+    } else {
+        compilerPath = await getZksolcPath(hre.config.zksolc.version);
+        if (!fs.existsSync(compilerPath)) {
+            console.log('Downloading zksolc...');
+            try {
+                await download(getZksolcUrl(hre.config.zksolc.version), compilerPath);
+                fs.chmodSync(compilerPath, '755');
+                console.log('Done.')
+            } catch (e: any) {
+                throw pluginError(e.message.split('\n')[0]);
+            }
+        }
     }
 
     return solcBuild;

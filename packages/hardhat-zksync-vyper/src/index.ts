@@ -8,15 +8,19 @@ import './type-extensions';
 import { ZkVyperConfig } from './types';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
-import { pluginError } from './utils';
+import { pluginError, getZkvyperUrl, getZkvyperPath } from './utils';
 import { spawnSync } from 'child_process';
+import { download } from 'hardhat/internal/util/download';
+import fs from 'fs';
+
+const LATEST_VERSION = '1.1.2';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkVyperConfig = {
-        version: 'latest',
+        version: LATEST_VERSION,
         compilerSource: 'binary',
         settings: {
-            compilerPath: 'zkvyper',
+            compilerPath: '',
             experimental: {},
         },
     };
@@ -66,8 +70,8 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
 
 // This task is overriden to:
 // - prevent unnecessary vyper downloads when using docker
+// - download zkvyper binary if needed
 // - validate zkvyper binary
-// - validate vyper version required by zkvyper
 subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
@@ -82,13 +86,27 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     }
 
     const vyperBuild = await runSuper(args);
-    const compilerPath = hre.config.zkvyper.settings.compilerPath;
+    let compilerPath = hre.config.zkvyper.settings.compilerPath;
 
-    const versionOutput = spawnSync(compilerPath!, ['--version']);
-    const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
+    if (compilerPath) {
+        const versionOutput = spawnSync(compilerPath, ['--version']);
+        const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
 
-    if (versionOutput.status !== 0 || version == null) {
-        throw pluginError(`Specified zkvyper binary is not found or invalid`);
+        if (versionOutput.status !== 0 || version == null) {
+            throw pluginError(`Specified zkvyper binary is not found or invalid`);
+        }
+    } else {
+        compilerPath = await getZkvyperPath(hre.config.zkvyper.version);
+        if (!fs.existsSync(compilerPath)) {
+            console.log('Downloading zkvyper...');
+            try {
+                await download(getZkvyperUrl(hre.config.zkvyper.version), compilerPath);
+                fs.chmodSync(compilerPath, '755');
+                console.log('Done.')
+            } catch (e: any) {
+                throw pluginError(e.message.split('\n')[0]);
+            }
+        }
     }
 
     return vyperBuild;
