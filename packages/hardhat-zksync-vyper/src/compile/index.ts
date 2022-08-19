@@ -8,7 +8,7 @@ import {
     dockerImage,
     compileWithDocker,
 } from './docker';
-import { pluginError } from '../utils';
+import { pluginError, getZkvyperPath } from '../utils';
 
 export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[], sourcesPath: string, vyperPath?: string) {
     let compiler: ICompiler;
@@ -26,7 +26,7 @@ export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[]
     return await compiler.compile({ 
         inputPaths, 
         sourcesPath, 
-        compilerPath: zkvyperConfig.settings.compilerPath
+        compilerPath: zkvyperConfig.settings.compilerPath || await getZkvyperPath(zkvyperConfig.version)
     });
 }
 

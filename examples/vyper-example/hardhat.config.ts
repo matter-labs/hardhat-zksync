@@ -6,13 +6,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 const config: HardhatUserConfig = {
   zkvyper: {
     version: "1.1.2",
-    compilerSource: "docker",
-    settings: {
-      experimental: {
-        dockerImage: "matterlabs/zkvyper",
-        tag: "latest"
-      }
-    },
+    compilerSource: "binary",
   },
   zkSyncDeploy: {
     zkSyncNetwork: "http://127.0.0.1:3050",
