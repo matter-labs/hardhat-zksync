@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "@nomiclabs/hardhat-docker": "^2.0.0",
-    "dockerode": "^3.3.3"
+    "dockerode": "^3.3.4"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
