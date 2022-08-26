@@ -476,7 +476,7 @@
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
-  version "0.4.0-alpha.1"
+  version "0.4.0"
   dependencies:
     glob "^8.0.1"
 
@@ -4461,12 +4461,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zksync-web3@=0.8.0-alpha.2:
-  version "0.8.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.8.0-alpha.2.tgz#69416cd2eeed04a07a7a1a171124edf7874d8ba6"
-  integrity sha512-BIv0KJtUxY/707eXrG42mSSSdtW+BvtQB+yaAuNEhoTI0LpR2BmRUKrvThnMS1o8h/uh5i5H1tAZS9O0rv75bg==
-
-zksync-web3@^0.7.8, zksync-web3@^0.7.9:
+zksync-web3@^0.7.8:
   version "0.7.9"
   resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.7.9.tgz#fbb9a17f4b297c0fb9361de2a0d85ff2aac5becc"
   integrity sha512-B0pitKvEQGJuWkY2UWjXrL1YgHghXEoDaq6acVZnB62TRF099GV58Fzi7Fnqt+Nw14A7Wc9iJ2AHD4GBTLFgkg==
+
+zksync-web3@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.8.0.tgz#4a7d93cd59e03b241448088fff5eaa98d82bb26d"
+  integrity sha512-r4Azkade4Tj9nog4AYb+gGC9GocrslFRxeuEYPCeUZYp9z2i/GG2GSjBn7rY9UtGftwPnZvpiJ6ggvnd7exQtg==
