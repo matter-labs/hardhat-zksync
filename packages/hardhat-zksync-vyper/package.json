@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@nomiclabs/hardhat-docker": "^2.0.0",
-    "dockerode": "^3.3.3"
+    "dockerode": "^3.3.4"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.0",
