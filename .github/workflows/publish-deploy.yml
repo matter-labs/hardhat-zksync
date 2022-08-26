@@ -24,13 +24,12 @@ jobs:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
-          scope: '@matterlabs'
 
       - name: Setup environment
         run: yarn && yarn build
 
       - name: Publish
-        run: yarn --cwd packages/hardhat-zksync-deploy publish --access public --tag ${{ inputs.tag }}
+        run: npm publish @matterlabs/hardhat-zksync-deploy@${{ inputs.tag }} --workspace=packages/hardhat-zksync-deploy --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
 
