@@ -53,12 +53,12 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "~4.6.2",
-    "zksync-web3": "^0.8.0"
+    "zksync-web3": "^0.8.1"
   },
   "peerDependencies": {
     "ethers": "~5.7.0",
     "hardhat": "^2.10.2",
-    "zksync-web3": "^0.8.0"
+    "zksync-web3": "^0.8.1"
   },
   "prettier": {
     "tabWidth": 4,
