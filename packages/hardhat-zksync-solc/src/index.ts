@@ -8,7 +8,7 @@ import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/
 import './type-extensions';
 import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
-import { compile } from './compile';
+import { compile, DockerCompiler } from './compile';
 import { zeroxlify, pluginError, getZksolcPath, getZksolcUrl } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
@@ -139,18 +139,23 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
 // - prevent unnecessary solc downloads when using docker
 // - download zksolc binary if needed
 // - validate zksolc binary
-subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
+subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
 
     if (hre.config.zksolc.compilerSource === 'docker') {
-        // return dummy value, it's not used anywhere anyway
+        // query dockerized solc to get the actual version
+        const compiler = await DockerCompiler.initialize(hre.config.zksolc);
+        const versions = await compiler.solcVersion();
+        hre.config.solidity.compilers.forEach((compiler) => {
+            compiler.version = versions.version;
+        });
+
         return {
             compilerPath: '',
             isSolsJs: false,
-            version: args.solcVersion,
-            longVersion: args.solcVersion,
+            ...versions
         };
     }
 
@@ -167,7 +172,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     } else {
         compilerPath = await getZksolcPath(hre.config.zksolc.version);
         if (!fs.existsSync(compilerPath)) {
-            console.log('Downloading zksolc...');
+            console.log(`Downloading zksolc ${hre.config.zksolc.version}`);
             try {
                 await download(getZksolcUrl(hre.config.zksolc.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
