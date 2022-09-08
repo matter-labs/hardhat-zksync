@@ -17,7 +17,8 @@ export async function getZkvyperPath(version: string): Promise<string> {
 }
 
 export function getZkvyperUrl(version: string): string {
-    const platform = process.platform;
+    const platform = process.platform == 'darwin' ? 'macosx' : process.platform;
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
-    return `https://github.com/matter-labs/zkvyper-bin/raw/main/${platform}-${arch}/zkvyper-${platform}-${arch}-musl-v${version}`;
+    const musl = platform == 'linux' ? '-musl' : '';
+    return `https://github.com/matter-labs/zkvyper-bin/raw/main/${platform}-${arch}/zkvyper-${platform}-${arch}${musl}-v${version}`;
 }
