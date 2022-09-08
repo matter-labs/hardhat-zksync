@@ -678,10 +678,10 @@
     fs-extra "^7.0.1"
     node-fetch "^2.6.0"
 
-"@nomiclabs/hardhat-vyper@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-vyper/-/hardhat-vyper-3.0.0.tgz#36a9add9e2e465a26e53acd564f538215705c646"
-  integrity sha512-IxKPX5t2DKtqlwchKIfgAbaySwKrtzc4SgoGEVlbaLptwFBVAMY9yii9IFWX0MNTTsqbMmavCe5CcUsK/2lSKw==
+"@nomiclabs/hardhat-vyper@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-vyper/-/hardhat-vyper-3.0.1.tgz#a01e9977177a7a94237d56980cc72739c4d0d46f"
+  integrity sha512-FpRBxbOqLWg1n44qsBLWbvw09LVA2U7r7D1M0IsNpMe9QRa/aRYlRh8ine8Fr2KQl+k/NMZDZD4AKSKGPfm7lg==
   dependencies:
     debug "^4.1.1"
     fs-extra "^7.0.1"
