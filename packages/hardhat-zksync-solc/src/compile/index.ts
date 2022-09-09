@@ -7,6 +7,7 @@ import {
     pullImageIfNecessary,
     dockerImage,
     compileWithDocker,
+    getSolcVersion,
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
@@ -42,7 +43,7 @@ export class BinaryCompiler implements ICompiler {
 export class DockerCompiler implements ICompiler {
     protected constructor(public dockerImage: Image, public docker: HardhatDocker) {}
 
-    public static async initialize(config: ZkSolcConfig): Promise<ICompiler> {
+    public static async initialize(config: ZkSolcConfig): Promise<DockerCompiler> {
         await validateDockerIsInstalled();
 
         const image = dockerImage(config.settings.experimental?.dockerImage, config.settings.experimental?.tag);
@@ -54,5 +55,12 @@ export class DockerCompiler implements ICompiler {
 
     public async compile(input: CompilerInput, _config: ZkSolcConfig) {
         return await compileWithDocker(input, this.docker, this.dockerImage);
+    }
+
+    public async solcVersion() {
+        const versionOutput = await getSolcVersion(this.docker, this.dockerImage);
+        const longVersion = versionOutput.match(/^Version: (.*)$/)![1];
+        const version = longVersion.split('+')[0];
+        return { version, longVersion };
     }
 }

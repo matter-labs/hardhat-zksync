@@ -4,7 +4,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
   zksolc: {
-    version: "1.1.5",
+    version: "1.1.6",
     compilerSource: "binary",
   },
   zkSyncDeploy: {

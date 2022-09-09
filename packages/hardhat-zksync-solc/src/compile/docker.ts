@@ -12,7 +12,7 @@ import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 
-async function runZksolcContainer(docker: Docker, image: Image, input: string) {
+async function runContainer(docker: Docker, image: Image, command: string[], input: string) {
     const createOptions: ContainerCreateOptions = {
         Tty: false,
         AttachStdin: true,
@@ -21,7 +21,7 @@ async function runZksolcContainer(docker: Docker, image: Image, input: string) {
         HostConfig: {
             AutoRemove: true,
         },
-        Cmd: ['zksolc', '--standard-json'],
+        Cmd: command,
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
@@ -60,12 +60,7 @@ async function runZksolcContainer(docker: Docker, image: Image, input: string) {
     dockerStream.end(input);
     await container.wait();
 
-    const compilerOutput = output.toString('utf8');
-    try {
-        return JSON.parse(compilerOutput);
-    } catch {
-        throw pluginError(compilerOutput);
-    }
+    return output.toString('utf8');
 }
 
 export function dockerImage(imageName?: string, imageTag?: string): Image {
@@ -125,7 +120,33 @@ export async function compileWithDocker(
 ) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, JSON.stringify(input)));
+    return await handleCommonErrors((async () => {
+        const compilerOutput = await runContainer(
+            dockerInstance,
+            image,
+            ['zksolc', '--standard-json'],
+            JSON.stringify(input)
+        );
+        try {
+            return JSON.parse(compilerOutput);
+        } catch {
+            throw pluginError(compilerOutput);
+        }
+    })())
+}
+
+export async function getSolcVersion(docker: HardhatDocker, image: Image) {
+    // @ts-ignore
+    const dockerInstance: Docker = docker._docker;
+    return await handleCommonErrors((async () => {
+        const versionOutput = await runContainer(
+            dockerInstance,
+            image,
+            ['solc', '--version'],
+            ''
+        );
+        return versionOutput.split('\n')[1];
+    })());
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
