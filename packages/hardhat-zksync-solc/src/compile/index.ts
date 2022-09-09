@@ -7,7 +7,7 @@ import {
     pullImageIfNecessary,
     dockerImage,
     compileWithDocker,
-    getSolcVersion
+    getSolcVersion,
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
@@ -61,9 +61,6 @@ export class DockerCompiler implements ICompiler {
         const versionOutput = await getSolcVersion(this.docker, this.dockerImage);
         const longVersion = versionOutput.match(/^Version: (.*)$/)![1];
         const version = longVersion.split('+')[0];
-        return {
-            version,
-            longVersion
-        }
+        return { version, longVersion };
     }
 }

@@ -1,21 +1,24 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
+    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
-    TASK_COMPILE_SOLIDITY_COMPILE_JOBS
+    TASK_COMPILE_SOLIDITY_COMPILE_JOBS,
 } from 'hardhat/builtin-tasks/task-names';
+import { SolcBuild } from 'hardhat/types';
+import { CompilationJob } from 'hardhat/internal/solidity/compilation-job';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
-import { compile, DockerCompiler } from './compile';
+import { compile } from './compile';
 import { zeroxlify, pluginError, getZksolcPath, getZksolcUrl } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
-const LATEST_VERSION = '1.1.5';
+const LATEST_VERSION = '1.1.6';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkSolcConfig = {
@@ -64,15 +67,26 @@ extendEnvironment((hre) => {
 });
 
 // This override is needed to invalidate cache when zksolc config is changed
-// (e.g. version, compilerSource, settings).
+// (e.g. version, compilerSource, settings), as well as save the correct solc
+// versions in build-info files when using docker.
 subtask(
-    TASK_COMPILE_SOLIDITY_COMPILE_JOBS,
-    async (args, hre, runSuper) => {
-        const { artifactsEmittedPerJob } = await runSuper(args);
-        artifactsEmittedPerJob.forEach((artifact: any) => {
-            artifact.compilationJob.solidityConfig.zksolcConfig = hre.config.zksolc;
-        })
-        return { artifactsEmittedPerJob };
+    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
+    async (
+        args: {
+            output: any;
+            compilationJob: CompilationJob;
+            solcBuild: SolcBuild;
+        },
+        hre,
+        runSuper
+    ) => {
+        // @ts-ignore
+        args.compilationJob.solidityConfig.zksolcConfig = hre.config.zksolc;
+        if (hre.config.zksolc.compilerSource === 'docker') {
+            args.compilationJob.solidityConfig.version = args.output.version ?? 'unknown';
+            args.solcBuild.longVersion = args.output.long_version ?? args.output.version ?? 'unknown';
+        }
+        return await runSuper(args);
     }
 );
 
@@ -139,23 +153,19 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
 // - prevent unnecessary solc downloads when using docker
 // - download zksolc binary if needed
 // - validate zksolc binary
-subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args, hre, runSuper) => {
+subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
 
     if (hre.config.zksolc.compilerSource === 'docker') {
-        // query dockerized solc to get the actual version
-        const compiler = await DockerCompiler.initialize(hre.config.zksolc);
-        const versions = await compiler.solcVersion();
-        hre.config.solidity.compilers.forEach((compiler) => {
-            compiler.version = versions.version;
-        });
-
+        // `version` and `longVersion` later overriden by actual solc version used in docker
+        // and saved to cache and build-info files.
         return {
             compilerPath: '',
             isSolsJs: false,
-            ...versions
+            version: args.solcVersion,
+            longVersion: args.solcVersion,
         };
     }
 
@@ -176,7 +186,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args, hre, runSuper) => {
             try {
                 await download(getZksolcUrl(hre.config.zksolc.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
-                console.log('Done.')
+                console.log('Done.');
             } catch (e: any) {
                 throw pluginError(e.message.split('\n')[0]);
             }
