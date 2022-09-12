@@ -1,12 +1,9 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
-    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
-    TASK_COMPILE_SOLIDITY_COMPILE_JOBS,
+    TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
 } from 'hardhat/builtin-tasks/task-names';
-import { SolcBuild } from 'hardhat/types';
-import { CompilationJob } from 'hardhat/internal/solidity/compilation-job';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { FactoryDeps, ZkSolcConfig } from './types';
@@ -66,27 +63,13 @@ extendEnvironment((hre) => {
     }
 });
 
-// This override is needed to invalidate cache when zksolc config is changed
-// (e.g. version, compilerSource, settings), as well as save the correct solc
-// versions in build-info files when using docker.
+// This override is needed to invalidate cache when zksolc config is changed.
 subtask(
-    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
-    async (
-        args: {
-            output: any;
-            compilationJob: CompilationJob;
-            solcBuild: SolcBuild;
-        },
-        hre,
-        runSuper
-    ) => {
-        // @ts-ignore
-        args.compilationJob.solidityConfig.zksolcConfig = hre.config.zksolc;
-        if (hre.config.zksolc.compilerSource === 'docker') {
-            args.compilationJob.solidityConfig.version = args.output.version ?? 'unknown';
-            args.solcBuild.longVersion = args.output.long_version ?? args.output.version ?? 'unknown';
-        }
-        return await runSuper(args);
+    TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
+    async (args, hre, runSuper) => {
+        const { jobs, errors } = await runSuper(args);
+        jobs.forEach((job: any) => { job.solidityConfig.zksolc = hre.config.zksolc; });
+        return { jobs, errors };
     }
 );
 
@@ -159,13 +142,20 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     }
 
     if (hre.config.zksolc.compilerSource === 'docker') {
-        // `version` and `longVersion` later overriden by actual solc version used in docker
-        // and saved to cache and build-info files.
+        // Versions are wrong here when using docker, because there is no
+        // way to know them beforehand except to run the docker image, which
+        // adds 5-10 seconds to startup time. We cannot read them from artifacts,
+        // since that would make cache invalid every time, if the version is
+        // different from the one in the docker image.
+        //
+        // If you wish to know the actual versions from build-info files,
+        // please look at `output.version`, `output.long_version`
+        // and `output.zk_version` in the generated JSON.
         return {
             compilerPath: '',
             isSolsJs: false,
             version: args.solcVersion,
-            longVersion: args.solcVersion,
+            longVersion: '',
         };
     }
 
