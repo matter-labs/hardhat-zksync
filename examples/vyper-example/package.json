@@ -30,7 +30,7 @@
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
     "@nomiclabs/hardhat-vyper": "^3.0.1",
-    "ethers": "~5.7.0",
+    "ethers": "~5.7.1",
     "hardhat": "^2.11.1",
     "zksync-web3": "^0.8.1"
   },
