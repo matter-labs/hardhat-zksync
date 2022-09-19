@@ -13,7 +13,7 @@ import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 
-const LATEST_VERSION = '1.1.2';
+const LATEST_VERSION = '1.1.4';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkVyperConfig = {
@@ -59,6 +59,8 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
     }
 
     const compilerOutput = await compile(hre.config.zkvyper, args.inputPaths, hre.config.paths.sources, args.vyperPath);
+
+    delete compilerOutput.zk_version;
     if (compilerOutput.__VYPER_FORWARDER_CONTRACT) {
         (hre.artifacts as ZkArtifacts).forwarderOutput = compilerOutput.__VYPER_FORWARDER_CONTRACT;
         delete compilerOutput.__VYPER_FORWARDER_CONTRACT;

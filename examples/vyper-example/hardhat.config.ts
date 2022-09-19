@@ -5,7 +5,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
   zkvyper: {
-    version: "1.1.2",
+    version: "1.1.4",
     compilerSource: "binary",
   },
   zkSyncDeploy: {
