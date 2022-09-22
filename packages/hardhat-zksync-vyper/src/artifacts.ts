@@ -13,14 +13,19 @@ export class ZkArtifacts extends Artifacts {
 
     override async saveArtifactAndDebugFile(artifact: Artifact, pathToBuildInfo?: string) {
         if (this.forwarderOutput != null) {
-            const forwarderArtifact = getArtifactFromVyperOutput(".__VYPER_FORWARDER_CONTRACT", this.forwarderOutput);
-            await super.saveArtifactAndDebugFile({
-                ...forwarderArtifact,
+            const forwarderArtifact = {
+                ...getArtifactFromVyperOutput(".__VYPER_FORWARDER_CONTRACT", this.forwarderOutput),
                 contractName: "__VYPER_FORWARDER_CONTRACT",
                 _format: ZK_ARTIFACT_FORMAT_VERSION,
-            }, pathToBuildInfo);
+            };
+
+            await super.saveArtifactAndDebugFile(forwarderArtifact, pathToBuildInfo);
 
             this.forwarderOutput = undefined;
+            this.addValidArtifacts([{
+                sourceName: forwarderArtifact.sourceName,
+                artifacts: [forwarderArtifact.contractName]
+            }]);
         }
 
         if (artifact.sourceName.endsWith('.vy') || artifact.sourceName.endsWith('.v.py')) {
