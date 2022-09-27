@@ -40,14 +40,13 @@ jobs:
           repository: matter-labs/local-setup
           path: local-setup
 
-      # `sleep 30` because we need to wait until server added all the tokens
       - name: Run server
         run: |
           cd local-setup
           mkdir -p ./volumes/postgres ./volumes/geth ./volumes/zksync/env/dev ./volumes/zksync/data
           docker-compose pull
           docker-compose up &>../server.log &
-          sleep 30
+          sleep 60
 
       - uses: actions/setup-node@v2
         with:
