@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  test:
+  compilation:
     runs-on: ubuntu-latest
     name: Compilation tests
     steps:
@@ -28,3 +28,47 @@ jobs:
         run: |
           cd packages/hardhat-zksync-vyper
           yarn test
+
+  deployment:
+    runs-on: ubuntu-latest
+    name: Deployment tests
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: matter-labs/local-node
+          path: local-node
+
+      # `sleep 30` because we need to wait until server added all the tokens
+      - name: Run server
+        run: |
+          ./local-node/start.sh &>server.log &
+          sleep 30
+
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: |
+          yarn install
+
+      - name: Test zksolc example
+        run: |
+          cd examples/basic-example
+          yarn hardhat compile
+          yarn hardhat deploy-zksync
+
+      - name: Test zkvyper example
+        run: |
+          cd examples/vyper-example
+          yarn hardhat compile
+          yarn hardhat deploy-zksync
+
+      - name: Show logs
+        if: always()
+        run: |
+          cat server.log
+
