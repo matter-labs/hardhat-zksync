@@ -57,7 +57,7 @@ jobs:
 
       - name: Wait until server is up
         run: |
-          while ! curl -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksolc example
         run: |
