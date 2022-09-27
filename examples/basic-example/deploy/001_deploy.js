@@ -39,5 +39,6 @@ module.exports = async function (hre) {
         console.log(`Contract greets us!`);
     } else {
         console.error(`Contract said something unexpected: ${greetingFromContract}`);
+        process.exit(1);
     }
 }

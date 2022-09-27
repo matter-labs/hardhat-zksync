@@ -50,5 +50,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
         console.log(`Everything worked!`);
     } else {
         console.error(`Contract said something unexpected: ${greeting}`);
+        process.exit(1);
     }
 }

@@ -43,5 +43,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
         console.log(`Factory contract deployed!`);
     } else {
         console.error(`Contract said something unexpected: ${greetingFromContract}`);
+        process.exit(1);
     }
 }
