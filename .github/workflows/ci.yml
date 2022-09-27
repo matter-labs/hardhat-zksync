@@ -44,7 +44,9 @@ jobs:
       - name: Run server
         run: |
           cd local-setup
-          ./start.sh &>../server.log &
+          mkdir -p ./volumes/postgres ./volumes/geth ./volumes/zksync/env/dev ./volumes/zksync/data
+          docker-compose pull
+          docker-compose up &>../server.log &
           sleep 30
 
       - uses: actions/setup-node@v2
