@@ -30,7 +30,13 @@ jobs:
           yarn test
 
   deployment:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # solc: [0.8.16, 0.7.6]
+
+    runs-on: ${{ matrix.os }}
+
     name: Deployment tests
     steps:
       - uses: actions/checkout@v2
