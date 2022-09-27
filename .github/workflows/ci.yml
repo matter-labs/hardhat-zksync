@@ -5,7 +5,13 @@ on:
 
 jobs:
   compilation:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        solc: [0.8.16, 0.7.6, 0.4.22]
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
     name: Compilation tests
     steps:
       - uses: actions/checkout@v2
@@ -23,6 +29,8 @@ jobs:
         run: |
           cd packages/hardhat-zksync-solc
           yarn test
+        env:
+          SOLC_VERSION: ${{ matrix.solc }}
 
       - name: Test zkvyper compiler plugin
         run: |
@@ -30,13 +38,7 @@ jobs:
           yarn test
 
   deployment:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        # solc: [0.8.16, 0.7.6]
-
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-latest
     name: Deployment tests
     steps:
       - uses: actions/checkout@v2

@@ -3,13 +3,8 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
   zksolc: {
-    compilerSource: "docker",
-    settings: {
-      experimental: {
-        dockerImage: "matterlabs/zksolc",
-        tag: "latest"
-      }
-    },
+    version: "1.1.6",
+    compilerSource: "binary",
   },
   networks: {
     hardhat: {
@@ -17,7 +12,7 @@ const config: HardhatUserConfig = {
     },
   },
   solidity: {
-    version: "0.8.12"
+    version: process.env.SOLC_VERSION || "0.8.12"
   }
 };
 
