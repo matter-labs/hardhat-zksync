@@ -34,17 +34,17 @@ jobs:
     name: Deployment tests
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
         with:
-          repository: matter-labs/local-node
-          path: local-node
+          repository: matter-labs/local-setup
+          path: local-setup
 
       # `sleep 30` because we need to wait until server added all the tokens
       - name: Run server
         run: |
-          ./local-node/start.sh &>server.log &
+          ./local-setup/start.sh &>server.log &
           sleep 30
-
-      - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v2
         with:
