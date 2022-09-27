@@ -54,6 +54,7 @@ jobs:
       - name: Setup environment
         run: |
           yarn install
+          yarn build
 
       - name: Test zksolc example
         run: |
