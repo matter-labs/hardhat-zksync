@@ -43,10 +43,7 @@ jobs:
       - name: Run server
         run: |
           cd local-setup
-          mkdir -p ./volumes/postgres ./volumes/geth ./volumes/zksync/env/dev ./volumes/zksync/data
-          docker-compose pull
-          docker-compose up &>../server.log &
-          sleep 60
+          ./start.sh &>../server.log &
 
       - uses: actions/setup-node@v2
         with:
@@ -57,6 +54,10 @@ jobs:
         run: |
           yarn install
           yarn build
+
+      - name: Wait until server is up
+        run: |
+          while ! curl -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksolc example
         run: |
