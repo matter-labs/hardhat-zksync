@@ -8,11 +8,11 @@ jobs:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu, macos]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
 
-    name: Compilation tests
+    name: zksolc
     steps:
       - uses: actions/checkout@v2
 
@@ -34,7 +34,7 @@ jobs:
 
   zkvyper:
     runs-on: ubuntu-latest
-    name: Compilation tests
+    name: zkvyper
     steps:
       - uses: actions/checkout@v2
 
@@ -54,7 +54,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    name: Deployment tests
+    name: deploy
     steps:
       - uses: actions/checkout@v2
 
