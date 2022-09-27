@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  compilation:
+  zksolc:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
@@ -32,12 +32,27 @@ jobs:
         env:
           SOLC_VERSION: ${{ matrix.solc }}
 
+  zkvyper:
+    runs-on: ubuntu-latest
+    name: Compilation tests
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: |
+          yarn install
+
       - name: Test zkvyper compiler plugin
         run: |
           cd packages/hardhat-zksync-vyper
           yarn test
 
-  deployment:
+  deploy:
     runs-on: ubuntu-latest
     name: Deployment tests
     steps:
