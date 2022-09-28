@@ -38,6 +38,6 @@ module.exports = async function (hre) {
     if (greetingFromContract == greeting) {
         console.log(`Contract greets us!`);
     } else {
-        console.error(`Contract said something unexpected: ${greetingFromContract}`);
+        throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
     }
 }

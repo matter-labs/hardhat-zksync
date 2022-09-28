@@ -49,6 +49,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     if (greeting == 'Hello world') {
         console.log(`Everything worked!`);
     } else {
-        console.error(`Contract said something unexpected: ${greeting}`);
+        throw new Error(`Contract said something unexpected: ${greeting}`);
     }
 }

@@ -24,6 +24,11 @@ describe('zksolc plugin', async function () {
         useEnvironment('library');
 
         it('Should successfully compile the contract with inlined library', async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                // This test is not applicable to Solidity 0.4.x.
+                console.log('skipped');
+                return
+            }
             await this.env.run(TASK_COMPILE);
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Import.sol:Import').contractName, 'Import');
@@ -34,6 +39,11 @@ describe('zksolc plugin', async function () {
         useEnvironment('linked');
 
         it('Should successfully compile the contract with linked library', async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                // This test is not applicable to Solidity 0.4.x.
+                console.log('skipped');
+                return
+            }
             await this.env.run(TASK_COMPILE);
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Import.sol:Import').contractName, 'Import');

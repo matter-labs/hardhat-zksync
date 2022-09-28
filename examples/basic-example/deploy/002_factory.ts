@@ -42,6 +42,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     if (greetingFromContract == 'Foo') {
         console.log(`Factory contract deployed!`);
     } else {
-        console.error(`Contract said something unexpected: ${greetingFromContract}`);
+        throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
     }
 }

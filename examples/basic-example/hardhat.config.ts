@@ -8,8 +8,8 @@ const config: HardhatUserConfig = {
     compilerSource: "binary",
   },
   zkSyncDeploy: {
-    zkSyncNetwork: "http://127.0.0.1:3050",
-    ethNetwork: "http://127.0.0.1:8545",
+    zkSyncNetwork: "http://0.0.0.0:3050",
+    ethNetwork: "http://0.0.0.0:8545",
   },
   networks: {
     hardhat: {
