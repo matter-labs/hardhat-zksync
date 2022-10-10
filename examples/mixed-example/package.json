@@ -33,7 +33,7 @@
     "@nomiclabs/hardhat-vyper": "^3.0.1",
     "ethers": "~5.7.0",
     "hardhat": "^2.11.1",
-    "zksync-web3": "^0.9.0"
+    "zksync-web3": "^0.11.0"
   },
   "prettier": {
     "tabWidth": 4,
