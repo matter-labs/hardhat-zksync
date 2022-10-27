@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-deploy",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Hardhat plugin to deploy smart contracts into the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-deploy",
@@ -53,12 +53,12 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^4.6.2",
-    "zksync-web3": "^0.11.0"
+    "zksync-web3": "^0.11.1"
   },
   "peerDependencies": {
     "ethers": "~5.7.0",
     "hardhat": "^2.11.1",
-    "zksync-web3": "^0.11.0"
+    "zksync-web3": "^0.11.1"
   },
   "prettier": {
     "tabWidth": 4,

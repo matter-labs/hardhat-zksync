@@ -15,7 +15,7 @@ import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
-const LATEST_VERSION = '1.1.6';
+const LATEST_VERSION = '1.2.0';
 
 extendConfig((config, userConfig) => {
     const defaultConfig: ZkSolcConfig = {
