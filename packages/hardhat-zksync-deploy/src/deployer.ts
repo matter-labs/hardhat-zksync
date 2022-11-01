@@ -70,6 +70,23 @@ export class Deployer {
         artifact: ZkSyncArtifact,
         constructorArguments: any[]
     ): Promise<ethers.BigNumber> {
+        const gas = await this.estimateDeployGas(artifact, constructorArguments);
+        const gasPrice = await this.zkWallet.provider.getGasPrice();
+        return gas.mul(gasPrice);
+    }
+
+    /**
+     * Estimates the amount of gas needed to execute a deploy transaction.
+     *
+     * @param artifact The previously loaded artifact object.
+     * @param constructorArguments List of arguments to be passed to the contract constructor.
+     *
+     * @returns Calculated amount of gas.
+     */
+    public async estimateDeployGas(
+        artifact: ZkSyncArtifact,
+        constructorArguments: any[]
+    ): Promise<ethers.BigNumber> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
 
@@ -81,10 +98,7 @@ export class Deployer {
         });
         deployTx.from = this.zkWallet.address;
 
-        const gas = await this.zkWallet.provider.estimateGas(deployTx);
-        const gasPrice = await this.zkWallet.provider.getGasPrice();
-
-        return gas.mul(gasPrice);
+        return await this.zkWallet.provider.estimateGas(deployTx);
     }
 
     /**
