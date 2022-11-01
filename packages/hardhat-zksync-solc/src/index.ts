@@ -58,7 +58,8 @@ extendEnvironment((hre) => {
         // we have to manually pass them into zksolc. That's why we force the optimization.
         hre.config.solidity.compilers.forEach((compiler) => {
             let settings = compiler.settings || {};
-            compiler.settings = { ...settings, optimizer: { enabled: true } };
+            let optimizer = settings.optimizer || {};
+            compiler.settings = { ...settings, optimizer: { ...optimizer,enabled: true } };            
         });
     }
 });
