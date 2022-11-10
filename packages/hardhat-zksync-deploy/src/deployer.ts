@@ -147,13 +147,24 @@ export class Deployer {
      * @returns Factory dependencies in the format expected by SDK.
      */
     async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
+        const visited = new Set<string>();
+        visited.add(`${artifact.sourceName}:${artifact.contractName}`);
+        return await this.extractFactoryDepsRecursive(artifact, visited);
+    }
+
+    private async extractFactoryDepsRecursive(artifact: ZkSyncArtifact, visited: Set<string>): Promise<string[]> {
         // Load all the dependency bytecodes.
         // We transform it into an array of bytecodes.
         const factoryDeps: string[] = [];
         for (const dependencyHash in artifact.factoryDeps) {
             const dependencyContract = artifact.factoryDeps[dependencyHash];
-            const dependencyBytecodeString = (await this.hre.artifacts.readArtifact(dependencyContract)).bytecode;
-            factoryDeps.push(dependencyBytecodeString);
+            const dependencyArtifact = await this.loadArtifact(dependencyContract);
+            factoryDeps.push(dependencyArtifact.bytecode);
+            if (!visited.has(dependencyContract)) {
+                visited.add(dependencyContract);
+                const transitiveDeps = await this.extractFactoryDepsRecursive(dependencyArtifact, visited);
+                factoryDeps.push(...transitiveDeps);
+            }
         }
 
         return factoryDeps;
