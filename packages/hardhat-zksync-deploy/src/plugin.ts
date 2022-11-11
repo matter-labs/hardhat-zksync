@@ -3,14 +3,14 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as path from 'path';
 import * as glob from 'glob';
 
-import { pluginError } from './helpers';
+import { ZkSyncDeployPluginError } from './zksync-deploy-plugin-error';
 
 export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     const workDir = hre.config.paths.root;
     const deployScriptsDir = path.join(workDir, 'deploy');
 
     if (!existsSync(deployScriptsDir)) {
-        throw pluginError('No deploy folder was found');
+        throw new ZkSyncDeployPluginError('No deploy folder was found');
     }
 
     const tsFiles = glob.sync(path.join(deployScriptsDir, '**', '*.ts'));
@@ -21,20 +21,20 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     return files;
 }
 
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
+export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string, zkSyncNetwork: string) {
     const scripts = findDeployScripts(hre);
 
     if (targetScript == '') {
         // Target script not specified, run everything.
         for (const script of scripts) {
-            await runScript(hre, script);
+            await runScript(hre, script, zkSyncNetwork);
         }
     } else {
         // TODO: Not efficient.
         let found = false;
         for (const script of scripts) {
             if (script.includes(targetScript)) {
-                await runScript(hre, script);
+                await runScript(hre, script, zkSyncNetwork);
                 found = true;
                 break;
             }
@@ -45,7 +45,7 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
     }
 }
 
-async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
+async function runScript(hre: HardhatRuntimeEnvironment, script: string, zkSyncNetwork: string) {
     delete require.cache[script];
     let deployFn: any = require(script);
 
@@ -54,8 +54,8 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     }
 
     if (typeof deployFn !== 'function') {
-        throw pluginError('Deploy function does not exist or exported invalidly');
+        throw new ZkSyncDeployPluginError('Deploy function does not exist or exported invalidly');
     }
 
-    await deployFn(hre);
+    await deployFn(hre, zkSyncNetwork);
 }

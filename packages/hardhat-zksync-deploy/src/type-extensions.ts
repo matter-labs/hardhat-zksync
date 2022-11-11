@@ -1,13 +1,25 @@
 import 'hardhat/types/config';
 
-import { ZkDeployConfig } from './types';
+import { EthNetwork } from './types';
 
 declare module 'hardhat/types/config' {
-    interface HardhatUserConfig {
-        zkSyncDeploy?: Partial<ZkDeployConfig>;
+    interface HardhatNetworkUserConfig {
+        zksync?: boolean;
+        ethNetwork?: EthNetwork;
     }
 
-    interface HardhatConfig {
-        zkSyncDeploy: ZkDeployConfig;
+    interface HardhatNetworkConfig {
+        zksync: boolean;
+        ethNetwork: EthNetwork;
+    }
+
+    interface HttpNetworkUserConfig {
+        zksync?: boolean;
+        ethNetwork?: EthNetwork;
+    }
+
+    interface HttpNetworkConfig {
+        zksync: boolean;
+        ethNetwork: EthNetwork;
     }
 }
