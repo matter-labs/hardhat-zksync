@@ -23,6 +23,8 @@ export interface ZkSolcConfig {
             dockerImage?: string;
             tag?: string;
         };
+        // Wether to support compilation of zkSync-specific simulations
+        isSystem?: boolean
     };
 }
 
