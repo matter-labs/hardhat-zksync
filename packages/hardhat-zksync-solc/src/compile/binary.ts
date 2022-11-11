@@ -7,7 +7,7 @@ export async function compileWithBinary(input: any, config: ZkSolcConfig, solcPa
     const isSystem = config.settings.isSystem;
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
-            `${compilerPath} --standard-json --solc ${isSystem ? '--system-mode' : ''} ${solcPath}`,
+            `${compilerPath} --standard-json  ${isSystem ? '--system-mode' : ''} --solc ${solcPath}`,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },
