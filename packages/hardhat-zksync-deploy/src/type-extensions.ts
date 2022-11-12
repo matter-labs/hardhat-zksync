@@ -4,7 +4,7 @@ import { EthNetwork } from './types';
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
-        zksync?: boolean;
+        zksync: boolean;
         ethNetwork?: EthNetwork;
     }
 
