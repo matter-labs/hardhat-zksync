@@ -7,7 +7,7 @@ import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
 import { useEnvironment } from './helpers';
 import { Deployer } from '../src/deployer';
-import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME } from './constants';
+import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from './constants';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', async function () {
@@ -32,16 +32,20 @@ describe('Plugin tests', async function () {
         });
 
         it('Should call deploy scripts', async function () {
-            await callDeployScripts(this.env, '', ZKSYNC_NETWORK_NAME);
+            await callDeployScripts(this.env, '');
         });
 
         it('Should call deploy scripts through HRE', async function () {
             await this.env.run(TASK_DEPLOY_ZKSYNC);
         });
+    });
 
-        it('Should connect to correct L1 and L2 networks based on zkSync network provided', async function () {
-            const zkWallet = new Wallet('b026f25c0d248e11568e3e67a5969db7c9b6c4f4cacbdd81d373369c85ab1501');
-            const deployer = new Deployer(this.env, zkWallet, ZKSYNC_NETWORK_NAME);
+    describe('Deployer with zkSync network provided', async function () {
+        useEnvironment('successful-compilation', ZKSYNC_NETWORK_NAME);
+
+        it('Should connect to correct L1 and L2 networks based on zkSync network', async function () {
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
+            const deployer = new Deployer(this.env, zkWallet);
 
             assert.equal(
                 (deployer.ethWallet.provider as ethers.providers.JsonRpcProvider).connection.url,
@@ -50,9 +54,13 @@ describe('Plugin tests', async function () {
             );
             assert.equal(deployer.zkWallet.provider.connection.url, ZKSYNC_NETWORK_RPC_URL, 'Incorrect L2 network url');
         });
+    });
+
+    describe('Deployer without zkSync network provided', async function () {
+        useEnvironment('successful-compilation');
 
         it('Should use default L1 and L2 network providers', async function () {
-            const zkWallet = new Wallet('b026f25c0d248e11568e3e67a5969db7c9b6c4f4cacbdd81d373369c85ab1501');
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
 
             assert.equal(
@@ -66,11 +74,14 @@ describe('Plugin tests', async function () {
                 'Incorrect default L2 network provider'
             );
         });
+    });
 
+    describe('Deployer with invalid zkSync network provided', async function () {
+        useEnvironment('successful-compilation', 'invalidZkNetwork');
         it('Should throw an error if zkSync network with the provided name is not configured', async function () {
-            const zkWallet = new Wallet('b026f25c0d248e11568e3e67a5969db7c9b6c4f4cacbdd81d373369c85ab1501');
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
 
-            expect(() => new Deployer(this.env, zkWallet, 'invalidZkNetwork')).to.throw(
+            expect(() => new Deployer(this.env, zkWallet)).to.throw(
                 HardhatPluginError,
                 "ZkSync network 'invalidZkNetwork' is not configured in 'hardhat.config' file, with 'zksync' flag set to 'true'."
             );

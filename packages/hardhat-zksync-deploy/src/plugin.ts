@@ -21,20 +21,20 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     return files;
 }
 
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string, zkSyncNetwork: string) {
+export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
     const scripts = findDeployScripts(hre);
 
     if (targetScript == '') {
         // Target script not specified, run everything.
         for (const script of scripts) {
-            await runScript(hre, script, zkSyncNetwork);
+            await runScript(hre, script);
         }
     } else {
         // TODO: Not efficient.
         let found = false;
         for (const script of scripts) {
             if (script.includes(targetScript)) {
-                await runScript(hre, script, zkSyncNetwork);
+                await runScript(hre, script);
                 found = true;
                 break;
             }
@@ -45,7 +45,7 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
     }
 }
 
-async function runScript(hre: HardhatRuntimeEnvironment, script: string, zkSyncNetwork: string) {
+async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     delete require.cache[script];
     let deployFn: any = require(script);
 
@@ -57,5 +57,5 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string, zkSyncN
         throw new ZkSyncDeployPluginError('Deploy function does not exist or exported invalidly');
     }
 
-    await deployFn(hre, zkSyncNetwork);
+    await deployFn(hre);
 }

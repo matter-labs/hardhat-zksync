@@ -18,46 +18,46 @@ export class Deployer {
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
 
-    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, zkSyncNetwork?: string) {
+    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet) {
         this.hre = hre;
 
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
-        const { ethWeb3Provider, zkWeb3Provider } = this._getProviders(hre.config.networks, zkSyncNetwork);
+        const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.zksyncNetwork);
 
         this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
     }
 
-    static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, network: string) {
-        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey), network);
+    static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
+        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
     }
 
-    private _getProviders(
+    private _createProviders(
         networks: NetworksConfig,
-        zkSyncNetwork?: string
+        zksyncNetwork?: string
     ): {
         ethWeb3Provider: ethers.providers.BaseProvider;
         zkWeb3Provider: zk.Provider;
     } {
-        if (zkSyncNetwork === undefined) {
+        if (zksyncNetwork === undefined) {
             return {
-                ethWeb3Provider: this._getDefaultEthProvider(networks),
-                zkWeb3Provider: this._getDefaultZkProvider(),
+                ethWeb3Provider: this._createDefaultEthProvider(networks),
+                zkWeb3Provider: this._createDefaultZkProvider(),
             };
         }
 
         let ethWeb3Provider, zkWeb3Provider;
 
-        if (!(zkSyncNetwork in networks) || networks[zkSyncNetwork].zksync !== true) {
+        if (!(zksyncNetwork in networks) || networks[zksyncNetwork].zksync !== true) {
             throw new ZkSyncDeployPluginError(
-                `ZkSync network '${zkSyncNetwork}' is not configured in 'hardhat.config' file, with 'zksync' flag set to 'true'.`
+                `ZkSync network '${zksyncNetwork}' is not configured in 'hardhat.config' file, with 'zksync' flag set to 'true'.`
             );
         }
 
-        const ethNetwork = networks[zkSyncNetwork].ethNetwork;
+        const ethNetwork = networks[zksyncNetwork].ethNetwork;
         if (ethNetwork === undefined) {
             throw new ZkSyncDeployPluginError(
-                `Ethereum (layer 1) network is not configured for '${zkSyncNetwork}' zkSync network in 'hardhat.config' file.`
+                `Ethereum (layer 1) network is not configured for '${zksyncNetwork}' zkSync network in 'hardhat.config' file.`
             );
         }
 
@@ -67,12 +67,12 @@ export class Deployer {
                 : ethers.getDefaultProvider(ethNetwork)
             : new ethers.providers.JsonRpcProvider(ethNetwork);
 
-        zkWeb3Provider = new zk.Provider((networks[zkSyncNetwork] as HttpNetworkConfig).url);
+        zkWeb3Provider = new zk.Provider((networks[zksyncNetwork] as HttpNetworkConfig).url);
 
         return { ethWeb3Provider, zkWeb3Provider };
     }
 
-    private _getDefaultEthProvider(networks: NetworksConfig): ethers.providers.BaseProvider {
+    private _createDefaultEthProvider(networks: NetworksConfig): ethers.providers.BaseProvider {
         const networkUrl =
             ETH_DEFAULT_NETWORK in networks
                 ? (networks[ETH_DEFAULT_NETWORK] as HttpNetworkConfig).url
@@ -81,7 +81,7 @@ export class Deployer {
         return new ethers.providers.JsonRpcProvider(networkUrl);
     }
 
-    private _getDefaultZkProvider(): zk.Provider {
+    private _createDefaultZkProvider(): zk.Provider {
         return zk.Provider.getDefaultProvider();
     }
 

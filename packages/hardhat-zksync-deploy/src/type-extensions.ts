@@ -23,3 +23,9 @@ declare module 'hardhat/types/config' {
         ethNetwork: EthNetwork;
     }
 }
+
+declare module 'hardhat/types/runtime' {
+    interface HardhatRuntimeEnvironment {
+        zksyncNetwork?: string;
+    }
+}
