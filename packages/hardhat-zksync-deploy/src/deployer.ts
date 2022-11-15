@@ -4,7 +4,7 @@ import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './zksync-deploy-plugin-error';
-import { ETH_DEFAULT_NETWORK, ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
+import { ETH_DEFAULT_NETWORK, ETH_DEFAULT_NETWORK_RPC_URL, ZKSYNC_DEFAULT_NETWORK } from './constants';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -22,7 +22,7 @@ export class Deployer {
         this.hre = hre;
 
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
-        const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.zksyncNetwork);
+        const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network.name);
 
         this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
@@ -34,12 +34,12 @@ export class Deployer {
 
     private _createProviders(
         networks: NetworksConfig,
-        zksyncNetwork?: string
+        zksyncNetwork: string
     ): {
         ethWeb3Provider: ethers.providers.BaseProvider;
         zkWeb3Provider: zk.Provider;
     } {
-        if (zksyncNetwork === undefined) {
+        if (zksyncNetwork === ZKSYNC_DEFAULT_NETWORK || zksyncNetwork === 'hardhat') {
             return {
                 ethWeb3Provider: this._createDefaultEthProvider(networks),
                 zkWeb3Provider: this._createDefaultZkProvider(),
@@ -48,16 +48,16 @@ export class Deployer {
 
         let ethWeb3Provider, zkWeb3Provider;
 
-        if (!(zksyncNetwork in networks) || networks[zksyncNetwork].zksync !== true) {
+        if (networks[zksyncNetwork].zksync !== true) {
             throw new ZkSyncDeployPluginError(
-                `ZkSync network '${zksyncNetwork}' is not configured in 'hardhat.config' file, with 'zksync' flag set to 'true'.`
+                `Invalid zkSync network configuration for '${zksyncNetwork}' in 'hardhat.config' file. 'zksync' flag not set to 'true'.`
             );
         }
 
         const ethNetwork = networks[zksyncNetwork].ethNetwork;
         if (ethNetwork === undefined) {
             throw new ZkSyncDeployPluginError(
-                `Ethereum (layer 1) network is not configured for '${zksyncNetwork}' zkSync network in 'hardhat.config' file.`
+                `Invalid zkSync network configuration for '${zksyncNetwork}' in 'hardhat.config' file. 'ethNetwork' (layer 1) is missing.`
             );
         }
 

@@ -77,13 +77,14 @@ describe('Plugin tests', async function () {
     });
 
     describe('Deployer with invalid zkSync network provided', async function () {
-        useEnvironment('successful-compilation', 'invalidZkNetwork');
-        it('Should throw an error if zkSync network with the provided name is not configured', async function () {
+        useEnvironment('successful-compilation', 'goerli');
+
+        it('Should throw an error if invalid zkSync network is provided', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
 
             expect(() => new Deployer(this.env, zkWallet)).to.throw(
                 HardhatPluginError,
-                "ZkSync network 'invalidZkNetwork' is not configured in 'hardhat.config' file, with 'zksync' flag set to 'true'."
+                "Invalid zkSync network configuration for 'goerli' in 'hardhat.config' file. 'zksync' flag not set to 'true'."
             );
         });
     });

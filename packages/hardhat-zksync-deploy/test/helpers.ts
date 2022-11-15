@@ -8,18 +8,12 @@ declare module 'mocha' {
     }
 }
 
-declare module 'hardhat/types/runtime' {
-    interface HardhatRuntimeEnvironment {
-        zksyncNetwork?: string;
-    }
-}
-
-export function useEnvironment(fixtureProjectName: string, zksyncNetworkName?: string) {
+export function useEnvironment(fixtureProjectName: string, networkName = 'localhost') {
     beforeEach('Loading hardhat environment', function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
+        process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
-        this.env.zksyncNetwork = zksyncNetworkName;
     });
 
     afterEach('Resetting hardhat', function () {

@@ -33,8 +33,6 @@ const config: HardhatUserConfig = {
 export default config;
 ```
 
-If you don't specify zkSync network, `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
-
 ## Usage
 
 Before using plugins, you need to build them first
@@ -57,5 +55,7 @@ yarn hardhat deploy-zksync
 - `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
 - `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
     - To run a specific script, add the `--script` argument, e.g. `--script 001_deploy.ts`.
-    - To run on a specific zkSync network, add the `--zksyncNetwork` argument, e.g. `--zksyncNetwork zkTestnet`
+    - To run on a specific zkSync network, use standard hardhat `--network` argument, e.g. `--network zkTestnet`
     (with `zkTestnet` network specified in the `hardhat.config` networks section, with the `zksync` flag set to `true` and `ethNetwork` specified).
+
+If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
