@@ -29,7 +29,7 @@ jobs:
         run: yarn && yarn build
 
       - name: Publish
-        run: npm publish @matterlabs/hardhat-zksync-deploy@${{ inputs.tag }} --workspace=packages/hardhat-zksync-deploy --access=public
+        run: npm publish @matterlabs/hardhat-zksync-deploy --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-deploy --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
 
