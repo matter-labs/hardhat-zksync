@@ -2,7 +2,6 @@ import { assert } from 'chai';
 import { useEnvironment } from './helpers';
 import { Build } from '../src/types';
 import { TASK_VERIFY_GET_MINIMUM_BUILD } from '../src/constants';
-import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { encodeArguments } from '../src/utils';
 
 describe('verify plugin', async function () {

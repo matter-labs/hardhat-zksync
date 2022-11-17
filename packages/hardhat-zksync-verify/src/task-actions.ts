@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
-import { checkVerificationStatus, verifyContractRequest, ZKScanResponse } from './zkscan/ZkScanService';
+import { verifyContractRequest, ZKScanResponse } from './zkscan/ZkScanService';
 import axios from 'axios';
 
 import {
@@ -15,7 +15,7 @@ import {
     TASK_VERIFY_GET_COMPILER_VERSIONS,
 } from './constants';
 
-import { delay, encodeArguments, handleAxiosError } from './utils';
+import { delay, encodeArguments, executeVeificationWithRetry, handleAxiosError } from './utils';
 import { Build, Libraries } from './types';
 import { ZKScanVerifyRequest } from './zkscan/ZkSyncVerifyContractRequest';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
@@ -139,9 +139,7 @@ export async function sendVerificationRequest(
     };
     const response: ZKScanResponse = await verifyContractRequest(request, hre.network.verifyURL);
 
-    await delay(1000);
-
-    let isValidVerification: VerificationStatusResponse = await checkVerificationStatus(
+    let isValidVerification: VerificationStatusResponse = await executeVeificationWithRetry(
         response.message,
         hre.network.verifyURL
     );

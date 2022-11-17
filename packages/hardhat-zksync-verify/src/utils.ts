@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { VerificationStatusResponse } from './zkscan/VerificationStatusResponse';
+import { checkVerificationStatus } from './zkscan/ZkScanService';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
 
 export function handleAxiosError(error: any): never {
@@ -27,4 +29,24 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     }
 
     return deployArgumentsEncoded;
+}
+
+export async function executeVeificationWithRetry(
+    requestId: string,
+    verifyURL: string,
+    maxRetries = 3,
+    delayInMs = 1000
+): Promise<VerificationStatusResponse> {
+    let retries = 0;
+    while (true) {
+        const response = await checkVerificationStatus(requestId, verifyURL);
+        if (response.isVerificationSuccess() || response.isVerificationFailure()) {
+            return response;
+        }
+        retries += 1;
+        if (retries > maxRetries) {
+            throw new ZkSyncVerifyPluginError('Contract verification is still pending');
+        }
+        await delay(delayInMs);
+    }
 }

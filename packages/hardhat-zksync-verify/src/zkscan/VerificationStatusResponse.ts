@@ -6,7 +6,7 @@ enum VerificationStatusEnum {
 }
 
 export class VerificationStatusResponse {
-    public readonly status: string;
+    public readonly status: VerificationStatusEnum;
     public readonly error: String | undefined;
     public readonly compilationErrors: Array<String> | undefined;
 
