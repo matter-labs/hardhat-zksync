@@ -22,8 +22,6 @@ node_modules
 # Compilation output
 build-test/
 dist
-artifacts/
-cache/
 artifacts-zk/
 cache-zk/
 
