@@ -6,6 +6,7 @@ import { supportProperHex } from "@nomicfoundation/hardhat-chai-matchers/interna
 import { supportProperPrivateKey } from "@nomicfoundation/hardhat-chai-matchers/internal/properPrivateKey";
 import { supportChangeEtherBalances } from "@nomicfoundation/hardhat-chai-matchers/internal/changeEtherBalances";
 import { supportChangeTokenBalance } from "@nomicfoundation/hardhat-chai-matchers/internal/changeTokenBalance";
+import { supportWithArgs } from "@nomicfoundation/hardhat-chai-matchers/internal/withArgs";
 
 import { supportChangeEtherBalance } from "./changeEtherBalance";
 import { supportReverted } from "./reverted/reverted";
@@ -13,7 +14,6 @@ import { supportRevertedWith } from "./reverted/revertedWith";
 import { supportRevertedWithCustomError } from "./reverted/revertedWithCustomError";
 import { supportRevertedWithoutReason } from "./reverted/revertedWithoutReason";
 import { supportRevertedWithPanic } from "./reverted/revertedWithPanic";
-import { supportWithArgs } from "./withArgs";
 
 export function hardhatChaiMatchers(
   chai: Chai.ChaiStatic,
