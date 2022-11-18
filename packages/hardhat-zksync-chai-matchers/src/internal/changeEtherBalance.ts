@@ -108,24 +108,25 @@ export async function getBalanceChange(
     // const gasUsed = txReceipt.gasUsed;
     // const txFee = gasPrice.mul(gasUsed);
 
-    let gasPrice;
-    if (overrides?.maxFeePerGas) {
-      gasPrice = BigNumber.from(overrides?.maxFeePerGas);
-    } else {
-      gasPrice = await provider.getGasPrice();
-    }
+    const gasPrice = overrides?.maxFeePerGas ? BigNumber.from(overrides?.maxFeePerGas) : await provider.getGasPrice();
     // const gasUsed = await provider.estimateGasTransfer({ 
     //   from: txReceipt.from, 
     //   to: txReceipt.to, 
     //   amount
     // });
     // const gasUsed = await provider.estimateGas(txResponse as Deferrable<zk.types.TransactionRequest>);
-    const gasUsed = await provider.estimateGasTransfer({
-      to: txReceipt.to,
-      from: txReceipt.from,
-      amount,
-      overrides
-    });
+    const gasUsed = await provider.estimateGas(txResponse as zk.types.TransactionRequest);
+    // let gasUsed: BigNumber;
+    // if (txResponse.data !== "0x") {
+    //   gasUsed = await provider.estimateGas(txResponse as Deferrable<zk.types.TransactionRequest>)
+    // } else {
+    //   gasUsed = await provider.estimateGasTransfer({
+    //     to: txReceipt.to,
+    //     from: txReceipt.from,
+    //     amount,
+    //     overrides
+    //   });
+    // }
     const txFee = gasPrice.mul(gasUsed);
 
     return BigNumber.from(balanceAfter).add(txFee).sub(balanceBefore);

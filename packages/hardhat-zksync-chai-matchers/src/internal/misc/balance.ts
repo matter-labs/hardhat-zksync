@@ -15,17 +15,8 @@ export async function getBalances(
 ) {
   const { BigNumber } = await import("ethers");
   const hre = await import("hardhat");
-
   const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
-  console.log(hre.config.zkSyncDeploy.zkSyncNetwork);
-  console.log(accounts[0])
-  const result = await provider.send("eth_getBalance", [
-    accounts[0] as string,
-    `0x${blockNumber?.toString(16) ?? 0}`,
-  ]);
-  console.log(result);
-  const balance = await provider.getBalance(accounts[0] as string);
-  console.log(balance);
+
   return Promise.all(
     accounts.map(async (account) => {
       const address = await getAddressOf(account);
