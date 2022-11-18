@@ -1,4 +1,4 @@
-export const PLUGIN_NAME = '@nomiclabs/hardhat-etherscan';
+export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-verify';
 
 export const TESTNET_VERIFY_URL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 
