@@ -1,8 +1,7 @@
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import * as path from 'path';
 import { ethers } from 'ethers';
 import { Wallet } from 'zksync-web3';
-import { HardhatPluginError } from 'hardhat/plugins';
 import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
 import { useEnvironment } from './helpers';
@@ -59,32 +58,19 @@ describe('Plugin tests', async function () {
     describe('Deployer without zkSync network provided', async function () {
         useEnvironment('successful-compilation');
 
-        it('Should use default L1 and L2 network providers', async function () {
+        it('Should use default L1 and L2 network providers (local-setup)', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
 
             assert.equal(
                 (deployer.ethWallet.provider as ethers.providers.JsonRpcProvider).connection.url,
-                'http://127.0.0.1:8545',
+                'http://localhost:8545',
                 'Incorrect default L1 network provider'
             );
             assert.equal(
                 deployer.zkWallet.provider.connection.url,
                 'http://localhost:3050',
                 'Incorrect default L2 network provider'
-            );
-        });
-    });
-
-    describe('Deployer with invalid zkSync network provided', async function () {
-        useEnvironment('successful-compilation', 'goerli');
-
-        it('Should throw an error if invalid zkSync network is provided', async function () {
-            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
-
-            expect(() => new Deployer(this.env, zkWallet)).to.throw(
-                HardhatPluginError,
-                "Invalid zkSync network configuration for 'goerli' in 'hardhat.config' file. 'zksync' flag not set to 'true'."
             );
         });
     });

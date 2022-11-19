@@ -12,7 +12,7 @@ declare module 'hardhat/types/config' {
     }
 
     interface HardhatNetworkUserConfig {
-        zksync: boolean;
+        zksync?: boolean;
     }
 
     interface HttpNetworkUserConfig {
