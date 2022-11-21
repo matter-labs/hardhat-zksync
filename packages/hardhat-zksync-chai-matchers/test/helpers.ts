@@ -21,7 +21,7 @@ declare module 'hardhat/types/config' {
   }
 }
 
-export function useEnvironmentWithLocalSetup(fixtureProjectName: string, networkName = 'localhost') {
+export function useEnvironmentWithLocalSetup(fixtureProjectName: string) {
   const fixtureProjectDir = path.resolve(
     __dirname,
     "fixture-projects",
@@ -30,17 +30,13 @@ export function useEnvironmentWithLocalSetup(fixtureProjectName: string, network
 
   before("TODO", async function() {
     process.chdir(fixtureProjectDir);
-    // process.env.HARDHAT_NETWORK = networkName;
 
     this.hre = require("hardhat");
-    // console.log(this.hre);
     await this.hre.run(TASK_COMPILE);
-    console.log('a');
   });
 
   after(async function () {
     resetHardhatContext();
-    // delete process.env.HARDHAT_NETWORK;
   });
 }
 

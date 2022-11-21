@@ -4,11 +4,11 @@ import { supportHexEqual } from "@nomicfoundation/hardhat-chai-matchers/internal
 import { supportProperAddress } from "@nomicfoundation/hardhat-chai-matchers/internal/properAddress";
 import { supportProperHex } from "@nomicfoundation/hardhat-chai-matchers/internal/properHex";
 import { supportProperPrivateKey } from "@nomicfoundation/hardhat-chai-matchers/internal/properPrivateKey";
-import { supportChangeTokenBalance } from "@nomicfoundation/hardhat-chai-matchers/internal/changeTokenBalance";
 import { supportWithArgs } from "@nomicfoundation/hardhat-chai-matchers/internal/withArgs";
 
 import { supportChangeEtherBalance } from "./changeEtherBalance";
 import { supportChangeEtherBalances } from "./changeEtherBalances";
+import { supportChangeTokenBalance } from "./changeTokenBalance";
 import { supportReverted } from "./reverted/reverted";
 import { supportRevertedWith } from "./reverted/revertedWith";
 import { supportRevertedWithCustomError } from "./reverted/revertedWithCustomError";
