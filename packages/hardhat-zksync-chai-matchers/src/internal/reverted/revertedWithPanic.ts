@@ -1,11 +1,10 @@
 import type { BigNumber } from "ethers";
 
 import { normalizeToBigInt } from "hardhat/common";
-
 import { panicErrorCodeToReason } from "@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic";
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
-import { decodeReturnData, decodeReturnDataTODO, getReturnDataFromError } from "./utils";
 
+import { decodeReturnData, getReturnDataFromError } from "./utils";
 
 export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod(
@@ -13,7 +12,6 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
     function (this: any, expectedCodeArg: any) {
       const ethers = require("ethers");
 
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
       let expectedCode: BigNumber | undefined;
@@ -53,8 +51,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
         const assert = buildAssert(negated, onError);
 
         const returnData = getReturnDataFromError(error);
-        // const decodedReturnData = decodeReturnData(returnData);
-        const decodedReturnData = decodeReturnDataTODO(returnData);
+        const decodedReturnData = decodeReturnData(returnData);
 
         if (decodedReturnData.kind === "Empty") {
           assert(

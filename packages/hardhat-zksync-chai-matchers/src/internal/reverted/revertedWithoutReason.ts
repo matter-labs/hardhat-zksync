@@ -1,9 +1,9 @@
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
-import { decodeReturnData, decodeReturnDataTODO, getReturnDataFromError } from "./utils";
+
+import { decodeReturnData, getReturnDataFromError } from "./utils";
 
 export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod("revertedWithoutReason", function (this: any) {
-    // capture negated flag before async code executes; see buildAssert's jsdoc
     const negated = this.__flags.negate;
 
     const onSuccess = () => {
@@ -19,8 +19,7 @@ export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
       const assert = buildAssert(negated, onError);
 
       const returnData = getReturnDataFromError(error);
-      // const decodedReturnData = decodeReturnData(returnData);
-      const decodedReturnData = decodeReturnDataTODO(returnData);
+      const decodedReturnData = decodeReturnData(returnData);
 
       if (decodedReturnData.kind === "Error") {
         assert(

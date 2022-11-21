@@ -3,6 +3,7 @@ import * as zk from "zksync-web3";
 
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
 import { ensure } from "@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils";
+
 import { Account, getAddressOf } from "./misc/account";
 
 interface Token extends zk.Contract {
@@ -20,7 +21,6 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     ) {
       const { BigNumber } = require("ethers");
 
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
       let subject = this._obj;
@@ -67,7 +67,6 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     ) {
       const { BigNumber } = require("ethers");
 
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
       let subject = this._obj;

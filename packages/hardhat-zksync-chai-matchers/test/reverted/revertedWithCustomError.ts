@@ -1,19 +1,19 @@
 import { AssertionError, expect } from "chai";
 import { BigNumber } from "ethers";
-import { ProviderError } from "hardhat/internal/core/providers/errors";
 import * as zk from "zksync-web3";
-import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
 import path from "path";
 import util from "util";
+
+import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
+import { ZkSyncArtifact } from "@matterlabs/hardhat-zksync-deploy/src/types";
+import { anyUint, anyValue } from "@nomicfoundation/hardhat-chai-matchers/internal/withArgs";
 
 import {
   runSuccessfulAsserts,
   runFailedAsserts,
   useEnvironmentWithLocalSetup,
 } from "../helpers";
-
 import "../../src/internal/add-chai-matchers";
-import { anyUint, anyValue } from "@nomicfoundation/hardhat-chai-matchers/internal/withArgs";
 
 const RICH_WALLET_PK = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 
@@ -22,8 +22,9 @@ describe("INTEGRATION: Reverted with custom error", function () {
   let provider: zk.Provider;
   let wallet: zk.Wallet;
   let deployer: Deployer;
+  let artifact: ZkSyncArtifact;
 
-  describe("with the in-process hardhat network", function () {
+  describe("with the local setup", function () {
     useEnvironmentWithLocalSetup("hardhat-project");
 
     runTests();
@@ -35,22 +36,9 @@ describe("INTEGRATION: Reverted with custom error", function () {
       wallet = new zk.Wallet(RICH_WALLET_PK, provider);
       deployer = new Deployer(this.hre, wallet);
 
-      const artifact = await deployer.loadArtifact("Matchers");
+      artifact = await deployer.loadArtifact("Matchers");
       matchers = await deployer.deploy(artifact);
     });
-
-    // helpers
-    // const mineSuccessfulTransaction = async (hre: any) => {
-    //   await hre.network.provider.send("evm_setAutomine", [false]);
-
-    //   const [signer] = await hre.ethers.getSigners();
-    //   const tx = await signer.sendTransaction({ to: signer.address });
-
-    //   await hre.network.provider.send("hardhat_mine", []);
-    //   await hre.network.provider.send("evm_setAutomine", [true]);
-
-    //   return tx;
-    // };
 
     describe("calling a method that succeeds", function () {
       it("successful asserts", async function () {
@@ -90,22 +78,6 @@ describe("INTEGRATION: Reverted with custom error", function () {
               matchers,
               "SomeCustomError"
             ),
-        });
-      });
-
-      // depends on a bug being fixed on ethers.js
-      // see https://linear.app/nomic-foundation/issue/HH-725
-      it.skip("failed asserts", async function () {
-        await runFailedAsserts({
-          matchers,
-          method: "revertsWithoutReason",
-          failedAssert: (x) =>
-            expect(x).to.be.revertedWithCustomError(
-              matchers,
-              "SomeCustomError"
-            ),
-          failedAssertReason:
-            "Expected transaction to be reverted with custom error 'SomeCustomError', but it reverted without a reason",
         });
       });
     });
@@ -404,15 +376,6 @@ describe("INTEGRATION: Reverted with custom error", function () {
         ).to.be.rejectedWith(AssertionError, "Expected an Error object");
       });
 
-      // it("non-string as expectation", async function () {
-      //   const { hash } = await mineSuccessfulTransaction(this.hre);
-
-      //   expect(() =>
-      //     // @ts-expect-error
-      //     expect(hash).to.be.revertedWith(10)
-      //   ).to.throw(TypeError, "Expected the revert reason to be a string");
-      // });
-
       it("the contract is not specified", async function () {
         expect(() =>
           expect(matchers.revertWithSomeCustomError())
@@ -436,11 +399,8 @@ describe("INTEGRATION: Reverted with custom error", function () {
       });
 
       it("errors that are not related to a reverted transaction", async function () {
-        // use an address that almost surely doesn't have balance
         const signer = zk.Wallet.createRandom().connect(provider);
 
-        // this transaction will fail because of lack of funds, not because of a
-        // revert
         await expect(
           expect(
             matchers.connect(signer).revertsWithoutReason({
@@ -455,7 +415,6 @@ describe("INTEGRATION: Reverted with custom error", function () {
     });
 
     describe("stack traces", function () {
-      // smoke test for stack traces
       it("includes test file", async function () {
         try {
           await expect(

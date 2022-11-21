@@ -1,16 +1,16 @@
 import { AssertionError, expect } from "chai";
-import { ProviderError } from "hardhat/internal/core/providers/errors";
 import * as zk from "zksync-web3";
-import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
 import path from "path";
 import util from "util";
+
+import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
+import { ZkSyncArtifact } from "@matterlabs/hardhat-zksync-deploy/src/types";
 
 import {
   runSuccessfulAsserts,
   runFailedAsserts,
   useEnvironmentWithLocalSetup
 } from "../helpers";
-
 import "../../src/internal/add-chai-matchers";
 
 const RICH_WALLET_PK = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
@@ -20,8 +20,9 @@ describe("INTEGRATION: Reverted without reason", function () {
   let provider: zk.Provider;
   let wallet: zk.Wallet;
   let deployer: Deployer;
+  let artifact: ZkSyncArtifact;
 
-  describe("with the in-process hardhat network", function () {
+  describe("with the local setup", function () {
     useEnvironmentWithLocalSetup("hardhat-project");
 
     runTests();
@@ -33,7 +34,7 @@ describe("INTEGRATION: Reverted without reason", function () {
       wallet = new zk.Wallet(RICH_WALLET_PK, provider);
       deployer = new Deployer(this.hre, wallet);
 
-      const artifact = await deployer.loadArtifact("Matchers");
+      artifact = await deployer.loadArtifact("Matchers");
       matchers = await deployer.deploy(artifact);
     });
 
@@ -54,30 +55,6 @@ describe("INTEGRATION: Reverted without reason", function () {
           failedAssert: (x) => expect(x).to.be.revertedWithoutReason(),
           failedAssertReason:
             "Expected transaction to be reverted without a reason, but it didn't revert",
-        });
-      });
-    });
-
-    // depends on a bug being fixed on ethers.js
-    // see https://linear.app/nomic-foundation/issue/HH-725
-    describe.skip("calling a method that reverts without a reason", function () {
-      it("successful asserts", async function () {
-        await runSuccessfulAsserts({
-          matchers,
-          method: "revertsWithoutReason",
-          args: [],
-          successfulAssert: (x) => expect(x).to.be.revertedWithoutReason(),
-        });
-      });
-
-      it("failed asserts", async function () {
-        await runFailedAsserts({
-          matchers,
-          method: "revertsWithoutReason",
-          args: [],
-          failedAssert: (x) => expect(x).to.not.be.revertedWithoutReason(),
-          failedAssertReason:
-            "Expected transaction NOT to be reverted without a reason, but it was",
         });
       });
     });
@@ -152,11 +129,8 @@ describe("INTEGRATION: Reverted without reason", function () {
       });
 
       it("errors that are not related to a reverted transaction", async function () {
-        // use an address that almost surely doesn't have balance
         const signer = zk.Wallet.createRandom().connect(provider);
 
-        // this transaction will fail because of lack of funds, not because of a
-        // revert
         await expect(
           expect(
             matchers.connect(signer).revertsWithoutReason({
@@ -171,7 +145,6 @@ describe("INTEGRATION: Reverted without reason", function () {
     });
 
     describe("stack traces", function () {
-      // smoke test for stack traces
       it("includes test file", async function () {
         try {
           await expect(

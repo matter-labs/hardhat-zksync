@@ -1,5 +1,6 @@
-import { Account, getAddressOf } from "./account";
 import * as zk from "zksync-web3";
+
+import { Account, getAddressOf } from "./account";
 
 export interface BalanceChangeOptions {
   includeFee?: boolean;

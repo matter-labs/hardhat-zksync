@@ -1,8 +1,9 @@
-import type { BigNumberish, BigNumber, ethers } from "ethers";
+import type { BigNumberish, ethers } from "ethers";
 import * as zk from "zksync-web3";
 import ordinal from "ordinal";
 
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
+
 import { getAddressOf, Account } from "./misc/account";
 import {
   BalanceChangeOptions,
@@ -22,7 +23,6 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
     ) {
       const { BigNumber } = require("ethers");
 
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
       let subject = this._obj;
@@ -128,7 +128,6 @@ async function getTxFees(
         options?.includeFee !== true &&
         (await getAddressOf(account)) === txResponse.from
       ) {
-        const txReceipt = await txResponse.wait();
         const gasPrice = overrides?.maxFeePerGas ? BigNumber.from(overrides?.maxFeePerGas) : await provider.getGasPrice();
         const gasUsed = await provider.estimateGas(txResponse as zk.types.TransactionRequest);
         const txFee = gasPrice.mul(gasUsed);

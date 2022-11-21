@@ -1,20 +1,15 @@
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
-import { decodeReturnData, decodeReturnDataTODO, getReturnDataFromError } from "./utils";
-
 import * as zk from "zksync-web3";
+
+import { decodeReturnData, getReturnDataFromError } from "./utils";
+
 
 export function supportReverted(Assertion: Chai.AssertionStatic) {
   Assertion.addProperty("reverted", function (this: any) {
-    // capture negated flag before async code executes; see buildAssert's jsdoc
     const negated = this.__flags.negate;
 
     const subject: unknown = this._obj;
 
-    // Check if the received value can be linked to a transaction, and then
-    // get the receipt of that transaction and check its status.
-    //
-    // If the value doesn't correspond to a transaction, then the `reverted`
-    // assertion is false.
     const onSuccess = async (value: unknown) => {
       const assert = buildAssert(negated, onSuccess);
 
@@ -56,8 +51,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
     const onError = (error: any) => {
       const assert = buildAssert(negated, onError);
       const returnData = getReturnDataFromError(error);
-      // const decodedReturnData = decodeReturnData(returnData);
-      const decodedReturnData = decodeReturnDataTODO(returnData);
+      const decodedReturnData = decodeReturnData(returnData);
 
       if (
         decodedReturnData.kind === "Empty" ||

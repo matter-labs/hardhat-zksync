@@ -1,12 +1,11 @@
-import type { BigNumberish, BigNumber, ethers } from "ethers";
-import { TransactionResponse } from "zksync-web3/build/src/types";
+import type { BigNumberish, ethers } from "ethers";
 import * as zk from "zksync-web3";
 
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
 import { ensure } from "@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils";
+
 import { Account, getAddressOf } from "./misc/account";
 import { BalanceChangeOptions } from "./misc/balance";
-import { Deferrable } from "ethers/lib/utils";
 
 export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod(
@@ -20,10 +19,8 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
     ) {
       const { BigNumber } = require("ethers");
 
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
       const subject = this._obj;
-      const amount = BigNumber.from(balanceChange).abs();
 
       const checkBalanceChange = ([actualChange, address]: [
         typeof BigNumber,
@@ -39,7 +36,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
       };
 
       const derivedPromise = Promise.all([
-        getBalanceChange(subject, account, amount, options, withOverrides),
+        getBalanceChange(subject, account, options, withOverrides),
         getAddressOf(account),
       ]).then(checkBalanceChange);
       this.then = derivedPromise.then.bind(derivedPromise);
@@ -52,21 +49,17 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
 
 export async function getBalanceChange(
   transaction:
-    // | Deferrable<zk.types.TransactionRequest> 
-    // | (() => Deferrable<zk.types.TransactionRequest>),
     | zk.types.TransactionResponse
     | Promise<zk.types.TransactionResponse>
     | (() =>
       | Promise<zk.types.TransactionResponse>
       | zk.types.TransactionResponse),
   account: Account | string,
-  amount: BigNumber,
   options?: BalanceChangeOptions,
   overrides?: ethers.Overrides
 ) {
   const { BigNumber } = await import("ethers");
   const hre = await import("hardhat");
-
   const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
 
   let txResponse: zk.types.TransactionResponse;
@@ -104,29 +97,8 @@ export async function getBalanceChange(
   ]);
 
   if (options?.includeFee !== true && address === txResponse.from) {
-    // const gasPrice = txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
-    // const gasUsed = txReceipt.gasUsed;
-    // const txFee = gasPrice.mul(gasUsed);
-
     const gasPrice = overrides?.maxFeePerGas ? BigNumber.from(overrides?.maxFeePerGas) : await provider.getGasPrice();
-    // const gasUsed = await provider.estimateGasTransfer({ 
-    //   from: txReceipt.from, 
-    //   to: txReceipt.to, 
-    //   amount
-    // });
-    // const gasUsed = await provider.estimateGas(txResponse as Deferrable<zk.types.TransactionRequest>);
     const gasUsed = await provider.estimateGas(txResponse as zk.types.TransactionRequest);
-    // let gasUsed: BigNumber;
-    // if (txResponse.data !== "0x") {
-    //   gasUsed = await provider.estimateGas(txResponse as Deferrable<zk.types.TransactionRequest>)
-    // } else {
-    //   gasUsed = await provider.estimateGasTransfer({
-    //     to: txReceipt.to,
-    //     from: txReceipt.from,
-    //     amount,
-    //     overrides
-    //   });
-    // }
     const txFee = gasPrice.mul(gasUsed);
 
     return BigNumber.from(balanceAfter).add(txFee).sub(balanceBefore);

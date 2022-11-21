@@ -1,18 +1,19 @@
 import { expect, AssertionError } from "chai";
 import { BigNumber } from "ethers";
-import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
-// import * as hre from "hardhat";
 import * as zk from "zksync-web3";
 import path from "path";
 import util from "util";
 
-import "../src/internal/add-chai-matchers";
+import { Deployer } from "@matterlabs/hardhat-zksync-deploy/src/deployer";
+
 import { useEnvironmentWithLocalSetup } from "./helpers";
+import "../src/internal/add-chai-matchers";
+import { ZkSyncArtifact } from "@matterlabs/hardhat-zksync-deploy/src/types";
 
 const RICH_WALLET_PK = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 
 describe("INTEGRATION: changeEtherBalance matcher", function () {
-  describe("with the in-process hardhat network", function () {
+  describe("with the local setup", function () {
     useEnvironmentWithLocalSetup("hardhat-project");
 
     runTests();
@@ -23,6 +24,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
     let receiver: zk.Wallet;
     let provider: zk.Provider;
     let deployer: Deployer;
+    let artifact: ZkSyncArtifact;
     let contract: zk.Contract;
     let gasPrice: number;
     let gasUsed: number;
@@ -31,13 +33,11 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
 
     beforeEach(async function () {
       provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
-      
       sender = new zk.Wallet(RICH_WALLET_PK, provider);
       receiver = zk.Wallet.createRandom();
 
       deployer = new Deployer(this.hre, sender);
-
-      const artifact = await deployer.loadArtifact("ChangeEtherBalance");
+      artifact = await deployer.loadArtifact("ChangeEtherBalance");
       contract = await deployer.deploy(artifact);
 
       gasPrice = 100000000;
@@ -379,24 +379,6 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
           ).to.changeEtherBalance(contract, 200, {}, overrides);
         });
 
-        // it.only("Should take into account transaction fee", async function () {
-        //   const tx = {
-        //     to: contract.address,
-        //     amount: 200,
-        //     overrides
-        //   };
-
-        //   const gas = await provider.estimateGasTransfer(tx);
-
-        //   await expect(() => sender.sendTransaction(tx)).to.changeEtherBalance(
-        //     sender,
-        //     -gas.add(200).toNumber(),
-        //     {
-        //       includeFee: true,
-        //     }
-        //   );
-        // });
-
         it("should pass when calling function that returns half the sent ether", async () => {
           await expect(async () =>
             contract.returnHalf({
@@ -574,7 +556,6 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
     });
 
     describe("stack traces", function () {
-      // smoke test for stack traces
       it("includes test file", async function () {
         try {
           await expect(() =>

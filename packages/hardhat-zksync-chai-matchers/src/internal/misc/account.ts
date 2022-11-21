@@ -1,6 +1,5 @@
-import type { Contract, Signer, Wallet } from "zksync-web3";
-
 import assert from "assert";
+import type { Contract, Signer, Wallet } from "zksync-web3";
 
 export type Account = Signer | Wallet | Contract;
 

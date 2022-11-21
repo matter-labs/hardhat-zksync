@@ -1,14 +1,13 @@
 import { buildAssert } from "@nomicfoundation/hardhat-chai-matchers/utils";
-import { decodeReturnData, decodeReturnDataTODO, getReturnDataFromError } from "./utils";
+
+import { decodeReturnData, getReturnDataFromError } from "./utils";
 
 export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod(
     "revertedWith",
     function (this: any, expectedReason: unknown) {
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
-      // validate expected reason
       if (typeof expectedReason !== "string") {
         throw new TypeError("Expected the revert reason to be a string");
       }
@@ -26,8 +25,7 @@ export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
         const assert = buildAssert(negated, onError);
 
         const returnData = getReturnDataFromError(error);
-        // const decodedReturnData = decodeReturnData(returnData);
-        const decodedReturnData = decodeReturnDataTODO(returnData);
+        const decodedReturnData = decodeReturnData(returnData);
 
         if (decodedReturnData.kind === "Empty") {
           assert(

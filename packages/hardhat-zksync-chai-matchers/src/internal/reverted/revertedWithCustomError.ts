@@ -1,7 +1,8 @@
 import { AssertionError } from "chai";
 
 import { buildAssert, Ssfi } from "@nomicfoundation/hardhat-chai-matchers/utils";
-import { decodeReturnData, decodeReturnDataTODO, encodeFuncSelectorWithData, getReturnDataFromError } from "./utils";
+
+import { decodeReturnData, encodeFuncSelectorWithData, getReturnDataFromError } from "./utils";
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = "customErrorAssertionCalled";
 
@@ -18,18 +19,14 @@ export function supportRevertedWithCustomError(
   Assertion.addMethod(
     "revertedWithCustomError",
     function (this: any, contract: any, expectedCustomErrorName: string) {
-      // capture negated flag before async code executes; see buildAssert's jsdoc
       const negated = this.__flags.negate;
 
-      // check the case where users forget to pass the contract as the first
-      // argument
       if (typeof contract === "string" || contract?.interface === undefined) {
         throw new TypeError(
           "The first argument of .revertedWithCustomError must be the contract that defines the custom error"
         );
       }
 
-      // validate custom error name
       if (typeof expectedCustomErrorName !== "string") {
         throw new TypeError("Expected the custom error name to be a string");
       }
@@ -41,7 +38,6 @@ export function supportRevertedWithCustomError(
         expectedCustomErrorName
       );
 
-      // check that interface contains the given custom error
       if (expectedCustomError === undefined) {
         throw new Error(
           `The given contract doesn't have a custom error named '${expectedCustomErrorName}'`
@@ -61,8 +57,7 @@ export function supportRevertedWithCustomError(
         const assert = buildAssert(negated, onError);
 
         const returnData = getReturnDataFromError(error);
-        // const decodedReturnData = decodeReturnData(returnData);
-        const decodedReturnData = decodeReturnDataTODO(returnData);
+        const decodedReturnData = decodeReturnData(returnData);
         const encodedData = encodeFuncSelectorWithData(returnData);
 
         if (decodedReturnData.kind === "Empty") {
