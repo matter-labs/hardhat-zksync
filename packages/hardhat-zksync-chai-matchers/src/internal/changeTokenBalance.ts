@@ -162,13 +162,8 @@ export async function getBalanceChange(
 
   const address = await getAddressOf(account);
 
-  const balanceAfter = await token.balanceOf(address, {
-    blockTag: txBlockNumber,
-  });
-
-  const balanceBefore = await token.balanceOf(address, {
-    blockTag: txBlockNumber - 1,
-  });
+  const balanceAfter = await provider.getBalance(address, txBlockNumber, token.address);
+  const balanceBefore = await provider.getBalance(address, txBlockNumber - 1, token.address);
 
   return BigNumber.from(balanceAfter).sub(balanceBefore);
 }

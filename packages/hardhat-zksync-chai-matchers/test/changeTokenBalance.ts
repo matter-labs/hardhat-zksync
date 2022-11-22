@@ -133,6 +133,17 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
           );
         });
 
+        it("doesn't change balance as expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+            ).to.changeTokenBalance(mockToken, sender, 1)
+          ).to.be.rejectedWith(
+            AssertionError,
+            /Expected the balance of MCK tokens for "0x\w{40}" to change by 1, but it changed by -2/
+          );
+        });
+
         it("changes balance in the way it was not expected", async function () {
           await expect(
             expect(
@@ -144,11 +155,30 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
           );
         });
 
+        it("changes balance in the way it was not expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 1, token: mockToken.address })
+            ).to.not.changeTokenBalance(mockToken, sender, -1)
+          ).to.be.rejectedWith(
+            AssertionError,
+            /Expected the balance of MCK tokens for "0x\w{40}" NOT to change by -1, but it did/
+          );
+        });
+
         it("the first account doesn't change its balance as expected", async function () {
           await expect(
             expect(
               sender.sendTransaction({ to: receiver.address })
             ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 0])
+          ).to.be.rejectedWith(AssertionError);
+        });
+
+        it("the first account doesn't change its balance as expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address})
+            ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 2])
           ).to.be.rejectedWith(AssertionError);
         });
 
@@ -160,10 +190,26 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
           ).to.be.rejectedWith(AssertionError);
         });
 
+        it("the second account doesn't change its balance as expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+            ).to.changeTokenBalances(mockToken, [sender, receiver], [-2, 1])
+          ).to.be.rejectedWith(AssertionError);
+        });
+
         it("neither account changes its balance as expected", async function () {
           await expect(
             expect(
               sender.sendTransaction({ to: receiver.address })
+            ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 1])
+          ).to.be.rejectedWith(AssertionError);
+        });
+
+        it("neither account changes its balance as expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
             ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 1])
           ).to.be.rejectedWith(AssertionError);
         });
@@ -173,6 +219,14 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
             expect(
               sender.sendTransaction({ to: receiver.address })
             ).to.not.changeTokenBalances(mockToken, [sender, receiver], [0, 0])
+          ).to.be.rejectedWith(AssertionError);
+        });
+
+        it("accounts change their balance in the way it was not expected - zkSync transfer", async function () {
+          await expect(
+            expect(
+              sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+            ).to.not.changeTokenBalances(mockToken, [sender, receiver], [-2, 2])
           ).to.be.rejectedWith(AssertionError);
         });
       });
@@ -378,114 +432,6 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
             /Expected the balance of <token at 0x\w{40}> tokens for "0x\w{40}" NOT to change by 50, but it did/
           );
         });
-      });
-    });
-
-    describe("validation errors", function () {
-      describe("changeTokenBalance", function () {
-        // it("token is not specified", async function () {
-        //   expect(() =>
-        //     expect(mockToken.transfer(receiver.address, 50))
-        //       .to // @ts-expect-error
-        //       .changeTokenBalance(receiver, 50)
-        //   ).to.throw(
-        //     Error,
-        //     "The first argument of changeTokenBalance must be the contract instance of the token"
-        //   );
-
-        //   // if an address is used
-        //   expect(() =>
-        //     expect(mockToken.transfer(receiver.address, 50))
-        //       .to // @ts-expect-error
-        //       .changeTokenBalance(receiver.address, 50)
-        //   ).to.throw(
-        //     Error,
-        //     "The first argument of changeTokenBalance must be the contract instance of the token"
-        //   );
-        // });
-
-        // it("contract is not a token", async function () {
-        //   const NotATokenArtifact = await deployer.loadArtifact("NotAToken");
-        //   const notAToken = await deployer.deploy(NotATokenArtifact);
-
-        //   expect(() =>
-        //     expect(
-        //       mockToken.transfer(receiver.address, 50)
-        //     ).to.changeTokenBalance(notAToken, sender, -50)
-        //   ).to.throw(
-        //     Error,
-        //     "The given contract instance is not an ERC20 token"
-        //   );
-        // });
-
-        // it("tx reverts", async function () {
-        //   await expect(
-        //     expect(
-        //       mockToken.transfer(receiver.address, 0)
-        //     ).to.changeTokenBalance(mockToken, sender, -50)
-        //   ).to.be.rejectedWith(
-        //     Error,
-        //     "Transferred value is zero"
-        //   );
-        // });
-      });
-
-      describe("changeTokenBalances", function () {
-        // it("token is not specified", async function () {
-        //   expect(() =>
-        //     expect(mockToken.transfer(receiver.address, 50))
-        //       .to // @ts-expect-error
-        //       .changeTokenBalances([sender, receiver], [-50, 50])
-        //   ).to.throw(
-        //     Error,
-        //     "The first argument of changeTokenBalances must be the contract instance of the token"
-        //   );
-        // });
-
-        // it("contract is not a token", async function () {
-        //   const NotATokenArtifact = await deployer.loadArtifact("NotAToken");
-        //   const notAToken = await deployer.deploy(NotATokenArtifact);
-
-        //   expect(() =>
-        //     expect(
-        //       mockToken.transfer(receiver.address, 50)
-        //     ).to.changeTokenBalances(notAToken, [sender, receiver], [-50, 50])
-        //   ).to.throw(
-        //     Error,
-        //     "The given contract instance is not an ERC20 token"
-        //   );
-        // });
-
-        // it("arrays have different length", async function () {
-        //   expect(() =>
-        //     expect(
-        //       mockToken.transfer(receiver.address, 50)
-        //     ).to.changeTokenBalances(mockToken, [sender], [-50, 50])
-        //   ).to.throw(
-        //     Error,
-        //     "The number of accounts (1) is different than the number of expected balance changes (2)"
-        //   );
-
-        //   expect(() =>
-        //     expect(
-        //       mockToken.transfer(receiver.address, 50)
-        //     ).to.changeTokenBalances(mockToken, [sender, receiver], [-50])
-        //   ).to.throw(
-        //     Error,
-        //     "The number of accounts (2) is different than the number of expected balance changes (1)"
-        //   );
-        // });
-
-        // it("tx reverts", async function () {
-        //   await expect(
-        //     expect(
-        //       mockToken.transfer(receiver.address, 0)
-        //     ).to.changeTokenBalances(mockToken, [sender, receiver], [-50, 50])
-        //   ).to.be.rejectedWith(
-        //     Error,
-        //     "Transferred value is zero"
-        //   );
-        // });
       });
     });
 

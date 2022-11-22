@@ -30,7 +30,7 @@ describe("INTEGRATION: Reverted with custom error", function () {
     let wallet: zk.Wallet;
     let deployer: Deployer;
     let artifact: ZkSyncArtifact;
-    
+
     beforeEach("deploy matchers contract", async function () {
       provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
       wallet = new zk.Wallet(RICH_WALLET_PK, provider);
