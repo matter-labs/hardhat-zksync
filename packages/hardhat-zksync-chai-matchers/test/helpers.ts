@@ -28,7 +28,7 @@ export function useEnvironmentWithLocalSetup(fixtureProjectName: string) {
     fixtureProjectName
   );
 
-  before("TODO", async function() {
+  before("Run ZkSync Chai Matchers", async function() {
     process.chdir(fixtureProjectDir);
 
     this.hre = require("hardhat");

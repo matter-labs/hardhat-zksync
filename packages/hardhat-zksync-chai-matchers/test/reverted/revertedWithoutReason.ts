@@ -16,12 +16,6 @@ import "../../src/internal/add-chai-matchers";
 const RICH_WALLET_PK = "0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110";
 
 describe("INTEGRATION: Reverted without reason", function () {
-  let matchers: zk.Contract;
-  let provider: zk.Provider;
-  let wallet: zk.Wallet;
-  let deployer: Deployer;
-  let artifact: ZkSyncArtifact;
-
   describe("with the local setup", function () {
     useEnvironmentWithLocalSetup("hardhat-project");
 
@@ -29,6 +23,12 @@ describe("INTEGRATION: Reverted without reason", function () {
   });
 
   function runTests() {
+    let matchers: zk.Contract;
+    let provider: zk.Provider;
+    let wallet: zk.Wallet;
+    let deployer: Deployer;
+    let artifact: ZkSyncArtifact;
+    
     beforeEach("deploy matchers contract", async function () {
       provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
       wallet = new zk.Wallet(RICH_WALLET_PK, provider);

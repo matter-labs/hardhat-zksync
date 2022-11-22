@@ -134,7 +134,11 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
           ).to.changeEtherBalances(
             [sender, receiver, contract],
             [-(txGasFees + 200), 200, 0],
-            { includeFee: true }
+            { 
+              balanceChangeOptions:  { 
+                includeFee: true 
+              } 
+            }
           );
         });
 
@@ -148,8 +152,12 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
           ).to.changeEtherBalances(
             [sender, receiver, contract],
             [-(txGasFees + 200), 200, 0],
-            { includeFee: true },
-            overrides
+            { 
+              balanceChangeOptions:  { 
+                includeFee: true 
+              },
+              overrides,
+            } 
           );
         });
 
@@ -176,7 +184,9 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
               value: 200,
             })
           ).to.not.changeEtherBalances([sender, receiver], [-200, 201], {
-            includeFee: true,
+              balanceChangeOptions:  { 
+                includeFee: true 
+            }
           });
         });
 
@@ -265,7 +275,11 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
           ).to.changeEtherBalances(
             [sender, receiver],
             [(-(txGasFees + 200)).toString(), 200],
-            { includeFee: true }
+            {
+              balanceChangeOptions:  { 
+                includeFee: true 
+              }
+            }
           );
         });
 
@@ -279,7 +293,11 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
           ).to.changeEtherBalances(
             [sender, receiver, contract],
             [-(txGasFees + 200), 200, 0],
-            { includeFee: true }
+            {
+              balanceChangeOptions:  { 
+                includeFee: true 
+              }
+            }
           );
         });
 
@@ -308,7 +326,9 @@ describe("INTEGRATION: changeEtherBalances matcher", function () {
                 gasPrice,
               })
             ).to.changeEtherBalances([sender, receiver], [-200, 200], {
-              includeFee: true,
+              balanceChangeOptions:  { 
+                includeFee: true 
+              }
             })
           ).to.be.eventually.rejectedWith(
             AssertionError,

@@ -35,7 +35,6 @@ describe("INTEGRATION: changeTokenBalance and changeTokenBalances matchers", fun
 
     beforeEach(async function () {
       provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
-      
       sender = new zk.Wallet(RICH_WALLET_PK, provider);
       receiver = zk.Wallet.createRandom();
 

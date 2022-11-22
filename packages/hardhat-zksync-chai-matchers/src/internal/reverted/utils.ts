@@ -3,7 +3,7 @@ import { AssertionError } from "chai";
 
 import { panicErrorCodeToReason } from "@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic";
 
-import { ZkSyncChaiMatchersPluginError } from "../../zksync-chai-matchers-plugin-error";
+import { ZkSyncChaiMatchersPluginError } from "../../errors";
 
 // method id of 'Error(string)'
 const ERROR_STRING_PREFIX = "0x08c379a0";

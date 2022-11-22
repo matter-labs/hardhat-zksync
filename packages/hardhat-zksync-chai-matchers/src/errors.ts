@@ -1,4 +1,5 @@
 import { HardhatPluginError } from 'hardhat/plugins';
+
 import { PLUGIN_NAME } from './constants';
 
 export class ZkSyncChaiMatchersPluginError extends HardhatPluginError {

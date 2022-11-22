@@ -14,8 +14,10 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
       this: any,
       account: Account | string,
       balanceChange: BigNumberish,
-      options?: BalanceChangeOptions,
-      withOverrides?: ethers.Overrides
+      options?: {
+        balanceChangeOptions?: BalanceChangeOptions,
+        overrides?: ethers.Overrides
+      },
     ) {
       const { BigNumber } = require("ethers");
 
@@ -36,7 +38,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
       };
 
       const derivedPromise = Promise.all([
-        getBalanceChange(subject, account, options, withOverrides),
+        getBalanceChange(subject, account, options?.balanceChangeOptions, options?.overrides),
         getAddressOf(account),
       ]).then(checkBalanceChange);
       this.then = derivedPromise.then.bind(derivedPromise);

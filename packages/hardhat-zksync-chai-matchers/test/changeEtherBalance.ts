@@ -106,7 +106,9 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
             })
           ).to.changeEtherBalance(sender, -(txGasFees + 200), {
-            includeFee: true,
+            balanceChangeOptions: { 
+              includeFee: true
+            },
           });
         });
 
@@ -117,7 +119,11 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               gasPrice: gasPrice,
               value: 200,
             })
-          ).to.changeEtherBalance(receiver, 200, { includeFee: true });
+          ).to.changeEtherBalance(receiver, 200, { 
+            balanceChangeOptions: { 
+              includeFee: true
+            },
+          });
         });
 
         it("Should take into account transaction fee by default", async () => {
@@ -156,7 +162,11 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
                 gasPrice: gasPrice,
                 value: 200,
               })
-            ).to.changeEtherBalance(sender, -200, { includeFee: true })
+            ).to.changeEtherBalance(sender, -200, { 
+              balanceChangeOptions: { 
+                includeFee: true
+              },
+            })
           ).to.be.eventually.rejectedWith(
             AssertionError,
             `Expected the ether balance of "${
@@ -244,7 +254,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               amount: 200,
               overrides
             })
-          ).to.changeEtherBalance(sender, "-200", {}, overrides);
+          ).to.changeEtherBalance(sender, "-200", { overrides });
         });
 
         it("Should pass when expected balance change is passed as int and is equal to an actual", async () => {
@@ -254,7 +264,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.changeEtherBalance(receiver, 200, {}, overrides);
+          ).to.changeEtherBalance(receiver, 200, { overrides });
         });
 
         it("Should take into account transaction fee", async () => {
@@ -265,8 +275,11 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               ...overrides
             })
           ).to.changeEtherBalance(sender, -(txGasFees + 200), {
-            includeFee: true,
-          }, overrides);
+            balanceChangeOptions: { 
+              includeFee: true
+            },
+            overrides
+          });
         });
 
         it("Should take into account transaction fee", async () => {
@@ -277,8 +290,11 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               ...overrides
             })
           ).to.changeEtherBalance(sender, -(txGasFees + 200), {
-            includeFee: true,
-          }, overrides);
+            balanceChangeOptions: { 
+              includeFee: true
+            },
+            overrides
+          });
         });
 
         it("Should ignore fee if receiver's wallet is being checked and includeFee was set", async () => {
@@ -288,7 +304,12 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.changeEtherBalance(receiver, 200, { includeFee: true }, overrides);
+          ).to.changeEtherBalance(receiver, 200, { 
+            balanceChangeOptions: { 
+              includeFee: true
+            },
+            overrides
+           });
         });
 
         it("Should take into account transaction fee by default", async () => {
@@ -298,7 +319,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.changeEtherBalance(sender, -200, {}, overrides);
+          ).to.changeEtherBalance(sender, -200, { overrides });
         });
 
         it("Should pass when expected balance change is passed as BN and is equal to an actual", async () => {
@@ -307,7 +328,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               to: receiver.address,
               value: 200,
             })
-          ).to.changeEtherBalance(receiver, BigNumber.from(200), {}, overrides);
+          ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides });
         });
 
         it("Should pass on negative case when expected balance change is not equal to an actual", async () => {
@@ -317,7 +338,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.not.changeEtherBalance(receiver, BigNumber.from(300), {}, overrides);
+          ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides });
         });
 
         it("Should throw when fee was not calculated correctly", async () => {
@@ -328,7 +349,12 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
                 value: 200,
                 ...overrides
               })
-            ).to.changeEtherBalance(sender, -200, { includeFee: true }, overrides)
+            ).to.changeEtherBalance(sender, -200, {
+              balanceChangeOptions: { 
+                includeFee: true
+              },
+              overrides
+            })
           ).to.be.eventually.rejectedWith(
             AssertionError,
             `Expected the ether balance of "${
@@ -345,7 +371,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
                 value: 200,
                 ...overrides
               })
-            ).to.changeEtherBalance(sender, "-500", {}, overrides)
+            ).to.changeEtherBalance(sender, "-500", { overrides })
           ).to.be.eventually.rejectedWith(
             AssertionError,
             `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
@@ -360,7 +386,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
                 value: 200,
                 ...overrides
               })
-            ).to.not.changeEtherBalance(sender, "-200", {}, overrides)
+            ).to.not.changeEtherBalance(sender, "-200", { overrides })
           ).to.be.eventually.rejectedWith(
             AssertionError,
             `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
@@ -376,7 +402,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.changeEtherBalance(contract, 200, {}, overrides);
+          ).to.changeEtherBalance(contract, 200, { overrides });
         });
 
         it("should pass when calling function that returns half the sent ether", async () => {
@@ -385,7 +411,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
               value: 200,
               ...overrides
             })
-          ).to.changeEtherBalance(sender, -100, {}, overrides);
+          ).to.changeEtherBalance(sender, -100, { overrides });
         });
       });
 
@@ -398,7 +424,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
             value: 200,
             ...overrides
           })
-        ).to.changeEtherBalance(sender, -200, {}, overrides);
+        ).to.changeEtherBalance(sender, -200, { overrides });
 
         const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(
           receiverBalanceBefore

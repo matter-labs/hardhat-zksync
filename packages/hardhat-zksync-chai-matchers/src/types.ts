@@ -21,13 +21,11 @@ declare namespace Chai {
       account: any,
       balance: any,
       options?: any,
-      withOverrides?: any
     ): AsyncAssertion;
     changeEtherBalances(
       accounts: any[],
       balances: any[],
       options?: any,
-      withOverrides?: any
     ): AsyncAssertion;
     changeTokenBalance(token: any, account: any, balance: any): AsyncAssertion;
     changeTokenBalances(
