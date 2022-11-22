@@ -15,8 +15,8 @@ const config: HardhatUserConfig = {
     },
   },
   zkSyncDeploy: {
-    zkSyncNetwork: "http://localhost:3050",
-    ethNetwork: "http://localhost:8545",
+    zkSyncNetwork: "http://0.0.0.0:3050",
+    ethNetwork: "http://0.0.0.0:8545",
   },
   solidity: {
     version: "0.8.11",
