@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as path from 'path';
 import * as glob from 'glob';
 
-import { ZkSyncDeployPluginError } from './zksync-deploy-plugin-error';
+import { ZkSyncDeployPluginError } from './errors';
 
 export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     const workDir = hre.config.paths.root;

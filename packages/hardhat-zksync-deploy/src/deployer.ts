@@ -3,7 +3,7 @@ import * as zk from 'zksync-web3';
 import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
-import { ZkSyncDeployPluginError } from './zksync-deploy-plugin-error';
+import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
 import { isHttpNetworkConfig } from './utils';
 

@@ -1,5 +1,5 @@
 import { HttpNetworkConfig, Network, NetworkConfig } from 'hardhat/types';
-import { ZkSyncDeployPluginError } from './zksync-deploy-plugin-error';
+import { ZkSyncDeployPluginError } from './errors';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
