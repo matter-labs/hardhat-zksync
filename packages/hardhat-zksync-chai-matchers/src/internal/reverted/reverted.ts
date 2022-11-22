@@ -3,7 +3,6 @@ import * as zk from "zksync-web3";
 
 import { decodeReturnData, getReturnDataFromError } from "./utils";
 
-
 export function supportReverted(Assertion: Chai.AssertionStatic) {
   Assertion.addProperty("reverted", function (this: any) {
     const negated = this.__flags.negate;

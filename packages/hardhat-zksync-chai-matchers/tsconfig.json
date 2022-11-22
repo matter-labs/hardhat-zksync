@@ -1,7 +1,8 @@
 {
   "extends": "../../config/typescript/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "esModuleInterop": true,
   },
-  "exclude": ["./dist", "./node_modules"]
+  "exclude": ["./dist", "./node_modules", "./test/fixture-projects"]
 }

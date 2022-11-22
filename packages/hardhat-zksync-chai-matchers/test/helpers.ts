@@ -11,16 +11,6 @@ declare module "mocha" {
   }
 }
 
-declare module 'hardhat/types/config' {
-  interface HardhatUserConfig {
-      zkSyncDeploy?: Partial<ZkDeployConfig>;
-  }
-
-  interface HardhatConfig {
-      zkSyncDeploy: ZkDeployConfig;
-  }
-}
-
 export function useEnvironmentWithLocalSetup(fixtureProjectName: string) {
   const fixtureProjectDir = path.resolve(
     __dirname,
