@@ -10,7 +10,7 @@ declare module "mocha" {
   }
 }
 
-export function useEnvironmentWithLocalSetup(fixtureProjectName: string) {
+export function useEnvironmentWithLocalSetup(fixtureProjectName: string,  networkName = 'zkSyncNetwork') {
   const fixtureProjectDir = path.resolve(
     __dirname,
     "fixture-projects",
@@ -19,6 +19,7 @@ export function useEnvironmentWithLocalSetup(fixtureProjectName: string) {
 
   before("Run ZkSync Chai Matchers", async function() {
     process.chdir(fixtureProjectDir);
+    process.env.HARDHAT_NETWORK = networkName;
 
     this.hre = require("hardhat");
     await this.hre.run(TASK_COMPILE);

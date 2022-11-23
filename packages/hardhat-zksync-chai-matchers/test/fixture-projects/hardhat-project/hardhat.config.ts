@@ -1,8 +1,8 @@
-import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
+import '@matterlabs/hardhat-zksync-solc';
+import '../../../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
 
-import '../../../src/index';
 
 const config: HardhatUserConfig = {
   zksolc: {
@@ -15,18 +15,19 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  zkSyncDeploy: {
-    zkSyncNetwork: "http://0.0.0.0:3050",
-    ethNetwork: "http://0.0.0.0:8545",
-  },
   solidity: {
     version: "0.8.11",
   },
   networks: {
-    hardhat: {
-      zksync: true,
+    ethNetwork: {
+        url: "http://0.0.0.0:8545",
     },
-  },
+    zkSyncNetwork: {
+        url: "http://0.0.0.0:3050",
+        ethNetwork: 'ethNetwork',
+        zksync: true,
+    },
+},
 };
 
 export default config;
