@@ -1,4 +1,4 @@
-export interface ZKScanVerifyRequest {
+export interface ZkSyncBlockExplorerVerifyRequest {
     contractAddress: string;
     contractName: string;
     sourceCode: string;

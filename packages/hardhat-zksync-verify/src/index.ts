@@ -15,7 +15,7 @@ extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
 });
 
-task(TASK_VERIFY, 'Verifies contract on Ethereum L1 and ZKSync').setAction(verify);
+task(TASK_VERIFY, 'Verifies contract on Ethereum and zkSync networks').setAction(verify);
 
 subtask(TASK_VERIFY_VERIFY).setAction(verifyContract);
 

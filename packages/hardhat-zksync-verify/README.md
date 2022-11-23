@@ -1,3 +1,3 @@
 # hardhat-zksync-verify
 
-[Hardhat](https://hardhat.org/) plugin to verify contracts into the zkSync network.
+[Hardhat](https://hardhat.org/) plugin to verify contracts on the zkSync network.

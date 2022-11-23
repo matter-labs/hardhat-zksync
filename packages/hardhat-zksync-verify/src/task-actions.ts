@@ -1,6 +1,9 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
-import { verifyContractRequest, ZKScanResponse } from './zkscan/ZkScanService';
+import {
+    verifyContractRequest,
+    ZkSyncBlockExplorerResponse as blockExplorerResponse,
+} from './zksync-block-explorer/ZkSyncBlockExplorerService';
 import axios from 'axios';
 
 import {
@@ -17,10 +20,10 @@ import {
 
 import { delay, encodeArguments, executeVeificationWithRetry, handleAxiosError } from './utils';
 import { Build, Libraries } from './types';
-import { ZKScanVerifyRequest } from './zkscan/ZkSyncVerifyContractRequest';
+import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/ZkSyncVerifyContractRequest';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import { VerificationStatusResponse } from './zkscan/VerificationStatusResponse';
+import { VerificationStatusResponse } from './zksync-block-explorer/VerificationStatusResponse';
 
 export async function verify(
     args: {
@@ -123,12 +126,12 @@ export async function sendVerificationRequest(
     const compilerVersion: string = minimumBuild.output.version;
     if (!compilerPossibleVersions.data.includes(compilerVersion)) {
         throw new ZkSyncVerifyPluginError(
-            'Solidity compiler you used to compile the contract is not currently supported by ZKScan!\nPlease use one of the supporting versions'
+            'Solidity compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions'
         );
     }
     const compilerZksolcVersion = 'v' + minimumBuild.output.zk_version;
 
-    const request: ZKScanVerifyRequest = {
+    const request: ZkSyncBlockExplorerVerifyRequest = {
         contractAddress: contractAddress,
         sourceCode: contractContent,
         contractName: contractName,
@@ -137,7 +140,7 @@ export async function sendVerificationRequest(
         constructorArguments: deployArgumentsEncoded,
         optimizationUsed: true,
     };
-    const response: ZKScanResponse = await verifyContractRequest(request, hre.network.verifyURL);
+    const response: blockExplorerResponse = await verifyContractRequest(request, hre.network.verifyURL);
 
     let isValidVerification: VerificationStatusResponse = await executeVeificationWithRetry(
         response.message,
@@ -147,5 +150,5 @@ export async function sendVerificationRequest(
         throw new ZkSyncVerifyPluginError(isValidVerification.getError());
     }
 
-    console.log(`Successfully verified full build of contract ${contractName} on ZkScan!`);
+    console.log(`Successfully verified full build of contract ${contractName} on zkSync block explorer!`);
 }

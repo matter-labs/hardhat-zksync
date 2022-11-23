@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 import { handleAxiosError } from '../utils';
-import { VerificationStatusResponse } from '../zkscan/VerificationStatusResponse';
+import { VerificationStatusResponse } from './VerificationStatusResponse';
 import { ZkSyncVerifyPluginError } from '../zksync-verify-plugin-error';
-import { ZKScanVerifyRequest } from './ZkSyncVerifyContractRequest';
+import { ZkSyncBlockExplorerVerifyRequest } from './ZkSyncVerifyContractRequest';
 
-export class ZKScanResponse {
+export class ZkSyncBlockExplorerResponse {
     public readonly status: number;
     public readonly message: string;
 
@@ -35,18 +35,21 @@ export async function checkVerificationStatus(
     }
 }
 
-export async function verifyContractRequest(req: ZKScanVerifyRequest, verifyURL: string): Promise<ZKScanResponse> {
+export async function verifyContractRequest(
+    req: ZkSyncBlockExplorerVerifyRequest,
+    verifyURL: string
+): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
         data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' } });
 
-        const zKscanResponse = new ZKScanResponse(data);
+        const zkSyncBlockExplorerResponse = new ZkSyncBlockExplorerResponse(data);
 
-        if (!zKscanResponse.isOk()) {
-            throw new ZkSyncVerifyPluginError(zKscanResponse.message);
+        if (!zkSyncBlockExplorerResponse.isOk()) {
+            throw new ZkSyncVerifyPluginError(zkSyncBlockExplorerResponse.message);
         }
 
-        return zKscanResponse;
+        return zkSyncBlockExplorerResponse;
     } catch (error) {
         handleAxiosError(error);
     }

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { VerificationStatusResponse } from './zkscan/VerificationStatusResponse';
-import { checkVerificationStatus } from './zkscan/ZkScanService';
+import { VerificationStatusResponse } from './zksync-block-explorer/VerificationStatusResponse';
+import { checkVerificationStatus } from './zksync-block-explorer/ZkSyncBlockExplorerService';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
 
 export function handleAxiosError(error: any): never {
@@ -25,7 +25,7 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     try {
         deployArgumentsEncoded = contractInterface.encodeDeploy(constructorArgs).replace('0x', '');
     } catch (error: any) {
-        throw new ZkSyncVerifyPluginError(error);
+        throw new ZkSyncVerifyPluginError(error.reason);
     }
 
     return deployArgumentsEncoded;

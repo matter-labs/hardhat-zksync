@@ -4,7 +4,7 @@ export const TESTNET_VERIFY_URL = 'https://zksync2-testnet-explorer.zksync.dev/c
 
 export const TASK_VERIFY = 'verify';
 export const TASK_VERIFY_VERIFY = 'verify:verify';
-export const TASK_VERIFY_CONTRACT = 'zk-verify-contract';
+export const TASK_VERIFY_CONTRACT = 'zk:verify:contract';
 
 export const TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS = 'verify:get-constructor-arguments';
 export const TASK_VERIFY_GET_LIBRARIES = 'verify:get-libraries';
