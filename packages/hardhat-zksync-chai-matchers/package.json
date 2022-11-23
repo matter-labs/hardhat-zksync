@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "~1.0.4",
-    "@matterlabs/hardhat-zksync-deploy": "^0.5.2",
+    "@matterlabs/hardhat-zksync-deploy": "^0.5.3",
     "@matterlabs/hardhat-zksync-solc": "^0.3.10",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
