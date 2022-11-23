@@ -3,14 +3,14 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as path from 'path';
 import * as glob from 'glob';
 
-import { pluginError } from './helpers';
+import { ZkSyncDeployPluginError } from './errors';
 
 export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     const workDir = hre.config.paths.root;
     const deployScriptsDir = path.join(workDir, 'deploy');
 
     if (!existsSync(deployScriptsDir)) {
-        throw pluginError('No deploy folder was found');
+        throw new ZkSyncDeployPluginError('No deploy folder was found');
     }
 
     const tsFiles = glob.sync(path.join(deployScriptsDir, '**', '*.ts'));
@@ -54,7 +54,7 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     }
 
     if (typeof deployFn !== 'function') {
-        throw pluginError('Deploy function does not exist or exported invalidly');
+        throw new ZkSyncDeployPluginError('Deploy function does not exist or exported invalidly');
     }
 
     await deployFn(hre);

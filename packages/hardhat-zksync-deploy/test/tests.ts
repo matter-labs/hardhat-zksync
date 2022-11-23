@@ -1,8 +1,12 @@
 import { assert } from 'chai';
 import * as path from 'path';
+import { ethers } from 'ethers';
+import { Wallet } from 'zksync-web3';
 import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
 import { useEnvironment } from './helpers';
+import { Deployer } from '../src/deployer';
+import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from './constants';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', async function () {
@@ -32,6 +36,42 @@ describe('Plugin tests', async function () {
 
         it('Should call deploy scripts through HRE', async function () {
             await this.env.run(TASK_DEPLOY_ZKSYNC);
+        });
+    });
+
+    describe('Deployer with zkSync network provided', async function () {
+        useEnvironment('successful-compilation', ZKSYNC_NETWORK_NAME);
+
+        it('Should connect to correct L1 and L2 networks based on zkSync network', async function () {
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
+            const deployer = new Deployer(this.env, zkWallet);
+
+            assert.equal(
+                (deployer.ethWallet.provider as ethers.providers.JsonRpcProvider).connection.url,
+                ETH_NETWORK_RPC_URL,
+                'Incorrect L1 network url'
+            );
+            assert.equal(deployer.zkWallet.provider.connection.url, ZKSYNC_NETWORK_RPC_URL, 'Incorrect L2 network url');
+        });
+    });
+
+    describe('Deployer without zkSync network provided', async function () {
+        useEnvironment('successful-compilation');
+
+        it('Should use default L1 and L2 network providers (local-setup)', async function () {
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
+            const deployer = new Deployer(this.env, zkWallet);
+
+            assert.equal(
+                (deployer.ethWallet.provider as ethers.providers.JsonRpcProvider).connection.url,
+                'http://localhost:8545',
+                'Incorrect default L1 network provider'
+            );
+            assert.equal(
+                deployer.zkWallet.provider.connection.url,
+                'http://localhost:3050',
+                'Incorrect default L2 network provider'
+            );
         });
     });
 });
