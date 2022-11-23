@@ -2,7 +2,6 @@ import { AssertionError, expect } from "chai";
 import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
 import { resetHardhatContext } from "hardhat/plugins-testing";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { ZkDeployConfig } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import path from "path";
 
 declare module "mocha" {

@@ -61,8 +61,7 @@ export async function getBalanceChange(
   overrides?: ethers.Overrides
 ) {
   const { BigNumber } = await import("ethers");
-  const hre = await import("hardhat");
-  const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+  const provider = zk.Provider.getDefaultProvider();
 
   let txResponse: zk.types.TransactionResponse;
 

@@ -90,8 +90,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
 }
 
 async function getTransactionReceipt(hash: string) {
-  const hre = await import("hardhat");
-  const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+  const provider = zk.Provider.getDefaultProvider();
 
   return provider.getTransactionReceipt(hash);
 }

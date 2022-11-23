@@ -32,7 +32,7 @@ describe("INTEGRATION: changeEtherBalance matcher", function () {
     let overrides: {};
 
     beforeEach(async function () {
-      provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
+      provider = zk.Provider.getDefaultProvider();
       sender = new zk.Wallet(RICH_WALLET_PK, provider);
       receiver = zk.Wallet.createRandom();
 

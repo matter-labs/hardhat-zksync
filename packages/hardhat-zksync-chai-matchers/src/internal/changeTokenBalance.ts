@@ -141,8 +141,7 @@ export async function getBalanceChange(
   account: Account | string
 ) {
   const { BigNumber } = require("ethers");
-  const hre = await import("hardhat");
-  const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+  const provider = zk.Provider.getDefaultProvider();
 
   const txResponse = await transaction;
 

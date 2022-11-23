@@ -121,8 +121,7 @@ async function getTxFees(
   overrides?: ethers.Overrides,
 ) {
   const { BigNumber } = require("ethers");
-  const hre = await import("hardhat");
-  const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+  const provider = zk.Provider.getDefaultProvider();
 
   return Promise.all(
     accounts.map(async (account) => {

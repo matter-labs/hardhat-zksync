@@ -30,7 +30,7 @@ describe("INTEGRATION: Reverted", function () {
     let artifact: ZkSyncArtifact;
 
     beforeEach("deploy matchers contract", async function () {
-      provider = new zk.Provider(this.hre.config.zkSyncDeploy.zkSyncNetwork);
+      provider = zk.Provider.getDefaultProvider();
       wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
       deployer = new Deployer(this.hre, wallet);

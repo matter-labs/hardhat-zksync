@@ -15,8 +15,7 @@ export async function getBalances(
   blockNumber?: number
 ) {
   const { BigNumber } = await import("ethers");
-  const hre = await import("hardhat");
-  const provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+  const provider = zk.Provider.getDefaultProvider();
 
   return Promise.all(
     accounts.map(async (account) => {
