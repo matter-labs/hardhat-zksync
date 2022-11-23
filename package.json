@@ -14,7 +14,7 @@
     "wsrun": "^5.2.2"
   },
   "scripts": {
-    "build": "tsc --build packages/hardhat-zksync-*",
+    "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers",
     "watch": "tsc --build --watch packages/hardhat-zksync-*",
     "clean": "wsrun --exclude-missing clean",
     "lint": "wsrun --exclude-missing --stages lint",
