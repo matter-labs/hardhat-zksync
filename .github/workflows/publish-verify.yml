@@ -29,6 +29,6 @@ jobs:
         run: yarn && yarn build
 
       - name: Publish
-        run: npm publish @matterlabs/hardhat-zksync-verify@${{ inputs.tag }} --workspace=packages/hardhat-zksync-verify --access=public
+        run: npm publish @matterlabs/hardhat-zksync-verify --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-verify --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
