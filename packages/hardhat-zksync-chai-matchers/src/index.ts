@@ -1,3 +1,3 @@
-import "./types";
+import './types';
 
-import "./internal/add-chai-matchers";
+import './internal/add-chai-matchers';
