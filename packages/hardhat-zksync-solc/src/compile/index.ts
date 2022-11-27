@@ -53,8 +53,8 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(input: CompilerInput, _config: ZkSolcConfig) {
-        return await compileWithDocker(input, this.docker, this.dockerImage);
+    public async compile(input: CompilerInput, config: ZkSolcConfig) {
+        return await compileWithDocker(input, this.docker, this.dockerImage, config);
     }
 
     public async solcVersion() {
