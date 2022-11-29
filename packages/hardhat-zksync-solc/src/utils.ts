@@ -17,8 +17,11 @@ export async function getZksolcPath(version: string): Promise<string> {
 }
 
 export function getZksolcUrl(version: string): string {
-    const platform = process.platform == 'darwin' ? 'macosx' : process.platform;
+    // @ts-ignore
+    const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
+    // @ts-ignore
+    const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
-    const musl = platform == 'linux' ? '-musl' : '';
-    return `https://github.com/matter-labs/zksolc-bin/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${musl}-v${version}`;
+    const ext = process.platform == 'win32' ? '.exe' : '';
+    return `https://github.com/matter-labs/zksolc-bin/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
