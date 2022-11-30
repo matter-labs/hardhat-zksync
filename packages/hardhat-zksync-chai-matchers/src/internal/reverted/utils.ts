@@ -56,7 +56,7 @@ type FuncSelectorWithData = {
 export function getFuncSelectorWithData(message: string): FuncSelectorWithData {
     const extracted = message.match(/0x\w*/g);
 
-    if (extracted == null) {
+    if (extracted == null || !message.includes('Error function_selector')) {
         // Remove dot at the end of the reason
         message = message.substring(0, message.length - 1);
         // Remove substring: `Cannot estimate transaction: `
