@@ -1,4 +1,7 @@
 import axios from 'axios';
+import exp from 'constants';
+import { Artifacts } from 'hardhat/types';
+import { isFullyQualifiedName } from 'hardhat/utils/contract-names';
 import { VerificationStatusResponse } from './zksync-block-explorer/VerificationStatusResponse';
 import { checkVerificationStatus } from './zksync-block-explorer/ZkSyncBlockExplorerService';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
@@ -48,5 +51,25 @@ export async function executeVeificationWithRetry(
             throw new ZkSyncVerifyPluginError('Contract verification is still pending');
         }
         await delay(delayInMs);
+    }
+}
+
+export async function checkContractName(artifacts: Artifacts, contractFQN: string) {
+    if (contractFQN !== undefined) {
+        if (!isFullyQualifiedName(contractFQN)) {
+            throw new ZkSyncVerifyPluginError(
+                `A valid fully qualified name was expected. Fully qualified names look like this: "contracts/AContract.sol:TheContract"
+Instead, this name was received: ${contractFQN}`
+            );
+        }
+
+        if (!(await artifacts.artifactExists(contractFQN))) {
+            throw new ZkSyncVerifyPluginError(`The contract ${contractFQN} is not present in your project.`);
+        }
+    } else {
+        throw new ZkSyncVerifyPluginError(
+            `You did not provide any contract name. Please add fully qualified name of your contract. 
+            Qualified names look like this: contracts/AContract.sol:TheContract`
+        );
     }
 }

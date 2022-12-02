@@ -2,6 +2,7 @@ export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-verify';
 
 export const TESTNET_VERIFY_URL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 
+export const TASK_COMPILE = 'compile';
 export const TASK_VERIFY = 'verify';
 export const TASK_VERIFY_VERIFY = 'verify:verify';
 export const TASK_VERIFY_CONTRACT = 'zk:verify:contract';

@@ -7,6 +7,7 @@ import {
 import axios from 'axios';
 
 import {
+    TASK_COMPILE,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
     TASK_VERIFY_GET_LIBRARIES,
     TASK_VERIFY_VERIFY,
@@ -18,7 +19,7 @@ import {
     TASK_VERIFY_GET_COMPILER_VERSIONS,
 } from './constants';
 
-import { delay, encodeArguments, executeVeificationWithRetry, handleAxiosError } from './utils';
+import { checkContractName, encodeArguments, executeVeificationWithRetry, handleAxiosError } from './utils';
 import { Build, Libraries } from './types';
 import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/ZkSyncVerifyContractRequest';
 import { ZkSyncVerifyPluginError } from './zksync-verify-plugin-error';
@@ -81,21 +82,29 @@ export async function getCompilerVersions(
 }
 
 export async function verifyContract(
-    { address, contract, constructorArguments, libraries }: TaskArguments,
+    { address, contract: contractFQN, constructorArguments, libraries }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
 ) {
     if (!hre.network.zksync) {
-        return await runSuper({ address, contract, constructorArguments, libraries });
+        return await runSuper({ address, contractFQN, constructorArguments, libraries });
     }
 
     if (address === undefined) {
         throw new ZkSyncVerifyPluginError(NO_VERIFIABLE_ADDRESS_ERROR);
     }
 
+    await hre.run(TASK_COMPILE);
+
+    try {
+        await checkContractName(hre.artifacts, contractFQN);
+    } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(error.message);
+    }
+
     return hre.run(TASK_VERIFY_CONTRACT, {
         contractAddress: address,
-        contractFQN: contract,
+        contractFQN,
         constructorArgs: constructorArguments,
         libraries: libraries,
     });
