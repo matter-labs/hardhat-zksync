@@ -11,6 +11,7 @@ import Docker, { ContainerCreateOptions } from 'dockerode';
 import { CompilerInput } from 'hardhat/types';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
+import { ZkSolcConfig } from '../types';
 
 async function runContainer(docker: Docker, image: Image, command: string[], input: string) {
     const createOptions: ContainerCreateOptions = {
@@ -117,14 +118,20 @@ export async function compileWithDocker(
     input: CompilerInput,
     docker: HardhatDocker,
     image: Image,
+    zksolcConfig: ZkSolcConfig
 ) {
+    const command = ['zksolc', '--standard-json'];
+    if(zksolcConfig.settings.isSystem) {
+        command.push('--system-mode');
+    }
+
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
     return await handleCommonErrors((async () => {
         const compilerOutput = await runContainer(
             dockerInstance,
             image,
-            ['zksolc', '--standard-json'],
+            command,
             JSON.stringify(input)
         );
         try {

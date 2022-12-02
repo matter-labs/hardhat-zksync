@@ -1,9 +1,11 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
 import * as zk from 'zksync-web3';
 import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
-import { pluginError } from './helpers';
+import { ZkSyncDeployPluginError } from './errors';
+import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
+import { isHttpNetworkConfig } from './utils';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -20,12 +22,8 @@ export class Deployer {
     constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet) {
         this.hre = hre;
 
-        // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2). We will need both.
-        const ethNetwork = hre.config.zkSyncDeploy.ethNetwork;
-        const ethWeb3Provider = SUPPORTED_L1_TESTNETS.includes(ethNetwork)
-            ? ethers.getDefaultProvider(ethNetwork)
-            : new ethers.providers.JsonRpcProvider(ethNetwork);
-        const zkWeb3Provider = new zk.Provider(hre.config.zkSyncDeploy.zkSyncNetwork);
+        // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
+        const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
 
         this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
@@ -33,6 +31,46 @@ export class Deployer {
 
     static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
         return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
+    }
+
+    private _createProviders(
+        networks: NetworksConfig,
+        network: Network
+    ): {
+        ethWeb3Provider: ethers.providers.BaseProvider;
+        zkWeb3Provider: zk.Provider;
+    } {
+        if (network.name === 'hardhat') {
+            return {
+                ethWeb3Provider: this._createDefaultEthProvider(),
+                zkWeb3Provider: this._createDefaultZkProvider(),
+            };
+        }
+
+        let ethWeb3Provider, zkWeb3Provider;
+        const ethNetwork = network.ethNetwork;
+
+        if (SUPPORTED_L1_TESTNETS.includes(ethNetwork)) {
+            ethWeb3Provider = ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
+                ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
+                : ethers.getDefaultProvider(ethNetwork)
+        } else {
+            ethWeb3Provider = ethNetwork === 'localhost'
+                ? this._createDefaultEthProvider()
+                : new ethers.providers.JsonRpcProvider(ethNetwork);
+        }
+
+        zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);
+
+        return { ethWeb3Provider, zkWeb3Provider };
+    }
+
+    private _createDefaultEthProvider(): ethers.providers.BaseProvider {
+        return new ethers.providers.JsonRpcProvider(ETH_DEFAULT_NETWORK_RPC_URL);
+    }
+
+    private _createDefaultZkProvider(): zk.Provider {
+        return zk.Provider.getDefaultProvider();
     }
 
     /**
@@ -52,8 +90,13 @@ export class Deployer {
         const artifact = await this.hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
 
         // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
-        if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
-            throw pluginError(`Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`);
+        if (
+            artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION &&
+            artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION
+        ) {
+            throw new ZkSyncDeployPluginError(
+                `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`
+            );
         }
         return artifact as ZkSyncArtifact;
     }
@@ -66,10 +109,7 @@ export class Deployer {
      *
      * @returns Calculated fee in ETH wei
      */
-    public async estimateDeployFee(
-        artifact: ZkSyncArtifact,
-        constructorArguments: any[]
-    ): Promise<ethers.BigNumber> {
+    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<ethers.BigNumber> {
         const gas = await this.estimateDeployGas(artifact, constructorArguments);
         const gasPrice = await this.zkWallet.provider.getGasPrice();
         return gas.mul(gasPrice);
@@ -83,10 +123,7 @@ export class Deployer {
      *
      * @returns Calculated amount of gas.
      */
-    public async estimateDeployGas(
-        artifact: ZkSyncArtifact,
-        constructorArguments: any[]
-    ): Promise<ethers.BigNumber> {
+    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<ethers.BigNumber> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
 
@@ -117,10 +154,12 @@ export class Deployer {
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
         overrides?: ethers.Overrides,
-        additionalFactoryDeps?: ethers.BytesLike[],
+        additionalFactoryDeps?: ethers.BytesLike[]
     ): Promise<zk.Contract> {
         const baseDeps = await this.extractFactoryDeps(artifact);
-        const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val)) : [];
+        const additionalDeps = additionalFactoryDeps
+            ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val))
+            : [];
         const factoryDeps = [...baseDeps, ...additionalDeps];
 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
