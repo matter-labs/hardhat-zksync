@@ -1,6 +1,41 @@
 import { NomicLabsHardhatPluginError } from 'hardhat/plugins';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
+import { MultiSolcUserConfig, SolcConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
+import { defaultSolcOutputSelectionConfig, SUPPORTED_ZKSOLC_CONTRACT_OUTPUT_SELECTIONS } from './constants';
+
+export function isMultiSolcUserConfig(solcConfig: SolidityUserConfig | undefined): solcConfig is MultiSolcUserConfig {
+    return typeof solcConfig === 'object' && 'compilers' in solcConfig;
+}
+
+export function isSolcUserConfig(solcConfig: SolidityUserConfig | undefined): solcConfig is SolcUserConfig {
+    return typeof solcConfig === 'object' && 'version' in solcConfig;
+}
+
+export function filterSupportedOutputSelections(outputSelections: string[]): string[] {
+    return outputSelections.filter((contractOutputSelection: string) =>
+        SUPPORTED_ZKSOLC_CONTRACT_OUTPUT_SELECTIONS.includes(contractOutputSelection)
+    );
+}
+
+export function hasUnsupportedOutputSelections(outputSelections: string[]): boolean {
+    return outputSelections.some(
+        (contractOutputSelection: string) =>
+            !SUPPORTED_ZKSOLC_CONTRACT_OUTPUT_SELECTIONS.includes(contractOutputSelection)
+    );
+}
+
+export function resolveCompilerOutputSelection(userOutputSelection: any, compiler: SolcConfig) {
+    if (!userOutputSelection) {
+        compiler.settings.outputSelection = defaultSolcOutputSelectionConfig;
+    } else if (hasUnsupportedOutputSelections(userOutputSelection['*']['*'])) {
+        console.warn(
+            `Compiler settings has unsupported output selections.\nSupported values are: ${SUPPORTED_ZKSOLC_CONTRACT_OUTPUT_SELECTIONS.join(
+                ', '
+            )}.`
+        );
+    }
+}
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
