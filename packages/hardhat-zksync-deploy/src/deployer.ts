@@ -11,22 +11,35 @@ const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
+export interface SignerWithAddress extends zk.Signer {
+    address: string;
+}
+
 /**
  * An entity capable of deploying contracts to the zkSync network.
  */
-export class Deployer {
+export class Deployer<
+    TSigner extends zk.Wallet | SignerWithAddress = zk.Wallet,
+    TEthSigner = TSigner extends zk.Wallet ? ethers.Wallet : undefined
+> {
     public hre: HardhatRuntimeEnvironment;
-    public ethWallet: ethers.Wallet;
-    public zkWallet: zk.Wallet;
+    public ethWallet: TEthSigner;
+    public zkWallet: TSigner;
 
-    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet) {
+    constructor(hre: HardhatRuntimeEnvironment, zkWallet: TSigner) {
         this.hre = hre;
 
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
 
-        this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
-        this.ethWallet = this.zkWallet.ethWallet();
+        if ('connectToL1' in zkWallet) {
+            const connected = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
+            this.zkWallet = connected as TSigner;
+            this.ethWallet = connected.ethWallet() as TEthSigner;
+        } else {
+            this.zkWallet = zkWallet.connect(zkWeb3Provider) as TSigner;
+            this.ethWallet = undefined as TEthSigner;
+        }
     }
 
     static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
