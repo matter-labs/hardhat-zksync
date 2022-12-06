@@ -51,7 +51,7 @@
     "eslint-config-prettier": "8.4.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "hardhat": "^2.12.2",
+    "hardhat": "^2.12.3",
     "mocha": "^9.2.1",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
@@ -60,7 +60,7 @@
   },
   "peerDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.1",
-    "hardhat": "^2.12.2"
+    "hardhat": "^2.12.3"
   },
   "prettier": {
     "tabWidth": 4,

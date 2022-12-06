@@ -32,7 +32,7 @@
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
     "@nomiclabs/hardhat-vyper": "^3.0.1",
     "ethers": "~5.7.2",
-    "hardhat": "^2.12.2",
+    "hardhat": "^2.12.3",
     "zksync-web3": "^0.12.0"
   },
   "prettier": {

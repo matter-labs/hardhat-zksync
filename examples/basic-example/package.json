@@ -27,7 +27,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "hardhat": "^2.12.2",
+    "hardhat": "^2.12.3",
     "ethers": "~5.7.2",
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
