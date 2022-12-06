@@ -12,7 +12,7 @@ const config: HardhatUserConfig = {
     },
   },
   solidity: {
-    version: process.env.SOLC_VERSION || "0.8.12"
+    version: process.env.SOLC_VERSION || "0.8.17"
   }
 };
 
