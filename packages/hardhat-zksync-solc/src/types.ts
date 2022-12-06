@@ -24,8 +24,12 @@ export interface ZkSolcConfig {
             tag?: string;
         };
         // Whether to support compilation of zkSync-specific simulations
-        isSystem?: boolean
+        isSystem?: boolean;
     };
+}
+
+export interface CompilerOutputSelection {
+    [file: string]: { [contract: string]: string[] };
 }
 
 /**
