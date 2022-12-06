@@ -68,9 +68,7 @@ extendEnvironment((hre) => {
             let settings = compiler.settings || {};
             compiler.settings = { ...settings, optimizer: { enabled: true } };
 
-            compiler.settings.outputSelection['*']['*'] = filterSupportedOutputSelections(
-                compiler.settings.outputSelection['*']['*']
-            );
+            compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);
         });
     }
 });

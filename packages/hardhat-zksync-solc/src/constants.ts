@@ -12,12 +12,13 @@ export const defaultZkSolcConfig: ZkSolcConfig = {
     },
 };
 
-export const SUPPORTED_ZKSOLC_CONTRACT_OUTPUT_SELECTIONS = [
+export const SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS = [
     'abi',
     'evm.methodIdentifiers',
     'storageLayout',
     'irOptimized',
     'evm.legacyAssembly',
+    'ast',
 ];
 
 export const defaultSolcOutputSelectionConfig = {
