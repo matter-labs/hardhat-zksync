@@ -1,0 +1,5 @@
+/node_modules
+/dist
+/test/fixture-projects/**/artifacts-zk
+/test/fixture-projects/**/cache-zk
+CHANGELOG.md
