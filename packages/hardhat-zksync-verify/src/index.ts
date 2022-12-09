@@ -1,3 +1,5 @@
+import '@nomiclabs/hardhat-etherscan';
+
 import { extendEnvironment, subtask, task } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
