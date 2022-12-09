@@ -425,8 +425,16 @@
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
   version "0.5.3"
 
+"@matterlabs/hardhat-zksync-solc@0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.10.tgz#a492153f85b7b4dc2cea3d10de50479d367d0e7a"
+  integrity sha512-z1nJyjU1FsOteIw9QcLniRXz2G3Uy6Jhxf+tIqdW7LAqkL+j9ysbwV3j5DJz4ZkSC3V3P7EvBq/q36A0pStLjg==
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    dockerode "^3.3.4"
+
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.3.11"
+  version "0.3.12"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     dockerode "^3.3.4"
@@ -839,6 +847,13 @@
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.1.tgz#b51e1b55920a4ca26e9285ff79936bbdec910682"
   integrity sha512-qNrYbZqMx0uJAfKnKclPh+dTwK33KfLHYqtyODwd5HnXOjnkhc4qgn3BrK6RWyGZm5+sIFE7Q7Vz6QQtJB7w7g==
+  dependencies:
+    "@types/node" "*"
+
+"@types/cbor@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/cbor/-/cbor-5.0.1.tgz#e147bbe09ada4db7000ec6c23eafb5f67f5422a5"
+  integrity sha512-zVqJy2KzusZPLOgyGJDnOIbu3DxIGGqxYbEwtEEe4Z+la8jwIhOyb+GMrlHafs5tvKruwf8f8qOYP6zTvse/pw==
   dependencies:
     "@types/node" "*"
 

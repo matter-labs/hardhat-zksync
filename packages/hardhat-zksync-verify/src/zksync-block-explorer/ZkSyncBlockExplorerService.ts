@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { handleAxiosError } from '../utils';
 import { VerificationStatusResponse } from './VerificationStatusResponse';
-import { ZkSyncVerifyPluginError } from '../zksync-verify-plugin-error';
+import { ZkSyncVerifyPluginError } from '../errors';
 import { ZkSyncBlockExplorerVerifyRequest } from './ZkSyncVerifyContractRequest';
 
 export class ZkSyncBlockExplorerResponse {
@@ -50,6 +50,15 @@ export async function verifyContractRequest(
         }
 
         return zkSyncBlockExplorerResponse;
+    } catch (error) {
+        handleAxiosError(error);
+    }
+}
+
+export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
+    try {
+        const response = await axios.get(verifyURL + '/solc_versions');
+        return response.data;
     } catch (error) {
         handleAxiosError(error);
     }

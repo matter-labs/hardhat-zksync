@@ -6,33 +6,41 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
-import { FactoryDeps, ZkSolcConfig } from './types';
+import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, pluginError, getZksolcPath, getZksolcUrl } from './utils';
+import {
+    zeroxlify,
+    pluginError,
+    getZksolcPath,
+    getZksolcUrl,
+    isMultiSolcUserConfig,
+    isSolcUserConfig,
+    resolveCompilerOutputSelection,
+    filterSupportedOutputSelections,
+} from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
-
-const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
-const LATEST_VERSION = '1.2.0';
+import { defaultSolcOutputSelectionConfig, defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
 
 extendConfig((config, userConfig) => {
-    const defaultConfig: ZkSolcConfig = {
-        version: LATEST_VERSION,
-        compilerSource: 'binary',
-        settings: {
-            compilerPath: '',
-            experimental: {},
-        },
-    };
-
     if (userConfig?.zksolc?.settings?.optimizer) {
         console.warn('`optimizer` setting is deprecated, optimizer is always enabled');
     }
 
-    config.zksolc = { ...defaultConfig, ...userConfig?.zksolc };
-    config.zksolc.settings = { ...defaultConfig.settings, ...userConfig?.zksolc?.settings };
+    config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
+    config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
+
+    if (isMultiSolcUserConfig(userConfig.solidity)) {
+        userConfig.solidity.compilers.forEach((compiler, index) => {
+            resolveCompilerOutputSelection(compiler.settings?.outputSelection, config.solidity.compilers[index]);
+        });
+    } else if (isSolcUserConfig(userConfig.solidity)) {
+        resolveCompilerOutputSelection(userConfig.solidity.settings?.outputSelection, config.solidity.compilers[0]);
+    } else {
+        config.solidity.compilers[0].settings.outputSelection = defaultSolcOutputSelectionConfig;
+    }
 });
 
 extendEnvironment((hre) => {
@@ -59,19 +67,20 @@ extendEnvironment((hre) => {
         hre.config.solidity.compilers.forEach((compiler) => {
             let settings = compiler.settings || {};
             compiler.settings = { ...settings, optimizer: { enabled: true } };
+
+            compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);
         });
     }
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
-subtask(
-    TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
-    async (args, hre, runSuper) => {
-        const { jobs, errors } = await runSuper(args);
-        jobs.forEach((job: any) => { job.solidityConfig.zksolc = hre.config.zksolc; });
-        return { jobs, errors };
-    }
-);
+subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) => {
+    const { jobs, errors } = await runSuper(args);
+    jobs.forEach((job: any) => {
+        job.solidityConfig.zksolc = hre.config.zksolc;
+    });
+    return { jobs, errors };
+});
 
 subtask(
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
@@ -164,7 +173,10 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
     if (compilerPath) {
         const versionOutput = spawnSync(compilerPath, ['--version']);
-        const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
+        const version = versionOutput.stdout
+            ?.toString()
+            .match(/\d+\.\d+\.\d+/)
+            ?.toString();
 
         if (versionOutput.status !== 0 || version == null) {
             throw pluginError(`Specified zksolc binary is not found or invalid`);

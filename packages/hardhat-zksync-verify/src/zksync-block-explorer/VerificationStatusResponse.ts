@@ -7,8 +7,8 @@ enum VerificationStatusEnum {
 
 export class VerificationStatusResponse {
     public readonly status: VerificationStatusEnum;
-    public readonly error: String | undefined;
-    public readonly compilationErrors: Array<String> | undefined;
+    public readonly error: string | undefined;
+    public readonly compilationErrors: Array<string> | undefined;
 
     constructor(response: any) {
         this.status = response.data.status;
@@ -21,8 +21,17 @@ export class VerificationStatusResponse {
     }
 
     public getError(): string {
-        if (this.compilationErrors) return 'multiple compilation errors';
-        else return this.error!.toString();
+        let errors = '';
+
+        if (this.error) {
+            errors += this.error;
+        }
+
+        if (this.compilationErrors) {
+            errors += this.compilationErrors.join('\n');
+        }
+
+        return errors;
     }
 
     public isPending() {

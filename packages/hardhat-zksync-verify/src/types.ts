@@ -25,18 +25,3 @@ export interface Libraries {
     // This may be a fully qualified name
     [libraryName: string]: string;
 }
-
-export interface ResolvedLinks {
-    [sourceName: string]: {
-        [libraryName: string]: string;
-    };
-}
-
-export interface ContractInformation {
-    compilerInput: CompilerInput;
-    compilerOutput: CompilerOutput;
-    solcVersion: string;
-    sourceName: string;
-    contractFQN: string;
-    contract: CompilerOutput['contracts'][string][string];
-}
