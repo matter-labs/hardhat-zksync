@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 import { handleAxiosError } from '../utils';
-import { VerificationStatusResponse } from './VerificationStatusResponse';
+import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncVerifyPluginError } from '../errors';
-import { ZkSyncBlockExplorerVerifyRequest } from './ZkSyncVerifyContractRequest';
+import { ZkSyncBlockExplorerVerifyRequest } from './verify-contract-request';
 
 export class ZkSyncBlockExplorerResponse {
     public readonly status: number;

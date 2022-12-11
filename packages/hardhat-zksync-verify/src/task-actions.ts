@@ -4,7 +4,7 @@ import {
     getSupportedCompilerVersions,
     verifyContractRequest,
     ZkSyncBlockExplorerResponse as blockExplorerResponse,
-} from './zksync-block-explorer/ZkSyncBlockExplorerService';
+} from './zksync-block-explorer/service';
 
 import {
     TASK_COMPILE,
@@ -24,14 +24,14 @@ import {
 import {
     encodeArguments,
     executeVeificationWithRetry,
-    removeDuplicateLicenseIdentifiers,
+    removeMultipleSubstringOccurrences,
     retrieveContractBytecode,
 } from './utils';
 import { Build, Libraries } from './types';
-import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/ZkSyncVerifyContractRequest';
+import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/verify-contract-request';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import { VerificationStatusResponse } from './zksync-block-explorer/VerificationStatusResponse';
+import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
@@ -175,7 +175,7 @@ export async function verifyMinimumBuild(
 
     const input = await flattenContractFile(hre, contractInformation.sourceName);
 
-    const flattenedFile = removeDuplicateLicenseIdentifiers(input, 'SPDX-License-Identifier:');
+    const flattenedFile = removeMultipleSubstringOccurrences(input, 'SPDX-License-Identifier:');
 
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
@@ -224,7 +224,7 @@ export async function getContractInfo(
 
         if (buildInfo === undefined) {
             throw new ZkSyncVerifyPluginError(
-                `The contract ${contractFQN} is present in your project, but we couldn't find its sources.
+                `We couldn't find the sources of your "${contractFQN}" contract in the project.
   Please make sure that it has been compiled by Hardhat and that it is written in Solidity.`
             );
         }

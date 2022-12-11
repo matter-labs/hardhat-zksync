@@ -1,8 +1,9 @@
 import axios from 'axios';
 import * as zk from 'zksync-web3';
-import { VerificationStatusResponse } from './zksync-block-explorer/VerificationStatusResponse';
-import { checkVerificationStatus } from './zksync-block-explorer/ZkSyncBlockExplorerService';
+import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
+import { checkVerificationStatus } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
+import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -26,7 +27,11 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     try {
         deployArgumentsEncoded = contractInterface.encodeDeploy(constructorArgs).replace('0x', '');
     } catch (error: any) {
-        throw new ZkSyncVerifyPluginError(error.message);
+        const errorMessage = error.message.includes(WRONG_CONSTRUCTOR_ARGUMENTS)
+            ? parseWrongConstructorArgumentsError(error.message)
+            : error.message;
+
+        throw new ZkSyncVerifyPluginError(errorMessage);
     }
 
     return deployArgumentsEncoded;
@@ -56,6 +61,7 @@ export async function retrieveContractBytecode(address: string, hreNetwork: any)
     const provider = new zk.Provider(hreNetwork.config.url);
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
     const deployedBytecode = bytecodeString.startsWith('0x') ? bytecodeString.slice(2) : bytecodeString;
+
     if (deployedBytecode.length === 0) {
         throw new ZkSyncVerifyPluginError(
             `The address ${address} has no bytecode. Is the contract deployed to this network?
@@ -65,7 +71,7 @@ export async function retrieveContractBytecode(address: string, hreNetwork: any)
     return deployedBytecode;
 }
 
-export function removeDuplicateLicenseIdentifiers(inputString: string, stringToRemove: string): string {
+export function removeMultipleSubstringOccurrences(inputString: string, stringToRemove: string): string {
     const lines = inputString.split('\n');
     let output = '';
     let firstIdentifierFound = false;
@@ -82,4 +88,11 @@ export function removeDuplicateLicenseIdentifiers(inputString: string, stringToR
     }
 
     return output.trim();
+}
+
+export function parseWrongConstructorArgumentsError(string: string): string {
+    // extract the values of the "types" and "values" keys from the string
+    const data = JSON.parse(string.split('count=')[1].split(', value=')[0]);
+
+    return `The number of constructor arguments you provided (${data['values']}) does not match the number of constructor arguments the contract has been deployed with (${data['types']}).`;
 }

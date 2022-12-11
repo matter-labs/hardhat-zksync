@@ -24,9 +24,6 @@ If your constructor has no arguments pass an empty array. E.g:
 
 export const NO_VERIFIABLE_ADDRESS_ERROR =
     "You did not provide any address. Please re-run the 'verify' task with the address of the contract you want to verify.";
-export const CONTRUCTOR_ARGUMENTS_LENGTH_MISSMATCH = 'Incorrect number of constructor arguments provided';
-export const NO_MATCHING_BYTECODE =
-    'Contract bytecode from the deployed adddress you provided does not match any of your local contracts\n Please check your local compile settings';
 
 export const NO_MATCHING_CONTRACT = `The address provided as argument contains a contract, but its bytecode doesn't match any of your local contracts.
 
@@ -50,3 +47,5 @@ export const MULTIPLE_MATCHING_CONTRACTS = `More than one contract was found to 
           <other args>,
           contract: "contracts/Example.sol:ExampleContract"
         };`;
+
+export const WRONG_CONSTRUCTOR_ARGUMENTS = 'types/values length mismatch';
