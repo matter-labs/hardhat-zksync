@@ -188,12 +188,9 @@ export async function verifyMinimumBuild(
             optimizationUsed: true,
         };
 
-        const response: blockExplorerResponse = await verifyContractRequest(request, hre.network.verifyURL);
+        const response = await verifyContractRequest(request, hre.network.verifyURL);
+        let isValidVerification = await executeVeificationWithRetry(response.message, hre.network.verifyURL);
 
-        let isValidVerification: VerificationStatusResponse = await executeVeificationWithRetry(
-            response.message,
-            hre.network.verifyURL
-        );
         if (isValidVerification.errorExists()) {
             throw new ZkSyncVerifyPluginError(isValidVerification.getError());
         }
@@ -243,7 +240,5 @@ export async function getContractInfo(
     } else {
         contractInformation = await inferContractArtifacts(artifacts, matchingCompilerVersions, deployedBytecode);
     }
-    return {
-        ...contractInformation,
-    };
+    return contractInformation;
 }
