@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
-import { DeploymentType } from 'zksync-web3/build/src/types';
 import * as zk from 'zksync-web3';
 import * as ethers from 'ethers';
 
@@ -19,9 +18,9 @@ export class Deployer {
     public hre: HardhatRuntimeEnvironment;
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
-    public deploymentType?: DeploymentType;
+    public deploymentType?: zk.types.DeploymentType;
 
-    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: DeploymentType) {
+    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType) {
         this.hre = hre;
         this.deploymentType = deploymentType;
 
