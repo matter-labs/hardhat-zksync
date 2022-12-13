@@ -1,4 +1,5 @@
 import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
+import { DeploymentType } from 'zksync-web3/build/src/types';
 import * as zk from 'zksync-web3';
 import * as ethers from 'ethers';
 
@@ -18,9 +19,11 @@ export class Deployer {
     public hre: HardhatRuntimeEnvironment;
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
+    public deploymentType?: DeploymentType;
 
-    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet) {
+    constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: DeploymentType) {
         this.hre = hre;
+        this.deploymentType = deploymentType;
 
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
@@ -125,7 +128,7 @@ export class Deployer {
      */
     public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<ethers.BigNumber> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
 
         // Encode deploy transaction so it can be estimated.
         const deployTx = factory.getDeployTransaction(...constructorArguments, {
@@ -162,7 +165,7 @@ export class Deployer {
             : [];
         const factoryDeps = [...baseDeps, ...additionalDeps];
 
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet);
+        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
         const { customData, ..._overrides } = overrides ?? {};
 
         // Encode and send the deploy transaction providing factory dependencies.
