@@ -1,17 +1,22 @@
 import {
     TASK_COMPILE_VYPER_RUN_BINARY,
-    TASK_COMPILE_VYPER_GET_BUILD
+    TASK_COMPILE_VYPER_GET_BUILD,
+    TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT,
 } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
-import { TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE } from 'hardhat/builtin-tasks/task-names';
+import {
+    TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
+    TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE,
+} from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { ZkVyperConfig } from './types';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
-import { pluginError, getZkvyperUrl, getZkvyperPath } from './utils';
+import { pluginError, getZkvyperUrl, getZkvyperPath, pluralize } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
+import { SOLC_EXTENSION, VYPER_EXTENSION } from './constanst';
 
 const LATEST_VERSION = '1.2.0';
 
@@ -95,7 +100,10 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
 
     if (compilerPath) {
         const versionOutput = spawnSync(compilerPath, ['--version']);
-        const version = versionOutput.stdout?.toString().match(/\d+\.\d+\.\d+/)?.toString();
+        const version = versionOutput.stdout
+            ?.toString()
+            .match(/\d+\.\d+\.\d+/)
+            ?.toString();
 
         if (versionOutput.status !== 0 || version == null) {
             throw pluginError(`Specified zkvyper binary is not found or invalid`);
@@ -103,11 +111,11 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     } else {
         compilerPath = await getZkvyperPath(hre.config.zkvyper.version);
         if (!fs.existsSync(compilerPath)) {
-            console.log('Downloading zkvyper...');
+            console.log(`Downloading zkvyper ${hre.config.zkvyper.version}`);
             try {
                 await download(getZkvyperUrl(hre.config.zkvyper.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
-                console.log('Done.')
+                console.log('Done.');
             } catch (e: any) {
                 throw pluginError(e.message.split('\n')[0]);
             }
@@ -115,4 +123,32 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     }
 
     return vyperBuild;
+});
+
+// This task is overriden since TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT logs both solidity and vyper compiled contracts:
+subtask(TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT, async () => {});
+
+subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT, async ({ versionGroups, quiet }, hre) => {
+    const vyperCompilationsNum = Object.entries(versionGroups).length;
+
+    if (quiet || vyperCompilationsNum === 0) return;
+
+    let vyperNum = 0;
+    let solcNum = 0;
+
+    // We can ask for all compiled contracts since this task is run after all other compilation tasks for both solc and vyper
+    const allContractName = await hre.artifacts.getAllFullyQualifiedNames();
+
+    allContractName.forEach((fullyQualifiedName) => {
+        const contractName = fullyQualifiedName.split(':')[0];
+        if (contractName.slice(-3) === VYPER_EXTENSION) vyperNum++;
+        else if (contractName.slice(-4) === SOLC_EXTENSION) solcNum++;
+    });
+
+    console.log(
+        `Successfully compiled ${solcNum} Solidity ${pluralize(solcNum, 'file')} and ${vyperNum} Vyper ${pluralize(
+            vyperNum,
+            'file'
+        )}`
+    );
 });
