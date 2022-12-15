@@ -19,6 +19,7 @@ import {
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_VERIFY_VERIFY_MINIMUM_BUILD,
     NO_MATCHING_CONTRACT,
+    COMPILER_VERSION_NOT_SUPPORTED,
 } from './constants';
 
 import {
@@ -138,9 +139,7 @@ export async function verifyContract(
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
     const compilerVersion: string = minimumBuild.output.version;
     if (!compilerPossibleVersions.includes(compilerVersion)) {
-        throw new ZkSyncVerifyPluginError(
-            'Solidity compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions'
-        );
+        throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
     }
     const compilerZksolcVersion = 'v' + minimumBuild.output.zk_version;
 

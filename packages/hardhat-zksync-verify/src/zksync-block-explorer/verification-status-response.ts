@@ -2,7 +2,7 @@ enum VerificationStatusEnum {
     successful = 'successful',
     failed = 'failed',
     queued = 'queued',
-    in_progress = 'in_progress',
+    inProgress = 'in_progress',
 }
 
 export class VerificationStatusResponse {
@@ -35,7 +35,7 @@ export class VerificationStatusResponse {
     }
 
     public isPending() {
-        return this.status === VerificationStatusEnum.in_progress;
+        return this.status === VerificationStatusEnum.inProgress;
     }
 
     public isVerificationFailure() {

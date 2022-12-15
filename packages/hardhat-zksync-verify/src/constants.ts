@@ -48,4 +48,10 @@ export const MULTIPLE_MATCHING_CONTRACTS = `More than one contract was found to 
           contract: "contracts/Example.sol:ExampleContract"
         };`;
 
+export const CONTRACT_NAME_NOT_FOUND = `You did not provide any contract name. Please add fully qualified name of your contract. 
+Qualified names look like this: contracts/AContract.sol:TheContract`;
+
+export const COMPILER_VERSION_NOT_SUPPORTED =
+    'Solidity compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
+
 export const WRONG_CONSTRUCTOR_ARGUMENTS = 'types/values length mismatch';

@@ -91,9 +91,12 @@ export async function compareBytecode(
     }
 
     // Normalize deployed bytecode according to this contract.
-    const { normalizedBytecode } = await normalizeBytecode(deployedExecutableSection);
+    const { normalizedBytecode } = await normalizeBytecode(deployedExecutableSection, runtimeBytecodeSymbols);
 
-    const { normalizedBytecode: referenceBytecode } = await normalizeBytecode(runtimeBytecodeSymbols.object);
+    const { normalizedBytecode: referenceBytecode } = await normalizeBytecode(
+        runtimeBytecodeSymbols.object,
+        runtimeBytecodeSymbols
+    );
 
     if (
         normalizedBytecode.slice(0, deployedExecutableSection.length) ===
@@ -108,13 +111,19 @@ export async function compareBytecode(
     return null;
 }
 
-export async function normalizeBytecode(bytecode: string): Promise<BytecodeExtractedData> {
+export async function normalizeBytecode(
+    bytecode: string,
+    symbols: CompilerOutputBytecode
+): Promise<BytecodeExtractedData> {
     const nestedSliceReferences: NestedSliceReferences = [];
 
+    // To normalize a library object we need to take into account its call protection mechanism
+    // The runtime code of a library always starts with a push instruction (a zero of 20 bytes at compilation time)
+    // This constant is replaced in memory by the current address and this modified code is stored in the contract
     const addressSize = 20;
     const push20OpcodeHex = '73';
     const pushPlaceholder = push20OpcodeHex + '0'.repeat(addressSize * 2);
-    if (bytecode.startsWith(pushPlaceholder) && bytecode.startsWith(push20OpcodeHex)) {
+    if (bytecode.startsWith(pushPlaceholder) && symbols.object.startsWith(push20OpcodeHex)) {
         nestedSliceReferences.push([{ start: 1, length: addressSize }]);
     }
 

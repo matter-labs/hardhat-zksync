@@ -1,7 +1,7 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
 import { Artifacts, HardhatRuntimeEnvironment } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import { MULTIPLE_MATCHING_CONTRACTS, NO_MATCHING_CONTRACT } from './constants';
+import { MULTIPLE_MATCHING_CONTRACTS, CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 
@@ -64,9 +64,6 @@ Instead, this name was received: ${contractFQN}`
             throw new ZkSyncVerifyPluginError(`The contract ${contractFQN} is not present in your project.`);
         }
     } else {
-        throw new ZkSyncVerifyPluginError(
-            `You did not provide any contract name. Please add fully qualified name of your contract. 
-            Qualified names look like this: contracts/AContract.sol:TheContract`
-        );
+        throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
     }
 }
