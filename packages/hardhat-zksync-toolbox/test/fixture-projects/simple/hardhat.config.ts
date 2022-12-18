@@ -15,9 +15,11 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:8545',
         },
         zkSyncNetwork: {
+            zksync: true,
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
-            zksync: true,
+            // TODO
+            // verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
         },
     },
 };
