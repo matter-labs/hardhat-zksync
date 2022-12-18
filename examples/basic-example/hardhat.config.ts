@@ -1,5 +1,6 @@
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-solc';
+
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
