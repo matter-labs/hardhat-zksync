@@ -42,8 +42,7 @@ describe('zksync toolbox plugin', function () {
         it('Reads verifyURL form network config for existing network ', async function () {
             const testnetVerifyURL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 
-            // TODO
-            // assert.equal(this.env.network.verifyURL, testnetVerifyURL);
+            assert.equal(this.env.network.verifyURL, testnetVerifyURL);
         });
     });
 });
