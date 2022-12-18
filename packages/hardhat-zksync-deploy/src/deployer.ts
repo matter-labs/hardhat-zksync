@@ -31,8 +31,8 @@ export class Deployer {
         this.ethWallet = this.zkWallet.ethWallet();
     }
 
-    static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
-        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
+    static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, deploymentType?: zk.types.DeploymentType) {
+        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey), deploymentType);
     }
 
     private _createProviders(
