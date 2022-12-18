@@ -51,13 +51,15 @@ export class Deployer {
         const ethNetwork = network.ethNetwork;
 
         if (SUPPORTED_L1_TESTNETS.includes(ethNetwork)) {
-            ethWeb3Provider = ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
-                ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
-                : ethers.getDefaultProvider(ethNetwork)
+            ethWeb3Provider =
+                ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
+                    ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
+                    : ethers.getDefaultProvider(ethNetwork);
         } else {
-            ethWeb3Provider = ethNetwork === 'localhost'
-                ? this._createDefaultEthProvider()
-                : new ethers.providers.JsonRpcProvider(ethNetwork);
+            ethWeb3Provider =
+                ethNetwork === 'localhost'
+                    ? this._createDefaultEthProvider()
+                    : new ethers.providers.JsonRpcProvider(ethNetwork);
         }
 
         zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);

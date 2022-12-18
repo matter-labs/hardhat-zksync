@@ -3,6 +3,7 @@ import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { ZkSyncArtifact } from '../src/types';
 import { useEnvironment } from './helpers';
 import { spy } from 'sinon';
+import chalk from 'chalk';
 
 describe('zkvyper plugin', async function () {
     describe('Simple', async function () {
@@ -63,11 +64,15 @@ describe('zkvyper plugin', async function () {
         useEnvironment('logs');
 
         it('Should successfully compile both solidity and vyper contracts and match their log outputs', async function () {
-            let consoleSpy = spy(console, 'log');
+            let consoleSpy = spy(console, 'info');
             await this.env.run(TASK_COMPILE);
 
-            expect(consoleSpy.calledWith('Successfully compiled 3 Solidity files and 2 Vyper files')).to.equal(false);
-            expect(consoleSpy.calledWith('Successfully compiled 3 Solidity files and 1 Vyper file')).to.equal(true);
+            expect(
+                consoleSpy.calledWith(chalk.green('Successfully compiled 3 Solidity files and 2 Vyper files'))
+            ).to.equal(false);
+            expect(
+                consoleSpy.calledWith(chalk.green('Successfully compiled 3 Solidity files and 1 Vyper file'))
+            ).to.equal(true);
             consoleSpy.restore();
         });
     });

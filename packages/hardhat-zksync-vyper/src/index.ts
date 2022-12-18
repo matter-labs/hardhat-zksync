@@ -17,6 +17,7 @@ import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import { SOLC_EXTENSION, VYPER_EXTENSION } from './constanst';
+import chalk from 'chalk';
 
 const LATEST_VERSION = '1.2.0';
 
@@ -111,11 +112,11 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     } else {
         compilerPath = await getZkvyperPath(hre.config.zkvyper.version);
         if (!fs.existsSync(compilerPath)) {
-            console.log(`Downloading zkvyper ${hre.config.zkvyper.version}`);
+            console.info(chalk.yellow(`Downloading zkvyper ${hre.config.zkvyper.version}`));
             try {
                 await download(getZkvyperUrl(hre.config.zkvyper.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
-                console.log('Done.');
+                console.info(chalk.green(`zkvyper version ${hre.config.zkvyper.version} successfully downloaded.`));
             } catch (e: any) {
                 throw pluginError(e.message.split('\n')[0]);
             }
@@ -145,10 +146,16 @@ subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT, async ({ versionGroups, quiet
         else if (contractName.slice(-4) === SOLC_EXTENSION) solcNum++;
     });
 
-    console.log(
-        `Successfully compiled ${solcNum} Solidity ${pluralize(solcNum, 'file')} and ${vyperNum} Vyper ${pluralize(
-            vyperNum,
-            'file'
-        )}`
-    );
+    if (solcNum != 0 && vyperNum != 0) {
+        console.info(
+            chalk.green(
+                `Successfully compiled ${solcNum} Solidity ${pluralize(
+                    solcNum,
+                    'file'
+                )} and ${vyperNum} Vyper ${pluralize(vyperNum, 'file')}`
+            )
+        );
+    } else if (vyperNum != 0) {
+        console.info(chalk.green(`Successfully compiled ${vyperNum} Vyper ${pluralize(vyperNum, 'file')}`));
+    }
 });

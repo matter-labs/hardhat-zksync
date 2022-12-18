@@ -23,6 +23,7 @@ import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import { defaultSolcOutputSelectionConfig, defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
+import chalk from 'chalk';
 
 extendConfig((config, userConfig) => {
     if (userConfig?.zksolc?.settings?.optimizer) {
@@ -184,11 +185,11 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     } else {
         compilerPath = await getZksolcPath(hre.config.zksolc.version);
         if (!fs.existsSync(compilerPath)) {
-            console.log(`Downloading zksolc ${hre.config.zksolc.version}`);
+            console.info(chalk.yellow(`Downloading zksolc ${hre.config.zksolc.version}`));
             try {
                 await download(getZksolcUrl(hre.config.zksolc.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
-                console.log('Done.');
+                console.info(chalk.green(`zksolc version ${hre.config.zksolc.version} successfully downloaded`));
             } catch (e: any) {
                 throw pluginError(e.message.split('\n')[0]);
             }
