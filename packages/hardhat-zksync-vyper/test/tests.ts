@@ -60,8 +60,8 @@ describe('zkvyper plugin', async function () {
         });
     });
 
-    describe('Logs', async function () {
-        useEnvironment('logs');
+    describe('Output', async function () {
+        useEnvironment('output');
 
         it('Should successfully compile both solidity and vyper contracts and match their log outputs', async function () {
             let consoleSpy = spy(console, 'info');
