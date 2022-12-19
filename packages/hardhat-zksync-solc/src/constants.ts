@@ -20,10 +20,3 @@ export const SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS = [
     'evm.legacyAssembly',
     'ast',
 ];
-
-export const defaultSolcOutputSelectionConfig = {
-    '*': {
-        '*': ['abi', 'evm.methodIdentifiers'],
-        '': ['ast'],
-    },
-};

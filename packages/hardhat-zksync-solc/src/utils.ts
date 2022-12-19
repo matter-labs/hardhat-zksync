@@ -1,17 +1,8 @@
 import { NomicLabsHardhatPluginError } from 'hardhat/plugins';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
-import { MultiSolcUserConfig, SolcConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
-import { defaultSolcOutputSelectionConfig, SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS } from './constants';
+import { SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS } from './constants';
 import { CompilerOutputSelection } from './types';
-
-export function isMultiSolcUserConfig(solcConfig: SolidityUserConfig | undefined): solcConfig is MultiSolcUserConfig {
-    return typeof solcConfig === 'object' && 'compilers' in solcConfig;
-}
-
-export function isSolcUserConfig(solcConfig: SolidityUserConfig | undefined): solcConfig is SolcUserConfig {
-    return typeof solcConfig === 'object' && 'version' in solcConfig;
-}
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -27,32 +18,6 @@ export function filterSupportedOutputSelections(outputSelection: CompilerOutputS
     }
 
     return filteredOutputSelection;
-}
-
-export function hasUnsupportedOutputSelections(outputSelections: string[]): boolean {
-    return outputSelections.some(
-        (contractOutputSelection: string) => !SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS.includes(contractOutputSelection)
-    );
-}
-
-export function resolveCompilerOutputSelection(userOutputSelection: CompilerOutputSelection, compiler: SolcConfig) {
-    if (!userOutputSelection) {
-        compiler.settings.outputSelection = defaultSolcOutputSelectionConfig;
-        return;
-    }
-
-    for (const contractSelection of Object.values(userOutputSelection)) {
-        for (const outputs of Object.values(contractSelection)) {
-            if (hasUnsupportedOutputSelections(outputs)) {
-                console.warn(
-                    `Compiler settings has unsupported output selections.\nSupported values are: ${SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS.join(
-                        ', '
-                    )}.`
-                );
-                return;
-            }
-        }
-    }
 }
 
 export function zeroxlify(hex: string): string {
