@@ -27,7 +27,7 @@ describe('zksolc plugin', async function () {
             if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
                 // This test is not applicable to Solidity 0.4.x.
                 console.log('skipped');
-                return
+                return;
             }
             await this.env.run(TASK_COMPILE);
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
@@ -42,7 +42,7 @@ describe('zksolc plugin', async function () {
             if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
                 // This test is not applicable to Solidity 0.4.x.
                 console.log('skipped');
-                return
+                return;
             }
             await this.env.run(TASK_COMPILE);
             assert.equal(this.env.artifacts.readArtifactSync('contracts/Foo.sol:Foo').contractName, 'Foo');
