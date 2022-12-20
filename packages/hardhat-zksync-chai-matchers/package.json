@@ -60,7 +60,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^4.6.2",
-    "zksync-web3": "^0.12.0"
+    "zksync-web3": "^0.12.2"
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "~1.0.4"
