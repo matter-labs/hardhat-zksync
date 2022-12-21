@@ -1,5 +1,6 @@
 import { ZkSolcConfig } from './types';
 
+export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-solc';
 export const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const LATEST_VERSION = '1.2.1';
 

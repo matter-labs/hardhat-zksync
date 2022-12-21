@@ -1,4 +1,3 @@
-import { NomicLabsHardhatPluginError } from 'hardhat/plugins';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
 import { MultiSolcUserConfig, SolcConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
@@ -58,11 +57,6 @@ export function resolveCompilerOutputSelection(userOutputSelection: CompilerOutp
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
     return hex.slice(0, 2) === '0x' ? hex : `0x${hex}`;
-}
-
-// Returns a built plugin exception object.
-export function pluginError(message: string, parent?: any): NomicLabsHardhatPluginError {
-    return new NomicLabsHardhatPluginError('@matterlabs/hardhat-zksync-solc', message, parent);
 }
 
 export async function getZksolcPath(version: string): Promise<string> {
