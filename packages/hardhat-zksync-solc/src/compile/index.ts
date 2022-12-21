@@ -10,19 +10,19 @@ import {
     getSolcVersion,
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
-import { pluginError } from '../utils';
+import { ZkSyncSolcPluginError } from '../errors';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
     if (zksolcConfig.compilerSource == 'binary') {
         if (solcPath == null) {
-            throw pluginError('solc executable is not specified');
+            throw new ZkSyncSolcPluginError('solc executable is not specified');
         }
         compiler = new BinaryCompiler(solcPath);
     } else if (zksolcConfig.compilerSource == 'docker') {
         compiler = await DockerCompiler.initialize(zksolcConfig);
     } else {
-        throw pluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+        throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
     }
 
     return await compiler.compile(input, zksolcConfig);

@@ -9,8 +9,8 @@ import {
 } from '@nomiclabs/hardhat-docker';
 import Docker, { ContainerCreateOptions } from 'dockerode';
 import { CompilerInput } from 'hardhat/types';
-import { pluginError } from '../utils';
 import { Writable } from 'stream';
+import { ZkSyncSolcPluginError } from '../errors';
 import { ZkSolcConfig } from '../types';
 
 async function runContainer(docker: Docker, image: Image, command: string[], input: string) {
@@ -66,7 +66,7 @@ async function runContainer(docker: Docker, image: Image, command: string[], inp
 
 export function dockerImage(imageName?: string, imageTag?: string): Image {
     if (!imageName) {
-        throw pluginError('Docker source was chosen but no image was specified');
+        throw new ZkSyncSolcPluginError('Docker source was chosen but no image was specified');
     }
 
     return {
@@ -77,7 +77,7 @@ export function dockerImage(imageName?: string, imageTag?: string): Image {
 
 export async function validateDockerIsInstalled() {
     if (!(await HardhatDocker.isInstalled())) {
-        throw pluginError(
+        throw new ZkSyncSolcPluginError(
             'Docker Desktop is not installed.\n' +
                 'Please install it by following the instructions on https://www.docker.com/get-started'
         );
@@ -121,39 +121,33 @@ export async function compileWithDocker(
     zksolcConfig: ZkSolcConfig
 ) {
     const command = ['zksolc', '--standard-json'];
-    if(zksolcConfig.settings.isSystem) {
+    if (zksolcConfig.settings.isSystem) {
         command.push('--system-mode');
     }
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors((async () => {
-        const compilerOutput = await runContainer(
-            dockerInstance,
-            image,
-            command,
-            JSON.stringify(input)
-        );
-        try {
-            return JSON.parse(compilerOutput);
-        } catch {
-            throw pluginError(compilerOutput);
-        }
-    })())
+    return await handleCommonErrors(
+        (async () => {
+            const compilerOutput = await runContainer(dockerInstance, image, command, JSON.stringify(input));
+            try {
+                return JSON.parse(compilerOutput);
+            } catch {
+                throw new ZkSyncSolcPluginError(compilerOutput);
+            }
+        })()
+    );
 }
 
 export async function getSolcVersion(docker: HardhatDocker, image: Image) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors((async () => {
-        const versionOutput = await runContainer(
-            dockerInstance,
-            image,
-            ['solc', '--version'],
-            ''
-        );
-        return versionOutput.split('\n')[1];
-    })());
+    return await handleCommonErrors(
+        (async () => {
+            const versionOutput = await runContainer(dockerInstance, image, ['solc', '--version'], '');
+            return versionOutput.split('\n')[1];
+        })()
+    );
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
@@ -161,22 +155,25 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         return await promise;
     } catch (error) {
         if (error instanceof DockerNotRunningError || error instanceof DockerBadGatewayError) {
-            throw pluginError(
+            throw new ZkSyncSolcPluginError(
                 'Docker Desktop is not running.\nPlease open it and wait until it finishes booting.',
                 error
             );
         }
 
         if (error instanceof DockerHubConnectionError) {
-            throw pluginError('Error connecting to Docker Hub.\nPlease check your internet connection.', error);
+            throw new ZkSyncSolcPluginError(
+                'Error connecting to Docker Hub.\nPlease check your internet connection.',
+                error
+            );
         }
 
         if (error instanceof DockerServerError) {
-            throw pluginError('Docker error', error);
+            throw new ZkSyncSolcPluginError('Docker error', error);
         }
 
         if (error instanceof ImageDoesntExistError) {
-            throw pluginError(
+            throw new ZkSyncSolcPluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
                     'Make sure you chose a valid zksolc version.'
             );
