@@ -65,7 +65,7 @@ export class Deployer {
 
         if (networkConfig.ethNetwork === undefined) {
             throw new ZkSyncDeployPluginError(
-                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) url specified.`
+                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`
             );
         }
 
