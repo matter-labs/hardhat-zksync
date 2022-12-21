@@ -11,7 +11,6 @@ import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artif
 import { compile } from './compile';
 import {
     zeroxlify,
-    pluginError,
     getZksolcPath,
     getZksolcUrl,
     filterSupportedOutputSelections,
@@ -20,6 +19,7 @@ import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import { defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
+import { ZkSyncSolcPluginError } from './errors';
 
 extendConfig((config, userConfig) => {
     if (userConfig?.zksolc?.settings?.optimizer) {
@@ -167,7 +167,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
             ?.toString();
 
         if (versionOutput.status !== 0 || version == null) {
-            throw pluginError(`Specified zksolc binary is not found or invalid`);
+            throw new ZkSyncSolcPluginError(`Specified zksolc binary is not found or invalid`);
         }
     } else {
         compilerPath = await getZksolcPath(hre.config.zksolc.version);
@@ -178,7 +178,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
                 fs.chmodSync(compilerPath, '755');
                 console.log('Done.');
             } catch (e: any) {
-                throw pluginError(e.message.split('\n')[0]);
+                throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
             }
         }
     }
