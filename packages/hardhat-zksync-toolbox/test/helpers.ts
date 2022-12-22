@@ -3,8 +3,6 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { TASK_CLEAN } from 'hardhat/builtin-tasks/task-names';
 import path from 'path';
 
-import '@matterlabs/hardhat-zksync-verify/src/type-extensions';
-
 declare module 'mocha' {
     interface Context {
         env: HardhatRuntimeEnvironment;

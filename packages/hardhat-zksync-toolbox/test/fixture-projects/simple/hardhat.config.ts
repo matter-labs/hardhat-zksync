@@ -1,3 +1,4 @@
+import '@matterlabs/hardhat-zksync-verify/src/type-extensions';
 import { HardhatUserConfig } from 'hardhat/config';
 
 import '../../../src/index';
@@ -5,10 +6,6 @@ import '../../../src/index';
 const config: HardhatUserConfig = {
     zksolc: {
         version: '1.2.2',
-        compilerSource: 'binary',
-    },
-    zkvyper: {
-        version: '1.2.0',
         compilerSource: 'binary',
     },
     networks: {
@@ -21,9 +18,6 @@ const config: HardhatUserConfig = {
             ethNetwork: 'ethNetwork',
             verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
         },
-    },
-    vyper: {
-        version: "0.3.3",
     },
     solidity: {
         version: '0.8.17',
