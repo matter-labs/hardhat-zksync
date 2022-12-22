@@ -3,19 +3,21 @@ import {
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
+    TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections } from './utils';
+import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import chalk from 'chalk';
 import { defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
+import { CompilationJob } from 'hardhat/types';
 
 extendConfig((config, userConfig) => {
     if (userConfig?.zksolc?.settings?.optimizer) {
@@ -181,3 +183,17 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
     return solcBuild;
 });
+
+subtask(
+    TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
+    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }) => {
+        let count = 0;
+        for (const job of compilationJobs) {
+            count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
+        }
+
+        if (count > 0) {
+            console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
+        }
+    }
+);
