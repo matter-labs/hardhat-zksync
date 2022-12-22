@@ -2,6 +2,7 @@ import '@nomiclabs/hardhat-etherscan';
 
 import { extendEnvironment, subtask, task } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import './type-extensions';
 
 import {
     TASK_VERIFY,

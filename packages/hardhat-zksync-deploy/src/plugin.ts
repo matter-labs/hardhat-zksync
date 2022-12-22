@@ -19,7 +19,6 @@ function getAllFiles(dir: string): string[] {
     return files;
 }
 
-
 export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     const workDir = hre.config.paths.root;
     const deployScriptsDir = path.join(workDir, 'deploy');
@@ -28,8 +27,9 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
         throw new ZkSyncDeployPluginError('No deploy folder was found');
     }
 
-    const deployScripts = getAllFiles(deployScriptsDir)
-        .filter(file => path.extname(file) == '.ts' || path.extname(file) == '.js');
+    const deployScripts = getAllFiles(deployScriptsDir).filter(
+        (file) => path.extname(file) == '.ts' || path.extname(file) == '.js'
+    );
 
     return deployScripts;
 }

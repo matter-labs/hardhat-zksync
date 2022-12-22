@@ -437,6 +437,11 @@
     "@nomiclabs/hardhat-docker" "^2.0.0"
     dockerode "^3.3.4"
 
+"@matterlabs/zksync-contracts@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.5.1.tgz#1b28bd585b34a3890c003a16b2be538f744b5229"
+  integrity sha512-9cU5UEh5AZ40q54QmL+BJySwy9iZQv4vvEDQm5A2kyZ6bJD1lxPy0QRPOmP3Y3375Yz7MGtO6ynFPmonMcfAfQ==
+
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@metamask/eth-sig-util/-/eth-sig-util-4.0.1.tgz#3ad61f6ea9ad73ba5b19db780d40d9aae5157088"
@@ -741,6 +746,16 @@
     io-ts "1.10.4"
     lodash "^4.17.11"
     semver "^6.3.0"
+
+"@openzeppelin/contracts-upgradeable@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.0.tgz#26688982f46969018e3ed3199e72a07c8d114275"
+  integrity sha512-5GeFgqMiDlqGT8EdORadp1ntGF0qzWZLmEY7Wbp/yVhN7/B3NNzCxujuI77ktlyG81N3CUZP8cZe3ZAQ/cW10w==
+
+"@openzeppelin/contracts@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.0.tgz#6854c37df205dd2c056bdfa1b853f5d732109109"
+  integrity sha512-AGuwhRRL+NaKx73WKRNzeCxOCOCxpaqF+kp8TJ89QzAipSwZy/NoflkWaL9bywXFRhIzXt8j38sfF7KBKCPWLw==
 
 "@scure/base@~1.1.0":
   version "1.1.1"
