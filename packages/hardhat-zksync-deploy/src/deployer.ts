@@ -42,24 +42,48 @@ export class Deployer {
         ethWeb3Provider: ethers.providers.BaseProvider;
         zkWeb3Provider: zk.Provider;
     } {
-        if (network.name === 'hardhat') {
+        const networkName = network.name;
+
+        if (!network.zksync) {
+            throw new ZkSyncDeployPluginError(
+                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`
+            );
+        }
+
+        if (networkName === 'hardhat') {
             return {
                 ethWeb3Provider: this._createDefaultEthProvider(),
                 zkWeb3Provider: this._createDefaultZkProvider(),
             };
         }
 
+        const networkConfig = network.config;
+
+        if (!isHttpNetworkConfig(networkConfig)) {
+            throw new ZkSyncDeployPluginError(
+                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`
+            );
+        }
+
+        if (networkConfig.ethNetwork === undefined) {
+            throw new ZkSyncDeployPluginError(
+                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`
+            );
+        }
+
         let ethWeb3Provider, zkWeb3Provider;
-        const ethNetwork = network.ethNetwork;
+        const ethNetwork = networkConfig.ethNetwork;
 
         if (SUPPORTED_L1_TESTNETS.includes(ethNetwork)) {
-            ethWeb3Provider = ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
-                ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
-                : ethers.getDefaultProvider(ethNetwork)
+            ethWeb3Provider =
+                ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
+                    ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
+                    : ethers.getDefaultProvider(ethNetwork);
         } else {
-            ethWeb3Provider = ethNetwork === 'localhost'
-                ? this._createDefaultEthProvider()
-                : new ethers.providers.JsonRpcProvider(ethNetwork);
+            ethWeb3Provider =
+                ethNetwork === 'localhost'
+                    ? this._createDefaultEthProvider()
+                    : new ethers.providers.JsonRpcProvider(ethNetwork);
         }
 
         zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);
