@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
-import '@matterlabs/hardhat-zksync-verify/src/type-extensions';
 import { expect } from 'chai';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';

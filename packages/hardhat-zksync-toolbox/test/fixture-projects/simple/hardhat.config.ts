@@ -1,4 +1,3 @@
-import '@matterlabs/hardhat-zksync-verify/src/type-extensions';
 import { HardhatUserConfig } from 'hardhat/config';
 
 import '../../../src/index';
