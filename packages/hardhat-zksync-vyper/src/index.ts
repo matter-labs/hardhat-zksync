@@ -170,5 +170,7 @@ subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT, async ({ versionGroups, quiet
                 `Warning: You imported '@matterlabs/hardhat-zksync-vyper', but there are no .vy files to compile!\nPlease check if any files are missing or if the import is redundant.`
             )
         );
+    } else {
+        console.info(chalk.green(`Nothing to compile`));
     }
 });
