@@ -10,13 +10,20 @@ declare module 'hardhat/types/config' {
 
     interface HttpNetworkConfig {
         zksync: boolean;
-        ethNetwork: EthNetwork;
+        ethNetwork?: EthNetwork;
+    }
+
+    interface HardhatNetworkUserConfig {
+        zksync?: boolean;
+    }
+
+    interface HardhatNetworkConfig {
+        zksync: boolean;
     }
 }
 
 declare module 'hardhat/types/runtime' {
     interface Network {
         zksync: boolean;
-        ethNetwork: EthNetwork;
     }
 }

@@ -16,7 +16,7 @@ import { pluginError, getZkvyperUrl, getZkvyperPath, pluralize } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
-import { SOLC_EXTENSION, VYPER_EXTENSION } from './constanst';
+import { SOLIDITY_EXTENSION } from './constants';
 import chalk from 'chalk';
 
 const LATEST_VERSION = '1.2.0';
@@ -132,30 +132,43 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT, async () => {});
 subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT, async ({ versionGroups, quiet }, hre) => {
     const vyperCompilationsNum = Object.entries(versionGroups).length;
 
-    if (quiet || vyperCompilationsNum === 0) return;
+    if (quiet) return;
 
-    let vyperNum = 0;
-    let solcNum = 0;
+    let solcCompilationsNum = 0;
 
     // We can ask for all compiled contracts since this task is run after all other compilation tasks for both solc and vyper
     const allContractName = await hre.artifacts.getAllFullyQualifiedNames();
 
     allContractName.forEach((fullyQualifiedName) => {
         const contractName = fullyQualifiedName.split(':')[0];
-        if (contractName.slice(-3) === VYPER_EXTENSION) vyperNum++;
-        else if (contractName.slice(-4) === SOLC_EXTENSION) solcNum++;
+        if (contractName.slice(-4) === SOLIDITY_EXTENSION) solcCompilationsNum++;
     });
 
-    if (solcNum != 0 && vyperNum != 0) {
+    if (solcCompilationsNum != 0 && vyperCompilationsNum != 0) {
         console.info(
             chalk.green(
-                `Successfully compiled ${solcNum} Solidity ${pluralize(
-                    solcNum,
+                `Successfully compiled ${solcCompilationsNum} Solidity ${pluralize(
+                    solcCompilationsNum,
                     'file'
-                )} and ${vyperNum} Vyper ${pluralize(vyperNum, 'file')}`
+                )} and ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
             )
         );
-    } else if (vyperNum != 0) {
-        console.info(chalk.green(`Successfully compiled ${vyperNum} Vyper ${pluralize(vyperNum, 'file')}`));
+    } else if (vyperCompilationsNum != 0) {
+        console.info(
+            chalk.green(
+                `Successfully compiled ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
+            )
+        );
+    } else if (solcCompilationsNum != 0) {
+        console.info(
+            chalk.green(
+                `Successfully compiled ${solcCompilationsNum} Solidity ${pluralize(solcCompilationsNum, 'file')}`
+            )
+        );
+        console.info(
+            chalk.yellow(
+                `Warning: You imported '@matterlabs/hardhat-zksync-vyper', but there are no .vy files to compile!\nPlease check if any files are missing or if the import is redundant.`
+            )
+        );
     }
 });

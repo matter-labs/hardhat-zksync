@@ -9,21 +9,13 @@ import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import {
-    zeroxlify,
-    pluginError,
-    getZksolcPath,
-    getZksolcUrl,
-    isMultiSolcUserConfig,
-    isSolcUserConfig,
-    resolveCompilerOutputSelection,
-    filterSupportedOutputSelections,
-} from './utils';
+import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
-import { defaultSolcOutputSelectionConfig, defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
 import chalk from 'chalk';
+import { defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
+import { ZkSyncSolcPluginError } from './errors';
 
 extendConfig((config, userConfig) => {
     if (userConfig?.zksolc?.settings?.optimizer) {
@@ -32,16 +24,6 @@ extendConfig((config, userConfig) => {
 
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
-
-    if (isMultiSolcUserConfig(userConfig.solidity)) {
-        userConfig.solidity.compilers.forEach((compiler, index) => {
-            resolveCompilerOutputSelection(compiler.settings?.outputSelection, config.solidity.compilers[index]);
-        });
-    } else if (isSolcUserConfig(userConfig.solidity)) {
-        resolveCompilerOutputSelection(userConfig.solidity.settings?.outputSelection, config.solidity.compilers[0]);
-    } else {
-        config.solidity.compilers[0].settings.outputSelection = defaultSolcOutputSelectionConfig;
-    }
 });
 
 extendEnvironment((hre) => {
@@ -63,12 +45,13 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
-        // If solidity optimizer is not enabled, the libraries are not inlined and
-        // we have to manually pass them into zksolc. That's why we force the optimization.
         hre.config.solidity.compilers.forEach((compiler) => {
             let settings = compiler.settings || {};
+            // If solidity optimizer is not enabled, the libraries are not inlined and
+            // we have to manually pass them into zksolc. That's why we force the optimization.
             compiler.settings = { ...settings, optimizer: { enabled: true } };
 
+            // zkSolc supports only a subset of solc output selections
             compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);
         });
     }
@@ -180,7 +163,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
             ?.toString();
 
         if (versionOutput.status !== 0 || version == null) {
-            throw pluginError(`Specified zksolc binary is not found or invalid`);
+            throw new ZkSyncSolcPluginError(`Specified zksolc binary is not found or invalid`);
         }
     } else {
         compilerPath = await getZksolcPath(hre.config.zksolc.version);
@@ -191,7 +174,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
                 fs.chmodSync(compilerPath, '755');
                 console.info(chalk.green(`zksolc version ${hre.config.zksolc.version} successfully downloaded`));
             } catch (e: any) {
-                throw pluginError(e.message.split('\n')[0]);
+                throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
             }
         }
     }

@@ -68,9 +68,6 @@ describe('zkvyper plugin', async function () {
             await this.env.run(TASK_COMPILE);
 
             expect(
-                consoleSpy.calledWith(chalk.green('Successfully compiled 3 Solidity files and 2 Vyper files'))
-            ).to.equal(false);
-            expect(
                 consoleSpy.calledWith(chalk.green('Successfully compiled 3 Solidity files and 1 Vyper file'))
             ).to.equal(true);
             consoleSpy.restore();
