@@ -7,8 +7,9 @@ const config: HardhatUserConfig = {
         version: '1.2.2',
         compilerSource: 'binary',
     },
-    solidity: {
-        version: '0.8.17',
+    zkvyper: {
+        version: '1.2.0',
+        compilerSource: 'binary',
     },
     networks: {
         ethNetwork: {
@@ -20,6 +21,12 @@ const config: HardhatUserConfig = {
             ethNetwork: 'ethNetwork',
             verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
         },
+    },
+    vyper: {
+        version: "0.3.3",
+    },
+    solidity: {
+        version: '0.8.17',
     },
 };
 
