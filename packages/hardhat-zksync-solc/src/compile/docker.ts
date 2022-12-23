@@ -12,6 +12,7 @@ import { CompilerInput } from 'hardhat/types';
 import { Writable } from 'stream';
 import { ZkSyncSolcPluginError } from '../errors';
 import { ZkSolcConfig } from '../types';
+import chalk from 'chalk';
 
 async function runContainer(docker: Docker, image: Image, command: string[], input: string) {
     const createOptions: ContainerCreateOptions = {
@@ -94,11 +95,11 @@ export async function pullImageIfNecessary(docker: HardhatDocker, image: Image) 
 
 async function pullImageIfNecessaryInner(docker: HardhatDocker, image: Image) {
     if (!(await docker.hasPulledImage(image))) {
-        console.log(`Pulling Docker image ${HardhatDocker.imageToRepoTag(image)}...`);
+        console.info(chalk.yellow(`Pulling Docker image ${HardhatDocker.imageToRepoTag(image)}...`));
 
         await docker.pullImage(image);
 
-        console.log(`Image pulled`);
+        console.info(chalk.green(`Image pulled`));
     } else {
         await checkForImageUpdates(docker, image);
     }
@@ -106,11 +107,11 @@ async function pullImageIfNecessaryInner(docker: HardhatDocker, image: Image) {
 
 async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
     if (!(await docker.isImageUpToDate(image))) {
-        console.log(`Updating Docker image ${HardhatDocker.imageToRepoTag(image)}...`);
+        console.info(chalk.yellow(`Updating Docker image ${HardhatDocker.imageToRepoTag(image)}...`));
 
         await docker.pullImage(image);
 
-        console.log(`Image updated`);
+        console.info(chalk.green(`Image updated`));
     }
 }
 

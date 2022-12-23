@@ -37,3 +37,15 @@ export function getZksolcUrl(version: string): string {
     const ext = process.platform == 'win32' ? '.exe' : '';
     return `https://github.com/matter-labs/zksolc-bin/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
+
+export function pluralize(n: number, singular: string, plural?: string) {
+    if (n === 1) {
+        return singular;
+    }
+
+    if (plural !== undefined) {
+        return plural;
+    }
+
+    return `${singular}s`;
+}

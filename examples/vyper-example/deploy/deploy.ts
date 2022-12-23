@@ -2,6 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as ethers from 'ethers';
 import * as zk from 'zksync-web3';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
+import chalk from 'chalk';
 
 // An example of a deploy script which will deploy and call a factory-like contract (meaning that the main contract
 // may deploy other contracts).
@@ -9,7 +10,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 // In terms of presentation it's mostly copied from `001_deploy.ts`, so this example acts more like an integration test
 // for plugins/server capabilities.
 export default async function (hre: HardhatRuntimeEnvironment) {
-    console.log(`Running deploy script`);
+    console.info(chalk.yellow(`Running deploy script`));
 
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -36,19 +37,19 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const greeterContract = await deployer.deploy(greeter, []);
 
     // Deploy a forwarder to greeter from a factory
-    const forwarder = await factoryContract.deploy(greeterContract.address, "Hello world");
-    await forwarder.wait()
+    const forwarder = await factoryContract.deploy(greeterContract.address, 'Hello world');
+    await forwarder.wait();
 
     // Show the contract info.
     const forwarderAddress = await factoryContract.forwarder();
-    console.log(`${greeter.contractName} forwarder was deployed to ${forwarderAddress}!`);
+    console.info(chalk.green(`${greeter.contractName} forwarder was deployed to ${forwarderAddress}!`));
 
     // Call the deployed contract.
     const forwarderContract = new ethers.Contract(forwarderAddress, greeter.abi, deployer.zkWallet.provider);
     const greeting = await forwarderContract.greet();
     if (greeting == 'Hello world') {
-        console.log(`Everything worked!`);
+        console.info(chalk.green(`Successful greeting from the contract!`));
     } else {
-        throw new Error(`Contract said something unexpected: ${greeting}`);
+        throw new Error(`Contract returned unexpected greeting: ${greeting}`);
     }
 }

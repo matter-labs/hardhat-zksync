@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { ZkSyncArtifact } from '../src/types';
+import chalk from 'chalk';
 
 import { useEnvironment } from './helpers';
 
@@ -25,8 +26,7 @@ describe('zksolc plugin', async function () {
 
         it('Should successfully compile the contract with inlined library', async function () {
             if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
-                // This test is not applicable to Solidity 0.4.x.
-                console.log('skipped');
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
                 return;
             }
             await this.env.run(TASK_COMPILE);
@@ -40,8 +40,7 @@ describe('zksolc plugin', async function () {
 
         it('Should successfully compile the contract with linked library', async function () {
             if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
-                // This test is not applicable to Solidity 0.4.x.
-                console.log('skipped');
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
                 return;
             }
             await this.env.run(TASK_COMPILE);

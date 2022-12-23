@@ -32,7 +32,7 @@ import { Build, Libraries } from './types';
 import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/verify-contract-request';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
+import chalk from 'chalk';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
@@ -193,11 +193,17 @@ export async function verifyMinimumBuild(
         if (isValidVerification.errorExists()) {
             throw new ZkSyncVerifyPluginError(isValidVerification.getError());
         }
-        console.info(`Successfully verified full build of contract ${request.contractName} on zkSync block explorer!`);
+        console.info(
+            chalk.green(
+                `Successfully verified full build of contract ${request.contractName} on zkSync block explorer!`
+            )
+        );
         return true;
     }
 
-    console.log(`Compiling your contract excluding unrelated contracts did not produce identical bytecode.`);
+    console.info(
+        chalk.red(`Compiling your contract excluding unrelated contracts did not produce identical bytecode.`)
+    );
     return false;
 }
 
