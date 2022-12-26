@@ -21,15 +21,18 @@ declare module 'hardhat/types/config' {
 
     interface HardhatNetworkConfig {
         zksync: boolean;
+        // solCompilation: boolean;
     }
 
     interface HttpNetworkConfig {
         zksync: boolean;
+        // solCompilation: boolean;
     }
 }
 
 declare module 'hardhat/types/runtime' {
     interface Network {
         zksync: boolean;
+        solcCompilationsNum: number;
     }
 }
