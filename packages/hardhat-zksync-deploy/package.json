@@ -32,7 +32,7 @@
     "README.md"
   ],
   "dependencies": {
-    "chalk": "4.1.2"
+    "chalk": "5.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",

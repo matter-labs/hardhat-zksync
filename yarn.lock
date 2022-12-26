@@ -425,20 +425,28 @@
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
   version "0.6.0"
   dependencies:
-    chalk "4.1.2"
+    chalk "5.2.0"
 
-"@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
+"@matterlabs/hardhat-zksync-solc@0.3.12":
   version "0.3.12"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.12.tgz#0caeb0a2aac1d66057988b981a4d1c72ff614a1e"
+  integrity sha512-0py4bsqphPYJV1Ub7jlCkMP2lEENIB16jv700rNnikJJn251ofQgzowcspJw+/WchP+Tu4tJSRL0a1MVngtCoQ==
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
+    dockerode "^3.3.4"
+
+"@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
+  version "0.3.13"
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    chalk "5.2.0"
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.1.5"
+  version "0.1.6"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
+    chalk "5.2.0"
     dockerode "^3.3.4"
 
 "@matterlabs/zksync-contracts@^0.5.1":
@@ -1715,13 +1723,10 @@ chai@^4.3.7:
     pathval "^1.1.1"
     type-detect "^4.0.5"
 
-chalk@4.1.2, chalk@^4.0.0, chalk@^4.1.0:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
-  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
-  dependencies:
-    ansi-styles "^4.1.0"
-    supports-color "^7.1.0"
+chalk@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.2.0.tgz#249623b7d66869c673699fb66d65723e54dfcfb3"
+  integrity sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==
 
 chalk@^2.3.0, chalk@^2.4.2:
   version "2.4.2"
@@ -1731,6 +1736,14 @@ chalk@^2.3.0, chalk@^2.4.2:
     ansi-styles "^3.2.1"
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
+
+chalk@^4.0.0, chalk@^4.1.0:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
+  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
 
 check-error@^1.0.2:
   version "1.0.2"
