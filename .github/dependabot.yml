@@ -56,11 +56,9 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "production"
-<<<<<<< HEAD
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
       - dependency-name: chalk
-=======
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-toolbox"
@@ -68,4 +66,3 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "production"
->>>>>>> main
