@@ -12,6 +12,7 @@ import Docker, { ContainerCreateOptions } from 'dockerode';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 import path from 'path';
+import chalk from 'chalk';
 
 async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerOptions) {
     const relativeSourcesPath = path.relative(process.cwd(), paths.sourcesPath!);
@@ -23,9 +24,9 @@ async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerO
         StdinOnce: true,
         HostConfig: {
             AutoRemove: true,
-            Binds: [ `${paths.sourcesPath!}:/${relativeSourcesPath}` ]
+            Binds: [`${paths.sourcesPath!}:/${relativeSourcesPath}`],
         },
-        Cmd: ['zkvyper', '-f', 'combined_json', ...paths.inputPaths.map(p => path.relative(process.cwd(), p))],
+        Cmd: ['zkvyper', '-f', 'combined_json', ...paths.inputPaths.map((p) => path.relative(process.cwd(), p))],
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
@@ -101,11 +102,11 @@ export async function pullImageIfNecessary(docker: HardhatDocker, image: Image) 
 
 async function pullImageIfNecessaryInner(docker: HardhatDocker, image: Image) {
     if (!(await docker.hasPulledImage(image))) {
-        console.log(`Pulling Docker image ${HardhatDocker.imageToRepoTag(image)}...`);
+        console.info(chalk.yellow(`Pulling Docker image ${HardhatDocker.imageToRepoTag(image)}...`));
 
         await docker.pullImage(image);
 
-        console.log(`Image pulled`);
+        console.info(chalk.green(`Image pulled`));
     } else {
         await checkForImageUpdates(docker, image);
     }
@@ -113,19 +114,15 @@ async function pullImageIfNecessaryInner(docker: HardhatDocker, image: Image) {
 
 async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
     if (!(await docker.isImageUpToDate(image))) {
-        console.log(`Updating Docker image ${HardhatDocker.imageToRepoTag(image)}...`);
+        console.info(chalk.yellow(`Updating Docker image ${HardhatDocker.imageToRepoTag(image)}...`));
 
         await docker.pullImage(image);
 
-        console.log(`Image updated`);
+        console.info(chalk.green(`Image updated`));
     }
 }
 
-export async function compileWithDocker(
-    paths: CompilerOptions,
-    docker: HardhatDocker,
-    image: Image,
-) {
+export async function compileWithDocker(paths: CompilerOptions, docker: HardhatDocker, image: Image) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
     return await handleCommonErrors(runZksolcContainer(dockerInstance, image, paths));

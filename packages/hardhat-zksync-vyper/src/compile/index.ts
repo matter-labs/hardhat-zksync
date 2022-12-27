@@ -10,7 +10,12 @@ import {
 } from './docker';
 import { pluginError, getZkvyperPath } from '../utils';
 
-export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[], sourcesPath: string, vyperPath?: string) {
+export async function compile(
+    zkvyperConfig: ZkVyperConfig,
+    inputPaths: string[],
+    sourcesPath: string,
+    vyperPath?: string
+) {
     let compiler: ICompiler;
     if (zkvyperConfig.compilerSource == 'binary') {
         if (vyperPath == null) {
@@ -23,10 +28,10 @@ export async function compile(zkvyperConfig: ZkVyperConfig, inputPaths: string[]
         throw pluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
-    return await compiler.compile({ 
-        inputPaths, 
-        sourcesPath, 
-        compilerPath: zkvyperConfig.settings.compilerPath || await getZkvyperPath(zkvyperConfig.version)
+    return await compiler.compile({
+        inputPaths,
+        sourcesPath,
+        compilerPath: zkvyperConfig.settings.compilerPath || (await getZkvyperPath(zkvyperConfig.version)),
     });
 }
 

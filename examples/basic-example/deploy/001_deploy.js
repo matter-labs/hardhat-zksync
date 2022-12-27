@@ -1,10 +1,11 @@
 const ethers = require('ethers');
 const zk = require('zksync-web3');
 const { Deployer } = require('@matterlabs/hardhat-zksync-deploy');
+const chalk = require('chalk');
 
 // An example of a deploy script which will deploy and call a simple contract.
 module.exports = async function (hre) {
-    console.log(`Running deploy script for the Greeter contract`);
+    console.info(chalk.yellow(`Running deploy script for the Greeter contract`));
 
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -31,13 +32,13 @@ module.exports = async function (hre) {
 
     // Show the contract info.
     const contractAddress = greeterContract.address;
-    console.log(`${artifact.contractName} was deployed to ${contractAddress}!`);
+    console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
 
     // Call the deployed contract.
     const greetingFromContract = await greeterContract.greet();
     if (greetingFromContract == greeting) {
-        console.log(`Contract greets us!`);
+        console.info(chalk.green(`Successful greeting from the contract`));
     } else {
-        throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
+        throw new Error(`Contract returned unexpected greeting: ${greetingFromContract}`);
     }
-}
+};

@@ -41,4 +41,3 @@ export interface CompilerOptions {
     compilerPath?: string,
     sourcesPath?: string,
 }
-
