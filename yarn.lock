@@ -423,17 +423,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
-  version "0.6.0"
+  version "0.6.1"
   dependencies:
     chalk "4.1.2"
-
-"@matterlabs/hardhat-zksync-solc@0.3.12":
-  version "0.3.12"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.12.tgz#0caeb0a2aac1d66057988b981a4d1c72ff614a1e"
-  integrity sha512-0py4bsqphPYJV1Ub7jlCkMP2lEENIB16jv700rNnikJJn251ofQgzowcspJw+/WchP+Tu4tJSRL0a1MVngtCoQ==
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
   version "0.3.13"
