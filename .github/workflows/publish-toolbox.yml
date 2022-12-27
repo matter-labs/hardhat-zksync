@@ -1,0 +1,35 @@
+name: Publish toolbox plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: choice
+        description: package tag
+        default: latest
+        options: 
+          - latest
+          - next
+          - beta
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: yarn && yarn build
+
+      - name: Publish
+        run: npm publish @matterlabs/hardhat-zksync-toolbox --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-toolbox --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+
