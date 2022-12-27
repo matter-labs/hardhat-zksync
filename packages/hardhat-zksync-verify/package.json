@@ -32,8 +32,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "0.3.12",
     "axios": "^1.2.1",
+    "@matterlabs/hardhat-zksync-solc": "0.3.13",
     "chalk": "4.1.2",
     "dockerode": "^3.3.4"
   },
