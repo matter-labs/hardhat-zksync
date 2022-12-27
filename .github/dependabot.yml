@@ -8,8 +8,7 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-deploy"
@@ -19,8 +18,7 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-solc"
@@ -30,8 +28,7 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-vyper"
@@ -41,8 +38,7 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-chai-matchers"
@@ -52,8 +48,7 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-verify"
@@ -63,5 +58,4 @@ updates:
       - dependency-type: "production"
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - package: chalk
-        version: ">=5"
+      - dependency-name: chalk
