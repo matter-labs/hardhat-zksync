@@ -133,9 +133,12 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
-    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre) => {
+    async (args: { compilationJobs: CompilationJob[]; quiet: boolean }, hre, runSuper) => {
+        if (hre.network.zksync !== true) {
+            return await runSuper(args);
+        }
         let count = 0;
-        for (const job of compilationJobs) {
+        for (const job of args.compilationJobs) {
             count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
         }
 
@@ -143,33 +146,40 @@ subtask(
     }
 );
 
-subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT, async ({ versionGroups, quiet }, hre) => {
-    const vyperCompilationsNum = Object.entries(versionGroups).length;
+subtask(
+    TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT,
+    async (args: { versionGroups: any; quiet: boolean }, hre, runSuper) => {
+        const vyperCompilationsNum = Object.entries(args.versionGroups).length;
 
-    if (quiet) return;
+        if (hre.network.zksync !== true) {
+            return await runSuper(args);
+        }
 
-    if (hre.network.solcCompilationsNum != 0 && vyperCompilationsNum != 0) {
-        console.info(
-            chalk.green(
-                `Successfully compiled ${hre.network.solcCompilationsNum} Solidity ${pluralize(
-                    hre.network.solcCompilationsNum,
-                    'file'
-                )} and ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
-            )
-        );
-    } else if (hre.network.solcCompilationsNum == 0 && vyperCompilationsNum != 0) {
-        console.info(
-            chalk.green(
-                `Successfully compiled ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
-            )
-        );
-    } else if (hre.network.solcCompilationsNum != 0 && vyperCompilationsNum == 0) {
-        console.info(
-            chalk.yellow(
-                `Warning: You imported '@matterlabs/hardhat-zksync-vyper', but there are no .vy files to compile!\nPlease check if any files are missing or if the import is redundant.`
-            )
-        );
-    } else {
-        console.info(chalk.green(`Nothing to compile`));
+        if (args.quiet) return;
+
+        if (hre.network.solcCompilationsNum != 0 && vyperCompilationsNum != 0) {
+            console.info(
+                chalk.green(
+                    `Successfully compiled ${hre.network.solcCompilationsNum} Solidity ${pluralize(
+                        hre.network.solcCompilationsNum,
+                        'file'
+                    )} and ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
+                )
+            );
+        } else if (hre.network.solcCompilationsNum == 0 && vyperCompilationsNum != 0) {
+            console.info(
+                chalk.green(
+                    `Successfully compiled ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`
+                )
+            );
+        } else if (hre.network.solcCompilationsNum != 0 && vyperCompilationsNum == 0) {
+            console.info(
+                chalk.yellow(
+                    `Warning: You imported '@matterlabs/hardhat-zksync-vyper', but there are no .vy files to compile!\nPlease check if any files are missing or if the import is redundant.`
+                )
+            );
+        } else {
+            console.info(chalk.green(`Nothing to compile`));
+        }
     }
-});
+);
