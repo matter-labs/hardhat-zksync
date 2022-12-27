@@ -38,13 +38,12 @@
     "singleQuote": true,
     "bracketSpacing": true
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "~1.0.4",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
-    "@types/node": "^17.0.21",
+    "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "5.13.0",
     "@typescript-eslint/parser": "5.13.0",
     "bignumber.js": "^9.1.0",

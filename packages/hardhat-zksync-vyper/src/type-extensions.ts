@@ -31,5 +31,6 @@ declare module 'hardhat/types/config' {
 declare module 'hardhat/types/runtime' {
     interface Network {
         zksync: boolean;
+        solcCompilationsNum: number;
     }
 }
