@@ -740,10 +740,10 @@
     table "^6.8.0"
     undici "^5.4.0"
 
-"@nomiclabs/hardhat-vyper@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-vyper/-/hardhat-vyper-3.0.1.tgz#a01e9977177a7a94237d56980cc72739c4d0d46f"
-  integrity sha512-FpRBxbOqLWg1n44qsBLWbvw09LVA2U7r7D1M0IsNpMe9QRa/aRYlRh8ine8Fr2KQl+k/NMZDZD4AKSKGPfm7lg==
+"@nomiclabs/hardhat-vyper@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-vyper/-/hardhat-vyper-3.0.2.tgz#07c3c248c6323844673c80ec5eb6cdd10f7cda24"
+  integrity sha512-xU5N9fiKEYWY5euIt01/bKGZ4WrJUgvPzYWns4BLy4ivFmD7Jd7pbuT2HaGPolNVRXzawIEMQP29s8Cjq86NzQ==
   dependencies:
     debug "^4.1.1"
     fs-extra "^7.0.1"
