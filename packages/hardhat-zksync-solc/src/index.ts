@@ -47,7 +47,11 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
+        const forceEvmla = hre.config.zksolc.settings.forceEvmla;
         hre.config.solidity.compilers.forEach((compiler) => {
+            if (!compiler.version.startsWith('0.8') && forceEvmla) {
+                console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
+            }
             let settings = compiler.settings || {};
             // If solidity optimizer is not enabled, the libraries are not inlined and
             // we have to manually pass them into zksolc. That's why we force the optimization.

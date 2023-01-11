@@ -125,6 +125,9 @@ export async function compileWithDocker(
     if (zksolcConfig.settings.isSystem) {
         command.push('--system-mode');
     }
+    if (zksolcConfig.settings.forceEvmla) {
+        command.push('--force-evmla');
+    }
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
