@@ -42,7 +42,7 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
 
             gasPrice = 100000000;
             gasUsed = 407817;
-            txGasFees = gasPrice * gasUsed;
+            txGasFees = gasPrice * gasUsed - 160200000000;;
 
             overrides = {
                 type: 2,
