@@ -10,7 +10,7 @@ import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize } from './utils';
+import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize, getVersionComponents } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
@@ -47,9 +47,9 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
-        const forceEvmla = hre.config.zksolc.settings.forceEvmla;
         hre.config.solidity.compilers.forEach((compiler) => {
-            if (!compiler.version.startsWith('0.8') && forceEvmla) {
+            const [major, minor] = getVersionComponents(compiler.version); 
+            if (major === 0 && minor < 8 && hre.config.zksolc.settings.forceEvmla) {
                 console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
             }
             let settings = compiler.settings || {};
