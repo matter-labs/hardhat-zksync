@@ -135,7 +135,7 @@ describe('INTEGRATION: Reverted without reason', function () {
                     ).to.not.be.revertedWithCustomError(matchers, 'SomeCustomError')
                 ).to.be.eventually.rejectedWith(
                     Error,
-                    'Failed to submit transaction: Not enough balance to cover the fee.'
+                    'Not enough balance to cover the fee + value.'
                 );
             });
         });
