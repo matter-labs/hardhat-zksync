@@ -10,7 +10,7 @@ import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize } from './utils';
+import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize, getVersionComponents } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
@@ -48,6 +48,10 @@ extendEnvironment((hre) => {
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
         hre.config.solidity.compilers.forEach((compiler) => {
+            const [major, minor] = getVersionComponents(compiler.version); 
+            if (major === 0 && minor < 8 && hre.config.zksolc.settings.forceEvmla) {
+                console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
+            }
             let settings = compiler.settings || {};
             // If solidity optimizer is not enabled, the libraries are not inlined and
             // we have to manually pass them into zksolc. That's why we force the optimization.
