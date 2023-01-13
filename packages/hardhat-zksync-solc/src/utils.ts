@@ -49,3 +49,12 @@ export function pluralize(n: number, singular: string, plural?: string) {
 
     return `${singular}s`;
 }
+
+export function getVersionComponents(version: string): number[] {
+    const versionComponents = version.split(".");
+    return [
+        parseInt(versionComponents[0]),
+        parseInt(versionComponents[1]),
+        parseInt(versionComponents[2])
+    ];
+}

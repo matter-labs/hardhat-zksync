@@ -25,6 +25,8 @@ export interface ZkSolcConfig {
         };
         // Whether to support compilation of zkSync-specific simulations
         isSystem?: boolean;
+        // Force evmla
+        forceEvmla?: boolean;
     };
 }
 
