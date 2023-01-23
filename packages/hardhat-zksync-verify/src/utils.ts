@@ -1,9 +1,10 @@
 import axios from 'axios';
 import * as zk from 'zksync-web3';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
-import { checkVerificationStatus } from './zksync-block-explorer/service';
+import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
-import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import chalk from 'chalk';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -38,20 +39,22 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
 }
 
 export async function executeVeificationWithRetry(
-    requestId: string,
+    requestId: number,
     verifyURL: string,
     maxRetries = 5,
     delayInMs = 1500
-): Promise<VerificationStatusResponse> {
+): Promise<VerificationStatusResponse | undefined> {
     let retries = 0;
+
     while (true) {
-        const response = await checkVerificationStatus(requestId, verifyURL);
+        const response = await checkVerificationStatusService(requestId, verifyURL);
         if (response.isVerificationSuccess() || response.isVerificationFailure()) {
             return response;
         }
         retries += 1;
         if (retries > maxRetries) {
-            throw new ZkSyncVerifyPluginError('Contract verification is still pending');
+            console.info(chalk.cyan(PENDING_CONTRACT_INFORMATION_MESSAGE(requestId)));
+            return;
         }
         await delay(delayInMs);
     }

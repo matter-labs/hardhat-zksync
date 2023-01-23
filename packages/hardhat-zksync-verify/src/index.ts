@@ -1,6 +1,6 @@
 import '@nomiclabs/hardhat-etherscan';
 
-import { extendEnvironment, subtask, task } from 'hardhat/config';
+import { extendEnvironment, subtask, task, types } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import './type-extensions';
 
@@ -11,9 +11,17 @@ import {
     TESTNET_VERIFY_URL,
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_VERIFY_VERIFY_MINIMUM_BUILD,
+    TASK_CHECK_VERIFICATION_STATUS,
 } from './constants';
 
-import { getCompilerVersions, verify, verifyContract, getContractInfo, verifyMinimumBuild } from './task-actions';
+import {
+    getCompilerVersions,
+    verify,
+    verifyContract,
+    getContractInfo,
+    verifyMinimumBuild,
+    checkVerificationStatus,
+} from './task-actions';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
@@ -28,3 +36,7 @@ subtask(TASK_VERIFY_GET_COMPILER_VERSIONS).setAction(getCompilerVersions);
 subtask(TASK_VERIFY_VERIFY_MINIMUM_BUILD).setAction(verifyMinimumBuild);
 
 subtask(TASK_VERIFY_GET_CONTRACT_INFORMATION).setAction(getContractInfo);
+
+task(TASK_CHECK_VERIFICATION_STATUS)
+    .addParam('verificationId', 'An ID returned by the the verification request', undefined, types.int)
+    .setAction(checkVerificationStatus);
