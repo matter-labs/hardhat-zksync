@@ -38,5 +38,5 @@ subtask(TASK_VERIFY_VERIFY_MINIMUM_BUILD).setAction(verifyMinimumBuild);
 subtask(TASK_VERIFY_GET_CONTRACT_INFORMATION).setAction(getContractInfo);
 
 task(TASK_CHECK_VERIFICATION_STATUS)
-    .addParam('verificationId', 'An ID returned by the the verification request', undefined, types.int)
+    .addParam('verificationId', 'An ID returned by the verification request', undefined, types.int)
     .setAction(checkVerificationStatus);
