@@ -19,8 +19,8 @@ export class ZkSyncBlockExplorerResponse {
     }
 }
 
-export async function checkVerificationStatus(
-    requestId: string,
+export async function checkVerificationStatusService(
+    requestId: number,
     verifyURL: string
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
