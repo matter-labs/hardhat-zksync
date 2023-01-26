@@ -10,7 +10,16 @@ import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { compile } from './compile';
-import { zeroxlify, getZksolcPath, getZksolcUrl, filterSupportedOutputSelections, pluralize, getVersionComponents } from './utils';
+import {
+    zeroxlify,
+    getZksolcPath,
+    getZksolcUrl,
+    filterSupportedOutputSelections,
+    pluralize,
+    getVersionComponents,
+    isURL,
+    sha1,
+} from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
@@ -48,7 +57,7 @@ extendEnvironment((hre) => {
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
         hre.config.solidity.compilers.forEach((compiler) => {
-            const [major, minor] = getVersionComponents(compiler.version); 
+            const [major, minor] = getVersionComponents(compiler.version);
             if (major === 0 && minor < 8 && hre.config.zksolc.settings.forceEvmla) {
                 console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
             }
@@ -162,6 +171,24 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     let compilerPath = hre.config.zksolc.settings.compilerPath;
 
     if (compilerPath) {
+        if (isURL(compilerPath)) {
+            const compilerUrl = compilerPath;
+            // hashed url used as a salt to avoid name collisions
+            const salt = sha1(compilerUrl);
+            // where the binary will be downloaded to
+            hre.config.zksolc.settings.compilerPath = compilerPath = await getZksolcPath(
+                hre.config.zksolc.version,
+                salt
+            );
+            console.info(chalk.yellow(`Downloading zksolc from ${compilerUrl}`));
+            try {
+                await download(compilerUrl, compilerPath);
+                console.info(chalk.green(`zksolc successfully downloaded`));
+                fs.chmodSync(compilerPath, '755');
+            } catch (e: any) {
+                throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
+            }
+        }
         const versionOutput = spawnSync(compilerPath, ['--version']);
         const version = versionOutput.stdout
             ?.toString()
