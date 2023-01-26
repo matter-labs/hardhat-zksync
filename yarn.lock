@@ -427,6 +427,14 @@
   dependencies:
     chalk "4.1.2"
 
+"@matterlabs/hardhat-zksync-solc@0.3.12":
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.12.tgz#0caeb0a2aac1d66057988b981a4d1c72ff614a1e"
+  integrity sha512-0py4bsqphPYJV1Ub7jlCkMP2lEENIB16jv700rNnikJJn251ofQgzowcspJw+/WchP+Tu4tJSRL0a1MVngtCoQ==
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    dockerode "^3.3.4"
+
 "@matterlabs/hardhat-zksync-solc@0.3.13", "@matterlabs/hardhat-zksync-solc@^0.3.13":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.13.tgz#ff3401b164ebfde6feb2a8fac8639cf39f9b4954"
@@ -437,10 +445,19 @@
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.3.14-beta.1"
+  version "0.3.14-beta.2"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
+    dockerode "^3.3.4"
+
+"@matterlabs/hardhat-zksync-verify@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-verify/-/hardhat-zksync-verify-0.1.1.tgz#0f40b08e7dd7f8aafdb7ce0cb0888599fe8e9a64"
+  integrity sha512-RTV1tlyAGm/PZ30RLwiSODoZnduInelTSqTEjFE029s4zJJWmK4RZ1iscDdK5iPlsibMizQAEbu8ogQs3gTjMw==
+  dependencies:
+    "@matterlabs/hardhat-zksync-solc" "0.3.12"
+    axios "^1.2.1"
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
@@ -760,12 +777,12 @@
     lodash "^4.17.11"
     semver "^6.3.0"
 
-"@openzeppelin/contracts-upgradeable@^4.8.0", "@openzeppelin/contracts-upgradeable@^4.8.1":
+"@openzeppelin/contracts-upgradeable@^4.8.1":
   version "4.8.1"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.1.tgz#363f7dd08f25f8f77e16d374350c3d6b43340a7a"
   integrity sha512-1wTv+20lNiC0R07jyIAbHU7TNHKRwGiTGRfiNnA8jOWjKT98g5OgLpYWOi40Vgpk8SPLA9EvfJAbAeIyVn+7Bw==
 
-"@openzeppelin/contracts@^4.8.0", "@openzeppelin/contracts@^4.8.1":
+"@openzeppelin/contracts@^4.8.1":
   version "4.8.1"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.1.tgz#709cfc4bbb3ca9f4460d60101f15dac6b7a2d5e4"
   integrity sha512-xQ6eUZl+RDyb/FiZe1h+U7qr/f4p/SrTSQcTPH2bjur3C5DbuW/zFgCU/b1P/xcIaEqJep+9ju4xDRi3rmChdQ==
@@ -1445,6 +1462,15 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
+
+axios@^1.2.1:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.2.4.tgz#6555dd955d2efa9b8f4cb4cb0b3371b7b243537a"
+  integrity sha512-lIQuCfBJvZB/Bv7+RWUqEJqNShGOVpk9v7P0ZWx5Ip0qY6u7JBAU6dzQPMLasU9vHL2uD8av/1FDJXj7n6c39w==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 axios@^1.2.3:
   version "1.2.3"

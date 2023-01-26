@@ -2,6 +2,7 @@ import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
 import { SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS } from './constants';
 import { CompilerOutputSelection } from './types';
+import crypto from 'crypto';
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -24,8 +25,21 @@ export function zeroxlify(hex: string): string {
     return hex.slice(0, 2) === '0x' ? hex : `0x${hex}`;
 }
 
-export async function getZksolcPath(version: string): Promise<string> {
-    return path.join(await getCompilersDir(), 'zksolc', `zksolc-v${version}`);
+export async function getZksolcPath(version: string, salt: string = ''): Promise<string> {
+    return path.join(await getCompilersDir(), 'zksolc', `zksolc-v${version}${salt ? '-' : ''}${salt}`);
+}
+
+export function isURL(url: string): boolean {
+    try {
+        const locator = new URL(url);
+        return locator.protocol === 'http:' || locator.protocol === 'https:';
+    } catch (e) {
+        return false;
+    }
+}
+
+export function sha1(str: string): string {
+    return crypto.createHash('sha1').update(str).digest('hex');
 }
 
 export function getZksolcUrl(version: string): string {
@@ -51,7 +65,7 @@ export function pluralize(n: number, singular: string, plural?: string) {
 }
 
 export function getVersionComponents(version: string): number[] {
-    const versionComponents = version.split(".");
+    const versionComponents = version.split('.');
     return [
         parseInt(versionComponents[0]),
         parseInt(versionComponents[1]),
