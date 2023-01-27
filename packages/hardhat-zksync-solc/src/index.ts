@@ -180,8 +180,8 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
                 hre.config.zksolc.version,
                 salt
             );
-            console.info(chalk.yellow(`Downloading zksolc from ${compilerUrl}`));
             if(!fs.existsSync(compilerPath)) {
+                console.info(chalk.yellow(`Downloading zksolc from ${compilerUrl}`));
                 try {
                     await download(compilerUrl, compilerPath);
                     console.info(chalk.green(`zksolc successfully downloaded`));
