@@ -18,13 +18,13 @@ import {
     pluralize,
     getVersionComponents,
     isURL,
-    sha1,
+    saltFromUrl,
 } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import { CompilationJob } from 'hardhat/types';
 
@@ -174,19 +174,21 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
         if (isURL(compilerPath)) {
             const compilerUrl = compilerPath;
             // hashed url used as a salt to avoid name collisions
-            const salt = sha1(compilerUrl);
+            const salt = saltFromUrl(compilerUrl);
             // where the binary will be downloaded to
             hre.config.zksolc.settings.compilerPath = compilerPath = await getZksolcPath(
                 hre.config.zksolc.version,
                 salt
             );
             console.info(chalk.yellow(`Downloading zksolc from ${compilerUrl}`));
-            try {
-                await download(compilerUrl, compilerPath);
-                console.info(chalk.green(`zksolc successfully downloaded`));
-                fs.chmodSync(compilerPath, '755');
-            } catch (e: any) {
-                throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
+            if(!fs.existsSync(compilerPath)) {
+                try {
+                    await download(compilerUrl, compilerPath);
+                    console.info(chalk.green(`zksolc successfully downloaded`));
+                    fs.chmodSync(compilerPath, '755');
+                } catch (e: any) {
+                    throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
+                }  
             }
         }
         const versionOutput = spawnSync(compilerPath, ['--version']);
@@ -203,7 +205,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
         if (!fs.existsSync(compilerPath)) {
             console.info(chalk.yellow(`Downloading zksolc ${hre.config.zksolc.version}`));
             try {
-                await download(getZksolcUrl(hre.config.zksolc.version), compilerPath);
+                await download(getZksolcUrl(ZKSOLC_BIN_REPOSITORY, hre.config.zksolc.version), compilerPath);
                 fs.chmodSync(compilerPath, '755');
                 console.info(chalk.green(`zksolc version ${hre.config.zksolc.version} successfully downloaded`));
             } catch (e: any) {
@@ -228,3 +230,10 @@ subtask(
         }
     }
 );
+
+export {
+    getZksolcPath,
+    getZksolcUrl,
+    ZKSOLC_BIN_REPOSITORY,
+    saltFromUrl
+};
