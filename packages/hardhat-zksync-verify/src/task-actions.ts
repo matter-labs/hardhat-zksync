@@ -30,6 +30,7 @@ import {
     TASK_CHECK_VERIFICATION_STATUS,
     SINGLE_FILE_CODE_FORMAT,
     JSON_INPUT_CODE_FORMAT,
+    CONTRACT_SOURCES_PREFIX,
 } from './constants';
 
 import {
@@ -195,7 +196,6 @@ export async function verifyMinimumBuild(
         codeFormat = SINGLE_FILE_CODE_FORMAT;
         sourceCode = removeMultipleSubstringOccurrences(input, 'SPDX-License-Identifier:');
     } else {
-        contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
         codeFormat = JSON_INPUT_CODE_FORMAT;
         sourceCode = getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles());
     }
@@ -274,7 +274,13 @@ function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[]): any {
     return {
         language: 'Solidity',
         sources: Object.fromEntries(
-            resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
+            resolvedFiles.map((file) => {
+                let key = file.sourceName;
+                if (key.startsWith(CONTRACT_SOURCES_PREFIX)) {
+                    key = key.slice(CONTRACT_SOURCES_PREFIX.length);
+                }
+                return [key, { content: file.content.rawContent }];
+            })
         ),
         settings: { optimizer: { enabled: true } },
     };
