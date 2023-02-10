@@ -435,7 +435,7 @@
     "@nomiclabs/hardhat-docker" "^2.0.0"
     dockerode "^3.3.4"
 
-"@matterlabs/hardhat-zksync-solc@0.3.13", "@matterlabs/hardhat-zksync-solc@^0.3.13":
+"@matterlabs/hardhat-zksync-solc@0.3.13":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.13.tgz#ff3401b164ebfde6feb2a8fac8639cf39f9b4954"
   integrity sha512-QuU3CfaY17SQbRxk7VvheJt+bBvWOSNaeo4hWedWXWdIa6d2Y8lQqf6QmYTFMqJg39Z+bx+uuVm2qzzLI4x0SQ==
@@ -445,7 +445,7 @@
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.3.14-beta.3"
+  version "0.3.14"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -4840,3 +4840,8 @@ zksync-web3@^0.12.5:
   version "0.12.5"
   resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.12.5.tgz#f6dd9adee0dad9d176c0e5a42e8140b4d4b5c4b8"
   integrity sha512-WGobdAj1nBGnRTWPKLjUCA3KSk1U2zlB7silVX/FMpv8o7LQMvxY7vIGiA+Y+d1ND6PLWyLs3859kQKgrVwEGQ==
+
+zksync-web3@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.13.0.tgz#979633eb507c8501185ebacbaa543e91c8ab423c"
+  integrity sha512-7E16RMVTi+6+AyjeRNn3e6CNbQ29UCoFO2osTjkPBgQjTortA0aqjrVAyAEi7o4g22Q2iLsPD2T7llUmTI8bBw==
