@@ -4836,7 +4836,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zksync-web3@^0.12.5:
-  version "0.12.5"
-  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.12.5.tgz#f6dd9adee0dad9d176c0e5a42e8140b4d4b5c4b8"
-  integrity sha512-WGobdAj1nBGnRTWPKLjUCA3KSk1U2zlB7silVX/FMpv8o7LQMvxY7vIGiA+Y+d1ND6PLWyLs3859kQKgrVwEGQ==
+zksync-web3@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.13.3.tgz#d6459668546bbc081ad7353fde1c3b3b39c0aacd"
+  integrity sha512-JH5ODhbo3wd6ZiMndbxW4QcfOdAmY4dN7fuu69cCZhtHZ7Lv/ZfjUdmtbRt9gfWCKf/1+PoQtHc1Om5WO+rgsg==
