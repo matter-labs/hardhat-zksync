@@ -31,7 +31,7 @@
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "chalk": "4.1.2",
     "hardhat": "^2.12.6",
-    "ethers": "~5.7.2",
+    "ethers": "~6.0.5",
     "zksync-web3": "^0.12.5",
     "@matterlabs/zksync-contracts": "^0.5.1",
     "@openzeppelin/contracts": "^4.8.1",
