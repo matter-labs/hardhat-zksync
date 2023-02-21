@@ -109,10 +109,11 @@ async function getTxFees(
     return Promise.all(
         accounts.map(async (account) => {
             if (options?.includeFee !== true && (await getAddressOf(account)) === txResponse.from) {
+                const txReceipt = await txResponse.wait();
                 const gasPrice = overrides?.maxFeePerGas
                     ? BigNumber.from(overrides?.maxFeePerGas)
-                    : await provider.getGasPrice();
-                const gasUsed = await provider.estimateGas(txResponse as zk.types.TransactionRequest);
+                    : txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
+                const gasUsed = txReceipt.gasUsed;
                 const txFee = gasPrice.mul(gasUsed);
 
                 return txFee;
