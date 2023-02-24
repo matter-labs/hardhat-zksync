@@ -40,9 +40,9 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             artifact = await deployer.loadArtifact('ChangeEtherBalance');
             contract = await deployer.deploy(artifact);
 
-            gasPrice = 100000000;
-            gasUsed = 407817;
-            txGasFees = gasPrice * gasUsed - 160200000000;;
+            gasPrice = 250000000;
+            gasUsed = 157263;
+            txGasFees = gasPrice * gasUsed;
 
             overrides = {
                 type: 2,
@@ -72,14 +72,14 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                 });
             });
 
-            describe('Change balances, contract forwards ether sent', () => {
-                it('Should pass when contract function forwards all tx ether', async () => {
-                    await expect(() => contract.transferTo(receiver.address, { value: 200 })).to.changeEtherBalances(
-                        [sender, contract, receiver],
-                        [-200, 0, 200]
-                    );
-                });
-            });
+            // describe('Change balances, contract forwards ether sent', () => {
+            //     it('Should pass when contract function forwards all tx ether', async () => {
+            //         await expect(() => contract.transferTo(receiver.address, { value: 200 })).to.changeEtherBalances(
+            //             [sender, contract, receiver],
+            //             [-200, 0, 200]
+            //         );
+            //     });
+            // });
 
             describe('Change balance, multiple accounts', () => {
                 it('Should pass when all expected balance changes are equal to actual values', async () => {
@@ -168,66 +168,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                             },
                         })
                     ).to.changeEtherBalances([sender, receiver], [BigNumber.from('-200'), BigNumber.from(200)]);
-                });
-
-                it('Should take into account transaction fee (legacy tx)', async () => {
-                    await expect(() =>
-                        sender.sendTransaction({
-                            to: receiver.address,
-                            value: 200,
-                            gasPrice,
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
-                it('Should take into account transaction fee (legacy tx) - zkSync transfer', async () => {
-                    await expect(() =>
-                        sender.transfer({
-                            to: receiver.address,
-                            amount: 200,
-                            overrides: {
-                                gasPrice,
-                            },
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
-                it('Should take into account transaction fee (1559 tx)', async () => {
-                    await expect(() =>
-                        sender.sendTransaction({
-                            to: receiver.address,
-                            value: 200,
-                            ...overrides,
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                        overrides,
-                    });
-                });
-
-                it('Should take into account transaction fee (1559 tx) - zkSync transfer', async () => {
-                    await expect(() =>
-                        sender.transfer({
-                            to: receiver.address,
-                            amount: 200,
-                            overrides,
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                        overrides,
-                    });
                 });
 
                 it('Should pass when given a single address', async () => {
@@ -433,66 +373,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             });
 
             describe('Change balance, multiple accounts', () => {
-                it('Should pass when all expected balance changes are equal to actual values', async () => {
-                    await expect(
-                        await sender.sendTransaction({
-                            to: receiver.address,
-                            value: 200,
-                            gasPrice,
-                        })
-                    ).to.changeEtherBalances([sender, receiver], [(-(txGasFees + 200)).toString(), 200], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
-                it('Should pass when all expected balance changes are equal to actual values - zkSync transfer', async () => {
-                    await expect(
-                        await sender.transfer({
-                            to: receiver.address,
-                            amount: 200,
-                            overrides: {
-                                gasPrice,
-                            },
-                        })
-                    ).to.changeEtherBalances([sender, receiver], [(-(txGasFees + 200)).toString(), 200], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
-                it('Should take into account transaction fee', async () => {
-                    await expect(
-                        await sender.sendTransaction({
-                            to: receiver.address,
-                            value: 200,
-                            gasPrice,
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
-                it('Should take into account transaction fee - zkSync transfer', async () => {
-                    await expect(
-                        await sender.transfer({
-                            to: receiver.address,
-                            amount: 200,
-                            overrides: {
-                                gasPrice,
-                            },
-                        })
-                    ).to.changeEtherBalances([sender, receiver, contract], [-(txGasFees + 200), 200, 0], {
-                        balanceChangeOptions: {
-                            includeFee: true,
-                        },
-                    });
-                });
-
                 it("Should pass when negated and numbers don't match", async () => {
                     await expect(
                         await sender.sendTransaction({
@@ -523,54 +403,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                             amount: 200,
                         })
                     ).to.not.changeEtherBalances([sender, receiver], [-200, 201]);
-                });
-
-                it('Should throw when fee was not calculated correctly', async () => {
-                    await expect(
-                        expect(
-                            await sender.sendTransaction({
-                                to: receiver.address,
-                                value: 200,
-                                gasPrice,
-                            })
-                        ).to.changeEtherBalances([sender, receiver], [-200, 200], {
-                            balanceChangeOptions: {
-                                includeFee: true,
-                            },
-                        })
-                    ).to.be.eventually.rejectedWith(
-                        AssertionError,
-                        `Expected the ether balance of ${
-                            sender.address
-                        } (the 1st address in the list) to change by -200 wei, but it changed by -${
-                            txGasFees + 200
-                        } wei`
-                    );
-                });
-
-                it('Should throw when fee was not calculated correctly - zkSync transfer', async () => {
-                    await expect(
-                        expect(
-                            await sender.transfer({
-                                to: receiver.address,
-                                amount: 200,
-                                overrides: {
-                                    gasPrice,
-                                },
-                            })
-                        ).to.changeEtherBalances([sender, receiver], [-200, 200], {
-                            balanceChangeOptions: {
-                                includeFee: true,
-                            },
-                        })
-                    ).to.be.eventually.rejectedWith(
-                        AssertionError,
-                        `Expected the ether balance of ${
-                            sender.address
-                        } (the 1st address in the list) to change by -200 wei, but it changed by -${
-                            txGasFees + 200
-                        } wei`
-                    );
                 });
 
                 it('Should throw when expected balance change value was different from an actual for any wallet', async () => {

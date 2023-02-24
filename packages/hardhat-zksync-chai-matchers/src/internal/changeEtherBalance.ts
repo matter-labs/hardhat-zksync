@@ -82,8 +82,8 @@ export async function getBalanceChange(
     if (options?.includeFee !== true && address === txResponse.from) {
         const gasPrice = overrides?.maxFeePerGas
             ? BigNumber.from(overrides?.maxFeePerGas)
-            : await provider.getGasPrice();
-        const gasUsed = await provider.estimateGas(txResponse as zk.types.TransactionRequest);
+            : txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
+        const gasUsed = txReceipt.gasUsed;
         const txFee = gasPrice.mul(gasUsed);
 
         return BigNumber.from(balanceAfter).add(txFee).sub(balanceBefore);
