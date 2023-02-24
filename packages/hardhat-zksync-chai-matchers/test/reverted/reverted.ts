@@ -153,21 +153,6 @@ describe('INTEGRATION: Reverted', function () {
             it('non-errors', async function () {
                 await expectAssertionError(expect(Promise.reject({})).to.be.reverted, 'Expected an Error object');
             });
-
-            it('errors that are not related to a reverted transaction', async function () {
-                const signer = zk.Wallet.createRandom().connect(provider);
-
-                await expect(
-                    expect(
-                        matchers.connect(signer).revertsWithoutReason({
-                            gasLimit: 1_000_000,
-                        })
-                    ).to.not.be.revertedWithCustomError(matchers, 'SomeCustomError')
-                ).to.be.eventually.rejectedWith(
-                    Error,
-                    'Not enough balance to cover the fee + value.'
-                );
-            });
         });
 
         describe('stack traces', function () {

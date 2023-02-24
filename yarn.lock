@@ -467,10 +467,10 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
 
-"@matterlabs/zksync-contracts@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.5.1.tgz#1b28bd585b34a3890c003a16b2be538f744b5229"
-  integrity sha512-9cU5UEh5AZ40q54QmL+BJySwy9iZQv4vvEDQm5A2kyZ6bJD1lxPy0QRPOmP3Y3375Yz7MGtO6ynFPmonMcfAfQ==
+"@matterlabs/zksync-contracts@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.5.2.tgz#1488c967f1d60ad9f00121a70d89a79f9a18dc01"
+  integrity sha512-4hLKAsCGlTa/vC0u/j0rgX2TT5OV8cALNcxG5ismi2TqoTvx7I0kQUPEPl/AZshTb652Y0SMKJc6ayLJgolr1g==
 
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
@@ -4836,7 +4836,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zksync-web3@^0.12.5:
-  version "0.12.5"
-  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.12.5.tgz#f6dd9adee0dad9d176c0e5a42e8140b4d4b5c4b8"
-  integrity sha512-WGobdAj1nBGnRTWPKLjUCA3KSk1U2zlB7silVX/FMpv8o7LQMvxY7vIGiA+Y+d1ND6PLWyLs3859kQKgrVwEGQ==
+zksync-web3@^0.13.4:
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.13.4.tgz#1c5b1303436cb4cba1a0873ea07860b19f385331"
+  integrity sha512-AjCKhn9TRqsk2T9VLKxlod22rnVWOWGOjq+QXppFe2yTxZx9dVaai325OJ0aa7a3m5wx+9yhPqBu23jG2xPo5Q==

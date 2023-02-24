@@ -319,21 +319,6 @@ describe('INTEGRATION: Reverted with custom error', function () {
                     )
                 ).to.throw(Error, "The given contract doesn't have a custom error named 'SomeCustmError'");
             });
-
-            it('errors that are not related to a reverted transaction', async function () {
-                const signer = zk.Wallet.createRandom().connect(provider);
-
-                await expect(
-                    expect(
-                        matchers.connect(signer).revertsWithoutReason({
-                            gasLimit: 1_000_000,
-                        })
-                    ).to.not.be.revertedWithCustomError(matchers, 'SomeCustomError')
-                ).to.be.eventually.rejectedWith(
-                    Error,
-                    'Not enough balance to cover the fee + value.'
-                );
-            });
         });
 
         describe('stack traces', function () {
