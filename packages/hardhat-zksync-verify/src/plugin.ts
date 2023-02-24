@@ -1,9 +1,10 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
-import { Artifacts, HardhatRuntimeEnvironment } from 'hardhat/types';
+import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import { MULTIPLE_MATCHING_CONTRACTS, CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
+import { getContractNameFromSource } from './utils';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -66,4 +67,19 @@ Instead, this name was received: ${contractFQN}`
     } else {
         throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
     }
+}
+
+export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[], contractName: string): any {
+    return {
+        language: 'Solidity',
+        sources: Object.fromEntries(
+            resolvedFiles.map((file) => {
+                let key = !file.sourceName.includes('@')
+                    ? getContractNameFromSource(file.sourceName, false)
+                    : file.sourceName;
+                return [key, { content: file.content.rawContent }];
+            })
+        ),
+        settings: { optimizer: { enabled: true } },
+    };
 }

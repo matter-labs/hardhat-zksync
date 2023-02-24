@@ -5,6 +5,7 @@ import { checkVerificationStatusService } from './zksync-block-explorer/service'
 import { ZkSyncVerifyPluginError } from './errors';
 import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 import chalk from 'chalk';
+import * as path from 'path';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -98,4 +99,9 @@ export function parseWrongConstructorArgumentsError(string: string): string {
     const data = JSON.parse(string.split('count=')[1].split(', value=')[0]);
 
     return `The number of constructor arguments you provided (${data['values']}) does not match the number of constructor arguments the contract has been deployed with (${data['types']}).`;
+}
+
+export function getContractNameFromSource(sourceName: string, removeSolExtension: boolean): string {
+    let parts = sourceName.split(path.sep) || [];
+    return parts.length ? parts[parts.length - 1].replace(/\.sol$/, removeSolExtension ? '' : '.sol') : sourceName;
 }
