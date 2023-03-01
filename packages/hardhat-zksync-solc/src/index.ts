@@ -1,5 +1,6 @@
 import {
     TASK_COMPILE_SOLIDITY_RUN_SOLC,
+    TASK_COMPILE_SOLIDITY_RUN_SOLCJS,
     TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
@@ -19,6 +20,7 @@ import {
     getVersionComponents,
     isURL,
     saltFromUrl,
+    generateSolcJSExecutableCode,
 } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
@@ -132,12 +134,33 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
+    console.info(chalk.yellow('Using native solc compiler'));
 
     if (hre.config.zksolc.settings.libraries) {
         args.input.settings.libraries = hre.config.zksolc.settings.libraries;
     }
 
     return await compile(hre.config.zksolc, args.input, args.solcPath);
+});
+
+subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath: string }, hre, runSuper) => {
+    if (hre.network.zksync !== true) {
+        return await runSuper(args);
+    }
+    console.info(chalk.yellow('Using solcjs compiler'));
+
+    if (hre.config.zksolc.settings.libraries) {
+        args.input.settings.libraries = hre.config.zksolc.settings.libraries;
+    }
+
+    const solcPath = `${args.solcJsPath}.executable`;
+    if (!fs.existsSync(solcPath)) {
+        const solcJsExecutableCode = generateSolcJSExecutableCode(args.solcJsPath, process.cwd());
+        fs.writeFileSync(solcPath, Buffer.from(solcJsExecutableCode), {encoding:'utf-8', flag:'w'});
+        fs.chmodSync(solcPath, '755');
+    }
+
+    return await compile(hre.config.zksolc, args.input, solcPath);
 });
 
 // This task is overriden to:
