@@ -3,6 +3,7 @@ import { DependencyGraph, HardhatRuntimeEnvironment, RunSuperFunction, TaskArgum
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
+    TASK_COMPILE,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
     TASK_VERIFY_GET_LIBRARIES,
     TASK_VERIFY_VERIFY,
@@ -112,6 +113,8 @@ export async function verifyContract(
     const deployedBytecode = new Bytecode(deployedBytecodeHex);
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
+
+    await hre.run(TASK_COMPILE);
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
         contractFQN: contractFQN,
