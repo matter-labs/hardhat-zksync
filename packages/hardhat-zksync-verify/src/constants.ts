@@ -67,5 +67,3 @@ Please try one of the following options:
 
 export const SINGLE_FILE_CODE_FORMAT = 'solidity-single-file';
 export const JSON_INPUT_CODE_FORMAT = 'solidity-standard-json-input';
-
-export const CONTRACT_SOURCES_PREFIX = 'contracts/';
