@@ -35,7 +35,7 @@
     "zksync-web3": "^0.13.4",
     "@matterlabs/zksync-contracts": "^0.5.2",
     "@openzeppelin/contracts": "^4.8.1",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1"
+    "@openzeppelin/contracts-upgradeable": "^4.8.2"
   },
   "prettier": {
     "tabWidth": 4,
