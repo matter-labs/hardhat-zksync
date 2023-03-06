@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-toolbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "zkSync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync-toolbox",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-toolbox",
@@ -32,10 +32,10 @@
     "README.md"
   ],
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.1",
-    "@matterlabs/hardhat-zksync-solc": "^0.3.13",
-    "@matterlabs/hardhat-zksync-verify": "^0.1.1",
+    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.1",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.2",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.14",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.3",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
     "@nomiclabs/hardhat-etherscan": "3.1.2",
@@ -60,10 +60,10 @@
     "zksync-web3": "^0.13.4"
   },
   "peerDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.1",
-    "@matterlabs/hardhat-zksync-solc": "^0.3.13",
-    "@matterlabs/hardhat-zksync-verify": "^0.1.1"
+    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.1",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.2",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.14",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.3"
   },
   "prettier": {
     "tabWidth": 4,
