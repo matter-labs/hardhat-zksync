@@ -1,5 +1,5 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
-import { Artifacts, HardhatRuntimeEnvironment } from 'hardhat/types';
+import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import { MULTIPLE_MATCHING_CONTRACTS, CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
@@ -66,4 +66,14 @@ Instead, this name was received: ${contractFQN}`
     } else {
         throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
     }
+}
+
+export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[]): any {
+    return {
+        language: 'Solidity',
+        sources: Object.fromEntries(
+            resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
+        ),
+        settings: { optimizer: { enabled: true } },
+    };
 }

@@ -1,17 +1,6 @@
-import {
-    DependencyGraph,
-    HardhatRuntimeEnvironment,
-    ResolvedFile,
-    RunSuperFunction,
-    TaskArguments,
-} from 'hardhat/types';
+import { DependencyGraph, HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
-import {
-    checkVerificationStatusService,
-    getSupportedCompilerVersions,
-    verifyContractRequest,
-    ZkSyncBlockExplorerResponse as blockExplorerResponse,
-} from './zksync-block-explorer/service';
+import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
     TASK_COMPILE,
@@ -47,7 +36,7 @@ import chalk from 'chalk';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, flattenContractFile, inferContractArtifacts } from './plugin';
+import { checkContractName, flattenContractFile, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
 import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 
 export async function verify(
@@ -195,9 +184,9 @@ export async function verifyMinimumBuild(
         codeFormat = SINGLE_FILE_CODE_FORMAT;
         sourceCode = removeMultipleSubstringOccurrences(input, 'SPDX-License-Identifier:');
     } else {
-        contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
         codeFormat = JSON_INPUT_CODE_FORMAT;
         sourceCode = getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles());
+        contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
     }
 
     if (minimumBuildContractBytecode === matchedBytecode) {
@@ -269,13 +258,4 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
         throw new ZkSyncVerifyPluginError(isValidVerification.getError());
     }
     console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
-}
-function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[]): any {
-    return {
-        language: 'Solidity',
-        sources: Object.fromEntries(
-            resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
-        ),
-        settings: { optimizer: { enabled: true } },
-    };
 }

@@ -2,9 +2,10 @@ import * as ethers from 'ethers';
 import * as zk from 'zksync-web3';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
+import chalk from 'chalk';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
-    console.log('Running deploy script for the Account Abstraction');
+    console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
 
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -28,7 +29,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
 
-    console.log(`Greeter was deployed to ${greeterContract.address}`);
+    console.info(chalk.green(`Greeter was deployed to ${greeterContract.address}`));
 
     // The two owners of the multisig
     const owner1 = zk.Wallet.createRandom();
@@ -38,7 +39,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     const multisigAddress = aa.address;
 
-    console.log(`Multisig was deployed to ${multisigAddress}`);
+    console.info(chalk.green(`Multisig was deployed to ${multisigAddress}`));
 
     await (
         await contractDeployer.zkWallet.sendTransaction({
@@ -63,7 +64,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
         nonce: await provider.getTransactionCount(multisigAddress),
         type: 113,
         customData: {
-            ergsPerPubdata: zk.utils.DEFAULT_ERGS_PER_PUBDATA_LIMIT,
+          gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
         } as zk.types.Eip712Meta,
         value: ethers.BigNumber.from(0),
     };
@@ -91,7 +92,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // Confirm that tx was successful.
     const greetingFromContract = await greeterContract.greet();
     if (greetingFromContract === newGreeting) {
-        console.log('Successfully initiated tx from deployed multisig!');
+        console.info(chalk.green('Successfully initiated tx from deployed multisig!'));
     } else {
         throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
     }

@@ -5,7 +5,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zkvyper: {
-        version: '1.2.0',
+        version: '1.3.2',
         compilerSource: 'binary',
     },
     networks: {
