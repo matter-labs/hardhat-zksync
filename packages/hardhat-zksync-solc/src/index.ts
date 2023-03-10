@@ -29,8 +29,8 @@ import { ZkSyncSolcPluginError } from './errors';
 import { CompilationJob } from 'hardhat/types';
 
 extendConfig((config, userConfig) => {
-    if (userConfig?.zksolc?.settings?.optimizer) {
-        console.warn('`optimizer` setting is deprecated, optimizer is always enabled');
+    if (userConfig?.zksolc?.settings?.optimizer?.enabled) {
+        console.warn('`optimizer.enabled` setting is deprecated, optimizer is always enabled');
     }
 
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
@@ -64,7 +64,7 @@ extendEnvironment((hre) => {
             let settings = compiler.settings || {};
             // If solidity optimizer is not enabled, the libraries are not inlined and
             // we have to manually pass them into zksolc. That's why we force the optimization.
-            compiler.settings = { ...settings, optimizer: { enabled: true } };
+            compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer, enabled: true } };
 
             // zkSolc supports only a subset of solc output selections
             compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);

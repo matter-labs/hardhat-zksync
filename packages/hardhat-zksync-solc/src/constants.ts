@@ -20,5 +20,8 @@ export const SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS = [
     'storageLayout',
     'irOptimized',
     'evm.legacyAssembly',
+    'metadata',
+    'userdoc',
+    'devdoc',
     'ast',
 ];

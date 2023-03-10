@@ -8,11 +8,12 @@ export interface ZkSolcConfig {
         // If compilerSource == "docker", this option is ignored.
         // By default, the automatically downloaded binary is used.
         compilerPath?: string;
-        /**
-         * @deprecated This property has no effect, optimizer is always enabled. It is maintained for compatibility purposes.
-         */
         optimizer?: {
-            enabled: boolean;
+            /**
+             * @deprecated This property has no effect, optimizer is always enabled. It is maintained for compatibility purposes.
+             */
+            enabled?: boolean;
+            [key: string]: any;
         };
         // addresses of external libraries
         libraries?: {
