@@ -441,10 +441,10 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
 
-"@matterlabs/zksync-contracts@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.5.2.tgz#1488c967f1d60ad9f00121a70d89a79f9a18dc01"
-  integrity sha512-4hLKAsCGlTa/vC0u/j0rgX2TT5OV8cALNcxG5ismi2TqoTvx7I0kQUPEPl/AZshTb652Y0SMKJc6ayLJgolr1g==
+"@matterlabs/zksync-contracts@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.6.0.tgz#c94da2b3e8feaff69c3f5b2219ee11d860eb8904"
+  integrity sha512-DRVoyKM4dNV15UZdHS+IE4u7pPpJ/dYC6I8jRmVIf1tLwPuX7vzXiw3qpiW48lgeflA76h9FZnp7IcRWpsrbFw==
 
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
