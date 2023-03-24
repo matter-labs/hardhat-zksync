@@ -176,24 +176,13 @@ export async function verifyMinimumBuild(
         sourceNames: [contractInformation.sourceName],
     });
 
-    let codeFormat;
-    let sourceCode;
-    if (dependencyGraph.getResolvedFiles().length === 1) {
-        const input = await flattenContractFile(hre, contractInformation.sourceName);
-
-        codeFormat = SINGLE_FILE_CODE_FORMAT;
-        sourceCode = removeMultipleSubstringOccurrences(input, 'SPDX-License-Identifier:');
-    } else {
-        codeFormat = JSON_INPUT_CODE_FORMAT;
-        sourceCode = getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles());
-        contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
-    }
+    contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
 
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
             contractAddress: address,
-            sourceCode: sourceCode,
-            codeFormat: codeFormat,
+            sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles()),
+            codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: contractInformation.contractName,
             compilerSolcVersion: solcVersion,
             compilerZksolcVersion: compilerZksolcVersion,
