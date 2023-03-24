@@ -1,19 +1,86 @@
-import '@openzeppelin/hardhat-upgrades';
+import '@nomiclabs/hardhat-ethers';
+import '@matterlabs/hardhat-zksync-verify';
+import { extendEnvironment, subtask, task, types } from 'hardhat/internal/core/config/config-env';
 
-import { extendEnvironment, subtask, task, types } from 'hardhat/config';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import './type-extensions';
 
-import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core/src/solc-api';
+import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 import { SrcDecoder } from '@openzeppelin/upgrades-core/src/src-decoder';
-
+import { astDereferencer } from './utils/ast-dereferencer';
 import { TASK_COMPILE_SOLIDITY_COMPILE, TASK_COMPILE_SOLIDITY_COMPILE_SOLC } from 'hardhat/builtin-tasks/task-names';
 import type { ContractDefinition } from 'solidity-ast';
+import { Version, getVersion } from './version';
+
+import { isNodeType, findAll } from 'solidity-ast/utils';
+import { Node } from 'solidity-ast/node';
+import { lazyObject } from 'hardhat/plugins';
+import { HardhatUpgrades } from './interfaces';
+import { makeDeployProxyAdmin } from './deploy-proxy-admin';
+// import { HardhatUpgrades } from './interfaces';
 
 // import { extractStorageLayout } from '@openzeppelin/upgrades-core/src/storage/extract';
 // import { getFunctionSignature } from '@openzeppelin/upgrades-core/src/utils/function';
+// import { makeDeployProxyAdmin } from '@openzeppelin/hardhat-upgrades/src/deploy-proxy-admin';
 
-extendEnvironment((hre: HardhatRuntimeEnvironment) => {});
+extendEnvironment((hre) => {
+    hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
+        // const {
+        //     silenceWarnings,
+        //     getAdminAddress,
+        //     getImplementationAddress,
+        //     getBeaconAddress,
+        // } = require('@openzeppelin/upgrades-core');
+        const { makeDeployProxy } = require('./deploy-proxy');
+        const { makeUpgradeProxy } = require('./upgrade-proxy');
+        // const { makeValidateImplementation } = require('./validate-implementation');
+        // const { makeValidateUpgrade } = require('./validate-upgrade');
+        // const { makeDeployImplementation } = require('./deploy-implementation');
+        // const { makePrepareUpgrade } = require('./prepare-upgrade');
+        const { makeDeployBeacon } = require('./deploy-beacon');
+        const { makeDeployBeaconProxy } = require('./deploy-beacon-proxy');
+        const { makeUpgradeBeacon } = require('./upgrade-beacon');
+        // const { makeForceImport } = require('./force-import');
+        // const { makeChangeProxyAdmin, makeTransferProxyAdminOwnership, makeGetInstanceFunction } = require('./admin');
+        return {
+            // silenceWarnings,
+            deployProxy: makeDeployProxy(hre),
+            upgradeProxy: makeUpgradeProxy(hre),
+            // validateImplementation: makeValidateImplementation(hre),
+            // validateUpgrade: makeValidateUpgrade(hre),
+            // deployImplementation: makeDeployImplementation(hre),
+            // prepareUpgrade: makePrepareUpgrade(hre),
+            deployBeacon: makeDeployBeacon(hre),
+            deployBeaconProxy: makeDeployBeaconProxy(hre),
+            upgradeBeacon: makeUpgradeBeacon(hre),
+            deployProxyAdmin: makeDeployProxyAdmin(hre),
+            // forceImport: makeForceImport(hre),
+            // admin: {
+            //     getInstance: makeGetInstanceFunction(hre),
+            //     changeProxyAdmin: makeChangeProxyAdmin(hre),
+            //     transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+            // },
+            // erc1967: {
+            //     getAdminAddress: (proxyAddress) => getAdminAddress(hre.network.provider, proxyAddress),
+            //     getImplementationAddress: (proxyAddress) =>
+            //         getImplementationAddress(hre.network.provider, proxyAddress),
+            //     getBeaconAddress: (proxyAddress) => getBeaconAddress(hre.network.provider, proxyAddress),
+            // },
+            // beacon: {
+            //     // TODO: change to getImplementationAddressFromBeacon
+            //     getImplementationAddress: (beaconAddress) =>
+            //         getImplementationAddress(hre.network.provider, beaconAddress),
+            //     // getImplementationAddressFromBeacon(hre.network.provider, beaconAddress),
+            // },
+        };
+    });
+
+    // hre.qwe = lazyObject((): Zgadija => {
+    //     return {
+    //         name: 'zgadija',
+    //         version: '1.0.0',
+    //     };
+    // });
+});
 
 //TODO: move to interfaces file
 interface RunCompilerArgs {
@@ -21,14 +88,16 @@ interface RunCompilerArgs {
     solcVersion: string;
 }
 
-subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSuper) => {
+subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
     const { solcInputOutputDecoder } = await import('@openzeppelin/upgrades-core');
     const { writeValidations } = await import('./validations');
 
     // TODO: patch input
     const { output, solcBuild } = await hre.run(TASK_COMPILE_SOLIDITY_COMPILE_SOLC, args);
 
-    if (isFullSolcOutput(output)) {
+    // TODO: check the condition
+    // if (isFullSolcOutput(output)) {
+    if (true) {
         const decodeSrc = solcInputOutputDecoder(args.input, output);
         const validations = validate(output, decodeSrc, args.solcVersion);
         await writeValidations(hre, validations);
@@ -67,30 +136,24 @@ export function isFullSolcOutput(output: MaybeSolcOutput | undefined): boolean {
     return true;
 }
 
-//
-
-// import { astDereferencer } from '@openzeppelin/upgrades-core/src/ast-dereferencer';
-import { Version, getVersion } from './version';
-
-import { ValidationRunData, ValidationError } from '@openzeppelin/upgrades-core/src/validate/run';
-
-import { isNodeType, findAll } from 'solidity-ast/utils';
-import { Node } from 'solidity-ast/node';
-
 function getFullyQualifiedName(source: string, contractName: string) {
     return `${source}:${contractName}`;
 }
 
-export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVersion?: string): ValidationRunData {
-    const validation: ValidationRunData = {};
+export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVersion?: string): any {
+    const validation: any = {};
     const fromId: Record<number, string> = {};
     const inheritIds: Record<string, number[]> = {};
     const libraryIds: Record<string, number[]> = {};
 
-    // const deref = astDereferencer(solcOutput);
+    const deref = astDereferencer(solcOutput);
 
     for (const source in solcOutput.contracts) {
         for (const contractName in solcOutput.contracts[source]) {
+            // skip contracts that contain "@" in their name
+            if (source.includes('@')) {
+                continue;
+            }
             const bytecode = solcOutput.contracts[source][contractName].evm.bytecode;
             const version = bytecode.object === '' ? undefined : getVersion(bytecode.object);
             // const linkReferences = extractLinkReferences(bytecode);
@@ -159,7 +222,7 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
     return validation;
 }
 
-function* getConstructorErrors(contractDef: ContractDefinition, decodeSrc: SrcDecoder): Generator<ValidationError> {
+function* getConstructorErrors(contractDef: ContractDefinition, decodeSrc: SrcDecoder): Generator<any> {
     for (const fnDef of findAll('FunctionDefinition', contractDef, (node) => skipCheck('constructor', node))) {
         if (fnDef.kind === 'constructor' && ((fnDef.body?.statements?.length ?? 0) > 0 || fnDef.modifiers.length > 0)) {
             yield {

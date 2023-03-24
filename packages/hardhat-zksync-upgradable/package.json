@@ -32,10 +32,15 @@
     "README.md"
   ],
   "dependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts-upgradeable": "^4.8.2",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
     "dockerode": "^3.3.4"
   },
   "devDependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts-upgradeable": "^4.8.2",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.3",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "5.13.0",

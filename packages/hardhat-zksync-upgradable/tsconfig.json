@@ -1,11 +1,14 @@
 {
   "extends": "../../config/typescript/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./dist/",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
-    "target": "es2020"
+    "target": "es2020",
+    "rootDir": "./"
   },
-  "rootDir": "./",
+  
+  "include": ["src/**/*"],
   "exclude": ["./dist", "./node_modules", "./test/fixture-projects"]
 }
