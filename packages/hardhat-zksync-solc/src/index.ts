@@ -5,8 +5,10 @@ import {
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
+    TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START,
+    TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, types } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
@@ -31,12 +33,9 @@ import { ZkSyncSolcPluginError } from './errors';
 import { CompilationJob } from 'hardhat/types';
 
 extendConfig((config, userConfig) => {
-    if (userConfig?.zksolc?.settings?.optimizer?.enabled) {
-        console.warn('`optimizer.enabled` setting is deprecated, optimizer is always enabled');
-    }
-
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
+    config.zksolc.settings.optimizer = { ...defaultZkSolcConfig.settings.optimizer, ...userConfig?.zksolc?.settings?.optimizer };
 });
 
 extendEnvironment((hre) => {
@@ -64,9 +63,9 @@ extendEnvironment((hre) => {
                 console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
             }
             let settings = compiler.settings || {};
-            // If solidity optimizer is not enabled, the libraries are not inlined and
-            // we have to manually pass them into zksolc. That's why we force the optimization.
-            compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer, enabled: true } };
+
+            // Override the default solc optimizer settings with zksolc optimizer settings.
+            compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer } };
 
             // zkSolc supports only a subset of solc output selections
             compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);
@@ -134,7 +133,6 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
-    console.info(chalk.yellow('Using native solc compiler'));
 
     if (hre.config.zksolc.settings.libraries) {
         args.input.settings.libraries = hre.config.zksolc.settings.libraries;
@@ -147,7 +145,6 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
     if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
-    console.info(chalk.yellow('Using solcjs compiler'));
 
     if (hre.config.zksolc.settings.libraries) {
         args.input.settings.libraries = hre.config.zksolc.settings.libraries;
@@ -156,7 +153,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
     const solcPath = `${args.solcJsPath}.executable`;
     if (!fs.existsSync(solcPath)) {
         const solcJsExecutableCode = generateSolcJSExecutableCode(args.solcJsPath, process.cwd());
-        fs.writeFileSync(solcPath, Buffer.from(solcJsExecutableCode), {encoding:'utf-8', flag:'w'});
+        fs.writeFileSync(solcPath, Buffer.from(solcJsExecutableCode), { encoding: 'utf-8', flag: 'w' });
         fs.chmodSync(solcPath, '755');
     }
 
@@ -203,7 +200,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
                 hre.config.zksolc.version,
                 salt
             );
-            if(!fs.existsSync(compilerPath)) {
+            if (!fs.existsSync(compilerPath)) {
                 console.info(chalk.yellow(`Downloading zksolc from ${compilerUrl}`));
                 try {
                     await download(compilerUrl, compilerPath);
@@ -211,7 +208,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
                     fs.chmodSync(compilerPath, '755');
                 } catch (e: any) {
                     throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
-                }  
+                }
             }
         }
         const versionOutput = spawnSync(compilerPath, ['--version']);
@@ -253,6 +250,44 @@ subtask(
         }
     }
 );
+
+subtask(TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START)
+    .setAction(
+        async ({
+            isCompilerDownloaded,
+            solcVersion,
+        }: {
+            isCompilerDownloaded: boolean;
+            quiet: boolean;
+            solcVersion: string;
+        }) => {
+            if (isCompilerDownloaded) {
+                return;
+            }
+
+            console.info(chalk.yellow(`Downloading solc ${solcVersion}`));
+        }
+    );
+
+subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
+    .setAction(
+        async ({ 
+            compilationJob,
+        }: {
+            compilationJob: CompilationJob;
+            compilationJobs: CompilationJob[];
+            compilationJobIndex: number;
+        }) => {
+            let count = compilationJob.getResolvedFiles().length;
+            if (count > 0) {
+                console.info(
+                    chalk.green(
+                        `Compiling ${count} Solidity ${pluralize(count, 'file')}`
+                    )
+                );
+            }
+        }
+    );
 
 export {
     getZksolcPath,

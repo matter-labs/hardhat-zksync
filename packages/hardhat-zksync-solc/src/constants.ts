@@ -3,12 +3,16 @@ import { ZkSolcConfig } from './types';
 export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-solc';
 export const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKSOLC_BIN_REPOSITORY = 'https://github.com/matter-labs/zksolc-bin';
-export const LATEST_VERSION = '1.2.1';
+export const LATEST_VERSION = '1.3.7';
 
 export const defaultZkSolcConfig: ZkSolcConfig = {
     version: LATEST_VERSION,
     compilerSource: 'binary',
     settings: {
+        optimizer: {
+            enabled: true,
+            mode: '3',
+        },
         compilerPath: '',
         experimental: {},
     },
