@@ -146,6 +146,7 @@ export async function verifyContract(
     await hre.run(TASK_VERIFY_VERIFY_MINIMUM_BUILD, {
         minimumBuild,
         contractInformation,
+        libraries,
         address,
         compilerZksolcVersion,
         solcVersion,
@@ -157,6 +158,7 @@ export async function verifyMinimumBuild(
     {
         minimumBuild,
         contractInformation,
+        libraries,
         address,
         compilerZksolcVersion,
         solcVersion,
@@ -181,7 +183,7 @@ export async function verifyMinimumBuild(
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
             contractAddress: address,
-            sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles()),
+            sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), libraries),
             codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: contractInformation.contractName,
             compilerSolcVersion: solcVersion,

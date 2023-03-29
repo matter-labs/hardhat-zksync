@@ -4,6 +4,7 @@ import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/con
 import { MULTIPLE_MATCHING_CONTRACTS, CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
+import { Libraries } from './types';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -68,12 +69,12 @@ Instead, this name was received: ${contractFQN}`
     }
 }
 
-export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[]): any {
+export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[], libraries: Libraries = {}): any {
     return {
         language: 'Solidity',
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
         ),
-        settings: { optimizer: { enabled: true } },
+        settings: { optimizer: { enabled: true }, libraries },
     };
 }
