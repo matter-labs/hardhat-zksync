@@ -2,7 +2,7 @@ import { Artifact } from 'hardhat/types';
 
 export interface ZkVyperConfig {
     version: string; // Currently ignored.
-    compilerSource: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
+    compilerSource?: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
     settings: {
         // Path to zkvyper binary. If compilerSource == "docker", this option is ignored.
         // By default, zkvyper in $PATH is used.
