@@ -7,15 +7,24 @@ import {
     Image,
     ImageDoesntExistError,
 } from '@nomiclabs/hardhat-docker';
-import { CompilerOptions } from '../types';
+import { CompilerOptions, ZkVyperConfig } from '../types';
 import Docker, { ContainerCreateOptions } from 'dockerode';
 import { pluginError } from '../utils';
 import { Writable } from 'stream';
 import path from 'path';
 import chalk from 'chalk';
 
-async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerOptions) {
+async function runZkVyperContainer(docker: Docker, image: Image, paths: CompilerOptions, config: ZkVyperConfig) {
     const relativeSourcesPath = path.relative(process.cwd(), paths.sourcesPath!);
+    
+    const optimizationMode = config.settings.optimizer?.mode;
+    
+    const command = ['zkvyper'];
+    // Commented out because it's not supported by latest zkvyper image.
+    // if (optimizationMode) {
+    //     command.push('-O', optimizationMode);
+    // };
+    command.push('-f', 'combined_json', ...paths.inputPaths.map((p) => path.relative(process.cwd(), p)));
 
     const createOptions: ContainerCreateOptions = {
         Tty: false,
@@ -26,7 +35,7 @@ async function runZksolcContainer(docker: Docker, image: Image, paths: CompilerO
             AutoRemove: true,
             Binds: [`${paths.sourcesPath!}:/${relativeSourcesPath}`],
         },
-        Cmd: ['zkvyper', '-f', 'combined_json', ...paths.inputPaths.map((p) => path.relative(process.cwd(), p))],
+        Cmd: command,
         Image: HardhatDocker.imageToRepoTag(image),
     };
 
@@ -87,7 +96,7 @@ export async function validateDockerIsInstalled() {
     if (!(await HardhatDocker.isInstalled())) {
         throw pluginError(
             'Docker Desktop is not installed.\n' +
-                'Please install it by following the instructions on https://www.docker.com/get-started'
+            'Please install it by following the instructions on https://www.docker.com/get-started'
         );
     }
 }
@@ -122,10 +131,15 @@ async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
     }
 }
 
-export async function compileWithDocker(paths: CompilerOptions, docker: HardhatDocker, image: Image) {
+export async function compileWithDocker(
+    paths: CompilerOptions, 
+    docker: HardhatDocker, 
+    image: Image, 
+    config: ZkVyperConfig
+) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return await handleCommonErrors(runZksolcContainer(dockerInstance, image, paths));
+    return await handleCommonErrors(runZkVyperContainer(dockerInstance, image, paths, config));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
@@ -150,7 +164,7 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof ImageDoesntExistError) {
             throw pluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
-                    'Make sure you chose a valid zkvyper version.'
+                'Make sure you chose a valid zkvyper version.'
             );
         }
 

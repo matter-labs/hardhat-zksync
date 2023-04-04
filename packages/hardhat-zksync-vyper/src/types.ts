@@ -2,11 +2,14 @@ import { Artifact } from 'hardhat/types';
 
 export interface ZkVyperConfig {
     version: string; // Currently ignored.
-    compilerSource: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
+    compilerSource?: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
     settings: {
-        // Path to zksolc binary. If compilerSource == "docker", this option is ignored.
-        // By default, zksolc in $PATH is used.
+        // Path to zkvyper binary. If compilerSource == "docker", this option is ignored.
+        // By default, zkvyper in $PATH is used.
         compilerPath?: string;
+        optimizer?: {
+            [key: string]: any;
+        };
         // addresses of external libraries
         libraries?: {
             [file: string]: {
@@ -37,7 +40,7 @@ export interface ZkSyncArtifact extends Artifact {
 
 // Internal interface used for compilation
 export interface CompilerOptions {
-    inputPaths: string[],
-    compilerPath?: string,
-    sourcesPath?: string,
+    inputPaths: string[];
+    compilerPath?: string;
+    sourcesPath?: string;
 }

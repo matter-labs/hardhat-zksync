@@ -32,18 +32,20 @@ export async function compile(
         inputPaths,
         sourcesPath,
         compilerPath: zkvyperConfig.settings.compilerPath || (await getZkvyperPath(zkvyperConfig.version)),
-    });
+    },
+        zkvyperConfig
+    );
 }
 
 export interface ICompiler {
-    compile(paths: CompilerOptions): Promise<any>;
+    compile(paths: CompilerOptions, config: ZkVyperConfig): Promise<any>;
 }
 
 export class BinaryCompiler implements ICompiler {
     constructor(public vyperPath: string) {}
 
-    public async compile(paths: CompilerOptions) {
-        return await compileWithBinary(paths, this.vyperPath);
+    public async compile(paths: CompilerOptions, config: ZkVyperConfig) {
+        return await compileWithBinary(paths, config, this.vyperPath);
     }
 }
 
@@ -60,7 +62,7 @@ export class DockerCompiler implements ICompiler {
         return new DockerCompiler(image, docker);
     }
 
-    public async compile(paths: CompilerOptions) {
-        return await compileWithDocker(paths, this.docker, this.dockerImage);
+    public async compile(paths: CompilerOptions, config: ZkVyperConfig) {
+        return await compileWithDocker(paths, this.docker, this.dockerImage, config);
     }
 }
