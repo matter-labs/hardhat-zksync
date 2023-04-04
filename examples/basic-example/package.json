@@ -33,7 +33,7 @@
     "hardhat": "^2.13.0",
     "ethers": "~5.7.2",
     "zksync-web3": "^0.14.3",
-    "@matterlabs/zksync-contracts": "^0.5.2",
+    "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.8.2",
     "@openzeppelin/contracts-upgradeable": "^4.8.2"
   },
