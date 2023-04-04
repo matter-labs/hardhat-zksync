@@ -281,7 +281,7 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
             let count = compilationJob.getResolvedFiles().length;
             if (count > 0) {
                 console.info(
-                    chalk.green(
+                    chalk.yellow(
                         `Compiling ${count} Solidity ${pluralize(count, 'file')}`
                     )
                 );
