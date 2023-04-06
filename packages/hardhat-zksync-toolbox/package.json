@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-toolbox",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "zkSync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync-toolbox",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-toolbox",
@@ -32,10 +32,10 @@
     "README.md"
   ],
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.1",
-    "@matterlabs/hardhat-zksync-solc": "^0.3.13",
-    "@matterlabs/hardhat-zksync-verify": "^0.1.1",
+    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.2",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.15",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.4",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
     "@nomiclabs/hardhat-etherscan": "3.1.2",
@@ -51,19 +51,19 @@
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "^5.7.2",
-    "hardhat": "^2.12.6",
+    "hardhat": "^2.13.0",
     "mocha": "^9.2.1",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^4.6.2",
-    "zksync-web3": "^0.13.4"
+    "zksync-web3": "^0.14.3"
   },
   "peerDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.1",
-    "@matterlabs/hardhat-zksync-solc": "^0.3.13",
-    "@matterlabs/hardhat-zksync-verify": "^0.1.1"
+    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.2",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.15",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.4"
   },
   "prettier": {
     "tabWidth": 4,

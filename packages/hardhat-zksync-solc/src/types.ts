@@ -2,17 +2,15 @@ import { Artifact } from 'hardhat/types';
 
 export interface ZkSolcConfig {
     version: string; // Currently ignored.
-    compilerSource: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
+    compilerSource?: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
     settings: {
         // Path to zksolc binary. Can be a URL.
         // If compilerSource == "docker", this option is ignored.
         // By default, the automatically downloaded binary is used.
         compilerPath?: string;
-        /**
-         * @deprecated This property has no effect, optimizer is always enabled. It is maintained for compatibility purposes.
-         */
         optimizer?: {
-            enabled: boolean;
+            enabled?: boolean;
+            [key: string]: any;
         };
         // addresses of external libraries
         libraries?: {

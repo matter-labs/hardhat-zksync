@@ -2,6 +2,7 @@ import {
     TASK_COMPILE_VYPER_RUN_BINARY,
     TASK_COMPILE_VYPER_GET_BUILD,
     TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT,
+    TASK_COMPILE_VYPER_LOG_DOWNLOAD_COMPILER_START,
 } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
 import {
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
@@ -9,7 +10,6 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import './type-extensions';
-import { ZkVyperConfig } from './types';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
 import { pluginError, getZkvyperUrl, getZkvyperPath, pluralize } from './utils';
@@ -18,21 +18,12 @@ import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
-
-const LATEST_VERSION = '1.2.0';
+import { defaultZkVyperConfig } from './constants';
 
 extendConfig((config, userConfig) => {
-    const defaultConfig: ZkVyperConfig = {
-        version: LATEST_VERSION,
-        compilerSource: 'binary',
-        settings: {
-            compilerPath: '',
-            experimental: {},
-        },
-    };
-
-    config.zkvyper = { ...defaultConfig, ...userConfig?.zkvyper };
-    config.zkvyper.settings = { ...defaultConfig.settings, ...userConfig?.zkvyper?.settings };
+    config.zkvyper = { ...defaultZkVyperConfig, ...userConfig?.zkvyper };
+    config.zkvyper.settings = { ...defaultZkVyperConfig.settings, ...userConfig?.zkvyper?.settings };
+    config.zkvyper.settings.optimizer = { ...defaultZkVyperConfig.settings.optimizer, ...userConfig?.zkvyper?.settings?.optimizer };
 });
 
 extendEnvironment((hre) => {
@@ -57,7 +48,7 @@ extendEnvironment((hre) => {
 });
 
 // If there're no .sol files to compile - that's ok.
-subtask(TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE, async () => {});
+subtask(TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE, async () => { });
 
 subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vyperPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
@@ -149,7 +140,7 @@ subtask(
 subtask(
     TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT,
     async (args: { versionGroups: any; quiet: boolean }, hre, runSuper) => {
-        const vyperCompilationsNum = Object.entries(args.versionGroups).length;
+        const vyperCompilationsNum = Object.values(args.versionGroups).flat().length;
 
         if (hre.network.zksync !== true) {
             return await runSuper(args);
@@ -183,3 +174,20 @@ subtask(
         }
     }
 );
+
+subtask(TASK_COMPILE_VYPER_LOG_DOWNLOAD_COMPILER_START)
+    .setAction(
+        async ({
+            quiet,
+            isDownloaded,
+            vyperVersion,
+        }: {
+            quiet: boolean;
+            isDownloaded: boolean;
+            vyperVersion: string;
+        }) => {
+            if (isDownloaded || quiet) return;
+
+            console.info(chalk.yellow(`Downloading vyper ${vyperVersion}`));
+        }
+    );

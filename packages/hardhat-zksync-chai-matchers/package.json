@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-chai-matchers",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Hardhat plugin that adds zkSync-specific capabilities to the Chaiassertion library, making your smart contract tests easy to write and read",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-chai-matchers",
@@ -53,13 +53,13 @@
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "^5.7.2",
-    "hardhat": "^2.12.6",
+    "hardhat": "^2.13.0",
     "mocha": "^10.1.0",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^4.6.2",
-    "zksync-web3": "^0.13.4"
+    "zksync-web3": "^0.14.3"
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "~1.0.4"

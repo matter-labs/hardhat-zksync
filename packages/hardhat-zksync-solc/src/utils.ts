@@ -1,6 +1,6 @@
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
-import { SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS } from './constants';
+import { SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS, SOLCJS_EXECUTABLE_CODE } from './constants';
 import { CompilerOutputSelection } from './types';
 import crypto from 'crypto';
 
@@ -75,4 +75,11 @@ export function getVersionComponents(version: string): number[] {
         parseInt(versionComponents[1]),
         parseInt(versionComponents[2])
     ];
+}
+
+// Generate SolcJS executable code
+export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: string): string {
+    return SOLCJS_EXECUTABLE_CODE
+        .replace(/SOLCJS_PATH/g, solcJsPath)
+        .replace(/WORKING_DIR/g, workingDir);
 }

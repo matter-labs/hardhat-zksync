@@ -4,8 +4,7 @@ import '../../../src/index';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        version: '1.2.2',
-        compilerSource: 'binary',
+        version: '1.3.7',
     },
     networks: {
         ethNetwork: {

@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-verify",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Hardhat plugin to verify smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
@@ -50,7 +50,7 @@
     "eslint-config-prettier": "8.4.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "hardhat": "^2.12.6",
+    "hardhat": "^2.13.0",
     "mocha": "^10.1.0",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",

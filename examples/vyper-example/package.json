@@ -29,10 +29,10 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
-    "@nomiclabs/hardhat-vyper": "^3.0.2",
+    "@nomiclabs/hardhat-vyper": "^3.0.3",
     "ethers": "~5.7.2",
-    "hardhat": "^2.12.6",
-    "zksync-web3": "^0.13.4"
+    "hardhat": "^2.13.0",
+    "zksync-web3": "^0.14.3"
   },
   "prettier": {
     "tabWidth": 4,

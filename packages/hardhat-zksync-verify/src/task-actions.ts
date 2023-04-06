@@ -24,7 +24,6 @@ import {
 import {
     encodeArguments,
     executeVeificationWithRetry,
-    getContractNameFromSource,
     removeMultipleSubstringOccurrences,
     retrieveContractBytecode,
 } from './utils';
@@ -33,12 +32,11 @@ import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/verify
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
-import 'path';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, flattenContractFile, inferContractArtifacts, getSolidityStandardJsonInput } from './plugin';
+import { checkContractName, flattenContractFile, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
 import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 
 export async function verify(
@@ -178,27 +176,13 @@ export async function verifyMinimumBuild(
         sourceNames: [contractInformation.sourceName],
     });
 
-    let codeFormat;
-    let sourceCode;
-    if (dependencyGraph.getResolvedFiles().length === 1) {
-        const input = await flattenContractFile(hre, contractInformation.sourceName);
-
-        codeFormat = SINGLE_FILE_CODE_FORMAT;
-        sourceCode = removeMultipleSubstringOccurrences(input, 'SPDX-License-Identifier:');
-    } else {
-        codeFormat = JSON_INPUT_CODE_FORMAT;
-        sourceCode = getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), contractInformation.contractName);
-        contractInformation.contractName = getContractNameFromSource(
-            contractInformation.sourceName + ':' + contractInformation.contractName,
-            false
-        );
-    }
+    contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
 
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
             contractAddress: address,
-            sourceCode: sourceCode,
-            codeFormat: codeFormat,
+            sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles()),
+            codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: contractInformation.contractName,
             compilerSolcVersion: solcVersion,
             compilerZksolcVersion: compilerZksolcVersion,
