@@ -453,22 +453,14 @@
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "0.0.1"
+  version "0.0.1-beta.1"
   dependencies:
+    "@matterlabs/hardhat-zksync-deploy" "^0.6.2"
     "@openzeppelin/contracts" "^4.8.1"
-    "@openzeppelin/contracts-upgradeable" "^4.8.2"
+    "@openzeppelin/contracts-upgradeable" "^4.8.1"
     "@openzeppelin/hardhat-upgrades" "^1.22.1"
     dockerode "^3.3.4"
-
-"@matterlabs/hardhat-zksync-verify@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-verify/-/hardhat-zksync-verify-0.1.3.tgz#81a349c36b5d8c36e0144690b61a6c417db3ce26"
-  integrity sha512-gZhJmsC529HaLiJ42qSfvT+lYpStqj9IsiEzkI/jxyKHH8FVQz5Uu1wWMeWIRd3Q4GkF0arIYIJWf14oO5AhqA==
-  dependencies:
-    "@matterlabs/hardhat-zksync-solc" "0.3.14"
-    axios "^1.3.4"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
+    ts-node "^10.9.1"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
   version "0.1.7"
@@ -3785,6 +3777,33 @@ mocha@^10.0.0, mocha@^10.1.0:
     yargs-parser "20.2.4"
     yargs-unparser "2.0.0"
 
+mocha@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-10.2.0.tgz#1fd4a7c32ba5ac372e03a17eef435bd00e5c68b8"
+  integrity sha512-IDY7fl/BecMwFHzoqF2sg/SHHANeBoMMXFlS9r0OXKDssYE1M5O43wUY/9BVPeIvfH2zmEbBfseqN9gBQZzXkg==
+  dependencies:
+    ansi-colors "4.1.1"
+    browser-stdout "1.3.1"
+    chokidar "3.5.3"
+    debug "4.3.4"
+    diff "5.0.0"
+    escape-string-regexp "4.0.0"
+    find-up "5.0.0"
+    glob "7.2.0"
+    he "1.2.0"
+    js-yaml "4.1.0"
+    log-symbols "4.1.0"
+    minimatch "5.0.1"
+    ms "2.1.3"
+    nanoid "3.3.3"
+    serialize-javascript "6.0.0"
+    strip-json-comments "3.1.1"
+    supports-color "8.1.1"
+    workerpool "6.2.1"
+    yargs "16.2.0"
+    yargs-parser "20.2.4"
+    yargs-unparser "2.0.0"
+
 mocha@^9.2.1:
   version "9.2.2"
   resolved "https://registry.yarnpkg.com/mocha/-/mocha-9.2.2.tgz#d70db46bdb93ca57402c809333e5a84977a88fb9"
@@ -4844,7 +4863,7 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-ts-node@^10.6.0:
+ts-node@^10.6.0, ts-node@^10.9.1:
   version "10.9.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
   integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==

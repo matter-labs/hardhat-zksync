@@ -1,64 +1,37 @@
-import { silenceWarnings } from '@openzeppelin/upgrades-core';
-import type { PrepareUpgradeFunction } from '@openzeppelin/hardhat-upgrades/src/prepare-upgrade';
-// import type { DeployBeaconFunction } from '@openzeppelin/hardhat-upgrades/src/deploy-beacon';
-// import type { DeployBeaconProxyFunction } from '@openzeppelin/hardhat-upgrades/src/deploy-beacon-proxy';
-// import type { UpgradeBeaconFunction } from '@openzeppelin/hardhat-upgrades/src/upgrade-beacon';
-import type { ForceImportFunction } from '@openzeppelin/hardhat-upgrades/src/force-import';
-import type {
-    ChangeAdminFunction,
-    TransferProxyAdminOwnershipFunction,
-    GetInstanceFunction,
-} from '@openzeppelin/hardhat-upgrades/src/admin';
-import type { ValidateImplementationFunction } from '@openzeppelin/hardhat-upgrades/src/validate-implementation';
-import type { ValidateUpgradeFunction } from '@openzeppelin/hardhat-upgrades/src/validate-upgrade';
-import type { DeployImplementationFunction } from '@openzeppelin/hardhat-upgrades/src/deploy-implementation';
-// import { DeployFunction } from './deploy-proxy-admin';
+import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 
-import { DeployProxyOptions } from '@openzeppelin/hardhat-upgrades/src/utils';
-import type { ContractFactory, Contract } from 'ethers';
-import { DeployAdminFunction } from './deploy-proxy-admin';
-import { UpgradeFunction } from './upgrade-proxy';
-import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
-import { DeployBeaconFunction } from './deploy-beacon';
-import { DeployBeaconProxyFunction } from './deploy-beacon-proxy';
-import { UpgradeBeaconFunction } from './upgrade-beacon';
+import * as zk from 'zksync-web3';
 
-export interface DeployFunction {
-    (deployer: Deployer, ImplFactory: any, args?: unknown[], opts?: DeployProxyOptions): Promise<Contract>;
-    (deployer: Deployer, ImplFactory: ContractFactory, opts?: DeployProxyOptions): Promise<Contract>;
-}
+import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
+import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
+import { DeployBeaconFunction } from './proxy-deployment/deploy-beacon';
+import { DeployBeaconProxyFunction } from './proxy-deployment/deploy-beacon-proxy';
+import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
+import { DeployFunction } from './proxy-deployment/deploy-proxy';
+import { ValidateImplementationOptions } from './utils/options';
 
-export interface Zgadija {
-    name: string;
-    version: string;
-}
+export type ValidateImplementationFunction = (
+    ImplFactory: zk.ContractFactory,
+    opts?: ValidateImplementationOptions
+) => Promise<void>;
 
 export interface HardhatUpgrades {
     deployProxy: DeployFunction;
     upgradeProxy: UpgradeFunction;
-    // validateImplementation: ValidateImplementationFunction;
-    // validateUpgrade: ValidateUpgradeFunction;
-    // deployImplementation: DeployImplementationFunction;
-    // prepareUpgrade: PrepareUpgradeFunction;
+    validateImplementation: ValidateImplementationFunction;
     deployBeacon: DeployBeaconFunction;
     deployBeaconProxy: DeployBeaconProxyFunction;
     upgradeBeacon: UpgradeBeaconFunction;
     deployProxyAdmin: DeployAdminFunction;
-    // forceImport: ForceImportFunction;
-    // silenceWarnings: typeof silenceWarnings;
-    // admin: {
-    //     getInstance: GetInstanceFunction;
-    //     changeProxyAdmin: ChangeAdminFunction;
-    //     transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
-    // };
-    // erc1967: {
-    //     getAdminAddress: (proxyAdress: string) => Promise<string>;
-    //     getImplementationAddress: (proxyAdress: string) => Promise<string>;
-    //     getBeaconAddress: (proxyAdress: string) => Promise<string>;
-    // };
-    // beacon: {
-    //     getImplementationAddress: (beaconAddress: string) => Promise<string>;
-    // };
+}
+
+export interface RunCompilerArgs {
+    input: SolcInput;
+    solcVersion: string;
 }
 
 export type ContractAddressOrInstance = string | { address: string };
+
+export type RecursivePartial<T> = { [k in keyof T]?: RecursivePartial<T[k]> };
+
+export type MaybeSolcOutput = RecursivePartial<SolcOutput>;

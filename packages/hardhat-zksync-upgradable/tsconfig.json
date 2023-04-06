@@ -8,7 +8,7 @@
     "target": "es2020",
     "rootDir": "./"
   },
-  
-  "include": ["src/**/*"],
-  "exclude": ["./dist", "./node_modules", "./test/fixture-projects"]
+
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["./dist", "./node_modules", "./test"]
 }

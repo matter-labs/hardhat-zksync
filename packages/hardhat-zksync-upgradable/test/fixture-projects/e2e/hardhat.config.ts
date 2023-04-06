@@ -1,19 +1,13 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
-import '@matterlabs/hardhat-zksync-upgradable';
-// import '@openzeppelin/upgrades-core';
-
+import '../../../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
         version: '1.3.7',
         compilerSource: 'binary',
-        settings: {
-            isSystem: true,
-        },
     },
-    defaultNetwork: 'hardhat',
     networks: {
         hardhat: {
             zksync: true,
