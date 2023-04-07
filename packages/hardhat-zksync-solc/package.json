@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-solc",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "description": "Hardhat plugin to compile smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-solc",
