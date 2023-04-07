@@ -5,11 +5,6 @@ const config: HardhatUserConfig = {
     zksolc: {
         version: '1.3.7',
         compilerSource: 'binary',
-        settings: {
-            optimizer: {
-                mode: 'z'
-            }
-        }
     },
     networks: {
         hardhat: {
