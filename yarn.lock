@@ -436,6 +436,15 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
 
+"@matterlabs/hardhat-zksync-solc@^0.3.16":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.16.tgz#dd8ed44f1a580f282794a15fee995f418b040158"
+  integrity sha512-gw46yyiCfj49I/nbUcOlnF5xE80WyeW/i8i9ouHom4KWJNt1kioQIwOPkN7aJURhXpJJxKSdeWBrQHLWTZDnTA==
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    chalk "4.1.2"
+    dockerode "^3.3.4"
+
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
   version "0.3.15"
   dependencies:
@@ -447,14 +456,12 @@
   version "0.0.1-beta.1"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^0.6.2"
-    "@openzeppelin/contracts" "^4.8.1"
     "@openzeppelin/contracts-upgradeable" "^4.8.1"
     "@openzeppelin/hardhat-upgrades" "^1.22.1"
     dockerode "^3.3.4"
-    ts-node "^10.9.1"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.1.7"
+  version "0.1.8"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -743,6 +750,11 @@
   resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.2.1.tgz#8057b43566a0e41abeb8142064a3c0d3f23dca86"
   integrity sha512-RHWYwnxryWR8hzRmU4Jm/q4gzvXpetUOJ4OPlwH2YARcDB+j79+yAYCwO0lN1SUOb4++oOTJEe6AWLEc42LIvg==
 
+"@nomiclabs/hardhat-ethers@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.2.3.tgz#b41053e360c31a32c2640c9a45ee981a7e603fe0"
+  integrity sha512-YhzPdzb612X591FOe68q+qXVXGG2ANZRvDo0RRUtimev85rCrAlv/TLMEZw5c+kq9AbzocLTVX/h2jVIFPL9Xg==
+
 "@nomiclabs/hardhat-etherscan@3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-etherscan/-/hardhat-etherscan-3.1.2.tgz#1f9af26ce7db437eb705d46a99996811b43d0e4a"
@@ -784,6 +796,11 @@
   version "4.8.1"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.1.tgz#709cfc4bbb3ca9f4460d60101f15dac6b7a2d5e4"
   integrity sha512-xQ6eUZl+RDyb/FiZe1h+U7qr/f4p/SrTSQcTPH2bjur3C5DbuW/zFgCU/b1P/xcIaEqJep+9ju4xDRi3rmChdQ==
+
+"@openzeppelin/contracts@^4.8.2":
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.2.tgz#d815ade0027b50beb9bcca67143c6bcc3e3923d6"
+  integrity sha512-kEUOgPQszC0fSYWpbh2kT94ltOJwj1qfT2DWo+zVttmGmf97JZ99LspePNaeeaLhCImaHVeBbjaQFZQn7+Zc5g==
 
 "@openzeppelin/hardhat-upgrades@^1.22.1":
   version "1.22.1"
@@ -4854,7 +4871,7 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-ts-node@^10.6.0, ts-node@^10.9.1:
+ts-node@^10.6.0:
   version "10.9.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
   integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==

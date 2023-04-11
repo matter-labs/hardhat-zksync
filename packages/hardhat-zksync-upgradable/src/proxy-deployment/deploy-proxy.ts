@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import type { Contract } from 'ethers';
 import * as zk from 'zksync-web3';
 import chalk from 'chalk';
 
@@ -15,7 +14,7 @@ import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
 
 export interface DeployFunction {
-    (wallet: zk.Wallet, artifact: ZkSyncArtifact, args?: unknown[], opts?: DeployProxyOptions): Promise<Contract>;
+    (wallet: zk.Wallet, artifact: ZkSyncArtifact, args?: unknown[], opts?: DeployProxyOptions): Promise<zk.Contract>;
 }
 
 export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction {

@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import type { Contract } from 'ethers';
 
 import { Deployment } from '@openzeppelin/upgrades-core';
 
@@ -13,7 +12,7 @@ import { importProxyContract } from '../utils/utils-general';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 
 export interface DeployBeaconFunction {
-    (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<Contract>;
+    (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<zk.Contract>;
 }
 
 export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFunction {

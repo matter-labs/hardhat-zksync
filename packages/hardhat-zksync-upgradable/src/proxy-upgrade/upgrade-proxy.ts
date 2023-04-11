@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { ethers, ContractFactory, Contract } from 'ethers';
+import { ethers } from 'ethers';
 import * as zk from 'zksync-web3';
 
 import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
@@ -18,7 +18,7 @@ export type UpgradeFunction = (
     proxy: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
     opts?: UpgradeProxyOptions
-) => Promise<Contract>;
+) => Promise<zk.Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
     return async function upgradeProxy(wallet, proxy, artifact, opts: UpgradeProxyOptions = {}) {
@@ -79,7 +79,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
     }
 }
 
-function encodeCall(factory: ContractFactory, call: UpgradeProxyOptions['call']): string | undefined {
+function encodeCall(factory: zk.ContractFactory, call: UpgradeProxyOptions['call']): string | undefined {
     if (!call) {
         return undefined;
     }

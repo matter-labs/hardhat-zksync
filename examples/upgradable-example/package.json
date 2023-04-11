@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.8.1",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "5.13.0",
@@ -23,7 +22,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "3.4.0",
-    "hardhat": "^2.12.6",
+    "hardhat": "^2.13.0",
     "prettier": "2.3.2",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
@@ -31,6 +30,7 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
+    "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-upgradable": "link:../../packages/hardhat-zksync-upgradable",
     "@openzeppelin/contracts-upgradeable": "^4.8.2",
     "zksync": "^0.13.1"

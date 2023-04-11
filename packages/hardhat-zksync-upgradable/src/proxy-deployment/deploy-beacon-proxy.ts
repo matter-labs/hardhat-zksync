@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { Contract, ContractFactory } from 'ethers';
 
 import {
     logWarning,
@@ -28,13 +27,13 @@ export interface DeployBeaconProxyFunction {
         artifact: ZkSyncArtifact,
         args?: unknown[],
         opts?: DeployBeaconProxyOptions
-    ): Promise<Contract>;
+    ): Promise<zk.Contract>;
     (
         wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
         artifact: ZkSyncArtifact,
         opts?: DeployBeaconProxyOptions
-    ): Promise<Contract>;
+    ): Promise<zk.Contract>;
 }
 
 export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction {
@@ -47,7 +46,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
     ) {
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
-        if (!(attachTo instanceof ContractFactory)) {
+        if (!(attachTo instanceof zk.ContractFactory)) {
             throw new UpgradesError(
                 `attachTo must specify a contract factory`,
                 () => `Include the contract factory for the beacon's current implementation in the attachTo parameter`

@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import type { Contract } from 'ethers';
 import * as zk from 'zksync-web3';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
@@ -15,7 +14,7 @@ export type UpgradeBeaconFunction = (
     artifact: ZkSyncArtifact,
     beacon: ContractAddressOrInstance,
     opts?: UpgradeBeaconOptions
-) => Promise<Contract>;
+) => Promise<zk.Contract>;
 
 export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconFunction {
     return async function upgradeBeacon(wallet, artifact, boxV2Implementation, opts: UpgradeBeaconOptions = {}) {
