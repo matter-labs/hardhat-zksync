@@ -444,16 +444,16 @@
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.1.7"
+  version "0.1.8"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
     dockerode "^3.3.4"
 
-"@matterlabs/zksync-contracts@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.5.2.tgz#1488c967f1d60ad9f00121a70d89a79f9a18dc01"
-  integrity sha512-4hLKAsCGlTa/vC0u/j0rgX2TT5OV8cALNcxG5ismi2TqoTvx7I0kQUPEPl/AZshTb652Y0SMKJc6ayLJgolr1g==
+"@matterlabs/zksync-contracts@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@matterlabs/zksync-contracts/-/zksync-contracts-0.6.1.tgz#39f061959d5890fd0043a2f1ae710f764b172230"
+  integrity sha512-+hucLw4DhGmTmQlXOTEtpboYCaOm/X2VJcWmnW4abNcOgQXEHX+mTxQrxEfPjIZT0ZE6z5FTUrOK9+RgUZwBMQ==
 
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
