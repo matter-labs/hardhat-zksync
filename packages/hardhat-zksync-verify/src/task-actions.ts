@@ -180,11 +180,7 @@ export async function verifyMinimumBuild(
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
             contractAddress: address,
-            sourceCode: getSolidityStandardJsonInput(
-                hre,
-                dependencyGraph.getResolvedFiles(),
-                contractInformation.solcVersion
-            ),
+            sourceCode: getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles()),
             codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: contractInformation.contractName,
             compilerSolcVersion: solcVersion,

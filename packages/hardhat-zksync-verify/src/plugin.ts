@@ -68,16 +68,12 @@ Instead, this name was received: ${contractFQN}`
     }
 }
 
-export function getSolidityStandardJsonInput(
-    hre: HardhatRuntimeEnvironment,
-    resolvedFiles: ResolvedFile[],
-    solcVersion: string
-): any {
+export function getSolidityStandardJsonInput(hre: HardhatRuntimeEnvironment, resolvedFiles: ResolvedFile[]): any {
     return {
         language: 'Solidity',
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
         ),
-        settings: hre.config.solidity.compilers.find((c) => c.version === solcVersion)?.settings || {},
+        settings: hre.config.zksolc.settings,
     };
 }
