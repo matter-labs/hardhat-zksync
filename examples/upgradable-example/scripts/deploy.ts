@@ -1,4 +1,4 @@
-import { HardhatRuntimeEnvironment, HttpNetworkConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { Wallet } from 'zksync-web3';
 

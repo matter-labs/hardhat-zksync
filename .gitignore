@@ -124,5 +124,5 @@ typechain-types
 cache
 artifacts
 
-**/.upgradable
+**/.upgradable/
 
