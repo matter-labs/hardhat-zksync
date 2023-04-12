@@ -17,7 +17,6 @@ import {
     NO_MATCHING_CONTRACT,
     COMPILER_VERSION_NOT_SUPPORTED,
     TASK_CHECK_VERIFICATION_STATUS,
-    SINGLE_FILE_CODE_FORMAT,
     JSON_INPUT_CODE_FORMAT,
 } from './constants';
 
@@ -181,7 +180,11 @@ export async function verifyMinimumBuild(
     if (minimumBuildContractBytecode === matchedBytecode) {
         const request: ZkSyncBlockExplorerVerifyRequest = {
             contractAddress: address,
-            sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles()),
+            sourceCode: getSolidityStandardJsonInput(
+                hre,
+                dependencyGraph.getResolvedFiles(),
+                contractInformation.solcVersion
+            ),
             codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: contractInformation.contractName,
             compilerSolcVersion: solcVersion,
@@ -246,5 +249,5 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     if (isValidVerification?.errorExists()) {
         throw new ZkSyncVerifyPluginError(isValidVerification.getError());
     }
-    console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
+    if (isValidVerification) console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
 }
