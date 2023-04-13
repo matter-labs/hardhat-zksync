@@ -1,17 +1,9 @@
 name: Publish verify plugin
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        required: true
-        type: choice
-        description: package tag
-        default: latest
-        options:
-          - latest
-          - next
-          - beta
+  push:
+    tags:
+      - '@matterlabs/hardhat-zksync-verify@*'
 
 jobs:
   publish:
@@ -29,6 +21,23 @@ jobs:
         run: yarn && yarn build
 
       - name: Publish
-        run: npm publish @matterlabs/hardhat-zksync-verify --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-verify --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        run: |
+          if [[ ${{ github.ref }} == *"beta"* ]]; then
+            echo "Publishing package with beta tag"
+            npm publish @matterlabs/hardhat-zksync-verify --tag beta --workspace=packages/hardhat-zksync-verify --access=public
+          else
+            echo "Publishing package with latest tag"
+            npm publish @matterlabs/hardhat-zksync-verify --tag latest --workspace=packages/hardhat-zksync-verify --access=public
+          fi
+
+      - name: Create github release from tags
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ ${{ github.ref }} != *"beta"* ]]; then
+            node scripts/create-release-from-tags/run.js --package hardhat-zksync-verify
+          else
+            echo "Skipping github release creation for beta tag"
+          fi
