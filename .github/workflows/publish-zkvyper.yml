@@ -41,3 +41,20 @@ jobs:
           else
             echo "Skipping github release creation for beta tag"
           fi
+
+      - name: Create the MM Message
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh -R matter-labs/hardhat-zksync release view "${GITHUB_REF_NAME}" --json tagName,publishedAt,body --template \
+          '
+          ## {{.tagName}} {{.publishedAt}}
+          
+          {{.body}}
+          ' > ./changes.md
+          echo "{\"text\":\"$(cat ./changes.md)\"}" > mattermost.json
+
+      - uses: mattermost/action-mattermost-notify@master
+        env:
+          MATTERMOST_USERNAME: "Hardhat Release Bot"
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_URL }}
