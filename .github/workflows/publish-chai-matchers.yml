@@ -48,7 +48,6 @@ jobs:
         run: |
           gh -R matter-labs/hardhat-zksync-test release view "$GITHUB_REF_NAME" --json tagName,body --template '## {{.tagName}} {{"\n"}}{{.body}}' > ./release_info
           jq --null-input --arg text "$(cat ./release_info)" '{"text": $text}' > mattermost.json
-          cat mattermost.json
 
       - uses: mattermost/action-mattermost-notify@master
         env:
