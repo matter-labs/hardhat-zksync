@@ -1,7 +1,6 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-upgradable';
-// import '@openzeppelin/upgrades-core';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -10,22 +9,21 @@ const config: HardhatUserConfig = {
         version: '1.3.7',
         compilerSource: 'binary',
         settings: {
-            isSystem: true,
+            optimizer: {
+                enabled: true,
+            },
         },
     },
-    defaultNetwork: 'hardhat',
+    defaultNetwork: 'zkSyncNetwork',
     networks: {
-        hardhat: {
-            zksync: true,
-        },
         goerli: {
             zksync: false,
-            url: '',
+            url: 'http://localhost:8545',
         },
-        testnet: {
+        zkSyncNetwork: {
             zksync: true,
             ethNetwork: 'goerli',
-            url: 'https://zksync2-testnet.zksync.dev',
+            url: 'http://localhost:3050',
         },
     },
     solidity: {

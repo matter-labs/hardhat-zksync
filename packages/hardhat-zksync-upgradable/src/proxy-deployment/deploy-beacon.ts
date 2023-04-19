@@ -10,6 +10,7 @@ import * as zk from 'zksync-web3';
 import { deployBeaconImpl } from './deploy-impl';
 import { importProxyContract } from '../utils/utils-general';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
+import chalk from 'chalk';
 
 export interface DeployBeaconFunction {
     (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<zk.Contract>;
@@ -21,7 +22,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
 
         opts.provider = wallet.provider;
         const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
-        console.log('Beacon impl deployed at', impl);
+        console.info(chalk.green('Beacon impl deployed at', impl));
 
         const upgradeableBeaconContract = await importProxyContract(
             '..',

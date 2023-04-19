@@ -1,11 +1,11 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { Wallet } from 'zksync-web3';
 import * as zk from 'zksync-web3';
+import chalk from 'chalk';
+
+const hre = require('hardhat');
 
 async function main() {
-    const hre: HardhatRuntimeEnvironment = require('hardhat');
-
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
     const deployer = new Deployer(hre, zkWallet);
@@ -23,8 +23,8 @@ async function main() {
     // upgrade beacon
 
     const boxV2Implementation = await deployer.loadArtifact('BoxV2');
-    await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, boxV2Implementation, beacon.address);
-    console.log('Successfully upgraded beacon Box to BoxV2 on address: ', beacon.address);
+    await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, beacon.address, boxV2Implementation);
+    console.info(chalk.green('Successfully upgraded beacon Box to BoxV2 on address: ', beacon.address));
 
     const attachTo = new zk.ContractFactory(
         boxV2Implementation.abi,
@@ -38,7 +38,7 @@ async function main() {
     // wait some time before the next call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const value = await upgradedBox.retrieve();
-    console.log('New box value is', value);
+    console.info(chalk.cyan('New box value is', value));
 }
 
 main();

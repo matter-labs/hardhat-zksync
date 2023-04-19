@@ -29,24 +29,17 @@ export function withDefaults(opts: UpgradeOptions = {}): Required<UpgradeOptions
     };
 }
 
-export type GetTxResponse = {
-    getTxResponse?: boolean;
-};
-
 type Initializer = {
     initializer?: string | false;
 };
 
 export type DeployBeaconProxyOptions = ProxyKindOption & Initializer;
 export type DeployBeaconOptions = StandaloneOptions;
-export type DeployImplementationOptions = StandaloneOptions & GetTxResponse;
+export type DeployImplementationOptions = StandaloneOptions;
 export type DeployProxyAdminOptions = DeployOpts;
 export type DeployProxyOptions = StandaloneOptions & Initializer;
-export type ForceImportOptions = ProxyKindOption;
-export type PrepareUpgradeOptions = UpgradeOptions & GetTxResponse;
 export type UpgradeBeaconOptions = UpgradeOptions;
 export type UpgradeProxyOptions = UpgradeOptions & {
     call?: { fn: string; args?: unknown[] } | string;
 };
 export type ValidateImplementationOptions = StandaloneValidationOptions;
-export type ValidateUpgradeOptions = ValidationOptions;

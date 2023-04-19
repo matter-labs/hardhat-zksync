@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { useEnvironment } from './helpers';
 import { ContractFactory } from 'zksync-web3';
+import chalk from 'chalk';
 
 describe('Upgradable plugin tests', async function () {
     describe('Transparent upgradable proxy deployment', async function () {
@@ -8,7 +9,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should deploy proxy and contract implementation', async function () {
             const contractName = 'Box';
-            console.log('Deploying ' + contractName + '...');
+            console.info(chalk.yellow('Deploying ' + contractName + '...'));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -16,18 +17,17 @@ describe('Upgradable plugin tests', async function () {
             });
 
             await box.deployed();
-            console.log(contractName + ' deployed to:', box.address);
 
             box.connect(this.deployer.zkWallet);
             const value = await box.retrieve();
-            console.log('Box value is: ', value.toNumber());
+            console.info(chalk.green('Box value is: ', value.toNumber()));
             assert.equal(value.toNumber(), 42);
         });
 
         it('Should update proxy contract implementation', async function () {
             const contractName1 = 'Box';
             const contractName2 = 'BoxV2';
-            console.log('Deploying ' + contractName1 + '...');
+            console.info(chalk.yellow('Deploying ' + contractName1 + '...'));
 
             const contract = await this.deployer.loadArtifact(contractName1);
             const box1Proxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -36,7 +36,7 @@ describe('Upgradable plugin tests', async function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName2);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, box1Proxy.address, BoxV2);
-            console.log('Successfully upgraded Box to BoxV2');
+            console.info(chalk.green('Successfully upgraded Box to BoxV2'));
 
             box2.connect(this.deployer.zkWallet);
             const value = await box2.retrieve();
@@ -48,11 +48,10 @@ describe('Upgradable plugin tests', async function () {
 
             const beacon = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
             await beacon.deployed();
-            console.log('Beacon deployed to:', beacon.address);
+            console.info(chalk.green('Beacon deployed to:', beacon.address));
 
             const box = await this.env.zkUpgrades.deployBeaconProxy(this.deployer.zkWallet, beacon, contract, [42]);
             await box.deployed();
-            console.log(contractName + ' proxy deployed to:', box.address);
 
             box.connect(this.deployer.zkWallet);
             const value = await box.retrieve();
@@ -64,7 +63,7 @@ describe('Upgradable plugin tests', async function () {
 
             const beacon = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
             await beacon.deployed();
-            console.log('Beacon deployed to:', beacon.address);
+            console.info(chalk.green('Beacon deployed to:', beacon.address));
 
             const beaconProxy = await this.env.zkUpgrades.deployBeaconProxy(this.deployer.zkWallet, beacon, contract, [
                 42,
@@ -74,8 +73,7 @@ describe('Upgradable plugin tests', async function () {
             const implContractName = 'BoxV2';
             const boxV2Implementation = await this.deployer.loadArtifact(implContractName);
 
-            await this.env.zkUpgrades.upgradeBeacon(this.deployer.zkWallet, boxV2Implementation, beacon.address);
-            console.log('Successfully upgraded beacon Box to BoxV2 on address: ', beacon.address);
+            await this.env.zkUpgrades.upgradeBeacon(this.deployer.zkWallet, beacon.address, boxV2Implementation);
 
             const attachTo = new ContractFactory(
                 boxV2Implementation.abi,

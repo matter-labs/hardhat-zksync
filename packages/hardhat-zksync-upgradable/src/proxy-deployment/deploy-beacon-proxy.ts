@@ -19,6 +19,7 @@ import { deploy, DeployTransaction } from './deploy';
 import { importProxyContract } from '../utils/utils-general';
 import { BEACON_PROXY_JSON } from '../constants';
 import { Manifest } from '../core/manifest';
+import chalk from 'chalk';
 
 export interface DeployBeaconProxyFunction {
     (
@@ -89,7 +90,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             { kind: opts.kind },
             await deploy(beaconProxyFactory, beaconAddress, data)
         );
-        console.log('Beacon proxy deployed at: ', proxyDeployment.address);
+        console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
 
         await manifest.addProxy(proxyDeployment);
 

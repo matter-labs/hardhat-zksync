@@ -1,4 +1,3 @@
-import '@nomiclabs/hardhat-ethers';
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
 import './type-extensions';
@@ -9,7 +8,7 @@ import { TASK_COMPILE_SOLIDITY_COMPILE, TASK_COMPILE_SOLIDITY_COMPILE_SOLC } fro
 
 import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
-import { isFullSolcOutput } from './utils/utils-general';
+import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 
 extendEnvironment((hre) => {
@@ -39,7 +38,7 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
 
     const { output, solcBuild } = await hre.run(TASK_COMPILE_SOLIDITY_COMPILE_SOLC, args);
 
-    if (isFullSolcOutput(output)) {
+    if (isFullZkSolcOutput(output)) {
         const decodeSrc = solcInputOutputDecoder(args.input, output);
         const validations = validate(output, decodeSrc, args.solcVersion);
         await writeValidations(hre, validations);

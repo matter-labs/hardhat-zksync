@@ -42,10 +42,6 @@ export function getInitializerData(
     }
 }
 
-export function makeNonEnumerable<O>(obj: O, key: keyof O): void {
-    Object.defineProperty(obj, key, { enumerable: false });
-}
-
 export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
     const res: Partial<Pick<T, K>> = {};
     for (const k of keys) {
@@ -61,16 +57,8 @@ export function mapValues<V, W>(obj: Record<string, V>, fn: (value: V) => W): Re
     }
     return res as Record<string, W>;
 }
-export function assertUnreachable(_: never): never {
-    assert(false);
-}
 
-export function assert(p: unknown): asserts p {
-    if (!p) {
-        throw new Error('An unexpected condition occurred. Please report this at https://zpl.in/upgrades/report');
-    }
-}
-export function isFullSolcOutput(output: MaybeSolcOutput | undefined): boolean {
+export function isFullZkSolcOutput(output: MaybeSolcOutput | undefined): boolean {
     if (output?.contracts == undefined || output?.sources == undefined) {
         return false;
     }

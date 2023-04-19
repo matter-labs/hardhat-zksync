@@ -63,13 +63,13 @@ export async function readValidations(
 
 export class ValidationsCacheNotFound extends Error {
     constructor() {
-        super('Validations cache not found. Recompile with `hardhat compile --force`');
+        super('Validations cache not found.');
     }
 }
 
 export class ValidationsCacheOutdated extends Error {
     constructor() {
-        super('Validations cache is outdated. Recompile with `hardhat compile --force`');
+        super('Validations cache is outdated.`');
     }
 }
 

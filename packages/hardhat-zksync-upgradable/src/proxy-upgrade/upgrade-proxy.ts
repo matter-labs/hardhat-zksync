@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { ethers } from 'ethers';
 import * as zk from 'zksync-web3';
+import { TransactionResponse } from 'zksync-web3/src/types';
 
 import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
 
@@ -12,6 +12,7 @@ import { getContractAddress, importProxyContract } from '../utils/utils-general'
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { PROXY_ADMIN_JSON, TUP_JSON } from '../constants';
+import chalk from 'chalk';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
@@ -21,26 +22,30 @@ export type UpgradeFunction = (
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
-    return async function upgradeProxy(wallet, proxy, artifact, opts: UpgradeProxyOptions = {}) {
+    return async function upgradeProxy(wallet, proxy, newImplementationArtifact, opts: UpgradeProxyOptions = {}) {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
 
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
-        const { impl: nextImpl } = await deployProxyImpl(hre, factory, opts, proxyAddress);
+        const newImplementationFactory = new zk.ContractFactory(
+            newImplementationArtifact.abi,
+            newImplementationArtifact.bytecode,
+            wallet
+        );
+        const { impl: nextImpl } = await deployProxyImpl(hre, newImplementationFactory, opts, proxyAddress);
 
         const upgradeTo = await getUpgrader(proxyAddress, wallet);
-        const call = encodeCall(factory, opts.call);
+        const call = encodeCall(newImplementationFactory, opts.call);
         const upgradeTx = await upgradeTo(nextImpl, call);
 
-        console.log('Contract successfully upgraded to ', nextImpl, ' with tx ', upgradeTx.hash);
+        console.info(chalk.green('Contract successfully upgraded to ', nextImpl, ' with tx ', upgradeTx.hash));
 
-        const inst = factory.attach(proxyAddress);
+        const inst = newImplementationFactory.attach(proxyAddress);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = upgradeTx;
         return inst;
     };
 
-    type Upgrader = (nextImpl: string, call?: string) => Promise<ethers.providers.TransactionResponse>;
+    type Upgrader = (nextImpl: string, call?: string) => Promise<TransactionResponse>;
 
     async function getUpgrader(proxyAddress: string, wallet: zk.Wallet): Promise<Upgrader> {
         const provider = wallet.provider as zk.Provider;
@@ -49,10 +54,15 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const adminBytecode = await getCode(provider, adminAddress);
 
         if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const transparentUpgradeableProxyFactory = await importProxyContract(
+            const transparentUpgradeableProxyContract = await importProxyContract(
                 '..',
                 hre.config.zksolc.version,
                 TUP_JSON
+            );
+            const transparentUpgradeableProxyFactory = new zk.ContractFactory(
+                transparentUpgradeableProxyContract.abi,
+                transparentUpgradeableProxyContract.bytecode,
+                wallet
             );
             const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
 

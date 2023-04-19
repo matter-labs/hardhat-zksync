@@ -8,6 +8,7 @@ import type { StorageLayout } from '@openzeppelin/upgrades-core/src/storage';
 import { mapValues, pick } from '../utils/utils-general';
 import * as zk from 'zksync-web3';
 import { getChainId, networkNames } from './provider';
+import { MANIFEST_DEFAULT_DIR } from '../constants';
 
 const currentManifestVersion = '3.2';
 
@@ -37,24 +38,6 @@ function defaultManifest(): ManifestData {
     };
 }
 
-const MANIFEST_DEFAULT_DIR = '.upgradable';
-
-function getSuffix(chainId: number, devInstanceMetadata?: DevInstanceMetadata) {
-    if (devInstanceMetadata !== undefined) {
-        return `${chainId}-${devInstanceMetadata.instanceId}`;
-    } else {
-        return `${chainId}`;
-    }
-}
-
-interface DevInstanceMetadata {
-    networkName: string;
-    instanceId: string;
-    forkedNetwork?: {
-        chainId: number;
-    };
-}
-
 export class Manifest {
     readonly chainId: number;
     readonly file: string;
@@ -70,9 +53,9 @@ export class Manifest {
         return new Manifest(chainId);
     }
 
-    constructor(chainId: number, devInstanceMetadata?: DevInstanceMetadata, osTmpDir?: string) {
+    constructor(chainId: number) {
         this.chainId = chainId;
-        this.chainIdSuffix = getSuffix(chainId, devInstanceMetadata);
+        this.chainIdSuffix = `${chainId}`;
 
         this.dir = MANIFEST_DEFAULT_DIR;
         const networkName = networkNames[chainId];

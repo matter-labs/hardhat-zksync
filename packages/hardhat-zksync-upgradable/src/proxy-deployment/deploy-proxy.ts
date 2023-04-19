@@ -34,14 +34,14 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
-        console.log('Implementation contract was deployed to ' + impl);
+        console.info(chalk.green('Implementation contract was deployed to ' + impl));
 
         const contractInterface = factory.interface;
         const data = getInitializerData(contractInterface, args, opts.initializer);
 
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
-                console.log(
+                console.info(
                     chalk.yellow(`A proxy admin was previously deployed on this network`, [
                         `This is not natively used with the current kind of proxy ('uups').`,
                         `Changes to the admin will have no effect on this new proxy.`,
@@ -66,13 +66,13 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
             case 'transparent': {
                 const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
-                console.log('Admin was deployed to ' + adminAddress);
+                console.info(chalk.green('Admin was deployed to ' + adminAddress));
 
                 const TUPContract = await importProxyContract('..', hre.config.zksolc.version, TUP_JSON);
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(TUPFactory, impl, adminAddress, data));
-                console.log(`Transparent proxy was deployed to ${proxyDeployment.address}`);
+                console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
 
                 break;
             }

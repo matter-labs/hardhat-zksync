@@ -1,6 +1,5 @@
 import {
     getStorageLayout,
-    getUnlinkedBytecode,
     getVersion,
     StorageLayout,
     UpgradesError,
@@ -8,17 +7,17 @@ import {
     Version,
 } from '@openzeppelin/upgrades-core';
 
-import ethers from 'ethers';
 import * as zk from 'zksync-web3';
-import { FormatTypes } from 'ethers/lib/utils';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
-import { DeployProxyOptions, GetTxResponse, UpgradeOptions, withDefaults } from '../utils/options';
+import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
 import { validateBeaconImpl, validateProxyImpl } from '../validations/validate-impl';
 import { readValidations } from '../validations/validations';
 
 import { deploy } from './deploy';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
+import { TransactionResponse } from 'zksync-web3/src/types';
+import { FORMAT_TYPE_MINIMAL } from '../constants';
 
 export interface DeployData {
     provider: zk.Provider;
@@ -60,7 +59,7 @@ async function deployImpl(
     hre: HardhatRuntimeEnvironment,
     deployData: DeployData,
     factory: zk.ContractFactory,
-    opts: UpgradeOptions & GetTxResponse
+    opts: UpgradeOptions
 ): Promise<any> {
     const layout = deployData.layout;
 
@@ -68,7 +67,7 @@ async function deployImpl(
         deployData.version,
         deployData.provider,
         async () => {
-            const abi = factory.interface.format(FormatTypes.minimal) as string[];
+            const abi = factory.interface.format(FORMAT_TYPE_MINIMAL) as string[];
             const attemptDeploy = async () => {
                 if (opts.useDeployedImplementation) {
                     throw new UpgradesError(
@@ -88,22 +87,12 @@ async function deployImpl(
         opts
     );
 
-    let txResponse;
-    if (opts.getTxResponse) {
-        // This code is used to support the legacy API, where the txResponse is returned
-        if ('deployTransaction' in deployment) {
-            txResponse = deployment.deployTransaction;
-        } else if (deployment.txHash !== undefined) {
-            txResponse = hre.ethers.provider.getTransaction(deployment.txHash);
-        }
-    }
-
-    return { impl: deployment.address, kind: opts.kind, txResponse };
+    return { impl: deployment.address, kind: opts.kind };
 }
 
 interface DeployedBeaconImpl {
     impl: string;
-    txResponse?: ethers.providers.TransactionResponse;
+    txResponse?: TransactionResponse;
 }
 
 export async function deployBeaconImpl(

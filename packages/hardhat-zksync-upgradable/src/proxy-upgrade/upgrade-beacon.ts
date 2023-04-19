@@ -8,22 +8,32 @@ import { UpgradeBeaconOptions } from '../utils/options';
 import { deployBeaconImpl } from '../proxy-deployment/deploy-impl';
 import { getContractAddress } from '../utils/utils-general';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
+import chalk from 'chalk';
 
 export type UpgradeBeaconFunction = (
     wallet: zk.Wallet,
-    artifact: ZkSyncArtifact,
     beacon: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
     opts?: UpgradeBeaconOptions
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconFunction {
-    return async function upgradeBeacon(wallet, artifact, boxV2Implementation, opts: UpgradeBeaconOptions = {}) {
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    return async function upgradeBeacon(
+        wallet,
+        beaconImplementation,
+        newImplementationArtifact,
+        opts: UpgradeBeaconOptions = {}
+    ) {
+        const factory = new zk.ContractFactory(
+            newImplementationArtifact.abi,
+            newImplementationArtifact.bytecode,
+            wallet
+        );
 
         opts.provider = wallet.provider;
-        const beaconImplementationAddress = getContractAddress(boxV2Implementation);
+        const beaconImplementationAddress = getContractAddress(beaconImplementation);
         const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);
-        console.log('New beacon impl deployed at', nextImpl);
+        console.info(chalk.green('New beacon impl deployed at', nextImpl));
 
         const upgradeableBeaconContract = await importProxyContract(
             '..',
