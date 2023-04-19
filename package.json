@@ -9,6 +9,10 @@
     "examples/*"
   ],
   "devDependencies": {
+    "@changesets/cli": "^2.26.1",
+    "@npmcli/promise-spawn": "^6.0.2",
+    "commander": "^10.0.0",
+    "get-monorepo-packages": "^1.2.0",
     "prettier": "^2.7.1",
     "typescript": "^4.8.3",
     "wsrun": "^5.2.2"
@@ -18,7 +22,9 @@
     "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-toolbox",
     "clean": "wsrun --exclude-missing clean",
     "lint": "wsrun --exclude-missing --stages lint",
-    "lint:fix": "wsrun --exclude-missing --stages lint:fix"
+    "lint:fix": "wsrun --exclude-missing --stages lint:fix",
+    "test:release-script": "mocha scripts/test/tests.js"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "type": "module"
 }

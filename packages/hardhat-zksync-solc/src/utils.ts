@@ -1,18 +1,29 @@
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
-import { SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS, SOLCJS_EXECUTABLE_CODE } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
 import { CompilerOutputSelection } from './types';
 import crypto from 'crypto';
 
-export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection): CompilerOutputSelection {
+export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection, zkCompilerVersion: string): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
+    const versionComponents = getVersionComponents(zkCompilerVersion);
+    let supportedOutputSelections: string[];
+
+    switch (true) {
+        case versionComponents[0] <= 1 && versionComponents[1] <= 3 && versionComponents[2] <= 5:
+            supportedOutputSelections = ZKSOLC_COMPILERS_SELECTOR_MAP['1.3.5'];
+            break;
+        default:
+            supportedOutputSelections = [...ZKSOLC_COMPILERS_SELECTOR_MAP['1.3.5'], 'metadata', 'userdoc', 'devdoc'];
+            break;
+    }
 
     for (const [file, contractSelection] of Object.entries(outputSelection)) {
         filteredOutputSelection[file] = {};
 
         for (const [contract, outputs] of Object.entries(contractSelection)) {
             filteredOutputSelection[file][contract] = outputs.filter((output) =>
-                SUPPORTED_ZKSOLC_OUTPUT_SELECTIONS.includes(output)
+                supportedOutputSelections.includes(output)
             );
         }
     }
