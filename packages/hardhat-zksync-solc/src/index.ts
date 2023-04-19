@@ -68,7 +68,7 @@ extendEnvironment((hre) => {
             compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer } };
 
             // zkSolc supports only a subset of solc output selections
-            compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection);
+            compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, hre.config.zksolc.version);
         });
     }
 });
