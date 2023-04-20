@@ -1,6 +1,6 @@
-# zkSync 2.0 deploy environment example
+# zkSync 2.0 upgradable example
 
-This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to compile and deploy upgadable smart contracts in zkSync 2.0 using the Hardhat plugins.
 
 ## Prerequisites
 
@@ -14,7 +14,10 @@ You should only change the zkSync network configuration.
 
 `hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `goerli` used as the underlying layer 1 network:
 ```ts
-import "@matterlabs/hardhat-zksync-deploy";
+import '@matterlabs/hardhat-zksync-solc';
+import '@matterlabs/hardhat-zksync-deploy';
+import '@matterlabs/hardhat-zksync-upgradable';
+
 import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
@@ -33,6 +36,8 @@ const config: HardhatUserConfig = {
 export default config;
 ```
 
+If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
+
 ## Usage
 
 Before using plugins, you need to build them first
@@ -46,16 +51,17 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/vyper-example` folder.
+# Run the following in `examples/upgradable-example` folder.
 yarn
 yarn hardhat compile
-yarn hardhat deploy-zksync
 ```
 
 - `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
-- `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
-    - To run a specific script, add the `--script` argument, e.g. `--script 001_deploy.ts`.
-    - To run on a specific zkSync network, use standard hardhat `--network` argument, e.g. `--network zkTestnet`
-    (with `zkTestnet` network specified in the `hardhat.config` networks section, with the `zksync` flag set to `true` and `ethNetwork` specified).
 
-If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
+To run a specific end-to-end script in the `scripts` folder, use the following command
+
+```
+yarn hardhad run ./scipts/<SCRIPT_NAME>
+```
+
+- Example: `yarn hardhat run ./scripts/deploy-box-proxy.ts`
