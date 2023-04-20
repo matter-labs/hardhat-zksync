@@ -1,5 +1,5 @@
 {
-  "name": "@matterlabs/hardhat-zksync-upgradable-alpha.1",
+  "name": "@matterlabs/hardhat-zksync-upgradable",
   "version": "0.0.1-alpha.1",
   "description": "Hardhat plugin to deploy and update upgradable smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
@@ -40,7 +40,7 @@
     "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
     "@matterlabs/hardhat-zksync-solc": "^0.3.16",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1",
+    "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
@@ -60,8 +60,8 @@
     "typescript": "^4.6.2"
   },
   "peerDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.8.1",
-    "@openzeppelin/hardhat-upgrades": "1.22.1"
+    "@openzeppelin/contracts-upgradeable": "^4.8.3",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1"
   },
   "prettier": {
     "tabWidth": 4,

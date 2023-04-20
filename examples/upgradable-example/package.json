@@ -14,7 +14,7 @@
     "clean": "rimraf dist"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts": "^4.8.3",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "5.13.0",
@@ -32,7 +32,7 @@
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-upgradable": "link:../../packages/hardhat-zksync-upgradable",
-    "@openzeppelin/contracts-upgradeable": "^4.8.2",
+    "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "zksync": "^0.13.1"
   },
   "prettier": {
