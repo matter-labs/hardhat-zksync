@@ -1,0 +1,14 @@
+{
+  "extends": "../../config/typescript/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "target": "es2020",
+    "rootDir": "./"
+  },
+
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["./dist", "./node_modules", "./test"]
+}
