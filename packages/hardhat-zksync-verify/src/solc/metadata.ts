@@ -65,8 +65,7 @@ export function decodeSolcMetadata(bytecode: Buffer) {
     // The documentation for decodeFirst mentions the `required` option even though
     // the type information is missing it.
     // See http://hildjj.github.io/node-cbor/Decoder.html#.decodeFirst
-    const options: cbor.DecoderOptions = { required: true } as any;
-    const decoded = decodeFirstSync(metadataPayload, options);
+    const decoded = decodeFirstSync(metadataPayload, { required: true });
     return {
         decoded,
         metadataSectionSizeInBytes: metadataSectionLength,
