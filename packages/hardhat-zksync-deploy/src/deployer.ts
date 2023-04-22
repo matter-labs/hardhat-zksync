@@ -44,7 +44,7 @@ export class Deployer {
     } {
         const networkName = network.name;
 
-        if (!network.zksync) {
+        if (!network.config.zksync) {
             throw new ZkSyncDeployPluginError(
                 `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`
             );
