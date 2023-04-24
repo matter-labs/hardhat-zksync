@@ -18,6 +18,8 @@ import {
     COMPILER_VERSION_NOT_SUPPORTED,
     TASK_CHECK_VERIFICATION_STATUS,
     JSON_INPUT_CODE_FORMAT,
+    UNSUCCESSFUL_VERIFICATION_MESSAGE,
+    UNSUCCESSFUL_VERIFICATION_ID,
 } from './constants';
 
 import {
@@ -70,12 +72,16 @@ export async function verify(
         librariesModule: args.librariesModule,
     });
 
-    return hre.run(TASK_VERIFY_VERIFY, {
+    const verificationId = await hre.run(TASK_VERIFY_VERIFY, {
         address: args.address,
         constructorArguments: constructorArguments,
         contract: args.contract,
         libraries,
     });
+
+    if (verificationId === UNSUCCESSFUL_VERIFICATION_ID) {
+        console.log(chalk.red(UNSUCCESSFUL_VERIFICATION_MESSAGE(hre.network.name, args.address)));
+    }
 }
 
 export async function getCompilerVersions(
@@ -94,7 +100,7 @@ export async function verifyContract(
     { address, contract: contractFQN, constructorArguments, libraries }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
-) {
+): Promise<number> {
     if (!hre.network.zksync) {
         return await runSuper({ address, contractFQN, constructorArguments, libraries });
     }
@@ -142,7 +148,7 @@ export async function verifyContract(
     }
     const compilerZksolcVersion = 'v' + minimumBuild.output.zk_version;
 
-    await hre.run(TASK_VERIFY_VERIFY_MINIMUM_BUILD, {
+    return await hre.run(TASK_VERIFY_VERIFY_MINIMUM_BUILD, {
         minimumBuild,
         contractInformation,
         address,
@@ -162,7 +168,7 @@ export async function verifyMinimumBuild(
         deployArgumentsEncoded,
     }: TaskArguments,
     hre: HardhatRuntimeEnvironment
-) {
+): Promise<number> {
     const minimumBuildContractBytecode =
         minimumBuild.output.contracts[contractInformation.sourceName][contractInformation.contractName].evm.bytecode
             .object;
@@ -195,7 +201,11 @@ export async function verifyMinimumBuild(
         console.info(chalk.cyan('Your verification ID is: ' + verificationId));
 
         await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+
+        return verificationId;
     }
+
+    return UNSUCCESSFUL_VERIFICATION_ID;
 }
 
 export async function getContractInfo(
