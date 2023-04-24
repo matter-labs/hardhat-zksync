@@ -12,7 +12,7 @@ export interface ZkSolcConfig {
             enabled?: boolean;
             [key: string]: any;
         };
-        // Wheter to remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
+        // Remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
         metadata?: {
             bytecodeHash?: 'none';
         },
