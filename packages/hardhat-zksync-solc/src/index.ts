@@ -67,6 +67,13 @@ extendEnvironment((hre) => {
             // Override the default solc optimizer settings with zksolc optimizer settings.
             compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer } };
 
+            // Remove metadata settings from solidity settings.
+            delete compiler.settings.metadata;
+            // Override the solc metadata settings with zksolc metadata settings.
+            if (hre.config.zksolc.settings.metadata) {
+                compiler.settings.metadata = { ...hre.config.zksolc.settings.metadata };
+            }
+
             // zkSolc supports only a subset of solc output selections
             compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, hre.config.zksolc.version);
         });

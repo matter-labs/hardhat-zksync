@@ -4,7 +4,10 @@
 
 ### Patch Changes
 
+- c185b99: 'verify:verify' task now returns verification id
 - 892c1de: Updated the usage of cbor's DecoderOptions type
+- Updated dependencies [c9c91f7]
+  - @matterlabs/hardhat-zksync-solc@0.3.17
 
 ## 0.1.5
 
