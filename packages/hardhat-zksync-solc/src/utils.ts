@@ -1,8 +1,9 @@
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
 import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
-import { CompilerOutputSelection } from './types';
+import { CompilerOutputSelection, ZkSolcConfig } from './types';
 import crypto from 'crypto';
+import { SolcConfig } from 'hardhat/types';
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection, zkCompilerVersion: string): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -29,6 +30,27 @@ export function filterSupportedOutputSelections(outputSelection: CompilerOutputS
     }
 
     return filteredOutputSelection;
+}
+
+export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig) {
+    const [major, minor] = getVersionComponents(compiler.version);
+    if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
+        console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
+    }
+    let settings = compiler.settings || {};
+
+    // Override the default solc optimizer settings with zksolc optimizer settings.
+    compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
+
+    // Remove metadata settings from solidity settings.
+    delete compiler.settings.metadata;
+    // Override the solc metadata settings with zksolc metadata settings.
+    if (zksolc.settings.metadata) {
+        compiler.settings.metadata = { ...zksolc.settings.metadata };
+    }
+
+    // zkSolc supports only a subset of solc output selections
+    compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, zksolc.version);
 }
 
 export function zeroxlify(hex: string): string {
