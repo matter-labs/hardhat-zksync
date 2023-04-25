@@ -13,23 +13,17 @@ import {
     TASK_VERIFY_GET_MINIMUM_BUILD,
     TASK_VERIFY_GET_COMPILER_VERSIONS,
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
-    TASK_VERIFY_VERIFY_MINIMUM_BUILD,
     NO_MATCHING_CONTRACT,
     COMPILER_VERSION_NOT_SUPPORTED,
     TASK_CHECK_VERIFICATION_STATUS,
     JSON_INPUT_CODE_FORMAT,
     UNSUCCESSFUL_VERIFICATION_MESSAGE,
     UNSUCCESSFUL_VERIFICATION_ID,
+    UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
 } from './constants';
 
-import {
-    encodeArguments,
-    executeVeificationWithRetry,
-    removeMultipleSubstringOccurrences,
-    retrieveContractBytecode,
-} from './utils';
+import { encodeArguments, executeVeificationWithRetry, retrieveContractBytecode } from './utils';
 import { Build, Libraries } from './types';
-import { ZkSyncBlockExplorerVerifyRequest } from './zksync-block-explorer/verify-contract-request';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
@@ -37,7 +31,7 @@ import chalk from 'chalk';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, flattenContractFile, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
+import { checkContractName, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
 import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 
 export async function verify(
@@ -148,27 +142,6 @@ export async function verifyContract(
     }
     const compilerZksolcVersion = 'v' + minimumBuild.output.zk_version;
 
-    return await hre.run(TASK_VERIFY_VERIFY_MINIMUM_BUILD, {
-        minimumBuild,
-        contractInformation,
-        address,
-        compilerZksolcVersion,
-        solcVersion,
-        deployArgumentsEncoded,
-    });
-}
-
-export async function verifyMinimumBuild(
-    {
-        minimumBuild,
-        contractInformation,
-        address,
-        compilerZksolcVersion,
-        solcVersion,
-        deployArgumentsEncoded,
-    }: TaskArguments,
-    hre: HardhatRuntimeEnvironment
-): Promise<number> {
     const minimumBuildContractBytecode =
         minimumBuild.output.contracts[contractInformation.sourceName][contractInformation.contractName].evm.bytecode
             .object;
@@ -177,35 +150,36 @@ export async function verifyMinimumBuild(
         contractInformation.compilerOutput.contracts[contractInformation.sourceName][contractInformation.contractName]
             .evm.bytecode.object;
 
-    const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-        sourceNames: [contractInformation.sourceName],
-    });
-
     contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
 
-    if (minimumBuildContractBytecode === matchedBytecode) {
-        const request: ZkSyncBlockExplorerVerifyRequest = {
-            contractAddress: address,
-            sourceCode: getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles()),
-            codeFormat: JSON_INPUT_CODE_FORMAT,
-            contractName: contractInformation.contractName,
-            compilerSolcVersion: solcVersion,
-            compilerZksolcVersion: compilerZksolcVersion,
-            constructorArguments: deployArgumentsEncoded,
-            optimizationUsed: true,
-        };
+    let request = {
+        contractAddress: address,
+        sourceCode: contractInformation.compilerInput,
+        codeFormat: JSON_INPUT_CODE_FORMAT,
+        contractName: contractInformation.contractName,
+        compilerSolcVersion: solcVersion,
+        compilerZksolcVersion: compilerZksolcVersion,
+        constructorArguments: deployArgumentsEncoded,
+        optimizationUsed: true,
+    };
 
-        const response = await verifyContractRequest(request, hre.network.verifyURL);
-        const verificationId = parseInt(response.message);
-
-        console.info(chalk.cyan('Your verification ID is: ' + verificationId));
-
-        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
-
-        return verificationId;
+    if (minimumBuildContractBytecode !== matchedBytecode) {
+        console.log(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE);
+    } else {
+        const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+            sourceNames: [contractInformation.sourceName],
+        });
+        request.sourceCode = getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles());
     }
 
-    return UNSUCCESSFUL_VERIFICATION_ID;
+    const response = await verifyContractRequest(request, hre.network.verifyURL);
+    const verificationId = parseInt(response.message);
+
+    console.info(chalk.cyan('Your verification ID is: ' + verificationId));
+
+    await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+
+    return verificationId;
 }
 
 export async function getContractInfo(

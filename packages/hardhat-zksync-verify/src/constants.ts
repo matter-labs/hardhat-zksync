@@ -72,3 +72,8 @@ export const UNSUCCESSFUL_VERIFICATION_MESSAGE = (networkName: string, address: 
     `Failed to verify contract on network '${networkName}' with address ${address}`;
 
 export const UNSUCCESSFUL_VERIFICATION_ID = -1;
+
+export const UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE = `Compiling your contract excluding unrelated contracts did not produce identical bytecode.
+Trying again with the full solc input used to compile and deploy it.
+This means that unrelated contracts may be displayed on the zksync block explorer.
+`;
