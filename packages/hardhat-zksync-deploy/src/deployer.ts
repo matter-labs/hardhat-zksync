@@ -223,9 +223,9 @@ export class Deployer {
         const factoryDeps: string[] = [];
         for (const dependencyHash in artifact.factoryDeps) {
             const dependencyContract = artifact.factoryDeps[dependencyHash];
-            const dependencyArtifact = await this.loadArtifact(dependencyContract);
-            factoryDeps.push(dependencyArtifact.bytecode);
             if (!visited.has(dependencyContract)) {
+                const dependencyArtifact = await this.loadArtifact(dependencyContract);
+                factoryDeps.push(dependencyArtifact.bytecode);
                 visited.add(dependencyContract);
                 const transitiveDeps = await this.extractFactoryDepsRecursive(dependencyArtifact, visited);
                 factoryDeps.push(...transitiveDeps);
