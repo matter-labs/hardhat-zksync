@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [48e2699]
+  - @matterlabs/hardhat-zksync-solc@0.3.17
+
 ## 0.1.6
 
 ### Patch Changes
