@@ -17,12 +17,11 @@ import {
     zeroxlify,
     getZksolcPath,
     getZksolcUrl,
-    filterSupportedOutputSelections,
     pluralize,
-    getVersionComponents,
     isURL,
     saltFromUrl,
     generateSolcJSExecutableCode,
+    updateCompilerConf,
 } from './utils';
 import { spawnSync } from 'child_process';
 import { download } from 'hardhat/internal/util/download';
@@ -57,26 +56,11 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
-        hre.config.solidity.compilers.forEach((compiler) => {
-            const [major, minor] = getVersionComponents(compiler.version);
-            if (major === 0 && minor < 8 && hre.config.zksolc.settings.forceEvmla) {
-                console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
-            }
-            let settings = compiler.settings || {};
-
-            // Override the default solc optimizer settings with zksolc optimizer settings.
-            compiler.settings = { ...settings, optimizer: { ...hre.config.zksolc.settings.optimizer } };
-
-            // Remove metadata settings from solidity settings.
-            delete compiler.settings.metadata;
-            // Override the solc metadata settings with zksolc metadata settings.
-            if (hre.config.zksolc.settings.metadata) {
-                compiler.settings.metadata = { ...hre.config.zksolc.settings.metadata };
-            }
-
-            // zkSolc supports only a subset of solc output selections
-            compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, hre.config.zksolc.version);
-        });
+        // Update compilers config.
+        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc));
+        for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+            updateCompilerConf(compiler, hre.config.zksolc);
+        }
     }
 });
 
