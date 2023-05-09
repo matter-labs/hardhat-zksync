@@ -170,7 +170,7 @@ export async function verifyContract(
         });
         request.sourceCode = getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles());
     } else {
-        console.log(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE);
+        console.info(chalk.red(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE));
     }
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
