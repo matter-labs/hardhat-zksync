@@ -17,8 +17,6 @@ import {
     COMPILER_VERSION_NOT_SUPPORTED,
     TASK_CHECK_VERIFICATION_STATUS,
     JSON_INPUT_CODE_FORMAT,
-    UNSUCCESSFUL_VERIFICATION_MESSAGE,
-    UNSUCCESSFUL_VERIFICATION_ID,
     UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
 } from './constants';
 
@@ -66,16 +64,12 @@ export async function verify(
         librariesModule: args.librariesModule,
     });
 
-    const verificationId = await hre.run(TASK_VERIFY_VERIFY, {
+    await hre.run(TASK_VERIFY_VERIFY, {
         address: args.address,
         constructorArguments: constructorArguments,
         contract: args.contract,
         libraries,
     });
-
-    if (verificationId === UNSUCCESSFUL_VERIFICATION_ID) {
-        console.log(chalk.red(UNSUCCESSFUL_VERIFICATION_MESSAGE(hre.network.name, args.address)));
-    }
 }
 
 export async function getCompilerVersions(
@@ -170,13 +164,13 @@ export async function verifyContract(
         optimizationUsed: true,
     };
 
-    if (minimumBuildContractBytecode !== matchedBytecode) {
-        console.log(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE);
-    } else {
+    if (minimumBuildContractBytecode === matchedBytecode) {
         const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
             sourceNames: [contractInformation.sourceName],
         });
         request.sourceCode = getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles());
+    } else {
+        console.log(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE);
     }
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
