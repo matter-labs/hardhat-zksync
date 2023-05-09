@@ -87,7 +87,14 @@ export async function getCompilerVersions(
         return await runSuper();
     }
 
-    return hre.config.solidity.compilers.map((c) => c.version);
+    const compilerVersions = hre.config.solidity.compilers.map((c) => c.version);
+    if (hre.config.solidity.overrides !== undefined) {
+        for (const { version } of Object.values(hre.config.solidity.overrides)) {
+            compilerVersions.push(version);
+        }
+    }
+
+    return compilerVersions;
 }
 
 export async function verifyContract(
