@@ -29,6 +29,8 @@ export const ZKSOLC_COMPILERS_SELECTOR_MAP = {
     ]
 };
 
+export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
+
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Cannot find zksolc compiler version info file';
 export const COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR = 'Could not download zksolc compiler version info. Please check your internet connection and try again.';
 

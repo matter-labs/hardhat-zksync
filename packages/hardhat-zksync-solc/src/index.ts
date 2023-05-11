@@ -24,12 +24,9 @@ import {
     generateSolcJSExecutableCode,
     updateCompilerConf,
 } from './utils';
-import { spawnSync } from 'child_process';
-import { download } from 'hardhat/internal/util/download';
 import fs from 'fs';
 import chalk from 'chalk';
 import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
-import { ZkSyncSolcPluginError } from './errors';
 import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 

@@ -13,6 +13,7 @@ import {
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, 
     COMPILER_VERSION_RANGE_ERROR, 
     COMPILER_VERSION_WARNING, 
+    DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
     ZKSOLC_BIN_REPOSITORY, 
     ZKSOLC_BIN_VERSION_INFO 
 } from "../constants";
@@ -33,44 +34,47 @@ export class ZksolcCompilerDownloader {
         configCompilerPath: string,
         compilersDir: string,
     ): Promise<ZksolcCompilerDownloader> {
-        const compilerDownloader = new ZksolcCompilerDownloader(version, configCompilerPath, compilersDir);
+        if (!ZksolcCompilerDownloader._instance) {
+            ZksolcCompilerDownloader._instance = new ZksolcCompilerDownloader(version, configCompilerPath, compilersDir);
 
-        let compilerVersionInfo = await compilerDownloader._getCompilerVersionInfo();
-        if (compilerVersionInfo === undefined || (await compilerDownloader._shouldDownloadCompilerVersionInfo())) {
-            try {
-                await compilerDownloader._downloadCompilerVersionInfo();
-            } catch (e: any) {
-                throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
+            let compilerVersionInfo = await ZksolcCompilerDownloader._instance._getCompilerVersionInfo();
+            if (compilerVersionInfo === undefined || (await ZksolcCompilerDownloader._instance._shouldDownloadCompilerVersionInfo())) {
+                try {
+                    await ZksolcCompilerDownloader._instance._downloadCompilerVersionInfo();
+                } catch (e: any) {
+                    throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
+                }
+                compilerVersionInfo = await ZksolcCompilerDownloader._instance._getCompilerVersionInfo();
             }
-            compilerVersionInfo = await compilerDownloader._getCompilerVersionInfo();
+
+            if (compilerVersionInfo === undefined) {
+                throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
+            }
+
+            if (version === 'latest' || version === compilerVersionInfo.latest) {
+                ZksolcCompilerDownloader._instance._version = compilerVersionInfo.latest;
+            } else if (!isVersionInRange(version, compilerVersionInfo)) {
+                throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+            } else {
+                console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
+            };
         }
 
-        if (compilerVersionInfo === undefined) {
-            throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
-        }
-
-        if (version === 'latest' || version === compilerVersionInfo.latest) {
-            compilerDownloader._version = compilerVersionInfo.latest;
-        } else if (!isVersionInRange(version, compilerVersionInfo)) {
-            throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
-        } else {
-            console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
-        };
-
-        return compilerDownloader;
+        return ZksolcCompilerDownloader._instance;
     }
 
-    public static defaultCompilerVersionInfoCachePeriod = 3_600_000_00;
+    private static _instance: ZksolcCompilerDownloader;
+    public static defaultCompilerVersionInfoCachePeriod = DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD;
     private readonly _mutex = new Mutex();
     private _isCompilerPathURL: boolean;
 
     /** 
      * Use `getDownloaderWithVersionValidated` to create an instance of this class.
      */
-    constructor(
+    private constructor(
         private _version: string,
         private readonly _configCompilerPath: string,
-        private readonly _compilersDir: string,
+        private readonly _compilersDirectory: string,
         private readonly _compilerVersionInfoCachePeriodMs = ZksolcCompilerDownloader.defaultCompilerVersionInfoCachePeriod,
         private readonly _downloadFunction: typeof download = download
     ) {
@@ -85,7 +89,7 @@ export class ZksolcCompilerDownloader {
             salt = saltFromUrl(this._configCompilerPath);
         }
 
-        return path.join(this._compilersDir, 'zksolc', `zksolc-v${this._version}${salt ? '-' : ''}${salt}`);
+        return path.join(this._compilersDirectory, 'zksolc', `zksolc-v${this._version}${salt ? '-' : ''}${salt}`);
     }
 
     public async isCompilerDownloaded(): Promise<boolean> {
@@ -106,7 +110,7 @@ export class ZksolcCompilerDownloader {
     }
 
     private _getCompilerVersionInfoPath(): string {
-        return path.join(this._compilersDir, 'zksolc', 'compilerVersionInfo.json');
+        return path.join(this._compilersDirectory, 'zksolc', 'compilerVersionInfo.json');
     }
 
     public async downloadCompiler(): Promise<void> {
