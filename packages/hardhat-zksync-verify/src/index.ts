@@ -10,18 +10,10 @@ import {
     TASK_VERIFY_VERIFY,
     TESTNET_VERIFY_URL,
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
-    TASK_VERIFY_VERIFY_MINIMUM_BUILD,
     TASK_CHECK_VERIFICATION_STATUS,
 } from './constants';
 
-import {
-    getCompilerVersions,
-    verify,
-    verifyContract,
-    getContractInfo,
-    verifyMinimumBuild,
-    checkVerificationStatus,
-} from './task-actions';
+import { getCompilerVersions, verify, verifyContract, getContractInfo, checkVerificationStatus } from './task-actions';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
@@ -32,8 +24,6 @@ task(TASK_VERIFY, 'Verifies contract on Ethereum and zkSync networks').setAction
 subtask(TASK_VERIFY_VERIFY).setAction(verifyContract);
 
 subtask(TASK_VERIFY_GET_COMPILER_VERSIONS).setAction(getCompilerVersions);
-
-subtask(TASK_VERIFY_VERIFY_MINIMUM_BUILD).setAction(verifyMinimumBuild);
 
 subtask(TASK_VERIFY_GET_CONTRACT_INFORMATION).setAction(getContractInfo);
 
