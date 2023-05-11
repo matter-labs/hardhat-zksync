@@ -20,7 +20,7 @@ export function getReturnDataFromError(error: any): string {
     // some property that doesn't exist on Error
     error = error as any;
 
-    const returnData = error.error?.error?.data?.message;
+    const returnData = error.data ?? error.error?.error?.error?.data;
 
     if (returnData === undefined || typeof returnData !== 'string') {
         throw error;
@@ -31,98 +31,66 @@ export function getReturnDataFromError(error: any): string {
 
 type DecodedReturnData =
     | {
-          kind: 'Error';
-          reason: string;
-      }
+        kind: 'Error';
+        reason: string;
+    }
     | {
-          kind: 'Empty';
-      }
+        kind: 'Empty';
+    }
     | {
-          kind: 'Panic';
-          code: BigNumber;
-          description: string;
-      }
+        kind: 'Panic';
+        code: BigNumber;
+        description: string;
+    }
     | {
-          kind: 'Custom';
-          id: string;
-          data: string;
-      };
+        kind: 'Custom';
+        id: string;
+        data: string;
+    };
 
 type FuncSelectorWithData = {
     funcSelector: string;
     data: string;
 };
 
-export function getFuncSelectorWithData(message: string): FuncSelectorWithData {
-    const extracted = message.match(/0x\w*/g);
-
-    if (extracted == null || !message.includes('Error function_selector')) {
-        // Remove dot at the end of the reason
-        message = message.substring(0, message.length - 1);
-        // Remove substring: `Cannot estimate transaction: `
-        const reason = message.substring(29);
-
-        return {
-            funcSelector: ERROR_STRING_PREFIX,
-            data: reason,
-        };
-    }
-
-    return {
-        funcSelector: extracted[0],
-        data: extracted[1],
-    };
-}
-
-export function encodeFuncSelectorWithData(message: string): string {
-    let { funcSelector, data } = getFuncSelectorWithData(message);
-
-    if (funcSelector === ERROR_STRING_PREFIX) {
-        const { defaultAbiCoder: abi } = require('@ethersproject/abi');
-
-        data = abi.encode(['string'], [data]);
-    }
-
-    if (data.startsWith('0x')) {
-        data = data.slice('0x'.length);
-    }
-
-    return funcSelector + data;
-}
-
 export function decodeReturnData(returnData: string): DecodedReturnData {
-    const { funcSelector, data } = getFuncSelectorWithData(returnData);
-
-    if (funcSelector === '0x') {
-        return {
-            kind: 'Empty',
-        };
-    } else if (funcSelector === ERROR_STRING_PREFIX) {
-        return {
-            kind: 'Error',
-            reason: data,
-        };
-    } else if (funcSelector === PANIC_CODE_PREFIX) {
-        const { defaultAbiCoder: abi } = require('@ethersproject/abi');
-        let code: BigNumber;
+    const { defaultAbiCoder: abi } = require("@ethersproject/abi");
+    if (returnData === "0x") {
+        return { kind: "Empty" };
+    } else if (returnData.startsWith(ERROR_STRING_PREFIX)) {
+        const encodedReason = returnData.slice(ERROR_STRING_PREFIX.length);
+        let reason: string;
         try {
-            code = abi.decode(['uint256'], data)[0];
+            reason = abi.decode(["string"], `0x${encodedReason}`)[0];
         } catch (e: any) {
-            throw new ZkSyncChaiMatchersPluginError(data, 'uint256', e);
+            throw new ZkSyncChaiMatchersPluginError(encodedReason, "string", e);
         }
 
-        const description = panicErrorCodeToReason(code) ?? 'unknown panic code';
+        return {
+            kind: "Error",
+            reason,
+        };
+    } else if (returnData.startsWith(PANIC_CODE_PREFIX)) {
+        const encodedReason = returnData.slice(PANIC_CODE_PREFIX.length);
+        let code: BigNumber;
+        try {
+            code = abi.decode(["uint256"], `0x${encodedReason}`)[0];
+        } catch (e: any) {
+            throw new ZkSyncChaiMatchersPluginError(encodedReason, "uint256", e);
+        }
+
+        const description = panicErrorCodeToReason(code) ?? "unknown panic code";
 
         return {
-            kind: 'Panic',
+            kind: "Panic",
             code,
             description,
         };
     }
 
     return {
-        kind: 'Custom',
-        id: funcSelector,
-        data: data,
+        kind: "Custom",
+        id: returnData.slice(0, 10),
+        data: `0x${returnData.slice(10)}`,
     };
 }
