@@ -1,11 +1,5 @@
-import { PROXY_ARTIFACTS_PATH } from '../constants';
-
 import { Interface } from '@ethersproject/abi';
 import { MaybeSolcOutput } from '../interfaces';
-
-export async function importProxyContract(pathToSrc: string, compilerVersion: string, proxyName: string) {
-    return await import(pathToSrc + PROXY_ARTIFACTS_PATH + 'zksolc-' + compilerVersion + '/' + proxyName);
-}
 
 export type ContractAddressOrInstance = string | { address: string };
 

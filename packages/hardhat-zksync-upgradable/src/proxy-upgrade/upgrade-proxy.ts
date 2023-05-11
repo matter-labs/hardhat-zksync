@@ -8,11 +8,12 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { getContractAddress, importProxyContract } from '../utils/utils-general';
+import { getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { PROXY_ADMIN_JSON, TUP_JSON } from '../constants';
 import chalk from 'chalk';
+import assert from 'assert';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
@@ -54,11 +55,10 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const adminBytecode = await getCode(provider, adminAddress);
 
         if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const transparentUpgradeableProxyContract = await importProxyContract(
-                '..',
-                hre.config.zksolc.version,
-                TUP_JSON
-            );
+            const TUPPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(TUP_JSON));
+            assert(TUPPaths.length === 1, 'Transparent upgradeable proxy artifact not found');
+            const transparentUpgradeableProxyContract = await import(TUPPaths[0]);
+
             const transparentUpgradeableProxyFactory = new zk.ContractFactory(
                 transparentUpgradeableProxyContract.abi,
                 transparentUpgradeableProxyContract.bytecode,
@@ -70,12 +70,18 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         } else {
             const manifest = await Manifest.forNetwork(provider);
 
-            const proxyAdminContract = await importProxyContract('..', hre.config.zksolc.version, PROXY_ADMIN_JSON);
+            const proxyAdminPaths = (await hre.artifacts.getArtifactPaths()).filter((x) =>
+                x.includes(PROXY_ADMIN_JSON)
+            );
+            assert(proxyAdminPaths.length === 1, 'Proxy admin artifact not found');
+            const proxyAdminContract = await import(proxyAdminPaths[0]);
+
             const proxyAdminFactory = new zk.ContractFactory(
                 proxyAdminContract.abi,
                 proxyAdminContract.bytecode,
                 wallet
             );
+
             const admin = proxyAdminFactory.attach(adminAddress);
             const manifestAdmin = await manifest.getAdmin();
 

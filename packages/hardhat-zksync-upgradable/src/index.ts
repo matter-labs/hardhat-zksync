@@ -4,12 +4,17 @@ import './type-extensions';
 
 import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 
-import { TASK_COMPILE_SOLIDITY_COMPILE, TASK_COMPILE_SOLIDITY_COMPILE_SOLC } from 'hardhat/builtin-tasks/task-names';
+import {
+    TASK_COMPILE_SOLIDITY_COMPILE,
+    TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
+    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
+} from 'hardhat/builtin-tasks/task-names';
 
 import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
+import { PROXY_SOURCE_NAMES } from './constants';
 
 extendEnvironment((hre) => {
     hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
@@ -45,4 +50,10 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
     }
 
     return { output, solcBuild };
+});
+
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
+    const sourceNames = await runSuper();
+
+    return [...sourceNames, ...PROXY_SOURCE_NAMES];
 });

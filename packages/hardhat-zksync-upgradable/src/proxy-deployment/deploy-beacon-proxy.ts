@@ -16,10 +16,10 @@ import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-ge
 import { DeployBeaconProxyOptions } from '../utils/options';
 import { getInitializerData } from '../utils/utils-general';
 import { deploy, DeployTransaction } from './deploy';
-import { importProxyContract } from '../utils/utils-general';
-import { BEACON_PROXY_JSON } from '../constants';
+import { BEACON_PROXY_JSON, TUP_JSON } from '../constants';
 import { Manifest } from '../core/manifest';
 import chalk from 'chalk';
+import assert from 'assert';
 
 export interface DeployBeaconProxyFunction {
     (
@@ -79,7 +79,10 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             ]);
         }
 
-        const beaconProxyContract = await importProxyContract('..', hre.config.zksolc.version, BEACON_PROXY_JSON);
+        const beaconProxyPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(BEACON_PROXY_JSON));
+        assert(beaconProxyPaths.length === 1, 'Beacon proxy artifact not found');
+        const beaconProxyContract = await import(beaconProxyPaths[0]);
+
         const beaconProxyFactory = new zk.ContractFactory(
             beaconProxyContract.abi,
             beaconProxyContract.bytecode,
