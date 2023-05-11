@@ -714,11 +714,12 @@
     chalk "4.1.2"
 
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.3.16"
+  version "0.3.17"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
     dockerode "^3.3.4"
+    fs-extra "^7.0.1"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
   version "0.0.1-alpha.1"
@@ -1311,6 +1312,13 @@
   integrity sha512-SYRN5FF/qmwpxUT6snJP5D8k0wgoUKOGVs625XvpRJOOUi6s//UYI4F0tbyE3OmzpI70Fo1+aqpzX27zCrInww==
   dependencies:
     "@types/docker-modem" "*"
+    "@types/node" "*"
+
+"@types/fs-extra@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.1.0.tgz#2a325ef97901504a3828718c390d34b8426a10a1"
+  integrity sha512-AInn5+UBFIK9FK5xc9yP5e3TQSPNNgjHByqYcj9g5elVBnDQcQL7PlO1CIRy2gWlbwK7UPYqi7vRvFA44dCmYQ==
+  dependencies:
     "@types/node" "*"
 
 "@types/is-ci@^3.0.0":
