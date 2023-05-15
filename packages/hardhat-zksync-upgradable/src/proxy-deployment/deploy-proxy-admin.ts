@@ -13,9 +13,9 @@ export interface DeployAdminFunction {
 
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
-        const proxyAdminPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(PROXY_ADMIN_JSON));
-        assert(proxyAdminPaths.length == 1, 'Proxy admin artifact not found');
-        const proxyAdminContract = await import(proxyAdminPaths[0]);
+        const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(PROXY_ADMIN_JSON));
+        assert(proxyAdminPath, 'Proxy admin artifact not found');
+        const proxyAdminContract = await import(proxyAdminPath);
 
         const adminFactory = new zk.ContractFactory(proxyAdminContract.abi, proxyAdminContract.bytecode, wallet);
         return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);

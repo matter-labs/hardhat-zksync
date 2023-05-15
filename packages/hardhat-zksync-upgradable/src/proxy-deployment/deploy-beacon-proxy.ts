@@ -79,9 +79,11 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             ]);
         }
 
-        const beaconProxyPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(BEACON_PROXY_JSON));
-        assert(beaconProxyPaths.length === 1, 'Beacon proxy artifact not found');
-        const beaconProxyContract = await import(beaconProxyPaths[0]);
+        const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((path) =>
+            path.includes(BEACON_PROXY_JSON)
+        );
+        assert(beaconProxyPath, 'Beacon proxy artifact not found');
+        const beaconProxyContract = await import(beaconProxyPath);
 
         const beaconProxyFactory = new zk.ContractFactory(
             beaconProxyContract.abi,

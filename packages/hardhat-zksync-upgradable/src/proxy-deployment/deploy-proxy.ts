@@ -58,11 +58,11 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             case 'uups': {
-                const ERC1967ProxyPaths = (await hre.artifacts.getArtifactPaths()).filter((x) =>
+                const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
                     x.includes(ERC1967_PROXY_JSON)
                 );
-                assert(ERC1967ProxyPaths.length === 1, 'ERC1967Proxy artifact not found');
-                const proxyContract = await import(ERC1967ProxyPaths[0]);
+                assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
+                const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(proxyFactory, impl, data));
                 break;
@@ -72,9 +72,9 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
                 console.info(chalk.green('Admin was deployed to ' + adminAddress));
 
-                const TUPPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(TUP_JSON));
-                assert(TUPPaths.length === 1, 'TUP artifact not found');
-                const TUPContract = await import(TUPPaths[0]);
+                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(TUP_JSON));
+                assert(TUPPath, 'TUP artifact not found');
+                const TUPContract = await import(TUPPath);
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(TUPFactory, impl, adminAddress, data));

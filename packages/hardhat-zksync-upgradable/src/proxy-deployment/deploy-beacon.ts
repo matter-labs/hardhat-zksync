@@ -24,11 +24,11 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
         console.info(chalk.green('Beacon impl deployed at', impl));
 
-        const upgradableBeaconPaths = (await hre.artifacts.getArtifactPaths()).filter((x) =>
+        const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
             x.includes(UPGRADABLE_BEACON_JSON)
         );
-        assert(upgradableBeaconPaths.length == 1, 'Upgradable beacon artifact not found');
-        const upgradeableBeaconContract = await import(upgradableBeaconPaths[0]);
+        assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
+        const upgradeableBeaconContract = await import(upgradableBeaconPath);
 
         const upgradeableBeaconFactory = new zk.ContractFactory(
             upgradeableBeaconContract.abi,
