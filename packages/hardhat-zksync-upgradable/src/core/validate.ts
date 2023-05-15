@@ -4,12 +4,16 @@ import { SrcDecoder } from '@openzeppelin/upgrades-core/src/src-decoder';
 import { findAll } from 'solidity-ast/utils';
 import { Node } from 'solidity-ast/node';
 import type { ContractDefinition } from 'solidity-ast';
+import { getFunctionSignature } from './function';
+import { astDereferencer } from './ast-dereferencer';
 
 export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVersion?: string): any {
     const validation: any = {};
     const fromId: Record<number, string> = {};
     const inheritIds: Record<string, number[]> = {};
     const libraryIds: Record<string, number[]> = {};
+
+    const deref = astDereferencer(solcOutput);
 
     for (const source in solcOutput.contracts) {
         for (const contractName in solcOutput.contracts[source]) {
@@ -46,6 +50,10 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
             if (key in validation && bytecode !== undefined) {
                 validation[key].src = decodeSrc(contractDef);
                 validation[key].errors = [...getConstructorErrors(contractDef, decodeSrc)];
+
+                validation[key].methods = [...findAll('FunctionDefinition', contractDef)].map((fnDef) =>
+                    getFunctionSignature(fnDef, deref)
+                );
             }
         }
     }

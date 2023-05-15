@@ -1,5 +1,6 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
+import '@openzeppelin/upgrades-core';
 import '@matterlabs/hardhat-zksync-upgradable';
 
 import { HardhatUserConfig } from 'hardhat/config';
@@ -16,6 +17,9 @@ const config: HardhatUserConfig = {
     },
     defaultNetwork: 'zkSyncNetwork',
     networks: {
+        hardhat: {
+            zksync: false,
+        },
         goerli: {
             zksync: false,
             url: 'http://localhost:8545',
