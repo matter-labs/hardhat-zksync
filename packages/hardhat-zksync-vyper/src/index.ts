@@ -19,6 +19,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
 import { defaultZkVyperConfig } from './constants';
+import { checkSupportedVyperVersions } from './utils';
 
 extendConfig((config, userConfig) => {
     config.zkvyper = { ...defaultZkVyperConfig, ...userConfig?.zkvyper };
@@ -27,6 +28,8 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
+    checkSupportedVyperVersions(hre.config.vyper);
+
     if (hre.network.config.zksync) {
         hre.network.zksync = hre.network.config.zksync;
 
