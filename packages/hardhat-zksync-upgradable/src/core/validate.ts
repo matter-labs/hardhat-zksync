@@ -19,12 +19,7 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
         for (const contractName in solcOutput.contracts[source]) {
             const bytecode = solcOutput.contracts[source][contractName].evm.bytecode;
 
-            // if bytecode does not exist, it means the contract is abstract so skip it
-            if (bytecode === null) {
-                continue;
-            }
-
-            const version = bytecode.object === '' ? undefined : getVersion(bytecode.object);
+            const version = bytecode === null ? undefined : getVersion(bytecode.object);
 
             validation[getFullyQualifiedName(source, contractName)] = {
                 src: contractName,
@@ -48,12 +43,14 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
             const bytecode = solcOutput.contracts[source][contractDef.name]?.evm.bytecode;
 
             if (key in validation && bytecode !== undefined) {
+                inheritIds[key] = contractDef.linearizedBaseContracts.slice(1);
+
                 validation[key].src = decodeSrc(contractDef);
                 validation[key].errors = [...getConstructorErrors(contractDef, decodeSrc)];
 
-                validation[key].methods = [...findAll('FunctionDefinition', contractDef)].map((fnDef) =>
-                    getFunctionSignature(fnDef, deref)
-                );
+                validation[key].methods = [...findAll('FunctionDefinition', contractDef)]
+                    .filter((fnDef) => ['external', 'public'].includes(fnDef.visibility))
+                    .map((fnDef) => getFunctionSignature(fnDef, deref));
             }
         }
     }

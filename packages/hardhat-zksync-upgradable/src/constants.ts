@@ -1,3 +1,4 @@
+export const ITUP_JSON = '/ITransparentUpgradeableProxy.json';
 export const TUP_JSON = '/TransparentUpgradeableProxy.json';
 export const BEACON_PROXY_JSON = '/BeaconProxy.json';
 export const UPGRADABLE_BEACON_JSON = '/UpgradeableBeacon.json';

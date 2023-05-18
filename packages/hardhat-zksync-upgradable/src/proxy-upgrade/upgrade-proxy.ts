@@ -11,7 +11,7 @@ import { UpgradeProxyOptions } from '../utils/options';
 import { getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
-import { PROXY_ADMIN_JSON, TUP_JSON } from '../constants';
+import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
 import chalk from 'chalk';
 import assert from 'assert';
 
@@ -55,7 +55,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const adminBytecode = await getCode(provider, adminAddress);
 
         if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const TUPPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(TUP_JSON));
+            const TUPPaths = (await hre.artifacts.getArtifactPaths()).filter((x) => x.includes(ITUP_JSON));
             assert(TUPPaths.length === 1, 'Transparent upgradeable proxy artifact not found');
             const transparentUpgradeableProxyContract = await import(TUPPaths[0]);
 

@@ -37,11 +37,11 @@ extendEnvironment((hre) => {
     });
 });
 
-subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
+subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSuper) => {
     const { solcInputOutputDecoder } = await import('@openzeppelin/upgrades-core');
     const { writeValidations } = await import('./validations/validations');
 
-    const { output, solcBuild } = await hre.run(TASK_COMPILE_SOLIDITY_COMPILE_SOLC, args);
+    const { output, solcBuild } = await runSuper();
 
     if (isFullZkSolcOutput(output)) {
         const decodeSrc = solcInputOutputDecoder(args.input, output);
