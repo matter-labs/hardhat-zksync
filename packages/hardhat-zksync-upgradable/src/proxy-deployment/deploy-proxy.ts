@@ -43,10 +43,9 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
                 console.info(
-                    chalk.yellow(`A proxy admin was previously deployed on this network`, [
-                        `This is not natively used with the current kind of proxy ('uups').`,
-                        `Changes to the admin will have no effect on this new proxy.`,
-                    ])
+                    chalk.yellow(
+                        `A proxy admin was previously deployed on this network\nThis is not natively used with the current kind of proxy ('uups')\nChanges to the admin will have no effect on this new proxy`
+                    )
                 );
             }
         }

@@ -6,7 +6,6 @@ import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-
 
 import {
     TASK_COMPILE_SOLIDITY_COMPILE,
-    TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
     TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
 } from 'hardhat/builtin-tasks/task-names';
 
@@ -15,6 +14,7 @@ import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 import { PROXY_SOURCE_NAMES } from './constants';
+import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
 
 extendEnvironment((hre) => {
     hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
@@ -33,6 +33,11 @@ extendEnvironment((hre) => {
             deployBeaconProxy: makeDeployBeaconProxy(hre),
             upgradeBeacon: makeUpgradeBeacon(hre),
             deployProxyAdmin: makeDeployProxyAdmin(hre),
+            admin: {
+                getInstance: makeGetInstanceFunction(hre),
+                changeProxyAdmin: makeChangeProxyAdmin(hre),
+                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+            },
         };
     });
 });

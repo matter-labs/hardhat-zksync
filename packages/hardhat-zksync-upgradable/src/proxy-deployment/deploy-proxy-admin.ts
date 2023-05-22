@@ -13,11 +13,15 @@ export interface DeployAdminFunction {
 
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
-        const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(PROXY_ADMIN_JSON));
-        assert(proxyAdminPath, 'Proxy admin artifact not found');
-        const proxyAdminContract = await import(proxyAdminPath);
-
-        const adminFactory = new zk.ContractFactory(proxyAdminContract.abi, proxyAdminContract.bytecode, wallet);
+        const adminFactory = await getAdminFactory(hre, wallet);
         return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);
     };
+}
+
+export async function getAdminFactory(hre: HardhatRuntimeEnvironment, wallet: zk.Wallet): Promise<zk.ContractFactory> {
+    const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(PROXY_ADMIN_JSON));
+    assert(proxyAdminPath, 'Proxy admin artifact not found');
+    const proxyAdminContract = await import(proxyAdminPath);
+
+    return new zk.ContractFactory(proxyAdminContract.abi, proxyAdminContract.bytecode, wallet);
 }
