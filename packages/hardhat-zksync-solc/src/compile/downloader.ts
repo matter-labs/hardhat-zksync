@@ -87,12 +87,19 @@ export class ZksolcCompilerDownloader {
         if (this._isCompilerPathURL) {
             // hashed url used as a salt to avoid name collisions
             salt = saltFromUrl(this._configCompilerPath);
+        } else if (this._configCompilerPath) {
+            return this._configCompilerPath;
         }
 
         return path.join(this._compilersDirectory, 'zksolc', `zksolc-v${this._version}${salt ? '-' : ''}${salt}`);
     }
 
-    public async isCompilerDownloaded(): Promise<boolean> {
+    public async isCompilerDownloaded(): Promise<boolean> {        
+        if (this._configCompilerPath && !this._isCompilerPathURL) {
+            await this._verifyCompiler();
+            return true;
+        }
+        
         const compilerPath = this.getCompilerPath();
         return fsExtra.pathExists(compilerPath);
     }
@@ -117,7 +124,7 @@ export class ZksolcCompilerDownloader {
         await this._mutex.use(async () => {
             let compilerVersionInfo = await this._getCompilerVersionInfo();
 
-            if (compilerVersionInfo === undefined && (await this._shouldDownloadCompilerVersionInfo())) {
+            if (compilerVersionInfo === undefined || (await this._shouldDownloadCompilerVersionInfo())) {
                 try {
                     await this._downloadCompilerVersionInfo();
                 } catch (e: any) {
@@ -135,13 +142,15 @@ export class ZksolcCompilerDownloader {
             }
 
             try {
+                console.info(chalk.yellow(`Downloading zksolc ${this._version}`));
                 await this._downloadCompiler();
+                console.info(chalk.green(`zksolc version ${this._version} successfully downloaded`));
             } catch (e: any) {
                 throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
             }
 
             await this._postProcessCompilerDownload();
-            await this.verifyCompiler();
+            await this._verifyCompiler();
         });
     }
 
@@ -153,7 +162,7 @@ export class ZksolcCompilerDownloader {
     }
 
     private async _downloadCompiler(): Promise<string> {
-        let url = this._configCompilerPath as string;
+        let url = this._configCompilerPath;
         if (!this._isCompilerPathURL) {
             url = getZksolcUrl(ZKSOLC_BIN_REPOSITORY, this._version);
         }
@@ -181,7 +190,7 @@ export class ZksolcCompilerDownloader {
         fsExtra.chmodSync(compilerPath, 0o755);
     }
 
-    public async verifyCompiler(): Promise<void> {
+    private async _verifyCompiler(): Promise<void> {
         const compilerPath = this.getCompilerPath();
 
         const versionOutput = spawnSync(compilerPath, ['--version']);
@@ -191,11 +200,7 @@ export class ZksolcCompilerDownloader {
             ?.toString();
 
         if (versionOutput.status !== 0 || version == null) {
-            throw new ZkSyncSolcPluginError(COMPILER_BINARY_CORRUPTION_ERROR);
-        }
-
-        if (this._version !== version) {
-            console.info(chalk.yellow(`zksolc compiler version mismatch: expected ${this._version}, got ${version}`));
+            throw new ZkSyncSolcPluginError(COMPILER_BINARY_CORRUPTION_ERROR(compilerPath));
         }
     }
 }

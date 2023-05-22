@@ -180,20 +180,18 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     const solcBuild = await runSuper(args);
     const compilersCache = await getCompilersDir();
 
-    const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+    const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
         hre.config.zksolc.version, 
         hre.config.zksolc.settings.compilerPath ?? '',
         compilersCache
     );
-    const isCompilerDownloaded = await downloader.isCompilerDownloaded();
-
-    if (!isCompilerDownloaded) {
-        console.info(chalk.yellow(`Downloading zksolc ${hre.config.zksolc.version}`));
-        await downloader.downloadCompiler();
-        console.info(chalk.green(`zksolc version ${hre.config.zksolc.version} successfully downloaded`));
+    
+    const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
+    if (!isZksolcDownloaded) {
+        await zksolcDownloader.downloadCompiler();
     }
 
-    hre.config.zksolc.settings.compilerPath = await downloader.getCompilerPath();
+    hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
     return solcBuild;
 });
 
