@@ -3,7 +3,7 @@ import { Wallet } from 'zksync-web3';
 import * as zk from 'zksync-web3';
 import chalk from 'chalk';
 
-const hre = require('hardhat');
+import * as hre from 'hardhat';
 
 async function main() {
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -41,4 +41,7 @@ async function main() {
     console.info(chalk.cyan('New box value is', value));
 }
 
-main();
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});
