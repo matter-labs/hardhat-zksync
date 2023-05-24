@@ -17,10 +17,8 @@ import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import { compile } from './compile';
 import {
     zeroxlify,
-    // getZksolcPath,
     getZksolcUrl,
     pluralize,
-    isURL,
     saltFromUrl,
     generateSolcJSExecutableCode,
     updateCompilerConf,
@@ -252,7 +250,6 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
     );
 
 export {
-    // getZksolcPath,
     getZksolcUrl,
     ZKSOLC_BIN_REPOSITORY,
     saltFromUrl
