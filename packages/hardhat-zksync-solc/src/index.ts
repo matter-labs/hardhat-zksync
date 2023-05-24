@@ -13,6 +13,7 @@ import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
+import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import { compile } from './compile';
 import {
     zeroxlify,
@@ -180,18 +181,21 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
     const solcBuild = await runSuper(args);
     const compilersCache = await getCompilersDir();
 
-    const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-        hre.config.zksolc.version, 
-        hre.config.zksolc.settings.compilerPath ?? '',
-        compilersCache
-    );
-    
-    const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
-    if (!isZksolcDownloaded) {
-        await zksolcDownloader.downloadCompiler();
-    }
+    const mutex = new Mutex();
+    await mutex.use(async () => {
+        const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+            hre.config.zksolc.version, 
+            hre.config.zksolc.settings.compilerPath ?? '',
+            compilersCache
+        );
+        
+        const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
+        if (!isZksolcDownloaded) {
+            await zksolcDownloader.downloadCompiler();
+        }
+        hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
+    });
 
-    hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
     return solcBuild;
 });
 
