@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 0.1.7
+
+### Patch Changes
+
+- 670534e: Fallback verification support
+- d8b7c80: Axios dependency update
+- 1146fee: Expand matching solidity compilers with overrides
+
 ## 0.1.6
 
 ### Patch Changes

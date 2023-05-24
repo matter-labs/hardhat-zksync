@@ -8,9 +8,10 @@ import { DeployBeaconOptions } from '../utils/options';
 import { deploy, DeployTransaction } from './deploy';
 import * as zk from 'zksync-web3';
 import { deployBeaconImpl } from './deploy-impl';
-import { importProxyContract } from '../utils/utils-general';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import chalk from 'chalk';
+import assert from 'assert';
+import path from 'path';
 
 export interface DeployBeaconFunction {
     (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<zk.Contract>;
@@ -24,11 +25,12 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
         console.info(chalk.green('Beacon impl deployed at', impl));
 
-        const upgradeableBeaconContract = await importProxyContract(
-            '..',
-            hre.config.zksolc.version,
-            UPGRADABLE_BEACON_JSON
+        const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+            x.includes(path.sep + UPGRADABLE_BEACON_JSON)
         );
+        assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
+        const upgradeableBeaconContract = await import(upgradableBeaconPath);
+
         const upgradeableBeaconFactory = new zk.ContractFactory(
             upgradeableBeaconContract.abi,
             upgradeableBeaconContract.bytecode,

@@ -2,7 +2,7 @@ import { AssertionError } from 'chai';
 
 import { buildAssert, Ssfi } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
-import { decodeReturnData, encodeFuncSelectorWithData, getReturnDataFromError } from './utils';
+import { decodeReturnData, getReturnDataFromError } from './utils';
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = 'customErrorAssertionCalled';
 
@@ -50,7 +50,6 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
 
                 const returnData = getReturnDataFromError(error);
                 const decodedReturnData = decodeReturnData(returnData);
-                const encodedData = encodeFuncSelectorWithData(returnData);
 
                 if (decodedReturnData.kind === 'Empty') {
                     assert(
@@ -75,7 +74,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                         const customErrorAssertionData: CustomErrorAssertionData = {
                             contractInterface: iface,
                             customError: expectedCustomError,
-                            returnData: encodedData,
+                            returnData,
                         };
                         this.customErrorData = customErrorAssertionData;
 

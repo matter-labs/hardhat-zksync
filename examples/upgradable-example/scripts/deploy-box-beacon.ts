@@ -2,7 +2,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { Wallet } from 'zksync-web3';
 import chalk from 'chalk';
 
-const hre = require('hardhat');
+import * as hre from 'hardhat';
 
 async function main() {
     const contractName = 'Box';
@@ -25,4 +25,7 @@ async function main() {
     console.info(chalk.cyan('Box value is: ', value.toNumber()));
 }
 
-main();
+main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});

@@ -4,12 +4,17 @@ import './type-extensions';
 
 import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 
-import { TASK_COMPILE_SOLIDITY_COMPILE, TASK_COMPILE_SOLIDITY_COMPILE_SOLC } from 'hardhat/builtin-tasks/task-names';
+import {
+    TASK_COMPILE_SOLIDITY_COMPILE,
+    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
+} from 'hardhat/builtin-tasks/task-names';
 
 import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
+import { PROXY_SOURCE_NAMES } from './constants';
+import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
 
 extendEnvironment((hre) => {
     hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
@@ -28,15 +33,20 @@ extendEnvironment((hre) => {
             deployBeaconProxy: makeDeployBeaconProxy(hre),
             upgradeBeacon: makeUpgradeBeacon(hre),
             deployProxyAdmin: makeDeployProxyAdmin(hre),
+            admin: {
+                getInstance: makeGetInstanceFunction(hre),
+                changeProxyAdmin: makeChangeProxyAdmin(hre),
+                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+            },
         };
     });
 });
 
-subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
+subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSuper) => {
     const { solcInputOutputDecoder } = await import('@openzeppelin/upgrades-core');
     const { writeValidations } = await import('./validations/validations');
 
-    const { output, solcBuild } = await hre.run(TASK_COMPILE_SOLIDITY_COMPILE_SOLC, args);
+    const { output, solcBuild } = await runSuper();
 
     if (isFullZkSolcOutput(output)) {
         const decodeSrc = solcInputOutputDecoder(args.input, output);
@@ -45,4 +55,10 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre) => {
     }
 
     return { output, solcBuild };
+});
+
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
+    const sourceNames = await runSuper();
+
+    return [...sourceNames, ...PROXY_SOURCE_NAMES];
 });
