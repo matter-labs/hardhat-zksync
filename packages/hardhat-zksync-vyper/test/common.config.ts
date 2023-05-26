@@ -4,12 +4,8 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zkvyper: {
-        compilerSource: 'docker',
-        settings: {
-            experimental: {
-                dockerImage: 'matterlabs/zkvyper',
-            },
-        },
+        version: 'latest',
+        compilerSource: 'binary',
     },
     networks: {
         hardhat: {

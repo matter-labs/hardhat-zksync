@@ -9,16 +9,16 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
+import { getCompilersDir } from 'hardhat/internal/util/global-dir';
+import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
-import { pluginError, getZkvyperUrl, getZkvyperPath, pluralize } from './utils';
-import { spawnSync } from 'child_process';
-import { download } from 'hardhat/internal/util/download';
-import fs from 'fs';
+import { checkSupportedVyperVersions, pluralize } from './utils';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
 import { defaultZkVyperConfig } from './constants';
+import { ZkVyperCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
     config.zkvyper = { ...defaultZkVyperConfig, ...userConfig?.zkvyper };
@@ -27,6 +27,8 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
+    checkSupportedVyperVersions(hre.config.vyper);
+
     if (hre.network.config.zksync) {
         hre.network.zksync = hre.network.config.zksync;
 
@@ -93,31 +95,22 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     }
 
     const vyperBuild = await runSuper(args);
-    let compilerPath = hre.config.zkvyper.settings.compilerPath;
+    const compilersCache = await getCompilersDir();
 
-    if (compilerPath) {
-        const versionOutput = spawnSync(compilerPath, ['--version']);
-        const version = versionOutput.stdout
-            ?.toString()
-            .match(/\d+\.\d+\.\d+/)
-            ?.toString();
-
-        if (versionOutput.status !== 0 || version == null) {
-            throw pluginError(`Specified zkvyper binary is not found or invalid`);
+    const mutex = new Mutex();
+    await mutex.use(async () => {
+        const zkvyperDownloader = await ZkVyperCompilerDownloader.getDownloaderWithVersionValidated(
+            hre.config.zkvyper.version, 
+            hre.config.zkvyper.settings.compilerPath ?? '',
+            compilersCache
+        );
+        
+        const isZksolcDownloaded = await zkvyperDownloader.isCompilerDownloaded();
+        if (!isZksolcDownloaded) {
+            await zkvyperDownloader.downloadCompiler();
         }
-    } else {
-        compilerPath = await getZkvyperPath(hre.config.zkvyper.version);
-        if (!fs.existsSync(compilerPath)) {
-            console.info(chalk.yellow(`Downloading zkvyper ${hre.config.zkvyper.version}`));
-            try {
-                await download(getZkvyperUrl(hre.config.zkvyper.version), compilerPath);
-                fs.chmodSync(compilerPath, '755');
-                console.info(chalk.green(`zkvyper version ${hre.config.zkvyper.version} successfully downloaded.`));
-            } catch (e: any) {
-                throw pluginError(e.message.split('\n')[0]);
-            }
-        }
-    }
+        hre.config.zkvyper.settings.compilerPath = await zkvyperDownloader.getCompilerPath();
+    });
 
     return vyperBuild;
 });
