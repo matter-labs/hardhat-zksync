@@ -34,7 +34,9 @@
   "dependencies": {
     "@nomiclabs/hardhat-docker": "^2.0.0",
     "chalk": "4.1.2",
-    "dockerode": "^3.3.4"
+    "dockerode": "^3.3.4",
+    "fs-extra": "^7.0.1",
+    "semver": "^6.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -42,6 +44,7 @@
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
     "@types/semver": "^7.3.9",
+    "@types/fs-extra": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "5.13.0",
     "@typescript-eslint/parser": "5.13.0",
     "chai": "^4.3.6",
