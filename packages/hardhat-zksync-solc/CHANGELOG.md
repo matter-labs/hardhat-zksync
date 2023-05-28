@@ -1,11 +1,5 @@
 # @matterlabs/hardhat-zksync-solc
 
-## 0.4.0
-
-### Minor Changes
-
-- caab9a7: Download compiler version info file and validate versions
-
 ## 0.3.17
 
 ### Patch Changes
