@@ -4,6 +4,8 @@ import { SrcDecoder } from '@openzeppelin/upgrades-core/src/src-decoder';
 import { findAll } from 'solidity-ast/utils';
 import { Node } from 'solidity-ast/node';
 import type { ContractDefinition } from 'solidity-ast';
+import { getFunctionSignature } from './function';
+import { astDereferencer } from './ast-dereferencer';
 
 export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVersion?: string): any {
     const validation: any = {};
@@ -11,16 +13,13 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
     const inheritIds: Record<string, number[]> = {};
     const libraryIds: Record<string, number[]> = {};
 
+    const deref = astDereferencer(solcOutput);
+
     for (const source in solcOutput.contracts) {
         for (const contractName in solcOutput.contracts[source]) {
             const bytecode = solcOutput.contracts[source][contractName].evm.bytecode;
 
-            // if bytecode does not exist, it means the contract is abstract so skip it
-            if (bytecode === null) {
-                continue;
-            }
-
-            const version = bytecode.object === '' ? undefined : getVersion(bytecode.object);
+            const version = bytecode === null ? undefined : getVersion(bytecode.object);
 
             validation[getFullyQualifiedName(source, contractName)] = {
                 src: contractName,
@@ -44,8 +43,14 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
             const bytecode = solcOutput.contracts[source][contractDef.name]?.evm.bytecode;
 
             if (key in validation && bytecode !== undefined) {
+                inheritIds[key] = contractDef.linearizedBaseContracts.slice(1);
+
                 validation[key].src = decodeSrc(contractDef);
                 validation[key].errors = [...getConstructorErrors(contractDef, decodeSrc)];
+
+                validation[key].methods = [...findAll('FunctionDefinition', contractDef)]
+                    .filter((fnDef) => ['external', 'public'].includes(fnDef.visibility))
+                    .map((fnDef) => getFunctionSignature(fnDef, deref));
             }
         }
     }

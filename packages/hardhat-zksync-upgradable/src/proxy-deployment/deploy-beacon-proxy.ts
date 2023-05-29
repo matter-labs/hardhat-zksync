@@ -16,10 +16,11 @@ import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-ge
 import { DeployBeaconProxyOptions } from '../utils/options';
 import { getInitializerData } from '../utils/utils-general';
 import { deploy, DeployTransaction } from './deploy';
-import { BEACON_PROXY_JSON, TUP_JSON } from '../constants';
+import { BEACON_PROXY_JSON } from '../constants';
 import { Manifest } from '../core/manifest';
 import chalk from 'chalk';
 import assert from 'assert';
+import path from 'path';
 
 export interface DeployBeaconProxyFunction {
     (
@@ -79,8 +80,8 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             ]);
         }
 
-        const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((path) =>
-            path.includes(BEACON_PROXY_JSON)
+        const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
+            artifactPath.includes(path.sep + BEACON_PROXY_JSON)
         );
         assert(beaconProxyPath, 'Beacon proxy artifact not found');
         const beaconProxyContract = await import(beaconProxyPath);

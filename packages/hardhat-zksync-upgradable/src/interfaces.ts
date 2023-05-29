@@ -9,6 +9,7 @@ import { DeployBeaconProxyFunction } from './proxy-deployment/deploy-beacon-prox
 import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
 import { DeployFunction } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
+import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
@@ -23,6 +24,11 @@ export interface HardhatUpgrades {
     deployBeaconProxy: DeployBeaconProxyFunction;
     upgradeBeacon: UpgradeBeaconFunction;
     deployProxyAdmin: DeployAdminFunction;
+    admin: {
+        getInstance: GetInstanceFunction;
+        changeProxyAdmin: ChangeAdminFunction;
+        transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
+    };
 }
 
 export interface RunCompilerArgs {
