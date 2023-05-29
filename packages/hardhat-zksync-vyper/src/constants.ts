@@ -33,4 +33,3 @@ export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string
 export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string) => `zkvyper compiler version ${version} is not the latest. We recommend using the latest version ${latestVersion}.`;
 export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) => `The zkvyper binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 
-export const VYPER_VERSION_ERROR = 'Vyper versions 0.3.4 to 0.3.7 are not supported by zkvyper. Please use vyper 0.3.3 or >=0.3.8 in your hardhat.config file instead.'

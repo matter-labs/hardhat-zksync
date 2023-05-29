@@ -14,7 +14,7 @@ import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
-import { checkSupportedVyperVersions, pluralize } from './utils';
+import { pluralize } from './utils';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
 import { defaultZkVyperConfig } from './constants';
@@ -27,8 +27,6 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
-    checkSupportedVyperVersions(hre.config.vyper);
-
     if (hre.network.config.zksync) {
         hre.network.zksync = hre.network.config.zksync;
 
