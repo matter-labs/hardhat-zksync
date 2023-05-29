@@ -72,3 +72,7 @@ export function isFullZkSolcOutput(output: MaybeSolcOutput | undefined): boolean
 
     return true;
 }
+
+export function isNullish(value: unknown): value is null | undefined {
+    return value === null || value === undefined;
+}
