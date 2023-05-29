@@ -28,6 +28,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
 
         const zkSyncProvider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
         const ethProvider = ethers.getDefaultProvider('goerli');
+        zkWallet.connect(zkSyncProvider);
 
         const privateKey = LOCAL_SETUP_RICH_WALLET_PRIVATE_KEY;
         this.zkWallet2 = new Wallet(privateKey, zkSyncProvider, ethProvider);

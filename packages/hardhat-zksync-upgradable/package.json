@@ -42,6 +42,7 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "5.13.0",

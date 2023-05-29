@@ -1,9 +1,11 @@
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
+import semver from 'semver';
 import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
 import { CompilerOutputSelection, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
+import { CompilerVersionInfo } from './compile/downloader';
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection, zkCompilerVersion: string): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -58,10 +60,6 @@ export function zeroxlify(hex: string): string {
     return hex.slice(0, 2) === '0x' ? hex : `0x${hex}`;
 }
 
-export async function getZksolcPath(version: string, salt: string = ''): Promise<string> {
-    return path.join(await getCompilersDir(), 'zksolc', `zksolc-v${version}${salt ? '-' : ''}${salt}`);
-}
-
 export function isURL(url: string): boolean {
     try {
         const locator = new URL(url);
@@ -109,6 +107,13 @@ export function getVersionComponents(version: string): number[] {
         parseInt(versionComponents[2])
     ];
 }
+
+export function isVersionInRange(version: string, versionInfo: CompilerVersionInfo): boolean {
+    const latest = versionInfo.latest;
+    const minVersion = versionInfo.minVersion;
+
+    return semver.gte(version, minVersion) && semver.lte(version, latest);
+  }
 
 // Generate SolcJS executable code
 export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: string): string {
