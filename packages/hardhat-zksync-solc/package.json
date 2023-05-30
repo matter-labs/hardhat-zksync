@@ -36,7 +36,7 @@
     "chalk": "4.1.2",
     "dockerode": "^3.3.4",
     "fs-extra": "^7.0.1",
-    "semver": "^6.3.0"
+    "semver": "^7.5.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
