@@ -33,11 +33,7 @@ interface ValidationErrorBase {
 
 interface ValidationErrorWithName extends ValidationErrorBase {
     name: string;
-    kind:
-    | 'state-variable-assignment'
-    | 'state-variable-immutable'
-    | 'struct-definition'
-    | 'enum-definition';
+    kind: 'state-variable-assignment' | 'state-variable-immutable' | 'struct-definition' | 'enum-definition';
 }
 
 interface ValidationErrorConstructor extends ValidationErrorBase {
@@ -160,7 +156,7 @@ function* getOpcodeErrors(
     contractDef: ContractDefinition,
     deref: ASTDereferencer,
     decodeSrc: SrcDecoder,
-    delegateCallCache: OpcodeCache,
+    delegateCallCache: OpcodeCache
 ): Generator<ValidationErrorOpcode, void, undefined> {
     yield* getContractOpcodeErrors(contractDef, deref, decodeSrc, OPCODES.delegatecall, 'main', delegateCallCache);
 }
@@ -176,7 +172,7 @@ function* getContractOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache,
+    cache: OpcodeCache
 ): Generator<ValidationErrorOpcode, void, undefined> {
     const cached = getCachedOpcodes(contractDef.id, scope, cache);
     if (cached !== undefined) {
@@ -186,7 +182,7 @@ function* getContractOpcodeErrors(
         setCachedOpcodes(contractDef.id, scope, cache, errors);
         errors.push(
             ...getFunctionOpcodeErrors(contractDef, deref, decodeSrc, opcode, scope, cache),
-            ...getInheritedContractOpcodeErrors(contractDef, deref, decodeSrc, opcode, cache),
+            ...getInheritedContractOpcodeErrors(contractDef, deref, decodeSrc, opcode, cache)
         );
         yield* errors;
     }
@@ -198,7 +194,7 @@ function* getFunctionOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache,
+    cache: OpcodeCache
 ): Generator<ValidationErrorOpcode, void, undefined> {
     const parentContractDef = getParentDefinition(deref, contractOrFunctionDef);
     if (parentContractDef === undefined || !skipCheck(opcode.kind, parentContractDef)) {
@@ -224,7 +220,7 @@ function* getInheritedContractOpcodeErrors(
     deref: ASTDereferencer,
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
-    cache: OpcodeCache,
+    cache: OpcodeCache
 ) {
     if (!skipCheckReachable(opcode.kind, contractDef)) {
         for (const base of contractDef.baseContracts) {
@@ -244,12 +240,15 @@ function isInternalFunction(node: Node) {
 
 function* getStateVariableErrors(
     contractDef: ContractDefinition,
-    decodeSrc: SrcDecoder,
+    decodeSrc: SrcDecoder
 ): Generator<ValidationErrorWithName> {
     for (const varDecl of contractDef.nodes) {
         if (isNodeType('VariableDeclaration', varDecl)) {
             if (!varDecl.constant && !isNullish(varDecl.value)) {
-                if (!skipCheck('state-variable-assignment', contractDef) && !skipCheck('state-variable-assignment', varDecl)) {
+                if (
+                    !skipCheck('state-variable-assignment', contractDef) &&
+                    !skipCheck('state-variable-assignment', varDecl)
+                ) {
                     yield {
                         kind: 'state-variable-assignment',
                         name: varDecl.name,
@@ -258,7 +257,10 @@ function* getStateVariableErrors(
                 }
             }
             if (varDecl.mutability === 'immutable') {
-                if (!skipCheck('state-variable-immutable', contractDef) && !skipCheck('state-variable-immutable', varDecl)) {
+                if (
+                    !skipCheck('state-variable-immutable', contractDef) &&
+                    !skipCheck('state-variable-immutable', varDecl)
+                ) {
                     yield {
                         kind: 'state-variable-immutable',
                         name: varDecl.name,
@@ -285,12 +287,12 @@ function* getDirectFunctionOpcodeErrors(
     contractOrFunctionDef: ContractDefinition | FunctionDefinition,
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
-    scope: Scope,
+    scope: Scope
 ) {
     for (const fnCall of findAll(
         'FunctionCall',
         contractOrFunctionDef,
-        node => skipCheck(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node)),
+        (node) => skipCheck(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node))
     )) {
         const fn = fnCall.expression;
         if (fn.typeDescriptions.typeIdentifier?.match(opcode.pattern)) {
@@ -308,12 +310,12 @@ function* getReferencedFunctionOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache,
+    cache: OpcodeCache
 ) {
     for (const fnCall of findAll(
         'FunctionCall',
         contractOrFunctionDef,
-        node => skipCheckReachable(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node)),
+        (node) => skipCheckReachable(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node))
     )) {
         const fn = fnCall.expression;
         if ('referencedDeclaration' in fn && fn.referencedDeclaration && fn.referencedDeclaration > 0) {
@@ -372,7 +374,7 @@ export function getAnnotationArgs(doc: string, tag: string) {
     const result: string[] = [];
     for (const { groups } of execall(
         /^\s*(?:@(?<title>\w+)(?::(?<tag>[a-z][a-z-]*))? )?(?<args>(?:(?!^\s*@\w+)[^])*)/m,
-        doc,
+        doc
     )) {
         if (groups && groups.title === 'custom' && groups.tag === tag) {
             const trimmedArgs = groups.args.trim();
@@ -382,7 +384,7 @@ export function getAnnotationArgs(doc: string, tag: string) {
         }
     }
 
-    result.forEach(arg => {
+    result.forEach((arg) => {
         if (!(errorKinds as readonly string[]).includes(arg)) {
             throw new Error(`NatSpec: ${tag} argument not recognized: ${arg}`);
         }
