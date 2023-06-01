@@ -6,7 +6,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 
 import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../src/constants';
-import { LOCAL_SETUP_RICH_WALLET_1_PRIVATE_KEY, LOCAL_SETUP_RICH_WALLET_2_PRIVATE_KEY } from './constants';
+import richWallets from './rich-wallets.json';
 
 declare module 'mocha' {
     interface Context {
@@ -15,7 +15,7 @@ declare module 'mocha' {
 }
 
 export function useEnvironment(fixtureProjectName: string, networkName = 'hardhat') {
-    beforeEach('Loading hardhat environment', async function () {
+    before('Loading hardhat environment', async function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
 
@@ -24,13 +24,13 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
 
         const zkSyncProvider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
 
-        const zkWallet = new Wallet(LOCAL_SETUP_RICH_WALLET_1_PRIVATE_KEY, zkSyncProvider);
+        const zkWallet = new Wallet(richWallets[0].privateKey, zkSyncProvider);
         this.deployer = new Deployer(this.env, zkWallet);
 
-        this.zkWallet2 = new Wallet(LOCAL_SETUP_RICH_WALLET_2_PRIVATE_KEY, zkSyncProvider);
+        this.zkWallet2 = new Wallet(richWallets[1].privateKey, zkSyncProvider);
     });
 
-    afterEach('Resetting hardhat', function () {
+    after('Resetting hardhat', function () {
         resetHardhatContext();
     });
 }
