@@ -4,8 +4,10 @@ import {
     getImplementationAddress,
     getImplementationAddressFromBeacon,
     ValidationOptions,
+    assertStorageUpgradeSafe,
 } from '@openzeppelin/upgrades-core';
-
+import { getStorageLayoutForAddress } from '../core/manifest-storage-layout';
+import { Manifest } from '../core/manifest';
 import { DeployData } from '../proxy-deployment/deploy-impl';
 import { processProxyKind } from '../core/proxy-kind';
 
@@ -30,6 +32,14 @@ export async function validateImpl(
     currentImplAddress?: string
 ): Promise<void> {
     assertUpgradeSafe(deployData.validations, deployData.version, deployData.fullOpts);
+
+    if (currentImplAddress !== undefined) {
+        const manifest = await Manifest.forNetwork(deployData.provider);
+        const currentLayout = await getStorageLayoutForAddress(manifest, deployData.validations, currentImplAddress);
+        if (opts.unsafeSkipStorageCheck !== true) {
+            assertStorageUpgradeSafe(currentLayout, deployData.layout, deployData.fullOpts);
+        }
+    }
 }
 
 export async function validateProxyImpl(

@@ -1,6 +1,7 @@
 import { getVersion, SolcOutput, ValidationRunData } from '@openzeppelin/upgrades-core';
 import { SrcDecoder } from '@openzeppelin/upgrades-core/src/src-decoder';
 import { astDereferencer } from '@openzeppelin/upgrades-core/dist/ast-dereferencer';
+import { extractStorageLayout } from '@openzeppelin/upgrades-core/dist/storage';
 import { isNodeType, findAll, ASTDereferencer } from 'solidity-ast/utils';
 import { Node } from 'solidity-ast/node';
 import type { ContractDefinition, FunctionDefinition } from 'solidity-ast';
@@ -108,7 +109,12 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
                     ...getStateVariableErrors(contractDef, decodeSrc),
                 ];
 
-                // TODO: Add storage layout validation
+                validation[key].layout = extractStorageLayout(
+                    contractDef,
+                    decodeSrc,
+                    deref,
+                    solcOutput.contracts[source][contractDef.name].storageLayout
+                );
 
                 validation[key].methods = [...findAll('FunctionDefinition', contractDef)]
                     .filter((fnDef) => ['external', 'public'].includes(fnDef.visibility))
