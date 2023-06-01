@@ -255,7 +255,7 @@ describe('Upgradable plugin tests', async function () {
             );
 
             try {
-                this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, contract.address, contractV2);
+                this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, deployedContract.address, contractV2);
             } catch (error: any) {
                 expect(error.message).to.contain(WRONG_PROXY_ADMIN_ERROR);
             }

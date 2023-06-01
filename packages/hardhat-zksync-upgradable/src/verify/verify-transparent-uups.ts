@@ -1,14 +1,15 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { linkProxyWithImplementationAbi, verifiableContracts, verifyWithArtifactOrFallback } from "./verify-proxy";
-import { 
-  getImplementationAddress, 
-  isEmptySlot,
-  getAdminAddress
-} from '@openzeppelin/upgrades-core';
+import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
+import { verifyWithArtifact } from './verify-proxy';
+import { verifyImplementation } from './verify-impl';
+import { verifiableContracts } from '../constants';
+
+import { getImplementationAddress, isEmptySlot, getAdminAddress } from '@openzeppelin/upgrades-core';
+
+import * as zk from 'zksync-web3';
+import chalk from 'chalk';
 
 /**
  * Fully verifies all contracts related to the given transparent or UUPS proxy address: implementation, admin (if any), and proxy.
- * Also links the proxy to the implementation ABI on Etherscan.
  *
  * This function will determine whether the address is a transparent or UUPS proxy based on whether its creation bytecode matches with
  * TransparentUpgradeableProxy or ERC1967Proxy.
@@ -16,59 +17,44 @@ import {
  * Note: this function does not use the admin slot to determine whether the proxy is transparent or UUPS, but will always verify
  * the admin address as long as the admin storage slot has an address.
  *
- * @param hre
+ * @param hre The hardhat runtime environment
  * @param proxyAddress The transparent or UUPS proxy address
  * @param hardhatVerify A function that invokes the hardhat-etherscan plugin's verify command
- * @param errorReport Accumulated verification errors
+ * @param runSuper A function that invokes the hardhat-etherscan plugin's verify command
  */
 export async function fullVerifyTransparentOrUUPS(
     hre: HardhatRuntimeEnvironment,
     proxyAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
-  ) {
-    const provider = hre.network.provider;
+    runSuper: RunSuperFunction<any>
+) {
+    const networkConfig: any = hre.network.config;
+    const provider = new zk.Provider(networkConfig.url);
     const implAddress = await getImplementationAddress(provider, proxyAddress);
+
     await verifyImplementation(hardhatVerify, implAddress);
-  
-  
     await verifyTransparentOrUUPS();
-    await linkProxyWithImplementationAbi(proxyAddress, implAddress);
-    // Either UUPS or Transparent proxy could have admin slot set, although typically this should only be for Transparent
     await verifyAdmin();
-  
+
     async function verifyAdmin() {
-      const adminAddress = await getAdminAddress(provider, proxyAddress);
-      if (!isEmptySlot(adminAddress)) {
-        console.log(`Verifying proxy admin: ${adminAddress}`);
-        try {
-          await verifyWithArtifactOrFallback(
-            hre,
-            hardhatVerify,
-            adminAddress,
-            [verifiableContracts.proxyAdmin],
-            // The user provided the proxy address to verify, whereas this function is only verifying the related proxy admin.
-            // So even if this falls back and succeeds, we want to keep any errors that might have occurred while verifying the proxy itself.
-            false,
-          );
-        } catch (e: any) {
-         
-            console.log(
-              'Verification skipped for proxy admin - the admin address does not appear to contain a ProxyAdmin contract.',
-            );
-          
+        const adminAddress = await getAdminAddress(provider, proxyAddress);
+        if (!isEmptySlot(adminAddress)) {
+            console.info(chalk.cyan(`Verifying proxy admin: ${adminAddress}`));
+            try {
+                await verifyWithArtifact(hre, adminAddress, [verifiableContracts.proxyAdmin], runSuper);
+            } catch (e: any) {
+                console.error(chalk.red(`Error verifying proxy admin: ${e.message}`));
+            }
         }
-      }
     }
-  
+
     async function verifyTransparentOrUUPS() {
-      console.log(`Verifying proxy: ${proxyAddress}`);
-      await verifyWithArtifactOrFallback(
-        hre,
-        hardhatVerify,
-        proxyAddress,
-        [verifiableContracts.transparentUpgradeableProxy, verifiableContracts.erc1967proxy],
-        true,
-      );
+        console.info(chalk.cyan(`Verifying proxy: ${proxyAddress}`));
+        await verifyWithArtifact(
+            hre,
+            proxyAddress,
+            [verifiableContracts.transparentUpgradeableProxy, verifiableContracts.erc1967proxy],
+            runSuper
+        );
     }
-  }
-  
+}

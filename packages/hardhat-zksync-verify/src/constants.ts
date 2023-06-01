@@ -15,13 +15,27 @@ export const TASK_VERIFY_GET_MINIMUM_BUILD = 'verify:get-minimum-build';
 export const TASK_VERIFY_VERIFY_MINIMUM_BUILD = 'zk:verify:verify-minimum-build';
 export const TASK_VERIFY_GET_CONTRACT_INFORMATION = 'verify:get-contract-information';
 
-export const CONST_ARGS_ARRAY_ERROR = `The constructorArgs parameter should be an array.
-If your constructor has no arguments pass an empty array. E.g:
+export const CONST_ARGS_ARRAY_ERROR = `
+Wrong constructor arguments format:
 
+If your constructor arguments are not encoded, they should be passed as an array parameter. E.g:
+  await run("${TASK_VERIFY_VERIFY}", {
+    <other args>,
+    constructorArguments: [arg1, arg2, ...]
+  };
+
+If your constructor has no arguments pass an empty array. E.g:
   await run("${TASK_VERIFY_VERIFY}", {
     <other args>,
     constructorArguments: []
-  };`;
+  };
+  
+If your constructor arguments are already encoded, they should be passed as a non-array constructorArgs parameter. E.g:
+  await run("${TASK_VERIFY_VERIFY}", {
+    <other args>,
+    constructorArguments: encodedConstructorArguments
+  };
+`;
 
 export const NO_VERIFIABLE_ADDRESS_ERROR =
     "You did not provide any address. Please re-run the 'verify' task with the address of the contract you want to verify.";

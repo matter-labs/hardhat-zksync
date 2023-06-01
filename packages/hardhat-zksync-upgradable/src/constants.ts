@@ -1,3 +1,5 @@
+export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-upgradable';
+
 export const ITUP_JSON = '/ITransparentUpgradeableProxy.json';
 export const TUP_JSON = '/TransparentUpgradeableProxy.json';
 export const BEACON_PROXY_JSON = '/BeaconProxy.json';
@@ -16,5 +18,14 @@ export const PROXY_SOURCE_NAMES = [
     '@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol',
 ];
 
-export const UPGRADE_VERIFY_ERROR = 'The hardhat-etherscan plugin must be imported before the hardhat-upgrades plugin.' +
-  'Import the plugins in the following order in hardhat.config.js:\n'
+export const UPGRADE_VERIFY_ERROR =
+    'The verify plugin must be imported before the hardhat-upgrades plugin.' +
+    'Import the plugins in the following order in hardhat.config.js:\n';
+
+export const verifiableContracts = {
+    erc1967proxy: { event: 'Upgraded(address)' },
+    beaconProxy: { event: 'BeaconUpgraded(address)' },
+    upgradeableBeacon: { event: 'OwnershipTransferred(address,address)' },
+    transparentUpgradeableProxy: { event: 'AdminChanged(address,address)' },
+    proxyAdmin: { event: 'OwnershipTransferred(address,address)' },
+};

@@ -105,10 +105,6 @@ export async function verifyContract(
         throw new ZkSyncVerifyPluginError(`${address} is an invalid address.`);
     }
 
-    if (!Array.isArray(constructorArguments)) {
-        throw new ZkSyncVerifyPluginError(CONST_ARGS_ARRAY_ERROR);
-    }
-
     const deployedBytecodeHex = await retrieveContractBytecode(address, hre.network);
     const deployedBytecode = new Bytecode(deployedBytecodeHex);
 
@@ -132,9 +128,18 @@ export async function verifyContract(
 
     const solcVersion = contractInformation.solcVersion;
 
-    const deployArgumentsEncoded =
-        '0x' +
-        (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments));
+    let deployArgumentsEncoded;
+    if (!Array.isArray(constructorArguments)){
+        if (constructorArguments.startsWith('0x')) {
+            deployArgumentsEncoded = constructorArguments;
+        }
+        else{
+            throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR))
+        }
+    }
+    else {
+        deployArgumentsEncoded = '0x' + (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments)) ;
+    }
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
     const compilerVersion: string = minimumBuild.output.version;
