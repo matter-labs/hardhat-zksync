@@ -1,9 +1,6 @@
 import { NomicLabsHardhatPluginError } from 'hardhat/plugins';
-import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import path from 'path';
-import { UNSUPPORTED_VYPER_VERSIONS } from './constants';
-import { ZkSyncVyperPluginError } from './errors';
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
@@ -39,14 +36,4 @@ export function pluralize(n: number, singular: string, plural?: string) {
     }
 
     return `${singular}s`;
-}
-
-export function checkSupportedVyperVersions(vyper: MultiVyperConfig) {
-    vyper.compilers.forEach((compiler) => {
-        if (UNSUPPORTED_VYPER_VERSIONS.includes(compiler.version)) {
-            throw new ZkSyncVyperPluginError(
-                'Vyper versions 0.3.4 to 0.3.7 are not supported by zkvyper. Please use vyper 0.3.3 or >=0.3.8 in your hardhat.config file instead.'
-            );
-        }
-    });
 }
