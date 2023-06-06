@@ -67,7 +67,7 @@ async function searchEvent(provider: zk.Provider, address: string, possibleContr
         `Could not find an event with any of the following topics in the logs for address ${address}: ${events.join(
             ', '
         )}` +
-            'If the proxy was recently deployed, the transaction may not be available on Etherscan yet. Try running the verify task again after waiting a few blocks.'
+            'If the proxy was recently deployed, the transaction may not be available on Block Explorer yet. Try running the verify task again after waiting a few blocks.'
     );
 }
 

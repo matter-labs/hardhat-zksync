@@ -59,8 +59,9 @@ export function inferConstructorArgs(txInput: string, creationCode: string) {
 
 /**
  * Gets the txhash that created the contract at the given address, by calling the
- * Etherscan API to look for an event that should have been emitted during construction.
+ * RPC API to look for an event that should have been emitted during construction.
  *
+ * @param provider The provider to use to call the RPC API.
  * @param address The address to get the creation txhash for.
  * @param topic The event topic string that should have been logged.
  * @returns The txhash corresponding to the logged event, or undefined if not found or if
@@ -83,21 +84,6 @@ export async function getContractCreationTxHash(provider: zk.Provider, address: 
             chalk.yellow(TOPIC_LOGS_NOT_FOUND_ERROR(topic, address))
         );
     }
-}
-
-export async function callEtherscanApi(url: string, params: any): Promise<any> {
-    const response = await axios.post(url, params, { headers: { 'Content-Type': 'application/json' } });
-
-    if (!(response.status >= 200 && response.status <= 299)) {
-        const responseBodyText = await response.data;
-        throw new ZkSyncUpgradablePluginError(
-            `Block explorer API call failed with status ${response.status}, response: ${responseBodyText}`
-        );
-    }
-
-    const responseBodyJson = await response.data;
-
-    return responseBodyJson;
 }
 
 export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {

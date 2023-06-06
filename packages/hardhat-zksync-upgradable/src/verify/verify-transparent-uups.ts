@@ -19,8 +19,8 @@ import chalk from 'chalk';
  *
  * @param hre The hardhat runtime environment
  * @param proxyAddress The transparent or UUPS proxy address
- * @param hardhatVerify A function that invokes the hardhat-etherscan plugin's verify command
- * @param runSuper A function that invokes the hardhat-etherscan plugin's verify command
+ * @param hardhatVerify A function that invokes the verify plugin's verify command
+ * @param runSuper A function that invokes the verify plugin's verify command
  */
 export async function fullVerifyTransparentOrUUPS(
     hre: HardhatRuntimeEnvironment,
