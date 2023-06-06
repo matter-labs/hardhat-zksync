@@ -18,6 +18,8 @@ import {
     TASK_CHECK_VERIFICATION_STATUS,
     JSON_INPUT_CODE_FORMAT,
     UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
+    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
+    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
 } from './constants';
 
 import { encodeArguments, executeVeificationWithRetry, retrieveContractBytecode } from './utils';
@@ -25,6 +27,7 @@ import { Build, Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
+import path from 'path';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
@@ -89,6 +92,32 @@ export async function getCompilerVersions(
     }
 
     return compilerVersions;
+}
+
+export async function getContructorArguments(
+    taskArgs: any
+): Promise<any> {
+    if (typeof taskArgs.constructorArgsModule !== "string") {
+        return taskArgs.constructorArgsParams;
+      }
+
+      const constructorArgsModulePath = path.resolve(
+        process.cwd(),
+        taskArgs.constructorArgsModule
+      );
+
+      try {
+        const constructorArguments = (await import(constructorArgsModulePath))
+          .default;
+
+        // Since our plugin supports both encoded and decoded constructor arguments, we need to check how are they passed
+        if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith("0x")) {
+          throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
+        }
+        return constructorArguments;
+      } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(CONSTRUCTOR_MODULE_IMPORTING_ERROR(error.message), error); }
+    
 }
 
 export async function verifyContract(

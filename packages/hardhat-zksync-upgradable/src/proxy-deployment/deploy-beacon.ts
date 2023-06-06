@@ -11,6 +11,7 @@ import { deployBeaconImpl } from './deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import chalk from 'chalk';
 import assert from 'assert';
+import path from 'path';
 
 export interface DeployBeaconFunction {
     (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<zk.Contract>;
@@ -25,7 +26,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         console.info(chalk.green('Beacon impl deployed at', impl));
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-            x.includes(UPGRADABLE_BEACON_JSON)
+            x.includes(path.sep + UPGRADABLE_BEACON_JSON)
         );
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);
@@ -36,6 +37,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
             wallet
         );
         const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(upgradeableBeaconFactory, impl);
+        console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
 
         const beaconContract = upgradeableBeaconFactory.attach(beaconDeployment.address);
         // @ts-ignore Won't be readonly because beaconContract was created through attach.

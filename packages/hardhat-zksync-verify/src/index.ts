@@ -11,9 +11,10 @@ import {
     TESTNET_VERIFY_URL,
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_CHECK_VERIFICATION_STATUS,
+    TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
 } from './constants';
 
-import { getCompilerVersions, verify, verifyContract, getContractInfo, checkVerificationStatus } from './task-actions';
+import { getCompilerVersions, verify, verifyContract, getContractInfo, checkVerificationStatus, getContructorArguments } from './task-actions';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
@@ -25,8 +26,11 @@ subtask(TASK_VERIFY_VERIFY).setAction(verifyContract);
 
 subtask(TASK_VERIFY_GET_COMPILER_VERSIONS).setAction(getCompilerVersions);
 
+subtask(TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS).setAction(getContructorArguments);
+
 subtask(TASK_VERIFY_GET_CONTRACT_INFORMATION).setAction(getContractInfo);
 
 task(TASK_CHECK_VERIFICATION_STATUS)
     .addParam('verificationId', 'An ID returned by the verification request', undefined, types.int)
     .setAction(checkVerificationStatus);
+

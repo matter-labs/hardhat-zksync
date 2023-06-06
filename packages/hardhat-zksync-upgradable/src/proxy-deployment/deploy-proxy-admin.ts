@@ -1,6 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-web3';
-
+import path from 'path';
 import { DeployProxyAdminOptions } from '../utils/options';
 import { deploy } from './deploy';
 import { PROXY_ADMIN_JSON } from '../constants';
@@ -19,7 +19,7 @@ export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
 }
 
 export async function getAdminFactory(hre: HardhatRuntimeEnvironment, wallet: zk.Wallet): Promise<zk.ContractFactory> {
-    const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(PROXY_ADMIN_JSON));
+    const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + PROXY_ADMIN_JSON));
     assert(proxyAdminPath, 'Proxy admin artifact not found');
     const proxyAdminContract = await import(proxyAdminPath);
 

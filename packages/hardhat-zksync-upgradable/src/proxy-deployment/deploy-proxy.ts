@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-web3';
 import chalk from 'chalk';
-
+import path from 'path';
 import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
@@ -59,7 +59,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
             case 'uups': {
                 const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                    x.includes(ERC1967_PROXY_JSON)
+                    x.includes(path.sep + ERC1967_PROXY_JSON)
                 );
                 assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
                 const proxyContract = await import(ERC1967ProxyPath);
@@ -73,7 +73,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
                 console.info(chalk.green('Admin was deployed to ' + adminAddress));
 
-                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(TUP_JSON));
+                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
                 assert(TUPPath, 'TUP artifact not found');
                 const TUPContract = await import(TUPPath);
 

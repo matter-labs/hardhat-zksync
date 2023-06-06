@@ -35,7 +35,15 @@ If your constructor arguments are already encoded, they should be passed as a no
     <other args>,
     constructorArguments: encodedConstructorArguments
   };
+
+  Please refer to the documentation page for more info: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html
 `;
+
+export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: string) => `The module ${constructorArgsModulePath} doesn't export a list and does not start with "0x"\n` +
+`Please export a list of constructor arguments or a single string starting with "0x".`
+
+export const CONSTRUCTOR_MODULE_IMPORTING_ERROR = (errorMessage: string) => `Importing the module for the constructor arguments list failed.
+Reason: ${errorMessage}`;
 
 export const NO_VERIFIABLE_ADDRESS_ERROR =
     "You did not provide any address. Please re-run the 'verify' task with the address of the contract you want to verify.";

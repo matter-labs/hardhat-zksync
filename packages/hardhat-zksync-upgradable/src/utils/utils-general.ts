@@ -1,5 +1,6 @@
 import { MaybeSolcOutput } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
 import { keccak256 } from 'ethereumjs-util';
 import { Interface } from '@ethersproject/abi';
 import chalk from 'chalk';
@@ -79,10 +80,7 @@ export async function getContractCreationTxHash(provider: zk.Provider, address: 
         return logs[0].transactionHash; // get the txhash from the first instance of this event
     } else {
         console.warn(
-            chalk.yellow(
-                `No logs found for event topic ${topic} at address ${address}\n` +
-                    `One of possible reasons can be that you are trying to verify UUPS contract`
-            )
+            chalk.yellow(TOPIC_LOGS_NOT_FOUND_ERROR(topic, address))
         );
     }
 }
