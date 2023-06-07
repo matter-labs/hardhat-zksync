@@ -1,5 +1,11 @@
-import { Interface } from '@ethersproject/abi';
 import { MaybeSolcOutput } from '../interfaces';
+import { ZkSyncUpgradablePluginError } from '../errors';
+import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
+import { keccak256 } from 'ethereumjs-util';
+import { Interface } from '@ethersproject/abi';
+import chalk from 'chalk';
+import axios from 'axios';
+import * as zk from 'zksync-web3';
 
 export type ContractAddressOrInstance = string | { address: string };
 
@@ -33,6 +39,44 @@ export function getInitializerData(
             }
         }
         throw e;
+    }
+}
+
+/**
+ * Gets the constructor args from the given transaction input and creation code.
+ *
+ * @param txInput The transaction input that was used to deploy the contract.
+ * @param creationCode The contract creation code.
+ * @returns the encoded constructor args, or undefined if txInput does not start with the creationCode.
+ */
+export function inferConstructorArgs(txInput: string, creationCode: string) {
+    return txInput.startsWith(creationCode) ? txInput.substring(creationCode.length) : undefined;
+}
+
+/**
+ * Gets the txhash that created the contract at the given address, by calling the
+ * RPC API to look for an event that should have been emitted during construction.
+ *
+ * @param provider The provider to use to call the RPC API.
+ * @param address The address to get the creation txhash for.
+ * @param topic The event topic string that should have been logged.
+ * @returns The txhash corresponding to the logged event, or undefined if not found or if
+ *   the address is not a contract.
+ */
+export async function getContractCreationTxHash(provider: zk.Provider, address: string, topic: string): Promise<any> {
+    const params = {
+        fromBlock: 0,
+        toBlock: 'latest',
+        address: address,
+        topics: ['0x' + keccak256(Buffer.from(topic)).toString('hex')],
+    };
+
+    const logs = await provider.getLogs(params);
+
+    if (logs.length > 0) {
+        return logs[0].transactionHash; // get the txhash from the first instance of this event
+    } else {
+        console.warn(chalk.yellow(TOPIC_LOGS_NOT_FOUND_ERROR(topic, address)));
     }
 }
 

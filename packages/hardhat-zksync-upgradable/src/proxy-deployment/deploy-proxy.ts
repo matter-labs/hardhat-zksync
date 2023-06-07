@@ -12,6 +12,7 @@ import { getInitializerData } from '../utils/utils-general';
 import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
+import { ZkSyncUpgradablePluginError } from '../errors';
 import assert from 'assert';
 
 export interface DeployFunction {
@@ -64,6 +65,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(proxyFactory, impl, data));
+                console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
                 break;
             }
 
@@ -83,7 +85,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             default: {
-                throw new Error(`Unknown proxy kind: ${kind}`);
+                throw new ZkSyncUpgradablePluginError(`Unknown proxy kind: ${kind}`);
             }
         }
 

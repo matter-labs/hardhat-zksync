@@ -17,7 +17,8 @@ import { readValidations } from '../validations/validations';
 import { deploy } from './deploy';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
 import { TransactionResponse } from 'zksync-web3/src/types';
-import { FORMAT_TYPE_MINIMAL } from '../constants';
+import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
 
 export interface DeployData {
     provider: zk.Provider;
@@ -70,11 +71,7 @@ async function deployImpl(
             const abi = factory.interface.format(FORMAT_TYPE_MINIMAL) as string[];
             const attemptDeploy = async () => {
                 if (opts.useDeployedImplementation) {
-                    throw new UpgradesError(
-                        'The implementation contract was not previously deployed.',
-                        () =>
-                            'The useDeployedImplementation option was set to true but the implementation contract was not previously deployed on this network.'
-                    );
+                    throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
                     const deployed = await deploy(factory, deployData.fullOpts.constructorArgs);
 

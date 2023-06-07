@@ -18,6 +18,8 @@ import {
     TASK_CHECK_VERIFICATION_STATUS,
     JSON_INPUT_CODE_FORMAT,
     UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
+    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
+    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
 } from './constants';
 
 import { encodeArguments, executeVeificationWithRetry, retrieveContractBytecode } from './utils';
@@ -25,6 +27,7 @@ import { Build, Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
+import path from 'path';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
@@ -91,6 +94,34 @@ export async function getCompilerVersions(
     return compilerVersions;
 }
 
+export async function getConstructorArguments(
+    args: any,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>
+): Promise<any> {
+    if (!hre.network.zksync) {
+        return await runSuper(args);
+    }
+
+    if (typeof args.constructorArgsModule !== 'string') {
+        return args.constructorArgsParams;
+    }
+
+    const constructorArgsModulePath = path.resolve(process.cwd(), args.constructorArgsModule);
+
+    try {
+        const constructorArguments = (await import(constructorArgsModulePath)).default;
+
+        // Since our plugin supports both encoded and decoded constructor arguments, we need to check how are they passed
+        if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith('0x')) {
+            throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
+        }
+        return constructorArguments;
+    } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(CONSTRUCTOR_MODULE_IMPORTING_ERROR(error.message), error);
+    }
+}
+
 export async function verifyContract(
     { address, contract: contractFQN, constructorArguments, libraries }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
@@ -103,10 +134,6 @@ export async function verifyContract(
     const { isAddress } = await import('@ethersproject/address');
     if (!isAddress(address)) {
         throw new ZkSyncVerifyPluginError(`${address} is an invalid address.`);
-    }
-
-    if (!Array.isArray(constructorArguments)) {
-        throw new ZkSyncVerifyPluginError(CONST_ARGS_ARRAY_ERROR);
     }
 
     const deployedBytecodeHex = await retrieveContractBytecode(address, hre.network);
@@ -132,9 +159,18 @@ export async function verifyContract(
 
     const solcVersion = contractInformation.solcVersion;
 
-    const deployArgumentsEncoded =
-        '0x' +
-        (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments));
+    let deployArgumentsEncoded;
+    if (!Array.isArray(constructorArguments)) {
+        if (constructorArguments.startsWith('0x')) {
+            deployArgumentsEncoded = constructorArguments;
+        } else {
+            throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR));
+        }
+    } else {
+        deployArgumentsEncoded =
+            '0x' +
+            (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments));
+    }
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
     const compilerVersion: string = minimumBuild.output.version;
