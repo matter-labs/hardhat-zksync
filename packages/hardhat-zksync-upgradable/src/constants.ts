@@ -22,8 +22,19 @@ export const UPGRADE_VERIFY_ERROR =
     'The verify plugin must be imported before the hardhat-upgrades plugin.' +
     'Import the plugins in the following order in hardhat.config.js:\n';
 
-export const TOPIC_LOGS_NOT_FOUND_ERROR = (topic: string, address: string) => `No logs found for event topic ${topic} at address ${address}\n` +
-`One of possible reasons can be that you are trying to verify a UUPS contract`
+export const TOPIC_LOGS_NOT_FOUND_ERROR = (topic: string, address: string) =>
+    `No logs found for event topic ${topic} at address ${address}\n` +
+    `One of possible reasons can be that you are trying to verify a UUPS contract`;
+
+export const EVENT_NOT_FOUND_ERROR = (address: string, events: string[]) =>
+    `Could not find an event with any of the following topics in the logs for address ${address}: ${events.join(
+        ', '
+    )}` +
+    'If the proxy was recently deployed, the transaction may not be available on Block Explorer yet. Try running the verify task again after waiting a few blocks.';
+
+export const IMPL_CONTRACT_NOT_DEPLOYED_ERROR =
+    'The implementation contract was not previously deployed.\n' +
+    'The useDeployedImplementation option was set to true but the implementation contract was not previously deployed on this network.';
 
 export const verifiableContracts = {
     erc1967proxy: { event: 'Upgraded(address)' },

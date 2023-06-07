@@ -94,30 +94,32 @@ export async function getCompilerVersions(
     return compilerVersions;
 }
 
-export async function getContructorArguments(
-    taskArgs: any
+export async function getConstructorArguments(
+    args: any,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>
 ): Promise<any> {
-    if (typeof taskArgs.constructorArgsModule !== "string") {
-        return taskArgs.constructorArgsParams;
-      }
+    if (!hre.network.zksync) {
+        return await runSuper(args);
+    }
 
-      const constructorArgsModulePath = path.resolve(
-        process.cwd(),
-        taskArgs.constructorArgsModule
-      );
+    if (typeof args.constructorArgsModule !== 'string') {
+        return args.constructorArgsParams;
+    }
 
-      try {
-        const constructorArguments = (await import(constructorArgsModulePath))
-          .default;
+    const constructorArgsModulePath = path.resolve(process.cwd(), args.constructorArgsModule);
+
+    try {
+        const constructorArguments = (await import(constructorArgsModulePath)).default;
 
         // Since our plugin supports both encoded and decoded constructor arguments, we need to check how are they passed
-        if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith("0x")) {
-          throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
+        if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith('0x')) {
+            throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
         }
         return constructorArguments;
-      } catch (error: any) {
-        throw new ZkSyncVerifyPluginError(CONSTRUCTOR_MODULE_IMPORTING_ERROR(error.message), error); }
-    
+    } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(CONSTRUCTOR_MODULE_IMPORTING_ERROR(error.message), error);
+    }
 }
 
 export async function verifyContract(
@@ -158,16 +160,16 @@ export async function verifyContract(
     const solcVersion = contractInformation.solcVersion;
 
     let deployArgumentsEncoded;
-    if (!Array.isArray(constructorArguments)){
+    if (!Array.isArray(constructorArguments)) {
         if (constructorArguments.startsWith('0x')) {
             deployArgumentsEncoded = constructorArguments;
+        } else {
+            throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR));
         }
-        else{
-            throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR))
-        }
-    }
-    else {
-        deployArgumentsEncoded = '0x' + (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments)) ;
+    } else {
+        deployArgumentsEncoded =
+            '0x' +
+            (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArguments));
     }
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);

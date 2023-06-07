@@ -50,11 +50,7 @@ export function getInitializerData(
  * @returns the encoded constructor args, or undefined if txInput does not start with the creationCode.
  */
 export function inferConstructorArgs(txInput: string, creationCode: string) {
-    if (txInput.startsWith(creationCode)) {
-        return txInput.substring(creationCode.length);
-    } else {
-        return undefined;
-    }
+    return txInput.startsWith(creationCode) ? txInput.substring(creationCode.length) : undefined;
 }
 
 /**
@@ -80,9 +76,7 @@ export async function getContractCreationTxHash(provider: zk.Provider, address: 
     if (logs.length > 0) {
         return logs[0].transactionHash; // get the txhash from the first instance of this event
     } else {
-        console.warn(
-            chalk.yellow(TOPIC_LOGS_NOT_FOUND_ERROR(topic, address))
-        );
+        console.warn(chalk.yellow(TOPIC_LOGS_NOT_FOUND_ERROR(topic, address)));
     }
 }
 

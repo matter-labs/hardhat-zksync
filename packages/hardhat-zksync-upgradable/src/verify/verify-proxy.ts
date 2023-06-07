@@ -5,7 +5,7 @@ import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
 import chalk from 'chalk';
 import { fullVerifyBeacon, fullVerifyBeaconProxy } from './verify-beacon';
 import { fullVerifyTransparentOrUUPS } from './verify-transparent-uups';
-import { UPGRADE_VERIFY_ERROR } from '../constants';
+import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
 import { getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
@@ -29,16 +29,16 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
     const proxyAddress = args.address;
 
     if (await isTransparentOrUUPSProxy(provider, proxyAddress)) {
-        await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatVerify, runSuper);
+        await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
     } else if (await isBeaconProxy(provider, proxyAddress)) {
-        await fullVerifyBeaconProxy(hre, proxyAddress, hardhatVerify, runSuper);
+        await fullVerifyBeaconProxy(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
     } else if (await isBeacon(provider, proxyAddress)) {
-        await fullVerifyBeacon(hre, proxyAddress, hardhatVerify, runSuper);
+        await fullVerifyBeacon(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
     } else {
-        return hardhatVerify(proxyAddress);
+        return hardhatZkSyncVerify(proxyAddress);
     }
 
-    async function hardhatVerify(address: string) {
+    async function hardhatZkSyncVerify(address: string) {
         return await runSuper({ ...args, address });
     }
 }
@@ -63,12 +63,7 @@ async function searchEvent(provider: zk.Provider, address: string, possibleContr
     const events = possibleContractInfo.map((contractInfo) => {
         return contractInfo.event;
     });
-    throw new ZkSyncUpgradablePluginError(
-        `Could not find an event with any of the following topics in the logs for address ${address}: ${events.join(
-            ', '
-        )}` +
-            'If the proxy was recently deployed, the transaction may not be available on Block Explorer yet. Try running the verify task again after waiting a few blocks.'
-    );
+    throw new ZkSyncUpgradablePluginError(EVENT_NOT_FOUND_ERROR(address, events));
 }
 
 export async function verifyWithArtifact(
