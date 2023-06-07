@@ -6,7 +6,6 @@ import {
     isBeacon,
     DeployBeaconProxyUnsupportedError,
     DeployBeaconProxyKindError,
-    UpgradesError,
 } from '@openzeppelin/upgrades-core';
 
 import * as zk from 'zksync-web3';
@@ -17,6 +16,7 @@ import { DeployBeaconProxyOptions } from '../utils/options';
 import { getInitializerData } from '../utils/utils-general';
 import { deploy, DeployTransaction } from './deploy';
 import { BEACON_PROXY_JSON } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
 import { Manifest } from '../core/manifest';
 import chalk from 'chalk';
 import assert from 'assert';
@@ -49,9 +49,9 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
-            throw new UpgradesError(
-                `attachTo must specify a contract factory`,
-                () => `Include the contract factory for the beacon's current implementation in the attachTo parameter`
+            throw new ZkSyncUpgradablePluginError(
+                `attachTo must specify a contract factory\n` +
+                    `Include the contract factory for the beacon's current implementation in the attachTo parameter`
             );
         }
         if (!Array.isArray(args)) {

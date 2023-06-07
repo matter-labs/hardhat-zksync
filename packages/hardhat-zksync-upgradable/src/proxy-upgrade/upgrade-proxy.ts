@@ -70,7 +70,9 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         } else {
             const manifest = await Manifest.forNetwork(provider);
 
-            const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + PROXY_ADMIN_JSON));
+            const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+                x.includes(path.sep + PROXY_ADMIN_JSON)
+            );
             assert(proxyAdminPath, 'Proxy admin artifact not found');
             const proxyAdminContract = await import(proxyAdminPath);
 

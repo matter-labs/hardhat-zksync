@@ -5,6 +5,7 @@ import { Contract } from 'ethers';
 import { Manifest } from './core/manifest';
 import { Wallet } from 'zksync-web3';
 import { getAdminFactory } from './proxy-deployment/deploy-proxy-admin';
+import { ZkSyncUpgradablePluginError } from './errors';
 
 export type ChangeAdminFunction = (proxyAddress: string, newAdmin: string, wallet: Wallet) => Promise<void>;
 export type TransferProxyAdminOwnershipFunction = (newOwner: string, wallet: Wallet) => Promise<void>;
@@ -17,7 +18,7 @@ export function makeChangeProxyAdmin(hre: HardhatRuntimeEnvironment): ChangeAdmi
         const proxyAdminAddress = await getAdminAddress(wallet.provider, proxyAddress);
 
         if (proxyAdminManifest.address !== proxyAdminAddress) {
-            throw new Error('Proxy admin is not the one registered in the network manifest');
+            throw new ZkSyncUpgradablePluginError('Proxy admin is not the one registered in the network manifest');
         } else if (proxyAdminManifest.address !== newAdmin) {
             await proxyAdminManifest.changeProxyAdmin(proxyAddress, newAdmin);
         }
@@ -54,7 +55,7 @@ export async function getManifestAdmin(hre: HardhatRuntimeEnvironment, wallet: W
     const proxyAdminAddress = manifestAdmin?.address;
 
     if (proxyAdminAddress === undefined) {
-        throw new Error('No ProxyAdmin was found in the network manifest');
+        throw new ZkSyncUpgradablePluginError('No ProxyAdmin was found in the network manifest');
     }
 
     const adminFactory = await getAdminFactory(hre, wallet);

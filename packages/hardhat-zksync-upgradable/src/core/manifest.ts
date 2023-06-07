@@ -9,6 +9,7 @@ import { mapValues, pick } from '../utils/utils-general';
 import * as zk from 'zksync-web3';
 import { getChainId, networkNames } from './provider';
 import { MANIFEST_DEFAULT_DIR } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
 
 const currentManifestVersion = '3.2';
 
@@ -29,6 +30,8 @@ export interface ImplDeployment extends Deployment {
 export interface ProxyDeployment extends Deployment {
     kind: 'uups' | 'transparent' | 'beacon';
 }
+
+export class DeploymentNotFound extends ZkSyncUpgradablePluginError {}
 
 function defaultManifest(): ManifestData {
     return {
@@ -129,7 +132,7 @@ export class Manifest {
 
     async write(data: ManifestData): Promise<void> {
         if (!this.locked) {
-            throw new Error('Manifest must be locked');
+            throw new ZkSyncUpgradablePluginError('Manifest must be locked');
         }
         const normalized = normalizeManifestData(data);
         await this.writeFile(JSON.stringify(normalized, null, 2) + '\n');
@@ -137,7 +140,7 @@ export class Manifest {
 
     async lockedRun<T>(cb: () => Promise<T>): Promise<T> {
         if (this.locked) {
-            throw new Error('Manifest is already locked');
+            throw new ZkSyncUpgradablePluginError('Manifest is already locked');
         }
         const release = await this.lock();
         try {
@@ -162,15 +165,17 @@ export class Manifest {
 
 function validateOrUpdateManifestVersion(data: ManifestData): ManifestData {
     if (typeof data.manifestVersion !== 'string') {
-        throw new Error('Manifest version is missing');
+        throw new ZkSyncUpgradablePluginError('Manifest version is missing');
     } else if (compareVersions(data.manifestVersion, '3.0', '<')) {
-        throw new Error('Found a manifest file for OpenZeppelin CLI. An automated migration is not yet available.');
+        throw new ZkSyncUpgradablePluginError(
+            'Found a manifest file for OpenZeppelin CLI. An automated migration is not yet available.'
+        );
     } else if (compareVersions(data.manifestVersion, currentManifestVersion, '<')) {
         return migrateManifest(data);
     } else if (data.manifestVersion === currentManifestVersion) {
         return data;
     } else {
-        throw new Error(`Unknown value for manifest version (${data.manifestVersion})`);
+        throw new ZkSyncUpgradablePluginError(`Unknown value for manifest version (${data.manifestVersion})`);
     }
 }
 
@@ -182,12 +187,9 @@ export function migrateManifest(data: ManifestData): ManifestData {
             data.proxies = [];
             return data;
         default:
-            throw new Error('Manifest migration not available');
+            throw new ZkSyncUpgradablePluginError('Manifest migration not available');
     }
 }
-
-export class DeploymentNotFound extends Error {}
-
 export function normalizeManifestData(input: ManifestData): ManifestData {
     return {
         manifestVersion: input.manifestVersion,

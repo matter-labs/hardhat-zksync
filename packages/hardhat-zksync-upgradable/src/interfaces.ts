@@ -41,3 +41,7 @@ export type ContractAddressOrInstance = string | { address: string };
 export type RecursivePartial<T> = { [k in keyof T]?: RecursivePartial<T[k]> };
 
 export type MaybeSolcOutput = RecursivePartial<SolcOutput>;
+
+export interface VerifiableContractInfo {
+    event: string;
+}

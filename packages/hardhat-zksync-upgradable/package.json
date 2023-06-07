@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-upgradable",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "description": "Hardhat plugin to deploy and update upgradable smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
@@ -32,7 +32,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.2",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
     "@matterlabs/hardhat-zksync-solc": "^0.3.16",
     "dockerode": "^3.3.4"
   },
