@@ -1,11 +1,13 @@
+// contracts/Box.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract Box is Initializable {
+contract BoxWithStorageGap is Initializable {
     uint256 private value;
     uint256 private secondValue;
+    uint256[10] private __gap;
     uint256 private thirdValue;
 
     function initialize(uint256 initValue) public initializer {

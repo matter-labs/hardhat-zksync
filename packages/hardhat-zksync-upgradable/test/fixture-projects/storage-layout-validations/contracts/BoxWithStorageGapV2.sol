@@ -4,9 +4,11 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract BoxV2 is Initializable{
+contract BoxWithStorageGapV2 is Initializable {
     uint256 private value;
     uint256 private secondValue;
+    address private newAddress;
+    uint256[9] private __gap;
     uint256 private thirdValue;
 
     // Emitted when the stored value changes

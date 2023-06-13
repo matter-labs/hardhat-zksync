@@ -1,3 +1,4 @@
+// contracts/Box.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
@@ -7,6 +8,8 @@ contract Box is Initializable {
     uint256 private value;
     uint256 private secondValue;
     uint256 private thirdValue;
+    uint256 private fourthValue;
+    uint256 private fifthValue;
 
     function initialize(uint256 initValue) public initializer {
         value = initValue;

@@ -11,7 +11,7 @@ import {
 
 import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
-import { isFullZkSolcOutput } from './utils/utils-general';
+import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 import { PROXY_SOURCE_NAMES } from './constants';
 import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
@@ -39,6 +39,10 @@ extendEnvironment((hre) => {
                 transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
             },
         };
+    });
+
+    hre.config.solidity.compilers.forEach((compiler) => {
+        extendCompilerOutputSelection(compiler);
     });
 });
 
