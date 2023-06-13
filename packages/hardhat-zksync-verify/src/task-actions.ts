@@ -141,7 +141,7 @@ export async function verifyContract(
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
 
-    await hre.run(TASK_COMPILE);
+    await hre.run(TASK_COMPILE, {quiet:true});
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
         contractFQN: contractFQN,
