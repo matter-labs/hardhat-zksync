@@ -1,11 +1,10 @@
 import { MaybeSolcOutput } from '../interfaces';
-import { ZkSyncUpgradablePluginError } from '../errors';
 import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
 import { keccak256 } from 'ethereumjs-util';
 import { Interface } from '@ethersproject/abi';
 import chalk from 'chalk';
-import axios from 'axios';
 import * as zk from 'zksync-web3';
+import { SolcConfig } from 'hardhat/types';
 
 export type ContractAddressOrInstance = string | { address: string };
 
@@ -119,4 +118,10 @@ export function isFullZkSolcOutput(output: MaybeSolcOutput | undefined): boolean
 
 export function isNullish(value: unknown): value is null | undefined {
     return value === null || value === undefined;
+}
+
+export function extendCompilerOutputSelection(compiler: SolcConfig) {
+    if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o == 'storageLayout')) {
+        compiler.settings.outputSelection['*']['*'].push('storageLayout');
+    }
 }

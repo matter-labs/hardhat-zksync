@@ -197,8 +197,6 @@ describe('Upgradable plugin tests', async function () {
             const contract = await this.deployer.loadArtifact(contractName);
             beaconImplementation = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
 
-            console.info(chalk.green('Beacon deployed to:', beaconImplementation.address));
-
             beaconProxy = await this.env.zkUpgrades.deployBeaconProxy(
                 this.deployer.zkWallet,
                 beaconImplementation,
