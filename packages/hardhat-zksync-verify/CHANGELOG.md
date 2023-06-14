@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 0.1.8
+
+### Patch Changes
+
+- a730d07: Enable passing encoded constructor arguments in 'verify' task and 'verify:verify' subtask
+- cd50e0e: Add quiet compiling during the verification process
+
 ## 0.1.7
 
 ### Patch Changes
