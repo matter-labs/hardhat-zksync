@@ -78,6 +78,10 @@ export class ZksolcCompilerDownloader {
         this._isCompilerPathURL = isURL(_configCompilerPath);
     }
 
+    public getVersion(): string {
+        return this._version;
+    }
+
     public getCompilerPath(): string {
         let salt = '';
 

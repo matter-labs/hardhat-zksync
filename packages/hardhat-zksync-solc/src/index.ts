@@ -25,7 +25,7 @@ import {
 } from './utils';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION } from './constants';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE } from './constants';
 import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
@@ -65,9 +65,35 @@ extendEnvironment((hre) => {
 // This override is needed to invalidate cache when zksolc config is changed.
 subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) => {
     const { jobs, errors } = await runSuper(args);
+
+    if (hre.network.zksync !== true || hre.config.zksolc.compilerSource !== 'binary') {
+        return { jobs, errors };
+    }
+
+    const compilersCache = await getCompilersDir();
+
+    const mutex = new Mutex();
+    await mutex.use(async () => {
+        const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+            hre.config.zksolc.version, 
+            hre.config.zksolc.settings.compilerPath ?? '',
+            compilersCache
+        );
+        
+        const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
+        if (!isZksolcDownloaded) {
+            await zksolcDownloader.downloadCompiler();
+        }
+        hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
+        hre.config.zksolc.version = await zksolcDownloader.getVersion();
+
+    });
+
     jobs.forEach((job: any) => {
         job.solidityConfig.zksolc = hre.config.zksolc;
+        job.solidityConfig.zksolc.settings.compilerPath = hre.config.zksolc.settings.compilerPath;
     });
+
     return { jobs, errors };
 });
 
@@ -176,24 +202,9 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
         };
     }
 
+    console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+
     const solcBuild = await runSuper(args);
-    const compilersCache = await getCompilersDir();
-
-    const mutex = new Mutex();
-    await mutex.use(async () => {
-        const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-            hre.config.zksolc.version, 
-            hre.config.zksolc.settings.compilerPath ?? '',
-            compilersCache
-        );
-        
-        const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
-        if (!isZksolcDownloaded) {
-            await zksolcDownloader.downloadCompiler();
-        }
-        hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
-    });
-
     return solcBuild;
 });
 
