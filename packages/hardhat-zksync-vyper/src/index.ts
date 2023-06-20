@@ -14,10 +14,10 @@ import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import { ZkArtifacts } from './artifacts';
 import { compile } from './compile';
-import { pluralize } from './utils';
+import { checkSupportedVyperVersions, pluralize } from './utils';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
-import { defaultZkVyperConfig } from './constants';
+import { COMPILING_INFO_MESSAGE, defaultZkVyperConfig } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
@@ -27,6 +27,8 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
+    checkSupportedVyperVersions(hre.config.vyper);
+
     if (hre.network.config.zksync) {
         hre.network.zksync = hre.network.config.zksync;
 
@@ -108,7 +110,10 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
             await zkvyperDownloader.downloadCompiler();
         }
         hre.config.zkvyper.settings.compilerPath = await zkvyperDownloader.getCompilerPath();
+        hre.config.zkvyper.version = await zkvyperDownloader.getVersion();
     });
+
+    console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zkvyper.version, args.vyperVersion)));
 
     return vyperBuild;
 });

@@ -1,6 +1,10 @@
 import semver from 'semver';
 
+import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
+
 import { CompilerVersionInfo } from './compile/downloader';
+import { UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
+import { ZkSyncVyperPluginError } from './errors';
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
@@ -45,3 +49,10 @@ export function isVersionInRange(version: string, versionInfo: CompilerVersionIn
     return semver.gte(version, minVersion) && semver.lte(version, latest);
 }
 
+export function checkSupportedVyperVersions(vyper: MultiVyperConfig) {
+    vyper.compilers.forEach((compiler) => {
+        if (UNSUPPORTED_VYPER_VERSIONS.includes(compiler.version)) {
+            throw new ZkSyncVyperPluginError(VYPER_VERSION_ERROR);
+        }
+    });
+}

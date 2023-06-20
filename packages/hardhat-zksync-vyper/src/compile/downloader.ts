@@ -50,7 +50,6 @@ export class ZkVyperCompilerDownloader {
             
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
-                console.info(chalk.green(`Using zkvyper binary version ${version}`));
             } else if (!isVersionInRange(version, compilerVersionInfo)) {
                 throw new ZkSyncVyperPluginError(COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
             } else {
@@ -74,6 +73,10 @@ export class ZkVyperCompilerDownloader {
         private readonly _configCompilerPath: string,
         private readonly _compilersDirectory: string,
     ) { }
+
+    public getVersion(): string {
+        return this._version;
+    }
 
     public getCompilerPath(): string {
         if (this._configCompilerPath) {
