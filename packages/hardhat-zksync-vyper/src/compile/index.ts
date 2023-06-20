@@ -8,7 +8,7 @@ import {
     dockerImage,
     compileWithDocker,
 } from './docker';
-import { pluginError, getZkvyperPath } from '../utils';
+import { ZkSyncVyperPluginError } from '../errors';
 
 export async function compile(
     zkvyperConfig: ZkVyperConfig,
@@ -19,19 +19,19 @@ export async function compile(
     let compiler: ICompiler;
     if (zkvyperConfig.compilerSource == 'binary') {
         if (vyperPath == null) {
-            throw pluginError('vyper executable is not specified');
+            throw new ZkSyncVyperPluginError('vyper executable is not specified');
         }
         compiler = new BinaryCompiler(vyperPath);
     } else if (zkvyperConfig.compilerSource == 'docker') {
         compiler = await DockerCompiler.initialize(zkvyperConfig);
     } else {
-        throw pluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
+        throw new ZkSyncVyperPluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
     return await compiler.compile({
         inputPaths,
         sourcesPath,
-        compilerPath: zkvyperConfig.settings.compilerPath || (await getZkvyperPath(zkvyperConfig.version)),
+        compilerPath: zkvyperConfig.settings.compilerPath,
     },
         zkvyperConfig
     );

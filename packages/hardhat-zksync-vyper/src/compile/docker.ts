@@ -9,7 +9,7 @@ import {
 } from '@nomiclabs/hardhat-docker';
 import { CompilerOptions, ZkVyperConfig } from '../types';
 import Docker, { ContainerCreateOptions } from 'dockerode';
-import { pluginError } from '../utils';
+import { ZkSyncVyperPluginError } from '../errors';
 import { Writable } from 'stream';
 import path from 'path';
 import chalk from 'chalk';
@@ -77,13 +77,13 @@ async function runZkVyperContainer(docker: Docker, image: Image, paths: Compiler
     try {
         return JSON.parse(compilerOutput);
     } catch {
-        throw pluginError(compilerOutput);
+        throw new ZkSyncVyperPluginError(compilerOutput);
     }
 }
 
 export function dockerImage(imageName?: string, imageTag?: string): Image {
     if (!imageName) {
-        throw pluginError('Docker source was chosen but no image was specified');
+        throw new ZkSyncVyperPluginError('Docker source was chosen but no image was specified');
     }
 
     return {
@@ -94,7 +94,7 @@ export function dockerImage(imageName?: string, imageTag?: string): Image {
 
 export async function validateDockerIsInstalled() {
     if (!(await HardhatDocker.isInstalled())) {
-        throw pluginError(
+        throw new ZkSyncVyperPluginError(
             'Docker Desktop is not installed.\n' +
             'Please install it by following the instructions on https://www.docker.com/get-started'
         );
@@ -147,22 +147,22 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         return await promise;
     } catch (error) {
         if (error instanceof DockerNotRunningError || error instanceof DockerBadGatewayError) {
-            throw pluginError(
+            throw new ZkSyncVyperPluginError(
                 'Docker Desktop is not running.\nPlease open it and wait until it finishes booting.',
                 error
             );
         }
 
         if (error instanceof DockerHubConnectionError) {
-            throw pluginError('Error connecting to Docker Hub.\nPlease check your internet connection.', error);
+            throw new ZkSyncVyperPluginError('Error connecting to Docker Hub.\nPlease check your internet connection.', error);
         }
 
         if (error instanceof DockerServerError) {
-            throw pluginError('Docker error', error);
+            throw new ZkSyncVyperPluginError('Docker error', error);
         }
 
         if (error instanceof ImageDoesntExistError) {
-            throw pluginError(
+            throw new ZkSyncVyperPluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
                 'Make sure you chose a valid zkvyper version.'
             );
