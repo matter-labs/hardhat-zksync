@@ -8,6 +8,8 @@ import path from 'path';
 
 import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
 import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constants';
+import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
+import { deploy } from '../src/proxy-deployment/deploy';
 import { getManifestAdmin } from '../src/admin';
 import richWallets from './rich-wallets.json';
 
@@ -304,18 +306,27 @@ describe('Upgradable plugin tests', async function () {
                 initializer: 'initialize',
             });
 
+            const adminFactory = await getAdminFactory(this.env, this.zkWallet2);
+            const newAdminContract = await deploy(adminFactory)
+
+
             await this.env.zkUpgrades.admin.changeProxyAdmin(
                 deployedContract.address,
-                richWallets[1].address,
+                newAdminContract.address,
                 this.deployer.zkWallet
             );
 
-            try {
-                // TODO: This never throws an error, fix this and use assert.rejects
-                this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, deployedContract.address, contractV2);
-            } catch (error: any) {
-                expect(error.message).to.contain(authorizationErrors.WRONG_PROXY_ADMIN);
-            }
+            // wait 2 seconds before the next call
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            await assert.rejects(
+                this.env.zkUpgrades.upgradeProxy(
+                    this.deployer.zkWallet, 
+                    deployedContract.address, 
+                    contractV2
+                ),
+                (error: any) => error.message.includes(authorizationErrors.WRONG_PROXY_ADMIN)
+            );
         });
 
         it('Should fail to change the admin - wrong signer', async function () {
