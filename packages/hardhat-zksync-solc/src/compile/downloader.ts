@@ -157,7 +157,7 @@ export class ZksolcCompilerDownloader {
         const url = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
 
-        await download(url, downloadPath);
+        await download(url, downloadPath, 30000);
     }
 
     private async _downloadCompiler(): Promise<string> {
@@ -167,7 +167,7 @@ export class ZksolcCompilerDownloader {
         }
 
         const downloadPath = this.getCompilerPath();
-        await download(url, downloadPath);
+        await download(url, downloadPath, 30000);
         return downloadPath;
     }
 
