@@ -6,7 +6,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        version: '1.3.11',
+        version: 'latest',
         compilerSource: 'binary',
         settings: {
             optimizer: {
