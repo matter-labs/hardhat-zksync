@@ -722,19 +722,8 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
 
-"@matterlabs/hardhat-zksync-solc@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.4.0.tgz#4f0352398a9de9144fd2c0e32295e212318e164c"
-  integrity sha512-lCHozNmgLco7WOKSCG0FaywAT2Hdymlb2EZF3J4ly4gMVkz54LXXXFLtibggWH5OdYmYkMLGRvUdq8w/ilJUjQ==
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
-    fs-extra "^11.1.1"
-    semver "^7.5.1"
-
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.4.0-beta.2"
+  version "0.4.0"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -743,14 +732,14 @@
     semver "^7.5.1"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "0.1.0-beta.1"
+  version "0.1.0-beta.2"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^0.6.3"
     "@matterlabs/hardhat-zksync-solc" "^0.4.0"
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.2.0-beta.1"
+  version "0.2.0"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
