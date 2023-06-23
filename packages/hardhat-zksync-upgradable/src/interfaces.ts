@@ -29,6 +29,11 @@ export interface HardhatUpgrades {
         changeProxyAdmin: ChangeAdminFunction;
         transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
     };
+    estimation: {
+        estimateGasProxy: DeployFunction;
+        estimateGasBeacon: DeployBeaconFunction;
+        estimateGasBeaconProxy: DeployBeaconProxyFunction;
+    };
 }
 
 export interface RunCompilerArgs {

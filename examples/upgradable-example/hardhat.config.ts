@@ -6,7 +6,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        version: '1.3.10',
+        version: 'latest',
         compilerSource: 'binary',
         settings: {
             optimizer: {
@@ -27,10 +27,10 @@ const config: HardhatUserConfig = {
             zksync: true,
             ethNetwork: 'goerli',
             url: 'http://localhost:3050',
-        },
+        }, 
     },
     solidity: {
-        version: '0.8.19',
+        version: '0.8.20',
     },
 };
 
