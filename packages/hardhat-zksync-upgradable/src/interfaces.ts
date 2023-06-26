@@ -11,6 +11,7 @@ import { DeployFunction } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
 import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
+import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
@@ -31,8 +32,8 @@ export interface HardhatUpgrades {
         transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
     };
     estimation: {
-        estimateGasProxy: DeployFunction;
-        estimateGasBeacon: DeployFunction;
+        estimateGasProxy: EstimateProxyGasFunction;
+        estimateGasBeacon: EstimateProxyGasFunction;
         estimateGasBeaconProxy: EstimateBeaconGasFunction;
     };
 }

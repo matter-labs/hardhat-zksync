@@ -485,16 +485,23 @@ describe('Upgradable plugin tests', async function () {
     });
 
     describe('Test proxy gas estimation', async function () {
-        useEnvironment('beacon-e2e');
+        useEnvironment('deployment-gas-estimation');
 
-        it('Should estimate gas for transparent proxy deployment on local setup', async function () {
+        it.only('Should estimate gas for transparent proxy deployment on local setup', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
 
-            await this.env.zkUpgrades.estimation.estimateGasProxy(this.deployer, contract, [], { kind: 'transparent' });
+            const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], { initializer: 'initialize' });
+            await box.deployed();
+
+            const newBalance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
+
+            const gasEstimation = await this.env.zkUpgrades.estimation.estimateGasProxy(this.deployer, contract, [], { kind: 'transparent' });
+
+            assert(gasEstimation > balance.sub(newBalance).toNumber());
 
         });
 
@@ -519,7 +526,7 @@ describe('Upgradable plugin tests', async function () {
             await this.env.zkUpgrades.estimation.estimateGasBeacon(this.deployer, contract, []);
         });
 
-        it.only('Should estimate gas for beacon proxy deployment on local setup', async function () {
+        it('Should estimate gas for beacon proxy deployment on local setup', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
 

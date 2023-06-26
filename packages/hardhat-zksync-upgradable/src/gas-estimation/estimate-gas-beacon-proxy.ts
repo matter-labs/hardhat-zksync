@@ -2,6 +2,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
 import assert from 'assert';
 import path from 'path';
+import { BigNumber } from 'ethers';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { convertGasPriceToEth } from '../utils/utils-general';
@@ -11,7 +12,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { getMockedBeaconData } from './estimate-gas-beacon';
 
 export interface EstimateBeaconGasFunction {
-    (deployer: Deployer, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<void>;
+    (deployer: Deployer, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<BigNumber>;
 }
 
 export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): EstimateBeaconGasFunction {
@@ -41,6 +42,7 @@ export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): Esti
                 )
             );
             console.info(chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(beaconProxyGasCost)} ETH`));
+            return beaconProxyGasCost;
         } catch (error: any) {
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
         }

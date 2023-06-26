@@ -17,7 +17,7 @@ import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-pr
 import { deploy } from '../proxy-deployment/deploy';
 
 export interface EstimateProxyGasFunction {
-    (deployer: Deployer, artifact: ZkSyncArtifact, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<void>;
+    (deployer: Deployer, artifact: ZkSyncArtifact, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<ethers.BigNumber>;
 }
 interface GasCosts {
     adminGasCost: ethers.BigNumber;
@@ -98,6 +98,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         console.info(
             chalk.cyan(`Total deployment cost is estimated to cost: ${convertGasPriceToEth(totalGasCost)} ETH`)
         );
+        return totalGasCost;
     };
 }
 
