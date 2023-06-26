@@ -5,12 +5,12 @@ import chalk from 'chalk';
 import assert from 'assert';
 import path from 'path';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
+import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general';
 import { UPGRADABLE_BEACON_JSON, defaultImplAddresses } from '../constants';
 
-import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-proxy-admin';
 import { getChainId } from '../core/provider';
 import { deploy } from '../proxy-deployment/deploy';
@@ -72,10 +72,9 @@ export async function getMockedBeaconData(
 }
 
 export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateGasFunction {
-    // a function that goes through the same steps as deployProxy, but instead of deploying the proxy, it estimates the gas
     return async function estimateGasBeacon(
         deployer: Deployer,
-        artifact,
+        artifact: ZkSyncArtifact,
         args: DeployProxyOptions[] = [],
         opts: DeployProxyOptions = {}
     ) {
@@ -111,7 +110,6 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
         }
 
-        // print total cost
         console.info(
             chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost.add(beaconGasCost))} ETH`)
         );

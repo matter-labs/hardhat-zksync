@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
             zksync: true,
             ethNetwork: 'goerli',
             url: 'http://localhost:3050',
-        }, 
+        },
     },
     solidity: {
         version: '0.8.20',

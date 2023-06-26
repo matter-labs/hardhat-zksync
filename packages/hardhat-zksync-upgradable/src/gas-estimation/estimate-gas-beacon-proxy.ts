@@ -15,7 +15,6 @@ export interface EstimateBeaconGasFunction {
 }
 
 export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): EstimateBeaconGasFunction {
-    // a function that goes through the same steps as deployProxy, but instead of deploying the proxy, it estimates the gas
     return async function estimateGasBeaconProxy(
         deployer: Deployer,
         args: DeployProxyOptions[] = [],

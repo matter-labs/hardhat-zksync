@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import assert from 'assert';
 import { useEnvironment } from './helpers';
 import { ContractFactory, Provider, Contract } from 'zksync-web3';
@@ -483,5 +482,48 @@ describe('Upgradable plugin tests', async function () {
             const value = await boxV2.retrieve();
             assert.equal(value, 'V2: 42');
         });
+    });
+
+    describe('Test proxy gas estimation', async function () {
+        useEnvironment('beacon-e2e');
+
+        it('Should estimate gas for transparent proxy deployment on local setup', async function () {
+            const contractName = 'Box';
+            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+
+            const contract = await this.deployer.loadArtifact(contractName);
+            const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
+
+            await this.env.zkUpgrades.estimation.estimateGasProxy(this.deployer, contract, [], { kind: 'transparent' });
+
+        });
+
+        it('Should estimate gas for uups proxy deployment on local setup', async function () {
+            const contractName = 'BoxUups';
+            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+
+            const contract = await this.deployer.loadArtifact(contractName);
+            const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
+
+            await this.env.zkUpgrades.estimation.estimateGasProxy(this.deployer, contract, [], { kind: 'uups' });
+
+        });
+
+        it('Should estimate gas for beacon contract deployment on local setup', async function () {
+            const contractName = 'Box';
+            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+
+            const contract = await this.deployer.loadArtifact(contractName);
+            const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
+
+            await this.env.zkUpgrades.estimation.estimateGasBeacon(this.deployer, contract, []);
+        });
+
+        it.only('Should estimate gas for beacon proxy deployment on local setup', async function () {
+            const contractName = 'Box';
+            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+
+            await this.env.zkUpgrades.estimation.estimateGasBeaconProxy(this.deployer, [], {});
+        })
     });
 });

@@ -10,6 +10,7 @@ import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
 import { DeployFunction } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
 import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
+import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
@@ -31,8 +32,8 @@ export interface HardhatUpgrades {
     };
     estimation: {
         estimateGasProxy: DeployFunction;
-        estimateGasBeacon: DeployBeaconFunction;
-        estimateGasBeaconProxy: DeployBeaconProxyFunction;
+        estimateGasBeacon: DeployFunction;
+        estimateGasBeaconProxy: EstimateBeaconGasFunction;
     };
 }
 
