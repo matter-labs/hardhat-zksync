@@ -4,6 +4,7 @@
 
 ### Patch Changes
 
-- 090cda9: - Transparent, UUPS and beacon proxies support
+- 090cda9: 
+  - Transparent, UUPS and beacon proxies support
   - Proxy contracts verification support
   - Upgrade validations support
