@@ -16,12 +16,16 @@ import { getChainId } from '../core/provider';
 import { deploy } from '../proxy-deployment/deploy';
 
 export interface EstimateGasFunction {
-    (deployer: Deployer, artifact: ZkSyncArtifact, args?: DeployProxyOptions[], opts?: DeployProxyOptions) : Promise<void>
+    (
+        deployer: Deployer,
+        artifact: ZkSyncArtifact,
+        args?: DeployProxyOptions[],
+        opts?: DeployProxyOptions,
+        quiet?: boolean
+    ): Promise<ethers.BigNumber>;
 }
 
-async function deployProxyAdminLocally(
-    adminFactory: zk.ContractFactory
-) {
+async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
     const mockContract = await deploy(adminFactory);
     return mockContract.address;
 }
@@ -76,20 +80,23 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
         deployer: Deployer,
         artifact: ZkSyncArtifact,
         args: DeployProxyOptions[] = [],
-        opts: DeployProxyOptions = {}
+        opts: DeployProxyOptions = {},
+        quiet = false
     ) {
         let beaconGasCost = ethers.BigNumber.from(0);
 
-        const { mockedBeaconAddress} = await getMockedBeaconData(deployer, hre, args, opts);
+        const { mockedBeaconAddress } = await getMockedBeaconData(deployer, hre, args, opts);
 
         const implGasCost = await deployer.estimateDeployFee(artifact, []);
-        console.info(
-            chalk.cyan(
-                `Deployment of the implementation contract is estimated to cost: ${convertGasPriceToEth(
-                    implGasCost
-                )} ETH`
-            )
-        );
+        if (!quiet) {
+            console.info(
+                chalk.cyan(
+                    `Deployment of the implementation contract is estimated to cost: ${convertGasPriceToEth(
+                        implGasCost
+                    )} ETH`
+                )
+            );
+        }
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
             x.includes(path.sep + UPGRADABLE_BEACON_JSON)
@@ -99,19 +106,22 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
 
         try {
             beaconGasCost = await deployer.estimateDeployFee(upgradeableBeaconContract, [mockedBeaconAddress]);
-            console.info(
-                chalk.cyan(
-                    `Deployment of the upgradeable beacon contract is estimated to cost: ${convertGasPriceToEth(
-                        beaconGasCost
-                    )} ETH`
-                )
-            );
+            if (!quiet) {
+                console.info(
+                    chalk.cyan(
+                        `Deployment of the upgradeable beacon contract is estimated to cost: ${convertGasPriceToEth(
+                            beaconGasCost
+                        )} ETH`
+                    )
+                );
+
+                console.info(
+                    chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost.add(beaconGasCost))} ETH`)
+                );
+            }
         } catch (error: any) {
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
         }
-
-        console.info(
-            chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost.add(beaconGasCost))} ETH`)
-        );
+        return beaconGasCost.add(implGasCost);
     };
 }

@@ -17,16 +17,20 @@ import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-pr
 import { deploy } from '../proxy-deployment/deploy';
 
 export interface EstimateProxyGasFunction {
-    (deployer: Deployer, artifact: ZkSyncArtifact, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<ethers.BigNumber>;
+    (
+        deployer: Deployer,
+        artifact: ZkSyncArtifact,
+        args?: DeployProxyOptions[],
+        opts?: DeployProxyOptions,
+        quiet?: boolean
+    ): Promise<ethers.BigNumber>;
 }
 interface GasCosts {
     adminGasCost: ethers.BigNumber;
     proxyGasCost: ethers.BigNumber;
 }
 
-async function deployProxyAdminLocally(
-    adminFactory: zk.ContractFactory,
-) {
+async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
     const mockContract = await deploy(adminFactory);
     return mockContract.address;
 }
@@ -36,7 +40,8 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         deployer: Deployer,
         artifact: ZkSyncArtifact,
         args: DeployProxyOptions[] = [],
-        opts: DeployProxyOptions = {}
+        opts: DeployProxyOptions = {},
+        quiet: boolean = false
     ) {
         let data;
         let totalGasCost;
@@ -60,13 +65,16 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         }
 
         const implGasCost = await deployer.estimateDeployFee(artifact, []);
-        console.info(
-            chalk.cyan(
-                `Deployment of the implementation contract is estimated to cost: ${convertGasPriceToEth(
-                    implGasCost
-                )} ETH`
-            )
-        );
+
+        if (!quiet) {
+            console.info(
+                chalk.cyan(
+                    `Deployment of the implementation contract is estimated to cost: ${convertGasPriceToEth(
+                        implGasCost
+                    )} ETH`
+                )
+            );
+        }
 
         switch (kind) {
             case 'beacon': {
@@ -74,7 +82,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
             }
 
             case 'uups': {
-                const uupsGasCost = await estimateGasUUPS(hre, deployer, mockImplAddress, data);
+                const uupsGasCost = await estimateGasUUPS(hre, deployer, mockImplAddress, data, quiet);
                 totalGasCost = implGasCost.add(uupsGasCost);
                 break;
             }
@@ -84,7 +92,8 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
                     hre,
                     deployer,
                     mockImplAddress,
-                    data
+                    data,
+                    quiet
                 );
                 totalGasCost = implGasCost.add(adminGasCost).add(proxyGasCost);
                 break;
@@ -95,9 +104,11 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
             }
         }
 
-        console.info(
-            chalk.cyan(`Total deployment cost is estimated to cost: ${convertGasPriceToEth(totalGasCost)} ETH`)
-        );
+        if (!quiet) {
+            console.info(
+                chalk.cyan(`Total deployment cost is estimated to cost: ${convertGasPriceToEth(totalGasCost)} ETH`)
+            );
+        }
         return totalGasCost;
     };
 }
@@ -106,7 +117,8 @@ async function estimateGasUUPS(
     hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     mockImplAddress: string,
-    data: string
+    data: string,
+    quiet: boolean = false
 ): Promise<ethers.BigNumber> {
     const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
         x.includes(path.sep + ERC1967_PROXY_JSON)
@@ -116,11 +128,15 @@ async function estimateGasUUPS(
 
     try {
         const uupsGasCost = await deployer.estimateDeployFee(proxyContract, [mockImplAddress, data]);
-        console.info(
-            chalk.cyan(
-                `Deployment of the UUPS proxy contract is estimated to cost: ${convertGasPriceToEth(uupsGasCost)} ETH`
-            )
-        );
+        if (!quiet) {
+            console.info(
+                chalk.cyan(
+                    `Deployment of the UUPS proxy contract is estimated to cost: ${convertGasPriceToEth(
+                        uupsGasCost
+                    )} ETH`
+                )
+            );
+        }
         return uupsGasCost;
     } catch (error: any) {
         throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
@@ -131,16 +147,19 @@ async function estimateGasTransparent(
     hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     mockImplAddress: string,
-    data: string
+    data: string,
+    quiet: boolean = false
 ): Promise<GasCosts> {
     const adminArtifact = await getAdminArtifact(hre);
     const adminGasCost = await deployer.estimateDeployFee(adminArtifact, []);
     let proxyGasCost;
-    console.info(
-        chalk.cyan(
-            `Deployment of the admin proxy contract is estimated to cost: ${convertGasPriceToEth(adminGasCost)} ETH`
-        )
-    );
+    if (!quiet) {
+        console.info(
+            chalk.cyan(
+                `Deployment of the admin proxy contract is estimated to cost: ${convertGasPriceToEth(adminGasCost)} ETH`
+            )
+        );
+    }
 
     const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
     assert(TUPPath, 'TUP artifact not found');
@@ -148,13 +167,15 @@ async function estimateGasTransparent(
 
     try {
         proxyGasCost = await deployer.estimateDeployFee(TUPContract, [mockImplAddress, mockImplAddress, data]);
-        console.info(
-            chalk.cyan(
-                `Deployment of the transparent proxy contract is estimated to cost: ${convertGasPriceToEth(
-                    proxyGasCost
-                )} ETH`
-            )
-        );
+        if (!quiet) {
+            console.info(
+                chalk.cyan(
+                    `Deployment of the transparent proxy contract is estimated to cost: ${convertGasPriceToEth(
+                        proxyGasCost
+                    )} ETH`
+                )
+            );
+        }
     } catch (error: any) {
         throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
     }

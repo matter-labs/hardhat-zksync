@@ -12,14 +12,15 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { getMockedBeaconData } from './estimate-gas-beacon';
 
 export interface EstimateBeaconGasFunction {
-    (deployer: Deployer, args?: DeployProxyOptions[], opts?: DeployProxyOptions): Promise<BigNumber>;
+    (deployer: Deployer, args?: DeployProxyOptions[], opts?: DeployProxyOptions, quiet?: boolean): Promise<BigNumber>;
 }
 
 export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): EstimateBeaconGasFunction {
     return async function estimateGasBeaconProxy(
         deployer: Deployer,
         args: DeployProxyOptions[] = [],
-        opts: DeployProxyOptions = {}
+        opts: DeployProxyOptions = {},
+        quiet: boolean = false
     ) {
         const { mockedBeaconAddress, data } = await getMockedBeaconData(deployer, hre, args, opts);
 
@@ -34,14 +35,16 @@ export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): Esti
                 mockedBeaconAddress,
                 data,
             ]);
-            console.info(
-                chalk.cyan(
-                    `Deployment of the beacon proxy contract is estimated to cost: ${convertGasPriceToEth(
-                        beaconProxyGasCost
-                    )} ETH`
-                )
-            );
-            console.info(chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(beaconProxyGasCost)} ETH`));
+            if (!quiet) {
+                console.info(
+                    chalk.cyan(
+                        `Deployment of the beacon proxy contract is estimated to cost: ${convertGasPriceToEth(
+                            beaconProxyGasCost
+                        )} ETH`
+                    )
+                );
+                console.info(chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(beaconProxyGasCost)} ETH`));
+            }
             return beaconProxyGasCost;
         } catch (error: any) {
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
