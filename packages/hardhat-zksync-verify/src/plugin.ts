@@ -1,9 +1,17 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
 import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import { MULTIPLE_MATCHING_CONTRACTS, CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from './constants';
+import {
+    MULTIPLE_MATCHING_CONTRACTS,
+    CONTRACT_NAME_NOT_FOUND,
+    NO_MATCHING_CONTRACT,
+    LIBRARIES_EXPORT_ERROR,
+} from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
+import { executeVeificationWithRetry } from './utils';
+import path from 'path';
+import chalk from 'chalk';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -76,4 +84,37 @@ export function getSolidityStandardJsonInput(hre: HardhatRuntimeEnvironment, res
         ),
         settings: hre.config.zksolc.settings,
     };
+}
+
+export async function getLibraries(librariesModule: string) {
+    if (typeof librariesModule !== 'string') {
+        return {};
+    }
+
+    const librariesModulePath = path.resolve(process.cwd(), librariesModule);
+
+    try {
+        const libraries = (await import(librariesModulePath)).default;
+
+        if (typeof libraries !== 'object' || Array.isArray(libraries)) {
+            throw new ZkSyncVerifyPluginError(LIBRARIES_EXPORT_ERROR(librariesModule));
+        }
+
+        return libraries;
+    } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(
+            `Importing the module for the libraries dictionary failed. Reason: ${error.message}`,
+            error
+        );
+    }
+}
+
+export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
+    let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
+
+    if (isValidVerification?.errorExists()) {
+        throw new ZkSyncVerifyPluginError(isValidVerification.getError());
+    }
+    console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
+    return true;
 }

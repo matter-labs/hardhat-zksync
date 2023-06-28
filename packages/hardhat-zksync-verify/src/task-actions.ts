@@ -5,7 +5,6 @@ import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-bl
 import {
     TASK_COMPILE,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
-    TASK_VERIFY_GET_LIBRARIES,
     TASK_VERIFY_VERIFY,
     TESTNET_VERIFY_URL,
     NO_VERIFIABLE_ADDRESS_ERROR,
@@ -20,10 +19,9 @@ import {
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
-    LIBRARIES_EXPORT_ERROR,
 } from './constants';
 
-import { encodeArguments, executeVeificationWithRetry, retrieveContractBytecode } from './utils';
+import { encodeArguments, retrieveContractBytecode } from './utils';
 import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
@@ -33,7 +31,7 @@ import path from 'path';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
+import { checkContractName, getLibraries, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
 import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 
 export async function verify(
@@ -244,37 +242,4 @@ export async function getContractInfo(
         contractInformation = await inferContractArtifacts(artifacts, matchingCompilerVersions, deployedBytecode);
     }
     return contractInformation;
-}
-
-export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
-
-    if (isValidVerification?.errorExists()) {
-        throw new ZkSyncVerifyPluginError(isValidVerification.getError());
-    }
-    console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
-    return true;
-}
-
-export async function getLibraries(librariesModule: string) {
-    if (typeof librariesModule !== 'string') {
-        return {};
-    }
-
-    const librariesModulePath = path.resolve(process.cwd(), librariesModule);
-
-    try {
-        const libraries = (await import(librariesModulePath)).default;
-
-        if (typeof libraries !== 'object' || Array.isArray(libraries)) {
-            throw new ZkSyncVerifyPluginError(LIBRARIES_EXPORT_ERROR(librariesModule));
-        }
-
-        return libraries;
-    } catch (error: any) {
-        throw new ZkSyncVerifyPluginError(
-            `Importing the module for the libraries dictionary failed. Reason: ${error.message}`,
-            error
-        );
-    }
 }
