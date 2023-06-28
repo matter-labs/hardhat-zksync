@@ -38,7 +38,7 @@
     "dockerode": "^3.3.4"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-etherscan": "^3.1.2",
+    "@nomicfoundation/hardhat-verify": "^1.0.2",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -57,7 +57,7 @@
     "typescript": "^4.6.2"
   },
   "peerDependencies": {
-    "@nomiclabs/hardhat-etherscan": "^3.1.2"
+    "@nomicfoundation/hardhat-verify": "^1.0.2"
   },
   "prettier": {
     "tabWidth": 4,

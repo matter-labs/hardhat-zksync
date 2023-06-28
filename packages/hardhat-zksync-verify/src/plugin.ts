@@ -14,7 +14,7 @@ export async function inferContractArtifacts(
     const fqNames = await artifacts.getAllFullyQualifiedNames();
 
     for (const fqName of fqNames) {
-        const buildInfo = await artifacts.getBuildInfo(fqName);
+        const buildInfo: any = await artifacts.getBuildInfo(fqName);
 
         if (buildInfo === undefined) {
             continue;

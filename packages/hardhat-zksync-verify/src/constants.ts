@@ -39,6 +39,9 @@ If your constructor arguments are already encoded, they should be passed as a no
   Please refer to the documentation page for more info: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html
 `;
 
+export const BUILD_INFO_NOT_FOUND_ERROR = (contractFQN: string) => `We couldn't find the sources of your "${contractFQN}" contract in the project.
+Please make sure that it has been compiled by Hardhat and that it is written in Solidity.`
+
 export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: string) =>
     `The module ${constructorArgsModulePath} doesn't export a list and does not start with "0x"\n` +
     `Please export a list of constructor arguments or a single string starting with "0x".`;

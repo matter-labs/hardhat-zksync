@@ -1,7 +1,8 @@
-import { BuildInfo, CompilerOutputBytecode } from 'hardhat/types';
+import { CompilerOutputBytecode } from 'hardhat/types';
 
 import { inferSolcVersion } from './metadata';
 import {
+    BuildInfo,
     BytecodeExtractedData,
     BytecodeSlice,
     ContractInformation,
@@ -64,11 +65,10 @@ export async function extractMatchingContractInformation(
             return {
                 ...analyzedBytecode,
                 compilerInput: buildInfo.input,
-                compilerOutput: buildInfo.output,
+                contractOutput: buildInfo.output.contracts[sourceName][contractName],
                 solcVersion: buildInfo.solcVersion,
                 sourceName,
                 contractName,
-                contract,
             };
         }
 
