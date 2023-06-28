@@ -20,6 +20,7 @@ import {
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
+    LIBRARIES_EXPORT_ERROR,
 } from './constants';
 
 import { encodeArguments, executeVeificationWithRetry, retrieveContractBytecode } from './utils';
@@ -125,7 +126,6 @@ export async function verifyContract(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
 ): Promise<number> {
-
     if (!hre.network.zksync) {
         return await runSuper({ address, contractFQN, constructorArguments, libraries });
     }
@@ -140,7 +140,7 @@ export async function verifyContract(
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
 
-    await hre.run(TASK_COMPILE, {quiet:true});
+    await hre.run(TASK_COMPILE, { quiet: true });
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
         contractFQN: contractFQN,
@@ -159,8 +159,7 @@ export async function verifyContract(
         }
     } else {
         deployArgumentsEncoded =
-            '0x' +
-            (await encodeArguments(contractInformation.contractOutput.abi, constructorArguments));
+            '0x' + (await encodeArguments(contractInformation.contractOutput.abi, constructorArguments));
     }
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
@@ -192,12 +191,11 @@ export async function verifyContract(
 
     console.info(chalk.cyan('Your verification ID is: ' + verificationId));
 
-    try{
+    try {
         await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
-    }
-    // The first verirication attempt with 'minimal' source code was unnsuccessful.
-    // Now try with the full source code from the compilation context. 
-    catch (error: any) {
+    } catch (error: any) {
+        // The first verirication attempt with 'minimal' source code was unnsuccessful.
+        // Now try with the full source code from the compilation context.
         if (error.message !== NO_MATCHING_CONTRACT) {
             throw error;
         }
@@ -217,9 +215,8 @@ export async function verifyContract(
 
 export async function getContractInfo(
     { contractFQN, deployedBytecode, matchingCompilerVersions }: TaskArguments,
-    {  artifacts }: HardhatRuntimeEnvironment
+    { artifacts }: HardhatRuntimeEnvironment
 ): Promise<any> {
-
     let contractInformation;
 
     if (contractFQN !== undefined) {
@@ -259,28 +256,25 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     return true;
 }
 
-export async function getLibraries( librariesModule: string) {
-
-    if (typeof librariesModule !== "string") {
+export async function getLibraries(librariesModule: string) {
+    if (typeof librariesModule !== 'string') {
         return {};
-      }
+    }
 
-      const librariesModulePath = path.resolve(process.cwd(), librariesModule);
+    const librariesModulePath = path.resolve(process.cwd(), librariesModule);
 
-      try {
+    try {
         const libraries = (await import(librariesModulePath)).default;
 
-        if (typeof libraries !== "object" || Array.isArray(libraries)) {
-          throw new ZkSyncVerifyPluginError(
-            `The module ${librariesModulePath} doesn't export a dictionary. The module should look like this: module.exports = { lib1: "0x...", lib2: "0x...", ... };`
-          );
+        if (typeof libraries !== 'object' || Array.isArray(libraries)) {
+            throw new ZkSyncVerifyPluginError(LIBRARIES_EXPORT_ERROR(librariesModule));
         }
 
         return libraries;
-      } catch (error: any) {
+    } catch (error: any) {
         throw new ZkSyncVerifyPluginError(
-          `Importing the module for the libraries dictionary failed. Reason: ${error.message}`,
-          error
+            `Importing the module for the libraries dictionary failed. Reason: ${error.message}`,
+            error
         );
-      }
+    }
 }

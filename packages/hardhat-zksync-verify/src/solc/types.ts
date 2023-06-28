@@ -14,9 +14,8 @@ export interface ContractInformation {
     sourceName: string;
     contractName: string;
     contractOutput: CompilerOutputContract;
-  }
+}
 
-    
 export interface CompilerOutput {
     sources: CompilerOutputSources;
     contracts: {
@@ -35,13 +34,13 @@ export interface CompilerOutputContract {
             [methodSignature: string]: string;
         };
     };
-    metadata: CompilerOutputMetadata
+    metadata: CompilerOutputMetadata;
 }
 
-export interface CompilerOutputMetadata { 
-    optimizer_settings: string,
-    solc_metadata: string,
-    zk_version: string
+export interface CompilerOutputMetadata {
+    optimizer_settings: string;
+    solc_metadata: string;
+    zk_version: string;
 }
 
 export interface BytecodeSlice {
@@ -57,7 +56,5 @@ export interface BuildInfo {
     input: CompilerInput;
     output: CompilerOutput;
 }
-
-
 
 export type NestedSliceReferences = BytecodeSlice[][];
