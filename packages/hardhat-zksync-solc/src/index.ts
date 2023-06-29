@@ -92,6 +92,10 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
     jobs.forEach((job: any) => {
         job.solidityConfig.zksolc = hre.config.zksolc;
         job.solidityConfig.zksolc.settings.compilerPath = hre.config.zksolc.settings.compilerPath;
+
+        if (hre.config.zksolc.settings.libraries) {
+            job.solidityConfig.settings.libraries = hre.config.zksolc.settings.libraries;
+        }
     });
 
     return { jobs, errors };
@@ -149,20 +153,12 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
         return await runSuper(args);
     }
 
-    if (hre.config.zksolc.settings.libraries) {
-        args.input.settings.libraries = hre.config.zksolc.settings.libraries;
-    }
-
     return await compile(hre.config.zksolc, args.input, args.solcPath);
 });
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
         return await runSuper(args);
-    }
-
-    if (hre.config.zksolc.settings.libraries) {
-        args.input.settings.libraries = hre.config.zksolc.settings.libraries;
     }
 
     const solcPath = `${args.solcJsPath}.executable`;
