@@ -1,10 +1,16 @@
 # @matterlabs/hardhat-zksync-solc
 
+## 0.4.1
+
+### Patch Changes
+
+- a1a8f8e: Enable library caching
+
 ## 0.4.0
 
 ### Minor Changes
 
-- 224cc6c: 
+- 224cc6c:
   - Enhanced zksolc compiler version checking mechanism.
   - Improved error handling for incorrect zksolc compiler versions.
   - Optimized validation process for zksolc compiler configuration.
