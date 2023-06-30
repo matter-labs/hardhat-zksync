@@ -25,6 +25,9 @@ extendEnvironment((hre) => {
         const { makeDeployBeaconProxy } = require('./proxy-deployment/deploy-beacon-proxy');
         const { makeUpgradeBeacon } = require('./proxy-upgrade/upgrade-beacon');
         const { makeDeployProxyAdmin } = require('./proxy-deployment/deploy-proxy-admin');
+        const { makeEstimateGasProxy } = require('./gas-estimation/estimate-gas-proxy');
+        const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
+        const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
         return {
             deployProxy: makeDeployProxy(hre),
             upgradeProxy: makeUpgradeProxy(hre),
@@ -37,6 +40,11 @@ extendEnvironment((hre) => {
                 getInstance: makeGetInstanceFunction(hre),
                 changeProxyAdmin: makeChangeProxyAdmin(hre),
                 transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+            },
+            estimation: {
+                estimateGasProxy: makeEstimateGasProxy(hre),
+                estimateGasBeacon: makeEstimateGasBeacon(hre),
+                estimateGasBeaconProxy: makeEstimateGasBeaconProxy(hre),
             },
         };
     });
