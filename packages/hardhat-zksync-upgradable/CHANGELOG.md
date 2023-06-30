@@ -1,10 +1,16 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 0.1.1
+
+### Patch Changes
+
+- 463c5f4: Added proxy deployment gas estimation
+
 ## 0.1.0
 
 ### Patch Changes
 
-- 090cda9: 
+- 090cda9:
   - Transparent, UUPS and beacon proxies support
   - Proxy contracts verification support
   - Upgrade validations support
