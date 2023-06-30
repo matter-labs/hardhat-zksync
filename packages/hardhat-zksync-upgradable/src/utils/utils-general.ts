@@ -5,6 +5,7 @@ import { Interface } from '@ethersproject/abi';
 import chalk from 'chalk';
 import * as zk from 'zksync-web3';
 import { SolcConfig } from 'hardhat/types';
+import { ethers } from 'ethers';
 
 export type ContractAddressOrInstance = string | { address: string };
 
@@ -124,4 +125,8 @@ export function extendCompilerOutputSelection(compiler: SolcConfig) {
     if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o == 'storageLayout')) {
         compiler.settings.outputSelection['*']['*'].push('storageLayout');
     }
+}
+
+export function convertGasPriceToEth(gasPrice: ethers.BigNumber): string {
+    return ethers.utils.formatEther(gasPrice.toString());
 }
