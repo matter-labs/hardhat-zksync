@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 0.2.0
+
+### Minor Changes
+
+- 30d802a: Replaced hardhat-etherscan dependency with hardhat-verify dependency
+
 ## 0.1.8
 
 ### Patch Changes
