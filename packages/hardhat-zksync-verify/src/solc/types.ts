@@ -1,4 +1,4 @@
-import { CompilerInput, CompilerOutput } from 'hardhat/types';
+import { CompilerInput, CompilerOutputBytecode, CompilerOutputSources } from 'hardhat/types';
 
 // Left as an interface since future compiler outputs can contain more than just a bytecode field
 export interface BytecodeExtractedData {
@@ -8,18 +8,53 @@ export interface BytecodeExtractedData {
 export type SourceName = string;
 export type ContractName = string;
 
-export interface ContractInformation extends BytecodeExtractedData {
+export interface ContractInformation {
     compilerInput: CompilerInput;
-    compilerOutput: CompilerOutput;
     solcVersion: string;
-    sourceName: SourceName;
-    contractName: ContractName;
-    contract: CompilerOutput['contracts'][SourceName][ContractName];
+    sourceName: string;
+    contractName: string;
+    contractOutput: CompilerOutputContract;
+}
+
+export interface CompilerOutput {
+    sources: CompilerOutputSources;
+    contracts: {
+        [sourceName: string]: {
+            [contractName: string]: CompilerOutputContract;
+        };
+    };
+}
+
+export interface CompilerOutputContract {
+    abi: any;
+    evm: {
+        bytecode: CompilerOutputBytecode;
+        deployedBytecode: CompilerOutputBytecode;
+        methodIdentifiers: {
+            [methodSignature: string]: string;
+        };
+    };
+    metadata: CompilerOutputMetadata;
+}
+
+export interface CompilerOutputMetadata {
+    optimizer_settings: string;
+    solc_metadata: string;
+    zk_version: string;
 }
 
 export interface BytecodeSlice {
     start: number;
     length: number;
+}
+
+export interface BuildInfo {
+    _format: string;
+    id: string;
+    solcVersion: string;
+    solcLongVersion: string;
+    input: CompilerInput;
+    output: CompilerOutput;
 }
 
 export type NestedSliceReferences = BytecodeSlice[][];

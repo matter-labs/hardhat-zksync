@@ -1,4 +1,4 @@
-import '@nomiclabs/hardhat-etherscan';
+import '@nomicfoundation/hardhat-verify';
 
 import { extendEnvironment, subtask, task, types } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
@@ -14,14 +14,8 @@ import {
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
 } from './constants';
 
-import {
-    getCompilerVersions,
-    verify,
-    verifyContract,
-    getContractInfo,
-    checkVerificationStatus,
-    getConstructorArguments,
-} from './task-actions';
+import { getCompilerVersions, verify, verifyContract, getContractInfo, getConstructorArguments } from './task-actions';
+import { checkVerificationStatus } from './plugin';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;

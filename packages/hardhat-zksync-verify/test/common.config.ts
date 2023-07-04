@@ -1,4 +1,4 @@
-import '@nomiclabs/hardhat-etherscan';
+import '@nomicfoundation/hardhat-verify';
 import '@matterlabs/hardhat-zksync-solc';
 import '../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
