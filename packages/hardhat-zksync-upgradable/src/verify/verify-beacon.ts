@@ -11,7 +11,8 @@ export async function fullVerifyBeacon(
     hre: HardhatRuntimeEnvironment,
     beaconAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
-    runSuper: RunSuperFunction<any>
+    runSuper: RunSuperFunction<any>,
+    quiet: boolean = false
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new Provider(networkConfig.url);
@@ -21,7 +22,9 @@ export async function fullVerifyBeacon(
     await verifyBeacon();
 
     async function verifyBeacon() {
-        console.info(chalk.cyan(`Verifying beacon: ${beaconAddress}`));
+        if (!quiet) {
+            console.info(chalk.cyan(`Verifying beacon: ${beaconAddress}`));
+        }
         await verifyWithArtifact(hre, beaconAddress, [verifiableContracts.upgradeableBeacon], runSuper);
     }
 }
@@ -30,7 +33,8 @@ export async function fullVerifyBeaconProxy(
     hre: HardhatRuntimeEnvironment,
     proxyAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
-    runSuper: RunSuperFunction<any>
+    runSuper: RunSuperFunction<any>,
+    quiet: boolean = false
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new Provider(networkConfig.url);
@@ -40,7 +44,9 @@ export async function fullVerifyBeaconProxy(
     await verifyBeaconProxy();
 
     async function verifyBeaconProxy() {
-        console.info(chalk.cyan(`Verifying beacon proxy: ${proxyAddress}`));
+        if (!quiet) {
+            console.info(chalk.cyan(`Verifying beacon proxy: ${proxyAddress}`));
+        }
         await verifyWithArtifact(hre, proxyAddress, [verifiableContracts.beaconProxy], runSuper);
     }
 }
