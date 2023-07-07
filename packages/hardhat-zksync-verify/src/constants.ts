@@ -1,5 +1,6 @@
 export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-verify';
 
+export const TESTNET_URL = 'https://testnet.era.zksync.dev';
 export const TESTNET_VERIFY_URL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 
 export const TASK_COMPILE = 'compile';
@@ -14,6 +15,12 @@ export const TASK_VERIFY_GET_COMPILER_VERSIONS = 'verify:get-compiler-versions';
 export const TASK_VERIFY_GET_MINIMUM_BUILD = 'verify:get-minimum-build';
 export const TASK_VERIFY_VERIFY_MINIMUM_BUILD = 'zk:verify:verify-minimum-build';
 export const TASK_VERIFY_GET_CONTRACT_INFORMATION = 'verify:get-contract-information';
+
+export const MOCK_ADDRESS = '0x110eb1e16A63c608787236E728Fa1817C72e6950';
+
+// Error messages
+
+export const CONTRACT_ALREADY_VERIFIED_ERROR = 'This contract is already verified';
 
 export const CONST_ARGS_ARRAY_ERROR = `
 Wrong constructor arguments format:
@@ -105,3 +112,6 @@ export const UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE = `Compiling your contract
 Trying again with the full solc input used to compile and deploy it.
 This means that unrelated contracts may be displayed on the zksync block explorer.
 `;
+
+export const WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR =
+    'The number of constructor arguments you provided (0) does not match the number of constructor arguments the contract has been deployed with (1).';

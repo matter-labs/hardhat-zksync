@@ -732,10 +732,20 @@
     semver "^7.5.1"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "0.1.0"
+  version "0.1.1"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^0.6.3"
     "@matterlabs/hardhat-zksync-solc" "^0.4.0"
+    dockerode "^3.3.4"
+
+"@matterlabs/hardhat-zksync-verify@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-verify/-/hardhat-zksync-verify-0.1.8.tgz#0f975bb6354c8762e6d2f5b683453e3dc11dbbab"
+  integrity sha512-Ss8smBeX/h58NOaGQwQCGdYjkcQE9C0BX+iak5fWt49E58mDunnMsVhVogkWqO1QWq0LsdKLAuQO3blbvgVzFQ==
+  dependencies:
+    "@matterlabs/hardhat-zksync-solc" "0.3.17"
+    axios "^1.4.0"
+    chalk "4.1.2"
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
@@ -1086,20 +1096,10 @@
   dependencies:
     which "^3.0.0"
 
-"@openzeppelin/contracts-upgradeable@^4.8.3":
-  version "4.9.2"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.2.tgz#a817c75688f8daede420052fbcb34e52482e769e"
-  integrity sha512-siviV3PZV/fHfPaoIC51rf1Jb6iElkYWnNYZ0leO23/ukXuvOyoC/ahy8jqiV7g+++9Nuo3n/rk5ajSN/+d/Sg==
-
 "@openzeppelin/contracts-upgradeable@^4.9.1":
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.1.tgz#03e33b8059ce43884995e69e4479f5a7f084b404"
   integrity sha512-UZf5/VdaBA/0kxF7/gg+2UrC8k+fbgiUM0Qw1apAhwpBWBxULbsHw0ZRMgT53nd6N8hr53XFjhcWNeTRGIiCVw==
-
-"@openzeppelin/contracts@^4.8.3":
-  version "4.9.2"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.2.tgz#1cb2d5e4d3360141a17dbc45094a8cad6aac16c1"
-  integrity sha512-mO+y6JaqXjWeMh9glYVzVu8HYPGknAAnWyxTRhGeckOruyXQMNnlcW6w/Dx9ftLeIQk6N+ZJFuVmTwF7lEIFrg==
 
 "@openzeppelin/contracts@^4.9.1":
   version "4.9.1"
