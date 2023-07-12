@@ -26,7 +26,8 @@ export async function fullVerifyTransparentOrUUPS(
     hre: HardhatRuntimeEnvironment,
     proxyAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
-    runSuper: RunSuperFunction<any>
+    runSuper: RunSuperFunction<any>,
+    quiet: boolean = false
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new zk.Provider(networkConfig.url);
@@ -39,7 +40,9 @@ export async function fullVerifyTransparentOrUUPS(
     async function verifyAdmin() {
         const adminAddress = await getAdminAddress(provider, proxyAddress);
         if (!isEmptySlot(adminAddress)) {
-            console.info(chalk.cyan(`Verifying proxy admin: ${adminAddress}`));
+            if (!quiet) {
+                console.info(chalk.cyan(`Verifying proxy admin: ${adminAddress}`));
+            }
             try {
                 await verifyWithArtifact(hre, adminAddress, [verifiableContracts.proxyAdmin], runSuper);
             } catch (e: any) {
@@ -49,7 +52,9 @@ export async function fullVerifyTransparentOrUUPS(
     }
 
     async function verifyTransparentOrUUPS() {
-        console.info(chalk.cyan(`Verifying proxy: ${proxyAddress}`));
+        if (!quiet) {
+            console.info(chalk.cyan(`Verifying proxy: ${proxyAddress}`));
+        }
         await verifyWithArtifact(
             hre,
             proxyAddress,
