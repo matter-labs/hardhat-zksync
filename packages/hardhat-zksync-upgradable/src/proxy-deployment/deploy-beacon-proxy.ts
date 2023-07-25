@@ -1,7 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import {
-    logWarning,
     ProxyDeployment,
     isBeacon,
     DeployBeaconProxyUnsupportedError,
@@ -28,13 +27,14 @@ export interface DeployBeaconProxyFunction {
         beacon: ContractAddressOrInstance,
         artifact: ZkSyncArtifact,
         args?: unknown[],
-        opts?: DeployBeaconProxyOptions
+        opts?: DeployBeaconProxyOptions,
+        quiet?: boolean
     ): Promise<zk.Contract>;
     (
         wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
         artifact: ZkSyncArtifact,
-        opts?: DeployBeaconProxyOptions
+        opts?: DeployBeaconProxyOptions,
     ): Promise<zk.Contract>;
 }
 
@@ -44,7 +44,8 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         beacon: ContractAddressOrInstance,
         artifact: ZkSyncArtifact,
         args: unknown[] | DeployBeaconProxyOptions = [],
-        opts: DeployBeaconProxyOptions = {}
+        opts: DeployBeaconProxyOptions = {},
+        quiet: boolean = false
     ) {
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
@@ -74,10 +75,14 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         const data = getInitializerData(attachTo.interface, args, opts.initializer);
 
         if (await manifest.getAdmin()) {
-            logWarning(`A proxy admin was previously deployed on this network`, [
-                `This is not natively used with the current kind of proxy ('beacon').`,
-                `Changes to the admin will have no effect on this new proxy.`,
-            ]);
+            if (!quiet) {
+                console.info(
+                    chalk.yellow(`A proxy admin was previously deployed on this network`, [
+                        `This is not natively used with the current kind of proxy ('beacon').`,
+                        `Changes to the admin will have no effect on this new proxy.`,
+                    ])
+                );
+            }
         }
 
         const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
@@ -96,7 +101,9 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             { kind: opts.kind },
             await deploy(beaconProxyFactory, beaconAddress, data)
         );
-        console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
+        if (!quiet) {
+            console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
+        }
 
         await manifest.addProxy(proxyDeployment);
 

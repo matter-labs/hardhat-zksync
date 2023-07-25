@@ -15,7 +15,8 @@ export type UpgradeBeaconFunction = (
     wallet: zk.Wallet,
     beacon: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
-    opts?: UpgradeBeaconOptions
+    opts?: UpgradeBeaconOptions,
+    quiet?: boolean
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconFunction {
@@ -23,7 +24,8 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         wallet,
         beaconImplementation,
         newImplementationArtifact,
-        opts: UpgradeBeaconOptions = {}
+        opts: UpgradeBeaconOptions = {},
+        quiet: boolean = false
     ) {
         const factory = new zk.ContractFactory(
             newImplementationArtifact.abi,
@@ -34,7 +36,9 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         opts.provider = wallet.provider;
         const beaconImplementationAddress = getContractAddress(beaconImplementation);
         const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);
-        console.info(chalk.green('New beacon impl deployed at', nextImpl));
+        if (!quiet) {
+            console.info(chalk.green('New beacon impl deployed at', nextImpl));
+        }
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
             x.includes(path.sep + UPGRADABLE_BEACON_JSON)

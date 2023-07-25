@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 0.1.2
+
+### Patch Changes
+
+- 1341a00: Added `quiet` parameter for deploy proxy and upgrade proxy functionalities
+
 ## 0.1.1
 
 ### Patch Changes

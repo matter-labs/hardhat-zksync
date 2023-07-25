@@ -16,7 +16,7 @@ import { ZkSyncUpgradablePluginError } from '../errors';
 import assert from 'assert';
 
 export interface DeployFunction {
-    (wallet: zk.Wallet, artifact: ZkSyncArtifact, args?: unknown[], opts?: DeployProxyOptions): Promise<zk.Contract>;
+    (wallet: zk.Wallet, artifact: ZkSyncArtifact, args?: unknown[], opts?: DeployProxyOptions, quiet?: boolean): Promise<zk.Contract>;
 }
 
 export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction {
@@ -24,7 +24,8 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         wallet,
         artifact,
         args: unknown[] | DeployProxyOptions = [],
-        opts: DeployProxyOptions = {}
+        opts: DeployProxyOptions = {},
+        quiet: boolean = false
     ) {
         if (!Array.isArray(args)) {
             opts = args;
@@ -36,18 +37,22 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
-        console.info(chalk.green('Implementation contract was deployed to ' + impl));
+        if (!quiet) {
+            console.info(chalk.green('Implementation contract was deployed to ' + impl));
+        }
 
         const contractInterface = factory.interface;
         const data = getInitializerData(contractInterface, args, opts.initializer);
 
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
-                console.info(
-                    chalk.yellow(
-                        `A proxy admin was previously deployed on this network\nThis is not natively used with the current kind of proxy ('uups')\nChanges to the admin will have no effect on this new proxy`
-                    )
-                );
+                if (!quiet) {
+                    console.info(
+                        chalk.yellow(
+                            `A proxy admin was previously deployed on this network\nThis is not natively used with the current kind of proxy ('uups')\nChanges to the admin will have no effect on this new proxy`
+                        )
+                    );
+                }
             }
         }
 
@@ -65,13 +70,17 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(proxyFactory, impl, data));
-                console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
+                if (!quiet) {
+                    console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
+                }
                 break;
             }
 
             case 'transparent': {
                 const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
-                console.info(chalk.green('Admin was deployed to ' + adminAddress));
+                if (!quiet) {
+                    console.info(chalk.green('Admin was deployed to ' + adminAddress));
+                }
 
                 const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
                 assert(TUPPath, 'TUP artifact not found');
@@ -79,7 +88,9 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(TUPFactory, impl, adminAddress, data));
-                console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
+                if (!quiet) {
+                    console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
+                }
 
                 break;
             }

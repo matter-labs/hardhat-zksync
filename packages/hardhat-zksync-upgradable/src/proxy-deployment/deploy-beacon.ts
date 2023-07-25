@@ -14,16 +14,23 @@ import assert from 'assert';
 import path from 'path';
 
 export interface DeployBeaconFunction {
-    (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions): Promise<zk.Contract>;
+    (wallet: zk.Wallet, artifact: ZkSyncArtifact, opts?: DeployBeaconOptions, quiet?: boolean): Promise<zk.Contract>;
 }
 
 export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFunction {
-    return async function deployBeacon(wallet: zk.Wallet, artifact: ZkSyncArtifact, opts: DeployBeaconOptions = {}) {
+    return async function deployBeacon(
+        wallet: zk.Wallet,
+        artifact: ZkSyncArtifact,
+        opts: DeployBeaconOptions = {},
+        quiet: boolean = false
+    ) {
         const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         opts.provider = wallet.provider;
         const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
-        console.info(chalk.green('Beacon impl deployed at', impl));
+        if (!quiet) {
+            console.info(chalk.green('Beacon impl deployed at', impl));
+        }
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
             x.includes(path.sep + UPGRADABLE_BEACON_JSON)
@@ -37,7 +44,9 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
             wallet
         );
         const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(upgradeableBeaconFactory, impl);
-        console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
+        if (!quiet) {
+            console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
+        }
 
         const beaconContract = upgradeableBeaconFactory.attach(beaconDeployment.address);
         // @ts-ignore Won't be readonly because beaconContract was created through attach.
