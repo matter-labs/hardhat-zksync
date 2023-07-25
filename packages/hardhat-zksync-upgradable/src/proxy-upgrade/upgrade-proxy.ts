@@ -19,11 +19,18 @@ export type UpgradeFunction = (
     wallet: zk.Wallet,
     proxy: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
-    opts?: UpgradeProxyOptions
+    opts?: UpgradeProxyOptions,
+    quiet?: boolean
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
-    return async function upgradeProxy(wallet, proxy, newImplementationArtifact, opts: UpgradeProxyOptions = {}) {
+    return async function upgradeProxy(
+        wallet,
+        proxy,
+        newImplementationArtifact,
+        opts: UpgradeProxyOptions = {},
+        quiet: boolean = false
+    ) {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
 
@@ -38,7 +45,9 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const call = encodeCall(newImplementationFactory, opts.call);
         const upgradeTx = await upgradeTo(nextImpl, call);
 
-        console.info(chalk.green('Contract successfully upgraded to ', nextImpl, ' with tx ', upgradeTx.hash));
+        if (!quiet) {
+            console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
+        }
 
         const inst = newImplementationFactory.attach(proxyAddress);
         // @ts-ignore Won't be readonly because inst was created through attach.
