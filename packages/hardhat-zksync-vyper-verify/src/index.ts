@@ -1,7 +1,5 @@
-import { extendEnvironment, task, subtask } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, task, subtask, types } from 'hardhat/internal/core/config/config-env';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { types } from "hardhat/internal/core/config/config-env";
-import '@matterlabs/hardhat-zksync-vyper/dist/src/type-extensions';
 import './type-extensions';
 
 import {
