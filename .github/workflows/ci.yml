@@ -182,6 +182,7 @@ jobs:
       - name: Setup environment
         run: |
           yarn install
+          yarn build
 
       - name: Test zkvyper verify plugin
         run: |

@@ -67,7 +67,9 @@ Instead, this name was received: ${contractFQN}`
             throw new ZkSyncVerifyPluginError(`The contract ${contractFQN} is not present in your project.`);
         }
     }
-    throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
+    else {
+        throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
+    }
 }
 
 export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
