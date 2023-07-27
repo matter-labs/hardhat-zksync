@@ -33,7 +33,7 @@
   ],
   "dependencies": {
     "axios": "^1.4.0",
-    "@matterlabs/hardhat-zksync-solc": "0.3.17",
+    "@matterlabs/hardhat-zksync-solc": "0.4.1",
     "chalk": "4.1.2",
     "dockerode": "^3.3.4"
   },
