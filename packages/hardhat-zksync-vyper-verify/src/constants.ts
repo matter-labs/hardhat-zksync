@@ -67,17 +67,17 @@ export const MULTIPLE_MATCHING_CONTRACTS = `More than one contract was found to 
 
       For example:
 
-        hardhat verify:vyper --contract contracts/Example.sol:ExampleContract <other args>
+        hardhat verify:vyper --contract contracts/Example.vy:Example <other args>
 
       If you are running the verify subtask from within Hardhat instead:
 
         await run("${TASK_VERIFY_VERIFY_VYPER}", {
           <other args>,
-          contract: "contracts/Example.sol:ExampleContract"
+          contract: "contracts/Example.vy:Example"
         };`;
 
 export const CONTRACT_NAME_NOT_FOUND = `You did not provide any contract name. Please add fully qualified name of your contract. 
-Qualified names look like this: contracts/AContract.sol:TheContract`;
+Qualified names look like this: contracts/Example.vy:Example`;
 
 export const COMPILER_VERSION_NOT_SUPPORTED =
   'Vyper compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
