@@ -168,3 +168,23 @@ jobs:
         run: |
           cd packages/hardhat-zksync-upgradable
           yarn test
+  zkvyper-verify:
+    runs-on: ubuntu-latest
+    name: zkvyper-verify
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: yarn
+
+      - name: Setup environment
+        run: |
+          yarn install
+          yarn build
+
+      - name: Test zkvyper verify plugin
+        run: |
+          cd packages/hardhat-zksync-vyper-verify
+          yarn test
