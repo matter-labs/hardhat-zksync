@@ -1,6 +1,6 @@
 import { getVersion, SolcOutput, ValidationRunData } from '@openzeppelin/upgrades-core';
 import { SrcDecoder } from '@openzeppelin/upgrades-core/src/src-decoder';
-import { astDereferencer } from '@openzeppelin/upgrades-core/dist/ast-dereferencer';
+import { astDereferencer } from 'solidity-ast/dist/ast-dereferencer';
 import { extractStorageLayout } from '@openzeppelin/upgrades-core/dist/storage';
 import { isNodeType, findAll, ASTDereferencer } from 'solidity-ast/utils';
 import { Node } from 'solidity-ast/node';
