@@ -26,7 +26,7 @@ import {
 import fs from 'fs';
 import chalk from 'chalk';
 import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE } from './constants';
-import { CompilationJob } from 'hardhat/types';
+import { CompilationJob, CompilerInput } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
@@ -153,7 +153,10 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
         return await runSuper(args);
     }
 
-    return await compile(hre.config.zksolc, args.input, args.solcPath);
+    //compile and get missing libraries
+    let newInput = cropInputForLibraries(args.input);
+
+    return await compile(hre.config.zksolc, newInput, args.solcPath);
 });
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath: string }, hre, runSuper) => {
@@ -168,7 +171,9 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
         fs.chmodSync(solcPath, '755');
     }
 
-    return await compile(hre.config.zksolc, args.input, solcPath);
+    const newInput = cropInputForLibraries(args.input);
+
+    return await compile(hre.config.zksolc, newInput, solcPath);
 });
 
 // This task is overriden to:
@@ -261,3 +266,19 @@ export {
     ZKSOLC_BIN_REPOSITORY,
     saltFromUrl
 };
+
+function cropInputForLibraries(input: CompilerInput) {
+    const newInput: CompilerInput = {
+        language: input.language,
+        settings: input.settings,
+        sources: {},
+    };
+
+    for (const [fileName, file] of Object.entries(input.sources)) {
+        if (file.content.includes('library')) {
+            newInput.sources[fileName] = file;
+        }
+    }
+
+    return newInput;
+}
