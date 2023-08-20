@@ -23,11 +23,14 @@ export class Deployer {
     constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType) {
         this.hre = hre;
         this.deploymentType = deploymentType;
+        let l2Provider;
 
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
 
-        this.zkWallet = zkWallet.connect(zkWeb3Provider).connectToL1(ethWeb3Provider);
+        l2Provider = zkWallet.provider === undefined ? zkWeb3Provider : zkWallet.provider;
+
+        this.zkWallet = zkWallet.connect(l2Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
     }
 
@@ -223,9 +226,9 @@ export class Deployer {
         const factoryDeps: string[] = [];
         for (const dependencyHash in artifact.factoryDeps) {
             const dependencyContract = artifact.factoryDeps[dependencyHash];
-            const dependencyArtifact = await this.loadArtifact(dependencyContract);
-            factoryDeps.push(dependencyArtifact.bytecode);
             if (!visited.has(dependencyContract)) {
+                const dependencyArtifact = await this.loadArtifact(dependencyContract);
+                factoryDeps.push(dependencyArtifact.bytecode);
                 visited.add(dependencyContract);
                 const transitiveDeps = await this.extractFactoryDepsRecursive(dependencyArtifact, visited);
                 factoryDeps.push(...transitiveDeps);
