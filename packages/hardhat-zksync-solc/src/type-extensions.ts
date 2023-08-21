@@ -5,10 +5,12 @@ import { ZkSolcConfig } from './types';
 declare module 'hardhat/types/config' {
     interface HardhatUserConfig {
         zksolc?: Partial<ZkSolcConfig>;
+        contractsToCompile?: string[];
     }
 
     interface HardhatConfig {
         zksolc: ZkSolcConfig;
+        contractsToCompile: string[];
     }
 
     interface HardhatNetworkUserConfig {

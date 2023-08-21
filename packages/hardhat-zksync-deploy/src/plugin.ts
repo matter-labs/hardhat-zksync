@@ -1,15 +1,14 @@
 import { existsSync } from 'fs';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { Contract, Wallet } from 'zksync-web3';
+import { Wallet } from 'zksync-web3';
 import * as path from 'path';
 import fs from 'fs';
 
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
-import { LibraryNode, ZkAst, ZkBuildInfo, ZkCompilerOutputSource, ZkCompilerOutputSources } from './types';
+import { ContractInfo, LibraryNode, ZkBuildInfo, ZkCompilerOutputSource, ZkCompilerOutputSources } from './types';
 import { CONTRACT_NODE_TYPE, IMPORT_NODE_TYPE, LIBRARY_CONTRACT_TYPE } from './constants';
 import chalk from 'chalk';
-import { defaultZkSolcConfig } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 
 function getAllFiles(dir: string): string[] {
     const files = [];
@@ -92,27 +91,41 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
         libraries.push(findAllLibraries(sources, source));
     }
 
+    const libraryUsage: Map<string, boolean> = new Map(libraries.map(library => [library.contractName, false]));
+
     for (const library of libraries) {
-        await deployLibrary(hre, deployer, library);
+        calculateLibraryUsage(library.libraries, libraryUsage);
+    } 
+
+    let deployedLibraries: ContractInfo[] = [];
+    clearConfig(hre);
+
+    for (const library of libraries.filter(library => !libraryUsage.get(library.contractName))) {
+        deployedLibraries.push(await deployLibrary(hre, deployer, library));
     }
 }
 
-async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode): Promise<Contract> {
-    const artifact = await deployer.loadArtifact(library.contractName.split('/')[1]);
+async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode): Promise<ContractInfo> { 
+    const artifact = await deployer.loadArtifact(library.contractName.split('/')[1].split('.')[0]);
 
     if (library.libraries.length == 0) {
         const contract = await deployer.deploy(artifact, []);
-        chalk.green(`Deployed ${library.contractName} at ${contract.address}`);
-        return contract;
+        console.info(chalk.green(`Deployed ${library.contractName} at ${contract.address}`));
+        return {contractName: library.contractName, contract};
     }
 
-    const contracts = await Promise.all(library.libraries.map(async library => await deployLibrary(hre, deployer, library)));
-    let zkSolcConfig = defaultZkSolcConfig;
-    zkSolcConfig.settings.libraries = contracts.reduce((acc, contract) => ({ ...acc, [contract.contractName]: contract.address }), {});
-    hre.userConfig.zksolc = zkSolcConfig;  
+    const contractInfos = await Promise.all(library.libraries.map(async library => await deployLibrary(hre, deployer, library)));
+    contractInfos.forEach((contractInfo) => {
+        if(hre.config.zksolc.settings.libraries !== undefined) {
+            hre.config.zksolc.settings.libraries[contractInfo.contractName] = {[contractInfo.contractName.split('/')[1].split('.')[0]]: contractInfo.contract.address};
+        }
+    });
+    hre.config.contractsToCompile = [library.contractName];
     hre.run('compile', { force: true });
+
     const contract = await deployer.deploy(artifact, []);
-    return contract;
+    console.info(chalk.green(`Deployed ${library.contractName} at ${contract.address}`));
+    return {contractName: library.contractName, contract};
 }
 
 function findAllLibraries(sources: ZkCompilerOutputSources, source: ZkCompilerOutputSource): LibraryNode {
@@ -132,7 +145,15 @@ function findAllLibraries(sources: ZkCompilerOutputSources, source: ZkCompilerOu
     return libraryNode;
 }
 
-//function notImportedLibraries(libraries: LibraryNode[]): LibraryNode[] {}
+function calculateLibraryUsage(libraries: LibraryNode[], sourceLibraries: Map<string, boolean>) {
+    for (const library of libraries) {
+        sourceLibraries.set(library.contractName, true);
+
+        if(library.libraries.length > 0) {
+            calculateLibraryUsage(library.libraries, sourceLibraries);
+        }
+    }
+}
 
 function getBuildInfo(hre: HardhatRuntimeEnvironment): ZkBuildInfo {
     const buildInfoPath = hre.config.paths.artifacts + '/build-info';
@@ -147,4 +168,9 @@ function getBuildInfo(hre: HardhatRuntimeEnvironment): ZkBuildInfo {
     }
 
     return JSON.parse(fs.readFileSync(buildInfoPath + '/' + files[0], 'utf8'));
+}
+
+function clearConfig(hre: HardhatRuntimeEnvironment) {
+    hre.config.zksolc.settings.libraries = {};
+    hre.config.contractsToCompile = [];
 }

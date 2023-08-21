@@ -1,3 +1,4 @@
+import { Contract } from 'zksync-web3';
 import { Artifact } from 'hardhat/types';
 
 /**
@@ -59,4 +60,9 @@ export interface ZkCompilerOutput {
   export interface LibraryNode {
     contractName: string;
     libraries: LibraryNode[];
+  }
+
+  export interface ContractInfo {
+    contractName: string;
+    contract: Contract;
   }

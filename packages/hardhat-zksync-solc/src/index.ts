@@ -7,8 +7,9 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START,
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START,
+    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask, types } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { FactoryDeps } from './types';
@@ -60,6 +61,19 @@ extendEnvironment((hre) => {
             updateCompilerConf(compiler, hre.config.zksolc);
         }
     }
+});
+
+
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: {sourcePaths: string[]}, hre, runSuper) => {
+    const contractsToCompile: string[] = hre.config.contractsToCompile;
+
+    if (!contractsToCompile) {
+        return await runSuper(args);
+    }
+
+    const sourceNames: string[] = await runSuper(args);
+
+    return contractsToCompile.filter((contractName) => sourceNames.includes(contractName));
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
@@ -154,7 +168,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
     }
 
     //compile and get missing libraries
-    let newInput = cropInputForLibraries(args.input);
+    let newInput = compileLibrary(args.input);
 
     return await compile(hre.config.zksolc, newInput, args.solcPath);
 });
@@ -171,7 +185,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
         fs.chmodSync(solcPath, '755');
     }
 
-    const newInput = cropInputForLibraries(args.input);
+    const newInput = compileLibrary(args.input);
 
     return await compile(hre.config.zksolc, newInput, solcPath);
 });
@@ -267,18 +281,21 @@ export {
     saltFromUrl
 };
 
-function cropInputForLibraries(input: CompilerInput) {
-    const newInput: CompilerInput = {
-        language: input.language,
-        settings: input.settings,
-        sources: {},
-    };
-
-    for (const [fileName, file] of Object.entries(input.sources)) {
-        if (file.content.includes('library')) {
-            newInput.sources[fileName] = file;
+//Mock function should be replaced with special compiler mode
+function compileLibrary(input: CompilerInput) {
+    let nolibraries : string[] = [];
+    let inputSources = Object.entries(input.sources);
+    for (let [sourceName, value] of inputSources) {
+        if(!value.content.includes("library")) {
+            nolibraries.push(sourceName);
         }
     }
 
+    if(nolibraries.length == inputSources.length) {
+        return input;
+    }
+
+    let newInput: CompilerInput = input;
+    nolibraries.forEach(name => delete newInput.sources[name]);
     return newInput;
 }
