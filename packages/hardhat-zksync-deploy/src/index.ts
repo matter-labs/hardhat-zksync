@@ -17,4 +17,5 @@ task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for zkSync network')
 
 task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addParam('wallet', 'Wallet key for deployment', '')
+    .addOptionalParam('exportedConfigName', 'Exported HardhatUserConfig type variable from hardhat config file', undefined)
     .setAction(zkSyncLibraryDeploy);

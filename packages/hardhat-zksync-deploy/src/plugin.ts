@@ -79,7 +79,7 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     await deployFn(hre);
 }
 
-export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey: string) {
+export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey: string, exportedConfigName: string) {
     const wallet = new Wallet(walletKey);
     const deployer = new Deployer(hre, wallet);
 
@@ -110,7 +110,7 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
         console.info(chalk.yellow(`Deploy of ${library.contractName} finished!`));
     }
 
-    updateHardhatConfigFile(hre, allDeployedLibraries);
+    updateHardhatConfigFile(hre, allDeployedLibraries, exportedConfigName);
 }
 
 async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode, allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
