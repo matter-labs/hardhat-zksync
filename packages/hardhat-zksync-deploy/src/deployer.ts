@@ -28,7 +28,7 @@ export class Deployer {
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
 
-        l2Provider = zkWallet.provider === undefined ? zkWeb3Provider : zkWallet.provider;
+        l2Provider = zkWallet.provider === null ? zkWeb3Provider : zkWallet.provider;
 
         this.zkWallet = zkWallet.connect(l2Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
