@@ -59,10 +59,17 @@ export interface ZkCompilerOutput {
 
   export interface LibraryNode {
     contractName: string;
+    cleanContractName: string;
     libraries: LibraryNode[];
   }
 
   export interface ContractInfo {
     contractName: string;
-    contract: Contract;
+    cleanContractName: string;
+    adress: string;
+  }
+
+  export interface DeployedLibraryInfo {
+    contractName: string;
+    address: Contract;
   }
