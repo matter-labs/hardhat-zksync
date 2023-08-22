@@ -110,7 +110,7 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
         console.info(chalk.yellow(`Deploy of ${library.contractName} finished!`));
     }
 
-    //updateHardhatConfigFile(hre, allDeployedLibraries);
+    updateHardhatConfigFile(hre, allDeployedLibraries);
 }
 
 async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode, allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
