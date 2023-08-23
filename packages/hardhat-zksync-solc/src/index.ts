@@ -67,13 +67,13 @@ extendEnvironment((hre) => {
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: {sourcePaths: string[]}, hre, runSuper) => {
     const contractsToCompile: string[] = hre.config.contractsToCompile;
 
-    if (!contractsToCompile) {
+    if (!contractsToCompile || contractsToCompile.length === 0) {
         return await runSuper(args);
     }
 
     const sourceNames: string[] = await runSuper(args);
 
-    return contractsToCompile.filter((contractName) => sourceNames.includes(contractName));
+    return sourceNames.filter((sourceName) => contractsToCompile.includes(sourceName));
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
