@@ -12,6 +12,7 @@ import {
 import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
 import { hasMissingLibraries } from '../utils';
+import chalk from 'chalk';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -40,6 +41,7 @@ export class BinaryCompiler implements ICompiler {
         // Check for missing libraries
         const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
         if(hasMissingLibraries(zkSolcOutput)) {
+            console.info(chalk.yellow('zkSync compiler detected missing libraries.'));
             return zkSolcOutput;
         }
 
