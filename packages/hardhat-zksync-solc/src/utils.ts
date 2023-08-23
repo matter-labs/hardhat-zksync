@@ -122,16 +122,38 @@ export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: str
         .replace(/WORKING_DIR/g, workingDir);
 }
 
-// Check if the zksolc compiler output has missing libraries
-export function hasMissingLibraries(zkSolcOutput: any): boolean {
-    for (let contractName in zkSolcOutput.contracts) {
-        for (let contract in zkSolcOutput.contracts[contractName]) {
-            const contractOjectOutput = zkSolcOutput.contracts[contractName][contract];
-            if (contractOjectOutput.missingLibraries && contractOjectOutput.missingLibraries.length > 0) {
-                return true;
+// Find all the libraries that are missing from the contracts
+export function findMissingLibraries(zkSolcOutput: any): Set<string> {
+    const missingLibraries = new Set<string>();
+
+    for (let filePath in zkSolcOutput.contracts) {
+        for (let contractName in zkSolcOutput.contracts[filePath]) {
+            const contract = zkSolcOutput.contracts[filePath][contractName];
+            if (contract.missingLibraries && contract.missingLibraries.length > 0) {
+                contract.missingLibraries.forEach((library: string) => {
+                    missingLibraries.add(library);
+                });
             }
         }
     }
     
-    return false;
+    return missingLibraries;
+}
+
+export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibraries: Set<string>): Array<any> {
+    const dependencyMap = new Array();
+
+    missingLibraries.forEach(library => {
+        const [libFilePath, libContractName] = library.split(":");
+        if (zkSolcOutput.contracts[libFilePath] && zkSolcOutput.contracts[libFilePath][libContractName]) {
+            const contract = zkSolcOutput.contracts[libFilePath][libContractName];
+            if (contract.missingLibraries) {
+                dependencyMap.push({
+                    [libFilePath]: contract.missingLibraries
+                });
+            }
+        }
+    });
+
+    return dependencyMap;
 }

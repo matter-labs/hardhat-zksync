@@ -11,8 +11,9 @@ import {
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
-import { hasMissingLibraries } from '../utils';
+import { findMissingLibraries, mapMissingLibraryDependencies } from '../utils';
 import chalk from 'chalk';
+import fs from 'fs';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -40,8 +41,13 @@ export class BinaryCompiler implements ICompiler {
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
         // Check for missing libraries
         const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
-        if(hasMissingLibraries(zkSolcOutput)) {
+        const missingLibraries = findMissingLibraries(zkSolcOutput);
+        if(missingLibraries.size > 0) {
             console.info(chalk.yellow('zkSync compiler detected missing libraries.'));
+            const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
+            // Write missing librariry dependencies to JSON file
+            fs.writeFileSync('missingLibraryDependencies.json', JSON.stringify(missingLibraryDependencies, null, 4));
+
             return zkSolcOutput;
         }
 
