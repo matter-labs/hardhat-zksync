@@ -1,4 +1,3 @@
-import { Contract } from 'zksync-web3';
 import { Artifact } from 'hardhat/types';
 
 /**
@@ -13,63 +12,29 @@ export type EthNetwork = string;
  * Dependencies are contracts that can be deployed by this contract via `CREATE` operation.
  */
 export interface FactoryDeps {
-    // A mapping from the contract hash to the contract bytecode.
-    [contractHash: string]: string;
+  // A mapping from the contract hash to the contract bytecode.
+  [contractHash: string]: string;
 }
 
 export interface ZkSyncArtifact extends Artifact {
-    // List of factory dependencies of a contract.
-    factoryDeps: FactoryDeps;
-    // Mapping from the bytecode to the zkEVM assembly (used for tracing).
-    sourceMapping: string;
+  // List of factory dependencies of a contract.
+  factoryDeps: FactoryDeps;
+  // Mapping from the bytecode to the zkEVM assembly (used for tracing).
+  sourceMapping: string;
 }
 
-export interface ZkBuildInfo {
-    _format: string;
-    id: string;
-    output: ZkCompilerOutput;
+export interface MissingLibrary {
+  cleanContractName: string;
+  contractName: string;
+  missingLibraries: Array<string>;
 }
 
-export interface ZkCompilerOutput {
-    sources: ZkCompilerOutputSources;
-  }
-  
-  export interface ZkCompilerOutputSource {
-    id: number;
-    ast: ZkAst;
-  }
-  
-  export interface ZkCompilerOutputSources {
-    [sourceName: string]: ZkCompilerOutputSource;
-  }
+export interface ContractInfo {
+  contractNameDetails: ContractNameDetails;
+  address: string;
+}
 
-  export interface ZkAst {
-    absolutePath: string;
-    nodes: ZkAstNode[];
-  }
-
-  
-  export interface ZkAstNode {
-    absolutePath: string;
-    nodeType: string;
-    canonicalName: string;
-    contractKind: string;
-    fullyImplemented: boolean;
-  }
-
-  export interface LibraryNode {
-    contractName: string;
-    cleanContractName: string;
-    libraries: LibraryNode[];
-  }
-
-  export interface ContractInfo {
-    contractName: string;
-    cleanContractName: string;
-    adress: string;
-  }
-
-  export interface DeployedLibraryInfo {
-    contractName: string;
-    address: Contract;
-  }
+export interface ContractNameDetails {
+  contractName: string;
+  cleanContractName: string;
+}

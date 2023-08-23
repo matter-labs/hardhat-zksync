@@ -1,5 +1,3 @@
-import { getCompilersDir } from 'hardhat/internal/util/global-dir';
-import path from 'path';
 import semver from 'semver';
 import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
 import { CompilerOutputSelection, ZkSolcConfig } from './types';
@@ -140,8 +138,8 @@ export function findMissingLibraries(zkSolcOutput: any): Set<string> {
     return missingLibraries;
 }
 
-export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibraries: Set<string>): Array<any> {
-    const dependencyMap = new Array();
+export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibraries: Set<string>): Array<MissingLibrary> {
+    const dependencyMap = new Array<MissingLibrary>();
 
     missingLibraries.forEach(library => {
         const [libFilePath, libContractName] = library.split(":");
@@ -149,11 +147,19 @@ export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibrarie
             const contract = zkSolcOutput.contracts[libFilePath][libContractName];
             if (contract.missingLibraries) {
                 dependencyMap.push({
-                    [libFilePath]: contract.missingLibraries
+                    cleanContractName: libContractName,
+                    contractName: libFilePath,
+                    missingLibraries: contract.missingLibraries
                 });
             }
         }
     });
 
     return dependencyMap;
+}
+
+interface MissingLibrary {
+    cleanContractName: string;
+    contractName: string;
+    missingLibraries: Array<string>;
 }
