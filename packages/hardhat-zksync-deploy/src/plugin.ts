@@ -93,7 +93,7 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
         fillLibrarySettings(hre, [compileInfo]);
     }
 
-    updateHardhatConfigFile(hre, allDeployedLibraries, exportedConfigName);
+    updateHardhatConfigFile(hre, exportedConfigName);
 
     await compileContracts(hre, []);
 }

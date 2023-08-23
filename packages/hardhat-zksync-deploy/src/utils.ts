@@ -6,7 +6,7 @@ export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig
     return 'url' in networkConfig;
 }
 
-export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[], exportedConfigName: string) {
+export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, exportedConfigName: string) {
     new MorphTsBuilder(hre.config.paths.configFile)
         .intialStep(exportedConfigName)
         .nextStep({propertyName: 'zksolc', isRequired: true})
