@@ -108,17 +108,15 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
 
     for (const library of libraries.filter(library => !libraryUsage.get(library.contractName))) {
         console.info(chalk.yellow(`Deploying ${library.contractName} .....`));
-
-        await deployLibrary(hre, deployer, library, allDeployedLibraries);
-
+        const compileInfo = await deployLibrary(hre, deployer, library, allDeployedLibraries);
+        fillLibrarySettings(hre, [compileInfo]);
         console.info(chalk.yellow(`Deploy of ${library.contractName} finished!`));
     }
 
     updateHardhatConfigFile(hre, allDeployedLibraries, exportedConfigName);
 
     console.info(chalk.green(`Deploying libraries finished!`));
-    clearConfig(hre);
-    hre.run('compile', { force: true });
+    compileContracts(hre, []);
 }
 
 async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode, allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
@@ -129,17 +127,13 @@ async function deployLibrary(hre: HardhatRuntimeEnvironment, deployer: Deployer,
     }
 
     if (library.libraries.length == 0) {
-        compileOneContract(hre, library.contractName);
-        const artifact = await deployer.loadArtifact(library.cleanContractName);
-        return await deployOneLibrary(deployer, artifact, library, allDeployedLibraries);
+        return generalCompileDeploy(hre, deployer, library, allDeployedLibraries);
     }
 
     const contractInfos = await Promise.all(library.libraries.map(async library => await deployLibrary(hre, deployer, library, allDeployedLibraries)));
-    
+
     fillLibrarySettings(hre, contractInfos);
-    compileOneContract(hre, library.contractName);
-    const artifact = await deployer.loadArtifact(library.cleanContractName);
-    return await deployOneLibrary(deployer, artifact, library, allDeployedLibraries);
+    return generalCompileDeploy(hre, deployer, library, allDeployedLibraries);
 }
 
 function findAllLibraries(sources: ZkCompilerOutputSources, source: ZkCompilerOutputSource): LibraryNode | null {
@@ -212,12 +206,18 @@ async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: Co
     });
 }
 
+async function generalCompileDeploy(hre: HardhatRuntimeEnvironment, deployer: Deployer, library: LibraryNode, allDeployedLibraries: ContractInfo[]) {
+    await compileContracts(hre, [library.contractName]);
+    const artifact = await deployer.loadArtifact(library.cleanContractName);
+    return await deployOneLibrary(deployer, artifact, library, allDeployedLibraries);
+}
+
 function clearConfig(hre: HardhatRuntimeEnvironment) {
     hre.config.zksolc.settings.libraries = {};
     hre.config.contractsToCompile = [];
 }
 
-function compileOneContract(hre: HardhatRuntimeEnvironment, contractName: string) {
-    hre.config.contractsToCompile = [contractName];
-    hre.run('compile', { force: true });
+async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
+    hre.config.contractsToCompile = contracts;
+    await hre.run('compile', { force: true });
 }
