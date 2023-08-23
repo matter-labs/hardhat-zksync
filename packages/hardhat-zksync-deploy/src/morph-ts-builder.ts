@@ -16,7 +16,7 @@ export class MorphTsBuilder {
 }
 
 export class MorphTs {
-    private _queue: Expression[] = [];
+    private _currentStep: Expression;
 
     constructor(private _initialVariable: string, private _sourceFile: SourceFile, private _filePath: string) {
         const initialValue = _sourceFile.getVariableDeclaration(_initialVariable);
@@ -32,11 +32,11 @@ export class MorphTs {
             throw new Error(`Initial variable ${_initialVariable} is not an object`);
         }
 
-        this._queue.push(intialStep);
+        this._currentStep = intialStep;
     }
 
     public nextStep(step: MorphTsNextStep) {
-        let previousStep = this._queue.pop();
+        let previousStep = this._currentStep;
 
         let presentStep = previousStep
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
@@ -52,7 +52,8 @@ export class MorphTs {
                 .addPropertyAssignment({
                     name: step.propertyName,
                     initializer: JSON.stringify({}, null, 2)
-                }).getParentIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+                })
+                .getParentIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
         }
 
         let newPresentStep = previousStep
@@ -64,7 +65,7 @@ export class MorphTs {
             throw new Error(`Property ${step.propertyName} not found`);
         }
 
-        this._queue.push(newPresentStep);
+        this._currentStep = newPresentStep;
 
         return this;
     }
@@ -72,10 +73,21 @@ export class MorphTs {
     public replaceStep(step: MorphTsReplaceStep) {
         this.nextStep({ propertyName: step.propertyName });
 
-        this._queue.pop()
+        let previousStep = this._currentStep;
+
+        let presentStep = previousStep
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
             .getParentIfKindOrThrow(SyntaxKind.PropertyAssignment)
-            .setInitializer(JSON.stringify(step.replaceObject, null, 2));
+            .setInitializer(JSON.stringify(step.replaceObject, null, 2))
+            .getParentIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
+            .getProperty(step.propertyName)
+            ?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+        if (!presentStep || presentStep === undefined) {
+            throw new Error(`Property ${step.propertyName} not found`);
+        }
+
+        this._currentStep = presentStep;
 
         return this;
     }
