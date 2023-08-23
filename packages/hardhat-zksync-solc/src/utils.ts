@@ -121,3 +121,17 @@ export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: str
         .replace(/SOLCJS_PATH/g, solcJsPath)
         .replace(/WORKING_DIR/g, workingDir);
 }
+
+// Check if the zksolc compiler output has missing libraries
+export function hasMissingLibraries(zkSolcOutput: any): boolean {
+    for (let contractName in zkSolcOutput.contracts) {
+        for (let contract in zkSolcOutput.contracts[contractName]) {
+            const contractOjectOutput = zkSolcOutput.contracts[contractName][contract];
+            if (contractOjectOutput.missingLibraries && contractOjectOutput.missingLibraries.length > 0) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}

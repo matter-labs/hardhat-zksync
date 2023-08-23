@@ -167,10 +167,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: str
         return await runSuper(args);
     }
 
-    //compile and get missing libraries
-    let newInput = compileLibrary(args.input);
-
-    return await compile(hre.config.zksolc, newInput, args.solcPath);
+    return await compile(hre.config.zksolc, args.input, args.solcPath);
 });
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath: string }, hre, runSuper) => {
@@ -185,9 +182,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
         fs.chmodSync(solcPath, '755');
     }
 
-    const newInput = compileLibrary(args.input);
-
-    return await compile(hre.config.zksolc, newInput, solcPath);
+    return await compile(hre.config.zksolc, args.input, solcPath);
 });
 
 // This task is overriden to:
@@ -280,22 +275,3 @@ export {
     ZKSOLC_BIN_REPOSITORY,
     saltFromUrl
 };
-
-//Mock function should be replaced with special compiler mode
-function compileLibrary(input: CompilerInput) {
-    let nolibraries : string[] = [];
-    let inputSources = Object.entries(input.sources);
-    for (let [sourceName, value] of inputSources) {
-        if(!value.content.includes("library")) {
-            nolibraries.push(sourceName);
-        }
-    }
-
-    if(nolibraries.length == inputSources.length) {
-        return input;
-    }
-
-    let newInput: CompilerInput = input;
-    nolibraries.forEach(name => delete newInput.sources[name]);
-    return newInput;
-}
