@@ -46,7 +46,7 @@
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
     "ethers": "~5.7.2",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.17.1",
     "mocha": "^9.2.1",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
@@ -56,7 +56,7 @@
   },
   "peerDependencies": {
     "ethers": "~5.7.2",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.17.1",
     "zksync-web3": "^0.14.3"
   },
   "prettier": {

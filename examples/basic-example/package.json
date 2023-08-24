@@ -30,7 +30,7 @@
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "chalk": "4.1.2",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.17.1",
     "ethers": "~5.7.2",
     "zksync-web3": "^0.14.3",
     "@matterlabs/zksync-contracts": "^0.6.1",

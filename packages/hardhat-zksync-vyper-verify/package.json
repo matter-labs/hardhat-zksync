@@ -55,7 +55,7 @@
     "eslint-config-prettier": "8.4.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.17.1",
     "mocha": "^9.2.1",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
@@ -64,7 +64,7 @@
     "typescript": "^4.6.2"
   },
   "peerDependencies": {
-    "hardhat": "^2.14.0"
+    "hardhat": "^2.17.1"
   },
   "prettier": {
     "tabWidth": 4,
