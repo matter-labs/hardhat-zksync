@@ -11,7 +11,8 @@ import {
     TASK_VERIFY_GET_ARTIFACT,
 } from './constants';
 
-import { verify, getConstructorArguments, verifyContract, checkVerificationStatus, getArtifact } from './task-actions';
+import { verify, getConstructorArguments, verifyContract, getArtifact } from './task-actions';
+import { checkVerificationStatus } from './plugin';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;

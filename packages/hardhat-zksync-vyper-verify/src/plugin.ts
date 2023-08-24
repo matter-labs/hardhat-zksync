@@ -10,18 +10,13 @@ import {
 import { ZkSyncVerifyPluginError } from './errors';
 import { areSameBytecodes, encodeArguments } from './utils';
 import chalk from 'chalk';
-import { VyperFilesCache, getVyperFilesCachePath, CacheEntry } from '@nomiclabs/hardhat-vyper/dist/src/cache';
+import { VyperFilesCache, getVyperFilesCachePath } from '@nomiclabs/hardhat-vyper/dist/src/cache';
 import { Parser } from '@nomiclabs/hardhat-vyper/dist/src/parser';
-import { Resolver } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
+import { Resolver, ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
 import { TASK_COMPILE_VYPER_READ_FILE } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
-import { ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/types';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
-
-export type CacheResolveFileInfo = {
-    resolvedFile: ResolvedFile;
-    contractCache: CacheEntry;
-}
+import { CacheResolveFileInfo } from './types';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -93,7 +88,7 @@ export async function getDeployArgumentEncoded(constructorArguments: any, artifa
     return '0x' + (await encodeArguments(artifact.abi, constructorArguments));
 }
 
-export async function getCacheResolvedFileInformation(contractFQN: string, artifact: Artifact, hre: HardhatRuntimeEnvironment): Promise<CacheResolveFileInfo> {
+export async function getCacheResolvedFileInformation(contractFQN: string, sourceName: string, hre: HardhatRuntimeEnvironment): Promise<CacheResolveFileInfo> {
     const vyperFilesCachePath = getVyperFilesCachePath(hre.config.paths);
 
     let vyperFilesCache = await VyperFilesCache.readFromFile(
@@ -115,7 +110,7 @@ export async function getCacheResolvedFileInformation(contractFQN: string, artif
             hre.run(TASK_COMPILE_VYPER_READ_FILE, { absolutePath })
     );
 
-    const resolvedFile = await resolver.resolveSourceName(artifact.sourceName);
+    const resolvedFile = await resolver.resolveSourceName(sourceName);
 
     if (resolvedFile === undefined) {
         throw new ZkSyncVerifyPluginError(chalk.red('Reolved file not found for this contract'));
@@ -151,5 +146,20 @@ export async function executeVeificationWithRetry(
 
 export function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+
+export async function getResolvedFiles(hre: HardhatRuntimeEnvironment): Promise<ResolvedFile[]> {
+
+    const resolvedFiles: ResolvedFile[] = [];
+    const fqNames = await hre.artifacts.getAllFullyQualifiedNames();
+
+    for (const contractFQN of fqNames.filter((fqName) => !fqName.startsWith('@') && fqName.includes('.vy'))) {
+        const sourceName = contractFQN.split(':')[0];
+        const { resolvedFile } = await getCacheResolvedFileInformation(contractFQN, sourceName, hre);
+        resolvedFiles.push(resolvedFile);
+    }
+
+    return resolvedFiles;
 }
 
