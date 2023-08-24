@@ -83,10 +83,10 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
-    let allDeployedLibraries: ContractInfo[] = [];
+    const allDeployedLibraries: ContractInfo[] = [];
 
     hre.config.zksolc.settings.libraries = {};
-    hre.config.contractsToCompile = [];
+    hre.config.zksolc.settings.contractsToCompile = [];
 
     for (const libraryInfo of libraryInfos) {
         const compileInfo = await deployLibrary(hre, deployer, libraryInfo, libraryInfos, allDeployedLibraries);
@@ -104,8 +104,8 @@ async function deployLibrary(hre: HardhatRuntimeEnvironment,
     missingLibraries: MissingLibrary[],
     allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
     const deployedLibrary = allDeployedLibraries
-        .find(deployedLibrary => missingLibrary.contractName
-            .includes(deployedLibrary.contractNameDetails.contractName)
+        .find(deployedLibrary => generateFullQuailfiedName(missingLibrary)
+            .includes(generateFullQuailfiedName(deployedLibrary.contractNameDetails))
         );
 
     if (deployedLibrary) {
@@ -114,8 +114,9 @@ async function deployLibrary(hre: HardhatRuntimeEnvironment,
 
     const contractNameDetails = {
         contractName: missingLibrary.contractName,
-        cleanContractName: missingLibrary.cleanContractName
+        contractPath: missingLibrary.contractPath
     };
+
 
     if (missingLibrary.missingLibraries.length == 0) {
         return await compileAndDeploy(hre, deployer, contractNameDetails, allDeployedLibraries);
@@ -135,9 +136,15 @@ async function deployLibrary(hre: HardhatRuntimeEnvironment,
 
 function findDependentLibraries(dependentLibraries: string[], missingLibraries: MissingLibrary[]): MissingLibrary[] {
     return dependentLibraries.map(dependentLibrary => {
-        const dependentLibraryName = dependentLibrary.split(':')[0];
+        const dependentLibraryName = dependentLibrary.split(':');
+        const dependentLibraryNameDetails = {
+            contractName: dependentLibraryName[1],
+            contractPath: dependentLibraryName[0]
+        }
+
         const foundMissingLibrary = missingLibraries
-            .find(missingLibrary => missingLibrary.contractName.includes(dependentLibraryName))
+            .find(missingLibrary => generateFullQuailfiedName(missingLibrary)
+                .includes(generateFullQuailfiedName(dependentLibraryNameDetails)));
 
         if (!foundMissingLibrary) {
             throw new ZkSyncDeployPluginError(`Missing library ${dependentLibrary} not found`);
@@ -148,9 +155,7 @@ function findDependentLibraries(dependentLibraries: string[], missingLibraries: 
 }
 
 function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> {
-    const libraryPathFile = path.join(hre.config.paths.root
-        , '/.zksolc-libraries-cache'
-        , '/missingLibraryDependencies.json');
+    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
 
     if (!fs.existsSync(libraryPathFile)) {
         throw new ZkSyncDeployPluginError('Missing librararies file not found');
@@ -162,15 +167,15 @@ function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> 
 async function deployOneLibrary(deployer: Deployer,
     contractNameDetails: ContractNameDetails,
     allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
-    const artifact = await deployer.loadArtifact(contractNameDetails.cleanContractName);
+    const artifact = await deployer.loadArtifact(generateFullQuailfiedName(contractNameDetails));
 
-    console.info(chalk.yellow(`Deploying ${contractNameDetails.contractName} .....`));
+    console.info(chalk.yellow(`Deploying ${contractNameDetails.contractPath} .....`));
     const contract = await deployer.deploy(artifact, []);
-    console.info(chalk.green(`Deployed ${contractNameDetails.contractName} at ${contract.address}`));
+    console.info(chalk.green(`Deployed ${contractNameDetails.contractPath} at ${contract.address}`));
 
-    const contractInfo = { 
-        contractNameDetails, 
-        address: contract.address 
+    const contractInfo = {
+        contractNameDetails,
+        address: contract.address
     };
     allDeployedLibraries.push(contractInfo);
     return contractInfo;
@@ -178,16 +183,16 @@ async function deployOneLibrary(deployer: Deployer,
 
 async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[]) {
     libraries.forEach((library) => {
+        let contractPath = library.contractNameDetails.contractPath;
         let contractName = library.contractNameDetails.contractName;
-        let cleanContractName = library.contractNameDetails.cleanContractName;
 
-        if (hre.config.zksolc.settings.libraries === undefined) {
+        if (!hre.config.zksolc.settings.libraries) {
             hre.config.zksolc.settings.libraries = {};
         }
 
-        if (hre.config.zksolc.settings.libraries[contractName] === undefined) {
-            hre.config.zksolc.settings.libraries[contractName] = {
-                [cleanContractName]: library.address
+        if (!hre.config.zksolc.settings.libraries[contractPath]) {
+            hre.config.zksolc.settings.libraries[contractPath] = {
+                [contractName]: library.address
             };
         }
     });
@@ -197,13 +202,17 @@ async function compileAndDeploy(hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     contractNameDetails: ContractNameDetails,
     allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
-    await compileContracts(hre, [contractNameDetails.contractName]);
+    await compileContracts(hre, [contractNameDetails.contractPath]);
 
     return await deployOneLibrary(deployer, contractNameDetails, allDeployedLibraries);
 }
 
 async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
-    hre.config.contractsToCompile = contracts;
+    hre.config.zksolc.settings.contractsToCompile = contracts;
 
     await hre.run('compile', { force: true });
+}
+
+function generateFullQuailfiedName(contractNameDetails: ContractNameDetails | MissingLibrary): string {
+    return contractNameDetails.contractPath + ":" + contractNameDetails.contractName;
 }

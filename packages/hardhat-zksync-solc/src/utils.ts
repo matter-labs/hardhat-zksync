@@ -1,6 +1,6 @@
 import semver from 'semver';
 import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
-import { CompilerOutputSelection, ZkSolcConfig } from './types';
+import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
 import { CompilerVersionInfo } from './compile/downloader';
@@ -147,8 +147,8 @@ export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibrarie
             const contract = zkSolcOutput.contracts[libFilePath][libContractName];
             if (contract.missingLibraries) {
                 dependencyMap.push({
-                    cleanContractName: libContractName,
-                    contractName: libFilePath,
+                    contractName: libContractName,
+                    contractPath: libFilePath,
                     missingLibraries: contract.missingLibraries
                 });
             }
@@ -156,10 +156,4 @@ export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibrarie
     });
 
     return dependencyMap;
-}
-
-interface MissingLibrary {
-    cleanContractName: string;
-    contractName: string;
-    missingLibraries: Array<string>;
 }

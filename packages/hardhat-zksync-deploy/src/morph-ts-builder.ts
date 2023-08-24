@@ -105,5 +105,5 @@ export interface MorphTsNextStep {
 
 export interface MorphTsReplaceStep {
     propertyName: string;
-    replaceObject?: Object;
+    replaceObject: any;
 }

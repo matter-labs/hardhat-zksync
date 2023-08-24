@@ -24,8 +24,8 @@ export interface ZkSyncArtifact extends Artifact {
 }
 
 export interface MissingLibrary {
-  cleanContractName: string;
   contractName: string;
+  contractPath: string;
   missingLibraries: Array<string>;
 }
 
@@ -36,5 +36,5 @@ export interface ContractInfo {
 
 export interface ContractNameDetails {
   contractName: string;
-  cleanContractName: string;
+  contractPath: string;
 }

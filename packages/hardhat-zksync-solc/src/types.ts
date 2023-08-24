@@ -8,6 +8,7 @@ export interface ZkSolcConfig {
         // If compilerSource == "docker", this option is ignored.
         // By default, the automatically downloaded binary is used.
         compilerPath?: string;
+        missingLibrariesPath?: string;
         optimizer?: {
             enabled?: boolean;
             [key: string]: any;
@@ -30,6 +31,8 @@ export interface ZkSolcConfig {
         isSystem?: boolean;
         // Force evmla
         forceEvmla?: boolean;
+        // specific contracts to be compiled
+        contractsToCompile?: string[];
     };
 }
 
@@ -50,4 +53,10 @@ export interface FactoryDeps {
 export interface ZkSyncArtifact extends Artifact {
     // List of factory dependencies of a contract.
     factoryDeps: FactoryDeps;
+}
+
+export interface MissingLibrary {
+    contractName: string;
+    contractPath: string;
+    missingLibraries: Array<string>;
 }

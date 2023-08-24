@@ -14,6 +14,7 @@ export const defaultZkSolcConfig: ZkSolcConfig = {
             mode: '3',
         },
         compilerPath: '',
+        missingLibrariesPath: './.zksolc-libraries-cache/missingLibraryDependencies.json',
         experimental: {},
     },
 };
