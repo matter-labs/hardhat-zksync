@@ -4,5 +4,6 @@
 
 ### Patch Changes
 
-- 6507daa: - Use configured wallet provider in the deployer class
+- 6507daa: 
+  - Use configured wallet provider in the deployer class
   - Prevent duplicated bytecodes in factory deps
