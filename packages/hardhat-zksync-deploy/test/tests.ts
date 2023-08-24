@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import * as path from 'path';
 import { ethers } from 'ethers';
-import { Wallet } from 'zksync-web3';
+import { Provider, Wallet } from 'zksync-web3';
 import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
 import { useEnvironment } from './helpers';
@@ -70,6 +70,26 @@ describe('Plugin tests', async function () {
             assert.equal(
                 deployer.zkWallet.provider.connection.url,
                 'http://localhost:3050',
+                'Incorrect default L2 network provider'
+            );
+        });
+    });
+
+
+    describe('Test plugin functionalities', async function () {
+        useEnvironment('plugin-functionalities');
+
+        it('Should use the provider from the wallet instance passed as an argument', async function () {
+
+            const MOCKED_PROVIDER_URL = 'http://localhost:1234';
+            const provider: Provider = new Provider(MOCKED_PROVIDER_URL);
+
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY, provider);
+            const deployer = new Deployer(this.env, zkWallet);
+
+            assert.equal(
+                deployer.zkWallet.provider.connection.url,
+                MOCKED_PROVIDER_URL,
                 'Incorrect default L2 network provider'
             );
         });
