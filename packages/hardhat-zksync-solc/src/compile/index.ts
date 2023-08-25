@@ -13,7 +13,7 @@ import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
 import { findMissingLibraries, mapMissingLibraryDependencies } from '../utils';
 import chalk from 'chalk';
-import fs from 'fs';
+import fse from 'fs-extra';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -54,8 +54,7 @@ export class BinaryCompiler implements ICompiler {
                 throw new ZkSyncSolcPluginError('Missing libraries path is not specified');
             }
 
-            fs.writeFileSync(config.settings.missingLibrariesPath!, JSON.stringify(missingLibraryDependencies, null, 4));
-
+            fse.outputFileSync(config.settings.missingLibrariesPath!, JSON.stringify(missingLibraryDependencies, null, 4));
             return zkSolcOutput;
         }
 

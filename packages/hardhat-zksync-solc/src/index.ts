@@ -27,13 +27,14 @@ import {
 import fs from 'fs';
 import chalk from 'chalk';
 import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE } from './constants';
-import { CompilationJob, CompilerInput } from 'hardhat/types';
+import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
     config.zksolc.settings.optimizer = { ...defaultZkSolcConfig.settings.optimizer, ...userConfig?.zksolc?.settings?.optimizer };
+    config.zksolc.settings.libraries = { ...defaultZkSolcConfig.settings.libraries, ...userConfig?.zksolc?.settings?.libraries };
 });
 
 extendEnvironment((hre) => {

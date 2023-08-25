@@ -85,7 +85,6 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
     const libraryInfos = getLibraryInfos(hre);
     const allDeployedLibraries: ContractInfo[] = [];
 
-    hre.config.zksolc.settings.libraries = {};
     hre.config.zksolc.settings.contractsToCompile = [];
 
     for (const libraryInfo of libraryInfos) {
@@ -94,6 +93,7 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
     }
 
     updateHardhatConfigFile(hre, exportedConfigName);
+    cleanLibraryInfoFile(hre);
 
     await compileContracts(hre, []);
 }
@@ -164,6 +164,14 @@ function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> 
     return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));
 }
 
+function cleanLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
+    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
+
+    if (fs.existsSync(libraryPathFile)) {
+        fs.rmSync(libraryPathFile);
+    }
+}
+
 async function deployOneLibrary(deployer: Deployer,
     contractNameDetails: ContractNameDetails,
     allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
@@ -190,11 +198,9 @@ async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: Co
             hre.config.zksolc.settings.libraries = {};
         }
 
-        if (!hre.config.zksolc.settings.libraries[contractPath]) {
-            hre.config.zksolc.settings.libraries[contractPath] = {
-                [contractName]: library.address
-            };
-        }
+        hre.config.zksolc.settings.libraries[contractPath] = {
+            [contractName]: library.address
+        };
     });
 }
 
