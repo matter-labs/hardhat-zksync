@@ -93,7 +93,7 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
     }
 
     updateHardhatConfigFile(hre, exportedConfigName);
-    cleanLibraryInfoFile(hre);
+    removeLibraryInfoFile(hre);
 
     await compileContracts(hre, []);
 }
@@ -164,7 +164,7 @@ function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> 
     return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));
 }
 
-function cleanLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
+function removeLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
 
     if (fs.existsSync(libraryPathFile)) {
