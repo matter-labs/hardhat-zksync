@@ -12,7 +12,7 @@ import {
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
-import { FactoryDeps } from './types';
+import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import { compile } from './compile';
@@ -26,7 +26,7 @@ import {
 } from './utils';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE } from './constants';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS } from './constants';
 import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
@@ -225,13 +225,20 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     async ({ compilationJobs }: { compilationJobs: CompilationJob[] }) => {
-        let count = 0;
-        for (const job of compilationJobs) {
-            count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
-        }
+        const zksolcConfig: ZkSolcConfig = (global as any).hre.config.zksolc;
 
-        if (count > 0) {
-            console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
+        if (zksolcConfig.settings.areLibrariesMissing) {
+            console.info(chalk.blue(MISSING_LIBRARIES_NOTICE));
+            console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
+        } else {
+            let count = 0;
+            for (const job of compilationJobs) {
+                count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
+            }
+    
+            if (count > 0) {
+                console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
+            }
         }
     }
 );

@@ -713,6 +713,7 @@
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "0.4.1"
     chalk "4.1.2"
+    ts-morph "^19.0.0"
 
 "@matterlabs/hardhat-zksync-solc@0.3.17":
   version "0.3.17"
@@ -5100,7 +5101,7 @@ promise.prototype.finally@^3.1.2:
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
 
-proper-lockfile@^4.1.1:
+proper-lockfile@^4.1.1, proper-lockfile@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-4.1.2.tgz#c8b9de2af6b2f1601067f98e01ac66baa223141f"
   integrity sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==

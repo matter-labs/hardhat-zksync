@@ -11,9 +11,7 @@ import {
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
-import { findMissingLibraries, mapMissingLibraryDependencies } from '../utils';
-import chalk from 'chalk';
-import fse from 'fs-extra';
+import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFile } from '../utils';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -41,20 +39,19 @@ export class BinaryCompiler implements ICompiler {
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
         // Check for missing libraries
         const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
+
         const missingLibraries = findMissingLibraries(zkSolcOutput);
         if (missingLibraries.size > 0) {
-            console.info(chalk.yellow('zkSync compiler detected missing libraries.'));
-            // TODO: File must be updated not overwritten
-            // TODO: Check if compile jobs are running in parallel
-            // TODO: Fix message about missing libraries and with detailed next steps
-            // TODO: Support for missing library file with directory (relative path)
-            const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
-            // Write missing librariry dependencies to JSON file
-            if (config.settings.missingLibrariesPath == null || config.settings.missingLibrariesPath == undefined) {
+            if (!config.settings.missingLibrariesPath) {
                 throw new ZkSyncSolcPluginError('Missing libraries path is not specified');
             }
+            
+            const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
+            // Write missing libraries to file
+            const missingLibrariesPath = config.settings.missingLibrariesPath!;
+            await writeLibrariesToFile(missingLibrariesPath, missingLibraryDependencies);
 
-            fse.outputFileSync(config.settings.missingLibrariesPath!, JSON.stringify(missingLibraryDependencies, null, 4));
+            config.settings.areLibrariesMissing = true;
             return zkSolcOutput;
         }
 

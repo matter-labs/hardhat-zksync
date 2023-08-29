@@ -4,6 +4,9 @@ import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
 import { CompilerVersionInfo } from './compile/downloader';
+import fse from 'fs-extra';
+import lockfile from 'proper-lockfile';
+import { ZkSyncSolcPluginError } from './errors';
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection, zkCompilerVersion: string): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -157,3 +160,30 @@ export function mapMissingLibraryDependencies(zkSolcOutput: any, missingLibrarie
 
     return dependencyMap;
 }
+
+// Get or create the libraries file. If the file doesn't exist, create it with an empty array
+const getOrCreateLibraries = async (path: string): Promise<any[]> => {
+    // Ensure the file exists
+    if (!(await fse.pathExists(path))) {
+        await fse.outputFile(path, '[]');  // Initialize with an empty array
+    }
+
+    // Return the file's content
+    return await fse.readJSON(path);
+};
+
+// Write missing libraries to file and lock the file while writing
+export const writeLibrariesToFile = async (path: string, libraries: any[]): Promise<void> => {
+    try {
+        let existingLibraries = await getOrCreateLibraries(path); // Ensure that the file exists
+        await lockfile.lock(path, { retries: { retries: 10, maxTimeout: 1000 } });
+        
+        existingLibraries = await getOrCreateLibraries(path); // Read again after locking
+        const combinedLibraries = [...existingLibraries, ...libraries];
+        fse.outputFileSync(path, JSON.stringify(combinedLibraries, null, 4));
+    } catch (e) {
+        throw new ZkSyncSolcPluginError(`Failed to write missing libraries file: ${e}`);
+    } finally {
+        await lockfile.unlock(path);
+    }
+};
