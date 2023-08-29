@@ -6,5 +6,5 @@ export async function zkSyncDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeE
 }
 
 export async function zkSyncLibraryDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
-    await deployLibraries(hre, taskArgs.wallet, taskArgs.exportedConfigName ?? "config");
+    await deployLibraries(hre, taskArgs.accountNumber, taskArgs.externalConfigObjectPath, taskArgs.noAutoPopulateConfig, taskArgs.compileAllContracts);
 }

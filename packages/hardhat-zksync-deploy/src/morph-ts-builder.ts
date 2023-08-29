@@ -10,26 +10,32 @@ export class MorphTsBuilder {
         this._sourceFile = project.createSourceFile(_filePath, fileContent, { overwrite: true });
     }
 
-    public intialStep(initialVariable: string) {
-        return new MorphTs(initialVariable, this._sourceFile, this._filePath);
+    public intialStep(step: MorphBuilderInitialStepType | MorphBuilderInitialStepVariable) {
+        return new MorphTs(step, this._sourceFile, this._filePath);
     }
 }
 
 export class MorphTs {
     private _currentStep: Expression;
 
-    constructor(private _initialVariable: string, private _sourceFile: SourceFile, private _filePath: string) {
-        const initialValue = _sourceFile.getVariableDeclaration(_initialVariable);
+    constructor(private _step: MorphBuilderInitialStepType | MorphBuilderInitialStepVariable, private _sourceFile: SourceFile, private _filePath: string) {
+        let initialValue;
+        
+        if(isMorphBuilderInitialStepType(_step)) {
+            initialValue = _sourceFile.getVariableDeclaration(v => v.getType().getText().includes((_step as MorphBuilderInitialStepType).initialVariableType));
+        } else {
+            initialValue = _sourceFile.getVariableDeclaration((_step as MorphBuilderInitialStepVariable).initialVariable);
+        }
 
         if (!initialValue || initialValue === undefined) {
-            throw new Error(`Initial variable ${_initialVariable} not found`);
+            throw new Error(`Initial value is not found`);
         }
 
         const intialStep = initialValue.getInitializer()
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
         if (!intialStep || intialStep === undefined) {
-            throw new Error(`Initial variable ${_initialVariable} is not an object`);
+            throw new Error(`Initial variable is not an object`);
         }
 
         this._currentStep = intialStep;
@@ -106,4 +112,16 @@ export interface MorphTsNextStep {
 export interface MorphTsReplaceStep {
     propertyName: string;
     replaceObject: any;
+}
+
+export interface MorphBuilderInitialStepVariable {
+    initialVariable: string;
+}
+
+export interface MorphBuilderInitialStepType {
+    initialVariableType: string;
+}
+
+function isMorphBuilderInitialStepType(object: any): object is MorphBuilderInitialStepType {
+    return 'initialVariableType' in object;
 }

@@ -1,14 +1,14 @@
 import { existsSync } from 'fs';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { Wallet } from 'zksync-web3';
+import { Provider, Wallet } from 'zksync-web3';
 import * as path from 'path';
 import fs from 'fs';
 
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
-import { ContractInfo, ContractNameDetails, MissingLibrary, ZkSyncArtifact } from './types';
+import { ContractInfo, ContractNameDetails, MissingLibrary } from './types';
 import chalk from 'chalk';
-import { updateHardhatConfigFile } from './utils';
+import { compileContracts, fillLibrarySettings, generateFullQuailfiedName, getLibraryInfos, getWallet, removeLibraryInfoFile, updateHardhatConfigFile } from './utils';
 
 function getAllFiles(dir: string): string[] {
     const files = [];
@@ -78,8 +78,13 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     await deployFn(hre);
 }
 
-export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey: string, exportedConfigName: string) {
-    const wallet = new Wallet(walletKey);
+export async function deployLibraries(hre: HardhatRuntimeEnvironment, 
+    accountNumber: number, 
+    externalConfigObjectPath: string, 
+    noAutoPopulateConfig: boolean, 
+    compileAllContracts: boolean) {
+
+    const wallet = getWallet(hre, accountNumber);
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
@@ -92,10 +97,15 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment, walletKey:
         fillLibrarySettings(hre, [compileInfo]);
     }
 
-    updateHardhatConfigFile(hre, exportedConfigName);
+    if (!noAutoPopulateConfig) {
+        updateHardhatConfigFile(hre, externalConfigObjectPath);
+    }
+
     removeLibraryInfoFile(hre);
 
-    await compileContracts(hre, []);
+    if(compileAllContracts) {
+        await compileContracts(hre, []);
+    }
 }
 
 async function deployLibrary(hre: HardhatRuntimeEnvironment,
@@ -116,7 +126,6 @@ async function deployLibrary(hre: HardhatRuntimeEnvironment,
         contractName: missingLibrary.contractName,
         contractPath: missingLibrary.contractPath
     };
-
 
     if (missingLibrary.missingLibraries.length == 0) {
         return await compileAndDeploy(hre, deployer, contractNameDetails, allDeployedLibraries);
@@ -154,24 +163,6 @@ function findDependentLibraries(dependentLibraries: string[], missingLibraries: 
     });
 }
 
-function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> {
-    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
-
-    if (!fs.existsSync(libraryPathFile)) {
-        throw new ZkSyncDeployPluginError('Missing librararies file not found');
-    }
-
-    return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));
-}
-
-function removeLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
-    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
-
-    if (fs.existsSync(libraryPathFile)) {
-        fs.rmSync(libraryPathFile);
-    }
-}
-
 async function deployOneLibrary(deployer: Deployer,
     contractNameDetails: ContractNameDetails,
     allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
@@ -189,21 +180,6 @@ async function deployOneLibrary(deployer: Deployer,
     return contractInfo;
 }
 
-async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[]) {
-    libraries.forEach((library) => {
-        let contractPath = library.contractNameDetails.contractPath;
-        let contractName = library.contractNameDetails.contractName;
-
-        if (!hre.config.zksolc.settings.libraries) {
-            hre.config.zksolc.settings.libraries = {};
-        }
-
-        hre.config.zksolc.settings.libraries[contractPath] = {
-            [contractName]: library.address
-        };
-    });
-}
-
 async function compileAndDeploy(hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     contractNameDetails: ContractNameDetails,
@@ -211,14 +187,4 @@ async function compileAndDeploy(hre: HardhatRuntimeEnvironment,
     await compileContracts(hre, [contractNameDetails.contractPath]);
 
     return await deployOneLibrary(deployer, contractNameDetails, allDeployedLibraries);
-}
-
-async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
-    hre.config.zksolc.settings.contractsToCompile = contracts;
-
-    await hre.run('compile', { force: true });
-}
-
-function generateFullQuailfiedName(contractNameDetails: ContractNameDetails | MissingLibrary): string {
-    return contractNameDetails.contractPath + ":" + contractNameDetails.contractName;
 }

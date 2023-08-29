@@ -4,6 +4,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from './task-names';
 import './type-extensions';
 import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
+import { int } from 'hardhat/internal/core/params/argumentTypes';
 
 export * from './deployer';
 
@@ -16,6 +17,8 @@ task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for zkSync network')
     .setAction(zkSyncDeploy);
 
 task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
-    .addParam('wallet', 'Wallet key for deployment', '')
-    .addOptionalParam('exportedConfigName', 'Exported HardhatUserConfig type variable from hardhat config file', undefined)
+    .addOptionalParam('accountNumber', 'Network account index', 0, int)
+    .addOptionalParam('externalConfigObjectPath', 'Config file imported in hardhat config file that represent HardhatUserConfig type variable', undefined)
+    .addFlag('noAutoPopulateConfig', 'Flag to disable auto population of config file')
+    .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
