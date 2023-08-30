@@ -58,14 +58,13 @@ export async function verifyContract(
     { address, contract: contractFQN, constructorArguments }: TaskArguments,
     hre: HardhatRuntimeEnvironment
 ): Promise<number> {
-
     await hre.run(TASK_COMPILE_VYPER, { quiet: true });
 
     const deployedBytecode = await retrieveContractBytecode(address, hre.network);
 
     const artifact = await hre.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
-    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
     const artificatBytecode = artifact.bytecode;
+    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
 
     const deployArgumentsEncoded = await getDeployArgumentEncoded(constructorArguments, artifact);
 
@@ -92,13 +91,13 @@ export async function verifyContract(
     }
 
     const resolvedFiles: ResolvedFile[] = await getResolvedFiles(hre);
-    const filesSourceCodeMap = Object.fromEntries(
+    const contractsSourceCodesMap = Object.fromEntries(
         resolvedFiles.map((file) => [file.sourceName, file.content.rawContent])
     );
 
     let request = {
         contractAddress: address,
-        sourceCode: filesSourceCodeMap,
+        sourceCode: contractsSourceCodesMap,
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: artifact.contractName,
         compilerVyperVersion: vyperVersion,
