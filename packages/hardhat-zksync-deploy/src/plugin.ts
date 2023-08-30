@@ -98,6 +98,8 @@ export async function deployLibraries(
         fillLibrarySettings(hre, [compileInfo]);
     }
 
+    console.info(chalk.green('All libraries deployed successfully!'));
+
     if (!noAutoPopulateConfig) {
         updateHardhatConfigFile(hre, externalConfigObjectPath);
     }
@@ -105,7 +107,10 @@ export async function deployLibraries(
     removeLibraryInfoFile(hre);
 
     if(compileAllContracts) {
+        console.info(chalk.yellow('Compiling all contracts'));
         await compileContracts(hre, []);
+    } else {
+        console.info(chalk.yellow(`Please run ${chalk.green('yarn hardhat compile')} to compile all contracts`));
     }
 }
 
