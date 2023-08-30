@@ -8,6 +8,7 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START,
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START,
     TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
+    TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
@@ -26,7 +27,7 @@ import {
 } from './utils';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS } from './constants';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS, MISSING_LIBRARY_LINK } from './constants';
 import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
@@ -224,12 +225,11 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
-    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }) => {
-        const zksolcConfig: ZkSolcConfig = (global as any).hre.config.zksolc;
-
-        if (zksolcConfig.settings.areLibrariesMissing) {
+    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre, runSuper) => {
+        if (hre.config.zksolc.settings.areLibrariesMissing) {
             console.info(chalk.yellow(MISSING_LIBRARIES_NOTICE));
             console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
+            console.info(chalk.yellow(MISSING_LIBRARY_LINK));
         } else {
             let count = 0;
             for (const job of compilationJobs) {
@@ -280,6 +280,19 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
             }
         }
     );
+
+subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
+    if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {
+        return await runSuper(taskArgs);
+    }
+    
+    // Delete all artifacts and cache files because there are missing libraries and the compilation output is invalid.
+    const artifactsDir = hre.config.paths.artifacts;
+    const cacheDir = hre.config.paths.cache;
+
+    fs.rmSync(artifactsDir, { recursive: true });
+    fs.rmSync(cacheDir, { recursive: true });
+});
 
 export {
     getZksolcUrl,
