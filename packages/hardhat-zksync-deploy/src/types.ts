@@ -30,11 +30,11 @@ export interface MissingLibrary {
 }
 
 export interface ContractInfo {
-  contractNameDetails: ContractNameDetails;
+  contractFQN: ContractFullQualifiedName;
   address: string;
 }
 
-export interface ContractNameDetails {
+export interface ContractFullQualifiedName {
   contractName: string;
   contractPath: string;
 }

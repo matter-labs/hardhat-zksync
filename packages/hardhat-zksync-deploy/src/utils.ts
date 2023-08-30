@@ -1,5 +1,5 @@
 import { HardhatNetworkAccountConfig, HardhatNetworkHDAccountsConfig, HardhatRuntimeEnvironment, HttpNetworkConfig, NetworkConfig } from 'hardhat/types';
-import { ContractInfo, ContractNameDetails, MissingLibrary } from './types';
+import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
 import { MorphTsBuilder } from './morph-ts-builder';
 import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
@@ -18,14 +18,14 @@ export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, external
         .save();
 }
 
-export function generateFullQuailfiedName(contractNameDetails: ContractNameDetails | MissingLibrary): string {
-    return contractNameDetails.contractPath + ":" + contractNameDetails.contractName;
+export function generateFullQuailfiedNameString(contractFQN: ContractFullQualifiedName | MissingLibrary): string {
+    return contractFQN.contractPath + ":" + contractFQN.contractName;
 }
 
 export async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[]) {
     libraries.forEach((library) => {
-        let contractPath = library.contractNameDetails.contractPath;
-        let contractName = library.contractNameDetails.contractName;
+        let contractPath = library.contractFQN.contractPath;
+        let contractName = library.contractFQN.contractName;
 
         if (!hre.config.zksolc.settings.libraries) {
             hre.config.zksolc.settings.libraries = {};
