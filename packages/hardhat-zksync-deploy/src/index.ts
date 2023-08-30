@@ -20,6 +20,7 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addOptionalParam('privateKey', 'Private key of the account that will deploy the libraries', undefined, string)
     .addOptionalParam('accountNumber', 'Network account index', 0, int)
     .addOptionalParam('externalConfigObjectPath', 'Config file imported in hardhat config file that represent HardhatUserConfig type variable', undefined)
+    .addOptionalParam('exportedConfigObject', 'Object in hardhat config file that represent HardhatUserConfig type variable', 'config', string)
     .addFlag('noAutoPopulateConfig', 'Flag to disable auto population of config file')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);

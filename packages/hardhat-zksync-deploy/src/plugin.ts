@@ -82,6 +82,7 @@ export async function deployLibraries(
     privateKey: string,
     accountNumber: number, 
     externalConfigObjectPath: string, 
+    exportedConfigObject: string,
     noAutoPopulateConfig: boolean, 
     compileAllContracts: boolean
 ) {
@@ -101,7 +102,7 @@ export async function deployLibraries(
     console.info(chalk.green('All libraries deployed successfully!'));
 
     if (!noAutoPopulateConfig) {
-        updateHardhatConfigFile(hre, externalConfigObjectPath);
+        updateHardhatConfigFile(hre, externalConfigObjectPath, exportedConfigObject);
     }
 
     removeLibraryInfoFile(hre);

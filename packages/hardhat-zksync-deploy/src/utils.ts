@@ -9,13 +9,17 @@ export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig
     return 'url' in networkConfig;
 }
 
-export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, externalConfigObjectPath: string) {
-    new MorphTsBuilder(externalConfigObjectPath ?? hre.config.paths.configFile)
-        .intialStep({initialVariableType: "HardhatUserConfig"})
+export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, externalConfigObjectPath: string, exportedConfigObject: string) {
+    try { 
+        new MorphTsBuilder(externalConfigObjectPath ?? hre.config.paths.configFile)
+        .intialStep([{initialVariableType: "HardhatUserConfig"}, {initialVariable: exportedConfigObject}, {initialModule: "module.exports"}])
         .nextStep({propertyName: 'zksolc', isRequired: true})
         .nextStep({ propertyName: 'settings'})
         .replaceStep({ propertyName: 'libraries', replaceObject: hre.config.zksolc.settings.libraries})
         .save();
+    } catch (error) {
+        throw new ZkSyncDeployPluginError('Failed to update hardhat config file, please use addresses from console output');
+    }
 }
 
 export function generateFullQuailfiedNameString(contractFQN: ContractFullQualifiedName | MissingLibrary): string {

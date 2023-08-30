@@ -10,35 +10,61 @@ export class MorphTsBuilder {
         this._sourceFile = project.createSourceFile(_filePath, fileContent, { overwrite: true });
     }
 
-    public intialStep(step: MorphBuilderInitialStepType | MorphBuilderInitialStepVariable) {
-        return new MorphTs(step, this._sourceFile, this._filePath);
+    public intialStep(steps: (MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule)[]) {
+        return new MorphTs(steps, this._sourceFile, this._filePath);
     }
 }
 
 export class MorphTs {
-    private _currentStep: Expression;
+    private _currentStep : Expression = undefined as any as Expression;
 
-    constructor(private _step: MorphBuilderInitialStepType | MorphBuilderInitialStepVariable, private _sourceFile: SourceFile, private _filePath: string) {
-        let initialValue;
-        
-        if(isMorphBuilderInitialStepType(_step)) {
-            initialValue = _sourceFile.getVariableDeclaration(v => v.getType().getText().includes((_step as MorphBuilderInitialStepType).initialVariableType));
-        } else {
-            initialValue = _sourceFile.getVariableDeclaration((_step as MorphBuilderInitialStepVariable).initialVariable);
+    constructor(private _steps: (MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule)[], private _sourceFile: SourceFile, private _filePath: string) {
+        let initialValue : any;
+
+        for(let _step of _steps) {
+            if (isMorphBuilderInitialStepType(_step)) {
+                initialValue = _sourceFile.getVariableDeclaration(v => v.getType().getText().includes((_step as MorphBuilderInitialStepType).initialVariableType));
+            
+                if(!initialValue || initialValue === undefined) {
+                    continue;
+                }
+
+                const intialStep = initialValue.getInitializer()
+                ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+                this._currentStep = intialStep;
+                return;
+            } else if (isMorphBuilderInitialStepModule(_step)) {
+                initialValue = _sourceFile
+                .getStatements().find(ea => ea.getText().startsWith((_step as MorphBuilderInitialStepModule).initialModule))
+                ?.asKind(SyntaxKind.ExpressionStatement)
+                ?.getFirstChildByKind(SyntaxKind.BinaryExpression)
+                ?.getRight()
+
+                if(!initialValue || initialValue === undefined) {
+                    continue;
+                }
+                
+                this._currentStep = initialValue;
+                return;
+            } else {
+                initialValue = _sourceFile.getVariableDeclaration((_step as MorphBuilderInitialStepVariable).initialVariable);
+
+                if(!initialValue || initialValue === undefined) {
+                    continue;
+                }
+
+                const intialStep = initialValue.getInitializer()
+                ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+
+                this._currentStep = intialStep;
+                return;
+            }
         }
 
-        if (!initialValue || initialValue === undefined) {
-            throw new Error(`Initial value is not found`);
+        if (!this._currentStep || this._currentStep === undefined) {
+            throw new Error(`Initial current step is not found`);
         }
-
-        const intialStep = initialValue.getInitializer()
-            ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-
-        if (!intialStep || intialStep === undefined) {
-            throw new Error(`Initial variable is not an object`);
-        }
-
-        this._currentStep = intialStep;
     }
 
     public nextStep(step: MorphTsNextStep) {
@@ -122,6 +148,14 @@ export interface MorphBuilderInitialStepType {
     initialVariableType: string;
 }
 
+export interface MorphBuilderInitialStepModule {
+    initialModule: string;
+}
+
 function isMorphBuilderInitialStepType(object: any): object is MorphBuilderInitialStepType {
     return 'initialVariableType' in object;
+}
+
+function isMorphBuilderInitialStepModule(object: any): object is MorphBuilderInitialStepModule {
+    return 'initialModule' in object;
 }
