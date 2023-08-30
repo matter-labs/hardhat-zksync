@@ -77,13 +77,15 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
     await deployFn(hre);
 }
 
-export async function deployLibraries(hre: HardhatRuntimeEnvironment, 
+export async function deployLibraries(
+    hre: HardhatRuntimeEnvironment, 
+    privateKey: string,
     accountNumber: number, 
     externalConfigObjectPath: string, 
     noAutoPopulateConfig: boolean, 
-    compileAllContracts: boolean) {
-
-    const wallet = getWallet(hre, accountNumber);
+    compileAllContracts: boolean
+) {
+    const wallet = getWallet(hre, privateKey, accountNumber);
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
@@ -107,11 +109,13 @@ export async function deployLibraries(hre: HardhatRuntimeEnvironment,
     }
 }
 
-async function deployLibrary(hre: HardhatRuntimeEnvironment,
+async function deployLibrary(
+    hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     missingLibrary: MissingLibrary,
     missingLibraries: MissingLibrary[],
-    allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
+    allDeployedLibraries: ContractInfo[]
+): Promise<ContractInfo> {
     const deployedLibrary = allDeployedLibraries
         .find(deployedLibrary => generateFullQuailfiedNameString(missingLibrary)
             .includes(generateFullQuailfiedNameString(deployedLibrary.contractFQN))
@@ -162,27 +166,32 @@ function findDependentLibraries(dependentLibraries: string[], missingLibraries: 
     });
 }
 
-async function deployOneLibrary(deployer: Deployer,
+async function deployOneLibrary(
+    deployer: Deployer,
     contractFQN: ContractFullQualifiedName,
-    allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
+    allDeployedLibraries: ContractInfo[]
+): Promise<ContractInfo> {
     const artifact = await deployer.loadArtifact(generateFullQuailfiedNameString(contractFQN));
 
-    console.info(chalk.yellow(`Deploying ${contractFQN.contractName} .....`));
+    console.info(chalk.yellow(`Deploying ${generateFullQuailfiedNameString(contractFQN)} .....`));
     const contract = await deployer.deploy(artifact, []);
-    console.info(chalk.green(`Deployed ${contractFQN.contractName} at ${contract.address}`));
+    console.info(chalk.green(`Deployed ${generateFullQuailfiedNameString(contractFQN)} at ${contract.address}`));
 
     const contractInfo = {
         contractFQN,
         address: contract.address
     };
+
     allDeployedLibraries.push(contractInfo);
     return contractInfo;
 }
 
-async function compileAndDeploy(hre: HardhatRuntimeEnvironment,
+async function compileAndDeploy(
+    hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     contractFQN: ContractFullQualifiedName,
-    allDeployedLibraries: ContractInfo[]): Promise<ContractInfo> {
+    allDeployedLibraries: ContractInfo[]
+): Promise<ContractInfo> {
     await compileContracts(hre, [contractFQN.contractPath]);
 
     return await deployOneLibrary(deployer, contractFQN, allDeployedLibraries);

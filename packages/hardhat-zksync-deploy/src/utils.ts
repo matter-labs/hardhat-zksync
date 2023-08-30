@@ -61,7 +61,11 @@ export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts
     await hre.run('compile', { force: true });
 }
 
-export function getWallet(hre: HardhatRuntimeEnvironment, accountNumber: number) {
+export function getWallet(hre: HardhatRuntimeEnvironment, privateKey: string, accountNumber: number) {
+    if (privateKey) {
+        return new Wallet(privateKey);
+    }
+
     const accounts = hre.network.config.accounts;
 
     if(!accounts) {

@@ -731,6 +731,7 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
     fs-extra "^11.1.1"
+    proper-lockfile "^4.1.2"
     semver "^7.5.1"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":

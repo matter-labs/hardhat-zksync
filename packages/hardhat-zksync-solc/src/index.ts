@@ -228,7 +228,7 @@ subtask(
         const zksolcConfig: ZkSolcConfig = (global as any).hre.config.zksolc;
 
         if (zksolcConfig.settings.areLibrariesMissing) {
-            console.info(chalk.blue(MISSING_LIBRARIES_NOTICE));
+            console.info(chalk.yellow(MISSING_LIBRARIES_NOTICE));
             console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
         } else {
             let count = 0;
