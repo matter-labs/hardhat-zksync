@@ -1,5 +1,6 @@
 import { Artifact, HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import {
+    BYTECODES_ARE_NOT_SAME,
     COMPILER_VERSION_NOT_SUPPORTED,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
@@ -17,7 +18,7 @@ import path from 'path';
 import { ZkSyncVerifyPluginError } from './errors';
 import chalk from 'chalk';
 import { COMPILER_TYPE, getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
-import { retrieveContractBytecode } from './utils';
+import { areSameBytecodes, retrieveContractBytecode } from './utils';
 import { checkContractName, getCacheResolvedFileInformation, getDeployArgumentEncoded, getResolvedFiles, inferContractArtifacts } from './plugin';
 import { ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
 
@@ -58,19 +59,22 @@ export async function verifyContract(
     hre: HardhatRuntimeEnvironment
 ): Promise<number> {
 
-    if (contractFQN === undefined) {
-        throw new ZkSyncVerifyPluginError("Contract name is not provided! Please use required argument '--contract'");
-    }
     await hre.run(TASK_COMPILE_VYPER, { quiet: true });
 
     const deployedBytecode = await retrieveContractBytecode(address, hre.network);
 
     const artifact = await hre.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
+    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
+    const artificatBytecode = artifact.bytecode;
 
     const deployArgumentsEncoded = await getDeployArgumentEncoded(constructorArguments, artifact);
 
+    if (!areSameBytecodes(artificatBytecode, deployedBytecode)) {
+        throw new ZkSyncVerifyPluginError(chalk.red(BYTECODES_ARE_NOT_SAME));
+    }
+
     // This contractCahce is used only to get the vyper version of the contract
-    // TODO: check if this is any other way to get the vyper version without using the cache
+    // TODO: check if there is any other way to get the vyper version without using the cache
     const { contractCache } = await getCacheResolvedFileInformation(contractFQN, artifact.sourceName, hre);
 
     const vyperVersion = contractCache.vyperConfig.version;
