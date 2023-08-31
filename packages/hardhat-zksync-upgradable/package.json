@@ -34,7 +34,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
     "@matterlabs/hardhat-zksync-solc": "^0.4.0",
-    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "@openzeppelin/hardhat-upgrades": "^2.2.1",
     "@openzeppelin/upgrades-core": "~1.27.0",
     "dockerode": "^3.3.4"
   },
@@ -43,7 +43,7 @@
     "@matterlabs/hardhat-zksync-solc": "^0.4.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
-    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "@openzeppelin/hardhat-upgrades": "^2.2.1",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
