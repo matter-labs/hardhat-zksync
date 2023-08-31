@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 0.1.3
+
+### Patch Changes
+
+- a79f478: Fixed openzeppelin packages import issue by adding the fixed dependency
+
 ## 0.1.2
 
 ### Patch Changes
