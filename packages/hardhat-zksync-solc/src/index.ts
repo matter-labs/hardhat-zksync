@@ -7,11 +7,13 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START,
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START,
+    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
+    TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask, types } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
-import { FactoryDeps } from './types';
+import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import { compile } from './compile';
@@ -25,7 +27,7 @@ import {
 } from './utils';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE } from './constants';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS, MISSING_LIBRARY_LINK } from './constants';
 import { CompilationJob } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
@@ -33,6 +35,7 @@ extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
     config.zksolc.settings.optimizer = { ...defaultZkSolcConfig.settings.optimizer, ...userConfig?.zksolc?.settings?.optimizer };
+    config.zksolc.settings.libraries = { ...defaultZkSolcConfig.settings.libraries, ...userConfig?.zksolc?.settings?.libraries };
 });
 
 extendEnvironment((hre) => {
@@ -60,6 +63,22 @@ extendEnvironment((hre) => {
             updateCompilerConf(compiler, hre.config.zksolc);
         }
     }
+});
+
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: {sourcePaths: string[]}, hre, runSuper) => {
+    if(hre.network.zksync !== true) {
+        return await runSuper(args);
+    }
+
+    const contractsToCompile: string[] | undefined = hre.config.zksolc.settings.contractsToCompile;
+
+    if (!contractsToCompile || contractsToCompile.length === 0) {
+        return await runSuper(args);
+    }
+
+    const sourceNames: string[] = await runSuper(args);
+
+    return sourceNames.filter((sourceName) => contractsToCompile.includes(sourceName));
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
@@ -206,14 +225,20 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
-    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }) => {
-        let count = 0;
-        for (const job of compilationJobs) {
-            count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
-        }
-
-        if (count > 0) {
-            console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
+    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre, runSuper) => {
+        if (hre.config.zksolc.settings.areLibrariesMissing) {
+            console.info(chalk.yellow(MISSING_LIBRARIES_NOTICE));
+            console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
+            console.info(chalk.yellow(MISSING_LIBRARY_LINK));
+        } else {
+            let count = 0;
+            for (const job of compilationJobs) {
+                count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
+            }
+    
+            if (count > 0) {
+                console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
+            }
         }
     }
 );
@@ -255,6 +280,19 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
             }
         }
     );
+
+subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
+    if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {
+        return await runSuper(taskArgs);
+    }
+    
+    // Delete all artifacts and cache files because there are missing libraries and the compilation output is invalid.
+    const artifactsDir = hre.config.paths.artifacts;
+    const cacheDir = hre.config.paths.cache;
+
+    fs.rmSync(artifactsDir, { recursive: true });
+    fs.rmSync(cacheDir, { recursive: true });
+});
 
 export {
     getZksolcUrl,

@@ -11,6 +11,7 @@ import {
 } from './docker';
 import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
+import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFile } from '../utils';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -36,6 +37,24 @@ export class BinaryCompiler implements ICompiler {
     constructor(public solcPath: string) {}
 
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
+        // Check for missing libraries
+        const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
+
+        const missingLibraries = findMissingLibraries(zkSolcOutput);
+        if (missingLibraries.size > 0) {
+            if (!config.settings.missingLibrariesPath) {
+                throw new ZkSyncSolcPluginError('Missing libraries path is not specified');
+            }
+            
+            const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
+            // Write missing libraries to file
+            const missingLibrariesPath = config.settings.missingLibrariesPath!;
+            await writeLibrariesToFile(missingLibrariesPath, missingLibraryDependencies);
+
+            config.settings.areLibrariesMissing = true;
+            return zkSolcOutput;
+        }
+
         return await compileWithBinary(input, config, this.solcPath);
     }
 }
@@ -54,6 +73,8 @@ export class DockerCompiler implements ICompiler {
     }
 
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
+        // We don't check here for missing libraries because docker is using older versions of zksolc and it's deprecated
+
         return await compileWithDocker(input, this.docker, this.dockerImage, config);
     }
 
