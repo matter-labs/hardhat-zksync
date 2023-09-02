@@ -1,4 +1,4 @@
-export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-vyper-verify';
+export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-verify-vyper';
 
 export const TESTNET_VERIFY_URL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 

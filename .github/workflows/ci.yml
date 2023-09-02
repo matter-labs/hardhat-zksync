@@ -168,9 +168,9 @@ jobs:
         run: |
           cd packages/hardhat-zksync-upgradable
           yarn test
-  zkvyper-verify:
+  verify-vyper:
     runs-on: ubuntu-latest
-    name: zkvyper-verify
+    name: verify-vyper
     steps:
       - uses: actions/checkout@v2
 
@@ -184,7 +184,7 @@ jobs:
           yarn install
           yarn build
 
-      - name: Test zkvyper verify plugin
+      - name: Test zksync verify vyper plugin
         run: |
-          cd packages/hardhat-zksync-vyper-verify
+          cd packages/hardhat-zksync-verify-vyper
           yarn test
