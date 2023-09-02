@@ -31,7 +31,7 @@ describe('verify plugin', async function () {
             const contractName = 'contracts/Greeter.vy:Greeter';
             const artifact = await this.env.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN: contractName, deployedBytecode: '0x' });
         
-            const { resolvedFile, contractCache } = await getCacheResolvedFileInformation(sourceName, artifact, this.env);
+            const { resolvedFile, contractCache } = await getCacheResolvedFileInformation(sourceName, artifact.sourceName, this.env);
             
             assert.equal(resolvedFile.sourceName, sourceName);
             assert.equal(contractCache.sourceName, sourceName);
