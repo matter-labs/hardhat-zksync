@@ -8,6 +8,11 @@ export interface ZkSolcConfig {
         // If compilerSource == "docker", this option is ignored.
         // By default, the automatically downloaded binary is used.
         compilerPath?: string;
+        // Used to cache missing library dependencies. This is used later to compile and deploy libraries.
+        missingLibrariesPath?: string;
+        // Whether there are missing libraries. This is used as a temp flag that will enable or disable logs for successful compilation.
+        areLibrariesMissing?: boolean;
+        // Optimizer settings
         optimizer?: {
             enabled?: boolean;
             [key: string]: any;
@@ -30,6 +35,8 @@ export interface ZkSolcConfig {
         isSystem?: boolean;
         // Force evmla
         forceEvmla?: boolean;
+        // specific contracts to be compiled
+        contractsToCompile?: string[];
     };
 }
 
@@ -50,4 +57,10 @@ export interface FactoryDeps {
 export interface ZkSyncArtifact extends Artifact {
     // List of factory dependencies of a contract.
     factoryDeps: FactoryDeps;
+}
+
+export interface MissingLibrary {
+    contractName: string;
+    contractPath: string;
+    missingLibraries: Array<string>;
 }

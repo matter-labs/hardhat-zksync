@@ -27,6 +27,9 @@ jobs:
           if [[ ${{ github.ref }} == *"beta"* ]]; then
             echo "Publishing package with beta tag"
             npm publish @matterlabs/hardhat-zksync-solc --tag beta --workspace=packages/hardhat-zksync-solc --access=public
+          elif [[ ${{ github.ref }} == *"alpha"* ]]; then
+            echo "Publishing package with alpha tag"
+            npm publish @matterlabs/hardhat-zksync-solc --tag alpha --workspace=packages/hardhat-zksync-solc --access=public
           else
             echo "Publishing package with latest tag"
             npm publish @matterlabs/hardhat-zksync-solc --tag latest --workspace=packages/hardhat-zksync-solc --access=public
