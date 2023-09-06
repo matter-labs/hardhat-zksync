@@ -55,6 +55,8 @@ export class BinaryCompiler implements ICompiler {
             return zkSolcOutput;
         }
 
+        // Make sure that libraries are not missing.
+        config.settings.areLibrariesMissing = false;
         return await compileWithBinary(input, config, this.solcPath);
     }
 }
