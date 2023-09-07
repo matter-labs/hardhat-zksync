@@ -168,10 +168,5 @@ describe('zksolc plugin', async function () {
             // Assert that list of missing libraries is correct.
             assert.deepEqual(missingLibraries, expectedMissingLibraries);
         });
-
-        afterEach(async function () {
-            // Remove the file with the list of missing libraries.
-            fs.unlinkSync(this.env.config.zksolc.settings.missingLibrariesPath!);
-        });
     });
 });
