@@ -78,13 +78,17 @@ export function saltFromUrl(url: string): string {
     return sha1(url);
 }
 
-export function getZksolcUrl(repo: string, version: string): string {
+export function getZksolcUrl(repo: string, version: string, isRelease: boolean = true): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     // @ts-ignore
     const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
     const ext = process.platform == 'win32' ? '.exe' : '';
+    
+    if (isRelease) {
+        return `${repo}/releases/download/v${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+    }
     return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
 
