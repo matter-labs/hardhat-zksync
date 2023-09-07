@@ -150,17 +150,17 @@ describe('zksolc plugin', async function () {
                     "missingLibraries": []
                 },
                 {
-                    "contractName": "MathLib",
-                    "contractPath": "contracts/MathLib.sol",
-                    "missingLibraries": [
-                        "contracts/ChildLib.sol:ChildLib"
-                    ]
-                },
-                {
                     "contractName": "ChildLib",
                     "contractPath": "contracts/ChildLib.sol",
                     "missingLibraries": [
                         "contracts/ChildChildLib.sol:ChildChildLib"
+                    ]
+                },
+                {
+                    "contractName": "MathLib",
+                    "contractPath": "contracts/MathLib.sol",
+                    "missingLibraries": [
+                        "contracts/ChildLib.sol:ChildLib"
                     ]
                 }
             ];
