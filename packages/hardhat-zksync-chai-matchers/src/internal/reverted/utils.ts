@@ -23,7 +23,7 @@ export function getReturnDataFromError(error: any): string {
     let returnData = error.data ?? error.error?.error?.error?.data;
 
     if (returnData === undefined || typeof returnData !== 'string') {
-        returnData = error.error?.data;
+        returnData = error.error?.data ?? error.error?.error?.data;
 
         if (returnData === undefined || typeof returnData !== 'string') {
             throw error;
