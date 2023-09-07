@@ -134,6 +134,11 @@ describe('zksolc plugin', async function () {
         useEnvironment('missing-libraries');
 
         it('Should successfully identify all the missing libraries', async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
+                return;
+            }
+
             await this.env.run(TASK_COMPILE);
 
             // Assert that artifacts doesn't exist.
@@ -167,6 +172,16 @@ describe('zksolc plugin', async function () {
 
             // Assert that list of missing libraries is correct.
             assert.deepEqual(missingLibraries, expectedMissingLibraries);
+        });
+
+        afterEach(async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
+                return;
+            }
+            
+            // Remove the file with the list of missing libraries.
+            fs.unlinkSync(this.env.config.zksolc.settings.missingLibrariesPath!);
         });
     });
 });
