@@ -2,6 +2,7 @@ import { AssertionError, expect } from 'chai';
 import path from 'path';
 import util from 'util';
 import * as zk from 'zksync-web3';
+import * as ethers from 'ethers';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
@@ -9,7 +10,8 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
 
-const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
+const RICH_WALLET_1_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
+const RICH_WALLET_2_PK = '0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3';
 
 describe('INTEGRATION: Reverted', function () {
     describe('with the local setup', function () {
@@ -20,18 +22,26 @@ describe('INTEGRATION: Reverted', function () {
 
     function runTests() {
         let matchers: zk.Contract;
+        let aaAccount: zk.Contract;
         let provider: zk.Provider;
-        let wallet: zk.Wallet;
+        let wallet1: zk.Wallet;
+        let wallet2: zk.Wallet;
         let deployer: Deployer;
         let artifact: ZkSyncArtifact;
+        let aaDeployer: Deployer;
 
         beforeEach('deploy matchers contract', async function () {
             provider = zk.Provider.getDefaultProvider();
-            wallet = new zk.Wallet(RICH_WALLET_PK, provider);
+            wallet1 = new zk.Wallet(RICH_WALLET_1_PK, provider);
+            wallet2 = new zk.Wallet(RICH_WALLET_2_PK, provider);
 
-            deployer = new Deployer(this.hre, wallet);
+            deployer = new Deployer(this.hre, wallet1);
             artifact = await deployer.loadArtifact('Matchers');
             matchers = await deployer.deploy(artifact);
+
+            aaDeployer = new Deployer(this.hre, wallet1, 'createAccount');
+            artifact = await deployer.loadArtifact("TwoUserMultisig");
+            aaAccount = await aaDeployer.deploy(artifact, [wallet1.address, wallet2.address], undefined, []);
         });
 
         // helpers
@@ -166,6 +176,38 @@ describe('INTEGRATION: Reverted', function () {
                 }
 
                 expect.fail('Expected an exception but none was thrown');
+            });
+        });
+
+        describe('calling abstraction account', function () {
+            it('successfuly reverts', async function () {
+                let aaTx = await matchers.populateTransaction.succeeds();
+
+                const gasLimit = await provider.estimateGas(aaTx);
+                const gasPrice = await provider.getGasPrice();
+            
+                aaTx = {
+                    ...aaTx,
+                    from: aaAccount.address,
+                    gasLimit: gasLimit,
+                    gasPrice: gasPrice,
+                    chainId: (await provider.getNetwork()).chainId,
+                    nonce: await provider.getTransactionCount(aaAccount.address),
+                    type: 113,
+                    customData: {
+                      gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+                    } as zk.types.Eip712Meta,
+                    value: ethers.BigNumber.from(0),
+                };
+
+                const singedTx = await wallet1.eip712.sign(aaTx);
+
+                aaTx.customData = {
+                    ...aaTx.customData,
+                    customSignature: singedTx,
+                };
+
+                await expect(provider.sendTransaction(zk.utils.serialize(aaTx))).to.be.reverted;
             });
         });
     }
