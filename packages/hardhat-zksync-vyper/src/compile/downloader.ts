@@ -3,9 +3,7 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download } from 'hardhat/internal/util/download';
-
-import { getZkvyperUrl, isURL, isVersionInRange } from "../utils";
+import { download, getZkvyperUrl, isURL, isVersionInRange } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
@@ -148,18 +146,35 @@ export class ZkVyperCompilerDownloader {
         const url = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
 
-        await download(url, downloadPath);
+        await download(url, downloadPath, 'hardhat-zksync-zkvyper', 'compiler-version-info', 30000);
     }
 
     private async _downloadCompiler(): Promise<string> {
-        let url = this._configCompilerPath;
-        if (!isURL(url)) {
-            url = getZkvyperUrl(ZKVYPER_BIN_REPOSITORY, this._version);
+        const downloadPath = this.getCompilerPath();
+
+        const url = this._getCompilerUrl(true);
+        try {
+            await this._attemptDownload(url, downloadPath);
+        } catch (e: any) {
+            if (!isURL(this._configCompilerPath)) {
+                const fallbackUrl = this._getCompilerUrl(false);
+                await this._attemptDownload(fallbackUrl, downloadPath);
+            }
         }
 
-        const downloadPath = this.getCompilerPath();
-        await download(url, downloadPath);
         return downloadPath;
+    }
+
+    private _getCompilerUrl(useGithubRelease: boolean): string {
+        if (isURL(this._configCompilerPath)) {
+            return this._configCompilerPath;
+        }
+
+        return getZkvyperUrl(ZKVYPER_BIN_REPOSITORY, this._version, useGithubRelease);
+    }
+
+    private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
+        return download(url, downloadPath, 'hardhat-zksync-zkvyper', this._version, 30000);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {
