@@ -7,6 +7,12 @@ import { CompilerVersionInfo } from './compile/downloader';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import { ZkSyncSolcPluginError } from './errors';
+import fs from "fs";
+import path from "path";
+import util from "util";
+import type { Dispatcher } from "undici";
+
+const TEMP_FILE_PREFIX = "tmp-";
 
 export function filterSupportedOutputSelections(outputSelection: CompilerOutputSelection, zkCompilerVersion: string): CompilerOutputSelection {
     const filteredOutputSelection: CompilerOutputSelection = {};
@@ -78,13 +84,18 @@ export function saltFromUrl(url: string): string {
     return sha1(url);
 }
 
-export function getZksolcUrl(repo: string, version: string): string {
+export function getZksolcUrl(repo: string, version: string, isRelease: boolean = true): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     // @ts-ignore
     const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
     const ext = process.platform == 'win32' ? '.exe' : '';
+    
+    if (isRelease) {
+        return `${repo}/releases/download/v${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+    }
+    
     return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
 
@@ -187,3 +198,56 @@ export const writeLibrariesToFile = async (path: string, libraries: any[]): Prom
         await lockfile.unlock(path);
     }
 };
+
+function resolveTempFileName(filePath: string): string {
+    const { dir, ext, name } = path.parse(filePath);
+
+    return path.format({
+        dir,
+        ext,
+        name: `${TEMP_FILE_PREFIX}${name}`,
+    });
+}
+
+export async function download(
+    url: string,
+    filePath: string,
+    userAgent: string,
+    version: string,
+    timeoutMillis = 10000,
+    extraHeaders: { [name: string]: string } = {}
+) {
+    const { pipeline } = await import("stream");
+    const { getGlobalDispatcher, request } = await import("undici");
+    const streamPipeline = util.promisify(pipeline);
+
+    let dispatcher: Dispatcher = getGlobalDispatcher();
+
+    // Fetch the url
+    const response = await request(url, {
+        dispatcher,
+        headersTimeout: timeoutMillis,
+        maxRedirections: 10,
+        method: "GET",
+        headers: {
+            ...extraHeaders,
+            "User-Agent": `${userAgent} ${version}`,
+        },
+    });
+
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+        const tmpFilePath = resolveTempFileName(filePath);
+        await fse.ensureDir(path.dirname(filePath));
+
+        await streamPipeline(response.body, fs.createWriteStream(tmpFilePath));
+        return fse.move(tmpFilePath, filePath, { overwrite: true });
+    }
+    
+    // undici's response bodies must always be consumed to prevent leaks
+    const text = await response.body.text();
+
+    // eslint-disable-next-line
+    throw new Error(
+        `Failed to download ${url} - ${response.statusCode} received. ${text}`
+    );
+}

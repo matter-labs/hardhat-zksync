@@ -1,6 +1,7 @@
 import { ZkSolcConfig } from '../types';
 import { compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
+import semver from 'semver';
 import {
     validateDockerIsInstalled,
     createDocker,
@@ -12,6 +13,7 @@ import {
 import { CompilerInput } from 'hardhat/types';
 import { ZkSyncSolcPluginError } from '../errors';
 import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFile } from '../utils';
+import { DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION } from '../constants';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -38,21 +40,23 @@ export class BinaryCompiler implements ICompiler {
 
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
         // Check for missing libraries
-        const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
+        if (semver.gte(config.version, DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION)) {
+            const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
 
-        const missingLibraries = findMissingLibraries(zkSolcOutput);
-        if (missingLibraries.size > 0) {
-            if (!config.settings.missingLibrariesPath) {
-                throw new ZkSyncSolcPluginError('Missing libraries path is not specified');
+            const missingLibraries = findMissingLibraries(zkSolcOutput);
+            if (missingLibraries.size > 0) {
+                if (!config.settings.missingLibrariesPath) {
+                    throw new ZkSyncSolcPluginError('Missing libraries path is not specified');
+                }
+                
+                const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
+                // Write missing libraries to file
+                const missingLibrariesPath = config.settings.missingLibrariesPath!;
+                await writeLibrariesToFile(missingLibrariesPath, missingLibraryDependencies);
+
+                config.settings.areLibrariesMissing = true;
+                return zkSolcOutput;
             }
-            
-            const missingLibraryDependencies = mapMissingLibraryDependencies(zkSolcOutput, missingLibraries);
-            // Write missing libraries to file
-            const missingLibrariesPath = config.settings.missingLibrariesPath!;
-            await writeLibrariesToFile(missingLibrariesPath, missingLibraryDependencies);
-
-            config.settings.areLibrariesMissing = true;
-            return zkSolcOutput;
         }
 
         return await compileWithBinary(input, config, this.solcPath);
