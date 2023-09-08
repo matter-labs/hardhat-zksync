@@ -1,4 +1,9 @@
 import semver from 'semver';
+import fs from "fs";
+import path from "path";
+import util from "util";
+import fse from "fs-extra";
+import type { Dispatcher } from "undici";
 
 import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 
@@ -6,18 +11,25 @@ import { CompilerVersionInfo } from './compile/downloader';
 import { UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
 import { ZkSyncVyperPluginError } from './errors';
 
+const TEMP_FILE_PREFIX = "tmp-";
+
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
     return hex.slice(0, 2) === '0x' ? hex : `0x${hex}`;
 }
 
-export function getZkvyperUrl(repo: string, version: string): string {
+export function getZkvyperUrl(repo: string, version: string, isRelease: boolean = true): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     // @ts-ignore
     const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
     const ext = process.platform == 'win32' ? '.exe' : '';
+
+    if (isRelease) {
+        return `${repo}/releases/download/v${version}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;
+    }
+
     return `${repo}/raw/main/${platform}-${arch}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
 
@@ -55,4 +67,57 @@ export function checkSupportedVyperVersions(vyper: MultiVyperConfig) {
             throw new ZkSyncVyperPluginError(VYPER_VERSION_ERROR);
         }
     });
+}
+
+function resolveTempFileName(filePath: string): string {
+    const { dir, ext, name } = path.parse(filePath);
+
+    return path.format({
+        dir,
+        ext,
+        name: `${TEMP_FILE_PREFIX}${name}`,
+    });
+}
+
+export async function download(
+    url: string,
+    filePath: string,
+    userAgent: string,
+    version: string,
+    timeoutMillis = 10000,
+    extraHeaders: { [name: string]: string } = {}
+) {
+    const { pipeline } = await import("stream");
+    const { getGlobalDispatcher, request } = await import("undici");
+    const streamPipeline = util.promisify(pipeline);
+
+    let dispatcher: Dispatcher = getGlobalDispatcher();
+
+    // Fetch the url
+    const response = await request(url, {
+        dispatcher,
+        headersTimeout: timeoutMillis,
+        maxRedirections: 10,
+        method: "GET",
+        headers: {
+            ...extraHeaders,
+            "User-Agent": `${userAgent} ${version}`,
+        },
+    });
+
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+        const tmpFilePath = resolveTempFileName(filePath);
+        await fse.ensureDir(path.dirname(filePath));
+
+        await streamPipeline(response.body, fs.createWriteStream(tmpFilePath));
+        return fse.move(tmpFilePath, filePath, { overwrite: true });
+    }
+
+    // undici's response bodies must always be consumed to prevent leaks
+    const text = await response.body.text();
+
+    // eslint-disable-next-line
+    throw new Error(
+        `Failed to download ${url} - ${response.statusCode} received. ${text}`
+    );
 }
