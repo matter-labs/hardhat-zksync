@@ -3,10 +3,9 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download } from 'hardhat/internal/util/download';
-import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
+import { performance } from 'perf_hooks';
 
-import { getZksolcUrl, isURL, isVersionInRange, saltFromUrl } from "../utils";
+import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
@@ -157,18 +156,34 @@ export class ZksolcCompilerDownloader {
         const url = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
 
-        await download(url, downloadPath, 30000);
+        await download(url, downloadPath, 'hardhat-zksync', 'compiler-version-info', 30000);
     }
 
     private async _downloadCompiler(): Promise<string> {
-        let url = this._configCompilerPath;
-        if (!this._isCompilerPathURL) {
-            url = getZksolcUrl(ZKSOLC_BIN_REPOSITORY, this._version);
-        }
-
         const downloadPath = this.getCompilerPath();
-        await download(url, downloadPath, 30000);
+
+        const url = this._getCompilerUrl(true);
+        try {
+            await this._attemptDownload(url, downloadPath);
+        } catch (e: any) {
+            if (!this._isCompilerPathURL) {
+                const fallbackUrl = this._getCompilerUrl(false);
+                await this._attemptDownload(fallbackUrl, downloadPath);
+            }
+        }
+    
         return downloadPath;
+    }
+
+    private _getCompilerUrl(useGithubRelease: boolean): string {
+        if (this._isCompilerPathURL) {
+            return this._configCompilerPath;
+        }
+        return getZksolcUrl(ZKSOLC_BIN_REPOSITORY, this._version, useGithubRelease);
+    }
+    
+    private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
+        return download(url, downloadPath, 'hardhat-zksync', this._version, 30000);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {
