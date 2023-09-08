@@ -4,6 +4,7 @@ export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-solc';
 export const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKSOLC_BIN_REPOSITORY = 'https://github.com/matter-labs/zksolc-bin';
 export const ZKSOLC_BIN_VERSION_INFO = `https://raw.githubusercontent.com/matter-labs/zksolc-bin/main`;
+export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
 
 export const defaultZkSolcConfig: ZkSolcConfig = {
     version: 'latest',
