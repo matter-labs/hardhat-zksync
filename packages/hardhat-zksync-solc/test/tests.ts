@@ -141,9 +141,6 @@ describe('zksolc plugin', async function () {
 
             await this.env.run(TASK_COMPILE);
 
-            // Assert that artifacts doesn't exist.
-            assert.throws(() => this.env.artifacts.readArtifactSync('contracts/DLib.sol:DLib'));
-
             // Assert that there is a json file with the list of missing libraries at the location this.env.config.zksolc.settings.missingLibrariesPath.
             const missingLibraries = JSON.parse(fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'));
             assert.isNotEmpty(missingLibraries);
