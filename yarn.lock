@@ -708,30 +708,14 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
-"@matterlabs/hardhat-zksync-deploy@^0.6.3":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-deploy/-/hardhat-zksync-deploy-0.6.4.tgz#360dfc353a01989a0faf43633f22de4d6b1e6050"
-  integrity sha512-MF46xbo4qOsou5nJq15KdOyiqf1cfaQWHn8K9tQzXZlWk2nda2NMYl3/GKsJUA08hSKgeA2JHTNmz7ReS6VGdA==
-  dependencies:
-    chalk "4.1.2"
-
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
-  version "0.6.5-alpha.1"
+  version "0.6.5"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "0.4.2-alpha.1"
+    "@matterlabs/hardhat-zksync-solc" "0.4.2"
     chalk "4.1.2"
     ts-morph "^19.0.0"
 
-"@matterlabs/hardhat-zksync-solc@0.3.17":
-  version "0.3.17"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.3.17.tgz#72f199544dc89b268d7bfc06d022a311042752fd"
-  integrity sha512-aZgQ0yfXW5xPkfuEH1d44ncWV4T2LzKZd0VVPo4PL5cUrYs2/II1FaEDp5zsf3FxOR1xT3mBsjuSrtJkk4AL8Q==
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
-
-"@matterlabs/hardhat-zksync-solc@0.4.1", "@matterlabs/hardhat-zksync-solc@^0.4.0", "@matterlabs/hardhat-zksync-solc@^0.4.1":
+"@matterlabs/hardhat-zksync-solc@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.4.1.tgz#e8e67d947098d7bb8925f968544d34e522af5a9c"
   integrity sha512-fdlGf/2yZR5ihVNc2ubea1R/nNFXRONL29Fgz5FwB3azB13rPb76fkQgcFIg9zSufHsEy6zUUT029NkxLNA9Sw==
@@ -742,20 +726,8 @@
     fs-extra "^11.1.1"
     semver "^7.5.1"
 
-"@matterlabs/hardhat-zksync-solc@0.4.2-alpha.1":
-  version "0.4.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.4.2-alpha.1.tgz#8397097b2398ffddecd322a4779ee1b878669182"
-  integrity sha512-X7YfC56f+N5JsoGpRibjzSSMf5EF930l7gPOPeebf9GuRcDPFhvctmptyNhhZPh22X4BqKGafRITKpOAfpHiLw==
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
-    fs-extra "^11.1.1"
-    proper-lockfile "^4.1.2"
-    semver "^7.5.1"
-
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.4.2-alpha.2"
+  version "0.4.2"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -773,18 +745,8 @@
     "@openzeppelin/upgrades-core" "~1.27.0"
     dockerode "^3.3.4"
 
-"@matterlabs/hardhat-zksync-verify@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-verify/-/hardhat-zksync-verify-0.1.8.tgz#0f975bb6354c8762e6d2f5b683453e3dc11dbbab"
-  integrity sha512-Ss8smBeX/h58NOaGQwQCGdYjkcQE9C0BX+iak5fWt49E58mDunnMsVhVogkWqO1QWq0LsdKLAuQO3blbvgVzFQ==
-  dependencies:
-    "@matterlabs/hardhat-zksync-solc" "0.3.17"
-    axios "^1.4.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
-
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.2.0"
+  version "0.2.1"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -972,18 +934,6 @@
     ethereum-cryptography "0.1.3"
     mcl-wasm "^0.7.1"
     rustbn.js "~0.2.0"
-
-"@nomicfoundation/hardhat-chai-matchers@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-chai-matchers/-/hardhat-chai-matchers-1.0.5.tgz#75d08bd9bd84a3cb7950be6bd27171a294516b01"
-  integrity sha512-+W5C/+5FHI2xBajUN9THSNc1UP6FUsA7LeLmfnaC9VMi/50/DEjjxd8OmizEXgV1Bjck7my4NVQLL1Ti39FkpA==
-  dependencies:
-    "@ethersproject/abi" "^5.1.2"
-    "@types/chai-as-promised" "^7.1.3"
-    chai-as-promised "^7.1.1"
-    chalk "^2.4.2"
-    deep-eql "^4.0.1"
-    ordinal "^1.0.3"
 
 "@nomicfoundation/hardhat-chai-matchers@~1.0.4":
   version "1.0.4"
