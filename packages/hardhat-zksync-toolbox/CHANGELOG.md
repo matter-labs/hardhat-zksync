@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 4a4df19: Bump toolbox dependencies
+- a1f0333: Bump toolbox dependencies
 
 ## 0.2.0
 
