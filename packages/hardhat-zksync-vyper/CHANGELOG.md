@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 0.2.2
+
+### Patch Changes
+
+- da5eee8: Add logging of zkvyper compilation warnings
+
 ## 0.2.1
 
 ### Patch Changes
