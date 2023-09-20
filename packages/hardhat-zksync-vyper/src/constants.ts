@@ -32,7 +32,7 @@ export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; /
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zkvyper compiler version info file. Please check your internet connection and try again.';
 export const COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR = 'Could not download zkvyper compiler version info file. Please check your internet connection and try again.';
 
-export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string, latestVersion: string) => `Deprecated zkvyper compiler version in hardhat config file (${version}). Please use versions ${minVersion} to ${latestVersion}.`;
+export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string, latestVersion: string) => `The zkvyper compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string) => `The zkvyper compiler version in your Hardhat config file (${version}) is not the latest. We recommend using the latest version ${latestVersion}.`;
 export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) => `The zkvyper binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: string) => `Compiling contracts for zkSync Era with zkvyper v${zksolcVersion} and vyper v${solcVersion}`;

@@ -206,29 +206,11 @@ subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS)
     .addParam("output", undefined, undefined, types.any)
     .addParam("quiet", undefined, undefined, types.boolean)
     .setAction(async ({ output }: { output: any; quiet: boolean }) => {
-        // if (output?.errors === undefined) {
-        //     return;
-        // }
-
-        // for (const error of output.errors) {
-        //     if (error.severity === "error") {
-        //         const errorMessage: string =
-        //             getFormattedInternalCompilerErrorMessage(error) ??
-        //             error.formattedMessage;
-
-        //         console.error(errorMessage.replace(/^\w+:/, (t) => chalk.red.bold(t)));
-        //     } else {
-        //         console.warn(
-        //             (error.formattedMessage as string).replace(/^\w+:/, (t) =>
-        //                 chalk.yellow.bold(t)
-        //             )
-        //         );
-        //     }
-        // }
-
+        // Iterate over contracts
         for (const contractPath in output) {
             if (contractPath !== "version" && contractPath !== "zk_version") {
                 const contract = output[contractPath];
+                
                 if (contract.warnings && Array.isArray(contract.warnings) && contract.warnings.length > 0) {
                     // Iterate over warnings
                     for (const warning of contract.warnings) {
