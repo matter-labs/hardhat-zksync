@@ -8,7 +8,7 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, types } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
@@ -17,7 +17,7 @@ import { compile } from './compile';
 import { checkSupportedVyperVersions, pluralize } from './utils';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
-import { COMPILING_INFO_MESSAGE, defaultZkVyperConfig } from './constants';
+import { COMPILING_INFO_MESSAGE, defaultZkVyperConfig, TASK_COMPILE_VYPER_CHECK_ERRORS, TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
@@ -64,6 +64,8 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
         args.vyperPath
     );
 
+    await hre.run(TASK_COMPILE_VYPER_CHECK_ERRORS, { output: compilerOutput, quiet: true });
+
     delete compilerOutput.zk_version;
     delete compilerOutput.long_version;
 
@@ -100,11 +102,11 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     const mutex = new Mutex();
     await mutex.use(async () => {
         const zkvyperDownloader = await ZkVyperCompilerDownloader.getDownloaderWithVersionValidated(
-            hre.config.zkvyper.version, 
+            hre.config.zkvyper.version,
             hre.config.zkvyper.settings.compilerPath ?? '',
             compilersCache
         );
-        
+
         const isZksolcDownloaded = await zkvyperDownloader.isCompilerDownloaded();
         if (!isZksolcDownloaded) {
             await zkvyperDownloader.downloadCompiler();
@@ -187,3 +189,56 @@ subtask(TASK_COMPILE_VYPER_LOG_DOWNLOAD_COMPILER_START)
             console.info(chalk.yellow(`Downloading vyper ${vyperVersion}`));
         }
     );
+
+subtask(TASK_COMPILE_VYPER_CHECK_ERRORS)
+    .addParam("output", undefined, undefined, types.any)
+    .addParam("quiet", undefined, undefined, types.boolean)
+    .setAction(
+        async ({ output, quiet }: { output: any; quiet: boolean }, { run }) => {
+            await run(TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS, {
+                output,
+                quiet,
+            });
+        }
+    );
+
+subtask(TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS)
+    .addParam("output", undefined, undefined, types.any)
+    .addParam("quiet", undefined, undefined, types.boolean)
+    .setAction(async ({ output }: { output: any; quiet: boolean }) => {
+        // if (output?.errors === undefined) {
+        //     return;
+        // }
+
+        // for (const error of output.errors) {
+        //     if (error.severity === "error") {
+        //         const errorMessage: string =
+        //             getFormattedInternalCompilerErrorMessage(error) ??
+        //             error.formattedMessage;
+
+        //         console.error(errorMessage.replace(/^\w+:/, (t) => chalk.red.bold(t)));
+        //     } else {
+        //         console.warn(
+        //             (error.formattedMessage as string).replace(/^\w+:/, (t) =>
+        //                 chalk.yellow.bold(t)
+        //             )
+        //         );
+        //     }
+        // }
+
+        for (const contractPath in output) {
+            if (contractPath !== "version" && contractPath !== "zk_version") {
+                const contract = output[contractPath];
+                if (contract.warnings && Array.isArray(contract.warnings) && contract.warnings.length > 0) {
+                    // Iterate over warnings
+                    for (const warning of contract.warnings) {
+                        console.warn(
+                            (warning.message as string).replace(/^\w+:/, (t) =>
+                                chalk.yellow.bold(t)
+                            )
+                        );
+                    }
+                }
+            }
+        }
+    });
