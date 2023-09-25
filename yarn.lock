@@ -715,6 +715,13 @@
     chalk "4.1.2"
     ts-morph "^19.0.0"
 
+"@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
+  version "0.0.1"
+  dependencies:
+    "@matterlabs/hardhat-zksync-solc" "0.4.2"
+    chalk "4.1.2"
+    ts-morph "^19.0.0"
+
 "@matterlabs/hardhat-zksync-solc@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.4.1.tgz#e8e67d947098d7bb8925f968544d34e522af5a9c"
@@ -746,7 +753,7 @@
     dockerode "^3.3.4"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
-  version "0.2.1"
+  version "0.2.2"
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
