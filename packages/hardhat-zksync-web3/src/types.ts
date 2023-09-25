@@ -3,13 +3,8 @@ import type { Artifact } from "hardhat/types";
 import { ContractFactory, Provider, Signer } from "zksync-web3";
 import { Address } from "zksync-web3/build/src/types";
 
-export interface Libraries {
-  [libraryName: string]: string | Address;
-}
-
 export interface FactoryOptions {
   signer?: Signer;
-  libraries?: Libraries;
 }
 
 export type DeployContractOptions = FactoryOptions & ethers.Overrides;
