@@ -142,8 +142,15 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
 
 // Get the asset to download from the latest release of the era-test-node binary
 export async function getAssetToDownload(latestRelease: any): Promise<string> {
+    const platform = getPlatform();
+
+    // TODO: Add support for Windows
+    if (platform === 'windows' || platform === '') {
+        throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
+    }
+
     const prefix = 'era_test_node-' + latestRelease.tag_name;
-    const expectedAssetName = `${prefix}-${getArch()}-${getPlatform()}.tar.gz`;
+    const expectedAssetName = `${prefix}-${getArch()}-${platform}.tar.gz`;
 
     return latestRelease.assets.find((asset: any) => asset.name === expectedAssetName);
 }
