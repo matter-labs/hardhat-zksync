@@ -1,12 +1,71 @@
 import { task, subtask, types } from "hardhat/config";
 
-import { TASK_NODE_ZKSYNC, TASK_NODE_ZKSYNC_CREATE_SERVER } from "./constants";
+import { PLUGIN_NAME, TASK_NODE_ZKSYNC, TASK_NODE_ZKSYNC_CREATE_SERVER, TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME } from "./constants";
 import { JsonRpcServer } from "./server";
-import { constructCommandArgs, getRPCServerBinariesDir } from "./utils";
-import { RPCServerBinaryDownloader } from "./downloader";
+import { constructCommandArgs, getAssetToDownload, getLatestRelease, getRPCServerBinariesDir } from "./utils";
+import { RPCServerDownloader } from "./downloader";
+import { ZkSyncNodePluginError } from "./errors";
 
-//TODO: Add more tasks
+// Subtask to download the binary
+subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, "Downloads the JSON-RPC server binary")
+    .addFlag(
+        "force",
+        "Force download even if the binary already exists"
+    )
+    .setAction(
+        async (
+            {
+                force,
+            }: {
+                force: boolean;
+            },
+            hre
+        ) => {
+            // Directory where the binaries are stored
+            const rpcServerBinaryDir = await getRPCServerBinariesDir();
 
+            // Get the latest release of the binary
+            const latestRelease = await getLatestRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME);
+            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, latestRelease.tag_name);
+
+            // Check if the binary is already downloaded
+            if (!force && await downloader.isDownloaded()) {
+                return downloader.getBinaryPath();
+            }
+
+            // Download the binary
+            const assetToDownload: any = await getAssetToDownload(latestRelease);
+            await downloader.download(assetToDownload.browser_download_url);
+
+            return downloader.getBinaryPath();
+        }
+    );
+
+// Subtask to create the server
+subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, "Creates a JSON-RPC server for zkSync node")
+    .addParam(
+        "binaryPath",
+        "Path to the binary file",
+        undefined,
+        types.string
+    )
+    .setAction(
+        async (
+            {
+                binaryPath,
+            }: {
+                binaryPath: string;
+            },
+            hre
+        ) => {
+            // Create the server
+            const server: JsonRpcServer = new JsonRpcServer(binaryPath);
+
+            return server;
+        }
+    );
+
+// Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, "Starts a JSON-RPC server for zkSync node")
     .addOptionalParam(
         "log",
@@ -68,6 +127,10 @@ task(TASK_NODE_ZKSYNC, "Starts a JSON-RPC server for zkSync node")
         "resolveHashes",
         "Ask openchain for ABI names"
     )
+    .addFlag(
+        "force",
+        "Force download even if the binary already exists"
+    )
     .setAction(
         async (
             {
@@ -95,7 +158,9 @@ task(TASK_NODE_ZKSYNC, "Starts a JSON-RPC server for zkSync node")
                 showCalls: boolean;
                 resolveHashes: boolean;
             },
-            hre
+            {
+                run,
+            }
         ) => {
             const commandArgs = constructCommandArgs({
                 log,
@@ -111,18 +176,16 @@ task(TASK_NODE_ZKSYNC, "Starts a JSON-RPC server for zkSync node")
                 resolveHashes,
             });
 
-            const rpcServerBinariyPath = await getRPCServerBinariesDir();
-            const downloader: RPCServerBinaryDownloader = new RPCServerBinaryDownloader(rpcServerBinariyPath);
-            console.log(downloader.binaryPath);
+            // Download the binary
+            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
-            //TODO: Change this to the path of the binary
-            const binaryPath = "/Users/milivojepopovac/TxFusion/Templates/era-test-node/target/debug/era_test_node";
-            const server: JsonRpcServer = new JsonRpcServer(binaryPath);
+            // Create the server
+            const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
 
             try {
-                server.listen(commandArgs);  // Add any arguments if needed
+                server.listen(commandArgs);
             } catch (error: any) {
-                throw error;
+                throw new ZkSyncNodePluginError(error.message);
             }
         }
     );
