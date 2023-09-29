@@ -1,10 +1,10 @@
 import path from 'path';
 import axios from 'axios';
-import util from "util";
-import fs from "fs";
+import util from 'util';
+import fs from 'fs';
 import fse from 'fs-extra';
 import { exec } from 'child_process';
-import type { Dispatcher } from "undici";
+import type { Dispatcher } from 'undici';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -14,10 +14,10 @@ import {
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
     PLATFORM_MAP,
-    TEMP_FILE_PREFIX
-} from "./constants";
-import { ZkSyncNodePluginError } from "./errors";
-import { CommandArguments } from "./types";
+    TEMP_FILE_PREFIX,
+} from './constants';
+import { ZkSyncNodePluginError } from './errors';
+import { CommandArguments } from './types';
 
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 
@@ -118,7 +118,7 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         const response = await axios.get(url, {
             headers: {
                 'User-Agent': userAgent,
-            }
+            },
         });
 
         return response.data;
@@ -126,7 +126,9 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         if (error.response) {
             // The request was made and the server responded with a status code outside of the range of 2xx
             throw new ZkSyncNodePluginError(
-                `Failed to get latest release for ${owner}/${repo}. Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`
+                `Failed to get latest release for ${owner}/${repo}. Status: ${
+                    error.response.status
+                }, Data: ${JSON.stringify(error.response.data)}`
             );
         } else if (error.request) {
             // The request was made but no response was received
@@ -140,7 +142,7 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
 
 // Get the asset to download from the latest release of the era-test-node binary
 export async function getAssetToDownload(latestRelease: any): Promise<string> {
-    const prefix = "era_test_node-" + latestRelease.tag_name;
+    const prefix = 'era_test_node-' + latestRelease.tag_name;
     const expectedAssetName = `${prefix}-${getArch()}-${getPlatform()}.tar.gz`;
 
     return latestRelease.assets.find((asset: any) => asset.name === expectedAssetName);
@@ -151,7 +153,7 @@ function isTarGzFile(filePath: string): boolean {
 }
 
 function ensureTarGzExtension(filePath: string): string {
-    return filePath.endsWith(".tar.gz") ? filePath : filePath + ".tar.gz";
+    return filePath.endsWith('.tar.gz') ? filePath : filePath + '.tar.gz';
 }
 
 async function ensureDirectory(filePath: string): Promise<void> {
@@ -209,8 +211,8 @@ export async function download(
     timeoutMillis = 10000,
     extraHeaders: { [name: string]: string } = {}
 ) {
-    const { pipeline } = await import("stream");
-    const { getGlobalDispatcher, request } = await import("undici");
+    const { pipeline } = await import('stream');
+    const { getGlobalDispatcher, request } = await import('undici');
     const streamPipeline = util.promisify(pipeline);
 
     let dispatcher: Dispatcher = getGlobalDispatcher();
@@ -220,10 +222,10 @@ export async function download(
         dispatcher,
         headersTimeout: timeoutMillis,
         maxRedirections: 10,
-        method: "GET",
+        method: 'GET',
         headers: {
             ...extraHeaders,
-            "User-Agent": `${userAgent} ${version}`,
+            'User-Agent': `${userAgent} ${version}`,
         },
     });
 
@@ -247,7 +249,5 @@ export async function download(
     const text = await response.body.text();
 
     // eslint-disable-next-line
-    throw new Error(
-        `Failed to download ${url} - ${response.statusCode} received. ${text}`
-    );
+    throw new Error(`Failed to download ${url} - ${response.statusCode} received. ${text}`);
 }

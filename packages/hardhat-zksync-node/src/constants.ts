@@ -22,7 +22,7 @@ export const PLATFORM_MAP: Record<string, string> = {
     win32: 'windows',
 };
 
-export const TEMP_FILE_PREFIX = "tmp-";
+export const TEMP_FILE_PREFIX = 'tmp-';
 
 // export const TOOLCHAIN_MAP: Record<string, string> = {
 //     linux: '-musl',

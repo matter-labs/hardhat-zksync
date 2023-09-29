@@ -20,7 +20,7 @@ export class JsonRpcServer {
                 console.info(chalk.yellow(`Received ${error.signal} signal. The server process has exited.`));
                 return;
             }
-            throw new Error(`The server process has exited with an error: ${error.message}`);            
+            throw new Error(`The server process has exited with an error: ${error.message}`);
         }
     }
 }

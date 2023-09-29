@@ -1,9 +1,9 @@
-import path from "path";
-import fs from "fs";
+import path from 'path';
+import fs from 'fs';
 import fse from 'fs-extra';
-import { download } from "./utils";
-import { ZkSyncNodePluginError } from "./errors";
-import { PLUGIN_NAME } from "./constants";
+import { download } from './utils';
+import { ZkSyncNodePluginError } from './errors';
+import { PLUGIN_NAME } from './constants';
 
 export class RPCServerDownloader {
     private readonly _binaryDir: string;
