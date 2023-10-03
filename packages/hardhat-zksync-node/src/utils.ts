@@ -92,17 +92,18 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--dev-use-local-contracts`);
     }
 
+    if (args.forkBlockNumber && args.replayTx) {
+        throw new ZkSyncNodePluginError(`Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`);
+    }
+    
+    if ((args.replayTx || args.forkBlockNumber) && !args.fork) {
+        throw new ZkSyncNodePluginError(`Cannot specify --replay-tx or --fork-block-number parameters without --fork param.`);
+    }
+
     if (args.fork) {
         const urlPattern = /^http(s)?:\/\/[^\s]+$/;
         if (!ALLOWED_FORK_VALUES.includes(args.fork) && !urlPattern.test(args.fork)) {
             throw new ZkSyncNodePluginError(`Invalid fork network value: ${args.fork}`);
-        }
-
-        // Throw an error if both forkBlockNumber and replayTx are specified
-        if (args.forkBlockNumber && args.replayTx) {
-            throw new ZkSyncNodePluginError(
-                `Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`
-            );
         }
 
         if (args.forkBlockNumber) {

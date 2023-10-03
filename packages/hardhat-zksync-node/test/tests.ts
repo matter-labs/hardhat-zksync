@@ -9,7 +9,6 @@ import { spawn, ChildProcess } from "child_process";
 
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
-import { ZkSyncNodePluginError } from '../src/errors';
 import { RPCServerDownloader } from '../src/downloader';
 import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS } from '../src/constants';
 
@@ -66,6 +65,11 @@ describe('node-zksync plugin', async function () {
             it('should throw error for invalid log value', () => {
                 const args = { log: 'invalid' };
                 expect(() => constructCommandArgs(args)).to.throw("Invalid log value: invalid");
+            });
+
+            it('should throw error when there is no fork arg', () => {
+                const args = { forkBlockNumber: 100};
+                expect(() => constructCommandArgs(args)).to.throw("Cannot specify --replay-tx or --fork-block-number parameters without --fork param.");
             });
 
             it('should correctly construct command arguments with fork and replayTx', () => {
