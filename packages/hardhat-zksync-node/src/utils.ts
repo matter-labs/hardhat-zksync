@@ -10,6 +10,7 @@ import {
     ALLOWED_CACHE_VALUES,
     ALLOWED_FORK_VALUES,
     ALLOWED_LOG_VALUES,
+    ALLOWED_SHOW_CALLS_VALUES,
     ALLOWED_SHOW_GAS_DETAILS_VALUES,
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
@@ -24,6 +25,10 @@ import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 // Generates command arguments for running the era-test-node binary
 export function constructCommandArgs(args: CommandArguments): string[] {
     const commandArgs: string[] = [];
+
+    if (args.port) {
+        commandArgs.push(`--port=${args.port}`);
+    }
 
     if (args.log) {
         if (!ALLOWED_LOG_VALUES.includes(args.log)) {
@@ -51,13 +56,6 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--reset-cache`);
     }
 
-    if (args.fork) {
-        if (!ALLOWED_FORK_VALUES.includes(args.fork)) {
-            throw new ZkSyncNodePluginError(`Invalid fork value: ${args.fork}`);
-        }
-        commandArgs.push(`--fork=${args.fork}`);
-    }
-
     if (args.showStorageLogs) {
         if (!ALLOWED_SHOW_STORAGE_LOGS_VALUES.includes(args.showStorageLogs)) {
             throw new ZkSyncNodePluginError(`Invalid showStorageLogs value: ${args.showStorageLogs}`);
@@ -80,14 +78,43 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.showCalls) {
-        commandArgs.push(`--show-calls`);
+        if (!ALLOWED_SHOW_CALLS_VALUES.includes(args.showCalls)) {
+            throw new ZkSyncNodePluginError(`Invalid showCalls value: ${args.showCalls}`);
+        }
+        commandArgs.push(`--show-calls=${args.showCalls}`);
     }
 
     if (args.resolveHashes) {
         commandArgs.push(`--resolve-hashes`);
     }
 
-    commandArgs.push('run');
+    if (args.devUseLocalContracts) {
+        commandArgs.push(`--dev-use-local-contracts`);
+    }
+
+    if (args.fork) {
+        const urlPattern = /^http(s)?:\/\/[^\s]+$/;
+        if (!ALLOWED_FORK_VALUES.includes(args.fork) && !urlPattern.test(args.fork)) {
+            throw new ZkSyncNodePluginError(`Invalid fork network value: ${args.fork}`);
+        }
+
+        // Throw an error if both forkBlockNumber and replayTx are specified
+        if (args.forkBlockNumber && args.replayTx) {
+            throw new ZkSyncNodePluginError(
+                `Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`
+            );
+        }
+
+        if (args.forkBlockNumber) {
+            commandArgs.push(`fork --fork-at ${args.forkBlockNumber} ${args.fork}`);
+        } else if(args.replayTx) {
+            commandArgs.push(`replay_tx ${args.fork} ${args.replayTx}`);
+        } else {
+            commandArgs.push(`fork ${args.fork}`);
+        }
+    } else {
+        commandArgs.push('run');
+    }
 
     return commandArgs;
 }

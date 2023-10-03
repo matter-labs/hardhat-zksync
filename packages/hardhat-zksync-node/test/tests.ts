@@ -9,42 +9,77 @@ import { spawn, ChildProcess } from "child_process";
 
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
+import { ZkSyncNodePluginError } from '../src/errors';
 import { RPCServerDownloader } from '../src/downloader';
 import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS } from '../src/constants';
 
 describe('node-zksync plugin', async function () {
     describe('Utils', () => {
         describe('constructCommandArgs', () => {
-            it('should correctly construct command arguments', () => {
+            it('should construct command arguments with minimum args', () => {
+                const args = {};
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal(['run']);
+            });
+        
+            it('should correctly construct command arguments with all args', () => {
                 const args = {
+                    port: 8012,
                     log: 'error',
                     logFilePath: '/path/to/log',
                     cache: 'disk',
                     cacheDir: '/path/to/cache',
                     resetCache: true,
-                    fork: 'mainnet',
                     showStorageLogs: 'all',
                     showVmDetails: 'none',
                     showGasDetails: 'all',
-                    showCalls: true,
-                    resolveHashes: true
+                    showCalls: 'user',
+                    resolveHashes: true,
+                    devUseLocalContracts: true,
+                    fork: 'mainnet',
+                    forkBlockNumber: 100,
                 };
-
+        
                 const result = constructCommandArgs(args);
                 expect(result).to.deep.equal([
+                    '--port=8012',
                     '--log=error',
                     '--log-file-path=/path/to/log',
                     '--cache=disk',
                     '--cache-dir=/path/to/cache',
                     '--reset-cache',
-                    '--fork=mainnet',
                     '--show-storage-logs=all',
                     '--show-vm-details=none',
                     '--show-gas-details=all',
-                    '--show-calls',
+                    '--show-calls=user',
                     '--resolve-hashes',
-                    'run'
+                    '--dev-use-local-contracts',
+                    'fork --fork-at 100 mainnet'
                 ]);
+            });
+
+            it('should throw error when both forkBlockNumber and replayTx are specified in all args', () => {
+                const args = { fork: 'mainnet', forkBlockNumber: 100, replayTx: '0x1234567890abcdef' };
+                expect(() => constructCommandArgs(args)).to.throw("Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.");
+            });
+
+            it('should throw error for invalid log value', () => {
+                const args = { log: 'invalid' };
+                expect(() => constructCommandArgs(args)).to.throw("Invalid log value: invalid");
+            });
+
+            it('should correctly construct command arguments with fork and replayTx', () => {
+                const args = { fork: 'http://example.com', replayTx: '0x1234567890abcdef' };
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal(['replay_tx http://example.com 0x1234567890abcdef']);
+            });
+
+            it('should throw error for invalid fork URL pattern', () => {
+                const args = {
+                    fork: 'invalidURL',
+                };
+            
+                expect(() => constructCommandArgs(args)).to.throw("Invalid fork network value: invalidURL");
             });
         });
 
@@ -300,7 +335,7 @@ describe('node-zksync plugin', async function () {
                 const server = new JsonRpcServer('/path/to/binary');
                 server.listen();
 
-                sinon.assert.calledWith(consoleInfoStub, chalk.green('Starting the JSON-RPC server with command: /path/to/binary '));
+                sinon.assert.calledWith(consoleInfoStub, chalk.green('Starting the JSON-RPC server at 127.0.0.1:8011'));
             });
 
             it('should handle termination signals gracefully', () => {

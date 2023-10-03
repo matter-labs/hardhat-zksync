@@ -12,6 +12,7 @@ export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM'];
 export const ALLOWED_LOG_VALUES = ['error', 'warn', 'info', 'debug'];
 export const ALLOWED_CACHE_VALUES = ['none', 'disk', 'memory'];
 export const ALLOWED_FORK_VALUES = ['testnet', 'mainnet'];
+export const ALLOWED_SHOW_CALLS_VALUES = ['none', 'user', 'system', 'all'];
 export const ALLOWED_SHOW_STORAGE_LOGS_VALUES = ['none', 'read', 'write', 'all'];
 export const ALLOWED_SHOW_VM_DETAILS_VALUES = ['none', 'all'];
 export const ALLOWED_SHOW_GAS_DETAILS_VALUES = ['none', 'all'];

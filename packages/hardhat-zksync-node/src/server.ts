@@ -12,8 +12,14 @@ export class JsonRpcServer {
 
     public listen(args: string[] = []): void {
         const command = `${this._serverBinaryPath} ${args.join(' ')}`;
+
+        const portArg = args.find(arg => arg.startsWith('--port='));
+        const port = portArg ? parseInt(portArg.split('=')[1], 10) : 8011;
+
         try {
-            console.info(chalk.green(`Starting the JSON-RPC server with command: ${command}`));
+            console.info(chalk.green(`Starting the JSON-RPC server at 127.0.0.1:${port}`));
+            console.info(chalk.green(`Running command: ${command}`));
+            
             execSync(command, { stdio: 'inherit' });
         } catch (error: any) {
             if (PROCESS_TERMINATION_SIGNALS.includes(error.signal)) {

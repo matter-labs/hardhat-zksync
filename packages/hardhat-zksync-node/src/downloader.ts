@@ -4,6 +4,7 @@ import fse from 'fs-extra';
 import { download } from './utils';
 import { ZkSyncNodePluginError } from './errors';
 import { PLUGIN_NAME } from './constants';
+import chalk from 'chalk';
 
 export class RPCServerDownloader {
     private readonly _binaryDir: string;
@@ -20,8 +21,12 @@ export class RPCServerDownloader {
 
     public async download(url: string): Promise<void> {
         try {
+            console.info(chalk.yellow(`Downloading era-test-node binary, release: ${this._version}`));
+            
             await download(url, this.getBinaryPath(), PLUGIN_NAME, this._version, 30000);
             await this._postProcessDownload();
+
+            console.info(chalk.green('era-test-node binary downloaded successfully'));
         } catch (error: any) {
             throw new ZkSyncNodePluginError(`Error downloading binary from URL ${url}: ${error.message}`);
         }
