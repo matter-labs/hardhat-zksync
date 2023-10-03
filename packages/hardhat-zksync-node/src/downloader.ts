@@ -22,7 +22,7 @@ export class RPCServerDownloader {
     public async download(url: string): Promise<void> {
         try {
             console.info(chalk.yellow(`Downloading era-test-node binary, release: ${this._version}`));
-            
+
             await download(url, this.getBinaryPath(), PLUGIN_NAME, this._version, 30000);
             await this._postProcessDownload();
 

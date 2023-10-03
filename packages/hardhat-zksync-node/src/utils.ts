@@ -93,11 +93,15 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.forkBlockNumber && args.replayTx) {
-        throw new ZkSyncNodePluginError(`Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`);
+        throw new ZkSyncNodePluginError(
+            `Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`
+        );
     }
-    
+
     if ((args.replayTx || args.forkBlockNumber) && !args.fork) {
-        throw new ZkSyncNodePluginError(`Cannot specify --replay-tx or --fork-block-number parameters without --fork param.`);
+        throw new ZkSyncNodePluginError(
+            `Cannot specify --replay-tx or --fork-block-number parameters without --fork param.`
+        );
     }
 
     if (args.fork) {
@@ -108,7 +112,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
 
         if (args.forkBlockNumber) {
             commandArgs.push(`fork --fork-at ${args.forkBlockNumber} ${args.fork}`);
-        } else if(args.replayTx) {
+        } else if (args.replayTx) {
             commandArgs.push(`replay_tx ${args.fork} ${args.replayTx}`);
         } else {
             commandArgs.push(`fork ${args.fork}`);

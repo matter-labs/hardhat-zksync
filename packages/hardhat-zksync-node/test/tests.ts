@@ -5,7 +5,7 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import proxyquire from 'proxyquire';
-import { spawn, ChildProcess } from "child_process";
+import { spawn, ChildProcess } from 'child_process';
 
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
@@ -20,7 +20,7 @@ describe('node-zksync plugin', async function () {
                 const result = constructCommandArgs(args);
                 expect(result).to.deep.equal(['run']);
             });
-        
+
             it('should correctly construct command arguments with all args', () => {
                 const args = {
                     port: 8012,
@@ -38,7 +38,7 @@ describe('node-zksync plugin', async function () {
                     fork: 'mainnet',
                     forkBlockNumber: 100,
                 };
-        
+
                 const result = constructCommandArgs(args);
                 expect(result).to.deep.equal([
                     '--port=8012',
@@ -53,23 +53,27 @@ describe('node-zksync plugin', async function () {
                     '--show-calls=user',
                     '--resolve-hashes',
                     '--dev-use-local-contracts',
-                    'fork --fork-at 100 mainnet'
+                    'fork --fork-at 100 mainnet',
                 ]);
             });
 
             it('should throw error when both forkBlockNumber and replayTx are specified in all args', () => {
                 const args = { fork: 'mainnet', forkBlockNumber: 100, replayTx: '0x1234567890abcdef' };
-                expect(() => constructCommandArgs(args)).to.throw("Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.");
+                expect(() => constructCommandArgs(args)).to.throw(
+                    'Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.'
+                );
             });
 
             it('should throw error for invalid log value', () => {
                 const args = { log: 'invalid' };
-                expect(() => constructCommandArgs(args)).to.throw("Invalid log value: invalid");
+                expect(() => constructCommandArgs(args)).to.throw('Invalid log value: invalid');
             });
 
             it('should throw error when there is no fork arg', () => {
-                const args = { forkBlockNumber: 100};
-                expect(() => constructCommandArgs(args)).to.throw("Cannot specify --replay-tx or --fork-block-number parameters without --fork param.");
+                const args = { forkBlockNumber: 100 };
+                expect(() => constructCommandArgs(args)).to.throw(
+                    'Cannot specify --replay-tx or --fork-block-number parameters without --fork param.'
+                );
             });
 
             it('should correctly construct command arguments with fork and replayTx', () => {
@@ -82,8 +86,8 @@ describe('node-zksync plugin', async function () {
                 const args = {
                     fork: 'invalidURL',
                 };
-            
-                expect(() => constructCommandArgs(args)).to.throw("Invalid fork network value: invalidURL");
+
+                expect(() => constructCommandArgs(args)).to.throw('Invalid fork network value: invalidURL');
             });
         });
 
@@ -96,8 +100,8 @@ describe('node-zksync plugin', async function () {
                 assets: [
                     { name: 'era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz' },
                     { name: 'era_test_node-v0.1.0-x86_64-apple-darwin.tar.gz' },
-                    { name: 'era_test_node-v0.1.0-x86_64-unknown-linux-gnu.tar.gz' }
-                ]
+                    { name: 'era_test_node-v0.1.0-x86_64-unknown-linux-gnu.tar.gz' },
+                ],
             };
 
             beforeEach(() => {
@@ -135,7 +139,7 @@ describe('node-zksync plugin', async function () {
                     await getAssetToDownload(mockRelease);
                     throw new Error("Expected an error to be thrown, but it wasn't.");
                 } catch (error: any) {
-                    expect(error.message).to.include("Unsupported platform");
+                    expect(error.message).to.include('Unsupported platform');
                 }
             });
         });
@@ -146,18 +150,21 @@ describe('node-zksync plugin', async function () {
             const mockRelease = {
                 assets: [
                     {
-                        url: "https://api.github.com/repos/matter-labs/era-test-node/releases/assets/1",
-                        browser_download_url: "https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz",
+                        url: 'https://api.github.com/repos/matter-labs/era-test-node/releases/assets/1',
+                        browser_download_url:
+                            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz',
                     },
                     {
-                        url: "https://api.github.com/repos/matter-labs/era-test-node/releases/assets/2",
-                        browser_download_url: "https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-x86_64-apple-darwin.tar.gz",
+                        url: 'https://api.github.com/repos/matter-labs/era-test-node/releases/assets/2',
+                        browser_download_url:
+                            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-x86_64-apple-darwin.tar.gz',
                     },
                     {
-                        url: "https://api.github.com/repos/matter-labs/era-test-node/releases/assets/3",
-                        browser_download_url: "https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-x86_64-unknown-linux-gnu.tar.gz",
-                    }
-                ]
+                        url: 'https://api.github.com/repos/matter-labs/era-test-node/releases/assets/3',
+                        browser_download_url:
+                            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-x86_64-unknown-linux-gnu.tar.gz',
+                    },
+                ],
             };
 
             beforeEach(() => {
@@ -182,51 +189,51 @@ describe('node-zksync plugin', async function () {
                     response: {
                         status: 404,
                         data: {
-                            message: "Not Found"
-                        }
-                    }
+                            message: 'Not Found',
+                        },
+                    },
                 };
 
                 axiosGetStub.rejects(errorResponse);
 
                 try {
                     await getLatestRelease('owner', 'repo', 'userAgent');
-                    assert.fail("Expected an error to be thrown");
+                    assert.fail('Expected an error to be thrown');
                 } catch (error: any) {
-                    expect(error.message).to.include("Failed to get latest release");
-                    expect(error.message).to.include("404");
-                    expect(error.message).to.include("Not Found");
+                    expect(error.message).to.include('Failed to get latest release');
+                    expect(error.message).to.include('404');
+                    expect(error.message).to.include('Not Found');
                 }
             });
 
             it('should handle errors when no response is received', async () => {
                 const errorNoResponse = {
                     request: {},
-                    message: "No response"
+                    message: 'No response',
                 };
 
                 axiosGetStub.rejects(errorNoResponse);
 
                 try {
                     await getLatestRelease('owner', 'repo', 'userAgent');
-                    assert.fail("Expected an error to be thrown");
+                    assert.fail('Expected an error to be thrown');
                 } catch (error: any) {
-                    expect(error.message).to.include("No response received");
+                    expect(error.message).to.include('No response received');
                 }
             });
 
             it('should handle errors during request setup', async () => {
                 const errorSetup = {
-                    message: "Setup error"
+                    message: 'Setup error',
                 };
 
                 axiosGetStub.rejects(errorSetup);
 
                 try {
                     await getLatestRelease('owner', 'repo', 'userAgent');
-                    assert.fail("Expected an error to be thrown");
+                    assert.fail('Expected an error to be thrown');
                 } catch (error: any) {
-                    expect(error.message).to.include("Failed to set up the request");
+                    expect(error.message).to.include('Failed to set up the request');
                 }
             });
         });
@@ -240,7 +247,9 @@ describe('node-zksync plugin', async function () {
         beforeEach(() => {
             downloadStub = sinon.stub(utils, 'download');
             existsSyncStub = sinon.stub(fs, 'existsSync');
-            postProcessDownloadStub = sinon.stub(RPCServerDownloader.prototype as any, '_postProcessDownload').resolves();  // Stubbing the private method
+            postProcessDownloadStub = sinon
+                .stub(RPCServerDownloader.prototype as any, '_postProcessDownload')
+                .resolves(); // Stubbing the private method
         });
 
         afterEach(() => {
@@ -248,7 +257,6 @@ describe('node-zksync plugin', async function () {
         });
 
         describe('isDownloaded', () => {
-
             it('should return true if binary exists', async () => {
                 const downloader = new RPCServerDownloader('/path/to/dir', 'version');
                 existsSyncStub.returns(true);
@@ -264,11 +272,9 @@ describe('node-zksync plugin', async function () {
                 const result = await downloader.isDownloaded();
                 expect(result).to.be.false;
             });
-
         });
 
         describe('download', () => {
-
             it('should download the binary if not already downloaded', async () => {
                 const downloader = new RPCServerDownloader('/path/to/dir', 'version');
                 existsSyncStub.returns(false);
@@ -289,7 +295,6 @@ describe('node-zksync plugin', async function () {
                     expect(error.message).to.contain('Error downloading binary from URL');
                 }
             });
-
         });
 
         describe('getBinaryPath', () => {
@@ -300,7 +305,6 @@ describe('node-zksync plugin', async function () {
                 expect(result).to.equal('/path/to/dir/version');
             });
         });
-
     });
 
     describe('JsonRpcServer', () => {
@@ -313,7 +317,7 @@ describe('node-zksync plugin', async function () {
 
         // Because we cannot stub the execSync method directly, we use proxyquire to stub the entire 'child_process' module
         const { JsonRpcServer } = proxyquire('../src/server', {
-            'child_process': { execSync: execSyncStub }
+            child_process: { execSync: execSyncStub },
         });
 
         beforeEach(() => {
@@ -345,7 +349,7 @@ describe('node-zksync plugin', async function () {
             it('should handle termination signals gracefully', () => {
                 const server = new JsonRpcServer('/path/to/binary');
                 const error = new Error('Mocked error') as ExecSyncError;
-                error.signal = PROCESS_TERMINATION_SIGNALS[0];  // Let's simulate the first signal, e.g., 'SIGINT'
+                error.signal = PROCESS_TERMINATION_SIGNALS[0]; // Let's simulate the first signal, e.g., 'SIGINT'
                 execSyncStub.throws(error);
 
                 try {
@@ -355,7 +359,10 @@ describe('node-zksync plugin', async function () {
                     expect.fail('Did not expect an error to be thrown');
                 }
 
-                sinon.assert.calledWith(consoleInfoStub, chalk.yellow(`Received ${PROCESS_TERMINATION_SIGNALS[0]} signal. The server process has exited.`));
+                sinon.assert.calledWith(
+                    consoleInfoStub,
+                    chalk.yellow(`Received ${PROCESS_TERMINATION_SIGNALS[0]} signal. The server process has exited.`)
+                );
             });
 
             it('should throw an error if the server process exits with an error', () => {
@@ -379,7 +386,7 @@ describe('node-zksync plugin', async function () {
         let serverProcess: ChildProcess;
 
         function delay(ms: number): Promise<void> {
-            return new Promise(resolve => setTimeout(resolve, ms));
+            return new Promise((resolve) => setTimeout(resolve, ms));
         }
 
         afterEach(() => {
@@ -421,7 +428,6 @@ describe('node-zksync plugin', async function () {
         //     serverProcess = spawn('ts-node', ['runHardhatTask.js', TASK_NODE_ZKSYNC], {
         //         cwd: path.join(__dirname, 'fixture-projects', 'simple'),
         //     });
-
 
         //     await delay(2000);
 
