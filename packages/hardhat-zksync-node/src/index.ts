@@ -1,10 +1,15 @@
+import { spawn } from 'child_process';
 import { task, subtask, types } from 'hardhat/config';
+import { TASK_COMPILE, TASK_TEST, TASK_TEST_GET_TEST_FILES, TASK_TEST_RUN_MOCHA_TESTS, TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS, TASK_TEST_SETUP_TEST_ENVIRONMENT } from 'hardhat/builtin-tasks/task-names';
+import { Provider } from 'zksync-web3';
 
 import {
     PLUGIN_NAME,
+    PROCESS_TERMINATION_SIGNALS,
     TASK_NODE_ZKSYNC,
     TASK_NODE_ZKSYNC_CREATE_SERVER,
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
+    TASK_RUN_TASK_IN_SEPARATE_PROCESS,
     ZKNODE_BIN_OWNER,
     ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
@@ -191,3 +196,78 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
             }
         }
     );
+
+subtask(TASK_RUN_TASK_IN_SEPARATE_PROCESS, "Runs a Hardhat task in a separate process.")
+    .addParam("taskName", "The name of the Hardhat task to run.", undefined, types.string)
+    .addVariadicPositionalParam("taskArgs", "Arguments for the Hardhat task.")
+    .setAction(async ({ taskName, taskArgs = [] }, hre) => {
+        const taskProcess = spawn('npx', ['hardhat', taskName, ...taskArgs], {
+            detached: true, // This creates a separate process group
+        });
+
+        return taskProcess;
+    });
+
+task(TASK_TEST, async (
+    {
+        testFiles,
+        noCompile,
+        parallel,
+        bail,
+        grep,
+    }: {
+        testFiles: string[];
+        noCompile: boolean;
+        parallel: boolean;
+        bail: boolean;
+        grep?: string;
+    },
+    { run, network },
+    runSuper
+) => {
+    if (network.zksync !== true) {
+        return await runSuper();
+    }
+
+    if (!noCompile) {
+        await run(TASK_COMPILE, { quiet: true });
+    }
+
+    const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
+
+    // Start the zkSync node using TASK_RUN_TASK_IN_SEPARATE_PROCESS
+    const taskArgs: any[] = [/* Add necessary arguments here */];
+    const taskProcess = await run(TASK_RUN_TASK_IN_SEPARATE_PROCESS, {
+        taskName: TASK_NODE_ZKSYNC,
+        taskArgs: taskArgs
+    });
+
+    // Give the node some time to start
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Modify the hre object to point to the running zkSync node
+    network.name = "zkSyncEraTestNode"; // or the appropriate network name
+
+    let testFailures = 0;
+    try {
+        // Run the tests
+        testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
+            testFiles: files,
+            parallel,
+            bail,
+            grep,
+        });
+    } finally {
+        // Ensure we shut down the zkSync node after tests are done
+        if (taskProcess) {
+            try {
+                process.kill(-taskProcess.pid!); // Notice the '-' before the pid
+            } catch (e) {
+                // Handle potential errors
+            }
+        }
+    }
+
+    process.exitCode = testFailures;
+    return testFailures;
+});

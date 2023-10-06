@@ -6,6 +6,7 @@ export const ZKNODE_BIN_REPOSITORY_NAME = 'era-test-node';
 export const TASK_NODE_ZKSYNC = 'node-zksync';
 export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
 export const TASK_NODE_ZKSYNC_DOWNLOAD_BINARY = 'node-zksync:download-binary';
+export const TASK_RUN_TASK_IN_SEPARATE_PROCESS = 'run-task-in-separate-process';
 
 export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM'];
 
