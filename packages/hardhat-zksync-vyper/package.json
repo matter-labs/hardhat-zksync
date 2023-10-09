@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-vyper",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Hardhat plugin to compile Vyper smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",

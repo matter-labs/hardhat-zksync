@@ -3,7 +3,7 @@ name: Publish zkvyper verify plugin
 on:
   push:
     tags:
-      - '@matterlabs/hardhat-zksync-vyper-verify@*'
+      - '@matterlabs/hardhat-zksync-verify-vyper@*'
 
 jobs:
   publish:
@@ -26,13 +26,13 @@ jobs:
         run: |
           if [[ ${{ github.ref }} == *"beta"* ]]; then
             echo "Publishing package with beta tag"
-            npm publish @matterlabs/hardhat-zksync-vyper-verify --tag beta --workspace=packages/hardhat-zksync-vyper-verify --access=public
+            npm publish @matterlabs/hardhat-zksync-verify-vyper --tag beta --workspace=packages/hardhat-zksync-verify-vyper --access=public
           elif [[ ${{ github.ref }} == *"alpha"* ]]; then
             echo "Publishing package with alpha tag"
-            npm publish @matterlabs/hardhat-zksync-vyper-verify --tag alpha --workspace=packages/hardhat-zksync-vyper-verify --access=public
+            npm publish @matterlabs/hardhat-zksync-verify-vyper --tag alpha --workspace=packages/hardhat-zksync-verify-vyper --access=public
           else
             echo "Publishing package with latest tag"
-            npm publish @matterlabs/hardhat-zksync-vyper-verify --tag latest --workspace=packages/hardhat-zksync-vyper-verify --access=public
+            npm publish @matterlabs/hardhat-zksync-verify-vyper --tag latest --workspace=packages/hardhat-zksync-verify-vyper --access=public
           fi
 
       - name: Create github release from tags
@@ -40,7 +40,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ ${{ github.ref }} != *"beta"* ]]; then
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-vyper-verify
+            node scripts/create-release-from-tags/run.js --package hardhat-zksync-verify-vyper
           else
             echo "Skipping github release creation for beta tag"
           fi

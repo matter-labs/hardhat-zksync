@@ -7,6 +7,7 @@ import {
     JSON_INPUT_CODE_FORMAT,
     NO_MATCHING_CONTRACT,
     NO_VERIFIABLE_ADDRESS_ERROR,
+    TASK_CHECK_VERIFICATION_STATUS,
     TASK_COMPILE_VYPER,
     TASK_VERIFY_GET_ARTIFACT,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
@@ -18,7 +19,8 @@ import { ZkSyncVerifyPluginError } from './errors';
 import chalk from 'chalk';
 import { COMPILER_TYPE, getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 import { areSameBytecodes, retrieveContractBytecode } from './utils';
-import { checkContractName, executeVeificationWithRetry, getCacheResolvedFileInformation, getDeployArgumentEncoded, inferContractArtifacts } from './plugin';
+import { checkContractName, getCacheResolvedFileInformation, getDeployArgumentEncoded, getResolvedFiles, inferContractArtifacts } from './plugin';
+import { ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
 
 export async function verify(
     args: {
@@ -61,9 +63,8 @@ export async function verifyContract(
     const deployedBytecode = await retrieveContractBytecode(address, hre.network);
 
     const artifact = await hre.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
-
-    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
     const artificatBytecode = artifact.bytecode;
+    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
 
     const deployArgumentsEncoded = await getDeployArgumentEncoded(constructorArguments, artifact);
 
@@ -71,7 +72,9 @@ export async function verifyContract(
         throw new ZkSyncVerifyPluginError(chalk.red(BYTECODES_ARE_NOT_SAME));
     }
 
-    const { resolvedFile, contractCache } = await getCacheResolvedFileInformation(contractFQN, artifact, hre);
+    // This contractCahce is used only to get the vyper version of the contract
+    // TODO: check if there is any other way to get the vyper version without using the cache
+    const { contractCache } = await getCacheResolvedFileInformation(contractFQN, artifact.sourceName, hre);
 
     const vyperVersion = contractCache.vyperConfig.version;
 
@@ -87,12 +90,14 @@ export async function verifyContract(
         throw new ZkSyncVerifyPluginError(ZK_COMPILER_VERSION_NOT_SUPPORTED);
     }
 
-    const sourceCodeMap: { [id: string]: string; } = {};
-    sourceCodeMap[resolvedFile.sourceName] = resolvedFile.content.rawContent;
+    const resolvedFiles: ResolvedFile[] = await getResolvedFiles(hre);
+    const contractsSourceCodesMap = Object.fromEntries(
+        resolvedFiles.map((file) => [file.sourceName, file.content.rawContent])
+    );
 
     let request = {
         contractAddress: address,
-        sourceCode: sourceCodeMap,
+        sourceCode: contractsSourceCodesMap,
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: artifact.contractName,
         compilerVyperVersion: vyperVersion,
@@ -106,17 +111,9 @@ export async function verifyContract(
     let verificationId = parseInt(response.message);
     console.info(chalk.cyan('Your verification ID is: ' + verificationId));
 
+    await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+
     return verificationId;
-}
-
-export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
-
-    if (isValidVerification?.errorExists()) {
-        throw new ZkSyncVerifyPluginError(isValidVerification.getError());
-    }
-    console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
-    return true;
 }
 
 export async function getConstructorArguments(
