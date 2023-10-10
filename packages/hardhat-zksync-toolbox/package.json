@@ -1,9 +1,9 @@
 {
-  "name": "@matterlabs/hardhat-zksync-toolbox",
+  "name": "@poohnet/hardhat-zksync-toolbox",
   "version": "0.3.0",
   "description": "zkSync bundle of Hardhat plugins",
-  "repository": "github:matter-labs/hardhat-zksync-toolbox",
-  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-toolbox",
+  "repository": "github:poohgithub/hardhat-zksync-toolbox",
+  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-toolbox",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",

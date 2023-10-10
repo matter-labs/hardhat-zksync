@@ -1,9 +1,9 @@
 {
-  "name": "@matterlabs/hardhat-zksync-upgradable",
+  "name": "@poohnet/hardhat-zksync-upgradable",
   "version": "0.1.3",
   "description": "Hardhat plugin to deploy and update upgradable smart contracts for the zkSync network",
-  "repository": "github:matter-labs/hardhat-zksync",
-  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
+  "repository": "github:poohgithub/hardhat-zksync",
+  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",

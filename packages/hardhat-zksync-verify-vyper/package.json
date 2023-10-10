@@ -1,9 +1,9 @@
 {
-  "name": "@matterlabs/hardhat-zksync-verify-vyper",
+  "name": "@poohnet/hardhat-zksync-verify-vyper",
   "version": "0.0.1-alpha.2",
   "description": "Hardhat plugin to verify Vyper smart contracts for the zkSync network",
-  "repository": "github:matter-labs/hardhat-zksync",
-  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-verify-vyper",
+  "repository": "github:poohgithub/hardhat-zksync",
+  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-verify-vyper",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",

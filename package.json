@@ -1,9 +1,8 @@
 {
   "name": "root",
   "version": "0.0.0",
-  "author": "Matter Labs",
+  "author": "Jay Lee",
   "license": "MIT",
-  "private": true,
   "workspaces": [
     "packages/*",
     "examples/*"
