@@ -1,9 +1,9 @@
 {
-  "name": "@poohnet/hardhat-zksync-vyper",
+  "name": "@matterlabs/hardhat-zksync-vyper",
   "version": "0.2.2",
   "description": "Hardhat plugin to compile Vyper smart contracts for the zkSync network",
-  "repository": "github:poohgithub/hardhat-zksync",
-  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
+  "repository": "github:matter-labs/hardhat-zksync",
+  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",

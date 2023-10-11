@@ -1,5 +1,5 @@
 import 'hardhat/types/config';
-import '@matterlabs/hardhat-zksync-solc/dist/src/type-extensions';
+import '@poohnet/hardhat-zksync-solc/dist/src/type-extensions';
 
 import { EthNetwork } from './types';
 

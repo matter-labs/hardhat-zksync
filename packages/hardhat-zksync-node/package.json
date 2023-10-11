@@ -1,9 +1,9 @@
 {
-  "name": "@poohnet/hardhat-zksync-node",
+  "name": "@matterlabs/hardhat-zksync-node",
   "version": "0.0.1-beta.1",
   "description": "Hardhat plugin to run zkSync era-test-node locally",
-  "repository": "github:poohgithub/hardhat-zksync",
-  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
+  "repository": "github:matter-labs/hardhat-zksync",
+  "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/index.js",

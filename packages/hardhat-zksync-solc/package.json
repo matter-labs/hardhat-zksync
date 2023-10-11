@@ -1,6 +1,6 @@
 {
   "name": "@poohnet/hardhat-zksync-solc",
-  "version": "0.4.2",
+  "version": "0.4.5",
   "description": "Hardhat plugin to compile smart contracts for the zkSync network",
   "repository": "github:poohgithub/hardhat-zksync",
   "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-solc",

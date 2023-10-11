@@ -1,9 +1,9 @@
 {
   "name": "@poohnet/hardhat-zksync-verify",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "description": "Hardhat plugin to verify smart contracts for the zkSync network",
   "repository": "github:poohgithub/hardhat-zksync",
-  "homepage": "https://github.compoohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
+  "homepage": "https://github.com/poohgithub/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
   "author": "Matter Labs",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -33,12 +33,12 @@
   ],
   "dependencies": {
     "axios": "^1.4.0",
-    "@matterlabs/hardhat-zksync-solc": "0.4.1",
+    "@poohnet/hardhat-zksync-solc": "0.4.5",
     "chalk": "4.1.2",
     "dockerode": "^3.3.4"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.0.2",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
