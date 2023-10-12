@@ -302,7 +302,8 @@ export async function download(
 
 async function isPortAvailableForIP(port: number, ip: string): Promise<boolean> {
     return new Promise((resolve) => {
-        const tester: net.Server = net.createServer()
+        const tester: net.Server = net
+            .createServer()
             .once('error', (err: any) => resolve(err.code !== 'EADDRINUSE'))
             .once('listening', () => tester.close(() => resolve(true)))
             .listen(port, ip);
@@ -317,12 +318,12 @@ export async function isPortAvailable(port: number): Promise<boolean> {
 
 export async function waitForNodeToBeReady(port: number, maxAttempts: number = 10): Promise<void> {
     const rpcEndpoint = `http://localhost:${port}`;
-    
+
     const payload = {
-        jsonrpc: "2.0",
-        method: "eth_chainId",
+        jsonrpc: '2.0',
+        method: 'eth_chainId',
         params: [],
-        id: new Date().getTime() // Unique ID for the request
+        id: new Date().getTime(), // Unique ID for the request
     };
 
     let attempts = 0;
@@ -338,7 +339,7 @@ export async function waitForNodeToBeReady(port: number, maxAttempts: number = 1
         }
 
         attempts++;
-        await new Promise(r => setTimeout(r, 500)); // Wait for 500ms before the next attempt.
+        await new Promise((r) => setTimeout(r, 500)); // Wait for 500ms before the next attempt.
     }
 
     throw new ZkSyncNodePluginError("Server didn't respond after multiple attempts");
@@ -362,7 +363,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
         if (portArgIndex + 1 < taskArgs.length) {
             taskArgs[portArgIndex + 1] = `${currentPort}`;
         } else {
-            throw new ZkSyncNodePluginError("Invalid task arguments: --port provided without a following port number.");
+            throw new ZkSyncNodePluginError('Invalid task arguments: --port provided without a following port number.');
         }
     } else {
         taskArgs.push(portArg, `${currentPort}`);
@@ -386,7 +387,7 @@ function getNetworkConfig(url: string) {
 
 export function configureNetwork(network: any, port: number) {
     const url = `${BASE_URL}:${port}`;
-    
+
     network.name = ZKSYNC_ERA_TEST_NODE_NETWORK_NAME;
     network.config = getNetworkConfig(url);
     network.provider = new ZkSyncProviderAdapter(new Provider(url));

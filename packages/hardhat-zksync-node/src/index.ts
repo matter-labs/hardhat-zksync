@@ -1,6 +1,13 @@
 import { spawn } from 'child_process';
 import { task, subtask, types } from 'hardhat/config';
-import { TASK_COMPILE, TASK_TEST, TASK_TEST_GET_TEST_FILES, TASK_TEST_RUN_MOCHA_TESTS, TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS, TASK_TEST_SETUP_TEST_ENVIRONMENT } from 'hardhat/builtin-tasks/task-names';
+import {
+    TASK_COMPILE,
+    TASK_TEST,
+    TASK_TEST_GET_TEST_FILES,
+    TASK_TEST_RUN_MOCHA_TESTS,
+    TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS,
+    TASK_TEST_SETUP_TEST_ENVIRONMENT,
+} from 'hardhat/builtin-tasks/task-names';
 import { Provider } from 'zksync-web3';
 
 import {
@@ -15,7 +22,18 @@ import {
     ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
 import { JsonRpcServer } from './server';
-import { adjustTaskArgsForPort, configureNetwork, constructCommandArgs, getAssetToDownload, getAvailablePort, getLatestRelease, getPlatform, getRPCServerBinariesDir, isPortAvailable, waitForNodeToBeReady } from './utils';
+import {
+    adjustTaskArgsForPort,
+    configureNetwork,
+    constructCommandArgs,
+    getAssetToDownload,
+    getAvailablePort,
+    getLatestRelease,
+    getPlatform,
+    getRPCServerBinariesDir,
+    isPortAvailable,
+    waitForNodeToBeReady,
+} from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
 import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
@@ -201,8 +219,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
         }
     );
 
-subtask(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, "Runs a Hardhat node-zksync task in a separate process.")
-    .addVariadicPositionalParam("taskArgs", "Arguments for the Hardhat node-zksync task.")
+subtask(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, 'Runs a Hardhat node-zksync task in a separate process.')
+    .addVariadicPositionalParam('taskArgs', 'Arguments for the Hardhat node-zksync task.')
     .setAction(async ({ taskArgs = [] }, hre) => {
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
         const adjustedArgs = adjustTaskArgsForPort(taskArgs, currentPort);
@@ -214,75 +232,83 @@ subtask(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, "Runs a Hardhat node-zksync ta
 
         return {
             process: taskProcess,
-            port: currentPort
+            port: currentPort,
         };
     });
 
-task(TASK_TEST, async (
-    {
-        testFiles,
-        noCompile,
-        parallel,
-        bail,
-        grep,
-    }: {
-        testFiles: string[];
-        noCompile: boolean;
-        parallel: boolean;
-        bail: boolean;
-        grep?: string;
-    },
-    { run, network },
-    runSuper
-) => {
-    if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
-        return await runSuper();
-    }
-
-    const platform = getPlatform();
-    if (platform === 'windows' || platform === '') {
-        throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
-    }
-
-    if (!noCompile) {
-        await run(TASK_COMPILE, { quiet: true });
-    }
-
-    const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
-
-    // Start the zkSync node using TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS
-    const taskArgs: any[] = [/* Add necessary arguments here */];
-    const { process: taskProcess, port } = await run(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, {
-        taskArgs: taskArgs
-    });
-
-    await waitForNodeToBeReady(port)
-    configureNetwork(network, port);
-
-    let testFailures = 0;
-    try {
-        // Run the tests
-        testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
-            testFiles: files,
+task(
+    TASK_TEST,
+    async (
+        {
+            testFiles,
+            noCompile,
             parallel,
             bail,
             grep,
+        }: {
+            testFiles: string[];
+            noCompile: boolean;
+            parallel: boolean;
+            bail: boolean;
+            grep?: string;
+        },
+        { run, network },
+        runSuper
+    ) => {
+        if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
+            return await runSuper();
+        }
+
+        const platform = getPlatform();
+        if (platform === 'windows' || platform === '') {
+            throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
+        }
+
+        if (!noCompile) {
+            await run(TASK_COMPILE, { quiet: true });
+        }
+
+        const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
+
+        // Start the zkSync node using TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS
+        const taskArgs: any[] = [
+            /* Add necessary arguments here */
+        ];
+        const { process: taskProcess, port } = await run(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, {
+            taskArgs: taskArgs,
         });
-    } finally {
-        // Ensure we shut down the zkSync node after tests are done
-        if (taskProcess) {
-            try {
-                process.kill(-taskProcess.pid!);
-            } catch (error: any) {
-                if (error.code !== 'ESRCH') { // ESRCH means the process was already terminated
-                    console.info(chalk.red(`Failed to kill the zkSync node process when running tests: ${error.message}`));
+
+        await waitForNodeToBeReady(port);
+        configureNetwork(network, port);
+
+        let testFailures = 0;
+        try {
+            // Run the tests
+            testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
+                testFiles: files,
+                parallel,
+                bail,
+                grep,
+            });
+        } finally {
+            // Ensure we shut down the zkSync node after tests are done
+            if (taskProcess) {
+                try {
+                    process.kill(-taskProcess.pid!);
+                } catch (error: any) {
+                    if (error.code !== 'ESRCH') {
+                        // ESRCH means the process was already terminated
+                        console.info(
+                            chalk.red(`Failed to kill the zkSync node process when running tests: ${error.message}`)
+                        );
+                    }
                 }
             }
         }
-    }
 
-    process.exitCode = testFailures;
-    return testFailures;
-});
+        process.exitCode = testFailures;
+        return testFailures;
+    }
+);
 
 export { ZkSyncProviderAdapter } from './zksync-provider-adapter';

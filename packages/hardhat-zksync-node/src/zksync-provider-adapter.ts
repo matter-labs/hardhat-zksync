@@ -1,9 +1,8 @@
 import { EthereumProvider } from 'hardhat/types';
-import { EventEmitter } from "events";
+import { EventEmitter } from 'events';
 import { Provider } from 'zksync-web3';
 
 export class ZkSyncProviderAdapter extends EventEmitter implements EthereumProvider {
-
     constructor(public readonly _zkSyncProvider: Provider) {
         super();
     }
@@ -12,7 +11,7 @@ export class ZkSyncProviderAdapter extends EventEmitter implements EthereumProvi
         return await this._zkSyncProvider.send(method, params);
     }
 
-    async request(payload: { method: string, params?: any[] }): Promise<any> {
+    async request(payload: { method: string; params?: any[] }): Promise<any> {
         return await this._zkSyncProvider.send(payload.method, payload.params ?? []);
     }
 
@@ -25,4 +24,3 @@ export class ZkSyncProviderAdapter extends EventEmitter implements EthereumProvi
         }
     }
 }
-

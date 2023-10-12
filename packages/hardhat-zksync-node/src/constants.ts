@@ -29,21 +29,21 @@ export const TEMP_FILE_PREFIX = 'tmp-';
 export const START_PORT = 8011;
 export const MAX_PORT_ATTEMPTS = 10;
 export const PORT_CHECK_DELAY = 500;
-export const RPC_ENDPOINT_PATH = "eth_chainId";
+export const RPC_ENDPOINT_PATH = 'eth_chainId';
 
 export const ZKSYNC_ERA_TEST_NODE_NETWORK_NAME = 'zkSyncEraTestNode';
 export const BASE_URL = `http://localhost`;
 export const NETWORK_ACCOUNTS = {
-    REMOTE: "remote"
+    REMOTE: 'remote',
 };
 export const NETWORK_GAS = {
-    AUTO: "auto"
+    AUTO: 'auto',
 };
 export const NETWORK_GAS_PRICE = {
-    AUTO: "auto"
+    AUTO: 'auto',
 };
 export const NETWORK_ETH = {
-    LOCALHOST: "localhost"
+    LOCALHOST: 'localhost',
 };
 
 // export const TOOLCHAIN_MAP: Record<string, string> = {

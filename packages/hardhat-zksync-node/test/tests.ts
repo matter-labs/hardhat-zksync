@@ -13,7 +13,12 @@ import { spawn, ChildProcess } from 'child_process';
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
 import { RPCServerDownloader } from '../src/downloader';
-import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS, ZKSYNC_ERA_TEST_NODE_NETWORK_NAME, MAX_PORT_ATTEMPTS } from '../src/constants';
+import {
+    TASK_NODE_ZKSYNC,
+    PROCESS_TERMINATION_SIGNALS,
+    ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
+    MAX_PORT_ATTEMPTS,
+} from '../src/constants';
 import { Network } from 'hardhat/types';
 
 chai.use(sinonChai);
@@ -272,7 +277,7 @@ describe('node-zksync plugin', async function () {
                 expect(axios.post).to.have.been.calledWith(`http://localhost:${port}`);
             });
 
-            it('should throw an error if the node isn\'t ready after maxAttempts', async () => {
+            it("should throw an error if the node isn't ready after maxAttempts", async () => {
                 // Make the stub reject all the time to simulate the node never being ready
                 sinon.stub(axios, 'post').rejects(new Error('Node not ready'));
 
@@ -280,18 +285,18 @@ describe('node-zksync plugin', async function () {
                     await utils.waitForNodeToBeReady(8080, 10);
                     throw new Error('Expected waitForNodeToBeReady to throw but it did not');
                 } catch (err: any) {
-                    expect(err.message).to.equal('Server didn\'t respond after multiple attempts');
+                    expect(err.message).to.equal("Server didn't respond after multiple attempts");
                 }
             });
         });
 
         describe('adjustTaskArgsForPort', () => {
-            it('should correctly add the --port argument if it\'s not present', () => {
+            it("should correctly add the --port argument if it's not present", () => {
                 const result = utils.adjustTaskArgsForPort([], 8000);
                 expect(result).to.deep.equal(['--port', '8000']);
             });
 
-            it('should correctly update the --port argument if it\'s present', () => {
+            it("should correctly update the --port argument if it's present", () => {
                 const result = utils.adjustTaskArgsForPort(['--port', '9000'], 8000);
                 expect(result).to.deep.equal(['--port', '8000']);
             });
@@ -299,17 +304,17 @@ describe('node-zksync plugin', async function () {
 
         describe('isPortAvailable', () => {
             let server: net.Server;
-        
+
             afterEach(() => {
                 if (server) server.close();
             });
-        
+
             it('should correctly identify an available port', async () => {
                 const port = await getPort();
                 const result = await utils.isPortAvailable(port);
                 expect(result).to.be.true;
             });
-        
+
             it('should correctly identify a port that is in use', async () => {
                 const port = await getPort();
                 server = net.createServer().listen(port);
