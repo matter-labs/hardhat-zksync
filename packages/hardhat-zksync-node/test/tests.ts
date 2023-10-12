@@ -1,16 +1,35 @@
 import { expect, assert } from 'chai';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
 import sinon from 'sinon';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import net from 'net';
 import proxyquire from 'proxyquire';
 import { spawn, ChildProcess } from 'child_process';
 
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
 import { RPCServerDownloader } from '../src/downloader';
-import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS } from '../src/constants';
+import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS, ZKSYNC_ERA_TEST_NODE_NETWORK_NAME, MAX_PORT_ATTEMPTS } from '../src/constants';
+import { Network } from 'hardhat/types';
+
+chai.use(sinonChai);
+
+async function getPort(): Promise<number> {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer();
+        server.listen(0, () => {
+            const port = (server.address() as net.AddressInfo).port;
+            server.close(() => {
+                resolve(port);
+            });
+        });
+        server.on('error', reject);
+    });
+}
 
 describe('node-zksync plugin', async function () {
     describe('Utils', () => {
@@ -237,6 +256,96 @@ describe('node-zksync plugin', async function () {
                 }
             });
         });
+
+        describe('waitForNodeToBeReady', () => {
+            afterEach(() => {
+                sinon.restore();
+            });
+
+            it('should return successfully if the node is ready', async () => {
+                // Mock the axios.post to simulate a node being ready
+                sinon.stub(axios, 'post').resolves({ data: { result: true } });
+
+                const port = 12345; // any port for testing purposes
+                await utils.waitForNodeToBeReady(port);
+
+                expect(axios.post).to.have.been.calledWith(`http://localhost:${port}`);
+            });
+
+            it('should throw an error if the node isn\'t ready after maxAttempts', async () => {
+                // Make the stub reject all the time to simulate the node never being ready
+                sinon.stub(axios, 'post').rejects(new Error('Node not ready'));
+
+                try {
+                    await utils.waitForNodeToBeReady(8080, 10);
+                    throw new Error('Expected waitForNodeToBeReady to throw but it did not');
+                } catch (err: any) {
+                    expect(err.message).to.equal('Server didn\'t respond after multiple attempts');
+                }
+            });
+        });
+
+        describe('adjustTaskArgsForPort', () => {
+            it('should correctly add the --port argument if it\'s not present', () => {
+                const result = utils.adjustTaskArgsForPort([], 8000);
+                expect(result).to.deep.equal(['--port', '8000']);
+            });
+
+            it('should correctly update the --port argument if it\'s present', () => {
+                const result = utils.adjustTaskArgsForPort(['--port', '9000'], 8000);
+                expect(result).to.deep.equal(['--port', '8000']);
+            });
+        });
+
+        describe('isPortAvailable', () => {
+            let server: net.Server;
+        
+            afterEach(() => {
+                if (server) server.close();
+            });
+        
+            it('should correctly identify an available port', async () => {
+                const port = await getPort();
+                const result = await utils.isPortAvailable(port);
+                expect(result).to.be.true;
+            });
+        
+            it('should correctly identify a port that is in use', async () => {
+                const port = await getPort();
+                server = net.createServer().listen(port);
+                const result = await utils.isPortAvailable(port);
+                expect(result).to.be.false;
+            });
+        });
+
+        describe('getAvailablePort', () => {
+            let isPortAvailableStub: sinon.SinonStub<[number], Promise<boolean>>;
+
+            beforeEach(() => {
+                isPortAvailableStub = sinon.stub(utils, 'isPortAvailable');
+            });
+
+            afterEach(() => {
+                isPortAvailableStub.restore();
+            });
+
+            it('should return the first available port', async () => {
+                isPortAvailableStub.returns(Promise.resolve(true));
+                const port = await utils.getAvailablePort(8080, 10);
+                expect(port).to.equal(8080);
+            });
+
+            // it('should throw an error after checking the maxAttempts number of ports', async () => {
+            //     isPortAvailableStub.returns(Promise.resolve(false));
+
+            //     try {
+            //         await utils.getAvailablePort(8000, 10);
+            //         throw new Error('Expected getAvailablePort to throw but it did not');
+            //     } catch (err: any) {
+            //         expect(err.message).to.equal('Couldn\'t find an available port after several attempts');
+            //     }
+            // });
+        });
     });
 
     describe('RPCServerDownloader', () => {
@@ -380,7 +489,7 @@ describe('node-zksync plugin', async function () {
         });
     });
 
-    describe('Testing task', function () {
+    describe('TASK_NODE_ZKSYNC', function () {
         this.timeout(10000); // Increase timeout if needed
 
         let serverProcess: ChildProcess;

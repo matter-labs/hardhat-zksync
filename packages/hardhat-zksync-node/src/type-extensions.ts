@@ -3,6 +3,7 @@ import 'hardhat/types/config';
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
         zksync?: boolean;
+        ethNetwork?: string;
     }
 
     interface HttpNetworkUserConfig {
@@ -15,6 +16,7 @@ declare module 'hardhat/types/config' {
 
     interface HttpNetworkConfig {
         zksync: boolean;
+        ethNetwork?: string;
     }
 }
 
