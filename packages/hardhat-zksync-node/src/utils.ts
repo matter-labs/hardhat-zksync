@@ -2,9 +2,12 @@ import path from 'path';
 import axios from 'axios';
 import util from 'util';
 import fs from 'fs';
+import net from 'net';
 import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
+import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
+import { Provider } from 'zksync-web3';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -14,8 +17,14 @@ import {
     ALLOWED_SHOW_GAS_DETAILS_VALUES,
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
+    BASE_URL,
+    NETWORK_ACCOUNTS,
+    NETWORK_ETH,
+    NETWORK_GAS,
+    NETWORK_GAS_PRICE,
     PLATFORM_MAP,
     TEMP_FILE_PREFIX,
+    ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
 } from './constants';
 import { ZkSyncNodePluginError } from './errors';
 import { CommandArguments } from './types';
@@ -124,7 +133,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     return commandArgs;
 }
 
-function getPlatform() {
+export function getPlatform() {
     return PLATFORM_MAP[process.platform] || '';
 }
 
@@ -289,4 +298,97 @@ export async function download(
 
     // eslint-disable-next-line
     throw new Error(`Failed to download ${url} - ${response.statusCode} received. ${text}`);
+}
+
+async function isPortAvailableForIP(port: number, ip: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        const tester: net.Server = net
+            .createServer()
+            .once('error', (err: any) => resolve(err.code !== 'EADDRINUSE'))
+            .once('listening', () => tester.close(() => resolve(true)))
+            .listen(port, ip);
+    });
+}
+
+export async function isPortAvailable(port: number): Promise<boolean> {
+    const availableIPv4 = await isPortAvailableForIP(port, '0.0.0.0');
+    const availableIPv6 = await isPortAvailableForIP(port, '::');
+    return availableIPv4 && availableIPv6;
+}
+
+export async function waitForNodeToBeReady(port: number, maxAttempts: number = 10): Promise<void> {
+    const rpcEndpoint = `http://localhost:${port}`;
+
+    const payload = {
+        jsonrpc: '2.0',
+        method: 'eth_chainId',
+        params: [],
+        id: new Date().getTime(), // Unique ID for the request
+    };
+
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+        try {
+            const response = await axios.post(rpcEndpoint, payload);
+
+            if (response.data && response.data.result) {
+                return; // The node responded with a valid chain ID
+            }
+        } catch (e) {
+            // If it fails, it will just try again
+        }
+
+        attempts++;
+        await new Promise((r) => setTimeout(r, 500)); // Wait for 500ms before the next attempt.
+    }
+
+    throw new ZkSyncNodePluginError("Server didn't respond after multiple attempts");
+}
+
+export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
+    let currentPort = startPort;
+    for (let i = 0; i < maxAttempts; i++) {
+        if (await isPortAvailable(currentPort)) {
+            return currentPort;
+        }
+        currentPort++;
+    }
+    throw new ZkSyncNodePluginError("Couldn't find an available port after several attempts");
+}
+
+export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): string[] {
+    const portArg = '--port';
+    const portArgIndex = taskArgs.indexOf(portArg);
+    if (portArgIndex !== -1) {
+        if (portArgIndex + 1 < taskArgs.length) {
+            taskArgs[portArgIndex + 1] = `${currentPort}`;
+        } else {
+            throw new ZkSyncNodePluginError('Invalid task arguments: --port provided without a following port number.');
+        }
+    } else {
+        taskArgs.push(portArg, `${currentPort}`);
+    }
+    return taskArgs;
+}
+
+function getNetworkConfig(url: string) {
+    return {
+        accounts: NETWORK_ACCOUNTS.REMOTE,
+        gas: NETWORK_GAS.AUTO,
+        gasPrice: NETWORK_GAS_PRICE.AUTO,
+        gasMultiplier: 1,
+        httpHeaders: {},
+        timeout: 20000,
+        url: url,
+        ethNetwork: NETWORK_ETH.LOCALHOST,
+        zksync: true,
+    };
+}
+
+export function configureNetwork(network: any, port: number) {
+    const url = `${BASE_URL}:${port}`;
+
+    network.name = ZKSYNC_ERA_TEST_NODE_NETWORK_NAME;
+    network.config = getNetworkConfig(url);
+    network.provider = new ZkSyncProviderAdapter(new Provider(url));
 }

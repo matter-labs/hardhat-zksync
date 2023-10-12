@@ -6,6 +6,7 @@ export const ZKNODE_BIN_REPOSITORY_NAME = 'era-test-node';
 export const TASK_NODE_ZKSYNC = 'node-zksync';
 export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
 export const TASK_NODE_ZKSYNC_DOWNLOAD_BINARY = 'node-zksync:download-binary';
+export const TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS = 'node-zksync:run-in-separate-process';
 
 export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM'];
 
@@ -24,6 +25,26 @@ export const PLATFORM_MAP: Record<string, string> = {
 };
 
 export const TEMP_FILE_PREFIX = 'tmp-';
+
+export const START_PORT = 8011;
+export const MAX_PORT_ATTEMPTS = 10;
+export const PORT_CHECK_DELAY = 500;
+export const RPC_ENDPOINT_PATH = 'eth_chainId';
+
+export const ZKSYNC_ERA_TEST_NODE_NETWORK_NAME = 'zkSyncEraTestNode';
+export const BASE_URL = `http://localhost`;
+export const NETWORK_ACCOUNTS = {
+    REMOTE: 'remote',
+};
+export const NETWORK_GAS = {
+    AUTO: 'auto',
+};
+export const NETWORK_GAS_PRICE = {
+    AUTO: 'auto',
+};
+export const NETWORK_ETH = {
+    LOCALHOST: 'localhost',
+};
 
 // export const TOOLCHAIN_MAP: Record<string, string> = {
 //     linux: '-musl',
