@@ -34,7 +34,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "0.4.2",
     "chalk": "4.1.2",
-    "ts-morph": "^19.0.0"
+    "ts-morph": "^20.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
