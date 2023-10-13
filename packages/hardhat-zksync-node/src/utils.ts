@@ -351,7 +351,7 @@ export async function waitForNodeToBeReady(port: number, maxAttempts: number = 2
         waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
     }
 
-    throw new Error("Server didn't respond after multiple attempts");
+    throw new ZkSyncNodePluginError("Server didn't respond after multiple attempts");
 }
 
 export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
