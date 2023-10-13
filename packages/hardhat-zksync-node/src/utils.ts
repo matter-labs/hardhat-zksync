@@ -167,8 +167,7 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         if (error.response) {
             // The request was made and the server responded with a status code outside of the range of 2xx
             throw new ZkSyncNodePluginError(
-                `Failed to get latest release for ${owner}/${repo}. Status: ${
-                    error.response.status
+                `Failed to get latest release for ${owner}/${repo}. Status: ${error.response.status
                 }, Data: ${JSON.stringify(error.response.data)}`
             );
         } else if (error.request) {
@@ -317,16 +316,20 @@ export async function isPortAvailable(port: number): Promise<boolean> {
 }
 
 export async function waitForNodeToBeReady(port: number, maxAttempts: number = 20): Promise<void> {
-    const rpcEndpoint = `http://localhost:${port}`;
+    const rpcEndpoint = `http://127.0.0.1:${port}`;
 
     const payload = {
         jsonrpc: '2.0',
         method: 'eth_chainId',
         params: [],
-        id: new Date().getTime(), // Unique ID for the request
+        id: new Date().getTime(),
     };
 
     let attempts = 0;
+    let waitTime = 1000; // Initial wait time in milliseconds
+    const backoffFactor = 2;
+    const maxWaitTime = 30000; // Maximum wait time (e.g., 30 seconds)
+
     while (attempts < maxAttempts) {
         try {
             const response = await axios.post(rpcEndpoint, payload);
@@ -334,15 +337,21 @@ export async function waitForNodeToBeReady(port: number, maxAttempts: number = 2
             if (response.data && response.data.result) {
                 return; // The node responded with a valid chain ID
             }
-        } catch (e) {
+        } catch (e: any) {
+            // console.error(`Attempt ${attempts + 1} failed with error:`, e.message);
             // If it fails, it will just try again
         }
 
         attempts++;
-        await new Promise((r) => setTimeout(r, 1000)); // Wait for 1000ms before the next attempt.
+
+        // Wait before the next attempt
+        await new Promise((r) => setTimeout(r, waitTime));
+
+        // Update the wait time for the next attempt
+        waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
     }
 
-    throw new ZkSyncNodePluginError("Server didn't respond after multiple attempts");
+    throw new Error("Server didn't respond after multiple attempts");
 }
 
 export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
