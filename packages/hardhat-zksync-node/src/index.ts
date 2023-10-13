@@ -270,6 +270,9 @@ task(
 
         const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
 
+        // Download the binary, if necessary
+        const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
+
         // Start the zkSync node using TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS
         const taskArgs: any[] = [
             /* Add necessary arguments here */

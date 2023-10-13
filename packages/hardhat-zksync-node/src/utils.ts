@@ -316,7 +316,7 @@ export async function isPortAvailable(port: number): Promise<boolean> {
     return availableIPv4 && availableIPv6;
 }
 
-export async function waitForNodeToBeReady(port: number, maxAttempts: number = 10): Promise<void> {
+export async function waitForNodeToBeReady(port: number, maxAttempts: number = 20): Promise<void> {
     const rpcEndpoint = `http://localhost:${port}`;
 
     const payload = {
@@ -339,7 +339,7 @@ export async function waitForNodeToBeReady(port: number, maxAttempts: number = 1
         }
 
         attempts++;
-        await new Promise((r) => setTimeout(r, 500)); // Wait for 500ms before the next attempt.
+        await new Promise((r) => setTimeout(r, 1000)); // Wait for 1000ms before the next attempt.
     }
 
     throw new ZkSyncNodePluginError("Server didn't respond after multiple attempts");
