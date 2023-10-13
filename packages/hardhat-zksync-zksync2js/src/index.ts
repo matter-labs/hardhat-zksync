@@ -1,9 +1,8 @@
-import { ContractFactory, Provider, Signer, Wallet } from "zksync2-js"
+import { Provider, Signer, Wallet } from "zksync2-js"
 
 import { extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import './type-extensions';
-
 
 import {
   extractFactoryDeps,
@@ -25,7 +24,7 @@ import { ethers } from "ethers";
     hre.zksync2js = lazyObject(() => {
       const { zksync2js } = require("zksync2-js");
       const config: any = hre.network.config;
-      const provider: Provider = new Provider(config.url)
+      const provider: Provider = new Provider(config.url);
   
       return {
         ...zksync2js,

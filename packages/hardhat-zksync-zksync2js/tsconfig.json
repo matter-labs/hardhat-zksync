@@ -4,6 +4,8 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "target": "ES2021",
+    "skipLibCheck":true,
+    "strict": false,
   },
   "include": ["src/**/*", "src/**/*.json"],
   "exclude": ["./dist", "./node_modules", "./test/**/*"]

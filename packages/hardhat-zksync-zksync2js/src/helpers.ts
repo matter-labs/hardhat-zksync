@@ -1,4 +1,5 @@
 import { Contract, ContractFactory, Provider, Signer, Wallet } from "zksync2-js"
+import {ContractFactory as cf} from "zksync-web3"
 
 import * as ethers from "ethers";
 
@@ -235,10 +236,12 @@ export async function deployContract(
 
   if(signer === undefined) {
     const signers = await hre.zksync2js.getSigners();
-    signer = signers[0];
+    signer = Signer.from(signers[0], 1);
   }
 
-  const factory = new ContractFactory(artifact.abi, artifact.bytecode, signer, deploymentType);
+  let w = new Wallet(rich_wallets[0].privateKey, hre.zksync2js.provider);
+
+  const factory = new ContractFactory(artifact.abi, artifact.deployedBytecode, w, "create");
 
   const baseDeps = await extractFactoryDeps(hre, artifact);
   const additionalDeps = additionalFactoryDeps
@@ -250,7 +253,8 @@ export async function deployContract(
 
   // Encode and send the deploy transaction providing factory dependencies.
   const contract = await factory.deploy(...constructorArguments, {
-      from: signer.address,
+      from: w.address,
+      //gasLimit: 13919861n,
       ..._overrides,
       customData: {
           ...customData,

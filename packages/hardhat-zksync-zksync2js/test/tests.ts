@@ -93,7 +93,7 @@ describe('Plugin tests', async function () {
           const [signer] = await this.env.zksync2js.getSigners();
 
           const artifact = await this.env.zksync2js.loadArtifact("Greeter");
-          const contract =  await this.env.zksync2js.deployContract(artifact, [], signer);
+          const contract =  await this.env.zksync2js.deployContract(artifact, []);
           assert.isDefined(contract);
           assert.equal(contract.address.length, 42);
         });
