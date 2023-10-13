@@ -88,6 +88,12 @@ jobs:
           yarn hardhat compile
           yarn hardhat deploy-zksync
 
+      - name: Test node example
+        run: |
+          cd examples/node-example
+          yarn hardhat compile
+          yarn hardhat test
+
       - name: Test zkvyper example
         run: |
           cd examples/vyper-example
