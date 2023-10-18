@@ -11,10 +11,12 @@ import {
     getContractFactory,
     getContractFactoryFromArtifact,
     getImpersonatedSigner,
+    getWallet,
     getSigner,
     getSigners,
     loadArtifact,
-    deployContract
+    deployContract,
+    getWallets
   } from "./helpers";
 import { ZkSyncArtifact } from "./types";
 import { ethers } from "ethers";
@@ -29,6 +31,8 @@ import { ethers } from "ethers";
       return {
         ...zksync2js,
         provider,
+        getWallet: (privateKey?: string) => getWallet(hre, privateKey),
+        getWallets: () => getWallets(hre),
         getSigner: (address: string) => getSigner(hre, address),
         getSigners: () => getSigners(hre),
         getImpersonatedSigner: (address: string) => getImpersonatedSigner(hre, address),
@@ -40,10 +44,10 @@ import { ethers } from "ethers";
         loadArtifact: (name: string) => loadArtifact(hre, name),
         deployContract: (artifact: ZkSyncArtifact,
           constructorArguments: any[],
-          signer?: Signer | Wallet,
+          wallet?: Wallet,
           overrides?: ethers.Overrides,
           additionalFactoryDeps?: ethers.BytesLike[]) => 
-          deployContract(hre, artifact, signer, constructorArguments = [], overrides, additionalFactoryDeps)
+          deployContract(hre, artifact, wallet, constructorArguments = [], overrides, additionalFactoryDeps)
       };
     });
   });

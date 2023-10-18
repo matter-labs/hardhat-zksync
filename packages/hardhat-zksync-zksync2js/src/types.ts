@@ -16,70 +16,61 @@ export interface ZkSyncArtifact extends Artifact {
   sourceMapping: string;
 }
 
-export class ZkSyncContractFactory extends ContractFactory {
-  // The factory dependencies of the contract.
-  factoryDeps: FactoryDeps;
-  constructor(abi: ethers.Interface | ethers.InterfaceAbi, bytecode: ethers.BytesLike, runner?: ethers.ContractRunner, deploymentType?: DeploymentType, factoryDeps?: FactoryDeps) {
-    super(abi, bytecode, runner, deploymentType);
-    this.factoryDeps = factoryDeps ?? {};
-  }
-}
-
 export interface FactoryOptions {
-  signer?: Signer;
+  wallet?: Wallet;
 }
-
-export type DeployContractOptions = FactoryOptions & ethers.Overrides;
 
 export declare function getContractFactory(
   name: string,
-  signerOrOptions?: Signer | FactoryOptions,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory>;
 
 export declare function getContractFactory(
   abi: any[],
   bytecode: ethers.BytesLike,
-  signer?: Signer,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory>;
 
 export declare function deployContract(
   contractFactoryOrArtifact: ContractFactory | ZkSyncArtifact,
   constructorArguments: any[],
+  wallet?: Wallet,
   overrides?: ethers.Overrides,
   additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<Contract>;
 
 export declare function getContractFactoryFromArtifact(
   artifact: ZkSyncArtifact,
-  signerOrOptions?: Signer | FactoryOptions,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory>;
 
 export interface HardhatZksync2jsHelpers {
   provider: Provider;
 
+  getWallet: (privateKey?: string) => Wallet;
   getContractFactory: typeof getContractFactory;
   getContractFactoryFromArtifact: typeof getContractFactoryFromArtifact;
   getContractAt: (
     nameOrAbi: string | any[],
     address: string | Address,
-    signer?: Signer
+    wallet?: Wallet
   ) => Promise<Contract>;
   getContractAtFromArtifact: (
     artifact: ZkSyncArtifact,
     address: string,
-    signer?: Signer
+    wallet?: Wallet
   ) => Promise<Contract>;
-  getSigner: (address: string) => Promise<Signer>;
-  getSigners: () => Promise<Signer[]>;
+  getSigner: (address: string) => Signer;
+  getSigners: () => Signer[];
   getImpersonatedSigner: (address: string) => Promise<Signer>;
   extractFactoryDeps: (artifact: ZkSyncArtifact) => Promise<string[]>;
   loadArtifact: (name: string) => Promise<ZkSyncArtifact>;
   deployContract: (artifact: ZkSyncArtifact,
     constructorArguments: any[],
-    signer?: Signer | Wallet,
+    wallet?: Wallet,
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[]) => Promise<Contract>;
 }

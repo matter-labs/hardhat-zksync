@@ -1,5 +1,5 @@
-import '@matterlabs/hardhat-zksync-solc';
-import '@matterlabs/hardhat-zksync-deploy';
+import '../../../../hardhat-zksync-solc/src/index'
+import '../../../../hardhat-zksync-deploy/src/index';
 import '../../../src/index';
 import { HardhatUserConfig } from 'hardhat/types';
 
@@ -10,16 +10,17 @@ const config: HardhatUserConfig = {
         settings: {},
       },
     networks: {
+        "hardhat": {
+            zksync: true
+        },
         zkSyncNetwork: {
             allowUnlimitedContractSize: true,
             url: 'http://localhost:8011',
-            ethNetwork: 'http://localhost:8545',
             zksync: true,
         },
         zkSyncTestnet:{
             allowUnlimitedContractSize: true,
             url: "https://zksync2-testnet.zksync.dev",
-            ethNetwork: "goerli",
             zksync: true,
             // verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
           },

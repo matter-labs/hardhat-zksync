@@ -1,5 +1,4 @@
 import { Contract, ContractFactory, Provider, Signer, Wallet } from "zksync2-js"
-import {ContractFactory as cf} from "zksync-web3"
 
 import * as ethers from "ethers";
 
@@ -37,24 +36,38 @@ function isArtifact(artifact: any): artifact is ZkSyncArtifact {
   );
 }
 
-export async function getSigners(
+export function getWallets(
+  hre: HardhatRuntimeEnvironment,
+): Wallet[] {
+  const accounts: string[] = rich_wallets.map((wallet) => wallet.privateKey);
+
+  const wallets =  accounts.map((account) => getWallet(hre, account))
+
+  return wallets;
+}
+
+export function getWallet(
+  hre: HardhatRuntimeEnvironment,
+  privateKey?: string
+): Wallet {
+  return new Wallet(privateKey ? privateKey : rich_wallets[0].privateKey, hre.zksync2js.provider);
+}
+
+export function getSigners(
   hre: HardhatRuntimeEnvironment
-): Promise<Signer[]> {
+): Signer[] {
   const accounts: string[] = rich_wallets.map((wallet) => wallet.address);
 
-  const signersWithAddress = await Promise.all(
-    accounts.map((account) => getSigner(hre, account))
-  );
+  const signersWithAddress =  accounts.map((account) => getSigner(hre, account))
 
   return signersWithAddress;
 }
 
-export async function getSigner(
+export function getSigner(
   hre: HardhatRuntimeEnvironment,
   address: string
-): Promise<Signer> {
-
-  return new Signer(hre.zksync2js.provider, address);
+): Signer {
+  return Signer.from(new Signer(hre.zksync2js.provider, address), hre.network.config.chainId);
 }
 
 export async function getImpersonatedSigner(
@@ -69,7 +82,7 @@ export async function getImpersonatedSigner(
 export function getContractFactory(
   hre: HardhatRuntimeEnvironment,
   name: string,
-  signerOrOptions?: Signer | FactoryOptions,
+  walletOrOption?: Wallet | FactoryOptions,
 ): Promise<ContractFactory>;
 
 
@@ -77,7 +90,7 @@ export function getContractFactory(
   hre: HardhatRuntimeEnvironment,
   abi: any[],
   bytecode: ethers.BytesLike,
-  signer?: Signer,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory>;
 
@@ -85,9 +98,9 @@ export async function getContractFactory(
   hre: HardhatRuntimeEnvironment,
   nameOrAbi: string | any[],
   bytecodeOrFactoryOptions?:
-    | (Signer | FactoryOptions)
+    | (Wallet | FactoryOptions)
     | ethers.BytesLike,
-  signer?: Signer,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory> {
   if (typeof nameOrAbi === "string") {
@@ -96,7 +109,7 @@ export async function getContractFactory(
     return getContractFactoryFromArtifact(
       hre,
       artifact,
-      bytecodeOrFactoryOptions as Signer | FactoryOptions | undefined,
+      bytecodeOrFactoryOptions as Wallet | FactoryOptions | undefined,
       deploymentType
     );
   }
@@ -105,15 +118,15 @@ export async function getContractFactory(
     hre,
     nameOrAbi,
     bytecodeOrFactoryOptions as ethers.BytesLike,
-    signer,
+    wallet,
     deploymentType
   );
 }
 
 function isFactoryOptions(
-  signerOrOptions?: Signer | FactoryOptions
-): signerOrOptions is FactoryOptions {
-  if (signerOrOptions === undefined || "provider" in signerOrOptions) {
+  walletOrOptions?: Wallet | FactoryOptions
+): walletOrOptions is FactoryOptions {
+  if (walletOrOptions === undefined || "provider" in walletOrOptions) {
     return false;
   }
 
@@ -123,10 +136,10 @@ function isFactoryOptions(
 export async function getContractFactoryFromArtifact(
   hre: HardhatRuntimeEnvironment,
   artifact: ZkSyncArtifact,
-  signerOrOptions?: Signer | FactoryOptions,
+  walletOrOptions?: Wallet | FactoryOptions,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory> {
-  let signer: Signer | undefined;
+  let wallet: Wallet | undefined;
 
   if (!isArtifact(artifact)) {
     throw new ZkSync2JsPluginError(
@@ -134,10 +147,10 @@ export async function getContractFactoryFromArtifact(
     );
   }
 
-  if (isFactoryOptions(signerOrOptions)) {
-    signer = signerOrOptions.signer;
+  if (isFactoryOptions(walletOrOptions)) {
+    wallet = walletOrOptions.wallet;
   } else {
-    signer = signerOrOptions;
+    wallet = walletOrOptions;
   }
 
   if (artifact.bytecode === "0x") {
@@ -151,7 +164,7 @@ If you want to call a contract using ${artifact.contractName} as its interface u
     hre,
     artifact.abi,
     artifact.bytecode,
-    signer,
+    wallet,
     deploymentType
   );
 }
@@ -160,49 +173,49 @@ async function getContractFactoryByAbiAndBytecode(
   hre: HardhatRuntimeEnvironment,
   abi: any[],
   bytecode: ethers.BytesLike,
-  signer?: Signer,
+  wallet?: Wallet,
   deploymentType?: DeploymentType
 ): Promise<ContractFactory> {
 
-  if (signer === undefined) {
-    const signers = await hre.zksync2js.getSigners();
-    signer = signers[0];
+  if (wallet === undefined) {
+    const wallets = getWallets(hre);
+    wallet = wallets[0];
   }
 
-  return new ContractFactory(abi, bytecode, signer, deploymentType);
+  return new ContractFactory(abi, bytecode, wallet, deploymentType);
 }
 
 export async function getContractAt(
   hre: HardhatRuntimeEnvironment,
   nameOrAbi: string | any[],
   address: string | Address,
-  signer?: Signer
+  wallet?: Wallet
 ) {
   if (typeof nameOrAbi === "string") {
     const artifact = await loadArtifact(hre, nameOrAbi);
 
-    return getContractAtFromArtifact(hre, artifact, address, signer);
+    return getContractAtFromArtifact(hre, artifact, address, wallet);
   }
 
-  if (signer === undefined) {
-    const signers = await hre.zksync2js.getSigners();
-    signer = signers[0];
+  if (wallet === undefined) {
+    const wallets = getWallets(hre);
+    wallet = wallets[0];
   }
 
   // If there's no signer, we want to put the provider for the selected network here.
   // This allows read only operations on the contract interface.
-  const signerOrProvider: Signer | Provider =
-    signer !== undefined ? signer : hre.zksync2js.provider;
+  const walletOrProvider: Wallet | Provider =
+    wallet !== undefined ? wallet : hre.zksync2js.provider;
 
 
-  return new Contract(address, nameOrAbi, signerOrProvider);
+  return new Contract(address, nameOrAbi, walletOrProvider);
 }
 
 export async function getContractAtFromArtifact(
   hre: HardhatRuntimeEnvironment,
   artifact: ZkSyncArtifact,
   address: string | Address,
-  signer?: Signer
+  wallet?: Wallet
 ) {
   if (!isArtifact(artifact)) {
     throw new ZkSync2JsPluginError(
@@ -210,12 +223,11 @@ export async function getContractAtFromArtifact(
     );
   }
 
-  if (signer === undefined) {
-    const signers = await hre.zksync2js.getSigners();
-    signer = signers[0];
+  if (wallet === undefined) {
+    wallet = hre.zksync2js.getWallet();
   }
 
-  let contract = new Contract(address, artifact.abi, signer);
+  let contract = new Contract(address, artifact.abi, wallet);
 
   if (contract.runner === null) {
     contract = contract.connect(hre.zksync2js.provider) as Contract;
@@ -227,21 +239,17 @@ export async function getContractAtFromArtifact(
 export async function deployContract(
   hre: HardhatRuntimeEnvironment,
   artifact: ZkSyncArtifact,
-  signer?: Signer | Wallet,
+  wallet?: Wallet,
   constructorArguments: any[] = [],
   overrides?: ethers.Overrides,
-  additionalFactoryDeps?: ethers.BytesLike[],
-  deploymentType?: DeploymentType
+  additionalFactoryDeps?: ethers.BytesLike[]
 ): Promise<Contract> {
 
-  if(signer === undefined) {
-    const signers = await hre.zksync2js.getSigners();
-    signer = Signer.from(signers[0], 1);
+  if(wallet === undefined) {
+    wallet = getWallet(hre);
   }
 
-  let w = new Wallet(rich_wallets[0].privateKey, hre.zksync2js.provider);
-
-  const factory = new ContractFactory(artifact.abi, artifact.deployedBytecode, w, "create");
+  const factory = new ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
   const baseDeps = await extractFactoryDeps(hre, artifact);
   const additionalDeps = additionalFactoryDeps
@@ -252,19 +260,19 @@ export async function deployContract(
   const { customData, ..._overrides } = overrides ?? {};
 
   // Encode and send the deploy transaction providing factory dependencies.
-  const contract = await factory.deploy(...constructorArguments, {
-      from: w.address,
-      //gasLimit: 13919861n,
-      ..._overrides,
-      customData: {
-          ...customData,
-          factoryDeps,
-      },
-  });
-  
-  await contract.deployed();
+  const contract = await factory.deploy(...constructorArguments,  {
+    ..._overrides,
+    customData: {
+      ...customData,
+        salt: ethers.ZeroHash,
+        factoryDeps,
+    },
+  }
+);
 
-  return contract;
+  await contract.waitForDeployment();
+
+  return contract as Contract;
 }
 
 

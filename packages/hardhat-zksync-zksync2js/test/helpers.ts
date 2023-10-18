@@ -13,7 +13,6 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'zkSync
     beforeEach('Loading hardhat environment', async function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
-
         this.env = require('hardhat');
         await this.env.run(TASK_COMPILE);
     });

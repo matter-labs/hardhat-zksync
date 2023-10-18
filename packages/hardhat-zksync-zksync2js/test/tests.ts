@@ -1,5 +1,7 @@
 import { assert } from 'chai';
 import { useEnvironment } from './helpers';
+import { Contract, ContractFactory, Wallet } from 'zksync2-js';
+import { rich_wallets } from '../src/rich-wallets';
 
 describe('Plugin tests', async function () {
 
@@ -12,6 +14,8 @@ describe('Plugin tests', async function () {
         assert.containsAllKeys(this.env.zksync2js, [
           "provider",
           "getSigners",
+          "getWallet",
+          "getWallets",
           "getImpersonatedSigner",
           "getContractFactory",
           "getContractAt",
@@ -25,78 +29,224 @@ describe('Plugin tests', async function () {
 
     describe("Provider", function () {
       it("the provider should handle requests", async function () {
-        const blockNumber = await this.env.zksync2js.provider.send("eth_blockNumber", []);
-        assert.strictEqual("0x0", blockNumber);
+        const gasPrice = await this.env.zksync2js.provider.send("eth_gasPrice", []);
+
+        assert.strictEqual("0xee6b280", gasPrice);
+      });
+      it("should return fee data", async function () {
+        const feeData = await this.env.zksync2js.provider.getFeeData();
+
+        assert.typeOf(feeData.gasPrice, "bigint");
+      });
+      it("should get the gas price", async function () {
+        const feeData = await this.env.zksync2js.provider.getFeeData();
+
+        assert.isNotNull(feeData.gasPrice);
+        assert.isTrue(feeData.gasPrice > 0);
       });
     });
 
-    describe("Signers and contracts helpers", function () {
-      describe("getSigners", function () {
-        it("should return the signers", async function () {
-          const sigs = await this.env.zksync2js.getSigners();
-          assert.strictEqual(
-            await sigs[0].getAddress(),
-            "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049"
-          );
-        });
-        it("should expose the address synchronously", async function () {
-          const sigs = await this.env.zksync2js.getSigners();
-          assert.strictEqual(
-            sigs[0].address,
-            "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049"
-          );
-        });
+    describe("getSigners", function () {
+      it("should return the signers", async function () {
+        const sigs = await this.env.zksync2js.getSigners();
+
+        assert.strictEqual(
+          await sigs[0].getAddress(),
+          "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049"
+        );
       });
-      describe("getImpersonatedSigner", function () {
-        it("should return the working impersonated signer", async function () {
-          const address = `0x${"ff".repeat(20)}`;
-          const impersonatedSigner =
-            await this.env.zksync2js.getImpersonatedSigner(address);
+      it("should expose the address synchronously", async function () {
+        const sigs = await this.env.zksync2js.getSigners();
 
-          assert.strictEqual(
-            impersonatedSigner.address,
-            "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
-          );
-
-        });
+        assert.strictEqual(
+          sigs[0].address,
+          "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049"
+        );
       });
-      describe("signer", function () {
-        // `signer.getBalance` is not present in ethers v6; we should re-enable
-        // this test when/if it's added back
-        it.skip("should return the balance of the account", async function () {
-          const [sig] = await this.env.zksync2js.getSigners();
-          assert.strictEqual(
-            (await sig.getBalance()).toString(),
-            "100000000000000000000"
-          );
-        });
+    });
 
-        it("should return the balance of the account", async function () {
-          // we use the second signer because the first one is used in previous tests
-          const [, secondSigner] = await this.env.zksync2js.getSigners();
-          assert.strictEqual(
-            await this.env.zksync2js.provider.getBalance(secondSigner.address),
-            1000000000000000000000000000000n
-          );
-        });
+    describe("getImpersonatedSigner", function () {
+      it("should return the working impersonated signer", async function () {
+        const address = `0x${"ff".repeat(20)}`;
+        const impersonatedSigner =
+          await this.env.zksync2js.getImpersonatedSigner(address);
 
-        it("should return the transaction count of the account", async function () {
-          // we use the second signer because the first one is used in previous tests
-          const [, secondSigner] = await this.env.zksync2js.getSigners();
-          assert.strictEqual(
-            await this.env.zksync2js.provider.getTransactionCount(secondSigner),
-            0
-          );
-        });
+        assert.strictEqual(
+          impersonatedSigner.address,
+          "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
+        );
+      });
+    });
 
-        it("should deploy with signer", async function () {
-          const [signer] = await this.env.zksync2js.getSigners();
+    describe("signer", function () {
+      it("should allow to use the estimateGas method", async function () {
+        const [sig] = await this.env.zksync2js.getSigners();
 
-          const artifact = await this.env.zksync2js.loadArtifact("Greeter");
-          const contract =  await this.env.zksync2js.deployContract(artifact, []);
-          assert.isDefined(contract);
-          assert.equal(contract.address.length, 42);
-        });
+        const Greeter = await this.env.zksync2js.getContractFactory("Greeter");
+        const tx = await Greeter.getDeployTransaction();
+
+        const result = await sig.estimateGas(tx);
+
+        assert.isTrue(result > 0n);
+      });
+      it("should return the balance of the account", async function () {
+        // we use the second signer because the first one is used in previous tests
+        const [, secondSigner] = await this.env.zksync2js.getSigners();
+
+        assert.strictEqual(
+          await this.env.zksync2js.provider.getBalance(secondSigner.address),
+          1000000000000000000000000000000n
+        );
+      });
+      it("should return the transaction count of the account", async function () {
+        // we use the second signer because the first one is used in previous tests
+        const [, secondSigner] = await this.env.zksync2js.getSigners();
+
+        assert.strictEqual(
+          await this.env.zksync2js.provider.getTransactionCount(secondSigner),
+          0
+        );
+      });
+    });
+
+    describe("wallet", function () {
+      it("get default wallet", async function () {
+        const wallet = this.env.zksync2js.getWallet();
+
+        assert.isDefined(wallet);
+        assert.equal((await wallet.getAddress()).length, 42);
+        assert.equal((await wallet.getAddress()), "0x36615Cf349d7F6344891B1e7CA7C72883F5dc049");
+      });
+      it("get specific wallet", async function () {
+        const wallet = this.env.zksync2js.getWallet(rich_wallets[6].privateKey);
+
+        assert.isDefined(wallet);
+        assert.equal((await wallet.getAddress()).length, 42);
+        assert.equal((await wallet.getAddress()), "0xbd29A1B981925B94eEc5c4F1125AF02a2Ec4d1cA");
+      });
+      it("should send a transaction", async function () {
+        const wallet = this.env.zksync2js.getWallet();
+
+        const Greeter = await this.env.zksync2js.getContractFactory("Greeter");
+        const tx = await Greeter.getDeployTransaction();
+
+        const response = await wallet.sendTransaction(tx);
+
+        const receipt = await response.wait();
+
+        if (receipt === null) {
+          assert.fail("receipt shoudn't be null");
+        }
+        assert.strictEqual(receipt.status, 1);
+      });
+      it("should deploy with wallet", async function () {
+        const artifact = await this.env.zksync2js.loadArtifact("Greeter");
+        const contract: Contract = await this.env.zksync2js.deployContract(artifact, []);
+
+        assert.isDefined(contract);
+        assert.equal((await contract.getAddress()).length, 42);
+      });
+      it("should allow to use the call method", async function () {
+        const wallet = await this.env.zksync2js.getWallet();
+
+        const Greeter = await this.env.zksync2js.getContractFactory("Greeter");
+        const tx = await Greeter.getDeployTransaction();
+
+        const result = await wallet.call(tx);
+
+        assert.isString(result);
+      });
+      it("should populate a transaction", async function () {
+        const wallet = await this.env.zksync2js.getWallet();
+
+        const Greeter = await this.env.zksync2js.getContractFactory("Greeter");
+        const tx = await Greeter.getDeployTransaction();
+
+        const populatedTransaction = await wallet.populateTransaction(tx);
+
+        assert.strictEqual(populatedTransaction.from, wallet.address);
+        assert.strictEqual(tx.type, 113);
+        assert.strictEqual(tx.to, "0x0000000000000000000000000000000000008006");
+      });
+    });
+
+    describe("getContractFactory", function () {
+      it("should return a contract factory", async function () {
+        const contract = await this.env.zksync2js.getContractFactory("Greeter");
+
+        assert.isNotNull(contract.interface.getFunction("greet"));
+
+        // non-existent functions should be null
+        assert.isNull(contract.interface.getFunction("doesntExist"));
+      });
+      it("should fail to return a contract factory for an interface", async function () {
+        try {
+          await this.env.zksync2js.getContractFactory("IGreeter");
+      } catch (err: any) {
+          assert.equal(err.message, "You are trying to create a contract factory for the contract IGreeter, which is abstract and can't be deployed.\nIf you want to call a contract using IGreeter as its interface use the \"getContractAt\" function instead.");
+      }
+      });
+      it("should return a contract factory", async function () {
+        const artifact = await this.env.zksync2js.loadArtifact("Greeter");
+        const contract = await this.env.zksync2js.getContractFactory(
+          artifact.abi,
+          artifact.bytecode
+        );
+
+        assert.isNotNull(contract.interface.getFunction("greet"));
+      });
+      it("Should be able to send txs and make calls", async function () {
+        const artifact = await this.env.zksync2js.loadArtifact("Greeter");
+
+        const Greeter: ContractFactory = await this.env.zksync2js.getContractFactory(artifact.abi, artifact.bytecode);
+        const greeter: Contract = await Greeter.deploy() as Contract;
+
+        assert.strictEqual(await greeter.greet(), "Hello, World!");
+      });
+    });
+
+    describe("getContractAt", function () {
+      let deployedGreeter: Contract;
+
+      beforeEach(async function () {
+        const Greeter = await this.env.zksync2js.getContractFactory("Greeter");
+        deployedGreeter = await Greeter.deploy() as Contract;
+      });
+      it("Should return an instance of a contract", async function () {
+        const wallet = this.env.zksync2js.getWallet();
+        const contract = await this.env.zksync2js.getContractAt(
+          "Greeter",
+          deployedGreeter.target.toString(),
+        );
+
+        assert.exists(contract.greet);
+
+        assert.strictEqual(
+          await (contract.runner as Wallet).getAddress(),
+          await wallet.getAddress()
+        );
+      });
+      it("Should return an instance of an interface", async function () {
+        const wallet = this.env.zksync2js.getWallet();
+        const contract = await this.env.zksync2js.getContractAt(
+          "IGreeter",
+          deployedGreeter.target.toString()
+        );
+
+        assert.isNotNull(contract.interface.getFunction("greet"));
+
+        assert.strictEqual(
+          await (contract.runner as Wallet).getAddress(),
+          await wallet.getAddress()
+        );
+      });
+      it("Should be able to send txs and make calls", async function () {
+        const greeter = await this.env.zksync2js.getContractAt(
+          "Greeter",
+          deployedGreeter.target.toString()
+        );
+
+        assert.strictEqual(await greeter.greet(), "Hello, World!");
       });
     });
   });
