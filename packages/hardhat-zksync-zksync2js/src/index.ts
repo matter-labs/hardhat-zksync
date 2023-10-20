@@ -1,4 +1,4 @@
-import { Provider, Signer, Wallet } from "zksync2-js"
+import { Provider, Wallet } from "zksync2-js"
 
 import { extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
