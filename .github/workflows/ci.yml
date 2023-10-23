@@ -196,7 +196,7 @@ jobs:
           yarn test
   zksync2js:
     runs-on: ubuntu-latest
-    name: deploy
+    name: zksync2js
     steps:
       - uses: actions/checkout@v2
 
@@ -227,7 +227,6 @@ jobs:
       - name: Test zksync2js example
         run: |
           cd packages/hardhat-zksync-zksync2js
-          yarn hardhat compile
           yarn test
 
       - name: Show logs
