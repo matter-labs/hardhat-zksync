@@ -13,13 +13,7 @@ import { spawn, ChildProcess } from 'child_process';
 import * as utils from '../src/utils';
 import { constructCommandArgs, getLatestRelease, getAssetToDownload, download } from '../src/utils';
 import { RPCServerDownloader } from '../src/downloader';
-import {
-    TASK_NODE_ZKSYNC,
-    PROCESS_TERMINATION_SIGNALS,
-    ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
-    MAX_PORT_ATTEMPTS,
-} from '../src/constants';
-import { Network } from 'hardhat/types';
+import { TASK_NODE_ZKSYNC, PROCESS_TERMINATION_SIGNALS } from '../src/constants';
 
 chai.use(sinonChai);
 
@@ -274,7 +268,7 @@ describe('node-zksync plugin', async function () {
                 const port = 12345; // any port for testing purposes
                 await utils.waitForNodeToBeReady(port);
 
-                expect(axios.post).to.have.been.calledWith(`http://localhost:${port}`);
+                expect(axios.post).to.have.been.calledWith(`http://127.0.0.1:${port}`);
             });
 
             it("should throw an error if the node isn't ready after maxAttempts", async () => {
@@ -282,7 +276,7 @@ describe('node-zksync plugin', async function () {
                 sinon.stub(axios, 'post').rejects(new Error('Node not ready'));
 
                 try {
-                    await utils.waitForNodeToBeReady(8080, 10);
+                    await utils.waitForNodeToBeReady(8080, 1);
                     throw new Error('Expected waitForNodeToBeReady to throw but it did not');
                 } catch (err: any) {
                     expect(err.message).to.equal("Server didn't respond after multiple attempts");

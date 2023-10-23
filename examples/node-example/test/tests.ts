@@ -1,18 +1,22 @@
 import { expect } from "chai";
-import { Contract, Wallet } from "zksync-web3";
+import { Contract, Wallet, Provider } from "zksync-web3";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
-import { ZkSyncProviderAdapter } from "@matterlabs/hardhat-zksync-node";
+import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
 import * as hre from "hardhat";
 
+const RICH_PRIVATE_KEY = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
+
 describe("Greeter", function () {
+    let provider: Provider;
     let deployer: Deployer;
     let artifact: ZkSyncArtifact;
     let contract: Contract;
 
     beforeEach(async function () {
         // Deploy the contract before each test
-        deployer = new Deployer(hre, new Wallet('0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110', (hre.network.provider as ZkSyncProviderAdapter)._zkSyncProvider));
+        provider = new Provider(hre.network.config.url);
+        deployer = new Deployer(hre, new Wallet(RICH_PRIVATE_KEY, provider));
         artifact = await deployer.loadArtifact('Greeter');
         contract = await deployer.deploy(artifact, ['Hello, world!']);
     });
