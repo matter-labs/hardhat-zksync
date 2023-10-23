@@ -1,6 +1,7 @@
-import '../../../../hardhat-zksync-solc/src/index'
-import '../../../../hardhat-zksync-deploy/src/index';
+import '@matterlabs/hardhat-zksync-solc';
+import '@matterlabs/hardhat-zksync-deploy';
 import '../../../src/index';
+
 import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
@@ -15,7 +16,7 @@ const config: HardhatUserConfig = {
         },
         zkSyncNetwork: {
             allowUnlimitedContractSize: true,
-            url: 'http://localhost:8011',
+            url: 'http://localhost:3050',
             zksync: true,
         },
         zkSyncTestnet:{
