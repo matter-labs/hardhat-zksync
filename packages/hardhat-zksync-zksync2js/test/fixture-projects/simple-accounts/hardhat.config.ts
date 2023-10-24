@@ -14,16 +14,28 @@ const config: HardhatUserConfig = {
         hardhat: {
             zksync: true,
         },
-        zkSyncNetwork: {
+        zkSyncNetworkAccounts: {
             allowUnlimitedContractSize: true,
             url: 'http://localhost:8011',
+            accounts: [
+                '0xd293c684d884d56f8d6abd64fc76757d3664904e309a0645baf8522ab6366d9e',
+                '0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3',
+            ],
             zksync: true,
         },
-        zkSyncTestnet: {
+        zkSyncNetworkMenmonic: {
             allowUnlimitedContractSize: true,
-            url: 'https://zksync2-testnet.zksync.dev',
+            url: 'http://localhost:8011',
+            accounts: {
+                mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle',
+            },
             zksync: true,
-            // verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
+        },
+        zkSyncNetworkEmptyAccounts: {
+            allowUnlimitedContractSize: true,
+            url: 'http://localhost:8011',
+            accounts: [],
+            zksync: true,
         },
     },
     solidity: {
