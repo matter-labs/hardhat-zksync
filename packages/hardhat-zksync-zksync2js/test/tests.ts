@@ -254,7 +254,7 @@ describe('Plugin tests', async function () {
 
         describe('wallets with accounts mnemonic', async function () {
             useEnvironment('simple-accounts', 'zkSyncNetworkMenmonic');
-            it.skip('get default wallet from mnemonic', async function () {
+            it('get default wallet from mnemonic', async function () {
                 const wallet = await this.env.zksync2js.getWallet();
 
                 assert.isDefined(wallet);
@@ -286,14 +286,14 @@ describe('Plugin tests', async function () {
         });
         describe('wallets with empty accounts', async function () {
             useEnvironment('simple-accounts', 'zkSyncNetworkEmptyAccounts');
-            it('get default wallet from mnemonic', async function () {
+            it('get default wallet from empty accounts', async function () {
                 try {
                     const wallet = await this.env.zksync2js.getWallet();
                 } catch (err: any) {
                     assert.equal(err.message, 'Accounts are not configured for this network');
                 }
             });
-            it('get invalid second wallet with rmpty accounts', async function () {
+            it('get invalid second wallet with empty accounts', async function () {
                 try {
                     const wallet = await this.env.zksync2js.getWallet(1);
                 } catch (err: any) {

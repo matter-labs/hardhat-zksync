@@ -3,18 +3,15 @@ import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync2-js'
 import * as ethers from 'ethers';
 
 import {
-    HardhatNetworkAccountsConfig,
-    HardhatNetworkHDAccountsConfig,
-    HardhatRuntimeEnvironment,
-    HttpNetworkAccountsConfig,
+    HardhatRuntimeEnvironment
 } from 'hardhat/types';
 
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ZkSync2JsPluginError } from './errors';
 import { rich_wallets } from './rich-wallets';
-import { isArtifact, isFactoryOptions, isHardhatNetworkAccountsConfigStrings, isHardhatNetworkHDAccountsConfig, isNumber, isString } from './utils';
-import { LOCAL_CHAIN_IDS, ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
+import { getWalletsFromAccount, isArtifact, isFactoryOptions, isNumber, isString } from './utils';
+import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
 
 export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrIndex?: string | number): Promise<Wallet> {
     const privateKey = isString(privateKeyOrIndex) ? (privateKeyOrIndex as string) : undefined;
@@ -37,37 +34,6 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     }
 
     return wallets[accountNumber || 0];
-}
-
-async function getWalletsFromAccount(
-    hre: HardhatRuntimeEnvironment,
-    accounts: HardhatNetworkAccountsConfig | HttpNetworkAccountsConfig
-): Promise<Wallet[]> {
-    if (!accounts || accounts == 'remote') {
-        const chainId = await hre.zksync2js.provider.send('eth_chainId', []);
-        if (LOCAL_CHAIN_IDS.includes(chainId)) {
-            return rich_wallets.map((wallet) => new Wallet(wallet.privateKey, hre.zksync2js.provider));
-        }
-        return [];
-    }
-
-    if (isHardhatNetworkAccountsConfigStrings(accounts)) {
-        const accountPrivateKeys = accounts as string[];
-
-        const wallets = accountPrivateKeys.map(
-            (accountPrivateKey) => new Wallet(accountPrivateKey, hre.zksync2js.provider)
-        );
-        return wallets;
-    }
-
-    if (isHardhatNetworkHDAccountsConfig(accounts)) {
-        const account = accounts as HardhatNetworkHDAccountsConfig;
-
-        const wallet = Wallet.fromMnemonic(account.mnemonic, hre.zksync2js.provider);
-        return [wallet];
-    }
-
-    return [];
 }
 
 export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet[]> {

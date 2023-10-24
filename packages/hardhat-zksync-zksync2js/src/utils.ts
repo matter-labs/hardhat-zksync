@@ -1,6 +1,8 @@
-import { HardhatNetworkHDAccountsConfig } from 'hardhat/types';
+import { HardhatNetworkAccountsConfig, HardhatNetworkHDAccountsConfig, HardhatRuntimeEnvironment, HttpNetworkAccountsConfig } from 'hardhat/types';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { Wallet } from 'zksync2-js';
+import { LOCAL_CHAIN_IDS } from './constants';
+import { rich_wallets } from './rich-wallets';
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
     return 'mnemonic' in object;
@@ -16,6 +18,37 @@ export function isString(object: any): object is string {
 
 export function isNumber(object: any): object is number {
     return typeof object === 'number';
+}
+
+export async function getWalletsFromAccount(
+    hre: HardhatRuntimeEnvironment,
+    accounts: HardhatNetworkAccountsConfig | HttpNetworkAccountsConfig
+): Promise<Wallet[]> {
+    if (!accounts || accounts == 'remote') {
+        const chainId = await hre.zksync2js.provider.send('eth_chainId', []);
+        if (LOCAL_CHAIN_IDS.includes(chainId)) {
+            return rich_wallets.map((wallet) => new Wallet(wallet.privateKey, hre.zksync2js.provider));
+        }
+        return [];
+    }
+
+    if (isHardhatNetworkAccountsConfigStrings(accounts)) {
+        const accountPrivateKeys = accounts as string[];
+
+        const wallets = accountPrivateKeys.map(
+            (accountPrivateKey) => new Wallet(accountPrivateKey, hre.zksync2js.provider)
+        );
+        return wallets;
+    }
+
+    if (isHardhatNetworkHDAccountsConfig(accounts)) {
+        const account = accounts as HardhatNetworkHDAccountsConfig;
+
+        const wallet = Wallet.fromMnemonic(account.mnemonic).connect(hre.zksync2js.provider);
+        return [wallet];
+    }
+
+    return [];
 }
 
 export function isFactoryOptions(walletOrOptions?: Wallet | FactoryOptions): walletOrOptions is FactoryOptions {
