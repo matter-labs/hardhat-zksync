@@ -41,6 +41,7 @@ export async function verify(
         contract: string;
         constructorArgsParams: any[];
         libraries: string;
+        noCompile: boolean;
     },
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
@@ -69,6 +70,7 @@ export async function verify(
         constructorArguments: constructorArguments,
         contract: args.contract,
         libraries,
+        noCompile: args.noCompile,
     });
 }
 
