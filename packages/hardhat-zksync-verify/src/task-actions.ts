@@ -41,6 +41,7 @@ export async function verify(
         contract: string;
         constructorArgsParams: any[];
         libraries: string;
+        noCompile: boolean;
     },
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
@@ -69,6 +70,7 @@ export async function verify(
         constructorArguments: constructorArguments,
         contract: args.contract,
         libraries,
+        noCompile: args.noCompile,
     });
 }
 
@@ -120,7 +122,7 @@ export async function getConstructorArguments(
 }
 
 export async function verifyContract(
-    { address, contract: contractFQN, constructorArguments, libraries }: TaskArguments,
+    { address, contract: contractFQN, constructorArguments, libraries, noCompile }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
 ): Promise<number> {
@@ -138,7 +140,9 @@ export async function verifyContract(
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
 
-    await hre.run(TASK_COMPILE, { quiet: true });
+    if (!noCompile) {
+        await hre.run(TASK_COMPILE, { quiet: true });
+    }
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
         contractFQN: contractFQN,
