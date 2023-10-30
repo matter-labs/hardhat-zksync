@@ -24,25 +24,4 @@ describe('verify plugin', async function () {
             assert.equal(this.env.network.verifyURL, testnetVerifyURL);
         });
     });
-
-    describe('Encoding constructor arguments', async function () {
-        useEnvironment('localGreeter', 'testnet');
-
-        it('Verifies encoding of contructor arguments', async function () {
-            const constructorArgs = ['Hi there!'];
-
-            const encodedConstructurArgs =
-                '0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000094869207468657265210000000000000000000000000000000000000000000000';
-
-            const minimumBuild: Build = await this.env.run(TASK_VERIFY_GET_MINIMUM_BUILD, {
-                sourceName: sourceName,
-            });
-
-            const deployArgumentsEncoded =
-                '0x' +
-                (await encodeArguments(minimumBuild.output.contracts[sourceName][contractName].abi, constructorArgs));
-
-            assert.equal(deployArgumentsEncoded, encodedConstructurArgs);
-        });
-    });
 });

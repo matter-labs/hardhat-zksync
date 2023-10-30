@@ -39,7 +39,7 @@
     "dockerode": "^3.3.4"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.0.2",
+    "@nomicfoundation/hardhat-verify": "^1.1.0",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -50,7 +50,7 @@
     "eslint-config-prettier": "8.4.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.18.1",
     "mocha": "^10.1.0",
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
@@ -58,7 +58,7 @@
     "typescript": "^4.6.2"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.0.2"
+    "@nomicfoundation/hardhat-verify": "^1.1.0"
   },
   "prettier": {
     "tabWidth": 4,
