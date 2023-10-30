@@ -1,9 +1,10 @@
+//@ts-nocheck
 import { HardhatNetworkAccountConfig, HardhatNetworkHDAccountsConfig, HardhatRuntimeEnvironment, HttpNetworkConfig, NetworkConfig } from 'hardhat/types';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
 import { MorphTsBuilder } from './morph-ts-builder';
 import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
-import { Wallet } from 'zksync-web3';
+import { Wallet } from 'zksync2-js';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
@@ -88,7 +89,7 @@ export function getWallet(hre: HardhatRuntimeEnvironment, privateKey: string, ac
 
     if(isHardhatNetworkHDAccountsConfig(accounts)) {
         const account = (accounts as HardhatNetworkHDAccountsConfig);
-        return Wallet.fromMnemonic(account.mnemonic, account.path);
+        return Wallet.fromMnemonic(account.mnemonic);
     }
 
     const account = (accounts as HardhatNetworkAccountConfig[])[accountNumber];

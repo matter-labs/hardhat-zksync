@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as ethers from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
@@ -11,10 +11,9 @@ import chalk from 'chalk';
 // for plugins/server capabilities.
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy script for the Factory contract`));
-
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
+    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
     // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
@@ -23,7 +22,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
-        amount: ethers.utils.parseEther('0.01'),
+        amount: ethers.parseEther('0.01'),
     });
     await depositHandle.wait();
 
@@ -35,7 +34,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const factoryContract = await deployer.deploy(artifact, []);
 
     // Show the contract info.
-    const contractAddress = factoryContract.address;
+    const contractAddress = await factoryContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
 
     // Call the deployed contract.

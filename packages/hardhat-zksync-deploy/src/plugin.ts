@@ -92,6 +92,7 @@ export async function deployLibraries(
     const libraryInfos = getLibraryInfos(hre);
     const allDeployedLibraries: ContractInfo[] = [];
 
+    //@ts-ignore
     hre.config.zksolc.settings.contractsToCompile = [];
 
     for (const libraryInfo of libraryInfos) {
@@ -183,9 +184,9 @@ async function deployOneLibrary(
     const contract = await deployer.deploy(artifact, []);
     console.info(chalk.green(`Deployed ${generateFullQuailfiedNameString(contractFQN)} at ${contract.address}`));
 
-    const contractInfo = {
+    const contractInfo:ContractInfo = {
         contractFQN,
-        address: contract.address
+        address: await contract.getAddress()
     };
 
     allDeployedLibraries.push(contractInfo);
