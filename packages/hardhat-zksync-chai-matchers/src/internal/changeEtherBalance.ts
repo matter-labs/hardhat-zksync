@@ -1,4 +1,4 @@
-import type { BigNumberish, ethers } from 'ethers';
+import type { ethers } from 'ethers';
 import * as zk from 'zksync2-js';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
@@ -35,7 +35,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             const derivedPromise = Promise.all([
                 getBalanceChange(subject, account, options?.balanceChangeOptions, options?.overrides),
                 getAddressOf(account),
-            ]).then(checkBalanceChange);
+            ]).then(value => checkBalanceChange(value as [bigint, string]));
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;

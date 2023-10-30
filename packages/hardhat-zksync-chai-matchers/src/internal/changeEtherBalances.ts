@@ -1,4 +1,4 @@
-import type { BigNumberish, ethers } from 'ethers';
+import type { ethers } from 'ethers';
 import * as zk from 'zksync2-js';
 import ordinal from 'ordinal';
 
@@ -69,7 +69,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
             const derivedPromise = Promise.all([
                 getBalanceChanges(subject, accounts, options?.balanceChangeOptions, options?.overrides),
                 getAddresses(accounts),
-            ]).then(checkBalanceChanges);
+            ]).then(value => checkBalanceChanges(value as [Array<bigint>, string[]]));
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;

@@ -37,7 +37,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 getBalanceChange(subject, token, account),
                 getAddressOf(account),
                 getTokenDescription(token),
-            ]).then(checkBalanceChange);
+            ]).then(value => checkBalanceChange(value as [bigint,string, string]));
 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
@@ -91,7 +91,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 balanceChangesPromise,
                 addressesPromise,
                 getTokenDescription(token),
-            ]).then(checkBalanceChanges);
+            ]).then(value => checkBalanceChanges(value as [bigint[],string[], string]));
 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
