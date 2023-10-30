@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Contract, Wallet, Provider } from "zksync-web3";
+import { Contract, Wallet, Provider } from "zksync2-js";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
