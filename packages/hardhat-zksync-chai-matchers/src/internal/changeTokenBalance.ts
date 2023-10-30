@@ -1,5 +1,4 @@
-import type { BigNumberish, BigNumber, ethers } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
@@ -7,14 +6,13 @@ import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOn
 import { Account, getAddressOf } from './misc/account';
 
 interface Token extends zk.Contract {
-    balanceOf(address: string, overrides?: any): Promise<BigNumber>;
+    balanceOf(address: string, overrides?: any): Promise<bigint>;
 }
 
 export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
         'changeTokenBalance',
-        function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
-            const { BigNumber } = require('ethers');
+        function (this: any, token: Token, account: Account | string, balanceChange: bigint) {
 
             const negated = this.__flags.negate;
 
@@ -25,11 +23,11 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 
             checkToken(token, 'changeTokenBalance');
 
-            const checkBalanceChange = ([actualChange, address, tokenDescription]: [BigNumber, string, string]) => {
+            const checkBalanceChange = ([actualChange, address, tokenDescription]: [bigint, string, string]) => {
                 const assert = buildAssert(negated, checkBalanceChange);
 
                 assert(
-                    actualChange.eq(BigNumber.from(balanceChange)),
+                    actualChange===balanceChange,
                     `Expected the balance of ${tokenDescription} tokens for "${address}" to change by ${balanceChange.toString()}, but it changed by ${actualChange.toString()}`,
                     `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`
                 );
@@ -50,9 +48,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 
     Assertion.addMethod(
         'changeTokenBalances',
-        function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: BigNumberish[]) {
-            const { BigNumber } = require('ethers');
-
+        function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: bigint[]) {
             const negated = this.__flags.negate;
 
             let subject = this._obj;
@@ -74,14 +70,14 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             const addressesPromise = Promise.all(accounts.map(getAddressOf));
 
             const checkBalanceChanges = ([actualChanges, addresses, tokenDescription]: [
-                BigNumber[],
+                bigint[],
                 string[],
                 string
             ]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
                 assert(
-                    actualChanges.every((change, ind) => change.eq(BigNumber.from(balanceChanges[ind]))),
+                    actualChanges.every((change, ind) => change===balanceChanges[ind]),
                     `Expected the balances of ${tokenDescription} tokens for ${addresses as any} to change by ${
                         balanceChanges as any
                     }, respectively, but they changed by ${actualChanges as any}`,
@@ -119,7 +115,7 @@ export async function getBalanceChange(
     account: Account | string
 ) {
     const { BigNumber } = require('ethers');
-    const provider = zk.Provider.getDefaultProvider();
+    const provider = zk.Provider.getDefaultProvider()!;
 
     const txResponse = await transaction;
 
@@ -131,11 +127,12 @@ export async function getBalanceChange(
     ensure(block.transactions.length === 1, Error, 'Multiple transactions found in block');
 
     const address = await getAddressOf(account);
+    const tokenAddress = await token.getAddress();
 
-    const balanceAfter = await provider.getBalance(address, txBlockNumber, token.address);
-    const balanceBefore = await provider.getBalance(address, txBlockNumber - 1, token.address);
+    const balanceAfter = await provider.getBalance(address as string, txBlockNumber, tokenAddress);
+    const balanceBefore = await provider.getBalance(address as string, txBlockNumber - 1, tokenAddress);
 
-    return BigNumber.from(balanceAfter).sub(balanceBefore);
+    return balanceAfter-balanceBefore;
 }
 
 let tokenDescriptionsCache: Record<string, string> = {};
@@ -145,8 +142,10 @@ let tokenDescriptionsCache: Record<string, string> = {};
  * exist, the address of the token is used.
  */
 async function getTokenDescription(token: Token): Promise<string> {
-    if (tokenDescriptionsCache[token.address] === undefined) {
-        let tokenDescription = `<token at ${token.address}>`;
+    const tokenAddress = await token.getAddress();
+
+    if (tokenDescriptionsCache[tokenAddress] === undefined) {
+        let tokenDescription = `<token at ${tokenAddress}>`;
         try {
             tokenDescription = await token.symbol();
         } catch (e) {
@@ -155,10 +154,10 @@ async function getTokenDescription(token: Token): Promise<string> {
             } catch (e2) {}
         }
 
-        tokenDescriptionsCache[token.address] = tokenDescription;
+        tokenDescriptionsCache[tokenAddress] = tokenDescription;
     }
 
-    return tokenDescriptionsCache[token.address];
+    return tokenDescriptionsCache[tokenAddress];
 }
 
 // only used by tests

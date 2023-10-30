@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { AssertionError, expect } from 'chai';
-import { BigNumber } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import util from 'util';
 
@@ -34,7 +33,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
         let mockToken: zk.Contract;
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider();
+            provider = zk.Provider.getDefaultProvider()!;
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 
@@ -143,7 +142,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it("doesn't change balance as expected - zkSync transfer", async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 2, token: await mockToken.getAddress() })
                         ).to.changeTokenBalance(mockToken, sender, 1)
                     ).to.be.rejectedWith(
                         AssertionError,
@@ -167,7 +166,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it('changes balance in the way it was not expected - zkSync transfer', async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 1, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 1, token: await mockToken.getAddress()})
                         ).to.not.changeTokenBalance(mockToken, sender, -1)
                     ).to.be.rejectedWith(
                         AssertionError,
@@ -188,7 +187,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it("the first account doesn't change its balance as expected - zkSync transfer", async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 2, token: await mockToken.getAddress() })
                         ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 2])
                     ).to.be.rejectedWith(AssertionError);
                 });
@@ -206,7 +205,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it("the second account doesn't change its balance as expected - zkSync transfer", async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 2, token: await mockToken.getAddress() })
                         ).to.changeTokenBalances(mockToken, [sender, receiver], [-2, 1])
                     ).to.be.rejectedWith(AssertionError);
                 });
@@ -224,7 +223,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it('neither account changes its balance as expected - zkSync transfer', async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 2, token:await mockToken.getAddress()})
                         ).to.changeTokenBalances(mockToken, [sender, receiver], [1, 1])
                     ).to.be.rejectedWith(AssertionError);
                 });
@@ -242,7 +241,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 it('accounts change their balance in the way it was not expected - zkSync transfer', async function () {
                     await expect(
                         expect(
-                            sender.transfer({ to: receiver.address, amount: 2, token: mockToken.address })
+                            sender.transfer({ to: receiver.address, amount: 2, token: await mockToken.getAddress()})
                         ).to.not.changeTokenBalances(mockToken, [sender, receiver], [-2, 2])
                     ).to.be.rejectedWith(AssertionError);
                 });
@@ -457,13 +456,13 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalance(
                     mockToken,
                     sender,
-                    BigInt(-50)
+                    -50
                 );
 
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalances(
                     mockToken,
                     [sender, receiver],
-                    [BigInt(-50), BigInt(50)]
+                    [-50, 50]
                 );
             });
 
@@ -471,13 +470,13 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalance(
                     mockToken,
                     sender,
-                    BigNumber.from(-50)
+                    -50
                 );
 
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalances(
                     mockToken,
                     [sender, receiver],
-                    [BigNumber.from(-50), BigNumber.from(50)]
+                    [-50,50]
                 );
             });
 
@@ -485,13 +484,13 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalances(
                     mockToken,
                     [sender, receiver],
-                    [BigInt(-50), BigNumber.from(50)]
+                    [-50, 50]
                 );
 
                 await expect(mockToken.transfer(receiver.address, 50)).to.changeTokenBalances(
                     mockToken,
                     [sender, receiver],
-                    [BigNumber.from(-50), BigInt(50)]
+                    [-50, 50]
                 );
             });
         });
@@ -554,7 +553,7 @@ async function runAllAsserts(
         | (() => Promise<zk.types.TransactionResponse>),
     token: zk.Contract,
     accounts: Array<string | zk.Wallet>,
-    balances: Array<number | bigint | BigNumber>
+    balances: Array<number | bigint>
 ) {
     await expect(expr).to.changeTokenBalances(token, accounts, balances);
     await expect(expr).to.changeTokenBalances(token, [], []);

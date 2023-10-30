@@ -1,5 +1,5 @@
 import type { BigNumberish, ethers } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
@@ -13,7 +13,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
         function (
             this: any,
             accounts: Array<Account | string>,
-            balanceChanges: BigNumberish[],
+            balanceChanges: bigint[],
             options?: {
                 balanceChangeOptions?: BalanceChangeOptions;
                 overrides?: ethers.Overrides;
@@ -28,15 +28,15 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            const checkBalanceChanges = ([actualChanges, accountAddresses]: [Array<typeof BigNumber>, string[]]) => {
+            const checkBalanceChanges = ([actualChanges, accountAddresses]: [Array<bigint>, string[]]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
                 assert(
-                    actualChanges.every((change, ind) => change.eq(BigNumber.from(balanceChanges[ind]))),
+                    actualChanges.every((change, ind) => change===(balanceChanges[ind])),
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (!change.eq(BigNumber.from(balanceChanges[i]))) {
+                            if (!(change===balanceChanges[i])) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1
@@ -51,7 +51,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (change.eq(BigNumber.from(balanceChanges[i]))) {
+                            if (change===balanceChanges[i]) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1

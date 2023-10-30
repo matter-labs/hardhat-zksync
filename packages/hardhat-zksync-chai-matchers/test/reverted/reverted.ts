@@ -1,7 +1,7 @@
 import { AssertionError, expect } from 'chai';
 import path from 'path';
 import util from 'util';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import * as ethers from 'ethers';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
@@ -31,7 +31,7 @@ describe('INTEGRATION: Reverted', function () {
         let aaDeployer: Deployer;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider();
+            provider = zk.Provider.getDefaultProvider()!;
             wallet1 = new zk.Wallet(RICH_WALLET_1_PK, provider);
             wallet2 = new zk.Wallet(RICH_WALLET_2_PK, provider);
 
@@ -192,12 +192,12 @@ describe('INTEGRATION: Reverted', function () {
                     gasLimit: gasLimit,
                     gasPrice: gasPrice,
                     chainId: (await provider.getNetwork()).chainId,
-                    nonce: await provider.getTransactionCount(aaAccount.address),
+                    nonce: await provider.getTransactionCount(await aaAccount.getAddress()),
                     type: 113,
                     customData: {
                       gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
                     } as zk.types.Eip712Meta,
-                    value: ethers.BigNumber.from(0),
+                    value: 0,
                 };
 
                 const singedTx = await wallet1.eip712.sign(aaTx);
@@ -207,7 +207,7 @@ describe('INTEGRATION: Reverted', function () {
                     customSignature: singedTx,
                 };
 
-                await expect(provider.sendTransaction(zk.utils.serialize(aaTx))).to.be.reverted;
+                await expect(provider.send(zk.utils.serializeEip712(aaTx),[])).to.be.reverted;
             });
         });
     }

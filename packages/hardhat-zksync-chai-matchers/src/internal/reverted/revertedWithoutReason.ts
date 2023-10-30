@@ -28,7 +28,7 @@ export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
             } else if (decodedReturnData.kind === 'Panic') {
                 assert(
                     false,
-                    `Expected transaction to be reverted without a reason, but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
+                    `Expected transaction to be reverted without a reason, but it reverted with panic code ${decodedReturnData.code.toString()} (${
                         decodedReturnData.description
                     })`
                 );

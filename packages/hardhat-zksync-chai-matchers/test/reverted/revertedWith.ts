@@ -1,5 +1,5 @@
 import { AssertionError, expect } from 'chai';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import util from 'util';
 
@@ -26,7 +26,7 @@ describe('INTEGRATION: Reverted with', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider();
+            provider = zk.Provider.getDefaultProvider()!;
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
             deployer = new Deployer(this.hre, wallet);

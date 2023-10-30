@@ -1,5 +1,3 @@
-import type { BigNumber } from 'ethers';
-
 import { normalizeToBigInt } from 'hardhat/common';
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
@@ -12,7 +10,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
 
         const negated = this.__flags.negate;
 
-        let expectedCode: BigNumber | undefined;
+        let expectedCode: bigint | undefined;
         try {
             if (expectedCodeArg !== undefined) {
                 const normalizedCode = normalizeToBigInt(expectedCodeArg);
@@ -24,7 +22,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             );
         }
 
-        const code: number | undefined = expectedCode as any;
+        const code: bigint | undefined = expectedCode as any;
 
         let description: string | undefined;
         let formattedPanicCode: string;
@@ -61,8 +59,8 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             } else if (decodedReturnData.kind === 'Panic') {
                 if (code !== undefined) {
                     assert(
-                        decodedReturnData.code.eq(code),
-                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
+                        decodedReturnData.code===(code),
+                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toString()} (${
                             decodedReturnData.description
                         })`,
                         `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it was`
@@ -71,7 +69,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
                     assert(
                         true,
                         undefined,
-                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
+                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toString()} (${
                             decodedReturnData.description
                         })`
                     );

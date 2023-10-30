@@ -1,4 +1,4 @@
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 
 import { Account, getAddressOf } from './account';
 
@@ -11,14 +11,13 @@ export function getAddresses(accounts: Array<Account | string>) {
 }
 
 export async function getBalances(accounts: Array<Account | string>, blockNumber?: number) {
-    const { BigNumber } = await import('ethers');
-    const provider = zk.Provider.getDefaultProvider();
+    const provider = zk.Provider.getDefaultProvider()!;
 
     return Promise.all(
         accounts.map(async (account) => {
             const address = await getAddressOf(account);
             const result = await provider.send('eth_getBalance', [address, `0x${blockNumber?.toString(16) ?? 0}`]);
-            return BigNumber.from(result);
+            return result
         })
     );
 }

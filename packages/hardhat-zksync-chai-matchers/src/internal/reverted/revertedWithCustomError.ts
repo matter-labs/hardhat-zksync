@@ -64,7 +64,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                 } else if (decodedReturnData.kind === 'Panic') {
                     assert(
                         false,
-                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
+                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with panic code ${decodedReturnData.code.toString()} (${
                             decodedReturnData.description
                         })`
                     );
