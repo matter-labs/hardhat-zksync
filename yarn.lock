@@ -7540,6 +7540,11 @@ zksync2-js@^0.2.0-beta.0:
   resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.2.0.tgz#d1f322e45710ba35de9fb664eaf9156e183cec44"
   integrity sha512-cfA2fJBkhY4QPbWNVW83j5eaPObkirFknpFi4ib/HwAttq8sRB9c+fjbjTobgN+hHuVC5qZCHpV/NuNJ+JUysg==
 
+zksync2-js@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.2.1.tgz#3b29b00c1e52d20a96aab7affbb5a8407c9d8287"
+  integrity sha512-DraRf5UysNUkAZUsc7gb6EmpuWuwYz68f94cxmREQ4K+ZASBIh5csk1WNsoNgbp2rIpVJZnkpwI88HcPWGEKZA==
+
 zksync@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.13.1.tgz#016f78f6c4079e3bdd143833f32f01d5c7c7a2c4"
