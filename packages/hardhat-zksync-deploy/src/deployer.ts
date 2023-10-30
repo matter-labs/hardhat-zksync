@@ -141,10 +141,10 @@ export class Deployer {
      *
      * @returns Calculated fee in ETH wei
      */
-    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<BigInt> {
+    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
         const gas = await this.estimateDeployGas(artifact, constructorArguments);
         const gasPrice = await this.zkWallet.provider.getGasPrice();
-        return BigInt(gas.mul(gasPrice));
+        return gas*gasPrice;
     }
 
     /**
@@ -167,7 +167,7 @@ export class Deployer {
         });
         deployTx.from = this.zkWallet.address;
 
-        return BigInt(await this.zkWallet.provider.estimateGas(deployTx));
+        return await this.zkWallet.provider.estimateGas(deployTx);
     }
 
     /**
