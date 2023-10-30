@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import { DeployProxyAdminOptions } from '../utils/options';
 import { deploy } from './deploy';
@@ -9,13 +9,14 @@ import assert from 'assert';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 export interface DeployAdminFunction {
-    (wallet?: zk.Wallet, opts?: DeployProxyAdminOptions): Promise<string>;
+(wallet?: zk.Wallet, opts?: DeployProxyAdminOptions): Promise<string>;
 }
 
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
         const adminFactory = await getAdminFactory(hre, wallet);
-        return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);
+        const adminAddress = await wallet.getAddress();
+        return await fetchOrDeployAdmin(wallet.provider, async() => deploy(adminFactory), opts);
     };
 }
 

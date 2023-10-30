@@ -7,7 +7,7 @@ import {
     DeployBeaconProxyKindError,
 } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-general';
@@ -46,7 +46,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         args: unknown[] | DeployBeaconProxyOptions = [],
         opts: DeployBeaconProxyOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<zk.Contract> {
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
@@ -72,7 +72,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             throw new DeployBeaconProxyUnsupportedError(beaconAddress);
         }
 
-        const data = getInitializerData(attachTo.interface, args, opts.initializer);
+        const data = getInitializerData(attachTo.interface as any, args, opts.initializer);
 
         if (await manifest.getAdmin()) {
             if (!quiet) {
@@ -107,7 +107,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
 
         await manifest.addProxy(proxyDeployment);
 
-        const inst = attachTo.attach(proxyDeployment.address);
+        const inst = attachTo.attach(proxyDeployment.address) as zk.Contract;
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = proxyDeployment.deployTransaction;
         return inst;

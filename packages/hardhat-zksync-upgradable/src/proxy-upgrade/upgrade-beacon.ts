@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
@@ -52,7 +52,7 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
             wallet
         );
 
-        const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress);
+        const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress) as zk.Contract;
         const upgradeTx = await beaconContract.upgradeTo(nextImpl);
 
         // @ts-ignore Won't be readonly because beaconContract was created through attach.

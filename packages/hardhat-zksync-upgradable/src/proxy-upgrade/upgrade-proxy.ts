@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
-import { TransactionResponse } from 'zksync-web3/src/types';
+import * as zk from 'zksync2-js';
+import { TransactionResponse } from 'zksync2-js/src/types';
 import path from 'path';
 import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
 
@@ -30,7 +30,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         newImplementationArtifact,
         opts: UpgradeProxyOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<zk.Contract> {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
 
@@ -49,7 +49,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
         }
 
-        const inst = newImplementationFactory.attach(proxyAddress);
+        const inst = newImplementationFactory.attach(proxyAddress) as zk.Contract;
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = upgradeTx;
         return inst;
@@ -73,7 +73,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
                 transparentUpgradeableProxyContract.bytecode,
                 wallet
             );
-            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
+            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress) as zk.Contract;
 
             return (nextImpl, call) => (call ? proxy.upgradeToAndCall(nextImpl, call) : proxy.upgradeTo(nextImpl));
         } else {
@@ -91,10 +91,10 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
                 wallet
             );
 
-            const admin = proxyAdminFactory.attach(adminAddress);
+            const admin = proxyAdminFactory.attach(adminAddress) as zk.Contract;
             const manifestAdmin = await manifest.getAdmin();
 
-            if (admin.address !== manifestAdmin?.address) {
+            if (await admin.getAddress() !== manifestAdmin?.address) {
                 throw new Error('Proxy admin is not the one registered in the network manifest');
             }
 

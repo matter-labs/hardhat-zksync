@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import chalk from 'chalk';
 import path from 'path';
 import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
@@ -26,13 +26,12 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         args: unknown[] | DeployProxyOptions = [],
         opts: DeployProxyOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<zk.Contract> {
         if (!Array.isArray(args)) {
             opts = args;
             args = [];
         }
         opts.provider = wallet.provider;
-
         const manifest = await Manifest.forNetwork(wallet.provider);
 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
@@ -42,7 +41,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         }
 
         const contractInterface = factory.interface;
-        const data = getInitializerData(contractInterface, args, opts.initializer);
+        const data = getInitializerData(contractInterface as any, args, opts.initializer);
 
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
@@ -101,7 +100,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         }
 
         await manifest.addProxy(proxyDeployment);
-        const inst = factory.attach(proxyDeployment.address);
+        const inst = factory.attach(proxyDeployment.address) as zk.Contract;
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = proxyDeployment.deployTransaction;
         return inst;
