@@ -24,6 +24,8 @@ async function main() {
     console.info(chalk.green('Successfully upgraded BoxUups to BoxUupsV2'));
 
     upgradedBox.connect(zkWallet);
+    // wait some time before the next call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const value = await upgradedBox.retrieve();
     console.info(chalk.cyan('BoxUups value is', value));
 }

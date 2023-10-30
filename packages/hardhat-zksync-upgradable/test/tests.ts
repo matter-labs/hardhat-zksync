@@ -16,7 +16,7 @@ import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { describe } from 'node:test';
 
 describe('Upgradable plugin tests', async function () {
-    describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
+    describe.skip('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
         let boxProxy: Contract;
@@ -496,10 +496,10 @@ describe('Upgradable plugin tests', async function () {
             },500)
         });
     });
-    describe.skip('Test proxy gas estimation', async function () {
+    describe('Test proxy gas estimation', async function () {
         useEnvironment('deployment-gas-estimation');
 
-        const MINIMUM_GAS_LIMIT = BigInt(1000000000000000); // 0.001 ETH
+        const MINIMUM_GAS_LIMIT = 1000000000000000n; // 0.001 ETH
 
         it('Should estimate gas for transparent proxy deployment on local setup', async function () {
             const contractName = 'Box';

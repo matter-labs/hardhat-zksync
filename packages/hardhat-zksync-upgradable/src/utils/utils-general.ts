@@ -137,6 +137,6 @@ export function extendCompilerOutputSelection(compiler: SolcConfig) {
     }
 }
 
-export function convertGasPriceToEth(gasPrice: BigInt): string {
+export function convertGasPriceToEth(gasPrice: bigint): string {
     return ethers.formatEther(gasPrice.toString());
 }

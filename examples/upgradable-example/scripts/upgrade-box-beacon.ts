@@ -31,7 +31,7 @@ async function main() {
         deployer.zkWallet,
         deployer.deploymentType
     );
-    const upgradedBox = await attachTo.attach(await boxBeaconProxy.getAddress()) as zk.Contract;
+    const upgradedBox =  attachTo.attach(await boxBeaconProxy.getAddress()) as zk.Contract;
 
     upgradedBox.connect(zkWallet);
     // wait some time before the next call

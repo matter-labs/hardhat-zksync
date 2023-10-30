@@ -22,7 +22,7 @@ export interface EstimateGasFunction {
         args?: DeployProxyOptions[],
         opts?: DeployProxyOptions,
         quiet?: boolean
-    ): Promise<BigInt>;
+    ): Promise<bigint>;
 }
 
 async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
@@ -83,11 +83,11 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
         opts: DeployProxyOptions = {},
         quiet = false
     ) {
-        let beaconGasCost:BigInt = BigInt(0);
+        let beaconGasCost:bigint = 0n;
 
         const { mockedBeaconAddress } = await getMockedBeaconData(deployer, hre, args, opts);
 
-        const implGasCost:BigInt = await deployer.estimateDeployFee(artifact, []);
+        const implGasCost:bigint = await deployer.estimateDeployFee(artifact, []);
         if (!quiet) {
             console.info(
                 chalk.cyan(
@@ -115,12 +115,12 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
                     )
                 );
                 console.info(
-                    chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(BigInt(implGasCost.toString()) + BigInt(beaconGasCost.toString()))} ETH`)
+                    chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost + beaconGasCost)} ETH`)
                 );
             }
         } catch (error: any) {
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
         }
-        return BigInt(beaconGasCost.toString())+BigInt(implGasCost.toString());
+        return beaconGasCost+implGasCost;
     };
 }
