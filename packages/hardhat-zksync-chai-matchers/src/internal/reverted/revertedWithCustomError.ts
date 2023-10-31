@@ -6,13 +6,14 @@ import { buildAssert, Ssfi } from '@nomicfoundation/hardhat-chai-matchers/utils'
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
 import { toBeHex } from 'ethers';
+import { assertIsNotNull } from '../utils';
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = 'customErrorAssertionCalled';
 
 interface CustomErrorAssertionData {
-    contractInterface: any;
+    contractInterface: EthersT.Interface;
     returnData: string;
-    customError: CustomError;
+    customError: EthersT.ErrorFragment;
 }
 
 export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, utils: Chai.ChaiUtils) {
@@ -21,23 +22,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
         function (this: any, contract:EthersT.BaseContract, expectedCustomErrorName: string) {
             const negated = this.__flags.negate;
 
-            if (typeof contract === 'string' || contract?.interface === undefined) {
-                throw new TypeError(
-                    'The first argument of .revertedWithCustomError must be the contract that defines the custom error'
-                );
-            }
-
-            if (typeof expectedCustomErrorName !== 'string') {
-                throw new TypeError('Expected the custom error name to be a string');
-            }
-
-            const iface: any = contract.interface;
-
-            const expectedCustomError = iface.getError(expectedCustomErrorName);
-
-            if (expectedCustomError === undefined) {
-                throw new Error(`The given contract doesn't have a custom error named '${expectedCustomErrorName}'`);
-            }
+            const {iface,expectedCustomError} = validateInput(this._obj,contract,expectedCustomErrorName)
 
             const onSuccess = () => {
                 const assert = buildAssert(negated, onSuccess);
@@ -118,7 +103,6 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
-            console.info(this)
             return this;
         }
     );
@@ -142,10 +126,12 @@ export async function revertedWithCustomErrorWithArgs(
 
     const { contractInterface, customError, returnData } = customErrorAssertionData;
 
-    const errorFragment = contractInterface.getError[customError.name];
+    const errorFragment = contractInterface.getError(customError.name);
+    assertIsNotNull(errorFragment, "errorFragment");
     // We transform ether's Array-like object into an actual array as it's safer
-    const actualArgs = Array.from<any>(contractInterface.decodeErrorResult(errorFragment, returnData));
-
+    const actualArgs = resultToArray(
+        contractInterface.decodeErrorResult(errorFragment, returnData)
+      );
     new Assertion(actualArgs).to.have.same.length(
         expectedArgs.length,
         `expected ${expectedArgs.length} args but got ${actualArgs.length}`
@@ -223,3 +209,52 @@ function findCustomErrorById(iface: any, id: string): CustomError | undefined {
         signature: customErrorEntry[0],
     };
 }
+
+function validateInput(
+    obj: any,
+    contract: EthersT.BaseContract,
+    expectedCustomErrorName: string
+  ): { iface: EthersT.Interface; expectedCustomError: EthersT.ErrorFragment } {
+    try {
+      // check the case where users forget to pass the contract as the first
+      // argument
+      if (typeof contract === "string" || contract?.interface === undefined) {
+        // discard subject since it could potentially be a rejected promise
+        throw new TypeError(
+          "The first argument of .revertedWithCustomError must be the contract that defines the custom error"
+        );
+      }
+  
+      // validate custom error name
+      if (typeof expectedCustomErrorName !== "string") {
+        throw new TypeError("Expected the custom error name to be a string");
+      }
+  
+      const iface = contract.interface;
+      const expectedCustomError = iface.getError(expectedCustomErrorName);
+  
+      // check that interface contains the given custom error
+      if (expectedCustomError === null) {
+        throw new Error(
+          `The given contract doesn't have a custom error named '${expectedCustomErrorName}'`
+        );
+      }
+  
+      return { iface, expectedCustomError };
+    } catch (e) {
+      // if the input validation fails, we discard the subject since it could
+      // potentially be a rejected promise
+      Promise.resolve(obj).catch(() => {});
+      throw e;
+    }
+  }
+
+  export function resultToArray(result: EthersT.Result): any[] {
+    return result
+      .toArray()
+      .map((x) =>
+        typeof x === "object" && x !== null && "toArray" in x
+          ? resultToArray(x)
+          : x
+      );
+  }

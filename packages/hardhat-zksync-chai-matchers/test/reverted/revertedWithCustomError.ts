@@ -13,7 +13,7 @@ import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
-describe.only('INTEGRATION: Reverted with custom error', function () {
+describe('INTEGRATION: Reverted with custom error', function () {
     describe('with the local setup', function () {
         useEnvironmentWithLocalSetup('hardhat-project');
 
@@ -313,7 +313,7 @@ describe.only('INTEGRATION: Reverted with custom error', function () {
                 );
             });
 
-            it.only("the contract doesn't have a custom error with that name", async function () {
+            it("the contract doesn't have a custom error with that name", async function () {
                 expect(() =>
                     expect(matchers.revertWithSomeCustomError()).to.be.revertedWithCustomError(
                         matchers,
@@ -321,6 +321,7 @@ describe.only('INTEGRATION: Reverted with custom error', function () {
                     )
                 ).to.throw(Error, "The given contract doesn't have a custom error named 'SomeCustmError'");
             });
+            
         });
 
         describe('stack traces', function () {

@@ -15,6 +15,8 @@ import richWallets from './rich-wallets.json';
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { describe } from 'node:test';
 
+
+
 describe('Upgradable plugin tests', async function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
