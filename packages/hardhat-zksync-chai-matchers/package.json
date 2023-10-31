@@ -40,7 +40,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "~1.0.4",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -64,6 +64,6 @@
     "@openzeppelin/contracts": "^4.8.3"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "~1.0.4"
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2"
   }
 }

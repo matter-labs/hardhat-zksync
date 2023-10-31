@@ -9,6 +9,7 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_1_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 const RICH_WALLET_2_PK = '0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3';
@@ -31,13 +32,14 @@ describe('INTEGRATION: Reverted', function () {
         let aaDeployer: Deployer;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider()!;
+            const hre = await import("hardhat");
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet1 = new zk.Wallet(RICH_WALLET_1_PK, provider);
             wallet2 = new zk.Wallet(RICH_WALLET_2_PK, provider);
 
             deployer = new Deployer(this.hre, wallet1);
             artifact = await deployer.loadArtifact('Matchers');
-            matchers = await deployer.deploy(artifact);
+            matchers = await deployer.deploy(artifact) as zk.Contract;
 
             aaDeployer = new Deployer(this.hre, wallet1, 'createAccount');
             artifact = await deployer.loadArtifact("TwoUserMultisig");
@@ -181,7 +183,8 @@ describe('INTEGRATION: Reverted', function () {
 
         describe('calling abstraction account', function () {
             it('successfuly reverts', async function () {
-                let aaTx = await matchers.populateTransaction.succeeds();
+                //TODO::Check
+                let aaTx = await matchers.succeeds();
 
                 const gasLimit = await provider.estimateGas(aaTx);
                 const gasPrice = await provider.getGasPrice();

@@ -8,6 +8,8 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { useEnvironmentWithLocalSetup } from './helpers';
 import '../src/internal/add-chai-matchers';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { HDNodeWallet } from 'ethers';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -20,7 +22,7 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
 
     function runTests() {
         let sender: zk.Wallet;
-        let receiver: zk.Wallet;
+        let receiver: HDNodeWallet;
         let provider: zk.Provider;
         let deployer: Deployer;
         let artifact: ZkSyncArtifact;
@@ -31,7 +33,8 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
         let overrides: {};
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider()!;
+            const hre = await import("hardhat");
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 

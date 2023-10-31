@@ -1,4 +1,4 @@
-import type { ethers } from 'ethers';
+import { toBigInt, type BigNumberish, type ethers } from 'ethers';
 import * as zk from 'zksync2-js';
 import ordinal from 'ordinal';
 
@@ -13,7 +13,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
         function (
             this: any,
             accounts: Array<Account | string>,
-            balanceChanges: bigint[],
+            balanceChanges: BigNumberish[],
             options?: {
                 balanceChangeOptions?: BalanceChangeOptions;
                 overrides?: ethers.Overrides;
@@ -103,18 +103,16 @@ async function getTxFees(
     options?: BalanceChangeOptions,
     overrides?: ethers.Overrides
 ) {
-    const { BigNumber } = require('ethers');
-    const provider = zk.Provider.getDefaultProvider();
 
     return Promise.all(
         accounts.map(async (account) => {
             if (options?.includeFee !== true && (await getAddressOf(account)) === txResponse.from) {
                 const txReceipt = await txResponse.wait();
                 const gasPrice = overrides?.maxFeePerGas
-                    ? BigNumber.from(overrides?.maxFeePerGas)
-                    : txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
+                    ? (overrides?.maxFeePerGas)
+                    : txReceipt.gasPrice ?? txResponse.gasPrice;
                 const gasUsed = txReceipt.gasUsed;
-                const txFee = gasPrice.mul(gasUsed);
+                const txFee = toBigInt(gasPrice)*gasUsed;
 
                 return txFee;
             }

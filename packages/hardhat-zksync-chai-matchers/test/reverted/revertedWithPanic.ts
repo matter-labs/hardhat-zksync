@@ -9,6 +9,7 @@ import { PANIC_CODES } from '@nomicfoundation/hardhat-chai-matchers/internal/rev
 
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -27,7 +28,8 @@ describe('INTEGRATION: Reverted with panic', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider()!;
+            const hre = await import("hardhat");
+            const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
             deployer = new Deployer(this.hre, wallet);

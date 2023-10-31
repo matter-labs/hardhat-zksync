@@ -4,10 +4,19 @@ import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
 import { Account, getAddressOf } from './misc/account';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { BaseContract, BaseContractMethod, BigNumberish, ContractTransactionResponse } from 'ethers';
 
-interface Token extends zk.Contract {
-    balanceOf(address: string, overrides?: any): Promise<bigint>;
-}
+export type Token = BaseContract & {
+    balanceOf: BaseContractMethod<[string], bigint, bigint>;
+    name: BaseContractMethod<[], string, string>;
+    transfer: BaseContractMethod<
+      [string, BigNumberish],
+      boolean,
+      ContractTransactionResponse
+    >;
+    symbol: BaseContractMethod<[], string, string>;
+  };
 
 export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
@@ -114,8 +123,8 @@ export async function getBalanceChange(
     token: Token,
     account: Account | string
 ) {
-    const { BigNumber } = require('ethers');
-    const provider = zk.Provider.getDefaultProvider()!;
+    const hre = await import("hardhat");
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     const txResponse = await transaction;
 

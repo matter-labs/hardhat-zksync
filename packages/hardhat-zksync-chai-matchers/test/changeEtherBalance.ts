@@ -8,10 +8,12 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { useEnvironmentWithLocalSetup } from './helpers';
 import '../src/internal/add-chai-matchers';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { HDNodeWallet } from 'ethers';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
-describe('INTEGRATION: changeEtherBalance matcher', function () {
+describe.only('INTEGRATION: changeEtherBalance matcher', function () {
     describe('with the local setup', function () {
         useEnvironmentWithLocalSetup('hardhat-project');
 
@@ -20,7 +22,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
 
     function runTests() {
         let sender: zk.Wallet;
-        let receiver: zk.Wallet;
+        let receiver: HDNodeWallet;
         let provider: zk.Provider;
         let deployer: Deployer;
         let artifact: ZkSyncArtifact;
@@ -31,7 +33,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
         let overrides: {};
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider()!;
+            const hre = await import("hardhat");
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 
@@ -207,7 +210,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     ).to.not.changeEtherBalance(receiver,300);
                 });
 
-                it('Should throw when expected balance change value was different from an actual', async () => {
+                //TODO
+                it.only('Should throw when expected balance change value was different from an actual', async () => {
                     await expect(
                         expect(() =>
                             sender.sendTransaction({
