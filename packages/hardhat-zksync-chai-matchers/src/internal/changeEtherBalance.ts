@@ -36,7 +36,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             const derivedPromise = Promise.all([
                 getBalanceChange(subject, account, options?.balanceChangeOptions, options?.overrides),
                 getAddressOf(account),
-            ]).then(value => checkBalanceChange(value as [bigint, string]));
+            ]).then(checkBalanceChange);
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;

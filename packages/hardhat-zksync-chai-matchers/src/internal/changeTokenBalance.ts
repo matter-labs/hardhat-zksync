@@ -5,9 +5,9 @@ import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOn
 
 import { Account, getAddressOf } from './misc/account';
 import { HttpNetworkConfig } from 'hardhat/types';
-import { BaseContract, BaseContractMethod, BigNumberish, ContractTransactionResponse } from 'ethers';
+import { BaseContract, BaseContractMethod, BigNumberish, ContractTransactionResponse, toBigInt } from 'ethers';
 
-export type Token = BaseContract & {
+export type Token = zk.Contract & {
     balanceOf: BaseContractMethod<[string], bigint, bigint>;
     name: BaseContractMethod<[], string, string>;
     transfer: BaseContractMethod<
@@ -16,12 +16,12 @@ export type Token = BaseContract & {
       ContractTransactionResponse
     >;
     symbol: BaseContractMethod<[], string, string>;
-  };
+};
 
 export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
         'changeTokenBalance',
-        function (this: any, token: Token, account: Account | string, balanceChange: bigint) {
+        function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
 
             const negated = this.__flags.negate;
 
@@ -36,7 +36,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 const assert = buildAssert(negated, checkBalanceChange);
 
                 assert(
-                    actualChange===balanceChange,
+                    actualChange === toBigInt(balanceChange),
                     `Expected the balance of ${tokenDescription} tokens for "${address}" to change by ${balanceChange.toString()}, but it changed by ${actualChange.toString()}`,
                     `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`
                 );
@@ -57,7 +57,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 
     Assertion.addMethod(
         'changeTokenBalances',
-        function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: bigint[]) {
+        function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: BigNumberish[]) {
             const negated = this.__flags.negate;
 
             let subject = this._obj;
@@ -86,7 +86,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
                 assert(
-                    actualChanges.every((change, ind) => change===balanceChanges[ind]),
+                    actualChanges.every((change, ind) => change === toBigInt(balanceChanges[ind])),
                     `Expected the balances of ${tokenDescription} tokens for ${addresses as any} to change by ${
                         balanceChanges as any
                     }, respectively, but they changed by ${actualChanges as any}`,
@@ -100,7 +100,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 balanceChangesPromise,
                 addressesPromise,
                 getTokenDescription(token),
-            ]).then(value => checkBalanceChanges(value as [bigint[],string[], string]));
+            ]).then(checkBalanceChanges);
 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
@@ -111,9 +111,9 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 }
 
 function checkToken(token: unknown, method: string) {
-    if (typeof token !== 'object' || token === null || !('functions' in token)) {
+    if (typeof token !== 'object' || token === null || !('interface' in token)) {
         throw new Error(`The first argument of ${method} must be the contract instance of the token`);
-    } else if ((token as any).functions.balanceOf === undefined) {
+    } else if ((token as any).interface.getFunction("balanceOf") === null) {
         throw new Error('The given contract instance is not an ERC20 token');
     }
 }
@@ -141,7 +141,7 @@ export async function getBalanceChange(
     const balanceAfter = await provider.getBalance(address as string, txBlockNumber, tokenAddress);
     const balanceBefore = await provider.getBalance(address as string, txBlockNumber - 1, tokenAddress);
 
-    return balanceAfter-balanceBefore;
+    return balanceAfter - balanceBefore;
 }
 
 let tokenDescriptionsCache: Record<string, string> = {};

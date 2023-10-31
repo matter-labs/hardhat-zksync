@@ -19,8 +19,6 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                 overrides?: ethers.Overrides;
             }
         ) {
-            const { BigNumber } = require('ethers');
-
             const negated = this.__flags.negate;
 
             let subject = this._obj;
@@ -28,15 +26,15 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            const checkBalanceChanges = ([actualChanges, accountAddresses]: [Array<bigint>, string[]]) => {
+            const checkBalanceChanges = ([actualChanges, accountAddresses]: [bigint[], string[]]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
                 assert(
-                    actualChanges.every((change, ind) => change===(balanceChanges[ind])),
+                    actualChanges.every((change, ind) => change === toBigInt(balanceChanges[ind])),
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (!(change===balanceChanges[i])) {
+                            if (!(change === toBigInt(balanceChanges[i]))) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1
@@ -51,7 +49,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (change===balanceChanges[i]) {
+                            if (change === toBigInt(balanceChanges[i])) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1
@@ -69,7 +67,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
             const derivedPromise = Promise.all([
                 getBalanceChanges(subject, accounts, options?.balanceChangeOptions, options?.overrides),
                 getAddresses(accounts),
-            ]).then(value => checkBalanceChanges(value as [Array<bigint>, string[]]));
+            ]).then(checkBalanceChanges);
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;
@@ -94,7 +92,7 @@ export async function getBalanceChanges(
 
     const txFees = await getTxFees(accounts, txResponse, options, overrides);
 
-    return balancesAfter.map((balance, ind) => balance.add(txFees[ind]).sub(balancesBefore[ind]));
+    return balancesAfter.map((balance, ind) => balance + txFees[ind] - balancesBefore[ind]);
 }
 
 async function getTxFees(
@@ -117,7 +115,7 @@ async function getTxFees(
                 return txFee;
             }
 
-            return 0;
+            return toBigInt(0);
         })
     );
 }

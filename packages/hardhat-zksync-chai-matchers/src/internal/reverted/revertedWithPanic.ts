@@ -3,18 +3,16 @@ import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/i
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { toBeHex } from 'ethers';
 
 export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod('revertedWithPanic', function (this: any, expectedCodeArg: any) {
-        const ethers = require('ethers');
-
         const negated = this.__flags.negate;
 
         let expectedCode: bigint | undefined;
         try {
             if (expectedCodeArg !== undefined) {
-                const normalizedCode = normalizeToBigInt(expectedCodeArg);
-                expectedCode = ethers.BigNumber.from(normalizedCode);
+                expectedCode = normalizeToBigInt(expectedCodeArg);
             }
         } catch {
             throw new TypeError(
@@ -22,16 +20,16 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             );
         }
 
-        const code: bigint | undefined = expectedCode as any;
+        const code: bigint | undefined = expectedCode;
 
         let description: string | undefined;
         let formattedPanicCode: string;
         if (code === undefined) {
             formattedPanicCode = 'some panic code';
         } else {
-            const codeBN = ethers.BigNumber.from(code);
+            const codeBN = code;
             description = panicErrorCodeToReason(codeBN) ?? 'unknown panic code';
-            formattedPanicCode = `panic code ${codeBN.toHexString()} (${description})`;
+            formattedPanicCode = `panic code ${toBeHex(codeBN)} (${description})`;
         }
 
         const onSuccess = () => {
@@ -60,7 +58,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
                 if (code !== undefined) {
                     assert(
                         decodedReturnData.code===(code),
-                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toString()} (${
+                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                             decodedReturnData.description
                         })`,
                         `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it was`
@@ -69,7 +67,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
                     assert(
                         true,
                         undefined,
-                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${decodedReturnData.code.toString()} (${
+                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                             decodedReturnData.description
                         })`
                     );

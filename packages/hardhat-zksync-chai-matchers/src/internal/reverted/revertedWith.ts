@@ -1,6 +1,7 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { toBeHex } from 'ethers';
 
 export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod('revertedWith', function (this: any, expectedReason: unknown) {
@@ -36,7 +37,7 @@ export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
             } else if (decodedReturnData.kind === 'Panic') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted with panic code ${decodedReturnData.code.toString()} (${
+                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                         decodedReturnData.description
                     })`
                 );

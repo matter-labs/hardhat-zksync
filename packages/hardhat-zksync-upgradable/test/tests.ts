@@ -16,7 +16,7 @@ import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { describe } from 'node:test';
 
 describe('Upgradable plugin tests', async function () {
-    describe.skip('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
+    describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
         let boxProxy: Contract;
@@ -78,7 +78,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test UUPS proxy deployment and upgrade functionalities', async function () {
+    describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
         useEnvironment('uups-e2e');
 
         let boxUupsProxy: Contract;
@@ -191,7 +191,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test beacon proxy deployment and upgrade functionalities', async function () {
+    describe('Test beacon proxy deployment and upgrade functionalities', async function () {
         useEnvironment('beacon-e2e');
 
         let beaconImplementation: Contract;
@@ -252,7 +252,7 @@ describe('Upgradable plugin tests', async function () {
             },500)
         });
     });
-    describe.skip('Test upgradable contracts admin functionalities', async function () {
+    describe('Test upgradable contracts admin functionalities', async function () {
         useEnvironment('admin');
         const provider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
 
@@ -394,7 +394,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test storage layout validations', async function () {
+    describe('Test storage layout validations', async function () {
         useEnvironment('storage-layout-validations');
 
         let boxProxy: Contract;

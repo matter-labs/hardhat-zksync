@@ -1,3 +1,5 @@
+import type EthersT from "ethers";
+
 import { AssertionError } from 'chai';
 
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
@@ -12,25 +14,27 @@ const PANIC_CODE_PREFIX = '0x4e487b71';
 
 export function getReturnDataFromError(error: any): string {
     if (!(error instanceof Error)) {
-        throw new AssertionError('Expected an Error object');
+      throw new AssertionError("Expected an Error object");
     }
-
+  
     // cast to any again so we don't have to cast it every time we access
     // some property that doesn't exist on Error
     error = error as any;
-
-    let returnData = error.data ?? error.error?.error?.error?.data;
-
-    if (returnData === undefined || typeof returnData !== 'string') {
-        returnData = error.error?.data ?? error.error?.error?.data;
-
-        if (returnData === undefined || typeof returnData !== 'string') {
-            throw error;
-        }
+  
+    const errorData = error.data ?? error.error?.data;
+  
+    if (errorData === undefined) {
+      throw error;
     }
-
+  
+    const returnData = typeof errorData === "string" ? errorData : errorData.data;
+  
+    if (returnData === undefined || typeof returnData !== "string") {
+      throw error;
+    }
+  
     return returnData;
-}
+  }
 
 type DecodedReturnData =
     | {
@@ -57,7 +61,8 @@ type FuncSelectorWithData = {
 };
 
 export function decodeReturnData(returnData: string): DecodedReturnData {
-    const { defaultAbiCoder: abi } = require("@ethersproject/abi");
+    const { AbiCoder } = require("ethers") as typeof EthersT;
+    const abi = new AbiCoder();
     if (returnData === "0x") {
         return { kind: "Empty" };
     } else if (returnData.startsWith(ERROR_STRING_PREFIX)) {

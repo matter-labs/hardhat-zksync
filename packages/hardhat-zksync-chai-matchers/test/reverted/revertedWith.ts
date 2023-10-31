@@ -28,7 +28,7 @@ describe('INTEGRATION: Reverted with', function () {
 
         beforeEach('deploy matchers contract', async function () {
             const hre = await import("hardhat");
-            const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
             deployer = new Deployer(this.hre, wallet);

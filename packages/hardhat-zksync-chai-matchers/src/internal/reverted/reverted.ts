@@ -3,6 +3,7 @@ import * as zk from 'zksync2-js';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
 import { HttpNetworkConfig } from 'hardhat/types';
+import { toBeHex } from 'ethers';
 
 export function supportReverted(Assertion: Chai.AssertionStatic) {
     Assertion.addProperty('reverted', function (this: any) {
@@ -65,7 +66,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
                 assert(
                     true,
                     undefined,
-                    `Expected transaction NOT to be reverted, but it reverted with panic code ${decodedReturnData.code.toString()} (${
+                    `Expected transaction NOT to be reverted, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                         decodedReturnData.description
                     })`
                 );

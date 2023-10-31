@@ -1,8 +1,11 @@
+import type EthersT from 'ethers'
+
 import { AssertionError } from 'chai';
 
 import { buildAssert, Ssfi } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { toBeHex } from 'ethers';
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = 'customErrorAssertionCalled';
 
@@ -15,7 +18,7 @@ interface CustomErrorAssertionData {
 export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, utils: Chai.ChaiUtils) {
     Assertion.addMethod(
         'revertedWithCustomError',
-        function (this: any, contract: any, expectedCustomErrorName: string) {
+        function (this: any, contract:EthersT.BaseContract, expectedCustomErrorName: string) {
             const negated = this.__flags.negate;
 
             if (typeof contract === 'string' || contract?.interface === undefined) {
@@ -30,7 +33,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
 
             const iface: any = contract.interface;
 
-            const expectedCustomError = findCustomErrorByName(iface, expectedCustomErrorName);
+            const expectedCustomError = iface.getError(expectedCustomErrorName);
 
             if (expectedCustomError === undefined) {
                 throw new Error(`The given contract doesn't have a custom error named '${expectedCustomErrorName}'`);
@@ -46,6 +49,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             };
 
             const onError = (error: any) => {
+
                 const assert = buildAssert(negated, onError);
 
                 const returnData = getReturnDataFromError(error);
@@ -64,12 +68,12 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                 } else if (decodedReturnData.kind === 'Panic') {
                     assert(
                         false,
-                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with panic code ${decodedReturnData.code.toString()} (${
+                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                             decodedReturnData.description
                         })`
                     );
                 } else if (decodedReturnData.kind === 'Custom') {
-                    if (decodedReturnData.id === expectedCustomError.id) {
+                    if (decodedReturnData.id === expectedCustomError.selector) {
                         // add flag with the data needed for .withArgs
                         const customErrorAssertionData: CustomErrorAssertionData = {
                             contractInterface: iface,
@@ -86,14 +90,14 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                     } else {
                         // try to decode the actual custom error
                         // this will only work when the error comes from the given contract
-                        const actualCustomError = findCustomErrorById(iface, decodedReturnData.id);
-
-                        if (actualCustomError === undefined) {
+                        const actualCustomError = iface.getError(decodedReturnData.id);
+                        
+                        if (actualCustomError === null) {
                             assert(
                                 false,
                                 `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with a different custom error`
-                            );
-                        } else {
+                                );
+                            } else {
                             assert(
                                 false,
                                 `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with custom error '${actualCustomError.name}'`
@@ -114,6 +118,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
+            console.info(this)
             return this;
         }
     );
@@ -137,7 +142,7 @@ export async function revertedWithCustomErrorWithArgs(
 
     const { contractInterface, customError, returnData } = customErrorAssertionData;
 
-    const errorFragment = contractInterface.errors[customError.signature];
+    const errorFragment = contractInterface.getError[customError.name];
     // We transform ether's Array-like object into an actual array as it's safer
     const actualArgs = Array.from<any>(contractInterface.decodeErrorResult(errorFragment, returnData));
 

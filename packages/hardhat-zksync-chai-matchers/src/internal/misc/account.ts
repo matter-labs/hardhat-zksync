@@ -8,13 +8,12 @@ export function isWalletOrContract(account: Account): account is Contract | Wall
     return account instanceof zk.Contract || account instanceof zk.Wallet;
 }
 
-export async function getAddressOf(account: Account | string) {
+export async function getAddressOf(account: Account | string):Promise<string> {
     if (typeof account === 'string') {
         assert(/^0x[0-9a-fA-F]{40}$/.test(account), `Invalid address ${account}`);
         return account;
-    } else if (isWalletOrContract(account)) {
-        return account.address?account.address:await account.getAddress();
     } else {
         return await account.getAddress();
     }
+    //TODO: Raise an error when cannot obtain address
 }

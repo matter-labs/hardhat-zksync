@@ -7,7 +7,7 @@ import util from 'util';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
-import { clearTokenDescriptionsCache } from '../src/internal/changeTokenBalance';
+import { Token, clearTokenDescriptionsCache } from '../src/internal/changeTokenBalance';
 import { useEnvironmentWithLocalSetup } from './helpers';
 import '../src/internal/add-chai-matchers';
 import { HttpNetworkConfig } from 'hardhat/types';
@@ -295,9 +295,9 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                     50
                 );
 
-                const receiverBalanceChange = (await mockToken.balanceOf(receiver.address)).sub(receiverBalanceBefore);
+                const receiverBalanceChange = (await mockToken.balanceOf(receiver.address)) - (receiverBalanceBefore);
 
-                expect(receiverBalanceChange.toNumber()).to.equal(50);
+                expect(receiverBalanceChange).to.equal(50);
             });
 
             it("changeTokenBalances shouldn't run the transaction twice", async function () {
@@ -309,9 +309,9 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                     [-50, 50]
                 );
 
-                const receiverBalanceChange = (await mockToken.balanceOf(receiver.address)).sub(receiverBalanceBefore);
+                const receiverBalanceChange = (await mockToken.balanceOf(receiver.address)) - (receiverBalanceBefore);
 
-                expect(receiverBalanceChange.toNumber()).to.equal(50);
+                expect(receiverBalanceChange).to.equal(50);
             });
 
             it('negated', async function () {
