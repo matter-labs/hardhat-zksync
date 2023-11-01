@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 0.2.1
+
+### Patch Changes
+
+- 64f5de0: Add noCompile flag to the contract verification script to not recompile the contracts before sending verification request
+
 ## 0.2.0
 
 ### Minor Changes
