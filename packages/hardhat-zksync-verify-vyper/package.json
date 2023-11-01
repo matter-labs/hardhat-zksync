@@ -38,7 +38,7 @@
     "chalk": "4.1.2"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-vyper": "^3.0.3",
+    "@nomiclabs/hardhat-vyper": "^3.0.4",
     "@matterlabs/hardhat-zksync-vyper": "^0.2.0",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.7",
