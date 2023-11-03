@@ -1,7 +1,7 @@
 {
   "name": "@matterlabs/hardhat-zksync-zksync2js",
   "version": "0.0.1-beta.0",
-  "description": "Hardhat plugin for integration with zksync2.js library",
+  "description": "Hardhat plugin for integration with zksync2-js library",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-zksync2js",
   "author": "Matter Labs",
@@ -56,7 +56,7 @@
     "rimraf": "^5.0.5",
     "sinon": "^9.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "~5.0.0",
+    "typescript": "^5.1.6",
     "zksync2-js": "^0.2.2",
     "@typechain/ethers-v6": "^0.5.0",
     "rlp": "3.0.0",
