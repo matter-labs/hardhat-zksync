@@ -108,8 +108,8 @@ describe('Plugin tests', async function () {
                 const populatedTransaction = await wallet.populateTransaction(tx);
 
                 assert.strictEqual(populatedTransaction.from, wallet.address);
-                assert.strictEqual(tx.type, 113);
-                assert.strictEqual(tx.to, '0x0000000000000000000000000000000000008006');
+                assert.strictEqual(populatedTransaction.type, 113);
+                assert.strictEqual(populatedTransaction.to, '0x0000000000000000000000000000000000008006');
             });
             it('should allow to use the estimateGas method', async function () {
                 const [wallet] = await this.env.zksync2js.getWallets();
@@ -170,7 +170,7 @@ describe('Plugin tests', async function () {
                     artifact.abi,
                     artifact.bytecode
                 );
-                const greeter: Contract = (await Greeter.deploy()) as Contract;
+                const greeter: Contract = (await Greeter.deploy());
 
                 assert.strictEqual(await greeter.greet(), 'Hello, World!');
             });
@@ -181,7 +181,7 @@ describe('Plugin tests', async function () {
 
             beforeEach(async function () {
                 const Greeter = await this.env.zksync2js.getContractFactory('Greeter');
-                deployedGreeter = (await Greeter.deploy()) as Contract;
+                deployedGreeter = (await Greeter.deploy());
             });
             it('Should return an instance of a contract', async function () {
                 const wallet = await this.env.zksync2js.getWallet();

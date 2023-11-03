@@ -63,7 +63,7 @@ export async function getContractFactory(
     hre: HardhatRuntimeEnvironment,
     name: string,
     walletOrOption?: Wallet | FactoryOptions
-): Promise<ContractFactory>;
+): Promise<ContractFactory<any[], Contract>>;
 
 export async function getContractFactory(
     hre: HardhatRuntimeEnvironment,
@@ -71,7 +71,7 @@ export async function getContractFactory(
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory>;
+): Promise<ContractFactory<any[], Contract>>;
 
 export async function getContractFactory(
     hre: HardhatRuntimeEnvironment,
@@ -79,7 +79,7 @@ export async function getContractFactory(
     bytecodeOrFactoryOptions?: (Wallet | FactoryOptions) | ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory> {
+): Promise<ContractFactory<any[], Contract>> {
     if (typeof nameOrAbi === 'string') {
         const artifact = await loadArtifact(hre, nameOrAbi);
 
@@ -105,7 +105,7 @@ export async function getContractFactoryFromArtifact(
     artifact: ZkSyncArtifact,
     walletOrOptions?: Wallet | FactoryOptions,
     deploymentType?: DeploymentType
-): Promise<ContractFactory> {
+): Promise<ContractFactory<any[], Contract>> {
     let wallet: Wallet | undefined;
 
     if (!isArtifact(artifact)) {
@@ -136,12 +136,12 @@ async function getContractFactoryByAbiAndBytecode(
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory> {
+): Promise<ContractFactory<any[], Contract>> {
     if (!wallet) {
         wallet = await getWallet(hre);
     }
 
-    return new ContractFactory(abi, bytecode, wallet, deploymentType);
+    return new ContractFactory<any[], Contract>(abi, bytecode, wallet, deploymentType);
 }
 
 export async function getContractAt(
@@ -204,7 +204,7 @@ export async function deployContract(
         wallet = await getWallet(hre);
     }
 
-    const factory = new ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    const factory = await getContractFactoryFromArtifact(hre, artifact, wallet);
 
     const baseDeps = await extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
@@ -224,7 +224,7 @@ export async function deployContract(
 
     await contract.waitForDeployment();
 
-    return contract as Contract;
+    return contract;
 }
 
 export async function loadArtifact(

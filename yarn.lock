@@ -836,7 +836,7 @@
     semver "^7.5.4"
 
 "@matterlabs/hardhat-zksync-zksync2js@link:packages/hardhat-zksync-zksync2js":
-  version "0.0.1-alpha.1"
+  version "0.0.1-beta.0"
   dependencies:
     chalk "5.3.0"
 
@@ -7535,15 +7535,10 @@ zksync-web3@^0.14.3:
   resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.14.3.tgz#64ac2a16d597464c3fc4ae07447a8007631c57c9"
   integrity sha512-hT72th4AnqyLW1d5Jlv8N2B/qhEnl2NePK2A3org7tAa24niem/UAaHMkEvmWI3SF9waYUPtqAtjpf+yvQ9zvQ==
 
-zksync2-js@^0.2.0-beta.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.2.0.tgz#d1f322e45710ba35de9fb664eaf9156e183cec44"
-  integrity sha512-cfA2fJBkhY4QPbWNVW83j5eaPObkirFknpFi4ib/HwAttq8sRB9c+fjbjTobgN+hHuVC5qZCHpV/NuNJ+JUysg==
-
-zksync2-js@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.2.1.tgz#3b29b00c1e52d20a96aab7affbb5a8407c9d8287"
-  integrity sha512-DraRf5UysNUkAZUsc7gb6EmpuWuwYz68f94cxmREQ4K+ZASBIh5csk1WNsoNgbp2rIpVJZnkpwI88HcPWGEKZA==
+zksync2-js@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.2.2.tgz#d673661a6ddf933d1f17c119e82111a111f05793"
+  integrity sha512-4DUZZI2Hk8tOBCUbdwwZvI+BEszCwN6C06bN1zm3N1/+wqIMVu0q64PtWzoTX0VZmC11UOz3yrXTeNUNjj9xww==
 
 zksync@^0.13.1:
   version "0.13.1"
