@@ -1,6 +1,5 @@
 import { AssertionError, expect } from 'chai';
-import { BigNumber } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import util from 'util';
 
@@ -10,6 +9,7 @@ import { anyUint, anyValue } from '@nomicfoundation/hardhat-chai-matchers/intern
 
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -28,7 +28,8 @@ describe('INTEGRATION: Reverted with custom error', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import("hardhat");
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
             deployer = new Deployer(this.hre, wallet);
@@ -250,20 +251,6 @@ describe('INTEGRATION: Reverted with custom error', function () {
                 );
             });
 
-            it('should work with bigints and bignumbers', async function () {
-                await expect(matchers.revertWithCustomErrorWithUint(1))
-                    .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')
-                    .withArgs(BigInt(1));
-
-                await expect(matchers.revertWithCustomErrorWithUint(1))
-                    .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')
-                    .withArgs(BigNumber.from(1));
-
-                await expect(matchers.revertWithCustomErrorWithPair(1, 2))
-                    .to.be.revertedWithCustomError(matchers, 'CustomErrorWithPair')
-                    .withArgs([BigInt(1), BigNumber.from(2)]);
-            });
-
             it('should work with predicates', async function () {
                 await expect(matchers.revertWithCustomErrorWithUint(1))
                     .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')
@@ -319,6 +306,7 @@ describe('INTEGRATION: Reverted with custom error', function () {
                     )
                 ).to.throw(Error, "The given contract doesn't have a custom error named 'SomeCustmError'");
             });
+            
         });
 
         describe('stack traces', function () {

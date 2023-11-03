@@ -1,6 +1,6 @@
 import { EthereumProvider } from 'hardhat/types';
 import { EventEmitter } from 'events';
-import { Provider } from 'zksync-web3';
+import { Provider } from 'zksync2-js';
 
 export class ZkSyncProviderAdapter extends EventEmitter implements EthereumProvider {
     constructor(public readonly _zkSyncProvider: Provider) {

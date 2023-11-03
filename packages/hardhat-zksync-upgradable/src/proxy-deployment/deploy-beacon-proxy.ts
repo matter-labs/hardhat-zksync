@@ -7,7 +7,7 @@ import {
     DeployBeaconProxyKindError,
 } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-general';
@@ -38,7 +38,7 @@ export interface DeployBeaconProxyFunction {
     ): Promise<zk.Contract>;
 }
 
-export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction {
+export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction  {
     return async function deployBeaconProxy(
         wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
@@ -47,7 +47,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         opts: DeployBeaconProxyOptions = {},
         quiet: boolean = false
     ) {
-        const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+        const attachTo = new zk.ContractFactory<any[],zk.Contract>(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
             throw new ZkSyncUpgradablePluginError(
@@ -91,7 +91,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         assert(beaconProxyPath, 'Beacon proxy artifact not found');
         const beaconProxyContract = await import(beaconProxyPath);
 
-        const beaconProxyFactory = new zk.ContractFactory(
+        const beaconProxyFactory = new zk.ContractFactory<any[],zk.Contract>(
             beaconProxyContract.abi,
             beaconProxyContract.bytecode,
             wallet

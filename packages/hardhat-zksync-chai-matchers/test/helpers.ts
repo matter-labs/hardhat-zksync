@@ -50,7 +50,7 @@ export async function runSuccessfulAsserts({
     await successfulAssert(matchers[method](...args));
     await successfulAssert(matchers[`${method}View`](...args));
     // await successfulAssert(matchers.estimateGas[method](...args));
-    await successfulAssert(matchers.callStatic[method](...args));
+    await successfulAssert(matchers[method].staticCall(...args));
 }
 
 /**
@@ -78,7 +78,7 @@ export async function runFailedAsserts({
     // await expect(
     //   failedAssert(matchers.estimateGas[method](...args))
     // ).to.be.rejectedWith(AssertionError, failedAssertReason);
-    await expect(failedAssert(matchers.callStatic[method](...args))).to.be.rejectedWith(
+    await expect(failedAssert(matchers[method].staticCall(...args))).to.be.rejectedWith(
         AssertionError,
         failedAssertReason
     );

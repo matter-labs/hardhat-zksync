@@ -1,5 +1,5 @@
 import type { FunctionDefinition, TypeName, VariableDeclaration } from 'solidity-ast';
-import { ASTDereferencer } from '@openzeppelin/upgrades-core/dist/ast-dereferencer';
+import { ASTDereferencer } from 'solidity-ast/utils';
 import assert from 'assert';
 
 function serializeParameterType(parameter: VariableDeclaration, deref: ASTDereferencer): string {

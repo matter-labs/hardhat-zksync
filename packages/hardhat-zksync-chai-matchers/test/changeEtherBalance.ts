@@ -1,6 +1,5 @@
 import { expect, AssertionError } from 'chai';
-import { BigNumber } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import path from 'path';
 import util from 'util';
 
@@ -9,6 +8,8 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { useEnvironmentWithLocalSetup } from './helpers';
 import '../src/internal/add-chai-matchers';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { HDNodeWallet } from 'ethers';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -21,7 +22,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
 
     function runTests() {
         let sender: zk.Wallet;
-        let receiver: zk.Wallet;
+        let receiver: HDNodeWallet;
         let provider: zk.Provider;
         let deployer: Deployer;
         let artifact: ZkSyncArtifact;
@@ -32,7 +33,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
         let overrides: {};
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import("hardhat");
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 
@@ -86,7 +88,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigInt('-200'));
+                    ).to.changeEtherBalance(sender, '-200');
                 });
 
                 it('Should pass when given a native bigint - zkSync transfer', async () => {
@@ -95,7 +97,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigInt('-200'));
+                    ).to.changeEtherBalance(sender, -200);
                 });
 
                 it('Should pass when given an ethers BigNumber', async () => {
@@ -104,7 +106,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from('-200'));
+                    ).to.changeEtherBalance(sender,-200);
                 });
 
                 it('Should pass when given an ethers BigNumber - zkSync transfer', async () => {
@@ -113,7 +115,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from('-200'));
+                    ).to.changeEtherBalance(sender, -200);
                 });
 
                 it('Should pass when expected balance change is passed as int and is equal to an actual', async () => {
@@ -178,7 +180,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200));
+                    ).to.changeEtherBalance(receiver,200);
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual - zkSync tranfer', async () => {
@@ -187,7 +189,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200));
+                    ).to.changeEtherBalance(receiver,200);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual', async () => {
@@ -196,7 +198,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver,300);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual - zkSync transfer', async () => {
@@ -205,7 +207,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver,300);
                 });
 
                 it('Should throw when expected balance change value was different from an actual', async () => {
@@ -215,7 +217,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                                 to: receiver.address,
                                 value: 200,
                             })
-                        ).to.changeEtherBalance(sender, '-500')
+                        ).to.changeEtherBalance(sender, -500)
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
                         `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
@@ -287,11 +289,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         })
                     ).to.changeEtherBalance(sender, -200);
 
-                    const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address))-(
                         receiverBalanceBefore
                     );
 
-                    expect(receiverBalanceChange.toNumber()).to.equal(200);
+                    expect(receiverBalanceChange).to.equal(200);
                 });
 
                 it("shouldn't run the transaction twice - zkSync transfer", async function () {
@@ -304,11 +306,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         })
                     ).to.changeEtherBalance(sender, -200);
 
-                    const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address))-(
                         receiverBalanceBefore
                     );
 
-                    expect(receiverBalanceChange.toNumber()).to.equal(200);
+                    expect(receiverBalanceChange).to.equal(200);
                 });
             });
 
@@ -316,7 +318,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual', async () => {
                     await expect(async () =>
                         sender.sendTransaction({
-                            to: contract.address,
+                            to: await contract.getAddress(),
                             value: 200,
                         })
                     ).to.changeEtherBalance(contract, 200);
@@ -325,7 +327,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual - zkSync transfer', async () => {
                     await expect(async () =>
                         sender.transfer({
-                            to: contract.address,
+                            to:await contract.getAddress(),
                             amount: 200,
                         })
                     ).to.changeEtherBalance(contract, 200);
@@ -425,7 +427,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides });
+                    ).to.changeEtherBalance(receiver, 200, { overrides });
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual - zkSync transfer', async () => {
@@ -434,7 +436,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides });
+                    ).to.changeEtherBalance(receiver, 200, { overrides });
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual', async () => {
@@ -444,7 +446,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             value: 200,
                             ...overrides,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides });
+                    ).to.not.changeEtherBalance(receiver, 300, { overrides });
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual - zkSync transfer', async () => {
@@ -454,7 +456,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             amount: 200,
                             overrides,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides });
+                    ).to.not.changeEtherBalance(receiver,300, { overrides });
                 });
 
                 it('Should throw when expected balance change value was different from an actual', async () => {
@@ -522,7 +524,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual', async () => {
                     await expect(async () =>
                         sender.sendTransaction({
-                            to: contract.address,
+                            to: await contract.getAddress(),
                             value: 200,
                             ...overrides,
                         })
@@ -532,7 +534,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual - zkSync transfer', async () => {
                     await expect(async () =>
                         sender.transfer({
-                            to: contract.address,
+                            to: await contract.getAddress(),
                             amount: 200,
                             overrides,
                         })
@@ -560,9 +562,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     })
                 ).to.changeEtherBalance(sender, -200, { overrides });
 
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(receiverBalanceBefore);
+                const receiverBalanceChange = (await provider.getBalance(receiver.address))-(receiverBalanceBefore);
 
-                expect(receiverBalanceChange.toNumber()).to.equal(200);
+                expect(receiverBalanceChange).to.equal(200);
             });
 
             it("shouldn't run the transaction twice - zkSync transfer", async function () {
@@ -576,9 +578,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     })
                 ).to.changeEtherBalance(sender, -200, { overrides });
 
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(receiverBalanceBefore);
+                const receiverBalanceChange = (await provider.getBalance(receiver.address))-(receiverBalanceBefore);
 
-                expect(receiverBalanceChange.toNumber()).to.equal(200);
+                expect(receiverBalanceChange).to.equal(200);
             });
         });
 
@@ -626,7 +628,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from(-200));
+                    ).to.changeEtherBalance(sender, -200);
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual - zkSync transfer', async () => {
@@ -635,7 +637,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from(-200));
+                    ).to.changeEtherBalance(sender,-200);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual', async () => {
@@ -644,7 +646,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver, 300);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual - zkSync transfer', async () => {
@@ -653,7 +655,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver,300);
                 });
 
                 it('Should throw when expected balance change value was different from an actual', async () => {
@@ -717,7 +719,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual', async () => {
                     await expect(
                         await sender.sendTransaction({
-                            to: contract.address,
+                            to: await contract.getAddress(),
                             value: 200,
                         })
                     ).to.changeEtherBalance(contract, 200);
@@ -726,7 +728,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 it('Should pass when expected balance change is passed as int and is equal to an actual - zkSync transfer', async () => {
                     await expect(
                         await sender.transfer({
-                            to: contract.address,
+                            to: await contract.getAddress(),
                             amount: 200,
                         })
                     ).to.changeEtherBalance(contract, 200);
@@ -778,7 +780,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from(-200));
+                    ).to.changeEtherBalance(sender, -200);
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual - zkSync transfer', async () => {
@@ -787,7 +789,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.changeEtherBalance(sender, BigNumber.from(-200));
+                    ).to.changeEtherBalance(sender, -200);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual', async () => {
@@ -796,7 +798,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             value: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver, 300);
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual - zkSync transfer', async () => {
@@ -805,7 +807,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             to: receiver.address,
                             amount: 200,
                         })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
+                    ).to.not.changeEtherBalance(receiver,300);
                 });
 
                 it('Should throw when expected balance change value was different from an actual', async () => {

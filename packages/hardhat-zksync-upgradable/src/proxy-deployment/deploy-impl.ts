@@ -7,7 +7,7 @@ import {
     Version,
 } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
@@ -16,7 +16,7 @@ import { readValidations } from '../validations/validations';
 
 import { deploy } from './deploy';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
-import { TransactionResponse } from 'zksync-web3/src/types';
+import { TransactionResponse } from 'zksync2-js/src/types';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
 
@@ -68,12 +68,12 @@ async function deployImpl(
         deployData.version,
         deployData.provider,
         async () => {
-            const abi = factory.interface.format(FORMAT_TYPE_MINIMAL) as string[];
+            const abi = factory.interface.format(FORMAT_TYPE_MINIMAL==='minimal') as string[];
             const attemptDeploy = async () => {
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const deployed = await deploy(factory, deployData.fullOpts.constructorArgs);
+                    const deployed = await deploy(factory,...deployData.fullOpts.constructorArgs);
 
                     return deployed;
                 }

@@ -10,7 +10,7 @@ import {
 
 import { Manifest, ManifestData, ImplDeployment } from './manifest';
 import assert from 'assert';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { getChainId } from './provider';
 
 interface ManifestLens<T> {

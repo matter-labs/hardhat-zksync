@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
-import { TransactionResponse } from 'zksync-web3/src/types';
+import * as zk from 'zksync2-js';
+import { TransactionResponse } from 'zksync2-js/src/types';
 import path from 'path';
 import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
 
@@ -30,11 +30,11 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         newImplementationArtifact,
         opts: UpgradeProxyOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<zk.Contract> {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
 
-        const newImplementationFactory = new zk.ContractFactory(
+        const newImplementationFactory = new zk.ContractFactory<any[],zk.Contract>(
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
             wallet
@@ -68,7 +68,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
             const transparentUpgradeableProxyContract = await import(TUPPath);
 
-            const transparentUpgradeableProxyFactory = new zk.ContractFactory(
+            const transparentUpgradeableProxyFactory = new zk.ContractFactory<any[],zk.Contract>(
                 transparentUpgradeableProxyContract.abi,
                 transparentUpgradeableProxyContract.bytecode,
                 wallet
@@ -85,7 +85,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             assert(proxyAdminPath, 'Proxy admin artifact not found');
             const proxyAdminContract = await import(proxyAdminPath);
 
-            const proxyAdminFactory = new zk.ContractFactory(
+            const proxyAdminFactory = new zk.ContractFactory<any[],zk.Contract>(
                 proxyAdminContract.abi,
                 proxyAdminContract.bytecode,
                 wallet
@@ -94,7 +94,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             const admin = proxyAdminFactory.attach(adminAddress);
             const manifestAdmin = await manifest.getAdmin();
 
-            if (admin.address !== manifestAdmin?.address) {
+            if (await admin.getAddress() !== manifestAdmin?.address) {
                 throw new Error('Proxy admin is not the one registered in the network manifest');
             }
 
