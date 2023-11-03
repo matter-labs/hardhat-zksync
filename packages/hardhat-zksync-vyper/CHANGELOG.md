@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 1.0.0
+
+### Major Changes
+
+- dfa0ac2: Hardhat version updates
+
 ## 0.2.2
 
 ### Patch Changes

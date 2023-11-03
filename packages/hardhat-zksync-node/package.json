@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-node",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1",
   "description": "Hardhat plugin to run zkSync era-test-node locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
@@ -32,7 +32,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "0.4.2",
+    "@matterlabs/hardhat-zksync-solc": "1.0.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
     "fs-extra": "^11.1.1",
