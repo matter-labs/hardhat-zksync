@@ -102,7 +102,7 @@ jobs:
 
       - name: Test upgradable example
         run: |
-          cd examples/upgradeable-example
+          cd examples/upgradable-example
           yarn hardhat compile
           yarn hardhat run scripts/deploy-box-beacon.ts 
           yarn hardhat run scripts/deploy-box-proxy.ts 
