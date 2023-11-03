@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.0.0
+
+### Major Changes
+
+- b3b175b: Hardhat version updates
+
 ## 0.2.1
 
 ### Patch Changes
