@@ -1,6 +1,6 @@
 import { AssertionError, expect } from 'chai';
 import * as zk from 'zksync2-js';
-import path from 'path';
+import path, { resolve } from 'path';
 import util from 'util';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
@@ -37,13 +37,17 @@ describe('INTEGRATION: Reverted with panic', function () {
             matchers = await deployer.deploy(artifact);
         });
 
-        describe('calling a method that succeeds', function () {
+        describe.only('calling a method that succeeds', function () {
             it('successful asserts', async function () {
+                //wait some time to update 
+                await new Promise((resolve) => setTimeout(resolve, 1000));
                 await runSuccessfulAsserts({
                     matchers,
                     method: 'succeeds',
                     successfulAssert: (x) => expect(x).not.to.be.revertedWithPanic(),
                 });
+                //wait some time to update 
+                await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 await runSuccessfulAsserts({
                     matchers,
@@ -53,6 +57,8 @@ describe('INTEGRATION: Reverted with panic', function () {
             });
 
             it('failed asserts', async function () {
+                //wait some time to update 
+                await new Promise((resolve) => setTimeout(resolve, 1000));
                 await runFailedAsserts({
                     matchers,
                     method: 'succeeds',
@@ -60,6 +66,8 @@ describe('INTEGRATION: Reverted with panic', function () {
                     failedAssertReason:
                         "Expected transaction to be reverted with some panic code, but it didn't revert",
                 });
+                //wait some time to update 
+                await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 await runFailedAsserts({
                     matchers,

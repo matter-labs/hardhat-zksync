@@ -524,11 +524,11 @@ describe('Upgradable plugin tests', async function () {
                 true
             );
 
-            const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
+            let box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
                 kind: 'uups',
             });
-            await box.waitForDeployment();
+           await box.waitForDeployment();
 
             const newBalance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
 

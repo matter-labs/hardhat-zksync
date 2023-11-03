@@ -4,38 +4,6 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
-const waitForTransaction = async (txHash: string, provider: zk.Provider) => {
-    const INTERVAL = 1000;
-    const MAX_ATTEMPTS = 60;
-
-    let attempts = 0;
-
-    return new Promise((resolve, reject) => {
-        const interval = setInterval(async () => {
-            try {
-                attempts++;
-
-                if (attempts > MAX_ATTEMPTS) {
-                    clearInterval(interval);
-                    reject(new Error('Transaction was not committed within the expected time frame.'));
-                    return;
-                }
-
-                const txStatus = await provider.getTransactionStatus(txHash);
-                console.log(`Transaction status is: ${txStatus}`); // For logging
-
-                if (txStatus === 'committed') {
-                    clearInterval(interval);
-                    resolve(txStatus);
-                }
-            } catch (error) {
-                clearInterval(interval);
-                reject(error);
-            }
-        }, INTERVAL);
-    });
-};
-
 export default async function (hre: HardhatRuntimeEnvironment) {
     //return;
     console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
@@ -82,8 +50,8 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     ).wait();
 
     const newGreeting = 'Hello!';
-    let aaTx = await greeterContract.setGreeting(newGreeting);
-
+    let aaTx = await greeterContract.setGreeting.populateTransaction(newGreeting);
+    aaTx.from = await owner2.getAddress();
     const gasLimit = await provider.estimateGas(aaTx);
     const gasPrice = await provider.getGasPrice();
 
@@ -117,10 +85,10 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.log(`The multisig's nonce before the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
 
     const serialized = zk.utils.serializeEip712(aaTx)
-    const txHash = await provider.send("eth_sendRawTransaction", [serialized])
-
-    await waitForTransaction(txHash,provider);
-
+   
+    const tx = await provider.broadcastTransaction(serialized);
+    await tx.wait();
+    
     console.log(`The multisig's nonce after the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
     const greetingFromContract = await greeterContract.greet();
     if (greetingFromContract === newGreeting) {

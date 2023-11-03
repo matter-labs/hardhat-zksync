@@ -766,7 +766,7 @@
   version "0.2.1"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "0.4.1"
-    "@nomicfoundation/hardhat-verify" "^1.0.2"
+    "@nomicfoundation/hardhat-verify" "^2.0.0"
     axios "^1.4.0"
     chalk "4.1.2"
     dockerode "^3.3.4"
@@ -995,10 +995,10 @@
     deep-eql "^4.0.1"
     ordinal "^1.0.3"
 
-"@nomicfoundation/hardhat-verify@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-verify/-/hardhat-verify-1.0.2.tgz#f84b9dfcb9478ed9cd1b360b6d12b7f4d8872881"
-  integrity sha512-IBEWGY9EtXhVTChTmA83m/Nd9VZ/u/bCU2SZkF6c01QbQB7qcimzY1V35hiFcpJLVZ39rV8J2rmedVdfXB+99w==
+"@nomicfoundation/hardhat-verify@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-verify/-/hardhat-verify-2.0.0.tgz#aa5b26827b67e3b82dae595167b32979c527fc39"
+  integrity sha512-DlzeYWcPtcD82AD1wSsmjPjrbuESSKlY5XMvUYnr5YMQc81yGUc++U3M7ghHo0JSnZEUhXq+hDc8/HkpOZ6h8A==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@ethersproject/address" "^5.0.2"

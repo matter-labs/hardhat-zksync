@@ -187,14 +187,14 @@ export class Deployer {
         constructorArguments: any[] = [],
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[]
-    ): Promise<ethers.Contract> {
+    ): Promise<zk.Contract> {
         const baseDeps = await this.extractFactoryDeps(artifact);
         const additionalDeps = additionalFactoryDeps
             ? additionalFactoryDeps.map((val) => ethers.hexlify(val))
             : [];
         const factoryDeps = [...baseDeps, ...additionalDeps];
 
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
+        const factory = new zk.ContractFactory<any[],zk.Contract>(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
         const { customData, ..._overrides } = overrides ?? {};
 
         // Encode and send the deploy transaction providing factory dependencies.
@@ -208,7 +208,7 @@ export class Deployer {
         });
         await contract.waitForDeployment();
         
-        return contract as ethers.Contract;
+        return contract;
     }
 
     /**

@@ -32,6 +32,5 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
 
     after('Resetting hardhat', function () {
         resetHardhatContext();
-        this.env=require('hardhat')
     });
 }

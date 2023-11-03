@@ -15,7 +15,7 @@ export interface DeployAdminFunction {
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
         const adminFactory = await getAdminFactory(hre, wallet);
-        return await fetchOrDeployAdmin(wallet.provider, async() => deploy(adminFactory), opts);
+        return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);
     };
 }
 

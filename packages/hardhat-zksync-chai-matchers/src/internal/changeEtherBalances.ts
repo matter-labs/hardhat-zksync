@@ -115,7 +115,7 @@ async function getTxFees(
                 return txFee;
             }
 
-            return toBigInt(0);
+            return 0n
         })
     );
 }

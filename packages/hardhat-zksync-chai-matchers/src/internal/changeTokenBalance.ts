@@ -46,7 +46,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 getBalanceChange(subject, token, account),
                 getAddressOf(account),
                 getTokenDescription(token),
-            ]).then(value => checkBalanceChange(value as [bigint,string, string]));
+            ]).then(checkBalanceChange);
 
             this.then = derivedPromise.then.bind(derivedPromise);
             this.catch = derivedPromise.catch.bind(derivedPromise);
@@ -138,8 +138,8 @@ export async function getBalanceChange(
     const address = await getAddressOf(account);
     const tokenAddress = await token.getAddress();
 
-    const balanceAfter = await provider.getBalance(address as string, txBlockNumber, tokenAddress);
-    const balanceBefore = await provider.getBalance(address as string, txBlockNumber - 1, tokenAddress);
+    const balanceAfter = await provider.getBalance(address, txBlockNumber, tokenAddress);
+    const balanceBefore = await provider.getBalance(address, txBlockNumber - 1, tokenAddress);
 
     return balanceAfter - balanceBefore;
 }

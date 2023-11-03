@@ -38,7 +38,7 @@ export interface DeployBeaconProxyFunction {
     ): Promise<zk.Contract>;
 }
 
-export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment) {
+export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction  {
     return async function deployBeaconProxy(
         wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
@@ -47,7 +47,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment) {
         opts: DeployBeaconProxyOptions = {},
         quiet: boolean = false
     ) {
-        const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+        const attachTo = new zk.ContractFactory<any[],zk.Contract>(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
             throw new ZkSyncUpgradablePluginError(
@@ -72,7 +72,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment) {
             throw new DeployBeaconProxyUnsupportedError(beaconAddress);
         }
 
-        const data = getInitializerData(attachTo.interface as any, args, opts.initializer);
+        const data = getInitializerData(attachTo.interface, args, opts.initializer);
 
         if (await manifest.getAdmin()) {
             if (!quiet) {
@@ -91,7 +91,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment) {
         assert(beaconProxyPath, 'Beacon proxy artifact not found');
         const beaconProxyContract = await import(beaconProxyPath);
 
-        const beaconProxyFactory = new zk.ContractFactory(
+        const beaconProxyFactory = new zk.ContractFactory<any[],zk.Contract>(
             beaconProxyContract.abi,
             beaconProxyContract.bytecode,
             wallet
