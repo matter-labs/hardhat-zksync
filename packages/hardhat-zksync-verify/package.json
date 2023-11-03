@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-verify",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Hardhat plugin to verify smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
@@ -33,13 +33,13 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "0.4.1",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
     "dockerode": "^3.3.4"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -58,7 +58,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0"
+    "@nomicfoundation/hardhat-verify": "^1.1.1"
   },
   "prettier": {
     "tabWidth": 4,

@@ -35,7 +35,7 @@
     "@matterlabs/hardhat-zksync-chai-matchers": "link:../packages/hardhat-zksync-chai-matchers",
     "@matterlabs/hardhat-zksync-deploy": "0.6.5",
     "@matterlabs/hardhat-zksync-solc": "^1.0.0",
-    "@matterlabs/hardhat-zksync-verify": "^0.2.0",
+    "@matterlabs/hardhat-zksync-verify": "^1.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
@@ -61,7 +61,7 @@
     "@matterlabs/hardhat-zksync-chai-matchers": "link:../packages/hardhat-zksync-chai-matchers",
     "@matterlabs/hardhat-zksync-deploy": "^0.6.5",
     "@matterlabs/hardhat-zksync-solc": "^1.0.0",
-    "@matterlabs/hardhat-zksync-verify": "^0.2.0"
+    "@matterlabs/hardhat-zksync-verify": "^1.0.0"
   },
   "prettier": {
     "tabWidth": 4,
