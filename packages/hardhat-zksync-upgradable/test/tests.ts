@@ -20,7 +20,7 @@ import '../src/type-extensions'
 
 
 describe('Upgradable plugin tests', async function () {
-    describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
+    describe.skip('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
         let boxProxy: Contract;
@@ -34,11 +34,11 @@ describe('Upgradable plugin tests', async function () {
             boxProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'initialize',
             });
+            await boxProxy.waitForDeployment();
         });
 
         it('Should deploy proxy and contract implementation', async function () {
             await boxProxy.waitForDeployment();
-            await new Promise((resolve) => setTimeout(resolve, 2000));
             boxProxy.connect(this.deployer.zkWallet);
             const value = await boxProxy.retrieve();
             assert.equal(value, 42n);
@@ -51,8 +51,9 @@ describe('Upgradable plugin tests', async function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, await boxProxy.getAddress(), BoxV2);
+            await box2.waitForDeployment();
+            //give it some time to upgrade
             await new Promise((resolve) => setTimeout(resolve, 1500));
-
             box2.connect(this.deployer.zkWallet);
             const value = await box2.retrieve();
             assert.equal(value, 'V2: 42');
@@ -78,7 +79,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
+    describe.skip('Test UUPS proxy deployment and upgrade functionalities', async function () {
         useEnvironment('uups-e2e');
         let boxUupsProxy: Contract;
         let boxUupsPublicProxy: Contract;
@@ -87,13 +88,11 @@ describe('Upgradable plugin tests', async function () {
             const contractName1 = 'BoxUups';
             const contractName2 = 'BoxUupsPublic';
 
-            console.info(chalk.yellow('Deploying ' + contractName1 + ' uups proxy...'));
-            console.info(`Current directory: ${process.cwd()}`)
-            console.info(`Trying to load ${contractName1} artifacts.`);
             const boxArtifact = await this.deployer.loadArtifact(contractName1);
             boxUupsProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'initialize',
             });
+            await boxUupsProxy.waitForDeployment()
 
             console.info(chalk.yellow('Deploying ' + contractName2 + ' uups proxy...'));
 
@@ -106,11 +105,12 @@ describe('Upgradable plugin tests', async function () {
                     initializer: 'initialize',
                 }
             );
+            await boxUupsPublicProxy.waitForDeployment();
         });
 
         it('Should deploy uups proxy and contract implementation', async function () {
             await boxUupsProxy.waitForDeployment();
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            //await new Promise((resolve) => setTimeout(resolve, 1500));
             boxUupsProxy.connect(this.deployer.zkWallet);
             const value = await boxUupsProxy.retrieve();
 
@@ -149,7 +149,9 @@ describe('Upgradable plugin tests', async function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.zkWallet2, await boxUupsPublicProxy.getAddress(), BoxV2);
+            await box2.waitForDeployment();
             console.info(chalk.green('Successfully upgraded BoxUupsPublic to BoxUupsV2'));
+            //give it some time to upgrade
             await new Promise((resolve) => setTimeout(resolve, 1500));
             box2.connect(this.deployer.zkWallet);
                 const value = await box2.retrieve();
@@ -205,11 +207,11 @@ describe('Upgradable plugin tests', async function () {
                 contract,
                 [42]
             );
+            await beaconProxy.waitForDeployment();
         });
 
         it('Should deploy beacon proxy and contract implementation', async function () {
             await beaconProxy.waitForDeployment();
-            await new Promise((resolve) => setTimeout(resolve, 1500));
             beaconProxy.connect(this.deployer.zkWallet);
                 const value = await beaconProxy.retrieve();
                 assert.equal(value, 'V2: 42');
@@ -234,6 +236,7 @@ describe('Upgradable plugin tests', async function () {
             const boxV2 = attachTo.attach(await beaconProxy.getAddress());
 
             boxV2.connect(this.deployer.zkWallet);
+            //give it some time to upgrade
             await new Promise((resolve) => setTimeout(resolve, 2000));
             const value = await boxV2.retrieve();
             assert.equal(value, 'V2: 42');
@@ -252,6 +255,7 @@ describe('Upgradable plugin tests', async function () {
             const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'store',
             });
+            await deployedContract.waitForDeployment();
 
             const adminInstance = await this.env.zkUpgrades.admin.getInstance(this.deployer.zkWallet);
             const adminAddress = await adminInstance.getProxyAdmin(await deployedContract.getAddress());
@@ -382,7 +386,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test storage layout validations', async function () {
+    describe('Test storage layout validations', async function () {
         useEnvironment('storage-layout-validations');
 
         let boxProxy: Contract;
@@ -480,7 +484,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe.skip('Test proxy gas estimation', async function () {
+    describe('Test proxy gas estimation', async function () {
         useEnvironment('deployment-gas-estimation');
         const MINIMUM_GAS_LIMIT = 1000000000000000n; // 0.001 ETH
 

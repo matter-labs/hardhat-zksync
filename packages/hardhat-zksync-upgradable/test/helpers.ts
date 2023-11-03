@@ -16,9 +16,7 @@ declare module 'mocha' {
 
 export function useEnvironment(fixtureProjectName: string, networkName = 'hardhat') {
     before('Loading hardhat environment', async function () {
-        console.info(`Changing directory to: ${fixtureProjectName}`)
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
-        console.log(`Directory after change: ${process.cwd()}`);
         process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
@@ -30,7 +28,6 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
         this.deployer = new Deployer(this.env, zkWallet);
 
         this.zkWallet2 = new Wallet(richWallets[1].privateKey, zkSyncProvider);
-        console.info("Changing directory, whole function finished.")
     });
 
     after('Resetting hardhat', function () {

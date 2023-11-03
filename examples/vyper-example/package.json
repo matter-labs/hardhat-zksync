@@ -29,7 +29,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
-    "@nomiclabs/hardhat-vyper": "^3.0.3",
+    "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",
     "hardhat": "^2.18.1",
     "zksync2-js": "^0.2.2"
