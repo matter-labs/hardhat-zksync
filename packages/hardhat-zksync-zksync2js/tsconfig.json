@@ -1,0 +1,11 @@
+{
+  "extends": "../../config/typescript/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "skipLibCheck":true,
+    "strict": false,
+  },
+  "include": ["src/**/*", "src/**/*.json"],
+  "exclude": ["./dist", "./node_modules", "./test/**/*"]
+}
