@@ -51,7 +51,7 @@ function getSigners(hre: HardhatRuntimeEnvironment): Signer[] {
 }
 
 function getSigner(hre: HardhatRuntimeEnvironment, address: string): Signer {
-    return Signer.from(new Signer(hre.zksync2js.provider, address), hre.network.config.chainId);
+    return Signer.from(new Signer(hre.zksync2js.provider, address), hre.network.config.chainId!);
 }
 
 export async function getImpersonatedSigner(hre: HardhatRuntimeEnvironment, address: string): Promise<Signer> {
