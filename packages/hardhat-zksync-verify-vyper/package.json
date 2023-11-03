@@ -33,13 +33,13 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-vyper": "^0.2.0",
+    "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
-    "@matterlabs/hardhat-zksync-vyper": "^0.2.0",
+    "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",
