@@ -40,7 +40,7 @@
     "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-vyper": "^3.0.3",
+    "@nomiclabs/hardhat-vyper": "^3.0.5",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",

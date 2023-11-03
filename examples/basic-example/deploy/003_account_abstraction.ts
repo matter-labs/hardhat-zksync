@@ -59,7 +59,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     });
     await depositHandle.wait();
 
-    const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']) as zk.Contract;
+    const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
 
     console.info(chalk.green(`Greeter was deployed to ${await greeterContract.getAddress()}`));
 
@@ -67,7 +67,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const owner1 = zk.Wallet.createRandom();
     const owner2 = zk.Wallet.createRandom();
 
-    const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []) as zk.Contract;
+    const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []);
 
     const multisigAddress = await aa.getAddress();
 

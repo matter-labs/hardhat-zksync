@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Contract, Wallet, Provider } from "zksync2-js";
+import { Wallet, Provider,Contract } from "zksync2-js";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
@@ -33,6 +33,8 @@ describe("Greeter", function () {
 
     // Test the setGreeting() function
     it("Should set a new greeting", async function () {
+        //Added for preveting nonce errors.
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await contract.setGreeting("Hello, Ethereum!");
         expect(await contract.greet()).to.equal("Hello, Ethereum!");
     });

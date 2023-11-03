@@ -34,14 +34,13 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         opts.provider = wallet.provider;
         const manifest = await Manifest.forNetwork(wallet.provider);
 
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+        const factory = new zk.ContractFactory<any[],zk.Contract>(artifact.abi, artifact.bytecode, wallet);
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
         if (!quiet) {
             console.info(chalk.green('Implementation contract was deployed to ' + impl));
         }
 
-        const contractInterface = factory.interface;
-        const data = getInitializerData(contractInterface as any, args, opts.initializer);
+        const data = getInitializerData(factory.interface, args, opts.initializer);
 
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
@@ -69,6 +68,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(proxyFactory, impl, data));
+
                 if (!quiet) {
                     console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
                 }
@@ -87,6 +87,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
                 proxyDeployment = Object.assign({ kind }, await deploy(TUPFactory, impl, adminAddress, data));
+
                 if (!quiet) {
                     console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
                 }
@@ -100,7 +101,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         }
 
         await manifest.addProxy(proxyDeployment);
-        const inst = factory.attach(proxyDeployment.address) as zk.Contract;
+        const inst = factory.attach(proxyDeployment.address);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = proxyDeployment.deployTransaction;
         return inst;

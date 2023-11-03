@@ -9,3 +9,15 @@ export class ZkSyncChaiMatchersPluginError extends HardhatPluginError {
         super(PLUGIN_NAME, message, parentError);
     }
 }
+
+export class ZkSyncChaiMatchersPluginDefaultError extends HardhatPluginError{
+    constructor(message:string){
+        super(PLUGIN_NAME,message)
+    }
+}
+
+export class ZkSyncChaiMatchersPluginAssertionError extends HardhatPluginError {
+    constructor(message: string) {
+      super(PLUGIN_NAME,`Assertion error: ${message}`);
+    }
+}

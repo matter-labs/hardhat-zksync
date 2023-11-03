@@ -34,7 +34,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
 
-        const newImplementationFactory = new zk.ContractFactory(
+        const newImplementationFactory = new zk.ContractFactory<any[],zk.Contract>(
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
             wallet
@@ -49,7 +49,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
         }
 
-        const inst = newImplementationFactory.attach(proxyAddress) as zk.Contract;
+        const inst = newImplementationFactory.attach(proxyAddress);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = upgradeTx;
         return inst;
@@ -68,12 +68,12 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
             const transparentUpgradeableProxyContract = await import(TUPPath);
 
-            const transparentUpgradeableProxyFactory = new zk.ContractFactory(
+            const transparentUpgradeableProxyFactory = new zk.ContractFactory<any[],zk.Contract>(
                 transparentUpgradeableProxyContract.abi,
                 transparentUpgradeableProxyContract.bytecode,
                 wallet
             );
-            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress) as zk.Contract;
+            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
 
             return (nextImpl, call) => (call ? proxy.upgradeToAndCall(nextImpl, call) : proxy.upgradeTo(nextImpl));
         } else {
@@ -85,13 +85,13 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             assert(proxyAdminPath, 'Proxy admin artifact not found');
             const proxyAdminContract = await import(proxyAdminPath);
 
-            const proxyAdminFactory = new zk.ContractFactory(
+            const proxyAdminFactory = new zk.ContractFactory<any[],zk.Contract>(
                 proxyAdminContract.abi,
                 proxyAdminContract.bytecode,
                 wallet
             );
 
-            const admin = proxyAdminFactory.attach(adminAddress) as zk.Contract;
+            const admin = proxyAdminFactory.attach(adminAddress);
             const manifestAdmin = await manifest.getAdmin();
 
             if (await admin.getAddress() !== manifestAdmin?.address) {

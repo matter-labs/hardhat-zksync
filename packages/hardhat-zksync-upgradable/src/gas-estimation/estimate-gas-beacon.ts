@@ -65,7 +65,7 @@ export async function getMockedBeaconData(
         const adminFactory = await getAdminFactory(hre, deployer.zkWallet);
         mockImplAddress = await deployProxyAdminLocally(adminFactory);
         mockedBeaconAddress = (await deployBeaconLocally(mockImplAddress, hre, deployer.zkWallet)).address;
-        data = getInitializerData(adminFactory.interface as any, args, opts.initializer);
+        data = getInitializerData(adminFactory.interface, args, opts.initializer);
     } else {
         mockedBeaconAddress = defaultImplAddresses[chainId].beacon;
         const mockArtifact = await getAdminArtifact(hre);

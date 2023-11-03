@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "esModuleInterop": true,
+    "target": "ES2021"
   },
   "exclude": ["./dist", "./node_modules"]
 }

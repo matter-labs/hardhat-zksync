@@ -38,7 +38,7 @@ export interface DeployBeaconProxyFunction {
     ): Promise<zk.Contract>;
 }
 
-export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction {
+export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment) {
     return async function deployBeaconProxy(
         wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
@@ -46,7 +46,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         args: unknown[] | DeployBeaconProxyOptions = [],
         opts: DeployBeaconProxyOptions = {},
         quiet: boolean = false
-    ):Promise<zk.Contract> {
+    ) {
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
@@ -107,7 +107,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
 
         await manifest.addProxy(proxyDeployment);
 
-        const inst = attachTo.attach(proxyDeployment.address) as zk.Contract;
+        const inst = attachTo.attach(proxyDeployment.address);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = proxyDeployment.deployTransaction;
         return inst;

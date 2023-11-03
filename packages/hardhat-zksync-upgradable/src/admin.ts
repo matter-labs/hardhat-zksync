@@ -58,5 +58,5 @@ export async function getManifestAdmin(hre: HardhatRuntimeEnvironment, wallet: W
     }
 
     const adminFactory = await getAdminFactory(hre, wallet);
-    return adminFactory.attach(proxyAdminAddress) as Contract;
+    return adminFactory.attach(proxyAdminAddress);
 }

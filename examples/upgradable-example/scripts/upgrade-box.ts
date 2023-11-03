@@ -8,7 +8,6 @@ async function main() {
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = Wallet.fromMnemonic(testMnemonic);
     const deployer = new Deployer(hre, zkWallet);
-
     // deploy proxy
     const contractName = 'Box';
 

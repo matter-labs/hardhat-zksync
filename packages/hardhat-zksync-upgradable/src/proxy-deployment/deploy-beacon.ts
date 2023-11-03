@@ -38,7 +38,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);
 
-        const upgradeableBeaconFactory = new zk.ContractFactory(
+        const upgradeableBeaconFactory = new zk.ContractFactory<any[],zk.Contract>(
             upgradeableBeaconContract.abi,
             upgradeableBeaconContract.bytecode,
             wallet
@@ -48,7 +48,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
             console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
         }
 
-        const beaconContract = upgradeableBeaconFactory.attach(beaconDeployment.address) as zk.Contract;
+        const beaconContract = upgradeableBeaconFactory.attach(beaconDeployment.address);
         // @ts-ignore Won't be readonly because beaconContract was created through attach.
         beaconContract.deployTransaction = beaconDeployment.deployTransaction;
         return beaconContract;

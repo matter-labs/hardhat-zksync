@@ -39,7 +39,7 @@ describe('INTEGRATION: Reverted', function () {
 
             deployer = new Deployer(this.hre, wallet1);
             artifact = await deployer.loadArtifact('Matchers');
-            matchers = await deployer.deploy(artifact) as zk.Contract;
+            matchers = await deployer.deploy(artifact);
 
             aaDeployer = new Deployer(this.hre, wallet1, 'createAccount');
             artifact = await deployer.loadArtifact("TwoUserMultisig");
@@ -182,9 +182,10 @@ describe('INTEGRATION: Reverted', function () {
         });
 
         describe('calling abstraction account', function () {
-            //TODO::No skip!
-            it.skip('successfuly reverts', async function () {
-                //TODO::Check
+            it('successfuly reverts', async function () {
+
+                await (await wallet1.sendTransaction({to: await aaAccount.getAddress(), value: ethers.parseEther("0.8")})).wait();
+                
                 let aaTx = await matchers.succeeds();
 
                 const gasLimit = await provider.estimateGas(aaTx);
@@ -192,7 +193,7 @@ describe('INTEGRATION: Reverted', function () {
             
                 aaTx = {
                     ...aaTx,
-                    from: aaAccount.address,
+                    from: await aaAccount.getAddress(),
                     gasLimit: gasLimit,
                     gasPrice: gasPrice,
                     chainId: (await provider.getNetwork()).chainId,
@@ -201,7 +202,7 @@ describe('INTEGRATION: Reverted', function () {
                     customData: {
                       gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
                     } as zk.types.Eip712Meta,
-                    value: 0,
+                    value: 0n,
                 };
 
                 const singedTx = await wallet1.eip712.sign(aaTx);
@@ -211,7 +212,7 @@ describe('INTEGRATION: Reverted', function () {
                     customSignature: singedTx,
                 };
 
-                await expect(provider.send(zk.utils.serializeEip712(aaTx),[])).to.be.reverted;
+                await expect(provider.broadcastTransaction(zk.utils.serializeEip712(aaTx))).to.be.reverted;
             });
         });
     }

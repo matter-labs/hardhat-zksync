@@ -46,13 +46,13 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);
 
-        const upgradeableBeaconFactory = new zk.ContractFactory(
+        const upgradeableBeaconFactory = new zk.ContractFactory<any[],zk.Contract>(
             upgradeableBeaconContract.abi,
             upgradeableBeaconContract.bytecode,
             wallet
         );
 
-        const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress) as zk.Contract;
+        const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress);
         const upgradeTx = await beaconContract.upgradeTo(nextImpl);
 
         // @ts-ignore Won't be readonly because beaconContract was created through attach.

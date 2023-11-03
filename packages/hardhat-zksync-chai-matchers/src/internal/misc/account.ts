@@ -1,5 +1,6 @@
 import assert from 'assert';
-import type { Contract, Signer, Wallet } from 'zksync2-js';
+import type { Signer, Wallet,Contract } from 'zksync2-js';
+import { ZkSyncChaiMatchersPluginAssertionError } from '../../errors';
 
 export type Account = Signer | Wallet | Contract;
 
@@ -9,11 +10,16 @@ export function isWalletOrContract(account: Account): account is Contract | Wall
 }
 
 export async function getAddressOf(account: Account | string):Promise<string> {
+    const { isAddressable } = await import("ethers");
+
     if (typeof account === 'string') {
         assert(/^0x[0-9a-fA-F]{40}$/.test(account), `Invalid address ${account}`);
         return account;
-    } else {
-        return await account.getAddress();
     }
-    //TODO: Raise an error when cannot obtain address
+    
+    if(isAddressable(account)) return await account.getAddress();
+    
+    throw new ZkSyncChaiMatchersPluginAssertionError(
+        `Expected string or addressable, got ${account as any}`
+    );
 }

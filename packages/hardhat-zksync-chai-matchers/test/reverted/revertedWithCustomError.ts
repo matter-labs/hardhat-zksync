@@ -251,21 +251,6 @@ describe('INTEGRATION: Reverted with custom error', function () {
                 );
             });
 
-            //TODO: Not needed?
-            //it('should work with bigints and bignumbers', async function () {
-            //    await expect(matchers.revertWithCustomErrorWithUint(1))
-            //        .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')
-            //        .withArgs(1);
-
-            //    await expect(matchers.revertWithCustomErrorWithUint(1))
-            //        .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')
-            //        .withArgs(1);
-
-            //    await expect(matchers.revertWithCustomErrorWithPair(1, 2))
-            //        .to.be.revertedWithCustomError(matchers, 'CustomErrorWithPair')
-            //        .withArgs([1,2]);
-            //});
-
             it('should work with predicates', async function () {
                 await expect(matchers.revertWithCustomErrorWithUint(1))
                     .to.be.revertedWithCustomError(matchers, 'CustomErrorWithUint')

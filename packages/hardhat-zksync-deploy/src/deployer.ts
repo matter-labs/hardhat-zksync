@@ -187,7 +187,7 @@ export class Deployer {
         constructorArguments: any[] = [],
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[]
-    ): Promise<zk.Contract> {
+    ): Promise<ethers.Contract> {
         const baseDeps = await this.extractFactoryDeps(artifact);
         const additionalDeps = additionalFactoryDeps
             ? additionalFactoryDeps.map((val) => ethers.hexlify(val))
@@ -208,7 +208,7 @@ export class Deployer {
         });
         await contract.waitForDeployment();
         
-        return contract as zk.Contract;
+        return contract as ethers.Contract;
     }
 
     /**
