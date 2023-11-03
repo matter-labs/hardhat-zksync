@@ -9,7 +9,7 @@ module.exports = async function (hre) {
 
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
+    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
     // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
