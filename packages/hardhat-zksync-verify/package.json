@@ -58,7 +58,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.1.0"
+    "@nomicfoundation/hardhat-verify": "^2.0.0"
   },
   "prettier": {
     "tabWidth": 4,
