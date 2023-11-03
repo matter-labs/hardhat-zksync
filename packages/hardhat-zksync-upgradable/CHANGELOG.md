@@ -1,12 +1,5 @@
 # @matterlabs/hardhat-zksync-upgradable
 
-## 0.1.4
-
-### Patch Changes
-
-- Updated dependencies [7a38bb8]
-  - @matterlabs/hardhat-zksync-deploy@1.0.0
-
 ## 0.1.3
 
 ### Patch Changes
