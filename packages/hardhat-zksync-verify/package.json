@@ -36,7 +36,7 @@
     "@nomicfoundation/hardhat-verify": "^1.1.1",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
-    "dockerode": "^3.3.4"
+    "dockerode": "^4.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^1.1.1",
