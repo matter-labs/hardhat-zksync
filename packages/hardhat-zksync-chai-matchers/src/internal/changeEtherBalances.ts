@@ -1,5 +1,5 @@
-import type { BigNumberish, ethers } from 'ethers';
-import * as zk from 'zksync-web3';
+import { toBigInt, type BigNumberish, type ethers } from 'ethers';
+import * as zk from 'zksync2-js';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
@@ -19,8 +19,6 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                 overrides?: ethers.Overrides;
             }
         ) {
-            const { BigNumber } = require('ethers');
-
             const negated = this.__flags.negate;
 
             let subject = this._obj;
@@ -28,15 +26,15 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            const checkBalanceChanges = ([actualChanges, accountAddresses]: [Array<typeof BigNumber>, string[]]) => {
+            const checkBalanceChanges = ([actualChanges, accountAddresses]: [bigint[], string[]]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
                 assert(
-                    actualChanges.every((change, ind) => change.eq(BigNumber.from(balanceChanges[ind]))),
+                    actualChanges.every((change, ind) => change === toBigInt(balanceChanges[ind])),
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (!change.eq(BigNumber.from(balanceChanges[i]))) {
+                            if (!(change === toBigInt(balanceChanges[i]))) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1
@@ -51,7 +49,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                     () => {
                         const lines: string[] = [];
                         actualChanges.forEach((change, i) => {
-                            if (change.eq(BigNumber.from(balanceChanges[i]))) {
+                            if (change === toBigInt(balanceChanges[i])) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
                                         i + 1
@@ -94,7 +92,7 @@ export async function getBalanceChanges(
 
     const txFees = await getTxFees(accounts, txResponse, options, overrides);
 
-    return balancesAfter.map((balance, ind) => balance.add(txFees[ind]).sub(balancesBefore[ind]));
+    return balancesAfter.map((balance, ind) => balance + txFees[ind] - balancesBefore[ind]);
 }
 
 async function getTxFees(
@@ -103,23 +101,21 @@ async function getTxFees(
     options?: BalanceChangeOptions,
     overrides?: ethers.Overrides
 ) {
-    const { BigNumber } = require('ethers');
-    const provider = zk.Provider.getDefaultProvider();
 
     return Promise.all(
         accounts.map(async (account) => {
             if (options?.includeFee !== true && (await getAddressOf(account)) === txResponse.from) {
                 const txReceipt = await txResponse.wait();
                 const gasPrice = overrides?.maxFeePerGas
-                    ? BigNumber.from(overrides?.maxFeePerGas)
-                    : txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
+                    ? (overrides?.maxFeePerGas)
+                    : txReceipt.gasPrice ?? txResponse.gasPrice;
                 const gasUsed = txReceipt.gasUsed;
-                const txFee = gasPrice.mul(gasUsed);
+                const txFee = toBigInt(gasPrice)*gasUsed;
 
                 return txFee;
             }
 
-            return 0;
+            return 0n
         })
     );
 }

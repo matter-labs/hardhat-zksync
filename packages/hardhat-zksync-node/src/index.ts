@@ -5,10 +5,7 @@ import {
     TASK_TEST,
     TASK_TEST_GET_TEST_FILES,
     TASK_TEST_RUN_MOCHA_TESTS,
-    TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS,
-    TASK_TEST_SETUP_TEST_ENVIRONMENT,
 } from 'hardhat/builtin-tasks/task-names';
-import { Provider } from 'zksync-web3';
 
 import {
     MAX_PORT_ATTEMPTS,

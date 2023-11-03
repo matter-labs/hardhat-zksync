@@ -166,11 +166,12 @@ describe('Plugin tests', async function () {
             it('Should be able to send txs and make calls', async function () {
                 const artifact = await this.env.zksync2js.loadArtifact('Greeter');
 
-                const Greeter: ContractFactory = await this.env.zksync2js.getContractFactory(
+                const Greeter = await this.env.zksync2js.getContractFactory(
                     artifact.abi,
                     artifact.bytecode
                 );
-                const greeter: Contract = (await Greeter.deploy());
+
+                const greeter = await Greeter.deploy();
 
                 assert.strictEqual(await greeter.greet(), 'Hello, World!');
             });
@@ -181,7 +182,7 @@ describe('Plugin tests', async function () {
 
             beforeEach(async function () {
                 const Greeter = await this.env.zksync2js.getContractFactory('Greeter');
-                deployedGreeter = (await Greeter.deploy());
+                deployedGreeter = await Greeter.deploy();
             });
             it('Should return an instance of a contract', async function () {
                 const wallet = await this.env.zksync2js.getWallet();

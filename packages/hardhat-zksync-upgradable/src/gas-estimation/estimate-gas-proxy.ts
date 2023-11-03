@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
 import assert from 'assert';
@@ -16,6 +16,7 @@ import { ERC1967_PROXY_JSON, TUP_JSON, defaultImplAddresses } from '../constants
 import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../proxy-deployment/deploy';
 
+
 export interface EstimateProxyGasFunction {
     (
         deployer: Deployer,
@@ -23,11 +24,11 @@ export interface EstimateProxyGasFunction {
         args?: DeployProxyOptions[],
         opts?: DeployProxyOptions,
         quiet?: boolean
-    ): Promise<ethers.BigNumber>;
+    ): Promise<bigint>;
 }
 interface GasCosts {
-    adminGasCost: ethers.BigNumber;
-    proxyGasCost: ethers.BigNumber;
+    adminGasCost: bigint;
+    proxyGasCost: bigint;
 }
 
 async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
@@ -42,9 +43,9 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         args: DeployProxyOptions[] = [],
         opts: DeployProxyOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<bigint> {
         let data;
-        let totalGasCost;
+        let totalGasCost:bigint;
         let mockImplAddress: string;
 
         const mockArtifact = await getAdminArtifact(hre);
@@ -58,13 +59,14 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         if (chainId == 270) {
             const adminFactory = await getAdminFactory(hre, deployer.zkWallet);
             mockImplAddress = await deployProxyAdminLocally(adminFactory);
+            //videti tamo u openzeppeln
             data = getInitializerData(adminFactory.interface, args, opts.initializer);
         } else {
             mockImplAddress = defaultImplAddresses[chainId].contractAddress;
-            data = getInitializerData(ethers.Contract.getInterface(mockArtifact.abi), args, opts.initializer);
+            data = getInitializerData(new ethers.Interface(mockArtifact.abi), args, opts.initializer);
         }
 
-        const implGasCost = await deployer.estimateDeployFee(artifact, []);
+        const implGasCost:bigint = await deployer.estimateDeployFee(artifact, []);
 
         if (!quiet) {
             console.info(
@@ -82,8 +84,8 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
             }
 
             case 'uups': {
-                const uupsGasCost = await estimateGasUUPS(hre, deployer, mockImplAddress, data, quiet);
-                totalGasCost = implGasCost.add(uupsGasCost);
+                const uupsGasCost:bigint = await estimateGasUUPS(hre, deployer, mockImplAddress, data, quiet);
+                totalGasCost = implGasCost + uupsGasCost;
                 break;
             }
 
@@ -95,7 +97,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
                     data,
                     quiet
                 );
-                totalGasCost = implGasCost.add(adminGasCost).add(proxyGasCost);
+                totalGasCost = implGasCost + adminGasCost + proxyGasCost;
                 break;
             }
 
@@ -119,7 +121,7 @@ async function estimateGasUUPS(
     mockImplAddress: string,
     data: string,
     quiet: boolean = false
-): Promise<ethers.BigNumber> {
+): Promise<bigint> {
     const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
         x.includes(path.sep + ERC1967_PROXY_JSON)
     );
@@ -127,7 +129,7 @@ async function estimateGasUUPS(
     const proxyContract = await import(ERC1967ProxyPath);
 
     try {
-        const uupsGasCost = await deployer.estimateDeployFee(proxyContract, [mockImplAddress, data]);
+        const uupsGasCost:bigint = await deployer.estimateDeployFee(proxyContract, [mockImplAddress, data]);
         if (!quiet) {
             console.info(
                 chalk.cyan(

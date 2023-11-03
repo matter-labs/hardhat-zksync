@@ -9,7 +9,7 @@ import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
 import { getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { ethers } from 'ethers';
 
 /**
@@ -114,9 +114,9 @@ async function attemptVerifyWithCreationEvent(
             `The transaction hash ${txHash} from the contract's logs was not found on the network`
         );
     }
-    const decodedInputData = ethers.utils.defaultAbiCoder.decode(
+    const decodedInputData = ethers.AbiCoder.defaultAbiCoder().decode(
         ['bytes32', 'bytes32', 'bytes'],
-        ethers.utils.hexDataSlice(tx.input, 4)
+        ethers.dataSlice(tx.input, 4)
     );
     const constructorArgs = decodedInputData[2];
 

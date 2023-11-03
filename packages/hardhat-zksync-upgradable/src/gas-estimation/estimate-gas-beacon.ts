@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
 import assert from 'assert';
@@ -22,7 +22,7 @@ export interface EstimateGasFunction {
         args?: DeployProxyOptions[],
         opts?: DeployProxyOptions,
         quiet?: boolean
-    ): Promise<ethers.BigNumber>;
+    ): Promise<bigint>;
 }
 
 async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
@@ -69,7 +69,7 @@ export async function getMockedBeaconData(
     } else {
         mockedBeaconAddress = defaultImplAddresses[chainId].beacon;
         const mockArtifact = await getAdminArtifact(hre);
-        data = getInitializerData(ethers.Contract.getInterface(mockArtifact.abi), args, opts.initializer);
+        data = getInitializerData(new ethers.Interface(mockArtifact.abi), args, opts.initializer);
     }
 
     return { mockedBeaconAddress: mockedBeaconAddress, data };
@@ -83,11 +83,11 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
         opts: DeployProxyOptions = {},
         quiet = false
     ) {
-        let beaconGasCost = ethers.BigNumber.from(0);
+        let beaconGasCost:bigint = 0n;
 
         const { mockedBeaconAddress } = await getMockedBeaconData(deployer, hre, args, opts);
 
-        const implGasCost = await deployer.estimateDeployFee(artifact, []);
+        const implGasCost:bigint = await deployer.estimateDeployFee(artifact, []);
         if (!quiet) {
             console.info(
                 chalk.cyan(
@@ -114,14 +114,13 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
                         )} ETH`
                     )
                 );
-
                 console.info(
-                    chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost.add(beaconGasCost))} ETH`)
+                    chalk.cyan(`Total estimated gas cost: ${convertGasPriceToEth(implGasCost + beaconGasCost)} ETH`)
                 );
             }
         } catch (error: any) {
             throw new ZkSyncUpgradablePluginError(`Error estimating gas cost: ${error.reason}`);
         }
-        return beaconGasCost.add(implGasCost);
+        return beaconGasCost+implGasCost;
     };
 }

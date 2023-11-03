@@ -1,11 +1,12 @@
-import type { BigNumberish, ethers } from 'ethers';
-import * as zk from 'zksync-web3';
+import { toBigInt, type BigNumberish, type ethers } from 'ethers';
+import * as zk from 'zksync2-js';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
 import { Account, getAddressOf } from './misc/account';
 import { BalanceChangeOptions } from './misc/balance';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
@@ -19,16 +20,14 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
                 overrides?: ethers.Overrides;
             }
         ) {
-            const { BigNumber } = require('ethers');
-
             const negated = this.__flags.negate;
             const subject = this._obj;
 
-            const checkBalanceChange = ([actualChange, address]: [typeof BigNumber, string]) => {
+            const checkBalanceChange = ([actualChange, address]: [bigint, string]) => {
                 const assert = buildAssert(negated, checkBalanceChange);
 
                 assert(
-                    actualChange.eq(BigNumber.from(balanceChange)),
+                    actualChange === toBigInt(balanceChange),
                     `Expected the ether balance of "${address}" to change by ${balanceChange.toString()} wei, but it changed by ${actualChange.toString()} wei`,
                     `Expected the ether balance of "${address}" NOT to change by ${balanceChange.toString()} wei, but it did`
                 );
@@ -55,8 +54,8 @@ export async function getBalanceChange(
     options?: BalanceChangeOptions,
     overrides?: ethers.Overrides
 ) {
-    const { BigNumber } = await import('ethers');
-    const provider = zk.Provider.getDefaultProvider();
+    const hre = await import("hardhat");
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     let txResponse: zk.types.TransactionResponse;
 
@@ -75,19 +74,21 @@ export async function getBalanceChange(
 
     const address = await getAddressOf(account);
 
-    const balanceAfter = await provider.send('eth_getBalance', [address, `0x${txBlockNumber.toString(16)}`]);
-
-    const balanceBefore = await provider.send('eth_getBalance', [address, `0x${(txBlockNumber - 1).toString(16)}`]);
+    const balanceAfterHex = await provider.send('eth_getBalance', [address, `0x${txBlockNumber.toString(16)}`]);
+    const balanceBeforeHex = await provider.send('eth_getBalance', [address, `0x${(txBlockNumber - 1).toString(16)}`]);
+   
+    const balanceAfter = BigInt(balanceAfterHex);
+    const balanceBefore = BigInt(balanceBeforeHex);
 
     if (options?.includeFee !== true && address === txResponse.from) {
         const gasPrice = overrides?.maxFeePerGas
-            ? BigNumber.from(overrides?.maxFeePerGas)
-            : txReceipt.effectiveGasPrice ?? txResponse.gasPrice;
+            ? (overrides?.maxFeePerGas)
+            : txReceipt.gasPrice ?? txResponse.gasPrice;
         const gasUsed = txReceipt.gasUsed;
-        const txFee = gasPrice.mul(gasUsed);
+        const txFee:bigint =  toBigInt(gasPrice)*gasUsed;
 
-        return BigNumber.from(balanceAfter).add(txFee).sub(balanceBefore);
+        return balanceAfter + txFee - balanceBefore;
     } else {
-        return BigNumber.from(balanceAfter).sub(balanceBefore);
+        return balanceAfter - balanceBefore;
     }
 }

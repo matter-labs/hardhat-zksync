@@ -1,6 +1,6 @@
-# zkSync 2.0 deploy environment example
+# zkSync 2.0 node environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to run [era-test-node](https://era.zksync.io/docs/tools/testing/era-test-node.html) locally using the zksync's `hardhat-zksync-node` Hardhat plugin for testing purposes.
 
 ## Prerequisites
 
@@ -10,21 +10,16 @@ This project demonstrates how to compile and deploy your contracts in zkSync 2.0
 ## Configuration
 
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
-You should only change the zkSync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `goerli` used as the underlying layer 1 network:
+`hardhat.config.ts` example with the hardhat network's zksync set to true::
 ```ts
+
 import "@matterlabs/hardhat-zksync-deploy";
 import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
     networks: {
-        goerli: {
-            url: 'https://goerli.infura.io/v3/<API_KEY>' // you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`)
-        },
-        zkTestnet: {
-            url: 'https://zksync2-testnet.zksync.dev', // you should use the URL of the zkSync network RPC
-            ethNetwork: 'goerli',
+        hardhat: {
             zksync: true
         },
     }
@@ -50,12 +45,9 @@ After that you should be able to run plugins:
 yarn
 yarn hardhat compile
 yarn hardhat deploy-zksync
+yarn hardhat test
 ```
 
 - `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
 - `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
-    - To run a specific script, add the `--script` argument, e.g. `--script 001_deploy.ts`.
-    - To run on a specific zkSync network, use standard hardhat `--network` argument, e.g. `--network zkTestnet`
-    (with `zkTestnet` network specified in the `hardhat.config` networks section, with the `zksync` flag set to `true` and `ethNetwork` specified).
-
-If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
+- `yarn hardhat test`: runs all the tests against the era-test-node instance instantiated in a separate process.

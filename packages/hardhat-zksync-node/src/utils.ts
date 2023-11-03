@@ -7,7 +7,7 @@ import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
 import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
-import { Provider } from 'zksync-web3';
+import { Provider } from 'zksync2-js';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -167,7 +167,8 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         if (error.response) {
             // The request was made and the server responded with a status code outside of the range of 2xx
             throw new ZkSyncNodePluginError(
-                `Failed to get latest release for ${owner}/${repo}. Status: ${error.response.status
+                `Failed to get latest release for ${owner}/${repo}. Status: ${
+                    error.response.status
                 }, Data: ${JSON.stringify(error.response.data)}`
             );
         } else if (error.request) {

@@ -1,7 +1,9 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { HttpNetworkConfig } from 'hardhat/types';
+import { toBeHex } from 'ethers';
 
 export function supportReverted(Assertion: Chai.AssertionStatic) {
     Assertion.addProperty('reverted', function (this: any) {
@@ -64,7 +66,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
                 assert(
                     true,
                     undefined,
-                    `Expected transaction NOT to be reverted, but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
+                    `Expected transaction NOT to be reverted, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
                         decodedReturnData.description
                     })`
                 );
@@ -85,7 +87,8 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
 }
 
 async function getTransactionReceipt(hash: string) {
-    const provider = zk.Provider.getDefaultProvider();
+    const hre = await import("hardhat");
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     return provider.getTransactionReceipt(hash);
 }

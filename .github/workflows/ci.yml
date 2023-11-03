@@ -100,6 +100,17 @@ jobs:
           yarn hardhat compile
           yarn hardhat deploy-zksync
 
+      - name: Test upgradable example
+        run: |
+          cd examples/upgradable-example
+          yarn hardhat compile
+          yarn hardhat run scripts/deploy-box-beacon.ts 
+          yarn hardhat run scripts/deploy-box-proxy.ts 
+          yarn hardhat run scripts/deploy-box-uups.ts 
+          yarn hardhat run scripts/upgrade-box-beacon.ts 
+          yarn hardhat run scripts/upgrade-box-uups.ts 
+          yarn hardhat run scripts/upgrade-box.ts 
+
       - name: Show logs
         if: always()
         run: |

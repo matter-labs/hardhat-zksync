@@ -18,7 +18,10 @@ export interface VerificationArgs {
     libraries?: string;
 
     // --list-networks flag
-    listNetworks: boolean;
+    listNetworks?: boolean;
+
+    // Do not compile contracts before verifying
+    noCompile?: boolean;
 }
 
 export interface Libraries {

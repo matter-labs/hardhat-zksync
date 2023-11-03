@@ -59,27 +59,36 @@ export async function getImpersonatedSigner(hre: HardhatRuntimeEnvironment, addr
     return getSigner(hre, address);
 }
 
-export async function getContractFactory(
+export async function getContractFactory<
+    A extends any[] = any[],
+    I = Contract
+>(
     hre: HardhatRuntimeEnvironment,
     name: string,
     walletOrOption?: Wallet | FactoryOptions
-): Promise<ContractFactory<any[], Contract>>;
+): Promise<ContractFactory<A, I>>;
 
-export async function getContractFactory(
+export async function getContractFactory<
+    A extends any[] = any[],
+    I = Contract
+>(
     hre: HardhatRuntimeEnvironment,
     abi: any[],
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory<any[], Contract>>;
+): Promise<ContractFactory<A, I>>;
 
-export async function getContractFactory(
+export async function getContractFactory<
+    A extends any[] = any[],
+    I = Contract
+>(
     hre: HardhatRuntimeEnvironment,
     nameOrAbi: string | any[],
     bytecodeOrFactoryOptions?: (Wallet | FactoryOptions) | ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory<any[], Contract>> {
+): Promise<ContractFactory<A, I>> {
     if (typeof nameOrAbi === 'string') {
         const artifact = await loadArtifact(hre, nameOrAbi);
 
@@ -100,12 +109,15 @@ export async function getContractFactory(
     );
 }
 
-export async function getContractFactoryFromArtifact(
+export async function getContractFactoryFromArtifact<
+    A extends any[] = any[],
+    I = Contract
+>(
     hre: HardhatRuntimeEnvironment,
     artifact: ZkSyncArtifact,
     walletOrOptions?: Wallet | FactoryOptions,
     deploymentType?: DeploymentType
-): Promise<ContractFactory<any[], Contract>> {
+): Promise<ContractFactory<A, I>> {
     let wallet: Wallet | undefined;
 
     if (!isArtifact(artifact)) {
@@ -130,18 +142,21 @@ If you want to call a contract using ${artifact.contractName} as its interface u
     return getContractFactoryByAbiAndBytecode(hre, artifact.abi, artifact.bytecode, wallet, deploymentType);
 }
 
-async function getContractFactoryByAbiAndBytecode(
+async function getContractFactoryByAbiAndBytecode<
+    A extends any[] = any[],
+    I = Contract
+>(
     hre: HardhatRuntimeEnvironment,
     abi: any[],
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory<any[], Contract>> {
+): Promise<ContractFactory<A, I>> {
     if (!wallet) {
         wallet = await getWallet(hre);
     }
 
-    return new ContractFactory<any[], Contract>(abi, bytecode, wallet, deploymentType);
+    return new ContractFactory<A, I>(abi, bytecode, wallet, deploymentType);
 }
 
 export async function getContractAt(

@@ -19,18 +19,24 @@ export interface FactoryOptions {
     wallet?: Wallet;
 }
 
-export declare function getContractFactory(
+export declare function getContractFactory<
+    A extends any[] = any[],
+    I = Contract
+>(
     name: string,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory>;
+): Promise<ContractFactory<A, I>>;
 
-export declare function getContractFactory(
+export declare function getContractFactory<
+    A extends any[] = any[],
+    I = Contract
+>(
     abi: any[],
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory>;
+): Promise<ContractFactory<A, I>>;
 
 export declare function deployContract(
     contractFactoryOrArtifact: ContractFactory | ZkSyncArtifact,
@@ -40,11 +46,14 @@ export declare function deployContract(
     additionalFactoryDeps?: ethers.BytesLike[]
 ): Promise<Contract>;
 
-export declare function getContractFactoryFromArtifact(
+export declare function getContractFactoryFromArtifact<
+    A extends any[] = any[],
+    I = Contract
+>(
     artifact: ZkSyncArtifact,
     wallet?: Wallet,
     deploymentType?: DeploymentType
-): Promise<ContractFactory>;
+): Promise<ContractFactory<A, I>>;
 
 export interface HardhatZksync2jsHelpers {
     provider: Provider;

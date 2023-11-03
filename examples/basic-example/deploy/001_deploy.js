@@ -1,5 +1,5 @@
 const ethers = require('ethers');
-const zk = require('zksync-web3');
+const zk = require('zksync2-js');
 const { Deployer } = require('@matterlabs/hardhat-zksync-deploy');
 const chalk = require('chalk');
 
@@ -18,7 +18,7 @@ module.exports = async function (hre) {
     const depositHandle = await deployer.zkWallet.deposit({
         to: deployer.zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
-        amount: ethers.utils.parseEther('0.001'),
+        amount: ethers.parseEther('0.001'),
     });
     await depositHandle.wait();
 
@@ -31,7 +31,7 @@ module.exports = async function (hre) {
     const greeterContract = await deployer.deploy(artifact, [greeting]);
 
     // Show the contract info.
-    const contractAddress = greeterContract.address;
+    const contractAddress = await greeterContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
 
     // Call the deployed contract.

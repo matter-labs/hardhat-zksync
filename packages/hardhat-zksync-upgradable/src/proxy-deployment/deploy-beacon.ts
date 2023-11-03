@@ -6,7 +6,7 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { DeployBeaconOptions } from '../utils/options';
 import { deploy, DeployTransaction } from './deploy';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { deployBeaconImpl } from './deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import chalk from 'chalk';
@@ -23,7 +23,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         artifact: ZkSyncArtifact,
         opts: DeployBeaconOptions = {},
         quiet: boolean = false
-    ) {
+    ):Promise<zk.Contract> {
         const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         opts.provider = wallet.provider;
@@ -38,7 +38,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);
 
-        const upgradeableBeaconFactory = new zk.ContractFactory(
+        const upgradeableBeaconFactory = new zk.ContractFactory<any[],zk.Contract>(
             upgradeableBeaconContract.abi,
             upgradeableBeaconContract.bytecode,
             wallet

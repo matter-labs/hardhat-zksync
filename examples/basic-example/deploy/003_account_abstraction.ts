@@ -1,15 +1,15 @@
 import * as ethers from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync2-js';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
+    //return;
     console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
-
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
+    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
     // Create deployer objects and load desired artifacts.
     const contractDeployer = new Deployer(hre, zkWallet, 'create');
@@ -21,15 +21,15 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Deposit some funds to L2 in order to be able to perform L2 transactions.
     const depositHandle = await contractDeployer.zkWallet.deposit({
-        to: contractDeployer.zkWallet.address,
+        to: await contractDeployer.zkWallet.getAddress(),
         token: zk.utils.ETH_ADDRESS,
-        amount: ethers.utils.parseEther('0.001'),
+        amount: ethers.parseEther('0.001'),
     });
     await depositHandle.wait();
 
     const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
 
-    console.info(chalk.green(`Greeter was deployed to ${greeterContract.address}`));
+    console.info(chalk.green(`Greeter was deployed to ${await greeterContract.getAddress()}`));
 
     // The two owners of the multisig
     const owner1 = zk.Wallet.createRandom();
@@ -37,7 +37,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []);
 
-    const multisigAddress = aa.address;
+    const multisigAddress = await aa.getAddress();
 
     console.info(chalk.green(`Multisig was deployed to ${multisigAddress}`));
 
@@ -45,13 +45,13 @@ export default async function (hre: HardhatRuntimeEnvironment) {
         await contractDeployer.zkWallet.sendTransaction({
             to: multisigAddress,
             // You can increase the amount of ETH sent to the multisig
-            value: ethers.utils.parseEther('0.003'),
+            value: ethers.parseEther('0.003'),
         })
     ).wait();
 
     const newGreeting = 'Hello!';
-    let aaTx = await greeterContract.populateTransaction.setGreeting(newGreeting);
-
+    let aaTx = await greeterContract.setGreeting.populateTransaction(newGreeting);
+    aaTx.from = await owner2.getAddress();
     const gasLimit = await provider.estimateGas(aaTx);
     const gasPrice = await provider.getGasPrice();
 
@@ -64,17 +64,17 @@ export default async function (hre: HardhatRuntimeEnvironment) {
         nonce: await provider.getTransactionCount(multisigAddress),
         type: 113,
         customData: {
-          gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
         } as zk.types.Eip712Meta,
-        value: ethers.BigNumber.from(0),
+        value: ethers.toBigInt(0)
     };
     const signedTxHash = zk.EIP712Signer.getSignedDigest(aaTx);
 
-    const signature = ethers.utils.concat([
+    const signature = ethers.concat([
         // Note, that `signMessage` wouldn't work here, since we don't want
         // the signed hash to be prefixed with `\x19Ethereum Signed Message:\n`
-        ethers.utils.joinSignature(owner1._signingKey().signDigest(signedTxHash)),
-        ethers.utils.joinSignature(owner2._signingKey().signDigest(signedTxHash)),
+        ethers.Signature.from(owner1.signingKey.sign(signedTxHash)).serialized,
+        ethers.Signature.from(owner2.signingKey.sign(signedTxHash)).serialized,
     ]);
 
     aaTx.customData = {
@@ -83,17 +83,18 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     };
 
     console.log(`The multisig's nonce before the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
-    const sentTx = await provider.sendTransaction(zk.utils.serialize(aaTx));
-    await sentTx.wait();
 
-    // Checking that the nonce for the account has increased.
+    const serialized = zk.utils.serializeEip712(aaTx)
+   
+    const tx = await provider.broadcastTransaction(serialized);
+    await tx.wait();
+    
     console.log(`The multisig's nonce after the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
-
-    // Confirm that tx was successful.
     const greetingFromContract = await greeterContract.greet();
     if (greetingFromContract === newGreeting) {
         console.info(chalk.green('Successfully initiated tx from deployed multisig!'));
     } else {
         throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
     }
+
 }
