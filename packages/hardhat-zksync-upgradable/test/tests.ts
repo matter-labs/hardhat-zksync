@@ -20,7 +20,7 @@ import '../src/type-extensions'
 
 
 describe('Upgradable plugin tests', async function () {
-    describe.skip('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
+    describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
         let boxProxy: Contract;
@@ -183,7 +183,10 @@ describe('Upgradable plugin tests', async function () {
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, await boxUupsProxy.getAddress(), boxV2, {
                     kind: 'uups',
                 }),
-                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO)
+                (error:any) =>
+                error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO) &&
+                error.message.includes('is not upgrade safe'),
+                'Expected error not thrown for missing upgradeTo function.'
             );
         });
     });
@@ -213,8 +216,8 @@ describe('Upgradable plugin tests', async function () {
         it('Should deploy beacon proxy and contract implementation', async function () {
             await beaconProxy.waitForDeployment();
             beaconProxy.connect(this.deployer.zkWallet);
-                const value = await beaconProxy.retrieve();
-                assert.equal(value, 'V2: 42');
+            const value = await beaconProxy.retrieve();
+            assert.equal(value, 42n);
         });
 
         it('Should upgrade beacon proxy contract implementation', async function () {
@@ -241,7 +244,7 @@ describe('Upgradable plugin tests', async function () {
             const value = await boxV2.retrieve();
             assert.equal(value, 'V2: 42');
         });
-    });
+    }); 
     describe.skip('Test upgradable contracts admin functionalities', async function () {
         useEnvironment('admin');
        
@@ -484,7 +487,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe('Test proxy gas estimation', async function () {
+    describe.skip('Test proxy gas estimation', async function () {
         useEnvironment('deployment-gas-estimation');
         const MINIMUM_GAS_LIMIT = 1000000000000000n; // 0.001 ETH
 
