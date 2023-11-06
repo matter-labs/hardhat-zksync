@@ -1,4 +1,4 @@
-name: Publish zksync2js Plugin
+name: Publish zksync2js plugin
 
 on:
   push:
