@@ -1,32 +1,61 @@
-import { execSync } from 'child_process';
+import { spawn, ChildProcess, StdioOptions } from 'child_process';
 import chalk from 'chalk';
 
 import { PROCESS_TERMINATION_SIGNALS } from './constants';
 
 export class JsonRpcServer {
-    private readonly _serverBinaryPath: string;
+    private serverProcess: ChildProcess | null = null;
 
-    constructor(serverBinaryPath: string) {
-        this._serverBinaryPath = serverBinaryPath;
+    constructor(private readonly serverBinaryPath: string) { }
+
+    public listen(args: string[] = [], blockProcess: boolean = true): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const command = this.serverBinaryPath;
+            const commandArgs = args;
+
+            const portArg = args.find((arg) => arg.startsWith('--port='));
+            const port = portArg ? parseInt(portArg.split('=')[1], 10) : 8011;
+
+            if (blockProcess) {
+                console.info(chalk.green(`Starting the JSON-RPC server at 127.0.0.1:${port}`));
+                console.info(chalk.green(`Running command: ${command} ${commandArgs.join(' ')}`));
+            }
+
+            let stdioConfig: StdioOptions = 'inherit';
+            if (!blockProcess) {
+                stdioConfig = ['ignore', 'ignore', 'ignore'];
+            }
+            this.serverProcess = spawn(command, commandArgs, { stdio: stdioConfig });
+
+            this.serverProcess.on('error', (error) => {
+                console.info(chalk.red('Error running the server:', error));
+                reject(new Error('Error running the server: ' + error.message));
+            });
+
+            this.serverProcess.on('exit', (code, signal) => {
+                if (signal && PROCESS_TERMINATION_SIGNALS.includes(signal)) {
+                    console.info(chalk.yellow(`Received ${signal} signal. The server process has exited.`));
+                    resolve();
+                } else {
+                    reject(new Error(`The server process exited with code: ${code}`));
+                }
+            });
+
+            if (!blockProcess) {
+                resolve();
+            }
+        });
     }
 
-    public listen(args: string[] = []): void {
-        const command = `${this._serverBinaryPath} ${args.join(' ')}`;
-
-        const portArg = args.find((arg) => arg.startsWith('--port='));
-        const port = portArg ? parseInt(portArg.split('=')[1], 10) : 8011;
-
-        try {
-            console.info(chalk.green(`Starting the JSON-RPC server at 127.0.0.1:${port}`));
-            console.info(chalk.green(`Running command: ${command}`));
-
-            execSync(command, { stdio: 'inherit' });
-        } catch (error: any) {
-            if (PROCESS_TERMINATION_SIGNALS.includes(error.signal)) {
-                console.info(chalk.yellow(`Received ${error.signal} signal. The server process has exited.`));
-                return;
-            }
-            throw new Error(`The server process has exited with an error: ${error.message}`);
-        }
+    public stop(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.serverProcess && !this.serverProcess.killed) {
+                this.serverProcess.kill(); // Sends SIGTERM
+                // this.serverProcess.on('exit', () => {
+                //     resolve();
+                // });
+            } 
+            resolve();
+        });
     }
 }

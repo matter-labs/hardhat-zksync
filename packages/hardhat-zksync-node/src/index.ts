@@ -33,7 +33,6 @@ import {
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
-import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
 import chalk from 'chalk';
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 
@@ -209,9 +208,9 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
             const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
 
             try {
-                server.listen(commandArgs);
+                await server.listen(commandArgs);
             } catch (error: any) {
-                throw new ZkSyncNodePluginError(error.message);
+                throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
             }
         }
     );
@@ -270,44 +269,35 @@ task(
         // Download the binary, if necessary
         const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
-        // Start the zkSync node using TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS
-        const taskArgs: any[] = [
-            /* Add necessary arguments here */
-        ];
-        const { process: taskProcess, port } = await run(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, {
-            taskArgs: taskArgs,
-        });
-
-        await waitForNodeToBeReady(port);
-        configureNetwork(network, port);
-
-        let testFailures = 0;
+        const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
+        const commandArgs = constructCommandArgs({ port: currentPort });
+        
+        const server = new JsonRpcServer(binaryPath);
+        
         try {
-            // Run the tests
-            testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
-                testFiles: files,
-                parallel,
-                bail,
-                grep,
-            });
-        } finally {
-            // Ensure we shut down the zkSync node after tests are done
-            if (taskProcess) {
-                try {
-                    process.kill(-taskProcess.pid!);
-                } catch (error: any) {
-                    if (error.code !== 'ESRCH') {
-                        // ESRCH means the process was already terminated
-                        console.info(
-                            chalk.red(`Failed to kill the zkSync node process when running tests: ${error.message}`)
-                        );
-                    }
-                }
-            }
-        }
+            await server.listen(commandArgs, false);
 
-        process.exitCode = testFailures;
-        return testFailures;
+            await waitForNodeToBeReady(currentPort);
+            configureNetwork(network, currentPort);
+
+            let testFailures = 0;
+            try {
+                // Run the tests
+                testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
+                    testFiles: files,
+                    parallel,
+                    bail,
+                    grep,
+                });
+            } finally {
+                await server.stop();
+            }
+
+            process.exitCode = testFailures;
+            return testFailures;
+        } catch (error: any) {
+            throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
+        }
     }
 );
 

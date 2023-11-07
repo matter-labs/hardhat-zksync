@@ -8,7 +8,7 @@ export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
 export const TASK_NODE_ZKSYNC_DOWNLOAD_BINARY = 'node-zksync:download-binary';
 export const TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS = 'node-zksync:run-in-separate-process';
 
-export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM'];
+export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGKILL'];
 
 export const ALLOWED_LOG_VALUES = ['error', 'warn', 'info', 'debug'];
 export const ALLOWED_CACHE_VALUES = ['none', 'disk', 'memory'];
