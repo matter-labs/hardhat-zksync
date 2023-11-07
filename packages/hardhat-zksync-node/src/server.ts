@@ -1,9 +1,10 @@
 import { spawn, ChildProcess, StdioOptions } from 'child_process';
 import chalk from 'chalk';
 
+import { PROCESS_TERMINATION_SIGNALS } from './constants';
+
 export class JsonRpcServer {
     private serverProcess: ChildProcess | null = null;
-    private keepAliveInterval: NodeJS.Timeout | null = null;
 
     constructor(private readonly serverBinaryPath: string) { }
 
@@ -22,33 +23,25 @@ export class JsonRpcServer {
 
             let stdioConfig: StdioOptions = 'inherit';
             if (!blockProcess) {
-                // When not blocking, ignore all stdio
                 stdioConfig = ['ignore', 'ignore', 'ignore'];
             }
             this.serverProcess = spawn(command, commandArgs, { stdio: stdioConfig });
 
             this.serverProcess.on('error', (error) => {
-                console.error(chalk.red('Error starting server process:', error));
-                this.clearKeepAlive();
-                reject(error);
+                console.info(chalk.red('Error running the server:', error));
+                reject(new Error('Error running the server: ' + error.message));
             });
 
-            this.serverProcess.on('exit', (code) => {
-                if (blockProcess) {
-                    console.info(chalk.yellow('Server process has been stopped.'));
-                }
-                this.clearKeepAlive();
-                if (code !== 0) {
-                    reject(new Error(`Server process exited with code ${code}`));
-                } else {
+            this.serverProcess.on('exit', (code, signal) => {
+                if (signal && PROCESS_TERMINATION_SIGNALS.includes(signal)) {
+                    console.info(chalk.yellow(`Received ${signal} signal. The server process has exited.`));
                     resolve();
+                } else {
+                    reject(new Error(`The server process exited with code: ${code}`));
                 }
             });
 
-            if (blockProcess) {
-                this.keepAlive();
-            } else {
-                // Resolve immediately for non-blocking mode
+            if (!blockProcess) {
                 resolve();
             }
         });
@@ -58,27 +51,11 @@ export class JsonRpcServer {
         return new Promise((resolve) => {
             if (this.serverProcess && !this.serverProcess.killed) {
                 this.serverProcess.kill(); // Sends SIGTERM
-                this.serverProcess.on('exit', () => {
-                    this.clearKeepAlive();
-                    resolve();
-                });
-            } else {
-                this.clearKeepAlive();
-                resolve();
-            }
+                // this.serverProcess.on('exit', () => {
+                //     resolve();
+                // });
+            } 
+            resolve();
         });
-    }
-
-    private keepAlive() {
-        if (!this.keepAliveInterval) {
-            this.keepAliveInterval = setInterval(() => { }, 1e6);
-        }
-    }
-
-    private clearKeepAlive() {
-        if (this.keepAliveInterval) {
-            clearInterval(this.keepAliveInterval);
-            this.keepAliveInterval = null;
-        }
     }
 }

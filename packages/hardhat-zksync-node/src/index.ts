@@ -33,7 +33,6 @@ import {
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
-import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
 import chalk from 'chalk';
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 
@@ -210,28 +209,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
 
             try {
                 await server.listen(commandArgs);
-                console.log(chalk.green(`zkSync node started on port ${port}`));
-
-                // Example for a long-running task or a task that needs to interact with the server
-                // Keep the process running until a signal is received
-                process.on('SIGINT', async () => {
-                    await server.stop();
-                    console.log(chalk.green('zkSync node stopped by SIGINT'));
-                    process.exit(0);
-                });
-
-                process.on('SIGTERM', async () => {
-                    await server.stop();
-                    console.log(chalk.green('zkSync node stopped by SIGTERM'));
-                    process.exit(0);
-                });
-
-                // If the task is not supposed to exit (like a watch task), you can add:
-                // return new Promise(() => {}); // to keep it running
-
-            } catch (error) {
-                console.error(chalk.red(`Failed to start zkSync node: ${error}`));
-                process.exit(1);
+            } catch (error: any) {
+                throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
             }
         }
     );
@@ -290,17 +269,11 @@ task(
         // Download the binary, if necessary
         const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
-        // Start the zkSync node using TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS
-        const taskArgs: any[] = [
-            /* Add necessary arguments here */
-        ];
-
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
         const commandArgs = constructCommandArgs({ port: currentPort });
+        
         const server = new JsonRpcServer(binaryPath);
-        // const { process: taskProcess, port } = await run(TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS, {
-        //     taskArgs: taskArgs,
-        // });
+        
         try {
             await server.listen(commandArgs, false);
 
@@ -323,8 +296,7 @@ task(
             process.exitCode = testFailures;
             return testFailures;
         } catch (error: any) {
-            console.error(chalk.red(`Failed to start or stop the zkSync node: ${error.message}`));
-            process.exit(1);
+            throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
         }
     }
 );

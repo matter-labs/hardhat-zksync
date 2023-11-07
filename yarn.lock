@@ -833,7 +833,7 @@
     ts-morph "^19.0.0"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
-  version "0.0.1-beta.5"
+  version "0.0.1-beta.6"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "1.0.0"
     axios "^1.4.0"
@@ -902,7 +902,7 @@
     semver "^7.5.4"
 
 "@matterlabs/hardhat-zksync-zksync2js@link:packages/hardhat-zksync-zksync2js":
-  version "0.0.1-beta.1"
+  version "0.0.1-beta.2"
   dependencies:
     chalk "5.3.0"
 
@@ -7640,6 +7640,11 @@ zksync-crypto@^0.6.1:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.6.2.tgz#319dc9b1a274c1c8feaa40f81636ef326eb2c28b"
   integrity sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==
+
+zksync-web3@^0.14.3:
+  version "0.14.4"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.14.4.tgz#0b70a7e1a9d45cc57c0971736079185746d46b1f"
+  integrity sha512-kYehMD/S6Uhe1g434UnaMN+sBr9nQm23Ywn0EUP5BfQCsbjcr3ORuS68PosZw8xUTu3pac7G6YMSnNHk+fwzvg==
 
 zksync2-js@^0.2.2:
   version "0.2.2"
