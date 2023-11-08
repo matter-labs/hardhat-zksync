@@ -61,6 +61,8 @@ const createGithubRelease = async (tag, releaseNotes) => {
         tag,
         '--notes',
         releaseNotes || '',
+        '--prerelease',
+        (tag.includes("alpha") || tag.includes("beta")) ? true : false,
     ]);
 
     if (code !== 0) {
