@@ -35,7 +35,7 @@
     "@matterlabs/hardhat-zksync-deploy": "^1.0.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.0",
     "@openzeppelin/upgrades-core": "^1.31.0",
-    "dockerode": "^3.3.4"
+    "dockerode": "^4.0.0"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^1.0.0",
