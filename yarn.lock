@@ -777,20 +777,7 @@
     read-yaml-file "^1.1.0"
 
 "@matterlabs/hardhat-zksync-chai-matchers@link:packages/hardhat-zksync-chai-matchers":
-  version "0.1.4"
-
-"@matterlabs/hardhat-zksync-chai-matchers@link:packages/packages/hardhat-zksync-chai-matchers":
-  version "0.0.0"
-  uid ""
-
-"@matterlabs/hardhat-zksync-deploy@0.6.5":
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-deploy/-/hardhat-zksync-deploy-0.6.5.tgz#fe56bf30850e71c8d328ac1a06a100c1a0af6e3e"
-  integrity sha512-EZpvn8pDslfO3UA2obT8FOi5jsHhxYS5ndIR7tjL2zXKbvkbpoJR5rgKoGTJJm0riaCud674sQcxMOybVQ+2gg==
-  dependencies:
-    "@matterlabs/hardhat-zksync-solc" "0.4.2"
-    chalk "4.1.2"
-    ts-morph "^19.0.0"
+  version "1.0.0"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
   version "1.0.0"
@@ -817,18 +804,6 @@
     chalk "4.1.2"
     dockerode "^3.3.4"
     fs-extra "^11.1.1"
-    semver "^7.5.1"
-
-"@matterlabs/hardhat-zksync-solc@0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-0.4.2.tgz#64121082e88c5ab22eb4e9594d120e504f6af499"
-  integrity sha512-6NFWPSZiOAoo7wNuhMg4ztj7mMEH+tLrx09WuCbcURrHPijj/KxYNsJD6Uw5lapKr7G8H7SQISGid1/MTXVmXQ==
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
-    fs-extra "^11.1.1"
-    proper-lockfile "^4.1.2"
     semver "^7.5.1"
 
 "@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
@@ -1074,6 +1049,14 @@
     chai-as-promised "^7.1.1"
     deep-eql "^4.0.1"
     ordinal "^1.0.3"
+
+"@nomicfoundation/hardhat-ethers@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-ethers/-/hardhat-ethers-3.0.4.tgz#6f0df2424e687e26d6574610de7a36bd69485cc1"
+  integrity sha512-k9qbLoY7qn6C6Y1LI0gk2kyHXil2Tauj4kGzQ8pgxYXIGw8lWn8tuuL72E11CrlKaXRUvOgF0EXrv/msPI2SbA==
+  dependencies:
+    debug "^4.1.1"
+    lodash.isequal "^4.5.0"
 
 "@nomicfoundation/hardhat-verify@^1.1.1":
   version "1.1.1"
@@ -5018,6 +5001,11 @@ lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==
 
 lodash.merge@^4.6.2:
   version "4.6.2"
