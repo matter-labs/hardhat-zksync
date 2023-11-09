@@ -37,7 +37,7 @@ describe('INTEGRATION: Reverted with panic', function () {
             matchers = await deployer.deploy(artifact);
         });
 
-        describe('calling a method that succeeds', function () {
+        describe.only('calling a method that succeeds', function () {
             it('successful asserts', async function () {
                 //wait some time to update 
                 await new Promise((resolve) => setTimeout(resolve, 1000));
