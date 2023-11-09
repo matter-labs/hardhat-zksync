@@ -17,10 +17,9 @@ export class RPCServerDownloader {
     private readonly _releaseInfoFile: string = DEFAULT_RELEASE_CACHE_FILE_NAME;
     private readonly _releaseInfoFilePath: string;
 
-    constructor(binaryDir: string, tag: string, releaseInfoFile?: string) {
+    constructor(binaryDir: string, tag: string) {
         this._binaryDir = binaryDir;
         this._tag = tag;
-        this._releaseInfoFile = releaseInfoFile || this._releaseInfoFile;
         this._releaseInfoFilePath = path.join(this._binaryDir, this._releaseInfoFile);
     }
 
@@ -61,7 +60,7 @@ export class RPCServerDownloader {
         return path.join(this._binaryDir, version || (await this._getReleaseTag()));
     }
 
-    public async createBinaryPath(version: string): Promise<string> {
+    private async createBinaryPath(version: string): Promise<string> {
         return path.join(this._binaryDir, version);
     }
 
