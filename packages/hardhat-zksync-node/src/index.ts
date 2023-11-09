@@ -9,31 +9,24 @@ import {
 
 import {
     MAX_PORT_ATTEMPTS,
-    PLUGIN_NAME,
     START_PORT,
     TASK_NODE_ZKSYNC,
     TASK_NODE_ZKSYNC_CREATE_SERVER,
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS,
-    ZKNODE_BIN_OWNER,
-    ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
 import { JsonRpcServer } from './server';
 import {
     adjustTaskArgsForPort,
     configureNetwork,
     constructCommandArgs,
-    getAssetToDownload,
     getAvailablePort,
     getPlatform,
     getRPCServerBinariesDir,
-    getRelease,
-    isPortAvailable,
     waitForNodeToBeReady,
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
-import chalk from 'chalk';
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 
 // Subtask to download the binary
@@ -44,7 +37,7 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
         async (
             {
                 force,
-                tag
+                tag,
             }: {
                 force: boolean;
                 tag: string;
@@ -165,7 +158,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
                 fork,
                 forkBlockNumber,
                 replayTx,
-                tag
+                tag,
             }: {
                 port: number;
                 log: string;
@@ -274,9 +267,9 @@ task(
 
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
         const commandArgs = constructCommandArgs({ port: currentPort });
-        
+
         const server = new JsonRpcServer(binaryPath);
-        
+
         try {
             await server.listen(commandArgs, false);
 

@@ -1,15 +1,20 @@
 import path from 'path';
-import fs from 'fs';
 import fse from 'fs-extra';
 import { download, getAssetToDownload, getRelease } from './utils';
 import { ZkSyncNodePluginError } from './errors';
-import { DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD, PLUGIN_NAME, ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME } from './constants';
+import {
+    DEFAULT_RELEASE_CACHE_FILE_NAME,
+    DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD,
+    PLUGIN_NAME,
+    ZKNODE_BIN_OWNER,
+    ZKNODE_BIN_REPOSITORY_NAME,
+} from './constants';
 import chalk from 'chalk';
 
 export class RPCServerDownloader {
     private readonly _binaryDir: string;
     private readonly _tag: string;
-    private readonly _releaseInfoFile: string = 'listNode.json';
+    private readonly _releaseInfoFile: string = DEFAULT_RELEASE_CACHE_FILE_NAME;
     private readonly _releaseInfoFilePath: string;
 
     constructor(binaryDir: string, tag: string, releaseInfoFile?: string) {
@@ -20,7 +25,11 @@ export class RPCServerDownloader {
     }
 
     public async isDownloaded(): Promise<boolean> {
-        return await this._isReleaseInfoValid() && fs.existsSync(await this.getBinaryPath());
+        return this.isLatestTag() ? await this._isLatestDownloaded() : await this._isBinaryPathExists();
+    }
+
+    private async _isLatestDownloaded(): Promise<boolean | PromiseLike<boolean>> {
+        return (await this._isLatestReleaseInfoValid()) && (await this._isBinaryPathExists());
     }
 
     public async download(): Promise<void> {
@@ -28,17 +37,28 @@ export class RPCServerDownloader {
         const assetToDownload: any = await getAssetToDownload(release);
         try {
             console.info(chalk.yellow(`Downloading era-test-node binary, release: ${release.tag_name}`));
-            await download(assetToDownload.browser_download_url, await this.createBinaryPath(release.tag_name), PLUGIN_NAME, release.tag_name, 30000);
+            await download(
+                assetToDownload.browser_download_url,
+                await this.createBinaryPath(release.tag_name),
+                PLUGIN_NAME,
+                release.tag_name,
+                30000
+            );
             await this._postProcessDownload(release);
-
             console.info(chalk.green('era-test-node binary downloaded successfully'));
         } catch (error: any) {
-            throw new ZkSyncNodePluginError(`Error downloading binary from URL ${assetToDownload.browser_download_url}: ${error.message}`);
+            throw new ZkSyncNodePluginError(
+                `Error downloading binary from URL ${assetToDownload.browser_download_url}: ${error.message}`
+            );
         }
     }
 
-    public async getBinaryPath(): Promise<string> {
-        return path.join(this._binaryDir, await this._getLatestRelease());
+    private async _isBinaryPathExists(): Promise<boolean> {
+        return fse.existsSync(await this.getBinaryPath());
+    }
+
+    public async getBinaryPath(version?: string): Promise<string> {
+        return path.join(this._binaryDir, version || (await this._getReleaseTag()));
     }
 
     public async createBinaryPath(version: string): Promise<string> {
@@ -46,34 +66,20 @@ export class RPCServerDownloader {
     }
 
     private async _postProcessDownload(release: any): Promise<void> {
-        const binaryPath = await this.getBinaryPath();
+        const binaryPath = await this.getBinaryPath(release.tag_name);
         fse.chmodSync(binaryPath, 0o755);
 
-        let nodeReleaseInfo = await this._getNodeReleaseInfo();
-
-        if (!this.isLatestTag()) {
-            if (!nodeReleaseInfo.specified.includes(this._tag)) {
-                nodeReleaseInfo.specified.push(this._tag);
-            }
-        } else {
-            nodeReleaseInfo.latest = release.tag_name;
+        if (this.isLatestTag()) {
+            await fse.writeJSON(this._releaseInfoFilePath, { latest: release.tag_name });
         }
-
-        await fse.writeJSON(this._releaseInfoFilePath, nodeReleaseInfo);
     }
 
-    private async _isReleaseInfoValid() {
+    private async _getReleaseTag() {
+        return this.isLatestTag() ? (await this._getLatestReleaseInfo()).latest : this._tag;
+    }
+
+    private async _isLatestReleaseInfoValid() {
         if (!fse.existsSync(this._releaseInfoFilePath)) {
-            return false;
-        }
-
-        const nodeReleaseInfo = await this._getNodeReleaseInfo();
-
-        if (!this.isLatestTag()) {
-            return !nodeReleaseInfo.specified.includes(this._tag) && fse.existsSync(`${this._binaryDir}/${this._tag}.json`);
-        }
-
-        if (nodeReleaseInfo.latest === '') {
             return false;
         }
 
@@ -83,17 +89,8 @@ export class RPCServerDownloader {
         return age < DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD;
     }
 
-    private async _getNodeReleaseInfo() {
-        if (!fse.existsSync(this._releaseInfoFilePath)) {
-            return { specified: [], latest: '' };
-        }
-
+    private async _getLatestReleaseInfo() {
         return await fse.readJSON(this._releaseInfoFilePath);
-    }
-
-    private async _getLatestRelease() {
-        const nodeReleaseInfo = await this._getNodeReleaseInfo();
-        return this.isLatestTag() ? nodeReleaseInfo.latest : this._tag;
     }
 
     private isLatestTag() {

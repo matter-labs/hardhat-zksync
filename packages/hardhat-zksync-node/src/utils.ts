@@ -154,8 +154,8 @@ export async function getRPCServerBinariesDir(): Promise<string> {
 
 // Get latest release from GitHub of the era-test-node binary
 export async function getRelease(owner: string, repo: string, userAgent: string, tag?: string): Promise<any> {
-    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`
-    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`
+    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
+    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
 
     try {
         const response = await axios.get(url, {
@@ -169,7 +169,8 @@ export async function getRelease(owner: string, repo: string, userAgent: string,
         if (error.response) {
             // The request was made and the server responded with a status code outside of the range of 2xx
             throw new ZkSyncNodePluginError(
-                `Failed to get latest release for ${owner}/${repo}. Status: ${error.response.status
+                `Failed to get latest release for ${owner}/${repo}. Status: ${
+                    error.response.status
                 }, Data: ${JSON.stringify(error.response.data)}`
             );
         } else if (error.request) {
