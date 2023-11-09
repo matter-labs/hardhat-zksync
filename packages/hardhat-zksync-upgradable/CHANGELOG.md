@@ -4,7 +4,7 @@
 
 ### Major Changes
 
-- fa9527a: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
+- d673e3bc: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
 
 ## 0.1.3
 
