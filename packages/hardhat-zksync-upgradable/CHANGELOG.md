@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 1.0.0
+
+### Major Changes
+
+- d673e3bc: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
+
 ## 0.1.3
 
 ### Patch Changes
