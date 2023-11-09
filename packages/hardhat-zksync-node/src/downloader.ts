@@ -41,7 +41,7 @@ export class RPCServerDownloader {
         return path.join(this._binaryDir, await this._getLatestRelease());
     }
 
-    public async createBinaryPath(version : string): Promise<string> {
+    public async createBinaryPath(version: string): Promise<string> {
         return path.join(this._binaryDir, version);
     }
 
@@ -51,28 +51,40 @@ export class RPCServerDownloader {
 
         let nodeReleaseInfo = await this._getNodeReleaseInfo();
 
-        !this.isLatestTag() ? nodeReleaseInfo.specified.push(this._tag) : nodeReleaseInfo.latest = release.tag_name;
+        if (!this.isLatestTag()) {
+            if (!nodeReleaseInfo.specified.includes(this._tag)) {
+                nodeReleaseInfo.specified.push(this._tag);
+            }
+        } else {
+            nodeReleaseInfo.latest = release.tag_name;
+        }
+
         await fse.writeJSON(this._releaseInfoFilePath, nodeReleaseInfo);
     }
 
     private async _isReleaseInfoValid() {
-        if(!fse.existsSync(this._releaseInfoFilePath)) {
+        if (!fse.existsSync(this._releaseInfoFilePath)) {
             return false;
         }
 
         const nodeReleaseInfo = await this._getNodeReleaseInfo();
-        if(!this.isLatestTag()) {
+
+        if (!this.isLatestTag()) {
             return !nodeReleaseInfo.specified.includes(this._tag) && fse.existsSync(`${this._binaryDir}/${this._tag}.json`);
         }
-    
+
+        if (nodeReleaseInfo.latest === '') {
+            return false;
+        }
+
         const stats = await fse.stat(this._releaseInfoFilePath);
         const age = new Date().valueOf() - stats.ctimeMs;
-    
+
         return age < DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD;
     }
-    
+
     private async _getNodeReleaseInfo() {
-        if(!fse.existsSync(this._releaseInfoFilePath)) {
+        if (!fse.existsSync(this._releaseInfoFilePath)) {
             return { specified: [], latest: '' };
         }
 
@@ -81,7 +93,7 @@ export class RPCServerDownloader {
 
     private async _getLatestRelease() {
         const nodeReleaseInfo = await this._getNodeReleaseInfo();
-        return this._tag === 'latest' ? nodeReleaseInfo.latest : this._tag;
+        return this.isLatestTag() ? nodeReleaseInfo.latest : this._tag;
     }
 
     private isLatestTag() {
