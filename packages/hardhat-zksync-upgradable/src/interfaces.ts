@@ -43,7 +43,7 @@ export interface RunCompilerArgs {
     solcVersion: string;
 }
 
-export type ContractAddressOrInstance = string | { address: string };
+export type ContractAddressOrInstance = string | { getAddress(): Promise<string> };
 
 export type RecursivePartial<T> = { [k in keyof T]?: RecursivePartial<T[k]> };
 

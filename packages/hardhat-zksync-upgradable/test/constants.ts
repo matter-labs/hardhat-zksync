@@ -8,7 +8,7 @@ export const standaloneValidationErrors = {
     USE_OF_DELEGATE_CALL: 'Use of delegatecall is not allowed',
     STATE_VARIABLE_ASSIGNMENT: 'Variable `value` is assigned an initial value',
     STATE_VARIABLE_IMMUTABLE: 'Variable `secondValue` is immutable',
-    MISSING_PUBLIC_UPGRADE_TO: 'Implementation is missing a public `upgradeTo(address)` function',
+    MISSING_PUBLIC_UPGRADE_TO:'Implementation is missing a public `upgradeTo(address)` or `upgradeToAndCall(address,bytes)` function' ,
 };
 
 export const storageLayoutErrors = {

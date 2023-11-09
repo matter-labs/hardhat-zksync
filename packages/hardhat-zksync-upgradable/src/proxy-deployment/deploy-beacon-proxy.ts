@@ -67,7 +67,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         }
         opts.kind = 'beacon';
 
-        const beaconAddress = getContractAddress(beacon);
+        const beaconAddress = await getContractAddress(beacon);
         if (!(await isBeacon(wallet.provider, beaconAddress))) {
             throw new DeployBeaconProxyUnsupportedError(beaconAddress);
         }

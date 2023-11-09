@@ -8,49 +8,43 @@ import { SolcConfig } from 'hardhat/types';
 import { ethers } from 'ethers';
 import { UpgradesError } from '@openzeppelin/upgrades-core';
 
-export type ContractAddressOrInstance = 
-    | string 
-    | { address: string }
-    | { target: string };
+export type ContractAddressOrInstance = string | { getAddress(): Promise<string> };
 
-    export function getContractAddress(addressOrInstance: ContractAddressOrInstance): string {
-        if (typeof addressOrInstance === 'string') {
-            return addressOrInstance;
-        } else if ('address' in addressOrInstance) {
-            return addressOrInstance.address;
-        } else if ('target' in addressOrInstance) {
-            return addressOrInstance.target;
-        }
-        throw new Error('Invalid type for addressOrInstance');
+export async function getContractAddress(addressOrInstance: ContractAddressOrInstance): Promise<string> {
+    if (typeof addressOrInstance === 'string') {
+        return addressOrInstance;
+    } else {
+        return await addressOrInstance.getAddress();
+    }
+}
+
+export function getInitializerData(
+    contractInterface: Interface,
+    args: unknown[],
+    initializer?: string | false,
+): string {
+    if (initializer === false) {
+        return '0x';
     }
 
-    export function getInitializerData(
-        contractInterface: Interface,
-        args: unknown[],
-        initializer?: string | false,
-      ): string {
-        if (initializer === false) {
-          return '0x';
-        }
-      
-        const allowNoInitialization = initializer === undefined && args.length === 0;
-        initializer = initializer ?? 'initialize';
-      
-        const fragment = contractInterface.getFunction(initializer);
-        if (fragment === null) {
-          if (allowNoInitialization) {
+    const allowNoInitialization = initializer === undefined && args.length === 0;
+    initializer = initializer ?? 'initialize';
+
+    const fragment = contractInterface.getFunction(initializer);
+    if (fragment === null) {
+        if (allowNoInitialization) {
             return '0x';
-          } else {
-            throw new UpgradesError(
-              `The contract has no initializer function matching the name or signature: ${initializer}`,
-              () =>
-                `Ensure that the initializer function exists, specify an existing function with the 'initializer' option, or set the 'initializer' option to false to omit the initializer call.`,
-            );
-          }
         } else {
-          return contractInterface.encodeFunctionData(fragment, args);
+            throw new UpgradesError(
+                `The contract has no initializer function matching the name or signature: ${initializer}`,
+                () =>
+                    `Ensure that the initializer function exists, specify an existing function with the 'initializer' option, or set the 'initializer' option to false to omit the initializer call.`,
+            );
         }
-      }
+    } else {
+        return contractInterface.encodeFunctionData(fragment, args);
+    }
+}
 
 /**
  * Gets the constructor args from the given transaction input and creation code.

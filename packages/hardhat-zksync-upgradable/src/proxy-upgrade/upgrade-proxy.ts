@@ -31,7 +31,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         opts: UpgradeProxyOptions = {},
         quiet: boolean = false
     ):Promise<zk.Contract> {
-        const proxyAddress = getContractAddress(proxy);
+        const proxyAddress = await getContractAddress(proxy);
         opts.provider = wallet.provider;
 
         const newImplementationFactory = new zk.ContractFactory<any[],zk.Contract>(
