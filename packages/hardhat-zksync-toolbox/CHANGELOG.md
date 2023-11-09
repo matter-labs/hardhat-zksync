@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-toolbox
 
+## 1.0.0
+
+### Major Changes
+
+- 7e04a2c: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
+
 ## 0.3.0
 
 ### Minor Changes
