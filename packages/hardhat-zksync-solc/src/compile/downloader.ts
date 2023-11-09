@@ -113,7 +113,7 @@ export class ZksolcCompilerDownloader {
         const stats = await fsExtra.stat(compilerVersionInfoPath);
         const age = new Date().valueOf() - stats.ctimeMs;
 
-        return age > ZksolcCompilerDownloader.compilerVersionInfoCachePeriodMs;
+        return age < ZksolcCompilerDownloader.compilerVersionInfoCachePeriodMs;
     }
 
     private static _getCompilerVersionInfoPath(compilersDir: string): string {

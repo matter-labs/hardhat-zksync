@@ -7,7 +7,7 @@ import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
 import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
-import { Provider } from 'zksync-web3';
+import { Provider } from 'zksync2-js';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -154,8 +154,8 @@ export async function getRPCServerBinariesDir(): Promise<string> {
 
 // Get latest release from GitHub of the era-test-node binary
 export async function getRelease(owner: string, repo: string, userAgent: string, tag?: string): Promise<any> {
-    const url = `https://api.github.com/repos/${owner}/${repo}/releases/`
-    tag != 'latest' ? url + `/tags/${tag}` : url + `/latest`
+    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`
+    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`
 
     try {
         const response = await axios.get(url, {
