@@ -61,11 +61,11 @@
     "sinon-chai": "^3.7.0",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync-web3": "^0.16.0"
+    "zksync-web3": "^0.14.3"
   },
   "peerDependencies": {
     "hardhat": "^2.18.1",
-    "zksync-web3": "^0.16.0"
+    "zksync-web3": "^0.14.3"
   },
   "prettier": {
     "tabWidth": 4,

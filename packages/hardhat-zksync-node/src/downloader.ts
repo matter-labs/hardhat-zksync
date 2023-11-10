@@ -34,7 +34,7 @@ export class RPCServerDownloader {
                 const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag);
 
                 if (await this._isBinaryPathExists(release.tag_name)) {
-                    this._postProcessDownload(release.tag_name);
+                    await this._postProcessDownload(release.tag_name);
                     return;
                 }
 
@@ -53,7 +53,7 @@ export class RPCServerDownloader {
                 && info.latest === release.tag_name
                 && await this._isBinaryPathExists(release.tag_name)) {
 
-                this._postProcessDownload(release.tag_name);
+                await this._postProcessDownload(release.tag_name);
                 return;
             }
             await this._download(release);
