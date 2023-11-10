@@ -18,6 +18,9 @@ export const ALLOWED_SHOW_STORAGE_LOGS_VALUES = ['none', 'read', 'write', 'all']
 export const ALLOWED_SHOW_VM_DETAILS_VALUES = ['none', 'all'];
 export const ALLOWED_SHOW_GAS_DETAILS_VALUES = ['none', 'all'];
 
+export const DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
+export const DEFAULT_RELEASE_CACHE_FILE_NAME = 'latestRelease.json';
+
 export const PLATFORM_MAP: Record<string, string> = {
     darwin: 'apple-darwin',
     linux: 'unknown-linux-gnu',

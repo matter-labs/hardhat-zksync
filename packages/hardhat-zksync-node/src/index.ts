@@ -9,42 +9,38 @@ import {
 
 import {
     MAX_PORT_ATTEMPTS,
-    PLUGIN_NAME,
     START_PORT,
     TASK_NODE_ZKSYNC,
     TASK_NODE_ZKSYNC_CREATE_SERVER,
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS,
-    ZKNODE_BIN_OWNER,
-    ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
 import { JsonRpcServer } from './server';
 import {
     adjustTaskArgsForPort,
     configureNetwork,
     constructCommandArgs,
-    getAssetToDownload,
     getAvailablePort,
-    getLatestRelease,
     getPlatform,
     getRPCServerBinariesDir,
-    isPortAvailable,
     waitForNodeToBeReady,
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
-import chalk from 'chalk';
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 
 // Subtask to download the binary
 subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary')
     .addFlag('force', 'Force download even if the binary already exists')
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
     .setAction(
         async (
             {
                 force,
+                tag,
             }: {
                 force: boolean;
+                tag: string;
             },
             hre
         ) => {
@@ -52,19 +48,11 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
             const rpcServerBinaryDir = await getRPCServerBinariesDir();
 
             // Get the latest release of the binary
-            const latestRelease = await getLatestRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME);
-            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, latestRelease.tag_name);
+            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
 
-            // Check if the binary is already downloaded
-            if (!force && (await downloader.isDownloaded())) {
-                return downloader.getBinaryPath();
-            }
-
-            // Download the binary
-            const assetToDownload: any = await getAssetToDownload(latestRelease);
-            await downloader.download(assetToDownload.browser_download_url);
-
-            return downloader.getBinaryPath();
+            // Download binary if needed
+            await downloader.downloadIfNeeded(force);
+            return await downloader.getBinaryPath();
         }
     );
 
@@ -145,6 +133,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
     )
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
     // .addFlag('force', 'Force download even if the binary already exists')
     .setAction(
         async (
@@ -164,6 +153,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
                 fork,
                 forkBlockNumber,
                 replayTx,
+                tag,
             }: {
                 port: number;
                 log: string;
@@ -180,6 +170,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
                 fork: string;
                 forkBlockNumber: number;
                 replayTx: string;
+                tag: string;
             },
             { run }
         ) => {
@@ -202,7 +193,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
             });
 
             // Download the binary
-            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
+            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
 
             // Create the server
             const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
@@ -271,9 +262,9 @@ task(
 
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
         const commandArgs = constructCommandArgs({ port: currentPort });
-        
+
         const server = new JsonRpcServer(binaryPath);
-        
+
         try {
             await server.listen(commandArgs, false);
 
