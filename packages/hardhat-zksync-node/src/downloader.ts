@@ -30,7 +30,7 @@ export class RPCServerDownloader {
         }
 
         if (this.isLatestTag()) {
-            if (!await this._isLatestReleaseInfoValid()) {
+            if (!(await this._isLatestReleaseInfoValid())) {
                 const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag);
 
                 if (await this._isBinaryPathExists(release.tag_name)) {
@@ -60,7 +60,7 @@ export class RPCServerDownloader {
             return;
         }
 
-        if (!await this._isBinaryPathExists(this._tag)) {
+        if (!(await this._isBinaryPathExists(this._tag))) {
             await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag));
         }
     }
@@ -126,7 +126,7 @@ export class RPCServerDownloader {
     }
 
     private async _getLatestReleaseInfo() {
-        if (!await this._isLatestReleaseInfoExists()) {
+        if (!(await this._isLatestReleaseInfoExists())) {
             return undefined;
         }
 
