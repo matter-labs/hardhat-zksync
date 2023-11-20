@@ -37,7 +37,7 @@ You can find more detailed explanations on how to use hardhat zkSync plugins on 
 [hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html)\
 [hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html)\
 [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html)
-[hardhat-zksync-toolbox](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-toolbox.html)\
+[hardhat-zksync-toolbox](https://era.zksync.io/docs/tools/hardhat/plugins.html)\
 [hardhat-zksync-upgradeable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html)\
 [hardhat-zksync-zksync2js](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-zksync2js.html)\
 
