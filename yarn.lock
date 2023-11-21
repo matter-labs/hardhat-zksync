@@ -787,7 +787,7 @@
     ts-morph "^19.0.0"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
-  version "0.0.1-beta.6"
+  version "0.0.1-beta.7"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "1.0.0"
     axios "^1.4.0"
