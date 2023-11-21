@@ -41,7 +41,7 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/basic-example` folder.
+# Run the following in `examples/node-example` folder.
 yarn
 yarn hardhat compile
 yarn hardhat deploy-zksync

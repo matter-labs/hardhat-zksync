@@ -1,4 +1,4 @@
-# zkSync 2.0 deploy environment example
+# zkSync 2.0 vyper environment example
 
 This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
 
