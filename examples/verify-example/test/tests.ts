@@ -10,7 +10,7 @@ describe('verify plugin', async function () {
     const testnetVerifyURL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
 
     describe('Testnet verifyURL extraction from config', async function () {
-        useEnvironment('testnet');
+        useEnvironment();
 
         it('Reads verifyURL form network config for existing network ', async function () {
             assert.equal(this.env.network.verifyURL, testnetVerifyURL);
