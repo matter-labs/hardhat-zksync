@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 1.0.1
+
+### Patch Changes
+
+- aa21c21: Added cdn link for downloading vyper compiler
+
 ## 1.0.0
 
 ### Major Changes
