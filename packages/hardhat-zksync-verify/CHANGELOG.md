@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.1.0
+
+### Minor Changes
+
+- 1148d9f: Bumped hardhat-verify version and used latest version zksync solc compiler
+
 ## 1.0.0
 
 ### Major Changes
