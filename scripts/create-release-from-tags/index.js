@@ -53,17 +53,13 @@ const getChangelogPath = (packageName) => {
  * @example ["@matterlabs/hardhat-zksync-solc@0.3.16", "@matterlabs/hardhat-zksync-deploy@0.6.3"]
  */
 const createGithubRelease = async (tag, releaseNotes) => {
-    const { stderr, code } = await spawn('gh', [
-        'release',
-        'create',
-        tag,
-        '--title',
-        tag,
-        '--notes',
-        releaseNotes || '',
-        '--prerelease',
-        (tag.includes("alpha") || tag.includes("beta")) ? true : false,
-    ]);
+    let args = ['release', 'create', tag, '--title', tag, --notes, releaseNotes || ''];
+
+    if(tag.includes("alpha") || tag.includes("beta")) {
+        args.push('--prerelease');
+    }
+    
+    const { stderr, code } = await spawn('gh', args);
 
     if (code !== 0) {
         throw new Error(stderr.toString());
