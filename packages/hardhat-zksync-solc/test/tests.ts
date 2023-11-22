@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { ZkSyncArtifact } from '../src/types';
 import chalk from 'chalk';
+import fs from 'fs';
 
 import { useEnvironment } from './helpers';
 
@@ -126,6 +127,58 @@ describe('zksolc plugin', async function () {
             );
             assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, 'Artifacts do not match');
             assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, 'Artifacts do not match');
+        });
+    });
+
+    describe('Missing Library', async function () {
+        useEnvironment('missing-libraries');
+
+        it('Should successfully identify all the missing libraries', async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
+                return;
+            }
+
+            await this.env.run(TASK_COMPILE);
+
+            // Assert that there is a json file with the list of missing libraries at the location this.env.config.zksolc.settings.missingLibrariesPath.
+            const missingLibraries = JSON.parse(fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'));
+            assert.isNotEmpty(missingLibraries);
+
+            const expectedMissingLibraries = [
+                {
+                    "contractName": "ChildChildLib",
+                    "contractPath": "contracts/ChildChildLib.sol",
+                    "missingLibraries": []
+                },
+                {
+                    "contractName": "ChildLib",
+                    "contractPath": "contracts/ChildLib.sol",
+                    "missingLibraries": [
+                        "contracts/ChildChildLib.sol:ChildChildLib"
+                    ]
+                },
+                {
+                    "contractName": "MathLib",
+                    "contractPath": "contracts/MathLib.sol",
+                    "missingLibraries": [
+                        "contracts/ChildLib.sol:ChildLib"
+                    ]
+                }
+            ];
+
+            // Assert that list of missing libraries is correct.
+            assert.deepEqual(missingLibraries, expectedMissingLibraries);
+        });
+
+        afterEach(async function () {
+            if (this.env.config.solidity.compilers[0].version.startsWith('0.4')) {
+                console.info(chalk.cyan('Test skipped since is not applicable to Solidity 0.4.x.'));
+                return;
+            }
+
+            // Remove the file with the list of missing libraries.
+            fs.unlinkSync(this.env.config.zksolc.settings.missingLibrariesPath!);
         });
     });
 });
