@@ -155,12 +155,12 @@ export class ZksolcCompilerDownloader {
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-        const originalUrl = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
+        const rawUrl = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
         const cdnUrl = `${ZKSOLC_BIN_CDN_VERSION_INFO}/version.json`;
         try {
             await download(cdnUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
         } catch (error) {
-            await download(originalUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
+            await download(rawUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
         }
     }
 
