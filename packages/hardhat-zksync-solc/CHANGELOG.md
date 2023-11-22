@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-solc
 
+## 1.0.1
+
+### Patch Changes
+
+- efbc6d8: Added CDN for compiler file version info download.
+
 ## 1.0.0
 
 ### Major Changes
