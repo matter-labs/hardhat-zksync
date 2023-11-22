@@ -11,6 +11,8 @@ import {
     COMPILER_VERSION_RANGE_ERROR, 
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
+    DEFAULT_TIMEOUT_MILISECONDS, 
+    ZKVYPER_BIN_CDN_VERSION_INFO, 
     ZKVYPER_BIN_REPOSITORY, 
     ZKVYPER_BIN_VERSION_INFO 
 } from "../constants";
@@ -143,10 +145,14 @@ export class ZkVyperCompilerDownloader {
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const url = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-
-        await download(url, downloadPath, 'hardhat-zksync-zkvyper', 'compiler-version-info', 30000);
+        const rawUrl = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
+        const cdnUrl = `${ZKVYPER_BIN_CDN_VERSION_INFO}/version.json`
+        try{
+            await download(cdnUrl,downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info',DEFAULT_TIMEOUT_MILISECONDS)
+        }catch(error){
+            await download(rawUrl, downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
+        }
     }
 
     private async _downloadCompiler(): Promise<string> {
@@ -174,7 +180,7 @@ export class ZkVyperCompilerDownloader {
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
-        return download(url, downloadPath, 'hardhat-zksync-zkvyper', this._version, 30000);
+        return download(url, downloadPath, 'hardhat-zksync-zkvyper', this._version, DEFAULT_TIMEOUT_MILISECONDS);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {
