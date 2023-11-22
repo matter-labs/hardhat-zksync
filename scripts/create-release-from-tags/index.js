@@ -53,7 +53,7 @@ const getChangelogPath = (packageName) => {
  * @example ["@matterlabs/hardhat-zksync-solc@0.3.16", "@matterlabs/hardhat-zksync-deploy@0.6.3"]
  */
 const createGithubRelease = async (tag, releaseNotes) => {
-    let args = ['release', 'create', tag, '--title', tag, --notes, releaseNotes || ''];
+    let args = ['release', 'create', tag, '--title', tag, '--notes', releaseNotes || ''];
 
     if(tag.includes("alpha") || tag.includes("beta")) {
         args.push('--prerelease');
