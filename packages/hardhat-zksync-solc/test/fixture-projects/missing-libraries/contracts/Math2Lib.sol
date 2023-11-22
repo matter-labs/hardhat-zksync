@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.17;
 import "./ChildLib.sol";
 library Math2Lib {
 
