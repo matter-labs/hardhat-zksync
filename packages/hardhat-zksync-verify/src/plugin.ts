@@ -113,7 +113,7 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
 
     if (isValidVerification?.errorExists()) {
-        throw new ZkSyncVerifyPluginError(isValidVerification.getError());
+        throw new ZkSyncVerifyPluginError("Backend verification error: " + isValidVerification.getError());
     }
     console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
     return true;

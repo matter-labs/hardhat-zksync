@@ -148,6 +148,7 @@ export async function verifyContract(
         contractFQN: contractFQN,
         deployedBytecode: deployedBytecode,
         matchingCompilerVersions: compilerVersions,
+        libraries:libraries
     });
 
     const solcVersion = contractInformation.solcVersion;
