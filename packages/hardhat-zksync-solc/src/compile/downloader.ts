@@ -14,8 +14,9 @@ import {
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
     ZKSOLC_BIN_REPOSITORY, 
-    ZKSOLC_BIN_VERSION_INFO 
-} from "../constants";
+    ZKSOLC_BIN_VERSION_INFO, 
+    ZKSOLC_BIN_CDN_VERSION_INFO,
+    DEFAULT_TIMEOUT_MILISECONDS} from "../constants";
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -153,10 +154,14 @@ export class ZksolcCompilerDownloader {
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const url = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-
-        await download(url, downloadPath, 'hardhat-zksync', 'compiler-version-info', 30000);
+        const rawUrl = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
+        const cdnUrl = `${ZKSOLC_BIN_CDN_VERSION_INFO}/version.json`;
+        try {
+            await download(cdnUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
+        } catch (error) {
+            await download(rawUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
+        }
     }
 
     private async _downloadCompiler(): Promise<string> {
@@ -171,7 +176,6 @@ export class ZksolcCompilerDownloader {
                 await this._attemptDownload(fallbackUrl, downloadPath);
             }
         }
-    
         return downloadPath;
     }
 
@@ -183,7 +187,7 @@ export class ZksolcCompilerDownloader {
     }
     
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
-        return download(url, downloadPath, 'hardhat-zksync', this._version, 30000);
+        return download(url, downloadPath, 'hardhat-zksync', this._version, DEFAULT_TIMEOUT_MILISECONDS);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {

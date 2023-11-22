@@ -1,4 +1,4 @@
-# zkSync 2.0 deploy environment example
+# zkSync 2.0 zksync2-js environment example
 
 This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
 
@@ -46,7 +46,7 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/basic-example` folder.
+# Run the following in `examples/zksync2js-example` folder.
 yarn
 yarn hardhat compile
 yarn hardhat deploy-zksync

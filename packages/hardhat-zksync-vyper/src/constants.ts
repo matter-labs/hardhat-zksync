@@ -4,7 +4,8 @@ export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-vyper';
 export const SOLIDITY_EXTENSION = '.sol';
 export const ZKVYPER_BIN_REPOSITORY = 'https://github.com/matter-labs/zkvyper-bin';
 export const ZKVYPER_BIN_VERSION_INFO = `https://raw.githubusercontent.com/matter-labs/zkvyper-bin/main`;
-
+export const ZKVYPER_BIN_CDN_VERSION_INFO = `https://cdn.jsdelivr.net/gh/matter-labs/zkvyper-bin`;
+export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 export const TASK_COMPILE_VYPER_CHECK_ERRORS = 'compile:vyper:check-errors';
 export const TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS = 'compile:vyper:log:compilation-errors';
 
