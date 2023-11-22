@@ -35,7 +35,7 @@
   "dependencies": {
     "@nomiclabs/hardhat-docker": "^2.0.0",
     "chalk": "4.1.2",
-    "dockerode": "^3.3.4",
+    "dockerode": "^4.0.0",
     "fs-extra": "^11.1.1",
     "semver": "^7.5.4"
   },
