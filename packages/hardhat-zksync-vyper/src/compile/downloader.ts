@@ -3,9 +3,10 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download, getZkvyperUrl, isURL, isVersionInRange } from "../utils";
+import { download, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
+    COMPILER_VERSION_INFO_DATA, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, 
     COMPILER_VERSION_RANGE_ERROR, 
@@ -15,7 +16,6 @@ import {
     ZKVYPER_BIN_CDN_VERSION_INFO, 
     ZKVYPER_BIN_REPOSITORY, 
     ZKVYPER_BIN_VERSION_INFO, 
-    COMPILER_VERSION_INFO_DATA
 } from "../constants";
 import { ZkSyncVyperPluginError } from "../errors";
 
@@ -35,21 +35,19 @@ export class ZkVyperCompilerDownloader {
         compilersDir: string,
     ): Promise<ZkVyperCompilerDownloader> {
         if (!ZkVyperCompilerDownloader._instance) {
-            //let compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            let compilerVersionInfo = COMPILER_VERSION_INFO_DATA;
-            //if (compilerVersionInfo === undefined || (await ZkVyperCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
-            //if (compilerVersionInfo === undefined) {
-            //    try {
-            //        await ZkVyperCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
-            //    } catch (e: any) {
-            //        throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
-            //    }
-            //    compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            //}
+            let compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
+            if (compilerVersionInfo === undefined || (await ZkVyperCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
+                try {
+                    await ZkVyperCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
+                } catch (e: any) {
+                    throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
+                }
+                compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
+            }
             
-            //if (compilerVersionInfo === undefined) {
-            //    throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
-            //}
+            if (compilerVersionInfo === undefined) {
+                throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
+            }
             
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
@@ -149,13 +147,15 @@ export class ZkVyperCompilerDownloader {
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
         const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-        const rawUrl = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
-        const cdnUrl = `${ZKVYPER_BIN_CDN_VERSION_INFO}/version.json`
-        try{
-            await download(cdnUrl,downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info',DEFAULT_TIMEOUT_MILISECONDS)
-        }catch(error){
-            await download(rawUrl, downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
-        }
+        await saveDataToFile(COMPILER_VERSION_INFO_DATA,downloadPath);
+        //const rawUrl = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
+        //const cdnUrl = `${ZKVYPER_BIN_CDN_VERSION_INFO}/version.json`
+        //try{
+        //    await download(cdnUrl,downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info',DEFAULT_TIMEOUT_MILISECONDS)
+        //}catch(error){
+        //    await download(rawUrl, downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
+        //}
+
     }
 
     private async _downloadCompiler(): Promise<string> {
