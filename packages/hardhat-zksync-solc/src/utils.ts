@@ -253,5 +253,6 @@ export async function download(
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
-        return await fse.writeJSON(targetPath, data);
+        await fse.ensureDir(path.dirname(targetPath));
+        await fse.writeJSON(targetPath, data, { spaces: 2 });
 }
