@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-solc
 
+## 1.0.2
+
+### Patch Changes
+
+- 13419e9: Localized compiler version info data
+
 ## 1.0.1
 
 ### Patch Changes
