@@ -8,7 +8,6 @@ import {
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, 
-    COMPILER_VERSION_INFO_FILE_NOT_FOUND_LOCALY_ERROR, 
     COMPILER_VERSION_RANGE_ERROR, 
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
@@ -16,7 +15,7 @@ import {
     ZKVYPER_BIN_CDN_VERSION_INFO, 
     ZKVYPER_BIN_REPOSITORY, 
     ZKVYPER_BIN_VERSION_INFO, 
-    compilerVersionInfoData
+    COMPILER_VERSION_INFO_DATA
 } from "../constants";
 import { ZkSyncVyperPluginError } from "../errors";
 
@@ -36,20 +35,21 @@ export class ZkVyperCompilerDownloader {
         compilersDir: string,
     ): Promise<ZkVyperCompilerDownloader> {
         if (!ZkVyperCompilerDownloader._instance) {
-            let compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            if (compilerVersionInfo === undefined || (await ZkVyperCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
-                try {
-                    await ZkVyperCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
-                } catch (e: any) {
-                    throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
-                }
-                //compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
-                compilerVersionInfo = compilerVersionInfoData;
-            }
+            //let compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
+            let compilerVersionInfo = COMPILER_VERSION_INFO_DATA;
+            //if (compilerVersionInfo === undefined || (await ZkVyperCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
+            //if (compilerVersionInfo === undefined) {
+            //    try {
+            //        await ZkVyperCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
+            //    } catch (e: any) {
+            //        throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
+            //    }
+            //    compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
+            //}
             
-            if (compilerVersionInfo === undefined) {
-                throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
-            }
+            //if (compilerVersionInfo === undefined) {
+            //    throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
+            //}
             
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
