@@ -3,9 +3,7 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { performance } from 'perf_hooks';
-
-import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl } from "../utils";
+import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
@@ -16,7 +14,8 @@ import {
     ZKSOLC_BIN_REPOSITORY, 
     ZKSOLC_BIN_VERSION_INFO, 
     ZKSOLC_BIN_CDN_VERSION_INFO,
-    DEFAULT_TIMEOUT_MILISECONDS} from "../constants";
+    DEFAULT_TIMEOUT_MILISECONDS,
+    ZKSOLC_COMPILER_VERSION_INFO_DATA} from "../constants";
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -153,15 +152,22 @@ export class ZksolcCompilerDownloader {
         await this._verifyCompiler();
     }
 
+    /*
+        Currently, the compiler version info is pulled from the constants and not from the remote origin, in the future we will allow it to be downloaded from CDN-a. 
+        We are currently limited in that each new version requires an update of the plugin version.
+    */
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
+        /*const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
         const rawUrl = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
         const cdnUrl = `${ZKSOLC_BIN_CDN_VERSION_INFO}/version.json`;
         try {
             await download(cdnUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
         } catch (error) {
             await download(rawUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
-        }
+        }*/
+        
+        const savePath = this._getCompilerVersionInfoPath(compilersDir);
+        await saveDataToFile(ZKSOLC_COMPILER_VERSION_INFO_DATA, savePath);
     }
 
     private async _downloadCompiler(): Promise<string> {

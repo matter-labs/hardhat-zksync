@@ -251,3 +251,7 @@ export async function download(
         `Failed to download ${url} - ${response.statusCode} received. ${text}`
     );
 }
+
+export async function saveDataToFile(data: any, targetPath: string) {
+        return await fse.writeJSON(targetPath, data);
+}
