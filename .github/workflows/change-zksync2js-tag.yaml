@@ -2,8 +2,6 @@ name: Change zksync2js release tag
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   change-zksync2js-release-tag:
