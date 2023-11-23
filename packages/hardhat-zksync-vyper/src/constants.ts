@@ -39,3 +39,8 @@ export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) => `The z
 export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: string) => `Compiling contracts for zkSync Era with zkvyper v${zksolcVersion} and vyper v${solcVersion}`;
 
 export const VYPER_VERSION_ERROR = 'Vyper versions 0.3.4 to 0.3.7 are not supported by zkvyper. Please use vyper 0.3.3 or >=0.3.8 in your hardhat.config file instead.'
+
+export const COMPILER_VERSION_INFO_DATA = {
+    "latest": "1.3.13",
+    "minVersion": "1.3.9"
+}
