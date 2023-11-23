@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 1.0.2
+
+### Patch Changes
+
+- 67892c0: Localized compiler version data
+
 ## 1.0.1
 
 ### Patch Changes
