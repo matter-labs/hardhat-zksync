@@ -1,0 +1,29 @@
+name: Delete zksync2js release tags
+
+on:
+  push:
+
+jobs:
+  delete-zksync2js-release-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: yarn && yarn build
+
+      - name: Delete tags
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        run: |
+          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.1
+          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.0
