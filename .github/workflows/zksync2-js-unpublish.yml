@@ -25,5 +25,5 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.1
-          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.0
+          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.1 --force
+          npm unpublish @matterlabs/hardhat-zksync-zksync2js@0.0.1-beta.0 --force
