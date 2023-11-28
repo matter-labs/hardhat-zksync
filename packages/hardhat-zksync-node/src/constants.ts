@@ -8,7 +8,7 @@ export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
 export const TASK_NODE_ZKSYNC_DOWNLOAD_BINARY = 'node-zksync:download-binary';
 export const TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS = 'node-zksync:run-in-separate-process';
 
-export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM'];
+export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGKILL'];
 
 export const ALLOWED_LOG_VALUES = ['error', 'warn', 'info', 'debug'];
 export const ALLOWED_CACHE_VALUES = ['none', 'disk', 'memory'];
@@ -17,6 +17,9 @@ export const ALLOWED_SHOW_CALLS_VALUES = ['none', 'user', 'system', 'all'];
 export const ALLOWED_SHOW_STORAGE_LOGS_VALUES = ['none', 'read', 'write', 'all'];
 export const ALLOWED_SHOW_VM_DETAILS_VALUES = ['none', 'all'];
 export const ALLOWED_SHOW_GAS_DETAILS_VALUES = ['none', 'all'];
+
+export const DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
+export const DEFAULT_RELEASE_CACHE_FILE_NAME = 'latestRelease.json';
 
 export const PLATFORM_MAP: Record<string, string> = {
     darwin: 'apple-darwin',

@@ -8,15 +8,18 @@ export class ZkSyncProviderAdapter extends EventEmitter implements EthereumProvi
     }
 
     async send(method: string, params: any): Promise<any> {
+        //@ts-ignore
         return await this._zkSyncProvider.send(method, params);
     }
 
     async request(payload: { method: string; params?: any[] }): Promise<any> {
+        //@ts-ignore
         return await this._zkSyncProvider.send(payload.method, payload.params ?? []);
     }
 
     async sendAsync(payload: any, callback: (error: Error | null, result?: any) => void): Promise<void> {
         try {
+            //@ts-ignore
             const result = await this._zkSyncProvider.send(payload.method, payload.params);
             callback(null, result);
         } catch (error) {

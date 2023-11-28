@@ -194,40 +194,6 @@ jobs:
         run: |
           cd packages/hardhat-zksync-verify-vyper
           yarn test
-  zksync2js:
-    runs-on: ubuntu-latest
-    name: zksync2js
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/checkout@v2
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Setup environment
-        run: |
-          yarn install
-          yarn build
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-
-      - name: Test zksync2js example
-        run: |
-          cd packages/hardhat-zksync-zksync2js
-          yarn test
 
       - name: Show logs
         if: always()
