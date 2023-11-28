@@ -27,7 +27,7 @@ Here is an overview of the plugins currently available:
 
 **hardhat-zksync-upgradeable**: This plugin provides a convenient method to deploy and upgrade smart contracts on the zkSync network.
 
-**hardhat-zksync-upgradeable**: This plugin is a wrapper around zksync2-js sdk that gives additional methods to use for faster development.
+**hardhat-zksync-zksync2js**: This plugin is a wrapper around zksync2-js sdk that gives additional methods to use for faster development.
 
 You can find more detailed explanations on how to use hardhat zkSync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
 
