@@ -194,8 +194,3 @@ jobs:
         run: |
           cd packages/hardhat-zksync-verify-vyper
           yarn test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
