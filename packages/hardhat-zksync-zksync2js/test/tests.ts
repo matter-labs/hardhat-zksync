@@ -1,7 +1,9 @@
 import { assert } from 'chai';
 import { useEnvironment } from './helpers';
-import { Contract, ContractFactory, Wallet } from 'zksync2-js';
+import { Contract, Wallet } from 'zksync2-js';
 import { rich_wallets } from '../src/rich-wallets';
+
+import '../src/type-extensions'
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', async function () {
