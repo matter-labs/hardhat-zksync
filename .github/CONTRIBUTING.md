@@ -31,7 +31,6 @@ git checkout -b feature/description-of-your-feature
 ```bash
 yarn lint
 yarn test
-yarn types
 yarn build
 ```
 
