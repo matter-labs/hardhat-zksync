@@ -53,8 +53,8 @@ git push origin feature/description-of-your-feature
 We follow basic coding style guidelines. Before committing, ensure your code is formatted and lint checks pass:
 
 ```bash
-yarn lint:check
 yarn lint
+yarn lint:fix
 ```
 
 This ensures consistent code style throughout the project and helps identify potential issues early.
