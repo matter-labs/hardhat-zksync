@@ -59,7 +59,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync2-js": "^0.2.2",
+    "zksync2-js": "^0.3.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.8.3"
   },
