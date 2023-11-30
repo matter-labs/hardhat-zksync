@@ -3,8 +3,6 @@ import { ZkSolcConfig } from './types';
 export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-solc';
 export const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKSOLC_BIN_REPOSITORY = 'https://github.com/matter-labs/zksolc-bin';
-export const ZKSOLC_BIN_VERSION_INFO = `https://raw.githubusercontent.com/matter-labs/zksolc-bin/main`;
-export const ZKSOLC_BIN_CDN_VERSION_INFO = `https://cdn.jsdelivr.net/gh/matter-labs/zksolc-bin`;
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
 
@@ -34,10 +32,10 @@ export const ZKSOLC_COMPILERS_SELECTOR_MAP = {
     ]
 };
 
-export const ZKSOLC_COMPILER_VERSION_INFO_DATA = {
-    "latest": "1.3.17",
-    "minVersion": "1.3.13"
-};
+export const ZKSOLC_COMPILER_VERSION_MIN_VERSION = "1.3.13";
+
+export const ZKSOLC_BIN_OWNER = 'matter-labs';
+export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 

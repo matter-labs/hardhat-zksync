@@ -1,5 +1,5 @@
 import semver from 'semver';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
@@ -214,16 +214,31 @@ export async function download(
     filePath: string,
     userAgent: string,
     version: string,
-    timeoutMillis = 10000,
+    timeoutMillis = DEFAULT_TIMEOUT_MILISECONDS,
     extraHeaders: { [name: string]: string } = {}
 ) {
     const { pipeline } = await import("stream");
-    const { getGlobalDispatcher, request } = await import("undici");
     const streamPipeline = util.promisify(pipeline);
 
+    const response = await pureDownload(url, userAgent, version, timeoutMillis, extraHeaders);
+
+    const tmpFilePath = resolveTempFileName(filePath);
+    await fse.ensureDir(path.dirname(filePath));
+
+    await streamPipeline(response, fs.createWriteStream(tmpFilePath));
+    return fse.move(tmpFilePath, filePath, { overwrite: true });
+}
+
+export async function pureDownload( url: string,
+    userAgent: string,
+    version: string,
+    timeoutMillis = DEFAULT_TIMEOUT_MILISECONDS,
+    extraHeaders: { [name: string]: string } = {}): Promise<any> {
+
+    const { getGlobalDispatcher, request } = await import("undici");
     let dispatcher: Dispatcher = getGlobalDispatcher();
 
-    // Fetch the url
+    try {
     const response = await request(url, {
         dispatcher,
         headersTimeout: timeoutMillis,
@@ -235,21 +250,35 @@ export async function download(
         },
     });
 
-    if (response.statusCode >= 200 && response.statusCode <= 299) {
-        const tmpFilePath = resolveTempFileName(filePath);
-        await fse.ensureDir(path.dirname(filePath));
-
-        await streamPipeline(response.body, fs.createWriteStream(tmpFilePath));
-        return fse.move(tmpFilePath, filePath, { overwrite: true });
+        return response.body;
+    } catch (error: any) {
+        if (error.response) {
+            // The request was made and the server responded with a status code outside of the range of 2xx
+            throw new ZkSyncSolcPluginError(
+                `Failed to download from ${url}. Status: ${
+                    error.response.status
+                }, Data: ${JSON.stringify(error.response.data)}`
+            );
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw new ZkSyncSolcPluginError(`No response received from url ${url}. Error: ${error.message}`);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw new ZkSyncSolcPluginError(`Failed to set up the request for ${url}: ${error.message}`);
+        }
     }
-    
-    // undici's response bodies must always be consumed to prevent leaks
-    const text = await response.body.text();
+}
 
-    // eslint-disable-next-line
-    throw new Error(
-        `Failed to download ${url} - ${response.statusCode} received. ${text}`
-    );
+export async function getRelease(owner: string, 
+    repo: string, 
+    userAgent: string, 
+    tag: string = 'latest',  
+    timeoutMillis = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
+    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+
+    let release = await pureDownload(url, userAgent, '', timeoutMillis);
+    return release.json();
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {

@@ -3,6 +3,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
+        version: '1.3.17',
         compilerSource: 'binary',
     },
     networks: {
