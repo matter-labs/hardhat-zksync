@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-solc
 
+## 1.0.3
+
+### Patch Changes
+
+- fc5d370: Fetch compiler version info from the latest release
+
 ## 1.0.2
 
 ### Patch Changes
