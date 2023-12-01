@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- afee64c: Fetch compiler version info from the latest release
+- fc5d370: Fetch compiler version info from the latest release
 
 ## 1.0.2
 
