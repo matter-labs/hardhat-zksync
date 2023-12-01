@@ -8,7 +8,7 @@ import type { Dispatcher } from "undici";
 import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 
 import { CompilerVersionInfo } from './compile/downloader';
-import { UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
+import { DEFAULT_TIMEOUT_MILISECONDS, UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
 import { ZkSyncVyperPluginError } from './errors';
 
 const TEMP_FILE_PREFIX = "tmp-";
@@ -120,6 +120,34 @@ export async function download(
     throw new Error(
         `Failed to download ${url} - ${response.statusCode} received. ${text}`
     );
+}
+
+export async function getRelease(owner: string, repo: string, userAgent: string, tag: string = 'latest', timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
+    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+
+    const { getGlobalDispatcher, request } = await import("undici");
+
+    let dispatcher: Dispatcher = getGlobalDispatcher();
+
+    // Fetch the url
+    const response = await request(url, {
+        dispatcher,
+        headersTimeout: timeout,
+        maxRedirections: 10,
+        method: "GET",
+        headers: {
+            "User-Agent": `${userAgent}`,
+        },
+    });
+
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+        return await response.body.json();
+    }
+
+    const text = await response.body.text();
+
+    throw new ZkSyncVyperPluginError(`No response received for ${owner}/${repo}. Error: ${text}`);
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
