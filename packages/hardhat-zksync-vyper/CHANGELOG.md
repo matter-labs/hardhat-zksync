@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 1.0.3
+
+### Patch Changes
+
+- f738148: Fetch compiler version info from the latest release
+
 ## 1.0.2
 
 ### Patch Changes
