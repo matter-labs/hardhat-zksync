@@ -3,7 +3,7 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile } from "../utils";
+import { download, getRelease, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
@@ -11,11 +11,12 @@ import {
     COMPILER_VERSION_RANGE_ERROR, 
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
-    ZKSOLC_BIN_REPOSITORY, 
-    ZKSOLC_BIN_VERSION_INFO, 
-    ZKSOLC_BIN_CDN_VERSION_INFO,
+    ZKSOLC_BIN_REPOSITORY,
     DEFAULT_TIMEOUT_MILISECONDS,
-    ZKSOLC_COMPILER_VERSION_INFO_DATA} from "../constants";
+    ZKSOLC_COMPILER_VERSION_MIN_VERSION,
+    ZKSOLC_BIN_OWNER,
+    ZKSOLC_BIN_REPOSITORY_NAME,
+    PLUGIN_NAME} from "../constants";
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -157,17 +158,14 @@ export class ZksolcCompilerDownloader {
         We are currently limited in that each new version requires an update of the plugin version.
     */
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        /*const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-        const rawUrl = `${ZKSOLC_BIN_VERSION_INFO}/version.json`;
-        const cdnUrl = `${ZKSOLC_BIN_CDN_VERSION_INFO}/version.json`;
-        try {
-            await download(cdnUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
-        } catch (error) {
-            await download(rawUrl, downloadPath, 'hardhat-zksync', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
-        }*/
-        
+        const realease = await getRelease(ZKSOLC_BIN_OWNER, ZKSOLC_BIN_REPOSITORY_NAME, PLUGIN_NAME);
+
+        const releaseToSave = {
+            latest: realease.tag_name.slice(1, realease.tag_name.length),
+            minVersion: ZKSOLC_COMPILER_VERSION_MIN_VERSION
+        }
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
-        await saveDataToFile(ZKSOLC_COMPILER_VERSION_INFO_DATA, savePath);
+        await saveDataToFile(releaseToSave, savePath);
     }
 
     private async _downloadCompiler(): Promise<string> {

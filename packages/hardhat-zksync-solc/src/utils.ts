@@ -1,5 +1,5 @@
 import semver from 'semver';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
@@ -250,6 +250,34 @@ export async function download(
     throw new Error(
         `Failed to download ${url} - ${response.statusCode} received. ${text}`
     );
+}
+
+export async function getRelease(owner: string, repo: string, userAgent: string, tag: string = 'latest', timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
+    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+
+    const { getGlobalDispatcher, request } = await import("undici");
+
+    let dispatcher: Dispatcher = getGlobalDispatcher();
+
+    // Fetch the url
+    const response = await request(url, {
+        dispatcher,
+        headersTimeout: timeout,
+        maxRedirections: 10,
+        method: "GET",
+        headers: {
+            "User-Agent": `${userAgent}`,
+        },
+    });
+
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+        return await response.body.json();
+    }
+
+    const text = await response.body.text();
+
+    throw new ZkSyncSolcPluginError(`No response received for ${owner}/${repo}. Error: ${text}`);
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
