@@ -75,7 +75,7 @@ export interface HardhatZksync2jsHelpers {
     ) => Promise<Contract>;
 }
 
-export interface NetworkZkSyncConfig {
+export interface NetworksZksyncConfig {
     [networkName: string]: NetworkZksyncConfig;
 }
 

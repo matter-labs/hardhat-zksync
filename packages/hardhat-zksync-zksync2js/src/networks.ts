@@ -1,6 +1,6 @@
-import { NetworkZkSyncConfig } from "./types";
+import { NetworksZksyncConfig } from "./types";
 
-export const zksyncNetworks: NetworkZkSyncConfig = {
+export const zksyncNetworks: NetworksZksyncConfig = {
     zkSyncTestnet: {
         url: "https://testnet.era.zksync.dev",
         ethNetwork: "goerli",
