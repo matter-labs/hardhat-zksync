@@ -1,5 +1,5 @@
 import type * as ethers from 'ethers';
-import type { Artifact } from 'hardhat/types';
+import type { Artifact,  HttpNetworkConfig } from 'hardhat/types';
 import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync2-js';
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
 
@@ -73,4 +73,15 @@ export interface HardhatZksync2jsHelpers {
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[]
     ) => Promise<Contract>;
+}
+
+export interface NetworkZkSyncConfig {
+    [networkName: string]: NetworkZksyncConfig;
+}
+
+
+export interface NetworkZksyncConfig extends HttpNetworkConfig {
+    zksync: boolean;
+    ethNetwork?: string;
+    verifyURL?: string;
 }

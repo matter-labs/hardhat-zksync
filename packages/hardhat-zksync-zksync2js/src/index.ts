@@ -1,6 +1,6 @@
 import { Provider, Wallet } from 'zksync2-js';
 
-import { extendEnvironment } from 'hardhat/config';
+import { extendConfig, extendEnvironment } from 'hardhat/config';
 import { lazyObject } from 'hardhat/plugins';
 import './type-extensions';
 
@@ -19,6 +19,24 @@ import {
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ethers } from 'ethers';
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
+import { zksyncNetworks } from './networks';
+import { NetworksConfig } from 'hardhat/types';
+
+extendConfig((config, userConfig) => {
+    if (!userConfig.networks) {
+        let allNetworks: NetworksConfig = {
+            hardhat: config.networks.hardhat,
+            localhost: config.networks.localhost,
+            zkSyncTestnet: zksyncNetworks.zkSyncTestnet,
+            zkSyncMainnet: zksyncNetworks.zkSyncMainnet,
+            zkSyncDockerizedNode: zksyncNetworks.zkSyncDockerizedNode,
+            zkSyncInMemoryNode: zksyncNetworks.zkSyncInMemoryNode,
+            };
+
+            config.networks = allNetworks;
+        };
+    }
+);
 
 extendEnvironment((hre) => {
     hre.zksync2js = lazyObject(() => {
