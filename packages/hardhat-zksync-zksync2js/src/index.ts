@@ -20,23 +20,24 @@ import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ethers } from 'ethers';
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
 import { zksyncNetworks } from './networks';
-import { NetworksConfig } from 'hardhat/types';
 
 extendConfig((config, userConfig) => {
-    if (!userConfig.networks) {
-        let allNetworks: NetworksConfig = {
-            hardhat: config.networks.hardhat,
-            localhost: config.networks.localhost,
-            zkSyncTestnet: zksyncNetworks.zkSyncTestnet,
-            zkSyncMainnet: zksyncNetworks.zkSyncMainnet,
-            zkSyncDockerizedNode: zksyncNetworks.zkSyncDockerizedNode,
-            zkSyncInMemoryNode: zksyncNetworks.zkSyncInMemoryNode,
-            };
-
-            config.networks = allNetworks;
-        };
+    if (!userConfig.networks?.zkSyncTestnet) {
+        config.networks.zkSyncTestnet = zksyncNetworks.zkSyncTestnet;
     }
-);
+
+    if (!userConfig.networks?.zkSyncMainnet) {
+        config.networks.zkSyncMainnet = zksyncNetworks.zkSyncMainnet;
+    }
+
+    if (!userConfig.networks?.zkSyncDockerizedNode) {
+        config.networks.zkSyncDockerizedNode = zksyncNetworks.zkSyncDockerizedNode;
+    }
+
+    if (!userConfig.networks?.zkSyncInMemoryNode) {
+        config.networks.zkSyncInMemoryNode = zksyncNetworks.zkSyncInMemoryNode;
+    }
+});
 
 extendEnvironment((hre) => {
     hre.zksync2js = lazyObject(() => {
