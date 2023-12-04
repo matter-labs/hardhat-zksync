@@ -8,13 +8,13 @@ const config: HardhatUserConfig = {
         settings: {
             libraries: {
                   "contracts/ChildChildLib.sol": {
-                    "ChildChildLib": "0x492eF3C3DF63741657aE435dCF2E7230CbaA72DA"
+                    "ChildChildLib": "0x5f2B1A703A8346221a5584070E45cd549Fd5c035"
                   },
                   "contracts/ChildLib.sol": {
-                    "ChildLib": "0xBF36823A50C6f2013c855094e4BC55c5564f393E"
+                    "ChildLib": "0x9DFc4aA1B6985F2fF8D6778Cf6De41B63ad24A6b"
                   },
                   "contracts/MathLib.sol": {
-                    "MathLib": "0x9FBac54eBF04e38e856B88A856eD7d3Bc182F03F"
+                    "MathLib": "0x0D0e34A06acb05E46FD4F576E70d342C81695978"
                   }
                 }
         }
