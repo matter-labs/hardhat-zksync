@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "NODE_ENV=test mocha test/**/*.ts --no-timeout --exit",
+    "test": "NODE_ENV=test c8 mocha test/**/*.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -33,7 +33,8 @@
     "README.md"
   ],
   "dependencies": {
-    "chalk": "5.3.0"
+    "chalk": "5.3.0",
+    "c8": "8.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",

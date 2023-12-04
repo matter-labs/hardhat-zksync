@@ -21,7 +21,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha test/tests.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -31,6 +31,9 @@
     "LICENSE",
     "README.md"
   ],
+  "dependencies": {
+    "c8": "8.0.1"
+  },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",
     "@matterlabs/hardhat-zksync-deploy": "^1.0.0",

@@ -21,7 +21,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --exit",
+    "test": "c8 mocha test/tests.ts --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -34,7 +34,8 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "1.0.0",
     "chalk": "4.1.2",
-    "ts-morph": "^20.0.0"
+    "ts-morph": "^20.0.0",
+    "c8": "8.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",

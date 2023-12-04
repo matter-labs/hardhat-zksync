@@ -21,7 +21,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha --recursive \"test/**/*.ts\" --exit",
+    "test": "c8 mocha --recursive \"test/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -38,7 +38,9 @@
     "singleQuote": true,
     "bracketSpacing": true
   },
-  "dependencies": {},
+  "dependencies": {
+    "c8": "8.0.1"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@types/chai": "^4.2.0",

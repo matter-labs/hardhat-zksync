@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha -r ts-node/register test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha -r ts-node/register test/tests.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -35,7 +35,8 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
     "axios": "^1.4.0",
-    "chalk": "4.1.2"
+    "chalk": "4.1.2",
+    "c8": "8.0.1"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
