@@ -15,8 +15,8 @@ const config: HardhatUserConfig = {
         },
         testnet: {
             zksync: true,
-            url: 'https://zksync2-testnet.zksync.dev',
-            verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
+            url: 'https://sepolia.era.zksync.dev"',
+            verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification',
         },
         customNetwork: {
             zksync: true,
