@@ -9,7 +9,7 @@ import { isHttpNetworkConfig } from './utils';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
-const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
+const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli','sepolia'];
 
 /**
  * An entity capable of deploying contracts to the zkSync network.
@@ -89,7 +89,7 @@ export class Deployer {
             ethWeb3Provider =
                 ethNetwork === 'localhost'
                     ? this._createDefaultEthProvider()
-                    : new ethers.JsonRpcProvider(ethNetwork);
+                    : new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url);
         }
 
         zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);
