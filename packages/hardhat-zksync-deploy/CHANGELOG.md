@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## 1.0.1
+
+### Patch Changes
+
+- ee858a6: Added support for Sepolia testnet.
+
 ## 1.0.0
 
 ### Major Changes
