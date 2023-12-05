@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.1.1
+
+### Patch Changes
+
+- 523985a: Added support for Sepolia testnet.
+
 ## 1.1.0
 
 ### Minor Changes

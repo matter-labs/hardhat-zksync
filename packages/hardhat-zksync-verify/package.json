@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-verify",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Hardhat plugin to verify smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
@@ -36,7 +36,7 @@
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "axios": "^1.4.0",
     "chalk": "4.1.2",
-    "zksync2-js":"^0.4.0"
+    "zksync2-js": "^0.4.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.0",
