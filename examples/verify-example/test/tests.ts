@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
 
 describe('verify plugin', async function () {
-    const testnetVerifyURL = 'https://zksync2-testnet-explorer.zksync.dev/contract_verification';
+    const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
 
     describe('Testnet verifyURL extraction from config', async function () {
         useEnvironment();
