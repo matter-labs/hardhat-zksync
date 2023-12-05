@@ -24,14 +24,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} == *"beta"* ]]; then
-            echo "Publishing package with beta tag"
-            npm publish @matterlabs/hardhat-zksync-upgradable --tag beta --workspace=packages/hardhat-zksync-upgradable --access=public
-          else
-            echo "Publishing package with latest tag"
-            npm publish @matterlabs/hardhat-zksync-upgradable --tag latest --workspace=packages/hardhat-zksync-upgradable --access=public
-          fi
-
+          echo "Publishing package with legacy-ethers5 tag"
+          npm publish @matterlabs/hardhat-zksync-upgradable --tag legacy-ethers5 --workspace=packages/hardhat-zksync-upgradable --access=public
+        
       - name: Create github release from tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -24,23 +24,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} == *"beta"* ]]; then
-            echo "Publishing package with beta tag"
-            npm publish @matterlabs/hardhat-zksync-verify --tag beta --workspace=packages/hardhat-zksync-verify --access=public
-          else
-            echo "Publishing package with latest tag"
-            npm publish @matterlabs/hardhat-zksync-verify --tag latest --workspace=packages/hardhat-zksync-verify --access=public
-          fi
-
-      - name: Create github release from tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ ${{ github.ref }} != *"beta"* ]]; then
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-verify
-          else
-            echo "Skipping github release creation for beta tag"
-          fi
+            echo "Publishing package with legacy-ethers5 tag"
+            npm publish @matterlabs/hardhat-zksync-verify --tag legacy-ethers5 --workspace=packages/hardhat-zksync-verify --access=public
 
       - name: Create the MM Message
         env:
