@@ -34,7 +34,7 @@ const config: HardhatUserConfig = {
             accounts: ["PRIVATE KEY"]
         },
         ethNetwork:{
-            url:'https://eth-sepolia.g.alchemy.com/v2/KaTL0rhcEuEBNLqU2tqlqvIwLpoClqTH'
+            url:'YOUR_URL_FOR_SEPOLIA'
         }
         
     },
