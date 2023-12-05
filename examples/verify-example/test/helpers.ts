@@ -14,7 +14,7 @@ declare module 'mocha' {
     }
 }
 
-export function useEnvironment(networkName = 'testnet') {
+export function useEnvironment(networkName = 'zkTestnet') {
     before('Loading hardhat environment', async function () {
         process.env.HARDHAT_NETWORK = networkName;
         this.env = require('hardhat');
