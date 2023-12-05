@@ -24,8 +24,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          echo "Publishing package with alpha tag"
-          npm publish @matterlabs/hardhat-zksync-deploy --tag legacy-ethers5 --workspace=packages/hardhat-zksync-deploy --access=public
+          echo "Publishing package with legacy-ethers-v5 tag"
+          npm publish @matterlabs/hardhat-zksync-deploy --tag legacy-ethers-v5 --workspace=packages/hardhat-zksync-deploy --access=public
 
       - name: Create the MM Message
         env:

@@ -24,8 +24,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          echo "Publishing package with legacy-ethers5 tag"
-          npm publish @matterlabs/hardhat-zksync-toolbox --tag legacy-ethers5 --workspace=packages/hardhat-zksync-toolbox --access=public
+          echo "Publishing package with legacy-ethers-v5 tag"
+          npm publish @matterlabs/hardhat-zksync-toolbox --tag legacy-ethers-v5 --workspace=packages/hardhat-zksync-toolbox --access=public
 
       - name: Create github release from tags
         env:
