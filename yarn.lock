@@ -817,14 +817,14 @@
     semver "^7.5.1"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    "@matterlabs/hardhat-zksync-deploy" "^1.0.0"
-    "@matterlabs/hardhat-zksync-solc" "^1.0.0"
-    "@openzeppelin/upgrades-core" "^1.31.0"
+    "@matterlabs/hardhat-zksync-deploy" "^1.0.1"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@openzeppelin/upgrades-core" "^1.31.3"
 
 "@matterlabs/hardhat-zksync-verify-vyper@link:packages/hardhat-zksync-verify-vyper":
-  version "0.0.1-alpha.3"
+  version "0.0.1-alpha.4"
   dependencies:
     "@matterlabs/hardhat-zksync-vyper" "^1.0.0"
     axios "^1.4.0"
@@ -850,7 +850,7 @@
     semver "^7.5.4"
 
 "@matterlabs/hardhat-zksync-zksync2js@link:packages/hardhat-zksync-zksync2js":
-  version "0.0.1-beta.2"
+  version "0.0.1-beta.3"
   dependencies:
     chalk "5.3.0"
 
@@ -1188,10 +1188,10 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.2.tgz#1cb2d5e4d3360141a17dbc45094a8cad6aac16c1"
   integrity sha512-mO+y6JaqXjWeMh9glYVzVu8HYPGknAAnWyxTRhGeckOruyXQMNnlcW6w/Dx9ftLeIQk6N+ZJFuVmTwF7lEIFrg==
 
-"@openzeppelin/upgrades-core@^1.31.0":
-  version "1.31.1"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.31.1.tgz#d4f9ff703c4006d45c02e08819357a4f92860b8b"
-  integrity sha512-BdkTZwvBxgZ9BYYfhOhuivmqZLOZ/bm6mK5eEDZ36I3Fy64a9BDL/NusaDV5XAoGn4La/j9dZSbTtgP/6d8jAQ==
+"@openzeppelin/upgrades-core@^1.31.3":
+  version "1.31.3"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.31.3.tgz#ff268a498fcd23106c33149e01dd3e7dfcae79fe"
+  integrity sha512-i7q0IuItKS4uO0clJwm4CARmt98aA9dLfKh38HFRbX+aFLGXwF0sOvB2iwr6f87ShH7d3DNuLrVgnnXUrYb7CA==
   dependencies:
     cbor "^9.0.0"
     chalk "^4.1.0"
@@ -5256,12 +5256,7 @@ minimist-options@^4.0.2:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@^1.2.0, minimist@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
-  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
-
-minimist@^1.2.7:
+minimist@^1.2.0, minimist@^1.2.6, minimist@^1.2.7:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
