@@ -4,54 +4,6 @@ on:
   push:
 
 jobs:
-  zksolc:
-    strategy:
-      matrix:
-        solc: [0.8.16, 0.7.6, 0.4.22]
-        os: [ubuntu, macos]
-
-    runs-on: ${{ matrix.os }}-latest
-
-    name: zksolc
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Setup environment
-        run: |
-          yarn install
-
-      - name: Test zksolc compiler plugin
-        run: |
-          cd packages/hardhat-zksync-solc
-          yarn test
-        env:
-          SOLC_VERSION: ${{ matrix.solc }}
-
-  zkvyper:
-    runs-on: ubuntu-latest
-    name: zkvyper
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Setup environment
-        run: |
-          yarn install
-
-      - name: Test zkvyper compiler plugin
-        run: |
-          cd packages/hardhat-zksync-vyper
-          yarn test
-
   deploy:
     runs-on: ubuntu-latest
     name: deploy

@@ -4,7 +4,7 @@ import {
 } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 
 import chalk from 'chalk';
-import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
+import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, PRIVATE_KEY, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { Wallet } from 'zksync-web3';
 
@@ -34,7 +34,7 @@ describe('verify plugin', async function () {
             const contractName = 'Greeter';
             const constructorArgs = 'Hi there!';
            
-            const wallet = new Wallet('PRIVATE_KEY');
+            const wallet = new Wallet(PRIVATE_KEY);
             const deployer = new Deployer(this.env, wallet);
 
             const artifact = await deployer.loadArtifact(contractName);
@@ -118,7 +118,7 @@ describe('verify plugin', async function () {
         beforeEach('Deploy minting contract ', async function () {
             const contractName = 'MintingContract';
 
-            const wallet = new Wallet('PRIVATE_KEY');
+            const wallet = new Wallet(PRIVATE_KEY);
             const deployer = new Deployer(this.env, wallet);
 
             const artifact = await deployer.loadArtifact(contractName);
@@ -169,7 +169,7 @@ describe('verify plugin', async function () {
         beforeEach('Deploy minting contract ', async function () {
             const contractName = 'Test';
 
-            const wallet = new Wallet('PRIVATE_KEY');
+            const wallet = new Wallet(PRIVATE_KEY);
             const deployer = new Deployer(this.env, wallet);
 
             const artifact = await deployer.loadArtifact(contractName);
