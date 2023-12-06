@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-toolbox
 
+## 1.1.0
+
+### Minor Changes
+
+- cceb4a0: Bumped version of dependencies
+
 ## 1.0.0
 
 ### Major Changes
