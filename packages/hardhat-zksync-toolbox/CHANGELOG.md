@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-toolbox
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [ed5dfb2]
+  - @matterlabs/hardhat-zksync-chai-matchers@1.1.0
+
 ## 1.0.0
 
 ### Major Changes
