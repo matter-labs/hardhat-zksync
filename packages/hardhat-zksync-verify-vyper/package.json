@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
-    "axios": "^1.4.0",
+    "axios": "^1.6.2",
     "chalk": "4.1.2",
     "zksync2-js":"^0.4.0"
   },

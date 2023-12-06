@@ -790,7 +790,7 @@
   version "0.0.1-beta.7"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "1.0.0"
-    axios "^1.4.0"
+    axios "^1.6.2"
     chalk "4.1.2"
     fs-extra "^11.1.1"
 
@@ -824,10 +824,10 @@
     "@openzeppelin/upgrades-core" "^1.31.0"
 
 "@matterlabs/hardhat-zksync-verify-vyper@link:packages/hardhat-zksync-verify-vyper":
-  version "0.0.1-alpha.3"
+  version "0.0.1-alpha.4"
   dependencies:
     "@matterlabs/hardhat-zksync-vyper" "^1.0.0"
-    axios "^1.4.0"
+    axios "^1.6.2"
     chalk "4.1.2"
     zksync2-js "^0.4.0"
 
@@ -836,7 +836,7 @@
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.0"
     "@nomicfoundation/hardhat-verify" "^2.0.0"
-    axios "^1.4.0"
+    axios "^1.6.2"
     chalk "4.1.2"
     zksync2-js "^0.4.0"
 
@@ -2240,10 +2240,10 @@ axios@^0.21.2:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
-  integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
+axios@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
+  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
