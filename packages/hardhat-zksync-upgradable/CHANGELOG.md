@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 1.1.0
+
+### Minor Changes
+
+- 72342e0: Bumped versions of dependencies.
+
 ## 1.0.0
 
 ### Major Changes
