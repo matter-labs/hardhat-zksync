@@ -4,13 +4,13 @@
 
 ### Minor Changes
 
-- ed5dfb2: Bumped version of zksync2-js
+- ee858a6: Bumped version of zksync2-js
 
 ## 1.0.0
 
 ### Major Changes
 
-- ee858a6: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
+- 3682ab6: Migrated from zksync-web3 to zksync2-js and updated dependencies on hardhat and ethers.
 
 ## 0.1.4
 
