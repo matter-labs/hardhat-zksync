@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-zksync2js",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "Hardhat plugin for integration with zksync2-js library",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-zksync2js",
