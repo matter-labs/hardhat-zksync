@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
             zksync: true,
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
-            verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
+            verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification',
         },
     },
     solidity: {
