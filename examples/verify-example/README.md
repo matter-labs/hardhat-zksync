@@ -49,7 +49,7 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/zksync2js-example` folder.
+# Run the following in `examples/verify-example` folder.
 yarn
 yarn hardhat test
 ```
