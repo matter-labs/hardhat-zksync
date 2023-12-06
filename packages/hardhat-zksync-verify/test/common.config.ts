@@ -17,10 +17,10 @@ const config: HardhatUserConfig = {
             url: '',
         },
         testnet: {
+            url: "https://sepolia.era.zksync.dev",
             zksync: true,
-            url: 'https://zksync2-testnet.zksync.dev',
-            verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
-        },
+            verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
+        }
     },
     solidity: {
         version: '0.8.16',
