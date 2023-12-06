@@ -56,7 +56,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync2-js": "^0.3.0"
+    "zksync2-js": "^0.4.0"
   },
   "peerDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",

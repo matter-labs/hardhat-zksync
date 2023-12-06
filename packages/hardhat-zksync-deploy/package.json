@@ -34,7 +34,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "^1.0.0",
     "chalk": "4.1.2",
-    "ts-morph": "^20.0.0"
+    "ts-morph": "^21.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -54,12 +54,12 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync2-js": "^0.3.0"
+    "zksync2-js": "^0.4.0"
   },
   "peerDependencies": {
     "ethers": "^6.7.1",
     "hardhat": "^2.19.1",
-    "zksync2-js": "^0.3.0"
+    "zksync2-js": "^0.4.0"
   },
   "prettier": {
     "tabWidth": 4,
