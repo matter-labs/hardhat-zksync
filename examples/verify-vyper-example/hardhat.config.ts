@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
             accounts: ["PRIVATE_KEY"]
         },
         ethNetwork:{
-            url:'https://eth-sepolia.g.alchemy.com/v2/KaTL0rhcEuEBNLqU2tqlqvIwLpoClqTH'
+            url:'YOUR_PROVIDER_URL'
         }
     },
     vyper: {
