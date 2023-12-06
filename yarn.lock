@@ -708,20 +708,25 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
-"@matterlabs/hardhat-zksync-chai-matchers@link:packages/hardhat-zksync-chai-matchers":
+"@matterlabs/hardhat-zksync-chai-matchers@^0.1.4":
   version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-chai-matchers/-/hardhat-zksync-chai-matchers-0.1.4.tgz#105cb0ec1367c8fcd3ce7e3773f747c71fff675b"
+  integrity sha512-eGQWiImg51fmayoQ7smIK/T6QZkSu38PK7xjp1RIrewGzw2ZgqFWGp40jb5oomkf8yOQPk52Hu4TwE3Ntp8CtA==
+
+"@matterlabs/hardhat-zksync-chai-matchers@link:packages/hardhat-zksync-chai-matchers":
+  version "0.2.0"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
-  version "0.6.5"
+  version "0.6.6"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "0.4.2"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
     chalk "4.1.2"
     ts-morph "^19.0.0"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
   version "0.0.1-beta.7"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "1.0.0"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
     axios "^1.4.0"
     chalk "4.1.2"
     fs-extra "^11.1.1"
@@ -737,24 +742,14 @@
     fs-extra "^11.1.1"
     semver "^7.5.1"
 
-"@matterlabs/hardhat-zksync-solc@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.0.0.tgz#4da54b59fb4fa9c2ba22a3bb2e6150cf1d70028c"
-  integrity sha512-N6uUcmbAwZtu60WooUGJ1ssUdFFCd8MU1PdOSXcCJQ3vzjej2p3Ra8t3DrbJSWf3LRJoM18mZkZD2AktlF/ONw==
+"@matterlabs/hardhat-zksync-solc@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.0.3.tgz#aa314dd0b9e40287fa35a20102e9b9109609aad9"
+  integrity sha512-+cyCAL3YmuKpli75evFXMK1eals9rQKVaU+4B74HMOnkMJFt8nH2Oh2KZYlqf8yVCRTPI//xn9VOD93z7REu3w==
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
-    dockerode "^3.3.4"
-    fs-extra "^11.1.1"
-    proper-lockfile "^4.1.2"
-    semver "^7.5.1"
-
-"@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.4.2"
-  dependencies:
-    "@nomiclabs/hardhat-docker" "^2.0.0"
-    chalk "4.1.2"
-    dockerode "^3.3.4"
+    dockerode "^4.0.0"
     fs-extra "^11.1.1"
     proper-lockfile "^4.1.2"
     semver "^7.5.1"
@@ -763,26 +758,52 @@
   version "0.1.3"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^0.6.3"
-    "@matterlabs/hardhat-zksync-solc" "^0.4.0"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
     "@openzeppelin/hardhat-upgrades" "~1.22.1"
     "@openzeppelin/upgrades-core" "1.27.0"
     dockerode "^3.3.4"
     solidity-ast "npm:solidity-ast@0.4.45"
 
-"@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
-  version "0.2.0"
+"@matterlabs/hardhat-zksync-verify@^0.2.0":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-verify/-/hardhat-zksync-verify-0.2.2.tgz#daa34bc4404096ed0f44461ee366c1cb0e5a4f2f"
+  integrity sha512-WgcItoZGY702oJ708uCP5uLvmwzDLBfhMqq2D0Kh1U/3fCTlPza9zMGUFHxKMQYsITKTeQ5zKOjKoi8MXOeUdQ==
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "0.4.1"
+    "@nomicfoundation/hardhat-verify" "^1.0.2"
     axios "^1.4.0"
     chalk "4.1.2"
     dockerode "^3.3.4"
 
-"@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
+"@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
+  version "0.3.0"
+  dependencies:
+    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@nomicfoundation/hardhat-verify" "^1.0.2"
+    axios "^1.4.0"
+    chalk "4.1.2"
+    dockerode "^3.3.4"
+    zksync-web3 "0.17.1"
+
+"@matterlabs/hardhat-zksync-vyper@^0.2.0":
   version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-vyper/-/hardhat-zksync-vyper-0.2.2.tgz#d42e171b58c7c3bfacc79817ff975fb3952587a9"
+  integrity sha512-FU22i4XrSR6WqISrsjVXDIY9BEEGUtb5ictOH4SR+EwzGgfSPm4C7cCTKXdtJ5ZHCOR99cwx/okVfKCwv7XVFw==
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
     dockerode "^3.3.4"
+    fs-extra "^11.1.1"
+    semver "^7.5.4"
+
+"@matterlabs/hardhat-zksync-vyper@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-vyper/-/hardhat-zksync-vyper-1.0.3.tgz#c45c8c599d71cc39dcdbfd3abc30ff4e9379cfc4"
+  integrity sha512-4DJR3NY7hmReELVpV0X/VhmCd7uxKjKpkBuM465J2JMC/8OQxJhjGOh9VLf1+kY4BHYOEEY8ci/L/OiOW7SKvw==
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    chalk "4.1.2"
+    dockerode "^4.0.0"
     fs-extra "^11.1.1"
     semver "^7.5.4"
 
@@ -2790,6 +2811,16 @@ docker-modem@^3.0.0:
     split-ca "^1.0.1"
     ssh2 "^1.11.0"
 
+docker-modem@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/docker-modem/-/docker-modem-5.0.1.tgz#106bab0886d4df4ed1ea9053f1863ade4adbe846"
+  integrity sha512-vqrE/nrweCyzmCpVpdFRC41qS+tfTF+IoUKlTZr52O82urbUqdfyJBGWMvT01pYUprWepLr8IkyVTEWJKRTQSg==
+  dependencies:
+    debug "^4.1.1"
+    readable-stream "^3.5.0"
+    split-ca "^1.0.1"
+    ssh2 "^1.11.0"
+
 dockerode@^2.5.8:
   version "2.5.8"
   resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-2.5.8.tgz#1b661e36e1e4f860e25f56e0deabe9f87f1d0acc"
@@ -2806,6 +2837,15 @@ dockerode@^3.3.4:
   dependencies:
     "@balena/dockerignore" "^1.0.2"
     docker-modem "^3.0.0"
+    tar-fs "~2.0.1"
+
+dockerode@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-4.0.0.tgz#9c9c66926da77f6f894ad54057737a0bc7d34712"
+  integrity sha512-3LF7/3MPz5+9RsUo91rD0MCcx0yxjC9bnbtgtVjOLKyKxlZSJ7/Kk3OPAgARlwlWHqXwAGYhmkAHYx7IwD0tJQ==
+  dependencies:
+    "@balena/dockerignore" "^1.0.2"
+    docker-modem "^5.0.0"
     tar-fs "~2.0.1"
 
 doctrine@^2.1.0:
@@ -3248,7 +3288,7 @@ ethereumjs-util@^7.0.3:
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.7.1, ethers@^5.7.2, ethers@~5.7.2:
+ethers@^5.7.1, ethers@^5.7.2, ethers@~5.7.0, ethers@~5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
@@ -6640,10 +6680,12 @@ zksync-crypto@^0.6.1:
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.6.2.tgz#319dc9b1a274c1c8feaa40f81636ef326eb2c28b"
   integrity sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==
 
-zksync-web3@^0.14.3:
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.14.4.tgz#0b70a7e1a9d45cc57c0971736079185746d46b1f"
-  integrity sha512-kYehMD/S6Uhe1g434UnaMN+sBr9nQm23Ywn0EUP5BfQCsbjcr3ORuS68PosZw8xUTu3pac7G6YMSnNHk+fwzvg==
+zksync-web3@0.17.1, zksync-web3@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/zksync-web3/-/zksync-web3-0.17.1.tgz#809c3b31295c29aae924ec2fe47f87701b539012"
+  integrity sha512-jMV4gfAQyehkIbNs81i4uvccHLe+XBu/tNPFb0Rm38pXccWY5VXzVE6XWS0dBiHlMfjdfUGn/sxwzJbWZDGYGQ==
+  dependencies:
+    ethers "~5.7.0"
 
 zksync@^0.13.1:
   version "0.13.1"

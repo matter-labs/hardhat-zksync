@@ -28,12 +28,12 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
-    "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
-    "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
+    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@matterlabs/hardhat-zksync-vyper": "^1.0.3",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "~5.7.2",
     "hardhat": "^2.14.0",
-    "zksync-web3": "^0.14.3"
+    "zksync-web3": "^0.17.1"
   },
   "prettier": {
     "tabWidth": 4,
