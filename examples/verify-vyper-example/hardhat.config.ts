@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
             accounts: ["PRIVATE_KEY"]
         },
         ethNetwork:{
-            url:'YOUR_PROVIDER_URL'
+            url:'YOUR_SEPOLIA_PROVIDER_URL'
         }
     },
     vyper: {
