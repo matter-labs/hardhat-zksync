@@ -149,7 +149,7 @@ subtask(
         if (hre.network.solcCompilationsNum != 0 && vyperCompilationsNum != 0) {
             console.info(
                 chalk.green(
-                    `Successfully compiled ${hre.network.solcCompilationsNum} Solidity ${pluralize(
+                    `Successfully compiled ${hre.network.solcCompilationsNum??0} Solidity ${pluralize(
                         hre.network.solcCompilationsNum,
                         'file'
                     )} and ${vyperCompilationsNum} Vyper ${pluralize(vyperCompilationsNum, 'file')}`

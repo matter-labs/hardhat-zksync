@@ -780,7 +780,7 @@
   version "1.0.0"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
-  version "1.0.0"
+  version "1.0.1"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "1.0.0"
     chalk "4.1.2"
@@ -823,13 +823,22 @@
     "@matterlabs/hardhat-zksync-solc" "^1.0.0"
     "@openzeppelin/upgrades-core" "^1.31.0"
 
+"@matterlabs/hardhat-zksync-verify-vyper@link:packages/hardhat-zksync-verify-vyper":
+  version "0.0.1-alpha.3"
+  dependencies:
+    "@matterlabs/hardhat-zksync-vyper" "^1.0.0"
+    axios "^1.4.0"
+    chalk "4.1.2"
+    zksync2-js "^0.4.0"
+
 "@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
-  version "1.1.0"
+  version "1.1.1"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.0"
     "@nomicfoundation/hardhat-verify" "^2.0.0"
     axios "^1.4.0"
     chalk "4.1.2"
+    zksync2-js "^0.4.0"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
   version "1.0.3"
@@ -7480,7 +7489,7 @@ zksync-crypto@^0.6.1:
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.6.2.tgz#319dc9b1a274c1c8feaa40f81636ef326eb2c28b"
   integrity sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==
 
-zksync2-js@^0.4.0:
+zksync2-js@0.4.0, zksync2-js@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/zksync2-js/-/zksync2-js-0.4.0.tgz#e9984ae4a9b4450105b1e9565a0dd2e010aa5bd3"
   integrity sha512-0Z+Yhqz6ZEkw3HHrbNZZT07zb631ALWqbe2exS7DFAqrSxACXx48/sqeYzpTXLJuNiqBXQYrVnHXzIeeqHKSxA==
