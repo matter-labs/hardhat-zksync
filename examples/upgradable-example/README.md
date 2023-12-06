@@ -12,7 +12,7 @@ This project demonstrates how to compile and deploy upgadable smart contracts in
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
 You should only change the zkSync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `goerli` used as the underlying layer 1 network:
+`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
@@ -22,12 +22,12 @@ import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
     networks: {
-        goerli: {
-            url: 'https://goerli.infura.io/v3/<API_KEY>' // you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`)
+        sepolia: {
+            url: 'https://sepolia.infura.io/v3/<API_KEY>' // you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`)
         },
         zkTestnet: {
-            url: 'https://zksync2-testnet.zksync.dev', // you should use the URL of the zkSync network RPC
-            ethNetwork: 'goerli',
+            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the zkSync network RPC
+            ethNetwork: 'sepolia',
             zksync: true
         },
     }

@@ -12,14 +12,14 @@ const config: HardhatUserConfig = {
         hardhat: {
             zksync: true,
         },
-        goerli: {
+        sepolia: {
             zksync: false,
             url: '',
         },
         testnet: {
             zksync: true,
-            ethNetwork: 'goerli',
-            url: 'https://zksync2-testnet.zksync.dev',
+            ethNetwork: 'sepolia',
+            url: 'https://sepolia.era.zksync.dev',
         },
     },
     solidity: {
