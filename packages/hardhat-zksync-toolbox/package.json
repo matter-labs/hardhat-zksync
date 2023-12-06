@@ -32,10 +32,10 @@
     "README.md"
   ],
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",
-    "@matterlabs/hardhat-zksync-deploy": "^1.0.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.0.0",
-    "@matterlabs/hardhat-zksync-verify": "^1.0.0",
+    "@matterlabs/hardhat-zksync-chai-matchers": "^1.1.0",
+    "@matterlabs/hardhat-zksync-deploy": "^1.0.1",
+    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@matterlabs/hardhat-zksync-verify": "^1.1.1",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@types/chai": "^4.2.0",
@@ -59,10 +59,10 @@
     "zksync2-js": "^0.4.0"
   },
   "peerDependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",
-    "@matterlabs/hardhat-zksync-deploy": "^1.0.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.0.0",
-    "@matterlabs/hardhat-zksync-verify": "^1.0.0"
+    "@matterlabs/hardhat-zksync-chai-matchers": "^1.1.0",
+    "@matterlabs/hardhat-zksync-deploy": "^1.0.1",
+    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@matterlabs/hardhat-zksync-verify": "^1.1.1"
   },
   "prettier": {
     "tabWidth": 4,
