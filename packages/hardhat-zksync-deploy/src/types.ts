@@ -3,7 +3,7 @@ import { Artifact } from 'hardhat/types';
 /**
  * Identifier of the Ethereum network (layer 1).
  * Can be set either to the RPC address of network (e.g. `http://127.0.0.1:3030`)
- * or the network ID (e.g. `mainnet` or `goerli`).
+ * or the network ID (e.g. `mainnet` or `sepolia`).
  */
 export type EthNetwork = string;
 
