@@ -4,19 +4,19 @@ import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
 import { download, getRelease, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
-import { 
-    COMPILER_BINARY_CORRUPTION_ERROR, 
-    COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
-    COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, 
-    COMPILER_VERSION_RANGE_ERROR, 
-    COMPILER_VERSION_WARNING, 
-    DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
-    DEFAULT_TIMEOUT_MILISECONDS, 
-    PLUGIN_NAME, 
-    ZKVYPER_BIN_OWNER, 
-    ZKVYPER_BIN_REPOSITORY, 
-    ZKVYPER_BIN_REPOSITORY_NAME, 
-    ZKVYPER_COMPILER_VERSION_MIN_VERSION, 
+import {
+    COMPILER_BINARY_CORRUPTION_ERROR,
+    COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR,
+    COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
+    COMPILER_VERSION_RANGE_ERROR,
+    COMPILER_VERSION_WARNING,
+    DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD,
+    DEFAULT_TIMEOUT_MILISECONDS,
+    USER_AGENT,
+    ZKVYPER_BIN_OWNER,
+    ZKVYPER_BIN_REPOSITORY,
+    ZKVYPER_BIN_REPOSITORY_NAME,
+    ZKVYPER_COMPILER_VERSION_MIN_VERSION,
 } from "../constants";
 import { ZkSyncVyperPluginError } from "../errors";
 
@@ -45,11 +45,11 @@ export class ZkVyperCompilerDownloader {
                 }
                 compilerVersionInfo = await ZkVyperCompilerDownloader._getCompilerVersionInfo(compilersDir);
             }
-            
+
             if (compilerVersionInfo === undefined) {
                 throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
-            
+
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
             } else if (!isVersionInRange(version, compilerVersionInfo)) {
@@ -67,7 +67,7 @@ export class ZkVyperCompilerDownloader {
     private static _instance: ZkVyperCompilerDownloader;
     public static compilerVersionInfoCachePeriodMs = DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD;
 
-    /** 
+    /**
      * Use `getDownloaderWithVersionValidated` to create an instance of this class.
      */
     private constructor(
@@ -88,12 +88,12 @@ export class ZkVyperCompilerDownloader {
         return path.join(this._compilersDirectory, 'zkvyper', `zkvyper-v${this._version}`);
     }
 
-    public async isCompilerDownloaded(): Promise<boolean> {        
+    public async isCompilerDownloaded(): Promise<boolean> {
         if (this._configCompilerPath) {
             await this._verifyCompiler();
             return true;
         }
-        
+
         const compilerPath = this.getCompilerPath();
         return fsExtra.pathExists(compilerPath);
     }
@@ -147,7 +147,7 @@ export class ZkVyperCompilerDownloader {
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const realease = await getRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, PLUGIN_NAME);
+        const realease = await getRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, USER_AGENT);
 
         const releaseToSave = {
             latest: realease.tag_name.slice(1, realease.tag_name.length),
