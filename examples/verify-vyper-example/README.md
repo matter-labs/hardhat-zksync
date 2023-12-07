@@ -1,6 +1,6 @@
-# zkSync 2.0 upgradable example
+# zkSync 2.0 verify vyper environment example
 
-This project demonstrates how to compile and deploy upgadable smart contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
 
 ## Prerequisites
 
@@ -14,10 +14,7 @@ You should only change the zkSync network configuration.
 
 `hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
-import '@matterlabs/hardhat-zksync-solc';
-import '@matterlabs/hardhat-zksync-deploy';
-import '@matterlabs/hardhat-zksync-upgradable';
-
+import "@matterlabs/hardhat-zksync-deploy";
 import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
@@ -36,8 +33,6 @@ const config: HardhatUserConfig = {
 export default config;
 ```
 
-If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
-
 ## Usage
 
 Before using plugins, you need to build them first
@@ -51,17 +46,8 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/upgradable-example` folder.
+# Run the following in `examples/verify-vyper-example` folder.
 yarn
-yarn hardhat compile
+yarn hardhat test
 ```
 
-- `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
-
-To run a specific end-to-end script in the `scripts` folder, use the following command
-
-```
-yarn hardhad run ./scipts/<SCRIPT_NAME>
-```
-
-- Example: `yarn hardhat run ./scripts/deploy-box-proxy.ts`

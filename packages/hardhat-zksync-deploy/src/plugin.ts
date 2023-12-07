@@ -182,7 +182,7 @@ async function deployOneLibrary(
 
     console.info(chalk.yellow(`Deploying ${generateFullQuailfiedNameString(contractFQN)} .....`));
     const contract = await deployer.deploy(artifact, []);
-    console.info(chalk.green(`Deployed ${generateFullQuailfiedNameString(contractFQN)} at ${contract.address}`));
+    console.info(chalk.green(`Deployed ${generateFullQuailfiedNameString(contractFQN)} at ${await contract.getAddress()}`));
 
     const contractInfo:ContractInfo = {
         contractFQN,

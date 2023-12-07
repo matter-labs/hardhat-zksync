@@ -15,7 +15,7 @@ const config: HardhatUserConfig = {
             },
         }
     },
-    defaultNetwork: 'zkTestnet',
+    defaultNetwork: 'testnet',
     networks: {     
         zkTestnet: {
             url: "https://zksync2-testnet.zksync.dev",
@@ -23,10 +23,20 @@ const config: HardhatUserConfig = {
             verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
             accounts: ["PRIVATE KEY"]
         },
-        customNetwork: {
+        customNetwork: {    
             zksync: true,
             url: ''
+        },
+        testnet:{
+            url: `https://sepolia.era.zksync.dev`,
+            ethNetwork: 'ethNetwork',
+            zksync:true,
+            accounts: ["PRIVATE KEY"]
+        },
+        ethNetwork:{
+            url:'YOUR_URL_FOR_SEPOLIA'
         }
+        
     },
     solidity: {
         version: '0.8.17',
