@@ -21,7 +21,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "NODE_ENV=test mocha test/**/*.ts  --no-timeout --exit",
+    "test": "NODE_ENV=test c8 mocha test/**/*.ts  --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -56,7 +56,8 @@
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.9.2"

@@ -21,7 +21,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --exit",
+    "test": "c8 mocha test/tests.ts --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -54,7 +54,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync2-js": "^0.4.0"
+    "zksync2-js": "^0.4.0",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "ethers": "^6.7.1",
