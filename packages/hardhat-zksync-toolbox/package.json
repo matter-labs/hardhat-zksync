@@ -32,7 +32,6 @@
     "README.md"
   ],
   "dependencies": {
-    "c8": "8.0.1"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",
@@ -59,7 +58,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync2-js": "^0.2.2"
+    "zksync2-js": "^0.2.2",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.0.0",

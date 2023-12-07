@@ -39,7 +39,6 @@
     "bracketSpacing": true
   },
   "dependencies": {
-    "c8": "8.0.1"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
@@ -63,7 +62,8 @@
     "typescript": "^5.1.6",
     "zksync2-js": "^0.2.2",
     "@matterlabs/zksync-contracts": "^0.6.1",
-    "@openzeppelin/contracts": "^4.8.3"
+    "@openzeppelin/contracts": "^4.8.3",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2"

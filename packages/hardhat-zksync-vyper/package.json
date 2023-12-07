@@ -37,8 +37,7 @@
     "chalk": "4.1.2",
     "dockerode": "^4.0.0",
     "fs-extra": "^11.1.1",
-    "semver": "^7.5.4",
-    "c8": "8.0.1"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
@@ -63,7 +62,8 @@
     "rimraf": "^3.0.2",
     "sinon": "^15.0.1",
     "ts-node": "^10.6.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
