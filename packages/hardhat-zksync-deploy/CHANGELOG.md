@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 23a577e: Migration from zksync2-js to zksync-ethers
+- f216797: Migration from zksync2-js to zksync-ethers
 
 ## 1.0.3
 
