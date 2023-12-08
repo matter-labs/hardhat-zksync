@@ -87,7 +87,7 @@ export class Deployer {
                     : ethers.getDefaultProvider(ethNetwork);
         } else {
             ethWeb3Provider =
-                ethNetwork === 'localhost'
+                ethNetwork === 'localhost' || ethNetwork === ''
                     ? this._createDefaultEthProvider()
                     : new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url);
         }

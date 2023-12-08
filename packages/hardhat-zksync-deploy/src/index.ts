@@ -24,3 +24,8 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addFlag('noAutoPopulateConfig', 'Flag to disable auto population of config file')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
+
+try {
+    require.resolve('zksync2-js');
+    console.info(chalk.red('The package zksync2-js is deprecated. Please use zksync-ethers.'))
+} catch { }
