@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { useEnvironment } from './helpers';
-import { Contract, Wallet } from 'zksync2-ethers';
+import { Contract, Wallet } from 'zksync-ethers';
 import { rich_wallets } from '../src/rich-wallets';
 
 describe('Plugin tests', async function () {
