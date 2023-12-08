@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## 1.0.3
+
+### Patch Changes
+
+- 238cbb7: Proper User-Agent for getRelease function
+
 ## 1.0.1
 
 ### Patch Changes
