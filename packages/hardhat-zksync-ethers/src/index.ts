@@ -18,7 +18,7 @@ import {
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ethers } from 'ethers';
-import { Address, DeploymentType } zksync-ethers/build/src/types';
+import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 
 extendEnvironment((hre) => {
     hre.zksyncEthers = lazyObject(() => {
