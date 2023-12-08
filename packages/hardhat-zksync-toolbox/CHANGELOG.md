@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-toolbox
 
+## 1.2.0
+
+### Minor Changes
+
+- 9b98257: Migration from zksync2-js to zksync-ethers
+
 ## 1.1.0
 
 ### Minor Changes
