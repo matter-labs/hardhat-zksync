@@ -1,12 +1,5 @@
 # @matterlabs/hardhat-zksync-toolbox
 
-## 2.0.0
-
-### Patch Changes
-
-- Updated dependencies [aede834]
-  - @matterlabs/hardhat-zksync-verify@1.2.0
-
 ## 1.1.0
 
 ### Minor Changes
