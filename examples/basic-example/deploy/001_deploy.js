@@ -1,5 +1,5 @@
 const ethers = require('ethers');
-const zk = require('zksync2-ethers');
+const zk = require('zksync-ethers');
 const { Deployer } = require('@matterlabs/hardhat-zksync-deploy');
 const chalk = require('chalk');
 
