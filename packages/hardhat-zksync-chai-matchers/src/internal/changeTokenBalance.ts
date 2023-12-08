@@ -1,4 +1,4 @@
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';

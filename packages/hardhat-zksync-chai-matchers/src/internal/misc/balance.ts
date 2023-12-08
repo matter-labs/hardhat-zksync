@@ -1,4 +1,4 @@
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 
 import { Account, getAddressOf } from './account';
 import { HttpNetworkConfig } from 'hardhat/types';

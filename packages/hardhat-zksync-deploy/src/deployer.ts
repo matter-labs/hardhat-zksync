@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
@@ -87,7 +87,7 @@ export class Deployer {
                     : ethers.getDefaultProvider(ethNetwork);
         } else {
             ethWeb3Provider =
-                ethNetwork === 'localhost'
+                ethNetwork === 'localhost' || ethNetwork === ''
                     ? this._createDefaultEthProvider()
                     : new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url);
         }

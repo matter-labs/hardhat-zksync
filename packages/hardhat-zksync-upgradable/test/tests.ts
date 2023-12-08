@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { useEnvironment } from './helpers';
-import { ContractFactory, Provider,Contract } from 'zksync2-js';
+import { ContractFactory, Provider,Contract } from 'zksync-ethers';
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import path from 'path';

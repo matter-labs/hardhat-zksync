@@ -2,7 +2,7 @@ import '@nomiclabs/hardhat-vyper';
 import '@matterlabs/hardhat-zksync-vyper';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify-vyper';
-import '@matterlabs/hardhat-zksync-zksync2js';
+import '@matterlabs/hardhat-zksync-ethers';
 
 
 import { HardhatUserConfig } from 'hardhat/config';

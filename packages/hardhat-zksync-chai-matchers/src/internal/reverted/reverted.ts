@@ -1,5 +1,5 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 
 import { decodeReturnData, getReturnDataFromError } from './utils';
 import { HttpNetworkConfig } from 'hardhat/types';

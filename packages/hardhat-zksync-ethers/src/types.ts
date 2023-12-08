@@ -1,7 +1,7 @@
 import type * as ethers from 'ethers';
 import type { Artifact } from 'hardhat/types';
-import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync2-js';
-import { Address, DeploymentType } from 'zksync2-js/build/src/types';
+import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync-ethers';
+import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 
 export interface FactoryDeps {
     // A mapping from the contract hash to the contract bytecode.
@@ -55,7 +55,7 @@ export declare function getContractFactoryFromArtifact<
     deploymentType?: DeploymentType
 ): Promise<ContractFactory<A, I>>;
 
-export interface HardhatZksync2jsHelpers {
+export interface HardhatZksyncEthersHelpers {
     provider: Provider;
     getWallets: () => Promise<Wallet[]>;
     getWallet: (privateKeyOrIndex?: string | number) => Promise<Wallet>;

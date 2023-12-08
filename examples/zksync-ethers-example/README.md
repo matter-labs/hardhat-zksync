@@ -1,4 +1,4 @@
-# zkSync 2.0 zksync2-js environment example
+# zkSync 2.0 zksync-ethers environment example
 
 This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
 

@@ -27,7 +27,7 @@ Here is an overview of the plugins currently available:
 
 **hardhat-zksync-upgradeable**: This plugin provides a convenient method to deploy and upgrade smart contracts on the zkSync network.
 
-**hardhat-zksync-zksync2js**: This plugin is a wrapper around zksync2-js sdk that gives additional methods to use for faster development.
+**hardhat-zksync-ethers**: This plugin is a wrapper around zksync-ethers sdk that gives additional methods to use for faster development.
 
 You can find more detailed explanations on how to use hardhat zkSync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
 
@@ -39,7 +39,7 @@ You can find more detailed explanations on how to use hardhat zkSync plugins on 
 [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html)\
 [hardhat-zksync-toolbox](https://era.zksync.io/docs/tools/hardhat/plugins.html)\
 [hardhat-zksync-upgradeable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html)\
-[hardhat-zksync-zksync2js](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-zksync2js.html)
+[hardhat-zksync-zksync2js](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-ethers.html)
 
 
 We hope you find these plugins useful in your development efforts.\

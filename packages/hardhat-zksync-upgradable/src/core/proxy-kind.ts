@@ -9,7 +9,7 @@ import {
     Version,
 } from '@openzeppelin/upgrades-core';
 import { Manifest, DeploymentNotFound, ProxyDeployment } from './manifest';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import { ZkSyncUpgradablePluginError } from '../errors';
 
 export async function setProxyKind(

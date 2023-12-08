@@ -1,11 +1,11 @@
 import assert from 'assert';
-import type { Signer, Wallet,Contract } from 'zksync2-js';
+import type { Signer, Wallet,Contract } from 'zksync-ethers';
 import { ZkSyncChaiMatchersPluginAssertionError } from '../../errors';
 
 export type Account = Signer | Wallet | Contract;
 
 export function isWalletOrContract(account: Account): account is Contract | Wallet {
-    const zk = require('zksync2-js');
+    const zk = require('zksync-ethers');
     return account instanceof zk.Contract || account instanceof zk.Wallet;
 }
 

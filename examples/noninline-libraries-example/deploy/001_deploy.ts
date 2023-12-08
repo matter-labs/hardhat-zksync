@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
@@ -21,6 +21,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const greeterContract = await deployer.deploy(artifact, []);
 
     // Show the contract info.
-    const contractAddress = greeterContract.address;
+    const contractAddress = await greeterContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
 };

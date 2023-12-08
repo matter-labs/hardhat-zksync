@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
 import { verifyWithArtifact } from './verify-proxy';
 import { verifyImplementation } from './verify-impl';
 import { verifiableContracts } from '../constants';
-import { Provider } from 'zksync2-js';
+import { Provider } from 'zksync-ethers';
 import chalk from 'chalk';
 
 export async function fullVerifyBeacon(

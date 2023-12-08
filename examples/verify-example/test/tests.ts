@@ -32,7 +32,7 @@ describe('verify plugin', async function () {
             const contractName = 'Greeter';
             const constructorArgs = 'Hi there!';
 
-            const factoryContract = await this.env.zksync2js.getContractFactory(contractName);
+            const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
             const contract = await factoryContract.deploy(constructorArgs);
 
             this.deployedAddress = await contract.getAddress();
@@ -113,7 +113,7 @@ describe('verify plugin', async function () {
         beforeEach('Deploy minting contract ', async function () {
             const contractName = 'MintingContract';
 
-            const factoryContract = await this.env.zksync2js.getContractFactory(contractName);
+            const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
             const contract = await factoryContract.deploy('ContractName', 'ContractSymbol', MOCK_ADDRESS, [MOCK_ADDRESS, MOCK_ADDRESS]);
 
             this.deployedAddress = await contract.getAddress();
@@ -161,7 +161,7 @@ describe('verify plugin', async function () {
         beforeEach('Deploy minting contract ', async function () {
             const contractName = 'Test';
 
-            const factoryContract = await this.env.zksync2js.getContractFactory(contractName);
+            const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
             const contract = await factoryContract.deploy([]);
 
             this.deployedAddress = await contract.getAddress();

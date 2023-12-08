@@ -7,7 +7,7 @@ import {
     Version,
 } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
@@ -16,7 +16,7 @@ import { readValidations } from '../validations/validations';
 
 import { deploy } from './deploy';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
-import { TransactionResponse } from 'zksync2-js/src/types';
+import { TransactionResponse } from 'zksync-ethers/src/types';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
 
