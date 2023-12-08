@@ -1,4 +1,4 @@
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync2-ethers';
 import type { HardhatZksyncEthersHelpers } from './types';
 
 import 'hardhat/types/runtime';
