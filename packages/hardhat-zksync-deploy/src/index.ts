@@ -1,10 +1,10 @@
 import { extendEnvironment, task } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from './task-names';
 import './type-extensions';
 import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { int, string } from 'hardhat/internal/core/params/argumentTypes';
+import chalk from 'chalk';
 
 export * from './deployer';
 
