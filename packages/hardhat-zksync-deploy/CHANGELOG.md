@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## 1.1.0
+
+### Minor Changes
+
+- 23a577e: Migration from zksync2-js to zksync-ethers
+
 ## 1.0.3
 
 ### Patch Changes

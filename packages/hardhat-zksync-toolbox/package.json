@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-toolbox",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "zkSync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync-toolbox",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-toolbox",
@@ -31,11 +31,10 @@
     "LICENSE",
     "README.md"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^1.0.1",
+    "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
     "@matterlabs/hardhat-zksync-verify": "^1.1.1",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
@@ -63,7 +62,7 @@
   },
   "peerDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.1.0",
-    "@matterlabs/hardhat-zksync-deploy": "^1.0.1",
+    "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
     "@matterlabs/hardhat-zksync-verify": "^1.1.1"
   },
