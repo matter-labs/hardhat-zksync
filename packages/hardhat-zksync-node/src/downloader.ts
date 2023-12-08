@@ -6,6 +6,7 @@ import {
     DEFAULT_RELEASE_CACHE_FILE_NAME,
     DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD,
     PLUGIN_NAME,
+    USER_AGENT,
     ZKNODE_BIN_OWNER,
     ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
@@ -25,13 +26,13 @@ export class RPCServerDownloader {
 
     public async downloadIfNeeded(force: boolean): Promise<void> {
         if (force) {
-            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag));
+            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag));
             return;
         }
 
         if (this.isLatestTag()) {
             if (!(await this._isLatestReleaseInfoValid())) {
-                const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag);
+                const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag);
 
                 if (await this._isBinaryPathExists(release.tag_name)) {
                     await this._postProcessDownload(release.tag_name);
@@ -47,7 +48,7 @@ export class RPCServerDownloader {
                 return;
             }
 
-            const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag);
+            const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag);
 
             if (info
                 && info.latest === release.tag_name
@@ -61,7 +62,7 @@ export class RPCServerDownloader {
         }
 
         if (!(await this._isBinaryPathExists(this._tag))) {
-            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, PLUGIN_NAME, this._tag));
+            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag));
         }
     }
 
