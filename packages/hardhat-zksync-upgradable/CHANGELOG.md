@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## 1.2.0
+
+### Minor Changes
+
+- f4c631f: Migration from zksync2-js to zksync-ethers
+
 ## 1.1.0
 
 ### Minor Changes
