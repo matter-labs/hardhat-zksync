@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.2.0
+
+### Minor Changes
+
+- aede834: Migration from zksync2-js to zksync-ethers
+
 ## 1.1.1
 
 ### Patch Changes
