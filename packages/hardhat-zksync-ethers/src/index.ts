@@ -21,13 +21,13 @@ import { ethers } from 'ethers';
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
 
 extendEnvironment((hre) => {
-    hre.zksync2js = lazyObject(() => {
-        const { zksync2js } = require('zksync2-js');
+    hre.zksyncEthers = lazyObject(() => {
+        const { zksyncEthers } = require('zksync2-js');
         const config: any = hre.network.config;
         const provider: Provider = new Provider(config.url);
 
         return {
-            ...zksync2js,
+            ...zksyncEthers,
             provider,
             getWallet: (privateKeyOrIndex?: string | number) => getWallet(hre, privateKeyOrIndex),
             getWallets: () => getWallets(hre),

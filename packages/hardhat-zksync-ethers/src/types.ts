@@ -55,7 +55,7 @@ export declare function getContractFactoryFromArtifact<
     deploymentType?: DeploymentType
 ): Promise<ContractFactory<A, I>>;
 
-export interface HardhatZksync2jsHelpers {
+export interface HardhatZksyncEthersHelpers {
     provider: Provider;
     getWallets: () => Promise<Wallet[]>;
     getWallet: (privateKeyOrIndex?: string | number) => Promise<Wallet>;

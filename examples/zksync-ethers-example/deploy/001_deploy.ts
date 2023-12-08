@@ -1,10 +1,9 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
-import { Contract } from 'zksync2-js';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy`));
-    const greeterFactory = await hre.zksync2js.getContractFactory("Greeter");
+    const greeterFactory = await hre.zksyncEthers.getContractFactory("Greeter");
     const greeter = await greeterFactory.deploy("Hello, world!");
     
     console.info(chalk.green(`Greeter deployed to: ${await greeter.getAddress()}`));

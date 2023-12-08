@@ -25,9 +25,9 @@ export async function getWalletsFromAccount(
     accounts: HardhatNetworkAccountsConfig | HttpNetworkAccountsConfig
 ): Promise<Wallet[]> {
     if (!accounts || accounts == 'remote') {
-        const chainId = await hre.zksync2js.provider.send('eth_chainId', []);
+        const chainId = await hre.zksyncEthers.provider.send('eth_chainId', []);
         if (LOCAL_CHAIN_IDS.includes(chainId)) {
-            return rich_wallets.map((wallet) => new Wallet(wallet.privateKey, hre.zksync2js.provider));
+            return rich_wallets.map((wallet) => new Wallet(wallet.privateKey, hre.zksyncEthers.provider));
         }
         return [];
     }
@@ -36,7 +36,7 @@ export async function getWalletsFromAccount(
         const accountPrivateKeys = accounts as string[];
 
         const wallets = accountPrivateKeys.map(
-            (accountPrivateKey) => new Wallet(accountPrivateKey, hre.zksync2js.provider)
+            (accountPrivateKey) => new Wallet(accountPrivateKey, hre.zksyncEthers.provider)
         );
         return wallets;
     }
@@ -44,7 +44,7 @@ export async function getWalletsFromAccount(
     if (isHardhatNetworkHDAccountsConfig(accounts)) {
         const account = accounts as HardhatNetworkHDAccountsConfig;
 
-        const wallet = Wallet.fromMnemonic(account.mnemonic).connect(hre.zksync2js.provider);
+        const wallet = Wallet.fromMnemonic(account.mnemonic).connect(hre.zksyncEthers.provider);
         return [wallet];
     }
 

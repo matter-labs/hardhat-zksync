@@ -8,7 +8,7 @@ import {
 
 import { Address, DeploymentType } from 'zksync2-js/build/src/types';
 import { FactoryOptions, ZkSyncArtifact } from './types';
-import { ZkSync2JsPluginError } from './errors';
+import { ZkSyncEthersPluginError } from './errors';
 import { rich_wallets } from './rich-wallets';
 import { getWalletsFromAccount, isArtifact, isFactoryOptions, isNumber, isString } from './utils';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
@@ -18,7 +18,7 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     const accountNumber = isNumber(privateKeyOrIndex) ? (privateKeyOrIndex as number) : undefined;
 
     if (privateKey) {
-        return new Wallet(privateKey, hre.zksync2js.provider);
+        return new Wallet(privateKey, hre.zksyncEthers.provider);
     }
 
     const accounts = hre.network.config.accounts;
@@ -26,11 +26,11 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     const wallets = await getWalletsFromAccount(hre, accounts);
 
     if (accountNumber && accountNumber >= wallets.length) {
-        throw new ZkSync2JsPluginError('Account private key with specified index is not found');
+        throw new ZkSyncEthersPluginError('Account private key with specified index is not found');
     }
 
     if (wallets.length == 0) {
-        throw new ZkSync2JsPluginError('Accounts are not configured for this network');
+        throw new ZkSyncEthersPluginError('Accounts are not configured for this network');
     }
 
     return wallets[accountNumber || 0];
@@ -51,11 +51,11 @@ function getSigners(hre: HardhatRuntimeEnvironment): Signer[] {
 }
 
 function getSigner(hre: HardhatRuntimeEnvironment, address: string): Signer {
-    return Signer.from(new Signer(hre.zksync2js.provider, address), hre.network.config.chainId!);
+    return Signer.from(new Signer(hre.zksyncEthers.provider, address), hre.network.config.chainId!);
 }
 
 export async function getImpersonatedSigner(hre: HardhatRuntimeEnvironment, address: string): Promise<Signer> {
-    await hre.zksync2js.provider.send('hardhat_impersonateAccount', [address]);
+    await hre.zksyncEthers.provider.send('hardhat_impersonateAccount', [address]);
     return getSigner(hre, address);
 }
 
@@ -121,7 +121,7 @@ export async function getContractFactoryFromArtifact<
     let wallet: Wallet | undefined;
 
     if (!isArtifact(artifact)) {
-        throw new ZkSync2JsPluginError(
+        throw new ZkSyncEthersPluginError(
             `You are trying to create a contract factory from an artifact, but you have not passed a valid artifact parameter.`
         );
     }
@@ -133,7 +133,7 @@ export async function getContractFactoryFromArtifact<
     }
 
     if (artifact.bytecode === '0x') {
-        throw new ZkSync2JsPluginError(
+        throw new ZkSyncEthersPluginError(
             `You are trying to create a contract factory for the contract ${artifact.contractName}, which is abstract and can't be deployed.
 If you want to call a contract using ${artifact.contractName} as its interface use the "getContractAt" function instead.`
         );
@@ -177,7 +177,7 @@ export async function getContractAt(
 
     // If there's no signer, we want to put the provider for the selected network here.
     // This allows read only operations on the contract interface.
-    const walletOrProvider: Wallet | Provider = wallet !== undefined ? wallet : hre.zksync2js.provider;
+    const walletOrProvider: Wallet | Provider = wallet !== undefined ? wallet : hre.zksyncEthers.provider;
 
     return new Contract(address, nameOrAbi, walletOrProvider);
 }
@@ -189,7 +189,7 @@ export async function getContractAtFromArtifact(
     wallet?: Wallet
 ): Promise<Contract> {
     if (!isArtifact(artifact)) {
-        throw new ZkSync2JsPluginError(
+        throw new ZkSyncEthersPluginError(
             `You are trying to create a contract by artifact, but you have not passed a valid artifact parameter.`
         );
     }
@@ -201,7 +201,7 @@ export async function getContractAtFromArtifact(
     let contract = new Contract(address, artifact.abi, wallet);
 
     if (contract.runner === null) {
-        contract = contract.connect(hre.zksync2js.provider) as Contract;
+        contract = contract.connect(hre.zksyncEthers.provider) as Contract;
     }
 
     return contract;
@@ -250,7 +250,7 @@ export async function loadArtifact(
 
     // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
     if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
-        throw new ZkSync2JsPluginError(
+        throw new ZkSyncEthersPluginError(
             `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`
         );
     }

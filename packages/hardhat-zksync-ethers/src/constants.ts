@@ -1,4 +1,4 @@
-export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-web3';
+export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-ethers';
 
 export const LOCAL_CHAIN_IDS = [
     '0x104', //era-node
