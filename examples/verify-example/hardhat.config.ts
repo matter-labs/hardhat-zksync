@@ -1,6 +1,6 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-verify';
-import '@matterlabs/hardhat-zksync-zksync2js';
+import '@matterlabs/hardhat-zksync-ethers';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -29,7 +29,6 @@ const config: HardhatUserConfig = {
         },
         testnet:{
             url: `https://sepolia.era.zksync.dev`,
-            ethNetwork: 'ethNetwork',
             zksync:true,
             accounts: ["PRIVATE KEY"]
         },

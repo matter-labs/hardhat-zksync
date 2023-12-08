@@ -32,7 +32,7 @@ describe('verify plugin', async function () {
             const contractName = 'Greeter';
             const constructorArgs:any[] = [];
 
-            const factoryContract = await this.env.zksync2js.getContractFactory(contractName);
+            const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
             const contract = await factoryContract.deploy(constructorArgs);
 
             this.deployedAddress = await contract.getAddress();

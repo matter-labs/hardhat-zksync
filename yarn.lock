@@ -814,6 +814,11 @@
     chalk "4.1.2"
     ts-morph "^20.0.0"
 
+"@matterlabs/hardhat-zksync-ethers@link:packages/hardhat-zksync-ethers":
+  version "0.0.1-beta.3"
+  dependencies:
+    chalk "5.3.0"
+
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
   version "0.0.1-beta.7"
   dependencies:
