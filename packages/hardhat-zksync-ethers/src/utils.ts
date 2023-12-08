@@ -1,6 +1,6 @@
 import { HardhatNetworkAccountsConfig, HardhatNetworkHDAccountsConfig, HardhatRuntimeEnvironment, HttpNetworkAccountsConfig } from 'hardhat/types';
 import { FactoryOptions, ZkSyncArtifact } from './types';
-import { Wallet } from 'zksync2-js';
+import { Wallet } from 'zksync-ethers';
 import { LOCAL_CHAIN_IDS } from './constants';
 import { rich_wallets } from './rich-wallets';
 

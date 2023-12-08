@@ -1,5 +1,5 @@
 import { toBigInt, type BigNumberish, type ethers } from 'ethers';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';

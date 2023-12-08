@@ -1,4 +1,4 @@
-import { Provider, Wallet } from 'zksync2-js';
+import { Provider, Wallet } from 'zksync-ethers';
 
 import { extendEnvironment } from 'hardhat/config';
 import { lazyObject } from 'hardhat/plugins';
@@ -18,11 +18,11 @@ import {
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ethers } from 'ethers';
-import { Address, DeploymentType } from 'zksync2-js/build/src/types';
+import { Address, DeploymentType } zksync-ethers/build/src/types';
 
 extendEnvironment((hre) => {
     hre.zksyncEthers = lazyObject(() => {
-        const { zksyncEthers } = require('zksync2-js');
+        const { zksyncEthers } = require('zksync-ethers');
         const config: any = hre.network.config;
         const provider: Provider = new Provider(config.url);
 

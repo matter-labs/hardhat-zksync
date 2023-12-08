@@ -5,7 +5,7 @@ import { verifiableContracts } from '../constants';
 
 import { getImplementationAddress, isEmptySlot, getAdminAddress } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
 
 /**

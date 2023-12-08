@@ -4,7 +4,7 @@ import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types
 import { MorphTsBuilder } from './morph-ts-builder';
 import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
-import { Wallet } from 'zksync2-js';
+import { Wallet } from 'zksync-ethers';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;

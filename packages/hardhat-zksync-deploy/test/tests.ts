@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import * as path from 'path';
 import { ethers } from 'ethers';
-import { Provider, Wallet } from 'zksync2-js';
+import { Provider, Wallet } from 'zksync-ethers';
 import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
 import { useEnvironment } from './helpers';
