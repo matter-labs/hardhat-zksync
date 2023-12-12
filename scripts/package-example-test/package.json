@@ -1,0 +1,7 @@
+{
+  "name": "tests",
+  "private": true,
+  "peerDependecies": {
+    "yargs": "17.7.2"
+  }
+}
