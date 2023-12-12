@@ -6,7 +6,6 @@ import { spawnSync } from 'child_process';
 import { download, getRelease, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile } from "../utils";
 import {
     COMPILER_BINARY_CORRUPTION_ERROR,
-    COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR,
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
     COMPILER_VERSION_RANGE_ERROR,
     COMPILER_VERSION_WARNING,
@@ -37,11 +36,7 @@ export class ZksolcCompilerDownloader {
         if (!ZksolcCompilerDownloader._instance) {
             let compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
             if (compilerVersionInfo === undefined || (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
-                try {
-                    await ZksolcCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
-                } catch (e: any) {
-                    throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR);
-                }
+                await ZksolcCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
                 compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
             }
 
@@ -125,12 +120,7 @@ export class ZksolcCompilerDownloader {
         let compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
 
         if (compilerVersionInfo === undefined || (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))) {
-            try {
-                await ZksolcCompilerDownloader._downloadCompilerVersionInfo(this._compilersDirectory);
-            } catch (e: any) {
-                throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR)
-            }
-
+            await ZksolcCompilerDownloader._downloadCompilerVersionInfo(this._compilersDirectory);
             compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
         }
 

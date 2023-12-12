@@ -277,7 +277,7 @@ export async function getRelease(owner: string, repo: string, userAgent: string,
 
     const text = await response.body.text();
 
-    throw new ZkSyncSolcPluginError(`No response received for ${owner}/${repo}. Error: ${text}`);
+    throw new ZkSyncSolcPluginError(`GitHub API request failed for URL: ${url} (status ${response.statusCode}). Error: ${text}`);
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {

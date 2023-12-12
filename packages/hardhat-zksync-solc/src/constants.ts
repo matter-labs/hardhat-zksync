@@ -40,8 +40,7 @@ export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
-export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file. Please check your internet connection and try again.';
-export const COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR = 'Could not download zksolc compiler version info file. Please check your internet connection and try again.';
+export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file.';
 
 export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string, latestVersion: string) => `The zksolc compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string) => `The zksolc compiler version in your Hardhat config file (${version}) is not the latest. We recommend using the latest version ${latestVersion}.`;
