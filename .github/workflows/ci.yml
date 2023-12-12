@@ -233,9 +233,9 @@ jobs:
         run: |
           cd packages/hardhat-zksync-verify
           yarn test
-  zksync2js:
+  zksync-ethers:
     runs-on: ubuntu-latest
-    name: zksync2js
+    name: zksync-ethers
     steps:
       - uses: actions/checkout@v2
 
@@ -263,9 +263,9 @@ jobs:
         run: |
           while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
-      - name: Test zksync2js example
+      - name: Test zksync-ethers example
         run: |
-          cd packages/hardhat-zksync-zksync2js
+          cd packages/hardhat-zksync-ethers
           yarn test
 
       - name: Show logs
