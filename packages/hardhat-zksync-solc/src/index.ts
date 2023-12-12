@@ -65,8 +65,8 @@ extendEnvironment((hre) => {
     }
 });
 
-subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: {sourcePaths: string[]}, hre, runSuper) => {
-    if(hre.network.zksync !== true) {
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: string[] }, hre, runSuper) => {
+    if (hre.network.zksync !== true) {
         return await runSuper(args);
     }
 
@@ -78,7 +78,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: {sourcePaths: strin
 
     const sourceNames: string[] = await runSuper(args);
 
-    return sourceNames.filter((sourceName) => contractsToCompile.includes(sourceName));
+    return sourceNames.filter((sourceName) => contractsToCompile.some(contractToCompile => sourceName.includes(contractToCompile)));
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
@@ -94,11 +94,11 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
     const mutex = new Mutex();
     await mutex.use(async () => {
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-            hre.config.zksolc.version, 
+            hre.config.zksolc.version,
             hre.config.zksolc.settings.compilerPath ?? '',
             compilersCache
         );
-        
+
         const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
         if (!isZksolcDownloaded) {
             await zksolcDownloader.downloadCompiler();
@@ -235,7 +235,7 @@ subtask(
             for (const job of compilationJobs) {
                 count += job.getResolvedFiles().filter((file) => job.emitsArtifacts(file)).length;
             }
-    
+
             if (count > 0) {
                 console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
             }
@@ -263,7 +263,7 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START)
 
 subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
     .setAction(
-        async ({ 
+        async ({
             compilationJob,
         }: {
             compilationJob: CompilationJob;
@@ -285,7 +285,7 @@ subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) 
     if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {
         return await runSuper(taskArgs);
     }
-    
+
     // Delete all artifacts and cache files because there are missing libraries and the compilation output is invalid.
     const artifactsDir = hre.config.paths.artifacts;
     const cacheDir = hre.config.paths.cache;
