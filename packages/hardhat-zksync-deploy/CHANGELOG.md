@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## 1.1.1
+
+### Patch Changes
+
+- 70811d0: Fixed edge case when ethNetwork is provided as URL
+
 ## 1.1.0
 
 ### Minor Changes
