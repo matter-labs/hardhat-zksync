@@ -60,6 +60,15 @@ export function removeLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
     }
 }
 
+export function isValidEthNetworkURL(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
 export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
     hre.config.zksolc.settings.contractsToCompile = contracts;
 
