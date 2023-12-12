@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.2.1
+
+### Patch Changes
+
+- 065f52a: Fixed to work with non zksync networks
+
 ## 1.2.0
 
 ### Minor Changes
