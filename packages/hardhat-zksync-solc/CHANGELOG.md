@@ -4,7 +4,8 @@
 
 ### Patch Changes
 
-- 12fad5f: - Proper User-Agent for getRelease function
+- 12fad5f: 
+  - Proper User-Agent for getRelease function
   - Contract source names can now match contract names without full overlap.
 
 ## 1.0.3

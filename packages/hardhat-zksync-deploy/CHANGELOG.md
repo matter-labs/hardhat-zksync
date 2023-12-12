@@ -1,12 +1,5 @@
 # @matterlabs/hardhat-zksync-deploy
 
-## 1.1.1
-
-### Patch Changes
-
-- Updated dependencies [12fad5f]
-  - @matterlabs/hardhat-zksync-solc@1.0.4
-
 ## 1.1.0
 
 ### Minor Changes
