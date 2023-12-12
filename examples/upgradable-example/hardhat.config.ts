@@ -14,7 +14,6 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork: 'zkTestnet',
     networks: {
         hardhat: {
             zksync: false,
@@ -27,14 +26,6 @@ const config: HardhatUserConfig = {
             zksync: true,
             ethNetwork: 'eth',
             url: 'http://localhost:3050',
-        },
-        sepolia:{
-            url:'https://sepolia.era.zksync.dev',
-        },
-        zkTestnet: {
-            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the zkSync network RPC
-            ethNetwork: 'sepolia',
-            zksync: true
         },
     },
     solidity: {
