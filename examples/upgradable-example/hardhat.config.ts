@@ -14,6 +14,7 @@ const config: HardhatUserConfig = {
             },
         },
     },
+    defaultNetwork:'zkSyncNetwork',
     networks: {
         hardhat: {
             zksync: true,
