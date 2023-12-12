@@ -16,10 +16,10 @@ const config: HardhatUserConfig = {
     },
     networks: {
         hardhat: {
-            zksync: false,
+            zksync: true,
         },
         eth: {
-            zksync: false,
+            zksync: true,
             url: 'http://localhost:8545',
         },
         zkSyncNetwork: {
