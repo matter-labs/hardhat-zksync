@@ -5,7 +5,7 @@ import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
-import { isHttpNetworkConfig,isValidEthNetworkURL } from './utils';
+import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -82,7 +82,7 @@ export class Deployer {
                 ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
                     ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
                     : ethers.getDefaultProvider(ethNetwork);
-        }else {
+        } else {
             if (ethNetwork === 'localhost' || ethNetwork === '') {
                 ethWeb3Provider = this._createDefaultEthProvider();
             } else if (isValidEthNetworkURL(ethNetwork)) {

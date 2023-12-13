@@ -41,7 +41,6 @@ export async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, librar
     });
 }
 
-
 export function isValidEthNetworkURL(string:string) {
     try {
         new URL(string);
@@ -50,7 +49,6 @@ export function isValidEthNetworkURL(string:string) {
         return false;
     }
 }
-
 
 export function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> {
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
