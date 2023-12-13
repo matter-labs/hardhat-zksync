@@ -31,11 +31,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} != *"beta"* ]]; then
             node scripts/create-release-from-tags/run.js --package hardhat-zksync-upgradable
-          else
-            echo "Skipping github release creation for beta tag"
-          fi
 
       - name: Create the MM Message
         env:

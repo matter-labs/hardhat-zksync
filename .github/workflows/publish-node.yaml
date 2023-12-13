@@ -27,16 +27,6 @@ jobs:
           echo "Publishing package with legacy-ethers-v5 tag"
           npm publish @matterlabs/hardhat-zksync-node --tag legacy-ethers-v5 --workspace=packages/hardhat-zksync-node --access=public
 
-      - name: Create github release from tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ ${{ github.ref }} != *"beta"* ]] && [[ ${{ github.ref }} != *"alpha"* ]]; then
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-node
-          else
-            echo "Skipping github release creation for beta and alpha tags"
-          fi
-
       - name: Create the MM Message
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
