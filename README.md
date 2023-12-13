@@ -9,25 +9,22 @@ write smart contracts in C++, Rust and other popular languages.
 
 This repository contains a collection of plugins to aid in the development and deployment of smart contracts on the zkSync network. These plugins are designed to integrate seamlessly with the [Hardhat](https://hardhat.org/) development environment, providing developers with an easy-to-use and powerful toolset.
 
+**Important Note: This version of the plugins is based on ethers v5, which is deprecated. Please consider updating to a newer version for better performance and security.**
+
 Here is an overview of the plugins currently available:
 
-**hardhat-zksync-solc**: This plugin is used to provide a convenient interface for compiling Solidity smart contracts before deploying them to the zkSync network.
 
 **hardhat-zksync-deploy**: This plugin simplifies the deployment of your smart contracts to the zkSync network by providing utilities for deploying smart contracts with artifacts built by the zkSync hardhat-zksync-solc or hardhat-zksync-vyper plugins.
 
 **hardhat-zksync-verify**: This plugin helps you to verify your smart contracts on the zkSync network by providing a set of tasks that automate the verification process.
 
-**hardhat-zksync-vyper**: This plugin is used to provide a convenient interface for compiling Vyper smart contracts before deploying them to the zkSync network.
+**hardhat-zksync-toolbox**: This plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins.
+
+**hardhat-zksync-upgradeable**: This plugin provides a convenient method to deploy and upgrade smart contracts on the zkSync network.
+
+**hardhat-zksync-verify-vyper**: This plugin helps you to verify your vyper smart contracts on the zkSync network by providing a set of tasks that automate the verification process.
 
 **hardhat-zksync-chai-matchers**: This plugin adds additional chai matchers to be used when writing tests with specific zkSync features.
-
-You can find more detailed explanations on how to use hardhat zkSync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
-
-[hardhat-zksync-solc](https://v2-docs.zksync.io/api/hardhat/plugins.html#hardhat-zksync-solc)\
-[hardhat-zksync-deploy](https://v2-docs.zksync.io/api/hardhat/plugins.html#hardhat-zksync-deploy)\
-[hardhat-zksync-verify](https://v2-docs.zksync.io/api/hardhat/plugins.html#hardhat-zksync-verify)\
-[hardhat-zksync-vyper](https://v2-docs.zksync.io/api/hardhat/plugins.html#hardhat-zksync-vyper)\
-[hardhat-zksync-chai-matchers](https://v2-docs.zksync.io/api/hardhat/plugins.html#hardhat-zksync-chai-matchers)
 
 We hope you find these plugins useful in your development efforts.\
 Happy coding!🙌🎉\o/
@@ -44,4 +41,4 @@ See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT) for details.
 - [GitHub](https://github.com/matter-labs)
 - [Twitter](https://twitter.com/zksync)
 - [Twitter for Devs](https://twitter.com/zkSyncDevs)
-- [Discord](https://discord.gg/nMaPGrDDwk)
+- [Discord](https://join.zksync.dev/)

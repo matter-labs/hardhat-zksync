@@ -1,4 +1,4 @@
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 
 export async function getChainId(provider: zk.Provider): Promise<number> {
     const id = await provider.send('eth_chainId', []);

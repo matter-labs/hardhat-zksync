@@ -1,7 +1,7 @@
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import path from 'path';
-import { Wallet, Provider } from 'zksync-web3';
+import { Wallet, Provider } from 'zksync-ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 

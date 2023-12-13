@@ -7,7 +7,7 @@ import {
     DeployBeaconProxyKindError,
 } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-general';

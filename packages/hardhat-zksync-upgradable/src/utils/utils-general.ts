@@ -3,7 +3,7 @@ import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
 import { keccak256 } from 'ethereumjs-util';
 import { Interface } from '@ethersproject/abi';
 import chalk from 'chalk';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import { SolcConfig } from 'hardhat/types';
 import { ethers } from 'ethers';
 

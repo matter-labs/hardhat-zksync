@@ -1,11 +1,11 @@
 import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
-import { isHttpNetworkConfig } from './utils';
+import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -83,10 +83,16 @@ export class Deployer {
                     ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
                     : ethers.getDefaultProvider(ethNetwork);
         } else {
-            ethWeb3Provider =
-                ethNetwork === 'localhost'
-                    ? this._createDefaultEthProvider()
-                    : new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url);
+            if (ethNetwork === 'localhost' || ethNetwork === '') {
+                ethWeb3Provider = this._createDefaultEthProvider();
+            } else if (isValidEthNetworkURL(ethNetwork)) {
+                ethWeb3Provider = new ethers.providers.JsonRpcProvider(ethNetwork);
+            } else {
+                ethWeb3Provider =
+                    ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
+                        ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
+                        : ethers.getDefaultProvider(ethNetwork);
+            }
         }
 
         zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);

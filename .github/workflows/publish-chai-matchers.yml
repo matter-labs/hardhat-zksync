@@ -27,6 +27,12 @@ jobs:
           echo "Publishing package with legacy-ethers-v5 tag"
           npm publish @matterlabs/hardhat-zksync-chai-matchers --tag legacy-ethers-v5 --workspace=packages/hardhat-zksync-chai-matchers --access=public
 
+      - name: Create github release from tags
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            node scripts/create-release-from-tags/run.js --package hardhat-zksync-chai-matchers
+
       - name: Create the MM Message
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

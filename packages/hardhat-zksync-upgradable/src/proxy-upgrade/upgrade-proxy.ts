@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
-import { TransactionResponse } from 'zksync-web3/src/types';
+import * as zk from 'zksync-ethers';
+import { TransactionResponse } from 'zksync-ethers/src/types';
 import path from 'path';
 import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
 

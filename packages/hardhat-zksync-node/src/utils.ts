@@ -7,7 +7,7 @@ import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
 import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
-import { Provider } from 'zksync-web3';
+import { Provider } from 'zksync-ethers';
 
 import {
     ALLOWED_CACHE_VALUES,

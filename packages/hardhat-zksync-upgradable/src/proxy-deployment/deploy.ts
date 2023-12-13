@@ -1,5 +1,5 @@
 import type { Deployment } from '@openzeppelin/upgrades-core';
-import { ContractFactory } from 'zksync-web3';
+import { ContractFactory } from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 export interface DeployTransaction {
