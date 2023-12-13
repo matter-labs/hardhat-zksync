@@ -272,3 +272,23 @@ jobs:
         if: always()
         run: |
           cat server.log
+  node:
+    runs-on: ubuntu-latest
+    name: node
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: yarn
+
+      - name: Setup environment
+        run: |
+          yarn install
+          yarn build
+
+      - name: Test zksync node plugin
+        run: |
+          cd packages/hardhat-zksync-node
+          yarn test
