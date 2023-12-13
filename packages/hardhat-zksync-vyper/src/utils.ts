@@ -122,32 +122,40 @@ export async function download(
     );
 }
 
-export async function getRelease(owner: string, repo: string, userAgent: string, tag: string = 'latest', timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
-    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
-    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://github.com/${owner}/${repo}/releases/latest`;
+    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`
 
-    const { getGlobalDispatcher, request } = await import("undici");
+    const { request } = await import("undici");
 
-    let dispatcher: Dispatcher = getGlobalDispatcher();
-
-    // Fetch the url
     const response = await request(url, {
-        dispatcher,
         headersTimeout: timeout,
-        maxRedirections: 10,
+        maxRedirections: 0,
         method: "GET",
         headers: {
             "User-Agent": `${userAgent}`,
         },
     });
 
-    if (response.statusCode >= 200 && response.statusCode <= 299) {
-        return await response.body.json();
+    // Check if the response is a redirect
+    if (response.statusCode >= 300 && response.statusCode < 400) {
+        // Get the URL from the 'location' header
+        if (response.headers.location) {
+            // Check if the redirect URL matches the expected pattern
+            if (response.headers.location.startsWith(redirectUrlPattern)) {
+                // Extract the tag from the redirect URL
+                return response.headers.location.substring(redirectUrlPattern.length);
+            }
+
+            throw new ZkSyncVyperPluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
+        } else {
+            // Throw an error if the 'location' header is missing in a redirect response
+            throw new ZkSyncVyperPluginError(`Redirect location not found for URL: ${url}`);
+        }
+    } else {
+        // Throw an error for non-redirect responses
+        throw new ZkSyncVyperPluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
     }
-
-    const text = await response.body.text();
-
-    throw new ZkSyncVyperPluginError(`No response received for ${owner}/${repo}. Error: ${text}`);
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
