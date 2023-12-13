@@ -5,11 +5,11 @@ import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
-import { isHttpNetworkConfig } from './utils';
+import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
-const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli', 'sepolia'];
+const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli','sepolia'];
 
 /**
  * An entity capable of deploying contracts to the zkSync network.
@@ -25,11 +25,14 @@ export class Deployer {
         this.deploymentType = deploymentType;
         let l2Provider;
 
+        interface Providers {
+            ethWeb3Provider: ethers.Provider;
+            zkWeb3Provider: zk.Provider; 
+        }
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
-        const { ethWeb3Provider, zkWeb3Provider } = this._createProviders(hre.config.networks, hre.network);
+        const { ethWeb3Provider, zkWeb3Provider }:Providers = this._createProviders(hre.config.networks, hre.network);
 
         l2Provider = zkWallet.provider === null ? zkWeb3Provider : zkWallet.provider;
-
         this.zkWallet = zkWallet.connect(l2Provider).connectToL1(ethWeb3Provider);
         this.ethWallet = this.zkWallet.ethWallet();
     }
@@ -42,7 +45,7 @@ export class Deployer {
         networks: NetworksConfig,
         network: Network
     ): {
-        ethWeb3Provider: ethers.providers.BaseProvider;
+        ethWeb3Provider: ethers.Provider;
         zkWeb3Provider: zk.Provider;
     } {
         const networkName = network.name;
@@ -80,9 +83,9 @@ export class Deployer {
         if (SUPPORTED_L1_TESTNETS.includes(ethNetwork)) {
             ethWeb3Provider =
                 ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
-                    ? new ethers.providers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
+                    ? new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
                     : ethers.getDefaultProvider(ethNetwork);
-        }else {
+        } else {
             if (ethNetwork === 'localhost' || ethNetwork === '') {
                 ethWeb3Provider = this._createDefaultEthProvider();
             } else if (isValidEthNetworkURL(ethNetwork)) {
@@ -100,12 +103,12 @@ export class Deployer {
         return { ethWeb3Provider, zkWeb3Provider };
     }
 
-    private _createDefaultEthProvider(): ethers.providers.BaseProvider {
-        return new ethers.providers.JsonRpcProvider(ETH_DEFAULT_NETWORK_RPC_URL);
+    private _createDefaultEthProvider(): ethers.Provider {
+        return new ethers.JsonRpcProvider(ETH_DEFAULT_NETWORK_RPC_URL);
     }
 
     private _createDefaultZkProvider(): zk.Provider {
-        return zk.Provider.getDefaultProvider();
+        return zk.Provider.getDefaultProvider()!;
     }
 
     /**
@@ -144,10 +147,10 @@ export class Deployer {
      *
      * @returns Calculated fee in ETH wei
      */
-    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<ethers.BigNumber> {
+    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
         const gas = await this.estimateDeployGas(artifact, constructorArguments);
         const gasPrice = await this.zkWallet.provider.getGasPrice();
-        return gas.mul(gasPrice);
+        return gas*gasPrice;
     }
 
     /**
@@ -158,12 +161,12 @@ export class Deployer {
      *
      * @returns Calculated amount of gas.
      */
-    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<ethers.BigNumber> {
+    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<any> {
         const factoryDeps = await this.extractFactoryDeps(artifact);
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
 
         // Encode deploy transaction so it can be estimated.
-        const deployTx = factory.getDeployTransaction(...constructorArguments, {
+        const deployTx = await factory.getDeployTransaction(...constructorArguments, {
             customData: {
                 factoryDeps,
             },
@@ -193,11 +196,11 @@ export class Deployer {
     ): Promise<zk.Contract> {
         const baseDeps = await this.extractFactoryDeps(artifact);
         const additionalDeps = additionalFactoryDeps
-            ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val))
+            ? additionalFactoryDeps.map((val) => ethers.hexlify(val))
             : [];
         const factoryDeps = [...baseDeps, ...additionalDeps];
 
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
+        const factory = new zk.ContractFactory<any[],zk.Contract>(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
         const { customData, ..._overrides } = overrides ?? {};
 
         // Encode and send the deploy transaction providing factory dependencies.
@@ -205,11 +208,12 @@ export class Deployer {
             ..._overrides,
             customData: {
                 ...customData,
+                salt:ethers.ZeroHash,
                 factoryDeps,
             },
         });
-        await contract.deployed();
-
+        await contract.waitForDeployment();
+        
         return contract;
     }
 
