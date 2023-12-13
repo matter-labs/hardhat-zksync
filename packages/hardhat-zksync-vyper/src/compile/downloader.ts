@@ -3,7 +3,7 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download, getRelease, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
+import { download, getLatestRelease, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
@@ -12,7 +12,7 @@ import {
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
     DEFAULT_TIMEOUT_MILISECONDS, 
-    PLUGIN_NAME, 
+    USER_AGENT, 
     ZKVYPER_BIN_OWNER, 
     ZKVYPER_BIN_REPOSITORY, 
     ZKVYPER_BIN_REPOSITORY_NAME, 
@@ -147,10 +147,10 @@ export class ZkVyperCompilerDownloader {
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const realease = await getRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, PLUGIN_NAME);
+        const latestRelease = await getLatestRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, USER_AGENT);
 
         const releaseToSave = {
-            latest: realease.tag_name.slice(1, realease.tag_name.length),
+            latest: latestRelease,
             minVersion: ZKVYPER_COMPILER_VERSION_MIN_VERSION
         }
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
