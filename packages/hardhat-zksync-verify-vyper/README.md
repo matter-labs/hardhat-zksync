@@ -1,3 +1,5 @@
 # hardhat-zksync-verify-vyper
 
-Check out the [documentation page](https://v2-docs.zksync.io/dev/developer-guides/) for more detailed explanation on how to verify vyper smart contracts.
+[Hardhat](https://hardhat.org/) plugin to verify contracts on the zkSync network.
+
+**Important Note:** This version of the hardhat-zksync-verify-vyper plugin is based on ethers v5, which is deprecated. Please consider updating to a newer version for better performance and security.
