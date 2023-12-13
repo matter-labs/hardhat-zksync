@@ -1,10 +1,16 @@
 # @matterlabs/hardhat-zksync-solc
 
+## 1.0.5
+
+### Patch Changes
+
+- f4677a0: Get latest release from redirect URL
+
 ## 1.0.4
 
 ### Patch Changes
 
-- 12fad5f: 
+- 12fad5f:
   - Proper User-Agent for getRelease function
   - Contract source names can now match contract names without full overlap.
 
