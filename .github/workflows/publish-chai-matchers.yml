@@ -31,11 +31,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} != *"beta"* ]] && [[ ${{ github.ref }} != *"alpha"* ]]; then
             node scripts/create-release-from-tags/run.js --package hardhat-zksync-chai-matchers
-          else
-            echo "Skipping github release creation for beta and alpha tags"
-          fi
 
       - name: Create the MM Message
         env:
