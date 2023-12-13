@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.4",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.5",
+    "@matterlabs/hardhat-zksync-deploy": "^0.7.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.5",
     "@matterlabs/hardhat-zksync-verify": "^0.2.0",
     "@nomicfoundation/hardhat-chai-matchers": "~1.0.4",
@@ -61,7 +61,7 @@
   },
   "peerDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.4",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.5",
+    "@matterlabs/hardhat-zksync-deploy": "^0.7.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.5",
     "@matterlabs/hardhat-zksync-verify": "^0.2.0"
   },
