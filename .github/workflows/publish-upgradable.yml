@@ -26,12 +26,6 @@ jobs:
         run: |
           echo "Publishing package with legacy-ethers-v5 tag"
           npm publish @matterlabs/hardhat-zksync-upgradable --tag legacy-ethers-v5 --workspace=packages/hardhat-zksync-upgradable --access=public
-        
-      - name: Create github release from tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-upgradable
 
       - name: Create the MM Message
         env:
