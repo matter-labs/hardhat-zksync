@@ -3,7 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { Contract } from 'ethers';
 import { Manifest } from './core/manifest';
-import { Wallet } from 'zksync-web3';
+import { Wallet } from 'zksync-ethers';
 import { getAdminFactory } from './proxy-deployment/deploy-proxy-admin';
 import { ZkSyncUpgradablePluginError } from './errors';
 

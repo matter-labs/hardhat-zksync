@@ -216,9 +216,15 @@ export async function verifyContract(
 }
 
 export async function getContractInfo(
-    { contractFQN, deployedBytecode, matchingCompilerVersions }: TaskArguments,
-    { artifacts }: HardhatRuntimeEnvironment
+    { contractFQN, deployedBytecode, matchingCompilerVersions, libraries }: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>
 ): Promise<any> {
+    if (!hre.network.zksync) {
+        return await runSuper({ contractFQN, deployedBytecode, matchingCompilerVersions, libraries });
+    }
+
+    let artifacts = hre.artifacts;
     let contractInformation;
 
     if (contractFQN !== undefined) {

@@ -1,5 +1,5 @@
 import type { BigNumberish, BigNumber, ethers } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';

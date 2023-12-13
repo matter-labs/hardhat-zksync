@@ -1,7 +1,7 @@
 import { AssertionError, expect } from 'chai';
 import path from 'path';
 import util from 'util';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';

@@ -1,6 +1,6 @@
 import { expect, AssertionError } from 'chai';
 import { BigNumber } from 'ethers';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import path from 'path';
 import util from 'util';
 

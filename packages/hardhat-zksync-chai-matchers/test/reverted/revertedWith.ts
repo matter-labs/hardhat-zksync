@@ -1,5 +1,5 @@
 import { AssertionError, expect } from 'chai';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import path from 'path';
 import util from 'util';
 

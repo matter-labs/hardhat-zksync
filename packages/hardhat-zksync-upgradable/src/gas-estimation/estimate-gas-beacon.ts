@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
 import assert from 'assert';

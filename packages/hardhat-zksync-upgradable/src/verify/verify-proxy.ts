@@ -9,7 +9,7 @@ import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
 import { getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import { ethers } from 'ethers';
 
 /**

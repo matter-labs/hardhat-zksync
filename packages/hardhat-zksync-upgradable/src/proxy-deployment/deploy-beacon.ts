@@ -6,7 +6,7 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { DeployBeaconOptions } from '../utils/options';
 import { deploy, DeployTransaction } from './deploy';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import { deployBeaconImpl } from './deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import chalk from 'chalk';

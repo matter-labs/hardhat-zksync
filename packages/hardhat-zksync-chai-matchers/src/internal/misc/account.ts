@@ -1,10 +1,10 @@
 import assert from 'assert';
-import type { Contract, Signer, Wallet } from 'zksync-web3';
+import type { Contract, Signer, Wallet } from 'zksync-ethers';
 
 export type Account = Signer | Wallet | Contract;
 
 export function isWalletOrContract(account: Account): account is Contract | Wallet {
-    const zk = require('zksync-web3');
+    const zk = require('zksync-ethers');
     return account instanceof zk.Contract || account instanceof zk.Wallet;
 }
 

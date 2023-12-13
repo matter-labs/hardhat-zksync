@@ -6,7 +6,7 @@ import {
 import chalk from 'chalk';
 import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, PRIVATE_KEY, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
-import { Wallet } from 'zksync-web3';
+import { Wallet } from 'zksync-ethers';
 
 describe('verify plugin', async function () {
     const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';

@@ -3,7 +3,7 @@ import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types
 import { MorphTsBuilder } from './morph-ts-builder';
 import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
-import { Wallet } from 'zksync-web3';
+import { Wallet } from 'zksync-ethers';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
@@ -40,6 +40,17 @@ export async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, librar
         };
     });
 }
+
+
+export function isValidEthNetworkURL(string:string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
 
 export function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> {
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;

@@ -1,6 +1,6 @@
 import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 
 import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
 import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';

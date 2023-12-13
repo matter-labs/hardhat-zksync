@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as zk from 'zksync-web3';
+import * as zk from 'zksync-ethers';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
