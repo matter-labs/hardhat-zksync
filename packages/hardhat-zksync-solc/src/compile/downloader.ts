@@ -3,7 +3,7 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download, getRelease, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile } from "../utils";
+import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile, getLatestRelease } from "../utils";
 import {
     COMPILER_BINARY_CORRUPTION_ERROR,
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
@@ -148,10 +148,10 @@ export class ZksolcCompilerDownloader {
         We are currently limited in that each new version requires an update of the plugin version.
     */
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const realease = await getRelease(ZKSOLC_BIN_OWNER, ZKSOLC_BIN_REPOSITORY_NAME, USER_AGENT);
+        const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKSOLC_BIN_REPOSITORY_NAME, USER_AGENT);
 
         const releaseToSave = {
-            latest: realease.tag_name.slice(1, realease.tag_name.length),
+            latest: latestRelease,
             minVersion: ZKSOLC_COMPILER_VERSION_MIN_VERSION
         }
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
