@@ -10,6 +10,7 @@ import chalk from 'chalk';
 // In terms of presentation it's mostly copied from `001_deploy.ts`, so this example acts more like an integration test
 // for plugins/server capabilities.
 export default async function (hre: HardhatRuntimeEnvironment) {
+    //return;
     console.info(chalk.yellow(`Running deploy script for the Factory contract`));
 
     // Initialize an Ethereum wallet.
