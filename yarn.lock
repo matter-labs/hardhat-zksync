@@ -719,14 +719,14 @@
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
   version "0.6.6"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     chalk "4.1.2"
     ts-morph "^19.0.0"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
   version "0.0.1-beta.7"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     axios "^1.4.0"
     chalk "4.1.2"
     fs-extra "^11.1.1"
@@ -742,10 +742,10 @@
     fs-extra "^11.1.1"
     semver "^7.5.1"
 
-"@matterlabs/hardhat-zksync-solc@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.0.3.tgz#aa314dd0b9e40287fa35a20102e9b9109609aad9"
-  integrity sha512-+cyCAL3YmuKpli75evFXMK1eals9rQKVaU+4B74HMOnkMJFt8nH2Oh2KZYlqf8yVCRTPI//xn9VOD93z7REu3w==
+"@matterlabs/hardhat-zksync-solc@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.0.5.tgz#9f128da0b47c147216dbd84c82bc58c190052afe"
+  integrity sha512-IBWvbGJSISNtWIz/4VBfV1NweVYK7xHmy787o6fDjntxP5P4XEklTJU3/pNBQdL5fZbIrQqMmXFMOwUXnuEY6Q==
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
     chalk "4.1.2"
@@ -758,7 +758,7 @@
   version "0.1.3"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^0.6.3"
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     "@openzeppelin/hardhat-upgrades" "~1.22.1"
     "@openzeppelin/upgrades-core" "1.27.0"
     dockerode "^3.3.4"
@@ -778,7 +778,7 @@
 "@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
   version "0.3.0"
   dependencies:
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     "@nomicfoundation/hardhat-verify" "^1.0.2"
     axios "^1.4.0"
     chalk "4.1.2"
