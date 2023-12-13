@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-let fse = require("fs-extra");
+const fse = require("fs-extra");
 const yargs = require("yargs");
-var spawn = require("child_process").spawnSync;
-var chalk = require("chalk");
+const spawn = require("child_process").spawnSync;
+const chalk = require("chalk");
 
 const argv = yargs
   .usage(
