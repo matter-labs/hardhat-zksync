@@ -1,4 +1,4 @@
-import { ZkVyperConfig, CompilerOptions } from '../types';
+import { ZkVyperConfig, CompilerOptions, CompilerOutput } from '../types';
 import { compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import {
@@ -14,6 +14,7 @@ export async function compile(
     zkvyperConfig: ZkVyperConfig,
     inputPaths: string[],
     sourcesPath: string,
+    rootPath: string,
     vyperPath?: string
 ) {
     let compiler: ICompiler;
@@ -28,13 +29,33 @@ export async function compile(
         throw new ZkSyncVyperPluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
-    return await compiler.compile({
+    let output =  await compiler.compile({
         inputPaths,
         sourcesPath,
         compilerPath: zkvyperConfig.settings.compilerPath,
     },
         zkvyperConfig
     );
+
+    if(process.platform !== 'win32') {
+        return output;
+    }
+
+    return getWindowsOutput(output, rootPath);
+}
+
+function getWindowsOutput(output: CompilerOutput, path: string) {
+    let { version, ...contracts } = output;
+    let changedOutput = {} as CompilerOutput;
+
+    let specificPath = path.replaceAll('\\', '/');
+    for(let [sourceName, output] of Object.entries(contracts)) {
+        sourceName = sourceName.replace(`//?/${specificPath}/`, '');
+        changedOutput[sourceName] = output;
+    }
+
+    changedOutput.version = version;
+    return changedOutput;
 }
 
 export interface ICompiler {
