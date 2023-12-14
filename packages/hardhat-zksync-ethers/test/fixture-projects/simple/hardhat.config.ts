@@ -21,9 +21,8 @@ const config: HardhatUserConfig = {
         },
         zkSyncTestnet: {
             allowUnlimitedContractSize: true,
-            url: 'https://zksync2-testnet.zksync.dev',
+            url: 'https://sepolia.era.zksync.dev',
             zksync: true,
-            // verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
         },
     },
     solidity: {

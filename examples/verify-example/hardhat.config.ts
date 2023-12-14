@@ -7,7 +7,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
-        version: '1.3.16',
+        version: 'latest',
         settings: {
             isSystem: true,
             optimizer: {
@@ -18,10 +18,10 @@ const config: HardhatUserConfig = {
     defaultNetwork: 'testnet',
     networks: {     
         zkTestnet: {
-            url: "https://zksync2-testnet.zksync.dev",
+            url: 'https://sepolia.era.zksync.dev',
             zksync: true,
-            verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
-            accounts: ["PRIVATE KEY"]
+            verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
+            accounts: ["0x3ebca5a070d36c4e2b5f337a95c08f5decc8cbb40206fe919d4a5c34679c07c4"]
         },
         customNetwork: {    
             zksync: true,
@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
         testnet:{
             url: `https://sepolia.era.zksync.dev`,
             zksync:true,
-            accounts: ["PRIVATE KEY"]
+            accounts: ["0x3ebca5a070d36c4e2b5f337a95c08f5decc8cbb40206fe919d4a5c34679c07c4"]
         },
         ethNetwork:{
             url:'YOUR_URL_FOR_SEPOLIA'
