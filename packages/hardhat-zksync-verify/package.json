@@ -34,13 +34,13 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.2",
     "axios": "^1.6.2",
     "chalk": "4.1.2",
     "zksync-ethers": "^6.0.0"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.2",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -61,7 +61,7 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0"
+    "@nomicfoundation/hardhat-verify": "^2.0.2"
   },
   "prettier": {
     "tabWidth": 4,
