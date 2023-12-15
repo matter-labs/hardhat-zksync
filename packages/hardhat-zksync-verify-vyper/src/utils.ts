@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import { ZkSyncVerifyPluginError } from './errors';
 import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 

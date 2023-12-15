@@ -7,12 +7,12 @@ const config: HardhatUserConfig = {
         hardhat: {
             zksync: true,
         },
-        goerli: {
+        sepolia: {
             url: ETH_NETWORK_RPC_URL,
         },
         [ZKSYNC_NETWORK_NAME]: {
             url: ZKSYNC_NETWORK_RPC_URL,
-            ethNetwork: 'goerli',
+            ethNetwork: 'sepolia',
             zksync: true,
         },
     },

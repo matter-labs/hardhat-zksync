@@ -1,5 +1,5 @@
 import semver from 'semver';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
 import { SolcConfig } from 'hardhat/types';
@@ -250,6 +250,42 @@ export async function download(
     throw new Error(
         `Failed to download ${url} - ${response.statusCode} received. ${text}`
     );
+}
+
+export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://github.com/${owner}/${repo}/releases/latest`;
+    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`
+
+    const { request } = await import("undici");
+
+    const response = await request(url, {
+        headersTimeout: timeout,
+        maxRedirections: 0,
+        method: "GET",
+        headers: {
+            "User-Agent": `${userAgent}`,
+        },
+    });
+
+    // Check if the response is a redirect
+    if (response.statusCode >= 300 && response.statusCode < 400) {
+        // Get the URL from the 'location' header
+        if (response.headers.location) {
+            // Check if the redirect URL matches the expected pattern
+            if (response.headers.location.startsWith(redirectUrlPattern)) {
+                // Extract the tag from the redirect URL
+                return response.headers.location.substring(redirectUrlPattern.length);
+            }
+
+            throw new ZkSyncSolcPluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
+        } else {
+            // Throw an error if the 'location' header is missing in a redirect response
+            throw new ZkSyncSolcPluginError(`Redirect location not found for URL: ${url}`);
+        }
+    } else {
+        // Throw an error for non-redirect responses
+        throw new ZkSyncSolcPluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
+    }
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {

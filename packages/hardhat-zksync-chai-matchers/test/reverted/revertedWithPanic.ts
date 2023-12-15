@@ -1,5 +1,5 @@
 import { AssertionError, expect } from 'chai';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import path, { resolve } from 'path';
 import util from 'util';
 
@@ -37,7 +37,7 @@ describe('INTEGRATION: Reverted with panic', function () {
             matchers = await deployer.deploy(artifact);
         });
 
-        describe.only('calling a method that succeeds', function () {
+        describe('calling a method that succeeds', function () {
             it('successful asserts', async function () {
                 //wait some time to update 
                 await new Promise((resolve) => setTimeout(resolve, 1000));

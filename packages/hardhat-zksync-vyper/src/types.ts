@@ -44,3 +44,8 @@ export interface CompilerOptions {
     compilerPath?: string;
     sourcesPath?: string;
 }
+
+export interface CompilerOutput {
+    [fqn: string]: any;
+    version: string;
+}

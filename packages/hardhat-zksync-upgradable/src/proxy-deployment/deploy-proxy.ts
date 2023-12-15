@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
 import path from 'path';
 import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';

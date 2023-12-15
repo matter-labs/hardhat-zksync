@@ -1,5 +1,5 @@
 {
-    "name": "harhat-zksync-example-noninline-libraries",
+    "name": "hardhat-zksync-example-noninline-libraries",
     "version": "0.1.0",
     "author": "Matter Labs",
     "license": "MIT",
@@ -32,9 +32,9 @@
       "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
       "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
       "chalk": "4.1.2",
-      "hardhat": "^2.18.1",
+      "hardhat": "^2.19.2",
       "ethers": "^6.7.1",
-      "zksync2-js": "^0.2.2",
+      "zksync-ethers": "^6.0.0",
       "@matterlabs/zksync-contracts": "^0.6.1",
       "@openzeppelin/contracts": "^4.9.2",
       "@openzeppelin/contracts-upgradeable": "^4.9.2"

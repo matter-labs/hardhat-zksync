@@ -1,5 +1,5 @@
 import type { Deployment, RemoteDeploymentId } from '@openzeppelin/upgrades-core';
-import { ContractFactory } from 'zksync2-js';
+import { ContractFactory } from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 export interface DeployTransaction {

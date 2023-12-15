@@ -1,6 +1,6 @@
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
-import { Wallet } from 'zksync2-js';
-import * as zk from 'zksync2-js';
+import { Wallet } from 'zksync-ethers';
+import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
 import * as hre from 'hardhat';
 import {Contract} from 'ethers'

@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { Wallet } from 'zksync2-js';
+import { Wallet } from 'zksync-ethers';
 import { Deployer } from '../../../../src/index';
 import { WALLET_PRIVATE_KEY } from '../../../constants';
 import chalk from 'chalk';

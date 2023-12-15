@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { Manifest } from './core/manifest';
-import { Wallet,Contract } from 'zksync2-js';
+import { Wallet,Contract } from 'zksync-ethers';
 import { getAdminFactory } from './proxy-deployment/deploy-proxy-admin';
 import { ZkSyncUpgradablePluginError } from './errors';
 

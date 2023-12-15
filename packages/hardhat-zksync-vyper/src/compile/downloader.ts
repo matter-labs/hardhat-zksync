@@ -3,19 +3,20 @@ import fsExtra from "fs-extra";
 import chalk from "chalk";
 import { spawnSync } from 'child_process';
 
-import { download, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
+import { download, getLatestRelease, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from "../utils";
 import { 
     COMPILER_BINARY_CORRUPTION_ERROR, 
-    COMPILER_VERSION_INFO_DATA, 
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR, 
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, 
     COMPILER_VERSION_RANGE_ERROR, 
     COMPILER_VERSION_WARNING, 
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD, 
     DEFAULT_TIMEOUT_MILISECONDS, 
-    ZKVYPER_BIN_CDN_VERSION_INFO, 
+    USER_AGENT, 
+    ZKVYPER_BIN_OWNER, 
     ZKVYPER_BIN_REPOSITORY, 
-    ZKVYPER_BIN_VERSION_INFO, 
+    ZKVYPER_BIN_REPOSITORY_NAME, 
+    ZKVYPER_COMPILER_VERSION_MIN_VERSION, 
 } from "../constants";
 import { ZkSyncVyperPluginError } from "../errors";
 
@@ -146,16 +147,14 @@ export class ZkVyperCompilerDownloader {
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const downloadPath = this._getCompilerVersionInfoPath(compilersDir);
-        await saveDataToFile(COMPILER_VERSION_INFO_DATA,downloadPath);
-        //const rawUrl = `${ZKVYPER_BIN_VERSION_INFO}/version.json`;
-        //const cdnUrl = `${ZKVYPER_BIN_CDN_VERSION_INFO}/version.json`
-        //try{
-        //    await download(cdnUrl,downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info',DEFAULT_TIMEOUT_MILISECONDS)
-        //}catch(error){
-        //    await download(rawUrl, downloadPath,'hardhat-zksync-zkvyper', 'compiler-version-info', DEFAULT_TIMEOUT_MILISECONDS);
-        //}
+        const latestRelease = await getLatestRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, USER_AGENT);
 
+        const releaseToSave = {
+            latest: latestRelease,
+            minVersion: ZKVYPER_COMPILER_VERSION_MIN_VERSION
+        }
+        const savePath = this._getCompilerVersionInfoPath(compilersDir);
+        await saveDataToFile(releaseToSave, savePath);
     }
 
     private async _downloadCompiler(): Promise<string> {

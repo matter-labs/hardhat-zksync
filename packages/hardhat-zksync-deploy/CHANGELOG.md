@@ -1,5 +1,29 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## 1.1.1
+
+### Patch Changes
+
+- 70811d0: Fixed edge case when ethNetwork is provided as URL
+
+## 1.1.0
+
+### Minor Changes
+
+- f216797: Migration from zksync2-js to zksync-ethers
+
+## 1.0.3
+
+### Patch Changes
+
+- 238cbb7: Proper User-Agent for getRelease function
+
+## 1.0.1
+
+### Patch Changes
+
+- ee858a6: Added support for Sepolia testnet.
+
 ## 1.0.0
 
 ### Major Changes

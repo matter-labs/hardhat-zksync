@@ -1,0 +1,47 @@
+{
+  "name": "hardhat-zksync-ethers-example",
+  "version": "0.1.0",
+  "author": "Matter Labs",
+  "license": "MIT",
+  "scripts": {
+    "lint": "yarn eslint",
+    "prettier:check": "yarn prettier --check",
+    "lint:fix": "yarn eslint --fix",
+    "fmt": "yarn prettier --write",
+    "eslint": "eslint deploy/*.ts",
+    "prettier": "prettier deploy/*.ts",
+    "test": "mocha test/tests.ts --exit",
+    "build": "tsc --build .",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-no-only-tests": "3.1.0",
+    "eslint-plugin-prettier": "5.0.1",
+    "prettier": "3.1.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.6.0",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
+    "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
+    "@matterlabs/hardhat-zksync-ethers": "link:../../packages/hardhat-zksync-ethers",
+    "chalk": "4.1.2",
+    "hardhat": "^2.19.2",
+    "ethers": "^6.7.1",
+    "zksync-ethers": "^6.0.0"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 120,
+    "parser": "typescript",
+    "singleQuote": true,
+    "bracketSpacing": true
+  }
+}

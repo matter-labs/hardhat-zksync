@@ -1,5 +1,23 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.2.1
+
+### Patch Changes
+
+- 065f52a: Fixed to work with non zksync networks
+
+## 1.2.0
+
+### Minor Changes
+
+- f216797: Migration from zksync2-js to zksync-ethers
+
+## 1.1.1
+
+### Patch Changes
+
+- 523985a: Added support for Sepolia testnet.
+
 ## 1.1.0
 
 ### Minor Changes

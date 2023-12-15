@@ -3,10 +3,10 @@ import { ZkSolcConfig } from './types';
 export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-solc';
 export const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKSOLC_BIN_REPOSITORY = 'https://github.com/matter-labs/zksolc-bin';
-export const ZKSOLC_BIN_VERSION_INFO = `https://raw.githubusercontent.com/matter-labs/zksolc-bin/main`;
-export const ZKSOLC_BIN_CDN_VERSION_INFO = `https://cdn.jsdelivr.net/gh/matter-labs/zksolc-bin`;
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
+// User agent of MacOSX Chrome 120.0.0.0
+export const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export const defaultZkSolcConfig: ZkSolcConfig = {
     version: 'latest',
@@ -34,15 +34,13 @@ export const ZKSOLC_COMPILERS_SELECTOR_MAP = {
     ]
 };
 
-export const ZKSOLC_COMPILER_VERSION_INFO_DATA = {
-    "latest": "1.3.17",
-    "minVersion": "1.3.13"
-};
+export const ZKSOLC_COMPILER_VERSION_MIN_VERSION = "1.3.13";
+export const ZKSOLC_BIN_OWNER = 'matter-labs';
+export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
-export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file. Please check your internet connection and try again.';
-export const COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR = 'Could not download zksolc compiler version info file. Please check your internet connection and try again.';
+export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file.';
 
 export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string, latestVersion: string) => `The zksolc compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string) => `The zksolc compiler version in your Hardhat config file (${version}) is not the latest. We recommend using the latest version ${latestVersion}.`;

@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## 1.0.4
+
+### Patch Changes
+
+- 0b97bb4: - Get latest release from redirect URL
+  - Change User Agent
+
+## 1.0.3
+
+### Patch Changes
+
+- f738148: Fetch compiler version info from the latest release
+
 ## 1.0.2
 
 ### Patch Changes

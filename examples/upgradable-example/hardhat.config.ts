@@ -14,18 +14,18 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork: 'zkSyncNetwork',
+    defaultNetwork:'zkSyncNetwork',
     networks: {
         hardhat: {
-            zksync: false,
+            zksync: true,
         },
-        goerli: {
-            zksync: false,
+        eth: {
+            zksync: true,
             url: 'http://localhost:8545',
         },
         zkSyncNetwork: {
             zksync: true,
-            ethNetwork: 'goerli',
+            ethNetwork: 'eth',
             url: 'http://localhost:3050',
         },
     },

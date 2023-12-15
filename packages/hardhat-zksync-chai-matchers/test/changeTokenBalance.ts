@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { AssertionError, expect } from 'chai';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import path from 'path';
 import util from 'util';
 

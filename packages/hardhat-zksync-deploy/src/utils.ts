@@ -4,7 +4,7 @@ import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types
 import { MorphTsBuilder } from './morph-ts-builder';
 import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
-import { Wallet } from 'zksync2-js';
+import { Wallet } from 'zksync-ethers';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
@@ -57,6 +57,15 @@ export function removeLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
 
     if (fs.existsSync(libraryPathFile)) {
         fs.rmSync(libraryPathFile);
+    }
+}
+
+export function isValidEthNetworkURL(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
     }
 }
 

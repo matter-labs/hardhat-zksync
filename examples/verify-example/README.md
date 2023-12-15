@@ -12,7 +12,7 @@ This project demonstrates how to compile and verify your contracts in zkSync 2.0
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
 You should only change the zkSync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `goerli` used as the underlying layer 1 network:
+`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
 import "@matterlabs/hardhat-zksync-deploy";
 import { HardhatUserConfig } from 'hardhat/types';
@@ -20,10 +20,10 @@ import { HardhatUserConfig } from 'hardhat/types';
 const config: HardhatUserConfig = {
      networks: {     
         zkTestnet: {
-            url: "https://zksync2-testnet.zksync.dev",
-            ethNetwork: "goerli",
+            url: "https://sepolia.era.zksync.dev",
+            ethNetwork: "sepolia",
             zksync: true,
-            verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
+            verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
             accounts: [PRIVATE KEY], //provide private key
         },
         customNetwork: {
@@ -49,7 +49,7 @@ yarn build
 After that you should be able to run plugins:
 
 ```sh
-# Run the following in `examples/zksync2js-example` folder.
+# Run the following in `examples/verify-example` folder.
 yarn
 yarn hardhat test
 ```

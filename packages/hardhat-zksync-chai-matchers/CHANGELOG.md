@@ -1,5 +1,17 @@
 # @matterlabs/hardhat-zksync-chai-matchers
 
+## 1.2.0
+
+### Minor Changes
+
+- f216797: Migration from zksync2-js to zksync-ethers
+
+## 1.1.0
+
+### Minor Changes
+
+- ee858a6: Bumped version of zksync2-js
+
 ## 1.0.0
 
 ### Major Changes

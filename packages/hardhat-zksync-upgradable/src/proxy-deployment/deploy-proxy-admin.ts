@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync2-js';
+import * as zk from 'zksync-ethers';
 import path from 'path';
 import { DeployProxyAdminOptions } from '../utils/options';
 import { deploy } from './deploy';

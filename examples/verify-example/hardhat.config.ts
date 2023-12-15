@@ -1,13 +1,13 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-verify';
-import '@matterlabs/hardhat-zksync-zksync2js';
+import '@matterlabs/hardhat-zksync-ethers';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
-        version: '1.3.16',
+        version: 'latest',
         settings: {
             isSystem: true,
             optimizer: {
@@ -15,18 +15,27 @@ const config: HardhatUserConfig = {
             },
         }
     },
-    defaultNetwork: 'zkTestnet',
+    defaultNetwork: 'testnet',
     networks: {     
         zkTestnet: {
-            url: "https://zksync2-testnet.zksync.dev",
+            url: 'https://sepolia.era.zksync.dev',
             zksync: true,
-            verifyURL: "https://zksync2-testnet-explorer.zksync.dev/contract_verification",
-            accounts: ["PRIVATE KEY"]
+            verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
+            accounts: ["PRIVATE_KEY"]
         },
-        customNetwork: {
+        customNetwork: {    
             zksync: true,
             url: ''
+        },
+        testnet:{
+            url: `https://sepolia.era.zksync.dev`,
+            zksync:true,
+            accounts: ["PRIVATE_KEY"]
+        },
+        ethNetwork:{
+            url:'YOUR_URL_FOR_SEPOLIA'
         }
+        
     },
     solidity: {
         version: '0.8.17',

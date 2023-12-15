@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-solc",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Hardhat plugin to compile smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-solc",
@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha test/tests.ts --no-timeout --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -55,15 +55,16 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "hardhat": "^2.18.1",
+    "hardhat": "^2.19.2",
     "mocha": "^9.2.1",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "hardhat": "^2.18.1"
+    "hardhat": "^2.19.2"
   },
   "prettier": {
     "tabWidth": 4,

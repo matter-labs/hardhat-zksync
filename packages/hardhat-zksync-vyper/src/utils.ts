@@ -8,7 +8,7 @@ import type { Dispatcher } from "undici";
 import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 
 import { CompilerVersionInfo } from './compile/downloader';
-import { UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
+import { DEFAULT_TIMEOUT_MILISECONDS, UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
 import { ZkSyncVyperPluginError } from './errors';
 
 const TEMP_FILE_PREFIX = "tmp-";
@@ -120,6 +120,42 @@ export async function download(
     throw new Error(
         `Failed to download ${url} - ${response.statusCode} received. ${text}`
     );
+}
+
+export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+    let url = `https://github.com/${owner}/${repo}/releases/latest`;
+    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`
+
+    const { request } = await import("undici");
+
+    const response = await request(url, {
+        headersTimeout: timeout,
+        maxRedirections: 0,
+        method: "GET",
+        headers: {
+            "User-Agent": `${userAgent}`,
+        },
+    });
+
+    // Check if the response is a redirect
+    if (response.statusCode >= 300 && response.statusCode < 400) {
+        // Get the URL from the 'location' header
+        if (response.headers.location) {
+            // Check if the redirect URL matches the expected pattern
+            if (response.headers.location.startsWith(redirectUrlPattern)) {
+                // Extract the tag from the redirect URL
+                return response.headers.location.substring(redirectUrlPattern.length);
+            }
+
+            throw new ZkSyncVyperPluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
+        } else {
+            // Throw an error if the 'location' header is missing in a redirect response
+            throw new ZkSyncVyperPluginError(`Redirect location not found for URL: ${url}`);
+        }
+    } else {
+        // Throw an error for non-redirect responses
+        throw new ZkSyncVyperPluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
+    }
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
