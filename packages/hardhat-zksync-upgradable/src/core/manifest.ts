@@ -61,7 +61,10 @@ export class Manifest {
         this.chainIdSuffix = `${chainId}`;
 
         this.dir = MANIFEST_DEFAULT_DIR;
-        const networkName = networkNames[chainId];
+       
+        const defaultFallbackName = `unknown-network-${chainId}`;
+        const networkName = networkNames[chainId] !== undefined ? networkNames[chainId] : defaultFallbackName;
+
         this.file = path.join(MANIFEST_DEFAULT_DIR, `${networkName}.json`);
     }
 
