@@ -2,7 +2,7 @@ import semver from 'semver';
 import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
-import { SolcConfig } from 'hardhat/types';
+import { MultiSolcUserConfig, SolcConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
 import { CompilerVersionInfo } from './compile/downloader';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
@@ -41,7 +41,7 @@ export function filterSupportedOutputSelections(outputSelection: CompilerOutputS
     return filteredOutputSelection;
 }
 
-export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig) {
+export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, userConfigCompilers: SolcUserConfig[]) {
     const [major, minor] = getVersionComponents(compiler.version);
     if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
         console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
@@ -60,6 +60,14 @@ export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig) {
 
     // zkSolc supports only a subset of solc output selections
     compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, zksolc.version);
+
+    if (userConfigCompilers) {
+        let compilerInfo = userConfigCompilers.find((compilerInfo) => compilerInfo.version === compiler.version);
+
+        if (compilerInfo?.eraVersion) {
+            compiler.eraVersion = compilerInfo.eraVersion;
+        }
+    }
 }
 
 export function zeroxlify(hex: string): string {
@@ -91,12 +99,25 @@ export function getZksolcUrl(repo: string, version: string, isRelease: boolean =
     const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch == 'x64' ? 'amd64' : process.arch;
     const ext = process.platform == 'win32' ? '.exe' : '';
-    
+
     if (isRelease) {
         return `${repo}/releases/download/v${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
     }
-    
+
     return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+}
+
+export function getZkVmSolcUrl(repo: string, version: string, isRelease: boolean = true): string {
+    // @ts-ignore
+    const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
+    // @ts-ignore
+    const arch = process.arch == 'x64' ? 'amd64' : process.arch;
+    const ext = process.platform == 'win32' ? '.exe' : '';
+    if (isRelease) {
+        return `${repo}/releases/download/${version}/solc-${platform}-${arch}-${version}${ext}`;
+    }
+
+    return `${repo}/raw/main/${platform}-${arch}/solc-${platform}-${arch}-${version}${ext}`;
 }
 
 export function pluralize(n: number, singular: string, plural?: string) {
@@ -125,7 +146,7 @@ export function isVersionInRange(version: string, versionInfo: CompilerVersionIn
     const minVersion = versionInfo.minVersion;
 
     return semver.gte(version, minVersion) && semver.lte(version, latest);
-  }
+}
 
 // Generate SolcJS executable code
 export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: string): string {
@@ -148,7 +169,7 @@ export function findMissingLibraries(zkSolcOutput: any): Set<string> {
             }
         }
     }
-    
+
     return missingLibraries;
 }
 
@@ -188,7 +209,7 @@ export const writeLibrariesToFile = async (path: string, libraries: any[]): Prom
     try {
         let existingLibraries = await getOrCreateLibraries(path); // Ensure that the file exists
         await lockfile.lock(path, { retries: { retries: 10, maxTimeout: 1000 } });
-        
+
         existingLibraries = await getOrCreateLibraries(path); // Read again after locking
         const combinedLibraries = [...existingLibraries, ...libraries];
         fse.outputFileSync(path, JSON.stringify(combinedLibraries, null, 4));
@@ -242,7 +263,7 @@ export async function download(
         await streamPipeline(response.body, fs.createWriteStream(tmpFilePath));
         return fse.move(tmpFilePath, filePath, { overwrite: true });
     }
-    
+
     // undici's response bodies must always be consumed to prevent leaks
     const text = await response.body.text();
 
@@ -252,9 +273,9 @@ export async function download(
     );
 }
 
-export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
+export async function getLatestRelease(owner: string, repo: string, userAgent: string, tagPrefix: string = "v", timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
     let url = `https://github.com/${owner}/${repo}/releases/latest`;
-    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`
+    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/${tagPrefix}`;
 
     const { request } = await import("undici");
 
@@ -289,6 +310,14 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
 }
 
 export async function saveDataToFile(data: any, targetPath: string) {
-        await fse.ensureDir(path.dirname(targetPath));
-        await fse.writeJSON(targetPath, data, { spaces: 2 });
+    await fse.ensureDir(path.dirname(targetPath));
+    await fse.writeJSON(targetPath, data, { spaces: 2 });
+}
+
+export function isSolcUserConfig(object: any): object is SolcUserConfig {
+    return 'version' in object;
+}
+
+export function isMultiSolcUserConfig(object: any): object is MultiSolcUserConfig {
+    return 'compilers' in object;
 }

@@ -24,12 +24,15 @@ import {
     saltFromUrl,
     generateSolcJSExecutableCode,
     updateCompilerConf,
+    isSolcUserConfig,
+    isMultiSolcUserConfig,
 } from './utils';
 import fs from 'fs';
 import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS, MISSING_LIBRARY_LINK } from './constants';
-import { CompilationJob } from 'hardhat/types';
+import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS, MISSING_LIBRARY_LINK, COMPILING_INFO_MESSAGE_ZKVM_SOLC } from './constants';
+import { CompilationJob, SolcUserConfig } from 'hardhat/types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
+import { ZkVmSolcCompilerDownloader } from './compile/solc-downloader';
 
 extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
@@ -57,10 +60,31 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
+        let compilers: SolcUserConfig[] = [];
+        let overrides: SolcUserConfig[] = [];
+        const userSolidityConfig = hre.userConfig.solidity;
+
+        if (isSolcUserConfig(userSolidityConfig)) {
+            compilers.push(userSolidityConfig);
+        }
+
+        if (isMultiSolcUserConfig(userSolidityConfig)) {
+            for (const compiler of userSolidityConfig.compilers) {
+                compilers.push(compiler);
+            }
+
+            if (userSolidityConfig.overrides) {
+                for (const [_, compiler] of Object.entries(userSolidityConfig.overrides)) {
+                    overrides.push(compiler);
+                }
+            }
+        }
+
         // Update compilers config.
-        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc));
+        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc, compilers));
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-            updateCompilerConf(compiler, hre.config.zksolc);
+            // TODO: Support multi files with same of solc version.
+            updateCompilerConf(compiler, hre.config.zksolc, overrides);
         }
     }
 });
@@ -211,16 +235,50 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
         // and `output.zk_version` in the generated JSON.
         return {
             compilerPath: '',
-            isSolsJs: false,
+            isSolcJs: false,
             version: args.solcVersion,
             longVersion: '',
         };
     }
 
-    console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+    const compiler = hre.config.solidity.compilers.find((compiler) => compiler.version === args.solcVersion && compiler.eraVersion);
 
-    const solcBuild = await runSuper(args);
-    return solcBuild;
+    if (compiler) {
+        const compilersCache = await getCompilersDir();
+        let path: string = '';
+        let version: string = '';
+        
+        const mutex = new Mutex();
+        await mutex.use(async () => {
+            const zkVmSolcCompilerDownloader = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                compiler.eraVersion!,
+                compiler.version,
+                compilersCache
+            );
+
+            const isZksolcDownloaded = await zkVmSolcCompilerDownloader.isCompilerDownloaded();
+            if (!isZksolcDownloaded) {
+                await zkVmSolcCompilerDownloader.downloadCompiler();
+            }
+
+            path = zkVmSolcCompilerDownloader.getCompilerPath();
+            version = zkVmSolcCompilerDownloader.getVersion();
+        });
+        console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
+
+        return {
+            compilerPath: path,
+            isSolcJs: false,
+            version: `${compiler.version}-${compiler.eraVersion}`,
+            longVersion: `${compiler.version}-${compiler.eraVersion}`,
+        };
+
+    } else {
+        const solcBuild = await runSuper(args);
+
+        console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+        return solcBuild;
+    }
 });
 
 subtask(
