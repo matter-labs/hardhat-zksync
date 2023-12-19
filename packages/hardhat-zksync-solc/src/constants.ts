@@ -55,6 +55,8 @@ export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string)
 export const COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC = (version: string, minVersion: string, latestVersion: string) => `The zkvm-solc compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING_ZKVM_SOLC = (version: string, latestVersion: string) => `The zkvm-solc compiler version in your Hardhat config file (${version}) is not the latest. We recommend using the latest version ${latestVersion}.`;
 
+export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) => `Solidity compiler versions in your Hardhat config file are in conflict for version ${version}. Please use only version with eraVersion or only version without eraVersion.`;
+
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC  = 'Could not find zkvm-solc compiler version info file.';
 
 export const MISSING_LIBRARIES_NOTICE = 'zksolc compiler detected missing libraries! For more details, visit: https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html.';

@@ -1,8 +1,8 @@
 import semver from 'semver';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS, COMPILERS_CONFLICT_ZKVM_SOLC } from './constants';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import crypto from 'crypto';
-import { MultiSolcUserConfig, SolcConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
+import { SolcConfig, SolcUserConfig } from 'hardhat/types';
 import { CompilerVersionInfo } from './compile/downloader';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
@@ -98,10 +98,10 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
         let compilerInfos = userConfigCompilers.filter((compilerInfo) => compilerInfo.version === compiler.version);
 
         if (compilerInfos.length > 1) {
-            let compilerInfo = compilerInfos.find((compilerInfo) => compilerInfo.eraVersion);
+            let compilerInfosWithEraVersion = compilerInfos.filter((compilerInfo) => compilerInfo.eraVersion);
 
-            if (compilerInfo) {
-                throw new ZkSyncSolcPluginError(`Multiple compiler versions found for ${compiler.version}, and one of them has eraVersion set.`);
+            if (compilerInfosWithEraVersion.length > 0 && compilerInfosWithEraVersion.length !== compilerInfos.length) {
+                throw new ZkSyncSolcPluginError(COMPILERS_CONFLICT_ZKVM_SOLC(compiler.version));
             }
         }
 
