@@ -14,7 +14,8 @@ import {
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC,
     COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC,
     COMPILER_VERSION_WARNING_ZKVM_SOLC,
-    COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC} from "../constants";
+    COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC,
+    ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION} from "../constants";
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -120,10 +121,10 @@ export class ZkVmSolcCompilerDownloader {
         if (compilerVersionInfo === undefined) {
             throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC);
         }
-        //TODO: check if we have version range
-        // if (!isVersionInRange(this._version, compilerVersionInfo)) {
-        //     throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR(this._version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
-        // }
+
+        if (!isVersionInRange(this._zkVmSolcVersion, compilerVersionInfo)) {
+             throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(this._zkVmSolcVersion, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+        }
 
         try {
             console.info(chalk.yellow(`Downloading zkvm-solc ${this.version}`));
@@ -145,7 +146,7 @@ export class ZkVmSolcCompilerDownloader {
         const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, "");
         const releaseToSave = {
             latest: latestRelease.split('-')[1],
-            minVersion: "1.0.0"
+            minVersion: ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION
         }
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
         await saveDataToFile(releaseToSave, savePath);

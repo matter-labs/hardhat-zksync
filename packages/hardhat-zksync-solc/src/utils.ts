@@ -41,7 +41,7 @@ export function filterSupportedOutputSelections(outputSelection: CompilerOutputS
     return filteredOutputSelection;
 }
 
-export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, userConfigCompilers: SolcUserConfig[]) {
+export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string) {
     const [major, minor] = getVersionComponents(compiler.version);
     if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
         console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
@@ -61,14 +61,56 @@ export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, u
     // zkSolc supports only a subset of solc output selections
     compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, zksolc.version);
 
-    if (userConfigCompilers) {
-        let compilerInfo = userConfigCompilers.find((compilerInfo) => compilerInfo.version === compiler.version);
+    solcUpdaters.find((updater) => updater.suituble(userConfigCompilers, file))?.update(compiler, userConfigCompilers, file);
+}
+
+export interface SolcUserConfigUpdater {
+    suituble(solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string): boolean;
+    update(compiler: SolcConfig, solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string): void;
+}
+
+export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
+    suituble(solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string): boolean {
+        return solcUserConfig instanceof Map && file !== undefined;
+    }
+
+    update(compiler: SolcConfig, userConfigCompilers: Map<string, SolcUserConfig>, file: string): void {
+        let compilerInfo = userConfigCompilers.get(file);
 
         if (compilerInfo?.eraVersion) {
             compiler.eraVersion = compilerInfo.eraVersion;
         }
     }
 }
+
+export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
+    suituble(solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string): boolean {
+        return solcUserConfig instanceof Array && file === undefined;
+    }
+
+    update(compiler: SolcConfig, userConfigCompilers: SolcUserConfig[], file?: string): void {
+        let compilerInfos = userConfigCompilers.filter((compilerInfo) => compilerInfo.version === compiler.version);
+
+        if (compilerInfos.length > 1) {
+            let compilerInfo = compilerInfos.find((compilerInfo) => compilerInfo.eraVersion);
+
+            if (compilerInfo) {
+                throw new ZkSyncSolcPluginError(`Multiple compiler versions found for ${compiler.version}, and one of them has eraVersion set.`);
+            }
+        }
+
+        let compilerInfo = compilerInfos[0];
+
+        if (compilerInfo?.eraVersion) {
+            compiler.eraVersion = compilerInfo.eraVersion;
+        }
+    }
+}
+
+const solcUpdaters: SolcUserConfigUpdater[] = [
+    new OverrideCompilerSolcUserConfigUpdater(),
+    new CompilerSolcUserConfigUpdater()
+]
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
@@ -312,12 +354,4 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
 export async function saveDataToFile(data: any, targetPath: string) {
     await fse.ensureDir(path.dirname(targetPath));
     await fse.writeJSON(targetPath, data, { spaces: 2 });
-}
-
-export function isSolcUserConfig(object: any): object is SolcUserConfig {
-    return 'version' in object;
-}
-
-export function isMultiSolcUserConfig(object: any): object is MultiSolcUserConfig {
-    return 'compilers' in object;
 }

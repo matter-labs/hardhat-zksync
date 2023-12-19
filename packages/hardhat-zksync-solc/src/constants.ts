@@ -39,6 +39,7 @@ export const ZKSOLC_COMPILER_VERSION_MIN_VERSION = "1.3.13";
 export const ZKSOLC_BIN_OWNER = 'matter-labs';
 export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 export const ZKVM_SOLC_BIN_REPOSITORY_NAME = 'era-solidity';
+export const ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION = "1.0.0";
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -49,7 +50,7 @@ export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string)
 export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) => `The zksolc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: string) => `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and solc v${solcVersion}`;
 
-export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolcVersiob: string) => `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersiob}`;
+export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolcVersion: string) => `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) => `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC = (version: string, minVersion: string, latestVersion: string) => `The zkvm-solc compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING_ZKVM_SOLC = (version: string, latestVersion: string) => `The zkvm-solc compiler version in your Hardhat config file (${version}) is not the latest. We recommend using the latest version ${latestVersion}.`;

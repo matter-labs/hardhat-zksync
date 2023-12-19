@@ -31,6 +31,15 @@ const config: HardhatUserConfig = {
     //     },
     // }
     solidity: {
+        overrides: {
+            "contracts/001_deploy/Greeter.sol": {
+                version: "0.8.16",
+            },
+            "contracts/002_factory/Foo.sol": {
+                version: "0.8.16",
+                eraVersion: "latest"
+            }
+        },
         compilers: [
             {
                 version: "0.8.17",
