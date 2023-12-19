@@ -53,7 +53,24 @@ export class SolcMultiUserConfigExtractor implements SolcUserConfigExtractor {
     }
 }
 
+export class SolcStringUserConfigExtractor implements SolcUserConfigExtractor {
+    suitable(solidityConfig: string | undefined): boolean {
+        if (!solidityConfig) {
+            return false;
+        }
+
+        return typeof solidityConfig === 'string';
+    }
+
+    extract(solidityConfig: MultiSolcUserConfig | undefined): SolcUserConfigData {
+        return {
+            compilers: []
+        }
+    }
+}
+
 export const extractors: SolcUserConfigExtractor[] = [
+    new SolcStringUserConfigExtractor(),
     new SolcSoloUserConfigExtractor(),
     new SolcMultiUserConfigExtractor(),
 ];

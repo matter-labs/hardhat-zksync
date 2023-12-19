@@ -15,7 +15,7 @@ import {
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
-import { FactoryDeps, ZkSolcConfig } from './types';
+import { FactoryDeps } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import { compile } from './compile';
@@ -63,24 +63,12 @@ extendEnvironment((hre) => {
 
         const userSolidityConfig = hre.userConfig.solidity;
 
-        const extractor = extractors.find((extractor) => extractor.suitable(userSolidityConfig));
+        const extractedConfigs = extractors.find((extractor) => extractor.suitable(userSolidityConfig))?.extract(userSolidityConfig);
 
-        let compilers: SolcUserConfig[] = [];
-        let overrides: Map<string, SolcUserConfig> = new Map();
-
-        if (extractor) {
-            const { compilers: extractedCompilers, overides: extractedOverrides } = extractor.extract(userSolidityConfig);
-            compilers = extractedCompilers;
-
-            if (extractedOverrides) {
-                overrides = extractedOverrides;
-            }
-        }
         // Update compilers config.
-        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc, compilers));
+        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf({compiler}, hre.config.zksolc, extractedConfigs?.compilers ?? []));
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-            // TODO: Support multi files with same of solc version.
-            updateCompilerConf(compiler, hre.config.zksolc, overrides, file);
+            updateCompilerConf({compiler, file}, hre.config.zksolc, extractedConfigs?.overides ?? new Map());
         }
     }
 });

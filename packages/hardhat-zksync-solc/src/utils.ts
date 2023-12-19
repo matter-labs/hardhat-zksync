@@ -41,7 +41,8 @@ export function filterSupportedOutputSelections(outputSelection: CompilerOutputS
     return filteredOutputSelection;
 }
 
-export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>, file?: string) {
+export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSolcConfig, userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>) {
+    var compiler = solcConfigData.compiler;
     const [major, minor] = getVersionComponents(compiler.version);
     if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
         console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
@@ -61,7 +62,12 @@ export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig, u
     // zkSolc supports only a subset of solc output selections
     compiler.settings.outputSelection = filterSupportedOutputSelections(compiler.settings.outputSelection, zksolc.version);
 
-    solcUpdaters.find((updater) => updater.suituble(userConfigCompilers, file))?.update(compiler, userConfigCompilers, file);
+    solcUpdaters.find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))?.update(compiler, userConfigCompilers, solcConfigData.file);
+}
+
+export interface SolcConfigData {
+    compiler: SolcConfig;
+    file?: string;
 }
 
 export interface SolcUserConfigUpdater {
