@@ -17,7 +17,7 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-upgradable** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-upgradable @openzeppelin/contracts @openzeppelin/contracts-upgradeable`
+`npm install -D @matterlabs/hardhat-zksync-upgradable`
 
 or
 

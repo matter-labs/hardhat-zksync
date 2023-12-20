@@ -8,7 +8,7 @@ zkSync Era [Hardhat](https://hardhat.org/) plugin that is a wrapper around [zksy
 
 To install **hardhat-zksync-ethers** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-ethers zksync-ethers ethers`
+`npm install -D @matterlabs/hardhat-zksync-ethers`
 
 or
 

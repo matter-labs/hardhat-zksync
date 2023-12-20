@@ -8,7 +8,7 @@
 
 To install **hardhat-zksync-vyper** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-vyper @nomiclabs/hardhat-vyper`
+`npm install -D @matterlabs/hardhat-zksync-vyper`
 
 or
 

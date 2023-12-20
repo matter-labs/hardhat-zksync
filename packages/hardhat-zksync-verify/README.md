@@ -17,7 +17,7 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-verify** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-verify @nomicfoundation/hardhat-verify`
+`npm install -D @matterlabs/hardhat-zksync-verify`
 
 or
 

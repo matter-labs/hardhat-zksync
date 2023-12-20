@@ -17,7 +17,7 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-chai-matchers** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-chai-matchers @nomicfoundation/hardhat-chai-matchers chai @nomiclabs/hardhat-ethers ethers`
+`npm install -D @matterlabs/hardhat-zksync-chai-matchers`
 
 or
 

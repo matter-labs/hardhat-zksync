@@ -17,7 +17,7 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-toolbox** plugin, run:
 
-`npm i -D @matterlabs/hardhat-zksync-toolbox ethers zksync-ethers`
+`npm i -D @matterlabs/hardhat-zksync-toolbox`
 
 or
 

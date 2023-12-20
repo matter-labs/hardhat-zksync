@@ -19,7 +19,7 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-deploy** plugin, run:
 
-`npm install -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
+`npm install -D @matterlabs/hardhat-zksync-deploy`
 
 or
 
