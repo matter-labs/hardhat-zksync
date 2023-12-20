@@ -26,7 +26,7 @@ or
 `yarn add -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
 
 ## 📝 Documentation
-In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),[zkSync's Era website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
 [Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
