@@ -1,6 +1,6 @@
 ## hardhat-zksync-deploy
 
-[Hardhat](https://hardhat.org/) plugin that adds zkSync-specific capabilities to deploy contracts into the zkSync Era network.
+zkSync Era capabilities for contract deployment are enhanced with this [Hardhat](https://hardhat.org/) plugin, specifically designed to add zkSync-specific features to the network.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -16,6 +16,7 @@ To install **hardhat-zksync-deploy** plugin, run:
 
 On [zkSync's Era website](https://era.zksync.io/docs/) you will find:
 
+[hardhat-zksync-deploy plugin](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html) documentation.\
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html)\
 [Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html)\
 [Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains)
