@@ -11,23 +11,17 @@ This repository contains a collection of plugins to aid in the development and d
 
 Here is an overview of the plugins currently available:
 
-**hardhat-zksync-solc**: This plugin is used to provide a convenient interface for compiling Solidity smart contracts before deploying them to the zkSync network.
-
-**hardhat-zksync-deploy**: This plugin simplifies the deployment of your smart contracts to the zkSync network by providing utilities for deploying smart contracts with artifacts built by the zkSync hardhat-zksync-solc or hardhat-zksync-vyper plugins.
-
-**hardhat-zksync-verify**: This plugin helps you to verify your smart contracts on the zkSync network by providing a set of tasks that automate the verification process.
-
-**hardhat-zksync-verify-vyper**: This plugin helps you to verify your vyper smart contracts on the zkSync network by providing a set of tasks that automate the verification process.
-
-**hardhat-zksync-vyper**: This plugin is used to provide a convenient interface for compiling Vyper smart contracts before deploying them to the zkSync network.
-
-**hardhat-zksync-chai-matchers**: This plugin adds additional chai matchers to be used when writing tests with specific zkSync features.
-
-**hardhat-zksync-toolbox**: This plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins.
-
-**hardhat-zksync-upgradeable**: This plugin provides a convenient method to deploy and upgrade smart contracts on the zkSync network.
-
-**hardhat-zksync-ethers**: This plugin is a wrapper around zksync-ethers sdk that gives additional methods to use for faster development.
+| 🔌 Plugin                     | 📄 Description                                                                                                                    |
+|----------------------- -------|-----------------------------------------------------------------------------------------------------------------------------------|
+| hardhat-zksync-solc           | Plugin simplifies the compilation of Solidity smart contracts for deployment on the zkSync network.  |
+| hardhat-zksync-deploy         | Plugin eases zkSync contract deployment using hardhat-zksync-solc/vyper artifacts. |
+| hardhat-zksync-verify         | Plugin automates smart contract verification on zkSync network. |
+| hardhat-zksync-verify-vyper   | Plugin automates verification of Vyper contracts on zkSync network. |
+| hardhat-zksync-vyper          | Plugin facilitates compiling Vyper contracts for zkSync network deployment. |
+| hardhat-zksync-chai-matchers  | Plugin adds additional chai matchers to be used when writing tests with specific zkSync features. |
+| hardhat-zksync-toolbox        | Plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins. |
+| hardhat-zksync-upgradeable    | Plugin provides a convenient method to deploy and upgrade smart contracts on the zkSync network. |
+| hardhat-zksync-ethers         | Plugin is a wrapper around zksync-ethers sdk that gives additional methods to use for faster development. |
 
 You can find more detailed explanations on how to use hardhat zkSync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
 

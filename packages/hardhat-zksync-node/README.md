@@ -29,7 +29,7 @@ or
 
 This command runs a local zkSync In-memory node by initiating a JSON-RPC server. It uses the provided or default configurations to set up and run the zkSync node, allowing for blockchain operations in a local environment. The command also handles tasks such as downloading the necessary JSON-RPC server binary if it's not already present.
 
-| 🙏 Helper                           | 📄 Description                                                                                                       |
+| 🔧 Command                          | 📄 Description                                                                                                       |
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | --port                              | Port on which the server should listen. Defaults to 8011.                                                            |
 | --log                               | Log filter level. Accepted values are: error, warn, info, and debug. Defaults to info.                               |
