@@ -6,11 +6,12 @@ zkSync Era's integration into the [Chai](https://chaijs.com/) assertion library 
 
 ## ⚠️ Version Compatibility Warning
 
-For plugin version **<1.0.0**:
-Compatible with ethers **v5**.
+Ensure you are using the correct version of the plugin with ethers:
+- For plugin version **<1.0.0**:
+  - Compatible with ethers **v5**.
 
-For plugin version **≥1.0.0**:
-Compatible with ethers **v6**.
+- For plugin version **≥1.0.0**:
+  - Compatible with ethers **v6** (:star2: Recommended)
 
 ## 📥 Installation
 
@@ -19,9 +20,8 @@ To install **hardhat-zksync-chai-matchers** plugin, run:
 `yarn add -D @matterlabs/hardhat-zksync-chai-matchers @nomicfoundation/hardhat-chai-matchers chai @nomiclabs/hardhat-ethers ethers`
 
 ## 📝 Documentation
-On [zkSync's Era website](https://era.zksync.io/docs/) you will find:
+In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),[zkSync's Era website](https://era.zksync.io/docs/) offers a variety of resources including:\
 
-[hardhat-zksync-chai-matchers plugin documentation.](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html) Detailed documentation for this plugin with examples.\
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
 [Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
 [Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
