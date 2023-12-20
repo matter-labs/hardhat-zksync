@@ -1,6 +1,6 @@
 # zkSync 2.0: Welcome to zkSync Hardhat plugins repository
 
-![](https://user-images.githubusercontent.com/8230135/215079996-46ec1c91-e65d-4adb-8d7a-f7eecf851858.svg)
+[![Logo](eraLogo.svg)](https://zksync.io/)
 
 zkSync 2.0 is a layer 2 rollup that uses zero-knowledge proofs to scale Ethereum without compromising on security or
 decentralization. Since it's EVM compatible (Solidity/Vyper), 99% of Ethereum projects can redeploy without refactoring
