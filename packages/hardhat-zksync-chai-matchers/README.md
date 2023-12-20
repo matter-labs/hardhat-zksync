@@ -6,11 +6,11 @@ zkSync Era's integration into the [Chai](https://chaijs.com/) assertion library 
 
 ## ⚠️ Version Compatibility Warning
 
-For plugins version <1.0.0:
-Compatible with ethers v5.
+For plugin version **<1.0.0**:
+Compatible with ethers **v5**.
 
-For plugins version ≥1.0.0:
-Compatible with ethers v6.
+For plugin version **≥1.0.0**:
+Compatible with ethers **v6**.
 
 ## 📥 Installation
 

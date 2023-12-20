@@ -8,11 +8,11 @@ This plugin provides utilities for deploying smart contracts on zkSync Era with 
 
 ## ⚠️ Version Compatibility Warning
 
-For plugins version <1.0.0:
-Compatible with ethers v5.
+For plugin version **<1.0.0**:
+Compatible with ethers **v5**.
 
-For plugins version ≥1.0.0:
-Compatible with ethers v6.
+For plugin version **≥1.0.0**:
+Compatible with ethers **v6**.
 
 ## 📥 Installation
 
