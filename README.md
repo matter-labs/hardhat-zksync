@@ -12,7 +12,7 @@ This repository contains a collection of plugins to aid in the development and d
 Here is an overview of the plugins currently available:
 
 | 🔌 Plugin                     | 📄 Description                                                                                                                    |
-|----------------------- -------|-----------------------------------------------------------------------------------------------------------------------------------|
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | hardhat-zksync-solc           | Plugin simplifies the compilation of Solidity smart contracts for deployment on the zkSync network.                               |
 | hardhat-zksync-deploy         | Plugin eases zkSync contract deployment using hardhat-zksync-solc/vyper artifacts.                                                |
 | hardhat-zksync-verify         | Plugin automates smart contract verification on zkSync network.                                                                   |
