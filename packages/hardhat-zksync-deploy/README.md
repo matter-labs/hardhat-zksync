@@ -19,12 +19,11 @@ Ensure you are using the correct version of the plugin with ethers:
 
 To install **hardhat-zksync-deploy** plugin, run:
 
-@tab:active yarn
+`npm install -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
 
-`yarn add -D @matterlabs/hardhat-zksync-deploy`
-@tab npm
+or
 
-`npm i -D @matterlabs/hardhat-zksync-deploy`
+`yarn add -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
 
 ## 📝 Documentation
 In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),[zkSync's Era website](https://era.zksync.io/docs/) offers a variety of resources including:
