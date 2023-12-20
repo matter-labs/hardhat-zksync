@@ -11,16 +11,17 @@ Ensure you are using the correct version of the plugin with ethers:
   - Compatible with ethers **v5**.
 
 - For plugin version **≥1.0.0**:
-  - Compatible with ethers **v6** (:star2: Recommended)
+  - Compatible with ethers **v6** (⭐ Recommended)
 
 ## 📥 Installation
 
 To install **hardhat-zksync-chai-matchers** plugin, run:
 
+
 `yarn add -D @matterlabs/hardhat-zksync-chai-matchers @nomicfoundation/hardhat-chai-matchers chai @nomiclabs/hardhat-ethers ethers`
 
 ## 📝 Documentation
-In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),[zkSync's Era website](https://era.zksync.io/docs/) offers a variety of resources including:\
+In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html),[zkSync's Era website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
 [Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
