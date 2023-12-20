@@ -23,7 +23,7 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-chai-matchers @nomicfoundation/hardhat-chai-matchers chai @nomiclabs/hardhat-ethers ethers`
 
-## 📖 Example
+## 📖 Usage
 
 After installing it, add the plugin to your Hardhat config:
 
@@ -31,7 +31,10 @@ After installing it, add the plugin to your Hardhat config:
 
 Then you'll be able to use the matchers in your tests.
 
+**changeEtherBalance**
+
 Assert that the ether balance of an address changed by a specific amount:
+
 ```
 await expect(() =>
   sender.transfer({
@@ -39,6 +42,36 @@ await expect(() =>
     amount: 2000,
   })
 ).to.changeEtherBalance(sender.address, -2000);
+```
+
+**changeTokenBalance**
+
+Assert that an ERC20 token balance of an address changed by a specific amount:
+
+```
+await expect(sender.transfer({ to: receiver.address, amount: 5, token: token.address })).to.changeTokenBalance(token, sender, -5);
+
+await expect(token.transfer(receiver.address, 5)).to.not.changeTokenBalance(token, sender, 0);
+```
+
+**revertedWithCustomError**
+
+Assert that a transaction reverted with a specific custom error:
+
+```
+await expect(contract.setAmount(100)).to.be.reverted;
+```
+
+You can also use regular chai matchers like:
+
+
+```
+await expect(contract.setAmount(100)).to.emit(contract, "AmountUpdated");
+
+expect("0x36615Cf349d7F6344891B1e7CA7C72883F5dc049").to.be.properAddress;
+
+expect(await contract.getAmount()).to.equal(100);
+
 ```
 
 ## 📝 Documentation

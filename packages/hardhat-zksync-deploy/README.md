@@ -15,6 +15,12 @@ Ensure you are using the correct version of the plugin with ethers:
 - For plugin version **≥1.0.0**:
   - Compatible with ethers **v6** (⭐ Recommended)
 
+## 📣 Prerequisite
+
+- You are already familiar with deploying smart contracts on zkSync Era. If not, please refer to the first section of the [quickstart tutorail](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html).
+- You have a wallet with sufficient Sepolia or Goerli **ETH** on L1 to pay for bridging funds to zkSync as well as deploying smart contracts. Use the third party faucets to get some test tokens in your account.
+- You know how to get your [private key from your MetaMask wallet](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
+
 ## 📥 Installation
 
 To install **hardhat-zksync-deploy** plugin, run:
@@ -25,6 +31,88 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
 
+
+## 📤 Exports
+
+The main export of this plugin is the Deployer class. It is used to wrap a zksync-ethers Wallet instance and provides a convenient interface to deploy smart contracts and account abstractions.
+It's main methods are:
+
+```
+/**
+   * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
+   * @param zkWallet The wallet which will be used to deploy the contracts.
+   * @param deploymentType Optional deployment type that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts.
+   */
+  constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType)
+
+  /**
+   * Created a `Deployer` object on ethers.Wallet object.
+   *
+   * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
+   * @param ethWallet The wallet used to deploy smart contracts.
+   * @param deploymentType The optional deployment type that relates to the `ContractDeployer` system contract function to be called. Defaults to deploying regular smart contracts.
+   */
+  static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, deploymentType?: zk.types.DeploymentType)
+
+  /**
+   * Loads an artifact and verifies that it was compiled by `zksolc`.
+   *
+   * @param contractNameOrFullyQualifiedName The name of the contract.
+   *   It can be a bare contract name (e.g. "Token") if it's
+   *   unique in your project, or a fully qualified contract name
+   *   (e.g. "contract/token.sol:Token") otherwise.
+   *
+   * @throws Throws an error if a non-unique contract name is used,
+   *   indicating which fully qualified names can be used instead.
+   *
+   * @throws Throws an error if an artifact was not compiled by `zksolc`.
+   */
+  public async loadArtifact(
+    contractNameOrFullyQualifiedName: string
+  ): Promise<ZkSyncArtifact>
+
+  /**
+   * Estimates the price of calling a deploy transaction in a certain fee token.
+   *
+   * @param artifact The previously loaded artifact object.
+   * @param constructorArguments The list of arguments to be passed to the contract constructor.
+   *
+   * @returns Calculated fee in ETH wei.
+   */
+  public async estimateDeployFee(
+    artifact: ZkSyncArtifact,
+    constructorArguments: any[]
+  ): Promise<ethers.BigNumber>
+
+  /**
+    * Sends a deploy transaction to the zkSync network.
+    * For now it uses defaults values for the transaction parameters:
+    *
+    * @param artifact The previously loaded artifact object.
+    * @param constructorArguments The list of arguments to be passed to the contract constructor.
+    * @param overrides Optional object with additional deploy transaction parameters.
+    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
+    * The fee amount is requested automatically from the zkSync Era server.
+    *
+    * @returns A contract object.
+    */
+  public async deploy(
+    artifact: ZkSyncArtifact,
+    constructorArguments: any[],
+    overrides?: Overrides,
+    additionalFactoryDeps?: ethers.BytesLike[],
+  ): Promise<zk.Contract>
+
+  /**
+   * Extracts factory dependencies from the artifact.
+   *
+   * @param artifact Artifact to extract dependencies from
+   *
+   * @returns Factory dependencies in the format expected by SDK.
+   */
+  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>
+```
+
 ## 📖 Example
 
 After installing it, add the plugin to your Hardhat config:
@@ -33,7 +121,9 @@ After installing it, add the plugin to your Hardhat config:
 
 Then you'll be able to use the Deployer class in your files.
 
-Import it like:
+Create your script in **deploy** folder,
+
+Import Deployer like this:
 
 `import { Deployer } from '@matterlabs/hardhat-zksync-deploy';`
 
@@ -61,8 +151,14 @@ Check the deployed address:
 
 `const address = await myContract.getAddress()`
 
+## 🕹 Commands
+
+`yarn hardhat deploy-zksync` -- runs through all the scripts in the **deploy** folder.
+`hardhat deploy-zksync --script script-name.ts` -- run a specific script from **deploy** folder.
+`yarn hardhat deploy-zksync:libraries --private-key <PRIVATE_KEY>` -- uns compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 
 ## 📝 Documentation
+
 In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
