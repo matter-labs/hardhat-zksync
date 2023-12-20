@@ -16,8 +16,8 @@ To install **hardhat-zksync-deploy** plugin, run:
 
 On [zkSync's website](https://era.zksync.io/docs/) you will find:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html) /
-[Hardhat zkSync plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html) /
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html)\
+[Hardhat zkSync plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html)\
 [Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains)
 
 # Contributing
