@@ -29,7 +29,7 @@ Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/
 
 # Feedback, help and news
 
-[zkSync Discord server](https://join.zksync.dev/): for questions and feedback.
+[zkSync Discord server](https://join.zksync.dev/): for questions and feedback.\
 [Follow zkSync on Twitter](https://twitter.com/zksync)
 
 # Happy building!
