@@ -25,6 +25,43 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-deploy ethers zksync-ethers`
 
+## 📖 Example
+
+After installing it, add the plugin to your Hardhat config:
+
+`import "@matterlabs/hardhat-zksync-deploy";`
+
+Then you'll be able to use the Deployer class in your files.
+
+Import it like:
+
+`import { Deployer } from '@matterlabs/hardhat-zksync-deploy';`
+
+or
+
+`const { Deployer } = require('@matterlabs/hardhat-zksync-deploy');`
+
+Create a deployer instance:
+
+`const deployer = new Deployer(hre, zkWallet);`
+
+Note:
+- **hre** - hardhat runtime enviroment
+- **zkWallet** - instace of Wallet using [zksync-ethers](https://www.npmjs.com/package/zksync-ethers) plugin 
+
+Load your contract artifacts:
+
+`const artifact = await deployer.loadArtifact('Greeter');`
+
+Deploy your contract:
+
+`const myContract = await deployer.deploy(artifact, [...contractArguments]);`
+
+Check the deployed address:
+
+`const address = await myContract.getAddress()`
+
+
 ## 📝 Documentation
 In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 

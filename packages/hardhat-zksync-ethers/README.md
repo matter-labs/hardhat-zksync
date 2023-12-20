@@ -14,6 +14,26 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-ethers zksync-ethers ethers`
 
+## 📖 Example
+
+After installing it, add the plugin to your Hardhat config:
+
+`import "@matterlabs/hardhat-zksync-ethers";`
+
+This plugin extends hardhat runtime environment, use it like this:
+
+Retrieve your contract factory:
+
+`const myContractFactory = await hre.zksyncEthers.getContractFactory("MyContract");`
+
+Deploy your contract: 
+
+`const myContract = await myContractFactory.deploy("Hello, world!");`
+
+Find deployed address:
+
+`console.info(await myContract.getAddress());`
+
 ## 📝 Documentation
 In addition to the [hardhat-zksync-ethers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-ethers.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 

@@ -23,6 +23,24 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-chai-matchers @nomicfoundation/hardhat-chai-matchers chai @nomiclabs/hardhat-ethers ethers`
 
+## 📖 Example
+
+After installing it, add the plugin to your Hardhat config:
+
+`import "@matterlabs/hardhat-zksync-chai-matchers";`
+
+Then you'll be able to use the matchers in your tests.
+
+Assert that the ether balance of an address changed by a specific amount:
+```
+await expect(() =>
+  sender.transfer({
+    to: receiver.address,
+    amount: 2000,
+  })
+).to.changeEtherBalance(sender.address, -2000);
+```
+
 ## 📝 Documentation
 In addition to the [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
