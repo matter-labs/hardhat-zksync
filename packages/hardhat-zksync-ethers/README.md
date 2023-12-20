@@ -14,6 +14,22 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync-ethers zksync-ethers ethers`
 
+## Helpers
+
+| 🙏 Helper                                     | 📄 Description                                                                                                |
+|-----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| provider                                      | Retruns a zk.Provider automatically connected to the selected network.                                        |
+| getWallet                                     | Returns zk.Wallet for the given private key or index.                                                         |
+| getContractFactory variant1                   | Returns a zk.ContractFactory for provided artifact name.                                                      |
+| getContractFactory variant2                   | Returns a zk.ContractFactory for provided artifact abi and bytecode.                                          |
+| getContractFactoryFromArtifact                | Returns a zk.ContractFactory for provided artifact.                                                           |
+| getContractAt                                 | Returns zk.Contract for provided artifact name or abi and address of deployed contract.                       |
+| getContractAtFromArtifact                     | Returns zk.ContractFactory for provided artifact and address of deployed contract                             |
+| getImpersonatedSigner                         | Impersonates zk.Signer from address                                                                           |
+| extractFactoryDeps                            | Extracts factory deps from artifact                                                                           |
+| loadArtifact                                  | Load ZkSyncArtifact from contract name                                                                        |
+| deployContract                                | Deploys contract                                                                                              |
+
 ## 📖 Example
 
 After installing it, add the plugin to your Hardhat config:
@@ -35,6 +51,7 @@ Find deployed address:
 `console.info(await myContract.getAddress());`
 
 ## 📝 Documentation
+
 In addition to the [hardhat-zksync-ethers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-ethers.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\

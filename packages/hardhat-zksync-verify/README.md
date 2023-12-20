@@ -24,6 +24,7 @@ or
 `yarn add -D @matterlabs/hardhat-zksync-verify @nomicfoundation/hardhat-verify`
 
 ## 📝 Documentation
+
 In addition to the [hardhat-zksync-verify](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
