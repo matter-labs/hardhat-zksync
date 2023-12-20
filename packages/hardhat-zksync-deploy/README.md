@@ -41,17 +41,18 @@ It's main methods are:
    * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
    * @param zkWallet The wallet which will be used to deploy the contracts.
    * @param deploymentType Optional deployment type that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts.
-   
-  constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType)
 ```
+  `constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType)`
+
 ```
    * Created a `Deployer` object on ethers.Wallet object.
    *
    * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
    * @param ethWallet The wallet used to deploy smart contracts.
    * @param deploymentType The optional deployment type that relates to the `ContractDeployer` system contract function to be called. Defaults to deploying regular smart contracts.
-  static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, deploymentType?: zk.types.DeploymentType)
 ```
+  `static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, deploymentType?: zk.types.DeploymentType)`
+
 ```
    * Loads an artifact and verifies that it was compiled by `zksolc`.
    *
@@ -64,10 +65,9 @@ It's main methods are:
    *   indicating which fully qualified names can be used instead.
    *
    * @throws Throws an error if an artifact was not compiled by `zksolc`.
-  public async loadArtifact(
-    contractNameOrFullyQualifiedName: string
-  ): Promise<ZkSyncArtifact>
 ```
+  `public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact>`
+
 ```
    * Estimates the price of calling a deploy transaction in a certain fee token.
    *
@@ -76,11 +76,9 @@ It's main methods are:
    *
    * @returns Calculated fee in ETH wei.
    */
-  public async estimateDeployFee(
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[]
-  ): Promise<ethers.BigNumber>
 ```
+  `public async estimateDeployFee(artifact: ZkSyncArtifact,constructorArguments: any[]): Promise<ethers.BigNumber>`
+
 ```
    * Sends a deploy transaction to the zkSync network.
    * For now it uses defaults values for the transaction parameters:
@@ -93,22 +91,16 @@ It's main methods are:
    *
    * @returns A contract object.
 ```
-```
-  public async deploy(
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[],
-    overrides?: Overrides,
-    additionalFactoryDeps?: ethers.BytesLike[],
-  ): Promise<zk.Contract>
-```
+  `public async deploy(artifact: ZkSyncArtifact,constructorArguments: any[],overrides?: OverridesadditionalFactoryDeps?: ethers.BytesLike[],): Promise<zk.Contract>`
+  
 ```
    * Extracts factory dependencies from the artifact.
    *
    * @param artifact Artifact to extract dependencies from
    *
    * @returns Factory dependencies in the format expected by SDK.
-  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>
 ```
+  `async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>`
 
 ## 📖 Example
 
