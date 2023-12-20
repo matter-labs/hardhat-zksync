@@ -38,23 +38,21 @@ The main export of this plugin is the Deployer class. It is used to wrap a zksyn
 It's main methods are:
 
 ```
-/**
    * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
    * @param zkWallet The wallet which will be used to deploy the contracts.
    * @param deploymentType Optional deployment type that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts.
-   */
+   
   constructor(hre: HardhatRuntimeEnvironment, zkWallet: zk.Wallet, deploymentType?: zk.types.DeploymentType)
-
-  /**
+```
+```
    * Created a `Deployer` object on ethers.Wallet object.
    *
    * @param hre Hardhat runtime environment. This object is provided to scripts by hardhat itself.
    * @param ethWallet The wallet used to deploy smart contracts.
    * @param deploymentType The optional deployment type that relates to the `ContractDeployer` system contract function to be called. Defaults to deploying regular smart contracts.
-   */
   static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet, deploymentType?: zk.types.DeploymentType)
-
-  /**
+```
+```
    * Loads an artifact and verifies that it was compiled by `zksolc`.
    *
    * @param contractNameOrFullyQualifiedName The name of the contract.
@@ -66,12 +64,11 @@ It's main methods are:
    *   indicating which fully qualified names can be used instead.
    *
    * @throws Throws an error if an artifact was not compiled by `zksolc`.
-   */
   public async loadArtifact(
     contractNameOrFullyQualifiedName: string
   ): Promise<ZkSyncArtifact>
-
-  /**
+```
+```
    * Estimates the price of calling a deploy transaction in a certain fee token.
    *
    * @param artifact The previously loaded artifact object.
@@ -83,33 +80,33 @@ It's main methods are:
     artifact: ZkSyncArtifact,
     constructorArguments: any[]
   ): Promise<ethers.BigNumber>
-
-  /**
-    * Sends a deploy transaction to the zkSync network.
-    * For now it uses defaults values for the transaction parameters:
-    *
-    * @param artifact The previously loaded artifact object.
-    * @param constructorArguments The list of arguments to be passed to the contract constructor.
-    * @param overrides Optional object with additional deploy transaction parameters.
-    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
-    * The fee amount is requested automatically from the zkSync Era server.
-    *
-    * @returns A contract object.
-    */
+```
+```
+   * Sends a deploy transaction to the zkSync network.
+   * For now it uses defaults values for the transaction parameters:
+   *
+   * @param artifact The previously loaded artifact object.
+   * @param constructorArguments The list of arguments to be passed to the contract constructor.
+   * @param overrides Optional object with additional deploy transaction parameters.
+   * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
+   * The fee amount is requested automatically from the zkSync Era server.
+   *
+   * @returns A contract object.
+```
+```
   public async deploy(
     artifact: ZkSyncArtifact,
     constructorArguments: any[],
     overrides?: Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
   ): Promise<zk.Contract>
-
-  /**
+```
+```
    * Extracts factory dependencies from the artifact.
    *
    * @param artifact Artifact to extract dependencies from
    *
    * @returns Factory dependencies in the format expected by SDK.
-   */
   async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>
 ```
 
@@ -153,8 +150,8 @@ Check the deployed address:
 
 ## 🕹 Commands
 
-`yarn hardhat deploy-zksync` -- runs through all the scripts in the **deploy** folder.
-`hardhat deploy-zksync --script script-name.ts` -- run a specific script from **deploy** folder.
+`yarn hardhat deploy-zksync` -- runs through all the scripts in the **deploy** folder.\
+`hardhat deploy-zksync --script script-name.ts` -- run a specific script from **deploy** folder.\
 `yarn hardhat deploy-zksync:libraries --private-key <PRIVATE_KEY>` -- uns compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 
 ## 📝 Documentation
