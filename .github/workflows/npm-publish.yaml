@@ -1,17 +1,34 @@
-name: Publish toolbox plugin
+name: Publish packages to npm
 
 on:
   workflow_dispatch:
-    inputs:
+    inputs: 
       tag:
         required: true
         type: choice
-        description: package tag
+        description: tag to publish
         default: latest
         options: 
           - latest
           - beta
+          - alpha
           - legacy-ethers-v5
+      package:
+        required: true
+        type: choice
+        description: package to publish
+        default: hardhat-zksync-deploy
+        options: 
+          - hardhat-zksync-deploy
+          - hardhat-zksync-solc
+          - hardhat-zksync-upgradable
+          - hardhat-zksync-vyper
+          - hardhat-zksync-verify
+          - hardhat-zksync-toolbox
+          - hardhat-zksync-node
+          - hardhat-zksync-chai-matchers
+          - hardhat-zksync-ethers
+          - hardhat-zksync-verify-vyper
 
 jobs:
   publish:
@@ -32,7 +49,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          npm publish @matterlabs/hardhat-zksync-toolbox --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-toolbox --access=public
+          npm publish @matterlabs/${{inputs.package}} --tag ${{ inputs.tag }} --workspace=packages/${{inputs.package}} --access=public
 
       - name: Create the MM Message
         env:
