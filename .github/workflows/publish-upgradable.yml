@@ -1,9 +1,17 @@
 name: Publish upgradable plugin
 
 on:
-  push:
-    tags:
-      - '@matterlabs/hardhat-zksync-upgradable@*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: choice
+        description: package tag
+        default: latest
+        options: 
+          - latest
+          - beta
+          - legacy-ethers-v5
 
 jobs:
   publish:

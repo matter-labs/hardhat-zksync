@@ -1,9 +1,18 @@
 name: Publish zksync-ethers plugin
 
 on:
-  push:
-    tags:
-      - '@matterlabs/hardhat-zksync-ethers@*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: choice
+        description: package tag
+        default: latest
+        options: 
+          - latest
+          - beta
+          - alpha
+          - legacy-ethers-v5
 
 jobs:
   publish:
@@ -24,26 +33,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} == *"beta"* ]]; then
-            echo "Publishing package with beta tag"
-            npm publish @matterlabs/hardhat-zksync-ethers --tag beta --workspace=packages/hardhat-zksync-ethers --access=public
-          elif [[ ${{ github.ref }} == *"alpha"* ]]; then
-            echo "Publishing package with alpha tag"
-            npm publish @matterlabs/hardhat-zksync-ethers --tag alpha --workspace=packages/hardhat-zksync-ethers --access=public
-          else
-            echo "Publishing package with latest tag"
-            npm publish @matterlabs/hardhat-zksync-ethers --tag latest --workspace=packages/hardhat-zksync-ethers --access=public
-          fi
-
-      - name: Create github release from tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ ${{ github.ref }} != *"beta"* ]] && [[ ${{ github.ref }} != *"alpha"* ]]; then
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-ethers
-          else
-            echo "Skipping github release creation for beta and alpha tags"
-          fi
+          npm publish @matterlabs/hardhat-zksync-ethers --tag ${{ inputs.tag }} --workspace=packages/hardhat-zksync-ethers --access=public
 
       - name: Create the MM Message
         env:
