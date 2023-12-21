@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ethers-v5
   workflow_dispatch:
 
 permissions:
@@ -25,3 +26,4 @@ jobs:
             config-file: .github/release-please/config.json
             manifest-file: .github/release-please/manifest.json
             monorepo-tags: true
+            target-branch: ${{ github.ref_name }}
