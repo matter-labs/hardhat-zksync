@@ -28,6 +28,26 @@ Update the hardhat.config.ts file with:
 
 `import "@matterlabs/hardhat-zksync-vyper";`
 
+```
+const config: HardhatUserConfig = {
+  zkvyper: {
+    version: "latest", // Uses latest available in https://github.com/matter-labs/zkvyper-bin/
+    settings: {
+      // compilerPath: "zkvyper", // optional field with the path to the `zkvyper` binary.
+      libraries: {}, // optional. References to non-inlinable libraries
+    },
+  },
+  ...
+```
+
+| 🔧 properties              | 📄 Description                                                                                                                       |
+|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| version                    | The zkvyper compiler version. Default value is latest                                                                                |
+| compilerSource             | TIndicates the compiler source and can be either binary. (A docker option is no longer recommended).                                 |
+| compilerPath               | Optional field with the path to the zkvyper binary. By default, the binary in $PATH is used.                                         |
+| libraries                  | Define any non-inlinable libraries your contracts use as dependencies here                                                           |
+
+Learn more about [compiling libraries](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 
 **Create a simple vyper contract**
 

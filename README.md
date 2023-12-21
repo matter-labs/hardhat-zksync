@@ -1,10 +1,10 @@
-# zkSync 2.0: Welcome to zkSync Hardhat plugins repository
+# zkSync Era: Welcome to zkSync Hardhat plugins repository
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
-zkSync 2.0 is a layer 2 rollup that uses zero-knowledge proofs to scale Ethereum without compromising on security or
+zkSync Era is a layer 2 rollup that uses zero-knowledge proofs to scale Ethereum without compromising on security or
 decentralization. Since it's EVM compatible (Solidity/Vyper), 99% of Ethereum projects can redeploy without refactoring
-or re-auditing a single line of code. zkSync 2.0 also uses an LLVM-based compiler that will eventually let developers
+or re-auditing a single line of code. zkSync Era also uses an LLVM-based compiler that will eventually let developers
 write smart contracts in C++, Rust and other popular languages.
 
 This repository contains a collection of plugins to aid in the development and deployment of smart contracts on the zkSync network. These plugins are designed to integrate seamlessly with the [Hardhat](https://hardhat.org/) development environment, providing developers with an easy-to-use and powerful toolset.

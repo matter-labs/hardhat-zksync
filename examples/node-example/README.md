@@ -1,4 +1,4 @@
-# zkSync 2.0 node environment example
+# zkSync Era node environment example
 
 This project demonstrates how to run [era-test-node](https://era.zksync.io/docs/tools/testing/era-test-node.html) locally using the zksync's `hardhat-zksync-node` Hardhat plugin for testing purposes.
 
