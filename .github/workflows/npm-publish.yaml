@@ -12,7 +12,7 @@ on:
           - latest
           - beta
           - alpha
-          - legacy-ethers-v5
+
       package:
         required: true
         type: choice
