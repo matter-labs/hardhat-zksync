@@ -71,9 +71,11 @@ When executed in this manner, the verification task attempts to compare the comp
 
 With the --contract parameter you can also specify which contract from your local setup you want to verify by specifying its Fully qualified name. Fully qualified name structure looks like this: "contracts/AContract.sol:TheContract"
 
+The following command checks the status of the verification request for the specific verification ID:
+
 `yarn hardhat verify-status --verification-id <your verification id>`
 
-The following command checks the status of the verification request for the specific verification ID:
+
 
 **Constructor arguments**
 
@@ -102,8 +104,6 @@ const verificationId = await hre.run("verify:verify", {
   constructorArguments: [...]
 });
 ```
-
-
 ## 📝 Documentation
 
 In addition to the [hardhat-zksync-verify](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
