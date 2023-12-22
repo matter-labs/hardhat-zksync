@@ -3,7 +3,7 @@
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable@1.2.0...@matterlabs/hardhat-zksync-upgradable-v1.2.1) (2023-12-22)
 
 
-### Bug Fixes
+### Fixes
 
 * **docs:** update readme files ([#612](https://github.com/matter-labs/hardhat-zksync/issues/612)) ([682338e](https://github.com/matter-labs/hardhat-zksync/commit/682338e60f52021206325ff6eeec2c394a118642))
 
