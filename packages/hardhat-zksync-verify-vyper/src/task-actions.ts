@@ -1,4 +1,7 @@
 import { Artifact, HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
+import path from 'path';
+import chalk from 'chalk';
+import { ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
 import {
     BYTECODES_ARE_NOT_SAME,
     COMPILER_VERSION_NOT_SUPPORTED,
@@ -14,13 +17,16 @@ import {
     TASK_VERIFY_VERIFY_VYPER,
     ZK_COMPILER_VERSION_NOT_SUPPORTED,
 } from './constants';
-import path from 'path';
 import { ZkSyncVerifyPluginError } from './errors';
-import chalk from 'chalk';
-import { COMPILER_TYPE, getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
+import { CompilerType, getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 import { areSameBytecodes, retrieveContractBytecode } from './utils';
-import { checkContractName, getCacheResolvedFileInformation, getDeployArgumentEncoded, getResolvedFiles, inferContractArtifacts } from './plugin';
-import { ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
+import {
+    checkContractName,
+    getCacheResolvedFileInformation,
+    getDeployArgumentEncoded,
+    getResolvedFiles,
+    inferContractArtifacts,
+} from './plugin';
 
 export async function verify(
     args: {
@@ -31,7 +37,6 @@ export async function verify(
     },
     hre: HardhatRuntimeEnvironment
 ) {
-
     if (args.address === undefined) {
         throw new ZkSyncVerifyPluginError(NO_VERIFIABLE_ADDRESS_ERROR);
     }
@@ -46,11 +51,10 @@ export async function verify(
         constructorArgsParams: args.constructorArgsParams,
     });
 
-
     await hre.run(TASK_VERIFY_VERIFY_VYPER, {
         address: args.address,
-        constructorArguments: constructorArguments,
-        contract: args.contract
+        constructorArguments,
+        contract: args.contract,
     });
 }
 
@@ -64,7 +68,7 @@ export async function verifyContract(
 
     const artifact = await hre.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
     const artificatBytecode = artifact.bytecode;
-    contractFQN = contractFQN ?? artifact.sourceName + ':' + artifact.contractName;
+    contractFQN = contractFQN ?? `${artifact.sourceName}:${artifact.contractName}`;
 
     const deployArgumentsEncoded = await getDeployArgumentEncoded(constructorArguments, artifact);
 
@@ -78,14 +82,14 @@ export async function verifyContract(
 
     const vyperVersion = contractCache.vyperConfig.version;
 
-    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, COMPILER_TYPE.VYPER);
+    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, CompilerType.VYPER);
     if (!compilerPossibleVersions.includes(vyperVersion)) {
         throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
     }
 
-    const zkVyperVersion = 'v' + hre.config.zkvyper.version;
+    const zkVyperVersion = `v${hre.config.zkvyper.version}`;
 
-    const zkCompilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, COMPILER_TYPE.ZKVYPER);
+    const zkCompilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, CompilerType.ZKVYPER);
     if (!zkCompilerPossibleVersions.includes(zkVyperVersion)) {
         throw new ZkSyncVerifyPluginError(ZK_COMPILER_VERSION_NOT_SUPPORTED);
     }
@@ -95,7 +99,7 @@ export async function verifyContract(
         resolvedFiles.map((file) => [file.sourceName, file.content.rawContent])
     );
 
-    let request = {
+    const request = {
         contractAddress: address,
         sourceCode: contractsSourceCodesMap,
         codeFormat: JSON_INPUT_CODE_FORMAT,
@@ -108,17 +112,15 @@ export async function verifyContract(
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
 
-    let verificationId = parseInt(response.message);
-    console.info(chalk.cyan('Your verification ID is: ' + verificationId));
+    const verificationId = parseInt(response.message, 10);
+    console.info(chalk.cyan(`Your verification ID is: ${verificationId}`));
 
-    await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+    await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
     return verificationId;
 }
 
-export async function getConstructorArguments(
-    args: any
-): Promise<any> {
+export async function getConstructorArguments(args: any): Promise<any> {
     if (typeof args.constructorArgsModule !== 'string') {
         return args.constructorArgsParams;
     }
@@ -142,9 +144,8 @@ export async function getArtifact(
     { contractFQN, deployedBytecode }: TaskArguments,
     { artifacts }: HardhatRuntimeEnvironment
 ): Promise<Artifact> {
-
     if (contractFQN !== undefined) {
-        checkContractName(artifacts, contractFQN);
+        const _ = checkContractName(artifacts, contractFQN);
 
         const artifact = await artifacts.readArtifact(contractFQN);
 
@@ -155,5 +156,5 @@ export async function getArtifact(
         return artifact;
     }
 
-    return await inferContractArtifacts(artifacts, deployedBytecode);
+    return inferContractArtifacts(artifacts, deployedBytecode);
 }

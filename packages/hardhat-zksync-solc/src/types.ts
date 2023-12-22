@@ -20,7 +20,7 @@ export interface ZkSolcConfig {
         // Remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
         metadata?: {
             bytecodeHash?: 'none';
-        },
+        };
         // addresses of external libraries
         libraries?: {
             [file: string]: {
@@ -62,5 +62,5 @@ export interface ZkSyncArtifact extends Artifact {
 export interface MissingLibrary {
     contractName: string;
     contractPath: string;
-    missingLibraries: Array<string>;
+    missingLibraries: string[];
 }

@@ -1,13 +1,12 @@
-import "@nomiclabs/hardhat-vyper";
-import "@matterlabs/hardhat-zksync-vyper";
+import '@nomiclabs/hardhat-vyper';
+import '@matterlabs/hardhat-zksync-vyper';
 import '../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zkvyper: {
         compilerSource: 'binary',
-        settings: {
-        },
+        settings: {},
     },
     networks: {
         hardhat: {
@@ -25,7 +24,7 @@ const config: HardhatUserConfig = {
     },
     vyper: {
         version: '0.3.3',
-    }
+    },
 };
 
 export default config;

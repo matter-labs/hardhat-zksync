@@ -36,11 +36,14 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
     "axios": "^1.6.2",
+    "chai": "^4.3.6",
     "chalk": "4.1.2",
-    "zksync-ethers": "^6.0.0"
+    "zksync-ethers": "^6.0.0",
+    "@nomiclabs/hardhat-vyper": "^3.0.5",
+    "@ethersproject/abi":"^5.1.2",
+    "@ethersproject/address": "5.7.0"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-vyper": "^3.0.5",
     "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.7",
@@ -52,7 +55,6 @@
     "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "5.61.0",
     "@typescript-eslint/parser": "5.61.0",
-    "chai": "^4.3.6",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.27.5",

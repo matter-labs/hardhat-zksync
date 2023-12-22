@@ -14,7 +14,9 @@ export async function deploy(
     const deploymentTransaction = contractInstance.deploymentTransaction();
 
     const deployTransaction = contractInstance.deploymentTransaction();
-    if (deployTransaction === null) {throw new Error('Broken invariant: deploymentTransaction is null');}
+    if (deployTransaction === null) {
+        throw new Error('Broken invariant: deploymentTransaction is null');
+    }
 
     const address = await contractInstance.getAddress();
     const txHash = deploymentTransaction!.hash;

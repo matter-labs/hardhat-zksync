@@ -32,13 +32,17 @@
     "LICENSE",
     "README.md"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "hardhat": "^2.19.2",
+    "zksync-ethers": "^6.0.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+    "chai": "^4.3.7"
+  },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.2.0",
     "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
     "@matterlabs/hardhat-zksync-verify": "^1.2.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
@@ -46,20 +50,17 @@
     "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
-    "chai": "^4.3.7",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
     "ethers": "^6.7.1",
-    "hardhat": "^2.19.2",
     "mocha": "^10.1.0",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync-ethers": "^6.0.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {

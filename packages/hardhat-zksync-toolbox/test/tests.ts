@@ -15,7 +15,7 @@ describe('zksync toolbox plugin', function () {
         useEnvironmentWithLocalSetup('simple');
 
         it('All tasks should be registered in HRE', async function () {
-            const taskNames = Object.keys(this.env['tasks']);
+            const taskNames = Object.keys(this.env.tasks);
 
             assert(taskNames.includes(TASK_COMPILE));
             assert(taskNames.includes(TASK_DEPLOY_ZKSYNC));
@@ -36,6 +36,7 @@ describe('zksync toolbox plugin', function () {
         });
 
         it('Should test for properPrivateKey chai matcher', async function () {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(RICH_WALLET_PK).to.be.properPrivateKey;
         });
 

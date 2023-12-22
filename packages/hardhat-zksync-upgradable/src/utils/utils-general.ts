@@ -1,12 +1,11 @@
-import { MaybeSolcOutput } from '../interfaces';
-import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
 import { keccak256 } from 'ethereumjs-util';
-import { Interface } from 'ethers';
+import { Interface, ethers } from 'ethers';
 import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
 import { SolcConfig } from 'hardhat/types';
-import { ethers } from 'ethers';
 import { UpgradesError } from '@openzeppelin/upgrades-core';
+import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
+import { MaybeSolcOutput } from '../interfaces';
 
 export type ContractAddressOrInstance = string | { getAddress(): Promise<string> };
 
@@ -14,7 +13,7 @@ export async function getContractAddress(addressOrInstance: ContractAddressOrIns
     if (typeof addressOrInstance === 'string') {
         return addressOrInstance;
     } else {
-        return await addressOrInstance.getAddress();
+        return addressOrInstance.getAddress();
     }
 }
 
@@ -71,8 +70,8 @@ export async function getContractCreationTxHash(provider: zk.Provider, address: 
     const params = {
         fromBlock: 0,
         toBlock: 'latest',
-        address: address,
-        topics: ['0x' + keccak256(Buffer.from(topic)).toString('hex')],
+        address,
+        topics: [`0x${keccak256(Buffer.from(topic)).toString('hex')}`],
     };
 
     const logs = await provider.getLogs(params);
@@ -95,25 +94,26 @@ export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
 export function mapValues<V, W>(obj: Record<string, V>, fn: (value: V) => W): Record<string, W> {
     const res: Partial<Record<string, W>> = {};
     for (const k in obj) {
+        if (!k) continue;
         res[k] = fn(obj[k]);
     }
     return res as Record<string, W>;
 }
 
 export function isFullZkSolcOutput(output: MaybeSolcOutput | undefined): boolean {
-    if (output?.contracts == undefined || output?.sources == undefined) {
+    if (output?.contracts === undefined || output?.sources === undefined) {
         return false;
     }
 
     for (const fileName of Object.keys(output.contracts)) {
         const file = output.contracts[fileName];
-        if (file == undefined) {
+        if (file === undefined) {
             return false;
         }
     }
 
     for (const file of Object.values(output.sources)) {
-        if (file?.ast == undefined || file?.id == undefined) {
+        if (file?.ast === undefined || file?.id === undefined) {
             return false;
         }
     }
@@ -126,7 +126,7 @@ export function isNullish(value: unknown): value is null | undefined {
 }
 
 export function extendCompilerOutputSelection(compiler: SolcConfig) {
-    if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o == 'storageLayout')) {
+    if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o === 'storageLayout')) {
         compiler.settings.outputSelection['*']['*'].push('storageLayout');
     }
 }

@@ -23,13 +23,13 @@ async function processProxyImpl(deployData: DeployData, proxyAddress: string | u
 
 async function processBeaconImpl(deployData: DeployData, beaconAddress: string) {
     await assertNotProxy(deployData.provider, beaconAddress);
-    return await getImplementationAddressFromBeacon(deployData.provider, beaconAddress);
+    return getImplementationAddressFromBeacon(deployData.provider, beaconAddress);
 }
 
 export async function validateImpl(
     deployData: DeployData,
     opts: ValidationOptions,
-    currentImplAddress?: string
+    currentImplAddress?: string,
 ): Promise<void> {
     assertUpgradeSafe(deployData.validations, deployData.version, deployData.fullOpts);
 
@@ -45,7 +45,7 @@ export async function validateImpl(
 export async function validateProxyImpl(
     deployData: DeployData,
     opts: ValidationOptions,
-    proxyAddress?: string
+    proxyAddress?: string,
 ): Promise<void> {
     const currentImplAddress = await processProxyImpl(deployData, proxyAddress, opts);
     return validateImpl(deployData, opts, currentImplAddress);
@@ -54,7 +54,7 @@ export async function validateProxyImpl(
 export async function validateBeaconImpl(
     deployData: DeployData,
     opts: ValidationOptions,
-    beaconAddress?: string
+    beaconAddress?: string,
 ): Promise<void> {
     const currentImplAddress =
         beaconAddress !== undefined ? await processBeaconImpl(deployData, beaconAddress) : undefined;

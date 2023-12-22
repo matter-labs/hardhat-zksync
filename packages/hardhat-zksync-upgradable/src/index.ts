@@ -1,6 +1,6 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
-import  './type-extensions';
+import './type-extensions';
 
 import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 
@@ -77,7 +77,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _,
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {
     const { verify } = await import('./verify/verify-proxy');
-    return await verify(args, hre, runSuper);
+    return verify(args, hre, runSuper);
 });
 
 export * from './type-extensions';

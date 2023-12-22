@@ -8,9 +8,9 @@ import {
     getClientVersion,
 } from '@openzeppelin/upgrades-core';
 
-import { Manifest, ManifestData, ImplDeployment } from './manifest';
 import assert from 'assert';
 import * as zk from 'zksync-ethers';
+import { Manifest, ManifestData, ImplDeployment } from './manifest';
 import { getChainId } from './provider';
 
 interface ManifestLens<T> {
@@ -30,29 +30,29 @@ async function fetchOrDeployGeneric<T extends Deployment, U extends T = T>(
     provider: zk.Provider,
     deploy: () => Promise<U>,
     opts?: DeployOpts,
-    merge?: boolean
+    merge?: boolean,
 ): Promise<U | Deployment> {
     const manifest = await Manifest.forNetwork(provider);
 
     try {
         const deployment = await manifest.lockedRun(async () => {
             const data = await manifest.read();
-            const deployment = lens(data);
-            if (merge && !deployment.merge) {
+            const deploymentInternal = lens(data);
+            if (merge && !deploymentInternal.merge) {
                 throw new Error(
-                    'fetchOrDeployGeneric was called with merge set to true but the deployment lens does not have a merge function'
+                    'fetchOrDeployGeneric was called with merge set to true but the deployment lens does not have a merge function',
                 );
             }
 
-            const stored = deployment.get();
-            const updated = await resumeOrDeploy(provider, stored, deploy, lens.type, opts, deployment, merge);
+            const stored = deploymentInternal.get();
+            const updated = await resumeOrDeploy(provider, stored, deploy, lens.type, opts, deploymentInternal, merge);
             if (updated !== stored) {
-                if (merge && deployment.merge) {
+                if (merge && deploymentInternal.merge) {
                     await checkForAddressClash(provider, data, updated, false);
-                    deployment.merge(updated);
+                    deploymentInternal.merge(updated);
                 } else {
                     await checkForAddressClash(provider, data, updated, true);
-                    deployment.set(updated);
+                    deploymentInternal.set(updated);
                 }
                 await manifest.write(data);
             }
@@ -90,7 +90,7 @@ export async function fetchOrDeploy(
     provider: zk.Provider,
     deploy: () => Promise<ImplDeployment>,
     opts?: DeployOpts,
-    merge?: boolean
+    merge?: boolean,
 ): Promise<string> {
     return (await fetchOrDeployGeneric(implLens(version.linkedWithoutMetadata), provider, deploy, opts, merge)).address;
 }
@@ -100,7 +100,7 @@ export async function fetchOrDeployGetDeployment<T extends ImplDeployment>(
     provider: zk.Provider,
     deploy: () => Promise<T>,
     opts?: DeployOpts,
-    merge?: boolean
+    merge?: boolean,
 ): Promise<T | Deployment> {
     return fetchOrDeployGeneric(implLens(version.linkedWithoutMetadata), provider, deploy, opts, merge);
 }
@@ -135,7 +135,7 @@ export function mergeAddresses(existing: ImplDeployment, value: ImplDeployment) 
 export async function fetchOrDeployAdmin(
     provider: zk.Provider,
     deploy: () => Promise<Deployment>,
-    opts?: DeployOpts
+    opts?: DeployOpts,
 ): Promise<string> {
     return (await fetchOrDeployGeneric(adminLens, provider, deploy, opts)).address;
 }
@@ -164,7 +164,7 @@ async function checkForAddressClash(
     provider: zk.Provider,
     data: ManifestData,
     updated: Deployment,
-    checkAllAddresses: boolean
+    checkAllAddresses: boolean,
 ): Promise<void> {
     const clash = lookupDeployment(data, updated.address, checkAllAddresses);
     if (clash !== undefined) {
@@ -172,9 +172,11 @@ async function checkForAddressClash(
             clash.set(undefined);
         } else {
             throw new Error(
-                `The following deployment clashes with an existing one at ${updated.address}\n\n` +
-                    JSON.stringify(updated, null, 2) +
-                    `\n\n`
+                `The following deployment clashes with an existing one at ${updated.address}\n\n${JSON.stringify(
+                    updated,
+                    null,
+                    2,
+                )}\n\n`,
             );
         }
     }
@@ -183,7 +185,7 @@ async function checkForAddressClash(
 function lookupDeployment(
     data: ManifestData,
     address: string,
-    checkAllAddresses: boolean
+    checkAllAddresses: boolean,
 ): ManifestField<Deployment> | undefined {
     if (data.admin?.address === address) {
         return adminLens(data);

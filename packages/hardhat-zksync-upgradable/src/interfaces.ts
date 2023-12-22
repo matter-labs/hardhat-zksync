@@ -15,7 +15,7 @@ import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
-    opts?: ValidateImplementationOptions
+    opts?: ValidateImplementationOptions,
 ) => Promise<void>;
 
 export interface HardhatUpgrades {
