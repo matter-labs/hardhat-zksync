@@ -1,0 +1,27 @@
+name: Publish packages to github
+
+on:
+  push:
+    branches:
+      - main
+      - ethers-v5
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_please_output: ${{ toJSON(steps.release.outputs) }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: google-github-actions/release-please-action@v4
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            config-file: .github/release-please/config.json
+            manifest-file: .github/release-please/manifest.json
+            target-branch: ${{ github.ref_name }}

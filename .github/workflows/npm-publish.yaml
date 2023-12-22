@@ -1,9 +1,34 @@
-name: Publish zkvyper plugin
+name: Publish packages to npm
 
 on:
-  push:
-    tags:
-      - '@matterlabs/hardhat-zksync-vyper@*'
+  workflow_dispatch:
+    inputs: 
+      tag:
+        required: true
+        type: choice
+        description: tag to publish
+        default: latest
+        options: 
+          - latest
+          - beta
+          - alpha
+
+      package:
+        required: true
+        type: choice
+        description: package to publish
+        default: hardhat-zksync-deploy
+        options: 
+          - hardhat-zksync-deploy
+          - hardhat-zksync-solc
+          - hardhat-zksync-upgradable
+          - hardhat-zksync-vyper
+          - hardhat-zksync-verify
+          - hardhat-zksync-toolbox
+          - hardhat-zksync-node
+          - hardhat-zksync-chai-matchers
+          - hardhat-zksync-ethers
+          - hardhat-zksync-verify-vyper
 
 jobs:
   publish:
@@ -24,23 +49,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          if [[ ${{ github.ref }} == *"beta"* ]]; then
-            echo "Publishing package with beta tag"
-            npm publish @matterlabs/hardhat-zksync-vyper --tag beta --workspace=packages/hardhat-zksync-vyper --access=public
-          else
-            echo "Publishing package with latest tag"
-            npm publish @matterlabs/hardhat-zksync-vyper --tag latest --workspace=packages/hardhat-zksync-vyper --access=public
-          fi
-
-      - name: Create github release from tags
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ ${{ github.ref }} != *"beta"* ]]; then
-            node scripts/create-release-from-tags/run.js --package hardhat-zksync-vyper
-          else
-            echo "Skipping github release creation for beta tag"
-          fi
+          npm publish @matterlabs/${{inputs.package}} --tag ${{ inputs.tag }} --workspace=packages/${{inputs.package}} --access=public
 
       - name: Create the MM Message
         env:
