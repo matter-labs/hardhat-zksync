@@ -40,12 +40,12 @@ networks: {
 
 | 🔧 properties              | 📄 Description                                                                                                                       |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| zkTestnet                  | An arbitrary zkSync Era network name. You can select this as the default network using the defaultNetwork property.          |
-| url                        | Field is required for all zkSync Era and Ethereum networks used by this plugin. For zkSync network, set it to true              |
-| ethNetwork                 | A field with the URL of the Ethereum node.                                                                                   |
+| zkTestnet                  | Arbitrary zkSync Era network name. You can select this as the default network using the defaultNetwork property.                     |
+| url                        | Field is required for all zkSync Era and Ethereum networks used by this plugin. For zkSync network, set it to true                   |
+| ethNetwork                 | Field with the URL of the Ethereum node.                                                                                             |
 | ethers                     | Provider for the network if the configuration is not provided. This field is required for all zkSync networks used by this plugin.   |
-| zksync                     | Flag that indicates a zkSync Era network configuration. This field is set to true for all zkSync Era networks.                |
-| verifyURL                  | Is a field that points to the verification endpoint for the specific zkSync network. This parameter is optional.                     |
+| zksync                     | Flag that indicates a zkSync Era network configuration. This field is set to true for all zkSync Era networks.                       |
+| verifyURL                  | Field that points to the verification endpoint for the specific zkSync network. This parameter is optional.                          |
 
 Default values for verifyURL are:
 
