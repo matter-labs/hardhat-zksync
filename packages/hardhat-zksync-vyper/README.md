@@ -43,7 +43,7 @@ const config: HardhatUserConfig = {
 | 🔧 properties              | 📄 Description                                                                                                                       |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | version                    | The zkvyper compiler version. Default value is latest                                                                                |
-| compilerSource             | TIndicates the compiler source and can be either binary. (A docker option is no longer recommended).                                 |
+| compilerSource             | Indicates the compiler source and can be either binary. (A docker option is no longer recommended).                                  |
 | compilerPath               | Optional field with the path to the zkvyper binary. By default, the binary in $PATH is used.                                         |
 | libraries                  | Define any non-inlinable libraries your contracts use as dependencies here                                                           |
 

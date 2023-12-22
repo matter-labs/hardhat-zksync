@@ -18,17 +18,17 @@ or
 
 | 🙏 Helper                                     | 📄 Description                                                                                                |
 |-----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| provider                                      | Retruns a zk.Provider automatically connected to the selected network.                                        |
-| getWallet                                     | Returns zk.Wallet for the given private key or index.                                                         |
-| getContractFactory variant1                   | Returns a zk.ContractFactory for provided artifact name.                                                      |
-| getContractFactory variant2                   | Returns a zk.ContractFactory for provided artifact abi and bytecode.                                          |
-| getContractFactoryFromArtifact                | Returns a zk.ContractFactory for provided artifact.                                                           |
-| getContractAt                                 | Returns zk.Contract for provided artifact name or abi and address of deployed contract.                       |
-| getContractAtFromArtifact                     | Returns zk.ContractFactory for provided artifact and address of deployed contract                             |
-| getImpersonatedSigner                         | Impersonates zk.Signer from address                                                                           |
+| provider                                      | Retruns a Provider automatically connected to the selected network.                                           |
+| getWallet                                     | Returns Wallet for the given private key or index.                                                            |
+| getContractFactory variant1                   | Returns a ContractFactory for provided artifact name.                                                         |
+| getContractFactory variant2                   | Returns a ContractFactory for provided artifact abi and bytecode.                                             |
+| getContractFactoryFromArtifact                | Returns a ContractFactory for provided artifact.                                                              |
+| getContractAt                                 | Returns Contract for provided artifact name or abi and address of deployed contract.                          |
+| getContractAtFromArtifact                     | Returns ContractFactory for provided artifact and address of deployed contract                                |
+| getImpersonatedSigner                         | Impersonates Signer from address                                                                              |
 | extractFactoryDeps                            | Extracts factory deps from artifact                                                                           |
 | loadArtifact                                  | Load ZkSyncArtifact from contract name                                                                        |
-| deployContract                                | Deploys contract                                                                                              |
+| deployContract                                | Deploys a contract to the network                                                                             |
 
 ## 📖 Example
 
