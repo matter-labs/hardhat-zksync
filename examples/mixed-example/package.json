@@ -28,7 +28,7 @@
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",
-    "hardhat": "^2.19.2"
+    "hardhat": "^2.19.3"
   },
   "prettier": {
     "tabWidth": 4,

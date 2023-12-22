@@ -33,7 +33,7 @@
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-ethers": "link:../../packages/hardhat-zksync-ethers",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.3",
     "ethers": "^6.7.1",
     "zksync-ethers": "^6.0.0"
   },
