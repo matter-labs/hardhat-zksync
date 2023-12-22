@@ -1,6 +1,6 @@
-# zkSync 2.0 zksync-ethers environment example
+# zkSync Era zksync-ethers environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to compile and deploy your contracts in zkSync Era using the Hardhat plugins.
 
 ## Prerequisites
 
