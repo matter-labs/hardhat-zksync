@@ -1,4 +1,4 @@
-# Examples for zkSync 2.0 contracts environment
+# Examples for zkSync Era contracts environment
 
 This folder has the following examples:
 

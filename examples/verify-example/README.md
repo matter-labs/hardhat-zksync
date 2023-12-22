@@ -1,6 +1,6 @@
-# zkSync 2.0 verify environment example
+# zkSync Era verify environment example
 
-This project demonstrates how to compile and verify your contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to compile and verify your contracts in zkSync Era using the Hardhat plugins.
 
 ## Prerequisites
 

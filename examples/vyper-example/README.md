@@ -1,6 +1,6 @@
-# zkSync 2.0 deploy environment example
+# zkSync Era deploy environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
+This project demonstrates how to compile and deploy your contracts in zkSync Era using the Hardhat plugins.
 
 ## Prerequisites
 
