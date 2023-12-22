@@ -3,7 +3,7 @@
     "group-pull-request-title-pattern": "chore(${component}): release at branch ${branch}",
     "bootstrap-sha": "21227c622dd5165b0b75468ca38044b600c8fca8",
     "bump-minor-pre-major": true,
-    "bump-patch-for-minor-pre-major": true,
+    "bump-patch-for-minor-pre-major": false,
     "packages": {
         "packages/hardhat-zksync-deploy": {
             "release-type": "node",
