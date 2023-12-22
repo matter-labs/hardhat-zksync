@@ -2,7 +2,7 @@
     "packages/hardhat-zksync-deploy": "1.1.2",
     "packages/hardhat-zksync-solc": "1.0.6",
     "packages/hardhat-zksync-upgradable": "1.2.1",
-    "packages/hardhat-zksync-vyper": "1.0.4",
+    "packages/hardhat-zksync-vyper": "1.0.5",
     "packages/hardhat-zksync-verify": "1.2.2",
     "packages/hardhat-zksync-toolbox": "1.2.1",
     "packages/hardhat-zksync-node": "1.0.1",
