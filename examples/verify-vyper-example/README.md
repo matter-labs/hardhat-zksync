@@ -1,6 +1,6 @@
-# zkSync Era verify vyper environment example
+# zkSync 2.0 verify vyper environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync Era using the Hardhat plugins.
+This project demonstrates how to compile and deploy your contracts in zkSync 2.0 using the Hardhat plugins.
 
 ## Prerequisites
 

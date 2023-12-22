@@ -1,6 +1,6 @@
-# zkSync Era upgradable example
+# zkSync 2.0 upgradable example
 
-This project demonstrates how to compile and deploy upgadable smart contracts in zkSync Era using the Hardhat plugins.
+This project demonstrates how to compile and deploy upgadable smart contracts in zkSync 2.0 using the Hardhat plugins.
 
 ## Prerequisites
 

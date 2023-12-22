@@ -1,6 +1,6 @@
-# zkSync Era non-inline libraries environment example
+# zkSync 2.0 non-inline libraries environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync Era when there are missing libraries.
+This project demonstrates how to compile and deploy your contracts in zkSync 2.0 when there are missing libraries.
 
 ## Prerequisites
 
