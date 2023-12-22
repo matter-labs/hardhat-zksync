@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify@1.2.1...@matterlabs/hardhat-zksync-verify-v1.2.2) (2023-12-22)
+
+
+### Fixes
+
+* **docs:** update readme files ([#612](https://github.com/matter-labs/hardhat-zksync/issues/612)) ([682338e](https://github.com/matter-labs/hardhat-zksync/commit/682338e60f52021206325ff6eeec2c394a118642))
+
 ## 1.2.1
 
 ### Patch Changes
