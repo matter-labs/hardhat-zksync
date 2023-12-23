@@ -1,10 +1,13 @@
 import assert from 'assert';
-import {
-    TASK_CHECK_VERIFICATION_STATUS,
-} from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
+import { TASK_CHECK_VERIFICATION_STATUS } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 
 import chalk from 'chalk';
-import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
+import {
+    CONTRACT_ALREADY_VERIFIED_ERROR,
+    MOCK_ADDRESS,
+    WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR,
+    useEnvironment,
+} from './helpers';
 
 describe('verify plugin', async function () {
     const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
@@ -49,7 +52,7 @@ describe('verify plugin', async function () {
                 constructorArguments: constructorArgs,
             });
 
-            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
             assert.equal(success, true);
         });
@@ -114,7 +117,10 @@ describe('verify plugin', async function () {
             const contractName = 'MintingContract';
 
             const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
-            const contract = await factoryContract.deploy('ContractName', 'ContractSymbol', MOCK_ADDRESS, [MOCK_ADDRESS, MOCK_ADDRESS]);
+            const contract = await factoryContract.deploy('ContractName', 'ContractSymbol', MOCK_ADDRESS, [
+                MOCK_ADDRESS,
+                MOCK_ADDRESS,
+            ]);
 
             this.deployedAddress = await contract.getAddress();
             console.info(chalk.green(`${contractName} was deployed to ${this.deployedAddress}`));
@@ -130,7 +136,7 @@ describe('verify plugin', async function () {
                 constructorArguments: constructorArgs,
             });
 
-            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
             assert.equal(success, true);
         });

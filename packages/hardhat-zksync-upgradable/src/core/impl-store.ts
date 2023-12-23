@@ -26,6 +26,7 @@ export interface ManifestField<T> {
 }
 
 async function fetchOrDeployGeneric<T extends Deployment, U extends T = T>(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     lens: ManifestLens<T>,
     provider: zk.Provider,
     deploy: () => Promise<U>,
