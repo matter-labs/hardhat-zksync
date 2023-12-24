@@ -21,6 +21,7 @@ Here is an overview of the plugins currently available:
 | hardhat-zksync-chai-matchers  | Extends chai with additional matchers, aiding in testing zkSync-specific features more effectively.                               |
 | hardhat-zksync-toolbox        | Offers a suite of zkSync-related Hardhat plugins in one package, enhancing accessibility and efficiency.                          |
 | hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the zkSync network, improving contract lifecycle management.        |
+| hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on zkSync.                                   |
 
 You can find more detailed explanations on how to use hardhat zkSync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
@@ -33,6 +34,7 @@ You can find more detailed explanations on how to use hardhat zkSync plugins on 
 [hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html)\
 [hardhat-zksync-toolbox](https://era.zksync.io/docs/tools/hardhat/plugins.html)\
 [hardhat-zksync-upgradeable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html)\
+[hardhat-zksync-node](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-node.html)\
 [hardhat-zksync-ethers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-ethers.html)
 
 

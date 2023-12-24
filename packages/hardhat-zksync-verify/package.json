@@ -43,7 +43,8 @@
     "@ethersproject/address": "5.7.0",
     "zksync-ethers": "^6.0.0",
     "cbor": "^8.1.0",
-    "debug":"^4.1.1"
+    "debug":"^4.1.1",
+    "@openzeppelin/contracts": "^4.9.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.0",
