@@ -89,10 +89,10 @@ jobs:
           yarn hardhat deploy-zksync
 
       - name: Test node example
-       run: |
+        run: |
          cd examples/node-example
-         yarn hardhat compile
-         yarn hardhat test
+          yarn hardhat compile
+          yarn hardhat test
 
       - name: Test noninline libraries example
         run: |
