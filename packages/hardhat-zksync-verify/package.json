@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "NODE_ENV=test c8 mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha --recursive \"test/tests/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },

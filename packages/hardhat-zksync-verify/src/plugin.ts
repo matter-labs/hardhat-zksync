@@ -2,7 +2,6 @@ import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-na
 import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import {
-    MULTIPLE_MATCHING_CONTRACTS,
     CONTRACT_NAME_NOT_FOUND,
     NO_MATCHING_CONTRACT,
     LIBRARIES_EXPORT_ERROR,
@@ -47,8 +46,6 @@ export async function inferContractArtifacts(
     }
 
     if (contractMatches.length === 0) throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
-
-    if (contractMatches.length > 1) throw new ZkSyncVerifyPluginError(MULTIPLE_MATCHING_CONTRACTS);
 
     return contractMatches[0];
 }
