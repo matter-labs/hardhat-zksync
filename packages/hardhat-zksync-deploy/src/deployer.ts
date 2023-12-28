@@ -176,7 +176,7 @@ export class Deployer {
         });
         deployTx.from = this.zkWallet.address;
 
-        return this.zkWallet.provider.estimateGas(deployTx);
+        return await this.zkWallet.provider.estimateGas(deployTx);
     }
 
     /**
@@ -233,7 +233,7 @@ export class Deployer {
     private async _extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
         const visited = new Set<string>();
         visited.add(`${artifact.sourceName}:${artifact.contractName}`);
-        return this._extractFactoryDepsRecursive(artifact, visited);
+        return await this._extractFactoryDepsRecursive(artifact, visited);
     }
 
     private async _extractFactoryDepsRecursive(artifact: ZkSyncArtifact, visited: Set<string>): Promise<string[]> {

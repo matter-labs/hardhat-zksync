@@ -86,7 +86,7 @@ export async function validateDockerIsInstalled() {
 }
 
 export async function createDocker(): Promise<HardhatDocker> {
-    return handleCommonErrors(HardhatDocker.create());
+    return await handleCommonErrors(HardhatDocker.create());
 }
 
 export async function pullImageIfNecessary(docker: HardhatDocker, image: Image) {
@@ -131,7 +131,7 @@ export async function compileWithDocker(
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return handleCommonErrors(
+    return await handleCommonErrors(
         (async () => {
             const compilerOutput = await runContainer(dockerInstance, image, command, JSON.stringify(input));
             try {
@@ -146,7 +146,7 @@ export async function compileWithDocker(
 export async function getSolcVersion(docker: HardhatDocker, image: Image) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return handleCommonErrors(
+    return await handleCommonErrors(
         (async () => {
             const versionOutput = await runContainer(dockerInstance, image, ['solc', '--version'], '');
             return versionOutput.split('\n')[1];

@@ -182,7 +182,7 @@ const getOrCreateLibraries = async (filePath: string): Promise<any[]> => {
     }
 
     // Return the file's content
-    return fse.readJSON(filePath);
+    return await fse.readJSON(filePath);
 };
 
 // Write missing libraries to file and lock the file while writing

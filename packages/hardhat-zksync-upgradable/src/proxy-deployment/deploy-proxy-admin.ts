@@ -13,7 +13,7 @@ export type DeployAdminFunction = (wallet?: zk.Wallet, opts?: DeployProxyAdminOp
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
         const adminFactory = await getAdminFactory(hre, wallet);
-        return fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);
+        return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory), opts);
     };
 }
 
@@ -22,7 +22,7 @@ export async function getAdminArtifact(hre: HardhatRuntimeEnvironment): Promise<
         x.includes(path.sep + PROXY_ADMIN_JSON),
     );
     assert(proxyAdminPath, 'Proxy admin artifact not found');
-    return import(proxyAdminPath);
+    return await import(proxyAdminPath);
 }
 
 export async function getAdminFactory(

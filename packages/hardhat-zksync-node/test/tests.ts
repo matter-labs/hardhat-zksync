@@ -524,7 +524,7 @@ describe('node-zksync plugin', async function () {
             serverProcess.kill(PROCESS_TERMINATION_SIGNALS[0] as NodeJS.Signals);
 
             // Wait for the server process to exit gracefully (i.e., not due to an error)
-            return new Promise((resolve, reject) => {
+            return await new Promise((resolve, reject) => {
                 serverProcess.on('exit', (code, signal) => {
                     if (signal === PROCESS_TERMINATION_SIGNALS[0]) {
                         resolve();

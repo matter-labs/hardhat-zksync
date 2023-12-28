@@ -47,7 +47,7 @@ export async function verify(
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
     if (!hre.network.zksync) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     if (hre.network.verifyURL === undefined) {
@@ -80,7 +80,7 @@ export async function getCompilerVersions(
     runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<string[]> {
     if (!hre.network.zksync) {
-        return runSuper();
+        return await runSuper();
     }
 
     const compilerVersions = hre.config.solidity.compilers.map((c) => c.version);
@@ -99,7 +99,7 @@ export async function getConstructorArguments(
     runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<any> {
     if (!hre.network.zksync) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     if (typeof args.constructorArgsModule !== 'string') {
@@ -127,7 +127,7 @@ export async function verifyContract(
     runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<number> {
     if (!hre.network.zksync) {
-        return runSuper({ address, contractFQN, constructorArguments, libraries });
+        return await runSuper({ address, contractFQN, constructorArguments, libraries });
     }
 
     const { isAddress } = await import('@ethersproject/address');
@@ -224,7 +224,7 @@ export async function getContractInfo(
     runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<any> {
     if (!hre.network.zksync) {
-        return runSuper({ contractFQN, deployedBytecode, matchingCompilerVersions, libraries });
+        return await runSuper({ contractFQN, deployedBytecode, matchingCompilerVersions, libraries });
     }
 
     const artifacts = hre.artifacts;

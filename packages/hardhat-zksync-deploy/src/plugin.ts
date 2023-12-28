@@ -146,7 +146,7 @@ async function deployLibrary(
     };
 
     if (missingLibrary.missingLibraries.length === 0) {
-        return compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
+        return await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
     }
 
     const dependentLibraries = findDependentLibraries(missingLibrary.missingLibraries, missingLibraries);
@@ -157,7 +157,7 @@ async function deployLibrary(
     );
 
     const _ = fillLibrarySettings(hre, contractInfos);
-    return compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
+    return  await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
 }
 
 function findDependentLibraries(dependentLibraries: string[], missingLibraries: MissingLibrary[]): MissingLibrary[] {
@@ -210,5 +210,5 @@ async function compileAndDeploy(
 ): Promise<ContractInfo> {
     await compileContracts(hre, [contractFQN.contractPath]);
 
-    return deployOneLibrary(deployer, contractFQN, allDeployedLibraries);
+    return await deployOneLibrary(deployer, contractFQN, allDeployedLibraries);
 }

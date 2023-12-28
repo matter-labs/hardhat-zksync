@@ -13,7 +13,7 @@ export async function getContractAddress(addressOrInstance: ContractAddressOrIns
     if (typeof addressOrInstance === 'string') {
         return addressOrInstance;
     } else {
-        return addressOrInstance.getAddress();
+        return await addressOrInstance.getAddress();
     }
 }
 

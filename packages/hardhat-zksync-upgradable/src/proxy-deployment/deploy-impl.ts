@@ -52,7 +52,7 @@ export async function deployProxyImpl(
 ): Promise<any> {
     const deployData = await getDeployData(hre, contractFactory, opts);
     await validateProxyImpl(deployData, opts, proxyAddress);
-    return deployImpl(hre, deployData, contractFactory, opts);
+    return await deployImpl(hre, deployData, contractFactory, opts);
 }
 
 async function deployImpl(
@@ -99,5 +99,5 @@ export async function deployBeaconImpl(
 ): Promise<DeployedBeaconImpl> {
     const deployData = await getDeployData(hre, factory, opts);
     await validateBeaconImpl(deployData, opts, beaconAddress);
-    return deployImpl(hre, deployData, factory, opts);
+    return await deployImpl(hre, deployData, factory, opts);
 }

@@ -37,7 +37,7 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
 export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet[]> {
     const accounts = hre.network.config.accounts;
 
-    return getWalletsFromAccount(hre, accounts);
+    return await getWalletsFromAccount(hre, accounts);
 }
 
 function _getSigners(hre: HardhatRuntimeEnvironment): Signer[] {
@@ -243,7 +243,7 @@ export async function loadArtifact(
 export async function extractFactoryDeps(hre: HardhatRuntimeEnvironment, artifact: ZkSyncArtifact): Promise<string[]> {
     const visited = new Set<string>();
     visited.add(`${artifact.sourceName}:${artifact.contractName}`);
-    return extractFactoryDepsRecursive(hre, artifact, visited);
+    return await extractFactoryDepsRecursive(hre, artifact, visited);
 }
 
 async function extractFactoryDepsRecursive(

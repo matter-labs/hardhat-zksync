@@ -81,13 +81,13 @@ extendEnvironment((hre) => {
 
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: string[] }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     const contractsToCompile: string[] | undefined = hre.config.zksolc.settings.contractsToCompile;
 
     if (!contractsToCompile || contractsToCompile.length === 0) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     const sourceNames: string[] = await runSuper(args);
@@ -184,15 +184,15 @@ subtask(
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
-    return compile(hre.config.zksolc, args.input, args.solcPath);
+    return await compile(hre.config.zksolc, args.input, args.solcPath);
 });
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     const solcPath = `${args.solcJsPath}.executable`;
@@ -202,7 +202,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
         fs.chmodSync(solcPath, '755');
     }
 
-    return compile(hre.config.zksolc, args.input, solcPath);
+    return await compile(hre.config.zksolc, args.input, solcPath);
 });
 
 // This task is overriden to:
@@ -211,7 +211,7 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
 // - validate zksolc binary
 subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     if (hre.config.zksolc.compilerSource === 'docker') {
@@ -292,7 +292,7 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START).setAction(
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
     if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {
-        return runSuper(taskArgs);
+        return await runSuper(taskArgs);
     }
 
     // Delete all artifacts and cache files because there are missing libraries and the compilation output is invalid.

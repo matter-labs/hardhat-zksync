@@ -40,7 +40,7 @@ async function deployBeaconLocally(impl: string, hre: HardhatRuntimeEnvironment,
         upgradeableBeaconContract.bytecode,
         wallet,
     );
-    return deploy(upgradeableBeaconFactory, impl);
+    return await deploy(upgradeableBeaconFactory, impl);
 }
 
 export async function getMockedBeaconData(

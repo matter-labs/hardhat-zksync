@@ -17,7 +17,7 @@ export async function getAddressOf(account: Account | string): Promise<string> {
         return account;
     }
 
-    if (isAddressable(account)) return account.getAddress();
+    if (isAddressable(account)) return await account.getAddress();
 
     throw new ZkSyncChaiMatchersPluginAssertionError(`Expected string or addressable, got ${account as any}`);
 }

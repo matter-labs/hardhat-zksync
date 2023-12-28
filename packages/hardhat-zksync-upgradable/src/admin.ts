@@ -44,7 +44,7 @@ export function makeTransferProxyAdminOwnership(hre: HardhatRuntimeEnvironment):
 
 export function makeGetInstanceFunction(hre: HardhatRuntimeEnvironment): GetInstanceFunction {
     return async function getInstance(wallet: Wallet) {
-        return getManifestAdmin(hre, wallet);
+        return await getManifestAdmin(hre, wallet);
     };
 }
 

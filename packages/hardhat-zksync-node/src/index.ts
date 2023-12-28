@@ -52,7 +52,7 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
 
             // Download binary if needed
             await downloader.downloadIfNeeded(force);
-            return downloader.getBinaryPath();
+            return await downloader.getBinaryPath();
         },
     );
 
@@ -243,7 +243,7 @@ task(
         runSuper,
     ) => {
         if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
-            return runSuper();
+            return await runSuper();
         }
 
         const platform = getPlatform();

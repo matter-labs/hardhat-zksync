@@ -62,7 +62,7 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE, async () => {});
 
 subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vyperPath: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     const compilerOutput: any = await compile(
@@ -94,7 +94,7 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
 // - validate zkvyper binary
 subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre, runSuper) => {
     if (hre.network.zksync !== true) {
-        return runSuper(args);
+        return await runSuper(args);
     }
 
     if (hre.config.zkvyper.compilerSource === 'docker') {
@@ -133,7 +133,7 @@ subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     async (args: { compilationJobs: CompilationJob[]; quiet: boolean }, hre, runSuper) => {
         if (hre.network.zksync !== true) {
-            return runSuper(args);
+            return await runSuper(args);
         }
         let count = 0;
         for (const job of args.compilationJobs) {
@@ -150,7 +150,7 @@ subtask(
         const vyperCompilationsNum = Object.values(args.versionGroups).flat().length;
 
         if (hre.network.zksync !== true) {
-            return runSuper(args);
+            return await runSuper(args);
         }
 
         if (args.quiet) return;

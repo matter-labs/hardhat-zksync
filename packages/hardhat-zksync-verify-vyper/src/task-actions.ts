@@ -156,5 +156,5 @@ export async function getArtifact(
         return artifact;
     }
 
-    return inferContractArtifacts(artifacts, deployedBytecode);
+    return await inferContractArtifacts(artifacts, deployedBytecode);
 }

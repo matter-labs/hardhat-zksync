@@ -102,7 +102,7 @@ export async function validateDockerIsInstalled() {
 }
 
 export async function createDocker(): Promise<HardhatDocker> {
-    return handleCommonErrors(HardhatDocker.create());
+    return await handleCommonErrors(HardhatDocker.create());
 }
 
 export async function pullImageIfNecessary(docker: HardhatDocker, image: Image) {
@@ -139,7 +139,7 @@ export async function compileWithDocker(
 ) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
-    return handleCommonErrors(runZkVyperContainer(dockerInstance, image, paths, config));
+    return await handleCommonErrors(runZkVyperContainer(dockerInstance, image, paths, config));
 }
 
 async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {

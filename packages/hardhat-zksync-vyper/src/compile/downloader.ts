@@ -207,8 +207,7 @@ export class ZkVyperCompilerDownloader {
         if (!(await fsExtra.pathExists(compilerVersionInfoPath))) {
             return undefined;
         }
-
-        return this._readCompilerVersionInfo(compilerVersionInfoPath);
+        return await this._readCompilerVersionInfo(compilerVersionInfoPath);
     }
 
     private async _postProcessCompilerDownload(): Promise<void> {

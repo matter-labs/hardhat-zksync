@@ -54,7 +54,7 @@ export async function inferContractArtifacts(
 }
 
 export async function flattenContractFile(hre: HardhatRuntimeEnvironment, filePath: string): Promise<string> {
-    return hre.run(TASK_FLATTEN_GET_FLATTENED_SOURCE, {
+    return await hre.run(TASK_FLATTEN_GET_FLATTENED_SOURCE, {
         files: [filePath],
     });
 }

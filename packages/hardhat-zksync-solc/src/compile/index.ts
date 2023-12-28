@@ -28,7 +28,7 @@ export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, 
         throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
     }
 
-    return compiler.compile(input, zksolcConfig);
+    return await compiler.compile(input, zksolcConfig);
 }
 
 export interface ICompiler {
@@ -59,7 +59,7 @@ export class BinaryCompiler implements ICompiler {
             }
         }
         config.settings.areLibrariesMissing = false;
-        return compileWithBinary(input, config, this.solcPath);
+        return await compileWithBinary(input, config, this.solcPath);
     }
 }
 
@@ -81,8 +81,7 @@ export class DockerCompiler implements ICompiler {
 
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
         // We don't check here for missing libraries because docker is using older versions of zksolc and it's deprecated
-
-        return compileWithDocker(input, this.docker, this.dockerCompilerImage, config);
+        return await compileWithDocker(input, this.docker, this.dockerCompilerImage, config);
     }
 
     public async solcVersion() {

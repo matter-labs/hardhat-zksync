@@ -39,7 +39,7 @@ You can find more detailed explanations on how to use hardhat zkSync plugins on 
 
 
 We hope you find these plugins useful in your development efforts.\
-Happy coding!🙌🎉\o/
+Happy coding!🙌🎉
 
 ## License
 

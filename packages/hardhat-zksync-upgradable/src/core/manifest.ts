@@ -106,7 +106,7 @@ export class Manifest {
     }
 
     private async _readFile(): Promise<string> {
-        return fs.readFile(this.file, 'utf8');
+        return await fs.readFile(this.file, 'utf8');
     }
 
     private async _writeFile(content: string): Promise<void> {

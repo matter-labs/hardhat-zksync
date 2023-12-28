@@ -133,7 +133,7 @@ export class RPCServerDownloader {
             return undefined;
         }
 
-        return fse.readJSON(this._releaseInfoFilePath);
+        return await fse.readJSON(this._releaseInfoFilePath);
     }
 
     private _isLatestTag() {

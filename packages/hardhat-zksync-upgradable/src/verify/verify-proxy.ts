@@ -39,7 +39,7 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
     }
 
     async function hardhatZkSyncVerify(address: string) {
-        return runSuper({ ...args, address });
+        return await runSuper({ ...args, address });
     }
 }
 
