@@ -157,7 +157,7 @@ async function deployLibrary(
     );
 
     const _ = fillLibrarySettings(hre, contractInfos);
-    return  await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
+    return await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
 }
 
 function findDependentLibraries(dependentLibraries: string[], missingLibraries: MissingLibrary[]): MissingLibrary[] {
