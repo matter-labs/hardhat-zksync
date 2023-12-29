@@ -2,7 +2,7 @@ export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-verify-vyper';
 
 export const TESTNET_VERIFY_URL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
 
-export const TASK_COMPILE_VYPER = "compile:vyper";
+export const TASK_COMPILE_VYPER = 'compile:vyper';
 
 export const TASK_VERIFY_VYPER = 'verify:vyper';
 export const TASK_CHECK_VERIFICATION_STATUS = 'verify-status:vyper';
@@ -38,20 +38,18 @@ If your constructor arguments are already encoded, they should be passed as a no
 `;
 
 export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: string) =>
-  `The module ${constructorArgsModulePath} doesn't export a list and does not start with "0x"\n` +
-  `Please export a list of constructor arguments or a single string starting with "0x".`;
+    `The module ${constructorArgsModulePath} doesn't export a list and does not start with "0x"\n` +
+    `Please export a list of constructor arguments or a single string starting with "0x".`;
 
 export const CONSTRUCTOR_MODULE_IMPORTING_ERROR = (
-  errorMessage: string
+    errorMessage: string
 ) => `Importing the module for the constructor arguments list failed.
 Reason: ${errorMessage}`;
 
-export const BYTECODES_ARE_NOT_SAME =
-  "Deployed and stored bytecodes are not the same.";
-
+export const BYTECODES_ARE_NOT_SAME = 'Deployed and stored bytecodes are not the same.';
 
 export const NO_VERIFIABLE_ADDRESS_ERROR =
-  "You did not provide any address. Please re-run the 'verify:vyper' task with the address of the contract you want to verify.";
+    "You did not provide any address. Please re-run the 'verify:vyper' task with the address of the contract you want to verify.";
 
 export const NO_MATCHING_CONTRACT = `The address provided as argument contains a contract, but its bytecode doesn't match any of your local contracts.
 
@@ -80,10 +78,10 @@ export const CONTRACT_NAME_NOT_FOUND = `You did not provide any contract name. P
 Qualified names look like this: contracts/Example.vy:Example`;
 
 export const COMPILER_VERSION_NOT_SUPPORTED =
-  'Vyper compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
+    'Vyper compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
 
 export const ZK_COMPILER_VERSION_NOT_SUPPORTED =
-  'ZkVyper compiler you used to compile the contract is not currently supported.\n Please use one of the supporting versions';
+    'ZkVyper compiler you used to compile the contract is not currently supported.\n Please use one of the supporting versions';
 
 export const WRONG_CONSTRUCTOR_ARGUMENTS = 'types/values length mismatch';
 

@@ -8,10 +8,10 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             zksync: false,
-        }
+        },
     },
     solidity: {
-        version: process.env.SOLC_VERSION || '0.8.17'
+        version: process.env.SOLC_VERSION || '0.8.17',
     },
 };
 

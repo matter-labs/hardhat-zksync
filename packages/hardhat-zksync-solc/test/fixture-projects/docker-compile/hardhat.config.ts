@@ -5,19 +5,19 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'docker',
         settings: {
-          experimental: {
-            dockerImage: "matterlabs/zksolc",
-            tag: "latest"
-          }
-        }
+            experimental: {
+                dockerImage: 'matterlabs/zksolc',
+                tag: 'latest',
+            },
+        },
     },
     networks: {
         hardhat: {
             zksync: true,
-        }
+        },
     },
     solidity: {
-        version: '0.8.17'
+        version: '0.8.17',
     },
 };
 

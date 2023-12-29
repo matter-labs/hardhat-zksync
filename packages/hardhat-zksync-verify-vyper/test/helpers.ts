@@ -1,6 +1,5 @@
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { TASK_CLEAN } from 'hardhat/builtin-tasks/task-names';
 import '../src/type-extensions';
 import path from 'path';
 import { TASK_COMPILE_VYPER } from '../src/constants';
@@ -15,8 +14,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
         this.env = require('hardhat');
-        await this.env.run(TASK_COMPILE_VYPER, { quiet: false});
-
+        await this.env.run(TASK_COMPILE_VYPER, { quiet: false });
     });
 
     afterEach('Resetting hardhat', function () {

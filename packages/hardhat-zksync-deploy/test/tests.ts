@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
 import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC } from '../src/task-names';
-import { useEnvironment } from './helpers';
 import { Deployer } from '../src/deployer';
+import { useEnvironment } from './helpers';
 import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from './constants';
 
 describe('Plugin tests', async function () {
@@ -49,9 +49,13 @@ describe('Plugin tests', async function () {
             assert.equal(
                 (deployer.ethWallet.provider as ethers.JsonRpcProvider)._getConnection().url,
                 ETH_NETWORK_RPC_URL,
-                'Incorrect L1 network url'
+                'Incorrect L1 network url',
             );
-            assert.equal(deployer.zkWallet.provider._getConnection().url, ZKSYNC_NETWORK_RPC_URL, 'Incorrect L2 network url');
+            assert.equal(
+                deployer.zkWallet.provider._getConnection().url,
+                ZKSYNC_NETWORK_RPC_URL,
+                'Incorrect L2 network url',
+            );
         });
     });
 
@@ -65,22 +69,20 @@ describe('Plugin tests', async function () {
             assert.equal(
                 (deployer.ethWallet.provider as ethers.JsonRpcProvider)._getConnection().url,
                 'http://localhost:8545',
-                'Incorrect default L1 network provider'
+                'Incorrect default L1 network provider',
             );
             assert.equal(
                 deployer.zkWallet.provider._getConnection().url,
                 'http://localhost:3050',
-                'Incorrect default L2 network provider'
+                'Incorrect default L2 network provider',
             );
         });
     });
-
 
     describe('Test plugin functionalities', async function () {
         useEnvironment('plugin-functionalities');
 
         it('Should use the provider from the wallet instance passed as an argument', async function () {
-
             const MOCKED_PROVIDER_URL = 'http://localhost:1234';
             const provider: Provider = new Provider(MOCKED_PROVIDER_URL);
 
@@ -90,7 +92,7 @@ describe('Plugin tests', async function () {
             assert.equal(
                 deployer.zkWallet.provider._getConnection().url,
                 MOCKED_PROVIDER_URL,
-                'Incorrect default L2 network provider'
+                'Incorrect default L2 network provider',
             );
         });
     });

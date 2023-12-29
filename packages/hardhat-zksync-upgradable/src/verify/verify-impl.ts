@@ -3,7 +3,7 @@ import chalk from 'chalk';
 export async function verifyImplementation(
     hardhatVerify: (address: string) => Promise<any>,
     implAddress: string,
-    quiet: boolean = false
+    quiet: boolean = false,
 ) {
     try {
         if (!quiet) {

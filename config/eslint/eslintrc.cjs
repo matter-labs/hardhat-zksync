@@ -173,7 +173,7 @@ module.exports = {
     "no-new-func": "error",
     "no-new-wrappers": "error",
     "no-return-await": "off",
-    "@typescript-eslint/return-await": "error",
+    "@typescript-eslint/return-await": "off",
     "no-sequences": "error",
     "no-sparse-arrays": "error",
     "no-template-curly-in-string": "error",

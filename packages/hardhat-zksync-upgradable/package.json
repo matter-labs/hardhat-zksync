@@ -35,7 +35,16 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
-    "@openzeppelin/upgrades-core": "^1.31.0"
+    "@openzeppelin/upgrades-core": "^1.31.0",
+    "chalk": "4.1.2",
+    "hardhat": "^2.19.2",
+    "fs-extra": "^7.0.1",
+    "ethereumjs-util": "^6.2.1",
+    "zksync-ethers": "^6.0.0",
+    "ethers": "^6.7.1",
+    "solidity-ast": "^0.4.51",
+    "proper-lockfile": "^4.1.1",
+    "compare-versions": "^6.0.0"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
@@ -46,14 +55,11 @@
     "@types/proper-lockfile": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
-    "chalk": "4.1.2",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "ethers": "^6.7.1",
-    "hardhat": "^2.19.2",
     "mocha": "^10.2.0",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",

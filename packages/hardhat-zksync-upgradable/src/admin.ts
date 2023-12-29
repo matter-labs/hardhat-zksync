@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
+import { Wallet, Contract } from 'zksync-ethers';
 import { Manifest } from './core/manifest';
-import { Wallet,Contract } from 'zksync-ethers';
 import { getAdminFactory } from './proxy-deployment/deploy-proxy-admin';
 import { ZkSyncUpgradablePluginError } from './errors';
 
@@ -16,9 +16,9 @@ export function makeChangeProxyAdmin(hre: HardhatRuntimeEnvironment): ChangeAdmi
 
         const proxyAdminAddress = await getAdminAddress(wallet.provider, proxyAddress);
 
-        if (await proxyAdminManifest.getAddress() !== proxyAdminAddress) {
+        if ((await proxyAdminManifest.getAddress()) !== proxyAdminAddress) {
             throw new ZkSyncUpgradablePluginError('Proxy admin is not the one registered in the network manifest');
-        } else if (await proxyAdminManifest.getAddress() !== newAdmin) {
+        } else if ((await proxyAdminManifest.getAddress()) !== newAdmin) {
             await proxyAdminManifest.changeProxyAdmin(proxyAddress, newAdmin);
         }
     };
@@ -33,7 +33,7 @@ export function makeTransferProxyAdminOwnership(hre: HardhatRuntimeEnvironment):
         const manifest = await Manifest.forNetwork(wallet.provider);
         const { proxies } = await manifest.read();
         for (const { address, kind } of proxies) {
-            if (await admin.getAddress() == (await getAdminAddress(wallet.provider, address))) {
+            if ((await admin.getAddress()) === (await getAdminAddress(wallet.provider, address))) {
                 console.info(chalk.green(`${address} (${kind}) proxy ownership transfered through admin proxy`));
             } else {
                 console.info(chalk.red(`${address} (${kind}) proxy ownership not affected by admin proxy`));

@@ -1,5 +1,9 @@
 import { DependencyGraph, HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
+import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
+import chalk from 'chalk';
+import path from 'path';
+import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -24,15 +28,11 @@ import {
 import { encodeArguments, retrieveContractBytecode } from './utils';
 import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
-import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import chalk from 'chalk';
-import path from 'path';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
 import { checkContractName, getLibraries, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
-import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 
 export async function verify(
     args: {
@@ -44,7 +44,7 @@ export async function verify(
         noCompile: boolean;
     },
     hre: HardhatRuntimeEnvironment,
-    runSuper: RunSuperFunction<TaskArguments>
+    runSuper: RunSuperFunction<TaskArguments>,
 ) {
     if (!hre.network.zksync) {
         return await runSuper(args);
@@ -67,7 +67,7 @@ export async function verify(
 
     await hre.run(TASK_VERIFY_VERIFY, {
         address: args.address,
-        constructorArguments: constructorArguments,
+        constructorArguments,
         contract: args.contract,
         libraries,
         noCompile: args.noCompile,
@@ -77,7 +77,7 @@ export async function verify(
 export async function getCompilerVersions(
     _: TaskArguments,
     hre: HardhatRuntimeEnvironment,
-    runSuper: RunSuperFunction<TaskArguments>
+    runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<string[]> {
     if (!hre.network.zksync) {
         return await runSuper();
@@ -96,7 +96,7 @@ export async function getCompilerVersions(
 export async function getConstructorArguments(
     args: any,
     hre: HardhatRuntimeEnvironment,
-    runSuper: RunSuperFunction<TaskArguments>
+    runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<any> {
     if (!hre.network.zksync) {
         return await runSuper(args);
@@ -124,7 +124,7 @@ export async function getConstructorArguments(
 export async function verifyContract(
     { address, contract: contractFQN, constructorArguments, libraries, noCompile }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
-    runSuper: RunSuperFunction<TaskArguments>
+    runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<number> {
     if (!hre.network.zksync) {
         return await runSuper({ address, contractFQN, constructorArguments, libraries });
@@ -145,10 +145,10 @@ export async function verifyContract(
     }
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
-        contractFQN: contractFQN,
-        deployedBytecode: deployedBytecode,
+        contractFQN,
+        deployedBytecode,
         matchingCompilerVersions: compilerVersions,
-        libraries:libraries
+        libraries,
     });
 
     const solcVersion = contractInformation.solcVersion;
@@ -161,8 +161,10 @@ export async function verifyContract(
             throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR));
         }
     } else {
-        deployArgumentsEncoded =
-            '0x' + (await encodeArguments(contractInformation.contractOutput.abi, constructorArguments));
+        deployArgumentsEncoded = `0x${await encodeArguments(
+            contractInformation.contractOutput.abi,
+            constructorArguments,
+        )}`;
     }
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
@@ -170,32 +172,32 @@ export async function verifyContract(
     if (!compilerPossibleVersions.includes(compilerVersion)) {
         throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
     }
-    const compilerZksolcVersion = 'v' + contractInformation.contractOutput.metadata.zk_version;
+    const compilerZksolcVersion = `v${contractInformation.contractOutput.metadata.zk_version}`;
 
-    contractInformation.contractName = contractInformation.sourceName + ':' + contractInformation.contractName;
+    contractInformation.contractName = `${contractInformation.sourceName}:${contractInformation.contractName}`;
 
     const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
         sourceNames: [contractInformation.sourceName],
     });
 
-    let request = {
+    const request = {
         contractAddress: address,
         sourceCode: getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles()),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
         compilerSolcVersion: solcVersion,
-        compilerZksolcVersion: compilerZksolcVersion,
+        compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
         optimizationUsed: true,
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
-    let verificationId = parseInt(response.message);
+    const verificationId = parseInt(response.message, 10);
 
-    console.info(chalk.cyan('Your verification ID is: ' + verificationId));
+    console.info(chalk.cyan(`Your verification ID is: ${verificationId}`));
 
     try {
-        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
     } catch (error: any) {
         // The first verirication attempt with 'minimal' source code was unnsuccessful.
         // Now try with the full source code from the compilation context.
@@ -206,11 +208,11 @@ export async function verifyContract(
 
         request.sourceCode = contractInformation.compilerInput;
 
-        const response = await verifyContractRequest(request, hre.network.verifyURL);
-        let verificationId = parseInt(response.message);
+        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL);
+        const fallbackVerificationId = parseInt(fallbackResponse.message, 10);
 
-        console.info(chalk.cyan('Your verification ID is: ' + verificationId));
-        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+        console.info(chalk.cyan(`Your verification ID is: ${fallbackVerificationId}`));
+        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: fallbackVerificationId });
     }
 
     return verificationId;
@@ -219,17 +221,17 @@ export async function verifyContract(
 export async function getContractInfo(
     { contractFQN, deployedBytecode, matchingCompilerVersions, libraries }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
-    runSuper: RunSuperFunction<TaskArguments>
+    runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<any> {
     if (!hre.network.zksync) {
         return await runSuper({ contractFQN, deployedBytecode, matchingCompilerVersions, libraries });
     }
 
-    let artifacts = hre.artifacts;
+    const artifacts = hre.artifacts;
     let contractInformation;
 
     if (contractFQN !== undefined) {
-        checkContractName(artifacts, contractFQN);
+        const _ = checkContractName(artifacts, contractFQN);
 
         // Process BuildInfo here to check version and throw an error if unexpected version is found.
         const buildInfo: any = await artifacts.getBuildInfo(contractFQN);
@@ -243,7 +245,7 @@ export async function getContractInfo(
             sourceName,
             contractName,
             buildInfo,
-            deployedBytecode
+            deployedBytecode,
         );
 
         if (contractInformation === null) {

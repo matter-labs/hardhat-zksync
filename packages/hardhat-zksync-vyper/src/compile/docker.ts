@@ -7,18 +7,18 @@ import {
     Image,
     ImageDoesntExistError,
 } from '@nomiclabs/hardhat-docker';
-import { CompilerOptions, ZkVyperConfig } from '../types';
 import Docker, { ContainerCreateOptions } from 'dockerode';
-import { ZkSyncVyperPluginError } from '../errors';
 import { Writable } from 'stream';
 import path from 'path';
 import chalk from 'chalk';
+import { ZkSyncVyperPluginError } from '../errors';
+import { CompilerOptions, ZkVyperConfig } from '../types';
 
 async function runZkVyperContainer(docker: Docker, image: Image, paths: CompilerOptions, config: ZkVyperConfig) {
     const relativeSourcesPath = path.relative(process.cwd(), paths.sourcesPath!);
-    
-    const optimizationMode = config.settings.optimizer?.mode;
-    
+
+    const _optimizationMode = config.settings.optimizer?.mode;
+
     const command = ['zkvyper'];
     // Commented out because it's not supported by latest zkvyper image.
     // if (optimizationMode) {
@@ -44,7 +44,7 @@ async function runZkVyperContainer(docker: Docker, image: Image, paths: Compiler
     let output = Buffer.from('');
     let chunk = Buffer.from('');
     const stream = new Writable({
-        write: function (incoming: Buffer, _encoding, next) {
+        write(incoming: Buffer, _encoding, next) {
             // Please refer to the 'Stream format' chapter at
             // https://docs.docker.com/engine/api/v1.37/#operation/ContainerAttach
             // to understand the details of this implementation.
@@ -96,7 +96,7 @@ export async function validateDockerIsInstalled() {
     if (!(await HardhatDocker.isInstalled())) {
         throw new ZkSyncVyperPluginError(
             'Docker Desktop is not installed.\n' +
-            'Please install it by following the instructions on https://www.docker.com/get-started'
+                'Please install it by following the instructions on https://www.docker.com/get-started',
         );
     }
 }
@@ -132,10 +132,10 @@ async function checkForImageUpdates(docker: HardhatDocker, image: Image) {
 }
 
 export async function compileWithDocker(
-    paths: CompilerOptions, 
-    docker: HardhatDocker, 
-    image: Image, 
-    config: ZkVyperConfig
+    paths: CompilerOptions,
+    docker: HardhatDocker,
+    image: Image,
+    config: ZkVyperConfig,
 ) {
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;
@@ -149,12 +149,15 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof DockerNotRunningError || error instanceof DockerBadGatewayError) {
             throw new ZkSyncVyperPluginError(
                 'Docker Desktop is not running.\nPlease open it and wait until it finishes booting.',
-                error
+                error,
             );
         }
 
         if (error instanceof DockerHubConnectionError) {
-            throw new ZkSyncVyperPluginError('Error connecting to Docker Hub.\nPlease check your internet connection.', error);
+            throw new ZkSyncVyperPluginError(
+                'Error connecting to Docker Hub.\nPlease check your internet connection.',
+                error,
+            );
         }
 
         if (error instanceof DockerServerError) {
@@ -164,7 +167,7 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof ImageDoesntExistError) {
             throw new ZkSyncVyperPluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
-                'Make sure you chose a valid zkvyper version.'
+                    'Make sure you chose a valid zkvyper version.',
             );
         }
 

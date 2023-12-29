@@ -1,18 +1,18 @@
 import { getBeaconAddress, getImplementationAddressFromBeacon } from '@openzeppelin/upgrades-core';
 import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
 
-import { verifyWithArtifact } from './verify-proxy';
-import { verifyImplementation } from './verify-impl';
-import { verifiableContracts } from '../constants';
 import { Provider } from 'zksync-ethers';
 import chalk from 'chalk';
+import { verifiableContracts } from '../constants';
+import { verifyWithArtifact } from './verify-proxy';
+import { verifyImplementation } from './verify-impl';
 
 export async function fullVerifyBeacon(
     hre: HardhatRuntimeEnvironment,
     beaconAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
     runSuper: RunSuperFunction<any>,
-    quiet: boolean = false
+    quiet: boolean = false,
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new Provider(networkConfig.url);
@@ -34,7 +34,7 @@ export async function fullVerifyBeaconProxy(
     proxyAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
     runSuper: RunSuperFunction<any>,
-    quiet: boolean = false
+    quiet: boolean = false,
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new Provider(networkConfig.url);

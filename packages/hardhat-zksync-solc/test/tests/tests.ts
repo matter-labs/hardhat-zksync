@@ -1,23 +1,28 @@
 import { assert } from 'chai';
-import { TASK_COMPILE, TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } from 'hardhat/builtin-tasks/task-names';
-import { ZkSyncArtifact } from '../../src/types';
+import {
+    TASK_COMPILE,
+    TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
+    TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
+    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
+    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
+} from 'hardhat/builtin-tasks/task-names';
 import chalk from 'chalk';
 import fs from 'fs';
 import sinonChai from 'sinon-chai';
 import chai from 'chai';
 
-import { useEnvironment } from '../helpers';
 import { DependencyGraph } from 'hardhat/types/builtin-tasks/compile';
 import path from 'path';
 import { SOLIDITY_FILES_CACHE_FILENAME } from 'hardhat/internal/constants';
 import sinon from 'sinon';
+import { CompilerDownloader } from 'hardhat/internal/solidity/compiler/downloader';
 import { ZksolcCompilerDownloader } from '../../src/compile/downloader';
-import { CompilerDownloader } from "hardhat/internal/solidity/compiler/downloader";
+import { useEnvironment } from '../helpers';
+import { ZkSyncArtifact } from '../../src/types';
 
 chai.use(sinonChai);
 
 describe('zksolc plugin', async function () {
-
     describe('Extend HRE', async function () {
         useEnvironment('multiple-compilers');
 
@@ -30,13 +35,13 @@ describe('zksolc plugin', async function () {
             assert.include(this.env.config.paths.artifacts, '/fixture-projects/multiple-compilers/artifacts-zk');
             assert.include(this.env.config.paths.cache, '/fixture-projects/multiple-compilers/cache-zk');
 
-            let compilers = this.env.config.solidity.compilers;
+            const compilers = this.env.config.solidity.compilers;
 
             assert.equal(compilers.length, 1);
             assert.equal(compilers[0].version, '0.8.17');
             assert.equal(compilers[0].settings.optimizer.enabled, true);
 
-            let overrides = this.env.config.solidity.overrides;
+            const overrides = this.env.config.solidity.overrides;
             assert.equal(overrides['contracts/Greeter2.sol'].version, '0.8.16');
         });
     });
@@ -46,15 +51,12 @@ describe('zksolc plugin', async function () {
 
         it('Should successfully return all contracts for compiling', async function () {
             const rootPath = this.env.config.paths.root;
-            const sourcePaths: string[] = [rootPath + '/contracts/Greeter.sol', rootPath + '/contracts/Greeter2.sol'];
+            const sourcePaths: string[] = [`${rootPath}/contracts/Greeter.sol`, `${rootPath}/contracts/Greeter2.sol`];
 
-            const sourceNames: string[] = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-                {
-                    rootPath,
-                    sourcePaths,
-                }
-            );
+            const sourceNames: string[] = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, {
+                rootPath,
+                sourcePaths,
+            });
 
             assert.equal(2, sourceNames.length);
             assert.equal('contracts/Greeter.sol', sourceNames[0]);
@@ -62,13 +64,10 @@ describe('zksolc plugin', async function () {
 
             this.env.config.zksolc.settings.contractsToCompile = [];
 
-            const sourceNames1: string[] = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-                {
-                    rootPath,
-                    sourcePaths,
-                }
-            );
+            const sourceNames1: string[] = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, {
+                rootPath,
+                sourcePaths,
+            });
 
             assert.equal(2, sourceNames1.length);
             assert.equal('contracts/Greeter.sol', sourceNames1[0]);
@@ -79,15 +78,12 @@ describe('zksolc plugin', async function () {
             this.env.config.zksolc.settings.contractsToCompile = ['contracts/Greeter.sol'];
 
             const rootPath = this.env.config.paths.root;
-            const sourcePaths: string[] = [rootPath + '/contracts/Greeter.sol', rootPath + '/contracts/Greeter2.sol'];
+            const sourcePaths: string[] = [`${rootPath}/contracts/Greeter.sol`, `${rootPath}/contracts/Greeter2.sol`];
 
-            const sourceNames: string[] = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-                {
-                    rootPath,
-                    sourcePaths,
-                }
-            );
+            const sourceNames: string[] = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, {
+                rootPath,
+                sourcePaths,
+            });
 
             assert.equal(1, sourceNames.length);
             assert.equal('contracts/Greeter.sol', sourceNames[0]);
@@ -99,13 +95,12 @@ describe('zksolc plugin', async function () {
 
         const compilerVersion = process.env.SOLC_VERSION || '0.8.17';
 
-        let sandbox = sinon.createSandbox();
+        const sandbox = sinon.createSandbox();
 
         let isZksolcDownloadedStub: sinon.SinonStub;
         let getZksolcCompilerPathStub: sinon.SinonStub;
         let getZksolcCompilerVersionStub: sinon.SinonStub;
         let downloadCompilerStub: sinon.SinonStub;
-
 
         async function isCompilerDownloaded(isZksolcDownloaded: boolean): Promise<boolean> {
             return isZksolcDownloaded;
@@ -113,8 +108,12 @@ describe('zksolc plugin', async function () {
 
         beforeEach(() => {
             downloadCompilerStub = sandbox.stub(ZksolcCompilerDownloader.prototype, 'downloadCompiler').resolves();
-            getZksolcCompilerPathStub = sandbox.stub(ZksolcCompilerDownloader.prototype, 'getCompilerPath').returns('zksolc/zksolc-version-0');
-            getZksolcCompilerVersionStub = sandbox.stub(ZksolcCompilerDownloader.prototype, 'getVersion').returns('zksolc-version-0');
+            getZksolcCompilerPathStub = sandbox
+                .stub(ZksolcCompilerDownloader.prototype, 'getCompilerPath')
+                .returns('zksolc/zksolc-version-0');
+            getZksolcCompilerVersionStub = sandbox
+                .stub(ZksolcCompilerDownloader.prototype, 'getVersion')
+                .returns('zksolc-version-0');
         });
 
         afterEach(() => {
@@ -122,30 +121,29 @@ describe('zksolc plugin', async function () {
         });
 
         after(() => {
-            ((ZksolcCompilerDownloader as any)._instance) = undefined;
+            (ZksolcCompilerDownloader as any)._instance = undefined;
         });
 
         it('Should download compiler and update jobs', async function () {
-            isZksolcDownloadedStub = sandbox.stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded').returns(isCompilerDownloaded(false));
+            isZksolcDownloadedStub = sandbox
+                .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
+                .returns(isCompilerDownloaded(false));
 
             const rootPath = this.env.config.paths.root;
             const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
 
-
             const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
 
-            const dependencyGraph: DependencyGraph = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
-                { rootPath, sourceNames, solidityFilesCachePath }
-            );
+            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+                rootPath,
+                sourceNames,
+                solidityFilesCachePath,
+            });
 
-            const { jobs, errors } = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
-                {
-                    dependencyGraph,
-                    solidityFilesCachePath,
-                }
-            );
+            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                dependencyGraph,
+                solidityFilesCachePath,
+            });
 
             sandbox.assert.calledOnce(isZksolcDownloadedStub);
             sandbox.assert.calledOnce(getZksolcCompilerPathStub);
@@ -159,37 +157,37 @@ describe('zksolc plugin', async function () {
                 const solidityConfig = job.solidityConfig;
                 assert.equal(solidityConfig.version, compilerVersion);
                 assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
-                assert.equal(solidityConfig.zksolc.settings.compilerPath, "zksolc/zksolc-version-0");
-                //assert.equal(solidityConfig.zksolc.settings.libraries, {});
+                assert.equal(solidityConfig.zksolc.settings.compilerPath, 'zksolc/zksolc-version-0');
+                // assert.equal(solidityConfig.zksolc.settings.libraries, {});
             });
         });
 
         it('Should not download compiler and update jobs with libraries', async function () {
-            isZksolcDownloadedStub = sandbox.stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded').returns(isCompilerDownloaded(true));
+            isZksolcDownloadedStub = sandbox
+                .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
+                .returns(isCompilerDownloaded(true));
 
             const rootPath = this.env.config.paths.root;
             const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
 
             this.env.config.zksolc.settings.libraries = {
                 'contracts/Greeter.sol': {
-                    'contracts/Greeter.sol': "0x1234567890123456789012345678901234567890"
-                }
+                    'contracts/Greeter.sol': '0x1234567890123456789012345678901234567890',
+                },
             };
 
             const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
 
-            const dependencyGraph: DependencyGraph = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
-                { rootPath, sourceNames, solidityFilesCachePath }
-            );
+            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+                rootPath,
+                sourceNames,
+                solidityFilesCachePath,
+            });
 
-            const { jobs, errors } = await this.env.run(
-                TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
-                {
-                    dependencyGraph,
-                    solidityFilesCachePath,
-                }
-            );
+            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                dependencyGraph,
+                solidityFilesCachePath,
+            });
 
             sandbox.assert.calledOnce(isZksolcDownloadedStub);
             sandbox.assert.calledOnce(getZksolcCompilerPathStub);
@@ -203,8 +201,11 @@ describe('zksolc plugin', async function () {
                 const solidityConfig = job.solidityConfig;
                 assert.equal(solidityConfig.version, compilerVersion);
                 assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
-                assert.equal(solidityConfig.zksolc.settings.compilerPath, "zksolc/zksolc-version-0");
-                assert.equal(solidityConfig.zksolc.settings.libraries['contracts/Greeter.sol']['contracts/Greeter.sol'], "0x1234567890123456789012345678901234567890");
+                assert.equal(solidityConfig.zksolc.settings.compilerPath, 'zksolc/zksolc-version-0');
+                assert.equal(
+                    solidityConfig.zksolc.settings.libraries['contracts/Greeter.sol']['contracts/Greeter.sol'],
+                    '0x1234567890123456789012345678901234567890',
+                );
             });
         });
     });
@@ -214,26 +215,21 @@ describe('zksolc plugin', async function () {
             useEnvironment('docker-compile');
 
             it('Should get solc build for docker compiler', async function () {
-
-                const build = await this.env.run(
-                    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
-                    {
-                        quiet: true,
-                        solcVersion: '0.8.17',
-                    }
-                );
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
+                });
 
                 assert.equal(build.compilerPath, '');
                 assert.equal(build.isSolsJs, false);
                 assert.equal(build.version, '0.8.17');
                 assert.equal(build.longVersion, '');
-
             });
         });
         describe('Solc build for binary', async function () {
             useEnvironment('multiple-contracts');
-            let sandbox = sinon.createSandbox();
-            
+            const sandbox = sinon.createSandbox();
+
             let isCompilerDownloadedStub: sinon.SinonStub;
             let downloadCompilerStub: sinon.SinonStub;
 
@@ -242,8 +238,15 @@ describe('zksolc plugin', async function () {
             }
 
             beforeEach(() => {
-                isCompilerDownloadedStub = sandbox.stub(CompilerDownloader.prototype, 'isCompilerDownloaded').returns(isCompilerDownloaded());
-                downloadCompilerStub = sandbox.stub(CompilerDownloader.prototype, 'getCompiler').resolves({ compilerPath: 'solc/solc-version-0', version: '0.8.17', longVersion: 'solc/solc-version-0-long', isSolcJs: false });
+                isCompilerDownloadedStub = sandbox
+                    .stub(CompilerDownloader.prototype, 'isCompilerDownloaded')
+                    .returns(isCompilerDownloaded());
+                downloadCompilerStub = sandbox.stub(CompilerDownloader.prototype, 'getCompiler').resolves({
+                    compilerPath: 'solc/solc-version-0',
+                    version: '0.8.17',
+                    longVersion: 'solc/solc-version-0-long',
+                    isSolcJs: false,
+                });
             });
 
             afterEach(() => {
@@ -251,17 +254,14 @@ describe('zksolc plugin', async function () {
             });
 
             after(() => {
-                ((ZksolcCompilerDownloader as any)._instance) = undefined;
+                (ZksolcCompilerDownloader as any)._instance = undefined;
             });
 
             it('Should get solc build for binary compiler', async function () {
-                const build = await this.env.run(
-                    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
-                    {
-                        quiet: true,
-                        solcVersion: '0.8.17',
-                    }
-                );
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
+                });
 
                 assert.equal(build.compilerPath, 'solc/solc-version-0');
                 assert.equal(build.isSolcJs, false);
@@ -286,8 +286,8 @@ describe('zksolc plugin', async function () {
             assert.isTrue(fs.existsSync(this.env.config.paths.cache));
             assert.isTrue(fs.existsSync(this.env.config.paths.artifacts));
 
-            assert.include(this.env.config.paths.artifacts, 'fixture-projects/no-zksync/artifacts')
-            assert.include(this.env.config.paths.cache, 'fixture-projects/no-zksync/cache')
+            assert.include(this.env.config.paths.artifacts, 'fixture-projects/no-zksync/artifacts');
+            assert.include(this.env.config.paths.cache, 'fixture-projects/no-zksync/cache');
         });
     });
 
@@ -342,7 +342,7 @@ describe('zksolc plugin', async function () {
                 await this.env.run(TASK_COMPILE);
 
                 const factoryArtifact = this.env.artifacts.readArtifactSync(
-                    'contracts/Factory.sol:Factory'
+                    'contracts/Factory.sol:Factory',
                 ) as ZkSyncArtifact;
                 const depArtifact = this.env.artifacts.readArtifactSync('contracts/Factory.sol:Dep') as ZkSyncArtifact;
 
@@ -374,10 +374,10 @@ describe('zksolc plugin', async function () {
 
                 const factoryArtifact = this.env.artifacts.readArtifactSync('NestedFactory') as ZkSyncArtifact;
                 const fooDepArtifact = this.env.artifacts.readArtifactSync(
-                    'contracts/deps/Foo.sol:FooDep'
+                    'contracts/deps/Foo.sol:FooDep',
                 ) as ZkSyncArtifact;
                 const barDepArtifact = this.env.artifacts.readArtifactSync(
-                    'contracts/deps/more_deps/Bar.sol:BarDep'
+                    'contracts/deps/more_deps/Bar.sol:BarDep',
                 ) as ZkSyncArtifact;
 
                 // Check that zkSync-specific artifact information was added.
@@ -390,7 +390,7 @@ describe('zksolc plugin', async function () {
                 for (const depName of [fooDepName, barDepName]) {
                     assert(
                         Object.values(factoryArtifact.factoryDeps).includes(depName),
-                        `No required dependency in the artifact: ${depName}`
+                        `No required dependency in the artifact: ${depName}`,
                     );
                 }
                 for (const depHash in factoryArtifact.factoryDeps) {
@@ -408,7 +408,7 @@ describe('zksolc plugin', async function () {
                 assert.equal(
                     fooDepArtifactFromFactoryDeps.contractName,
                     fooDepArtifact.contractName,
-                    'Artifacts do not match'
+                    'Artifacts do not match',
                 );
                 assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, 'Artifacts do not match');
                 assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, 'Artifacts do not match');
@@ -427,29 +427,27 @@ describe('zksolc plugin', async function () {
                 await this.env.run(TASK_COMPILE);
 
                 // Assert that there is a json file with the list of missing libraries at the location this.env.config.zksolc.settings.missingLibrariesPath.
-                const missingLibraries = JSON.parse(fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'));
+                const missingLibraries = JSON.parse(
+                    fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'),
+                );
                 assert.isNotEmpty(missingLibraries);
 
                 const expectedMissingLibraries = [
                     {
-                        "contractName": "ChildChildLib",
-                        "contractPath": "contracts/ChildChildLib.sol",
-                        "missingLibraries": []
+                        contractName: 'ChildChildLib',
+                        contractPath: 'contracts/ChildChildLib.sol',
+                        missingLibraries: [],
                     },
                     {
-                        "contractName": "ChildLib",
-                        "contractPath": "contracts/ChildLib.sol",
-                        "missingLibraries": [
-                            "contracts/ChildChildLib.sol:ChildChildLib"
-                        ]
+                        contractName: 'ChildLib',
+                        contractPath: 'contracts/ChildLib.sol',
+                        missingLibraries: ['contracts/ChildChildLib.sol:ChildChildLib'],
                     },
                     {
-                        "contractName": "MathLib",
-                        "contractPath": "contracts/MathLib.sol",
-                        "missingLibraries": [
-                            "contracts/ChildLib.sol:ChildLib"
-                        ]
-                    }
+                        contractName: 'MathLib',
+                        contractPath: 'contracts/MathLib.sol',
+                        missingLibraries: ['contracts/ChildLib.sol:ChildLib'],
+                    },
                 ];
 
                 // Assert that list of missing libraries is correct.

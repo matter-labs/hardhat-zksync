@@ -8,20 +8,20 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             zksync: true,
-        }
+        },
     },
     solidity: {
         compilers: [
             {
-                version: '0.8.17'
-            }
+                version: '0.8.17',
+            },
         ],
         overrides: {
-            "contracts/Greeter2.sol": {
-                version: '0.8.16'
-            }
-        }
-    }
+            'contracts/Greeter2.sol': {
+                version: '0.8.16',
+            },
+        },
+    },
 };
 
 export default config;
