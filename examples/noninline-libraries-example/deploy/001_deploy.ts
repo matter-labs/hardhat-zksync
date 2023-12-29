@@ -8,7 +8,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy script for the Test contract`));
 
     // Create zkWallet object
-    const zkWallet = new zk.Wallet("0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110");
+    const zkWallet = new zk.Wallet('0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110');
 
     // // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
@@ -23,4 +23,4 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // Show the contract info.
     const contractAddress = await greeterContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
-};
+}

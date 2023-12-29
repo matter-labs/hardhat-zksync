@@ -13,9 +13,11 @@ import {
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
-import { FactoryDeps, ZkSolcConfig } from './types';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
+import fs from 'fs';
+import chalk from 'chalk';
+import { CompilationJob } from 'hardhat/types';
 import { compile } from './compile';
 import {
     zeroxlify,
@@ -25,17 +27,29 @@ import {
     generateSolcJSExecutableCode,
     updateCompilerConf,
 } from './utils';
-import fs from 'fs';
-import chalk from 'chalk';
-import { defaultZkSolcConfig, ZKSOLC_BIN_REPOSITORY, ZK_ARTIFACT_FORMAT_VERSION, COMPILING_INFO_MESSAGE, MISSING_LIBRARIES_NOTICE, COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS, MISSING_LIBRARY_LINK } from './constants';
-import { CompilationJob } from 'hardhat/types';
+import {
+    defaultZkSolcConfig,
+    ZKSOLC_BIN_REPOSITORY,
+    ZK_ARTIFACT_FORMAT_VERSION,
+    COMPILING_INFO_MESSAGE,
+    MISSING_LIBRARIES_NOTICE,
+    COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS,
+    MISSING_LIBRARY_LINK,
+} from './constants';
+import { FactoryDeps } from './types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
-    config.zksolc.settings.optimizer = { ...defaultZkSolcConfig.settings.optimizer, ...userConfig?.zksolc?.settings?.optimizer };
-    config.zksolc.settings.libraries = { ...defaultZkSolcConfig.settings.libraries, ...userConfig?.zksolc?.settings?.libraries };
+    config.zksolc.settings.optimizer = {
+        ...defaultZkSolcConfig.settings.optimizer,
+        ...userConfig?.zksolc?.settings?.optimizer,
+    };
+    config.zksolc.settings.libraries = {
+        ...defaultZkSolcConfig.settings.libraries,
+        ...userConfig?.zksolc?.settings?.libraries,
+    };
 });
 
 extendEnvironment((hre) => {
@@ -44,12 +58,12 @@ extendEnvironment((hre) => {
 
         let artifactsPath = hre.config.paths.artifacts;
         if (!artifactsPath.endsWith('-zk')) {
-            artifactsPath = artifactsPath + '-zk';
+            artifactsPath = `${artifactsPath}-zk`;
         }
 
         let cachePath = hre.config.paths.cache;
         if (!cachePath.endsWith('-zk')) {
-            cachePath = cachePath + '-zk';
+            cachePath = `${cachePath}-zk`;
         }
 
         // Forcibly update the artifacts object.
@@ -59,7 +73,7 @@ extendEnvironment((hre) => {
 
         // Update compilers config.
         hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc));
-        for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+        for (const [_file, compiler] of Object.entries(hre.config.solidity.overrides)) {
             updateCompilerConf(compiler, hre.config.zksolc);
         }
     }
@@ -78,7 +92,9 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: stri
 
     const sourceNames: string[] = await runSuper(args);
 
-    return sourceNames.filter((sourceName) => contractsToCompile.some(contractToCompile => sourceName.includes(contractToCompile)));
+    return sourceNames.filter((sourceName) =>
+        contractsToCompile.some((contractToCompile) => sourceName.includes(contractToCompile)),
+    );
 });
 
 // This override is needed to invalidate cache when zksolc config is changed.
@@ -96,16 +112,15 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
             hre.config.zksolc.version,
             hre.config.zksolc.settings.compilerPath ?? '',
-            compilersCache
+            compilersCache,
         );
 
         const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
         if (!isZksolcDownloaded) {
             await zksolcDownloader.downloadCompiler();
         }
-        hre.config.zksolc.settings.compilerPath = await zksolcDownloader.getCompilerPath();
-        hre.config.zksolc.version = await zksolcDownloader.getVersion();
-
+        hre.config.zksolc.settings.compilerPath = zksolcDownloader.getCompilerPath();
+        hre.config.zksolc.version = zksolcDownloader.getVersion();
     });
 
     jobs.forEach((job: any) => {
@@ -132,7 +147,7 @@ subtask(
             contractName: string;
             contractOutput: any;
         },
-        hre
+        hre,
     ): Promise<any> => {
         if (hre.network.zksync !== true) {
             return getArtifactFromContractOutput(sourceName, contractName, contractOutput);
@@ -141,8 +156,8 @@ subtask(
             contractOutput.evm?.bytecode?.object || contractOutput.evm?.deployedBytecode?.object || '';
         bytecode = zeroxlify(bytecode);
 
-        let factoryDeps: FactoryDeps = {};
-        let entries: Array<[string, string]> = Object.entries(contractOutput.factoryDependencies || {});
+        const factoryDeps: FactoryDeps = {};
+        const entries: Array<[string, string]> = Object.entries(contractOutput.factoryDependencies || {});
         for (const [hash, dependency] of entries) {
             factoryDeps[zeroxlify(hash)] = dependency;
         }
@@ -164,7 +179,7 @@ subtask(
             // zkSync-specific field
             factoryDeps,
         };
-    }
+    },
 );
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any; solcPath: string }, hre, runSuper) => {
@@ -225,7 +240,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
-    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre, runSuper) => {
+    async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre, _runSuper) => {
         if (hre.config.zksolc.settings.areLibrariesMissing) {
             console.info(chalk.yellow(MISSING_LIBRARIES_NOTICE));
             console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
@@ -240,46 +255,40 @@ subtask(
                 console.info(chalk.green(`Successfully compiled ${count} Solidity ${pluralize(count, 'file')}`));
             }
         }
-    }
+    },
 );
 
-subtask(TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START)
-    .setAction(
-        async ({
-            isCompilerDownloaded,
-            solcVersion,
-        }: {
-            isCompilerDownloaded: boolean;
-            quiet: boolean;
-            solcVersion: string;
-        }) => {
-            if (isCompilerDownloaded) {
-                return;
-            }
-
-            console.info(chalk.yellow(`Downloading solc ${solcVersion}`));
+subtask(TASK_COMPILE_SOLIDITY_LOG_DOWNLOAD_COMPILER_START).setAction(
+    async ({
+        isCompilerDownloaded,
+        solcVersion,
+    }: {
+        isCompilerDownloaded: boolean;
+        quiet: boolean;
+        solcVersion: string;
+    }) => {
+        if (isCompilerDownloaded) {
+            return;
         }
-    );
 
-subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START)
-    .setAction(
-        async ({
-            compilationJob,
-        }: {
-            compilationJob: CompilationJob;
-            compilationJobs: CompilationJob[];
-            compilationJobIndex: number;
-        }) => {
-            let count = compilationJob.getResolvedFiles().length;
-            if (count > 0) {
-                console.info(
-                    chalk.yellow(
-                        `Compiling ${count} Solidity ${pluralize(count, 'file')}`
-                    )
-                );
-            }
+        console.info(chalk.yellow(`Downloading solc ${solcVersion}`));
+    },
+);
+
+subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START).setAction(
+    async ({
+        compilationJob,
+    }: {
+        compilationJob: CompilationJob;
+        compilationJobs: CompilationJob[];
+        compilationJobIndex: number;
+    }) => {
+        const count = compilationJob.getResolvedFiles().length;
+        if (count > 0) {
+            console.info(chalk.yellow(`Compiling ${count} Solidity ${pluralize(count, 'file')}`));
         }
-    );
+    },
+);
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
     if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {
@@ -294,8 +303,4 @@ subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) 
     fs.rmSync(cacheDir, { recursive: true });
 });
 
-export {
-    getZksolcUrl,
-    ZKSOLC_BIN_REPOSITORY,
-    saltFromUrl
-};
+export { getZksolcUrl, ZKSOLC_BIN_REPOSITORY, saltFromUrl };

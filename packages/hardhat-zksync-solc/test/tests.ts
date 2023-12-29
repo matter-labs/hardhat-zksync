@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
-import { ZkSyncArtifact } from '../src/types';
 import chalk from 'chalk';
 import fs from 'fs';
+import { ZkSyncArtifact } from '../src/types';
 
 import { useEnvironment } from './helpers';
 
@@ -57,7 +57,7 @@ describe('zksolc plugin', async function () {
             await this.env.run(TASK_COMPILE);
 
             const factoryArtifact = this.env.artifacts.readArtifactSync(
-                'contracts/Factory.sol:Factory'
+                'contracts/Factory.sol:Factory',
             ) as ZkSyncArtifact;
             const depArtifact = this.env.artifacts.readArtifactSync('contracts/Factory.sol:Dep') as ZkSyncArtifact;
 
@@ -89,10 +89,10 @@ describe('zksolc plugin', async function () {
 
             const factoryArtifact = this.env.artifacts.readArtifactSync('NestedFactory') as ZkSyncArtifact;
             const fooDepArtifact = this.env.artifacts.readArtifactSync(
-                'contracts/deps/Foo.sol:FooDep'
+                'contracts/deps/Foo.sol:FooDep',
             ) as ZkSyncArtifact;
             const barDepArtifact = this.env.artifacts.readArtifactSync(
-                'contracts/deps/more_deps/Bar.sol:BarDep'
+                'contracts/deps/more_deps/Bar.sol:BarDep',
             ) as ZkSyncArtifact;
 
             // Check that zkSync-specific artifact information was added.
@@ -105,10 +105,11 @@ describe('zksolc plugin', async function () {
             for (const depName of [fooDepName, barDepName]) {
                 assert(
                     Object.values(factoryArtifact.factoryDeps).includes(depName),
-                    `No required dependency in the artifact: ${depName}`
+                    `No required dependency in the artifact: ${depName}`,
                 );
             }
             for (const depHash in factoryArtifact.factoryDeps) {
+                if (!depHash) continue;
                 const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
                 assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
             }
@@ -123,7 +124,7 @@ describe('zksolc plugin', async function () {
             assert.equal(
                 fooDepArtifactFromFactoryDeps.contractName,
                 fooDepArtifact.contractName,
-                'Artifacts do not match'
+                'Artifacts do not match',
             );
             assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, 'Artifacts do not match');
             assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, 'Artifacts do not match');
@@ -142,29 +143,27 @@ describe('zksolc plugin', async function () {
             await this.env.run(TASK_COMPILE);
 
             // Assert that there is a json file with the list of missing libraries at the location this.env.config.zksolc.settings.missingLibrariesPath.
-            const missingLibraries = JSON.parse(fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'));
+            const missingLibraries = JSON.parse(
+                fs.readFileSync(this.env.config.zksolc.settings.missingLibrariesPath!, 'utf8'),
+            );
             assert.isNotEmpty(missingLibraries);
 
             const expectedMissingLibraries = [
                 {
-                    "contractName": "ChildChildLib",
-                    "contractPath": "contracts/ChildChildLib.sol",
-                    "missingLibraries": []
+                    contractName: 'ChildChildLib',
+                    contractPath: 'contracts/ChildChildLib.sol',
+                    missingLibraries: [],
                 },
                 {
-                    "contractName": "ChildLib",
-                    "contractPath": "contracts/ChildLib.sol",
-                    "missingLibraries": [
-                        "contracts/ChildChildLib.sol:ChildChildLib"
-                    ]
+                    contractName: 'ChildLib',
+                    contractPath: 'contracts/ChildLib.sol',
+                    missingLibraries: ['contracts/ChildChildLib.sol:ChildChildLib'],
                 },
                 {
-                    "contractName": "MathLib",
-                    "contractPath": "contracts/MathLib.sol",
-                    "missingLibraries": [
-                        "contracts/ChildLib.sol:ChildLib"
-                    ]
-                }
+                    contractName: 'MathLib',
+                    contractPath: 'contracts/MathLib.sol',
+                    missingLibraries: ['contracts/ChildLib.sol:ChildLib'],
+                },
             ];
 
             // Assert that list of missing libraries is correct.

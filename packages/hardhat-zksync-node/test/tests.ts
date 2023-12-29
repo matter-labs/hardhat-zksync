@@ -1,5 +1,4 @@
-import { expect, assert } from 'chai';
-import chai from 'chai';
+import chai, { expect, assert } from 'chai';
 import sinonChai from 'sinon-chai';
 import chalk from 'chalk';
 import sinon from 'sinon';
@@ -78,7 +77,7 @@ describe('node-zksync plugin', async function () {
             it('should throw error when both forkBlockNumber and replayTx are specified in all args', () => {
                 const args = { fork: 'mainnet', forkBlockNumber: 100, replayTx: '0x1234567890abcdef' };
                 expect(() => constructCommandArgs(args)).to.throw(
-                    'Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.'
+                    'Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.',
                 );
             });
 
@@ -90,7 +89,7 @@ describe('node-zksync plugin', async function () {
             it('should throw error when there is no fork arg', () => {
                 const args = { forkBlockNumber: 100 };
                 expect(() => constructCommandArgs(args)).to.throw(
-                    'Cannot specify --replay-tx or --fork-block-number parameters without --fork param.'
+                    'Cannot specify --replay-tx or --fork-block-number parameters without --fork param.',
                 );
             });
 
@@ -306,14 +305,14 @@ describe('node-zksync plugin', async function () {
             it('should correctly identify an available port', async () => {
                 const port = await getPort();
                 const result = await utils.isPortAvailable(port);
-                expect(result).to.be.true;
+                expect(result).to.equal(true);
             });
 
             it('should correctly identify a port that is in use', async () => {
                 const port = await getPort();
                 server = net.createServer().listen(port);
                 const result = await utils.isPortAvailable(port);
-                expect(result).to.be.false;
+                expect(result).to.equal(false);
             });
         });
 
@@ -348,7 +347,6 @@ describe('node-zksync plugin', async function () {
     });
 
     describe('RPCServerDownloader', () => {
-
         const mockRelease = {
             url: 'https://api.github.com/repos/matter-labs/era-test-node/releases/assets/latest',
             tag_name: 'v1.0.0',
@@ -356,9 +354,9 @@ describe('node-zksync plugin', async function () {
 
         const mockAsset = {
             browser_download_url:
-            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz',
-        }
-    
+                'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz',
+        };
+
         let downloadStub: sinon.SinonStub;
         let existsSyncStub: sinon.SinonStub;
         let postProcessDownloadStub: sinon.SinonStub;
@@ -433,12 +431,12 @@ describe('node-zksync plugin', async function () {
             signal?: string;
         }
 
-        let spawnStub = sinon.stub();
+        const spawnStub = sinon.stub();
         let consoleInfoStub: sinon.SinonStub;
 
         // Because we cannot stub the execSync method directly, we use proxyquire to stub the entire 'child_process' module
         const { JsonRpcServer } = proxyquire('../src/server', {
-            'child_process': { spawn: spawnStub },
+            child_process: { spawn: spawnStub },
         });
 
         beforeEach(() => {
@@ -482,7 +480,7 @@ describe('node-zksync plugin', async function () {
 
                 sinon.assert.calledWithMatch(
                     consoleInfoStub,
-                    chalk.yellow(`Received ${PROCESS_TERMINATION_SIGNALS[0]} signal. The server process has exited.`)
+                    chalk.yellow(`Received ${PROCESS_TERMINATION_SIGNALS[0]} signal. The server process has exited.`),
                 );
             });
 
@@ -494,8 +492,8 @@ describe('node-zksync plugin', async function () {
                 try {
                     server.listen();
                     expect.fail('Expected an error to be thrown');
-                } catch (error: any) {
-                    expect(error.message).to.equal('Expected an error to be thrown');
+                } catch (err: any) {
+                    expect(err.message).to.equal('Expected an error to be thrown');
                 }
             });
         });
@@ -506,7 +504,7 @@ describe('node-zksync plugin', async function () {
 
         let serverProcess: ChildProcess;
 
-        function delay(ms: number): Promise<void> {
+        function _delay(ms: number): Promise<void> {
             return new Promise((resolve) => setTimeout(resolve, ms));
         }
 

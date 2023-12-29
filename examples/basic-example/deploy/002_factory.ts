@@ -39,7 +39,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Call the deployed contract.
     const greetingFromContract = await factoryContract.getFooName();
-    if (greetingFromContract == 'Foo') {
+    if (greetingFromContract === 'Foo') {
         console.info(chalk.green(`Successful greeting from the contract!`));
     } else {
         throw new Error(`Contract returned unexpected greeting: ${greetingFromContract}`);

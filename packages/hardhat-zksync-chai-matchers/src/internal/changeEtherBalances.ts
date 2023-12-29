@@ -17,7 +17,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
             options?: {
                 balanceChangeOptions?: BalanceChangeOptions;
                 overrides?: ethers.Overrides;
-            }
+            },
         ) {
             const negated = this.__flags.negate;
 
@@ -37,10 +37,10 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                             if (!(change === toBigInt(balanceChanges[i]))) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
-                                        i + 1
+                                        i + 1,
                                     )} address in the list) to change by ${balanceChanges[
                                         i
-                                    ].toString()} wei, but it changed by ${change.toString()} wei`
+                                    ].toString()} wei, but it changed by ${change.toString()} wei`,
                                 );
                             }
                         });
@@ -52,15 +52,15 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
                             if (change === toBigInt(balanceChanges[i])) {
                                 lines.push(
                                     `Expected the ether balance of ${accountAddresses[i]} (the ${ordinal(
-                                        i + 1
+                                        i + 1,
                                     )} address in the list) NOT to change by ${balanceChanges[
                                         i
-                                    ].toString()} wei, but it did`
+                                    ].toString()} wei, but it did`,
                                 );
                             }
                         });
                         return lines.join('\n');
-                    }
+                    },
                 );
             };
 
@@ -72,7 +72,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;
             return this;
-        }
+        },
     );
 }
 
@@ -80,7 +80,7 @@ export async function getBalanceChanges(
     transaction: zk.types.TransactionResponse | Promise<zk.types.TransactionResponse>,
     accounts: Array<Account | string>,
     options?: BalanceChangeOptions,
-    overrides?: ethers.Overrides
+    overrides?: ethers.Overrides,
 ) {
     const txResponse = await transaction;
 
@@ -99,23 +99,22 @@ async function getTxFees(
     accounts: Array<Account | string>,
     txResponse: zk.types.TransactionResponse,
     options?: BalanceChangeOptions,
-    overrides?: ethers.Overrides
+    overrides?: ethers.Overrides,
 ) {
-
     return Promise.all(
         accounts.map(async (account) => {
             if (options?.includeFee !== true && (await getAddressOf(account)) === txResponse.from) {
                 const txReceipt = await txResponse.wait();
                 const gasPrice = overrides?.maxFeePerGas
-                    ? (overrides?.maxFeePerGas)
+                    ? overrides?.maxFeePerGas
                     : txReceipt.gasPrice ?? txResponse.gasPrice;
                 const gasUsed = txReceipt.gasUsed;
-                const txFee = toBigInt(gasPrice)*gasUsed;
+                const txFee = toBigInt(gasPrice) * gasUsed;
 
                 return txFee;
             }
 
-            return 0n
-        })
+            return 0n;
+        }),
     );
 }

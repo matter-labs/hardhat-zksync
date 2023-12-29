@@ -4,9 +4,9 @@ import * as zk from 'zksync-ethers';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
+import { HttpNetworkConfig } from 'hardhat/types';
 import { Account, getAddressOf } from './misc/account';
 import { BalanceChangeOptions } from './misc/balance';
-import { HttpNetworkConfig } from 'hardhat/types';
 
 export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
@@ -18,7 +18,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             options?: {
                 balanceChangeOptions?: BalanceChangeOptions;
                 overrides?: ethers.Overrides;
-            }
+            },
         ) {
             const negated = this.__flags.negate;
             const subject = this._obj;
@@ -29,7 +29,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
                 assert(
                     actualChange === toBigInt(balanceChange),
                     `Expected the ether balance of "${address}" to change by ${balanceChange.toString()} wei, but it changed by ${actualChange.toString()} wei`,
-                    `Expected the ether balance of "${address}" NOT to change by ${balanceChange.toString()} wei, but it did`
+                    `Expected the ether balance of "${address}" NOT to change by ${balanceChange.toString()} wei, but it did`,
                 );
             };
 
@@ -41,7 +41,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;
             return this;
-        }
+        },
     );
 }
 
@@ -52,9 +52,9 @@ export async function getBalanceChange(
         | (() => Promise<zk.types.TransactionResponse> | zk.types.TransactionResponse),
     account: Account | string,
     options?: BalanceChangeOptions,
-    overrides?: ethers.Overrides
+    overrides?: ethers.Overrides,
 ) {
-    const hre = await import("hardhat");
+    const hre = await import('hardhat');
     const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     let txResponse: zk.types.TransactionResponse;
@@ -76,16 +76,14 @@ export async function getBalanceChange(
 
     const balanceAfterHex = await provider.send('eth_getBalance', [address, `0x${txBlockNumber.toString(16)}`]);
     const balanceBeforeHex = await provider.send('eth_getBalance', [address, `0x${(txBlockNumber - 1).toString(16)}`]);
-   
+
     const balanceAfter = BigInt(balanceAfterHex);
     const balanceBefore = BigInt(balanceBeforeHex);
 
     if (options?.includeFee !== true && address === txResponse.from) {
-        const gasPrice = overrides?.maxFeePerGas
-            ? (overrides?.maxFeePerGas)
-            : txReceipt.gasPrice ?? txResponse.gasPrice;
+        const gasPrice = overrides?.maxFeePerGas ? overrides?.maxFeePerGas : txReceipt.gasPrice ?? txResponse.gasPrice;
         const gasUsed = txReceipt.gasUsed;
-        const txFee:bigint =  toBigInt(gasPrice)*gasUsed;
+        const txFee: bigint = toBigInt(gasPrice) * gasUsed;
 
         return balanceAfter + txFee - balanceBefore;
     } else {
