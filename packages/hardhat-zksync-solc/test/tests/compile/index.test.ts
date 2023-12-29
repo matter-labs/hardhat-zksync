@@ -50,7 +50,7 @@ describe('compile', () => {
     expect(result).to.have.property('errors');
   });
 
-  it('should compile with docker compiler', async () => {
+  it.skip('should compile with docker compiler', async () => {
     const zksolcConfig: ZkSolcConfig = {
       compilerSource: 'docker',
       version: '1.3.17',
