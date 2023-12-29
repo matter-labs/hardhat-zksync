@@ -1,7 +1,7 @@
 import { assert } from 'chai';
-import { useEnvironment } from './helpers';
 import { Contract, Wallet } from 'zksync-ethers';
-import { rich_wallets } from '../src/rich-wallets';
+import { richWallets } from '../src/rich-wallets';
+import { useEnvironment } from './helpers';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', async function () {
@@ -61,7 +61,7 @@ describe('Plugin tests', async function () {
                 assert.equal(await wallet.getAddress(), '0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
             });
             it('get specific wallet', async function () {
-                const wallet = await this.env.zksyncEthers.getWallet(rich_wallets[6].privateKey);
+                const wallet = await this.env.zksyncEthers.getWallet(richWallets[6].privateKey);
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
@@ -127,7 +127,7 @@ describe('Plugin tests', async function () {
 
                 assert.strictEqual(
                     await this.env.zksyncEthers.provider.getBalance(secWallet.address),
-                    1000000000000000000000000000000n
+                    1000000000000000000000000000000n,
                 );
             });
             it('should return the transaction count of the account', async function () {
@@ -153,7 +153,7 @@ describe('Plugin tests', async function () {
                 } catch (err: any) {
                     assert.equal(
                         err.message,
-                        'You are trying to create a contract factory for the contract IGreeter, which is abstract and can\'t be deployed.\nIf you want to call a contract using IGreeter as its interface use the "getContractAt" function instead.'
+                        'You are trying to create a contract factory for the contract IGreeter, which is abstract and can\'t be deployed.\nIf you want to call a contract using IGreeter as its interface use the "getContractAt" function instead.',
                     );
                 }
             });
@@ -166,10 +166,7 @@ describe('Plugin tests', async function () {
             it('Should be able to send txs and make calls', async function () {
                 const artifact = await this.env.zksyncEthers.loadArtifact('Greeter');
 
-                const Greeter = await this.env.zksyncEthers.getContractFactory(
-                    artifact.abi,
-                    artifact.bytecode
-                );
+                const Greeter = await this.env.zksyncEthers.getContractFactory(artifact.abi, artifact.bytecode);
 
                 const greeter = await Greeter.deploy();
 
@@ -186,7 +183,10 @@ describe('Plugin tests', async function () {
             });
             it('Should return an instance of a contract', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet();
-                const contract = await this.env.zksyncEthers.getContractAt('Greeter', deployedGreeter.target.toString());
+                const contract = await this.env.zksyncEthers.getContractAt(
+                    'Greeter',
+                    deployedGreeter.target.toString(),
+                );
 
                 assert.exists(contract.greet);
 
@@ -194,7 +194,10 @@ describe('Plugin tests', async function () {
             });
             it('Should return an instance of an interface', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet();
-                const contract = await this.env.zksyncEthers.getContractAt('IGreeter', deployedGreeter.target.toString());
+                const contract = await this.env.zksyncEthers.getContractAt(
+                    'IGreeter',
+                    deployedGreeter.target.toString(),
+                );
 
                 assert.isNotNull(contract.interface.getFunction('greet'));
 
@@ -235,13 +238,13 @@ describe('Plugin tests', async function () {
             });
             it('get invalid third wallet', async function () {
                 try {
-                    const wallet = await this.env.zksyncEthers.getWallet(3);
+                    const _ = await this.env.zksyncEthers.getWallet(3);
                 } catch (err: any) {
                     assert.equal(err.message, 'Account private key with specified index is not found');
                 }
             });
             it('get wallet with private key', async function () {
-                const wallet = await this.env.zksyncEthers.getWallet(rich_wallets[6].privateKey);
+                const wallet = await this.env.zksyncEthers.getWallet(richWallets[6].privateKey);
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
@@ -268,13 +271,13 @@ describe('Plugin tests', async function () {
             });
             it('get invalid second wallet with mnemonic', async function () {
                 try {
-                    const wallet = await this.env.zksyncEthers.getWallet(1);
+                    const _ = await this.env.zksyncEthers.getWallet(1);
                 } catch (err: any) {
                     assert.equal(err.message, 'Account private key with specified index is not found');
                 }
             });
             it('get wallet with private key and with mnemonic', async function () {
-                const wallet = await this.env.zksyncEthers.getWallet(rich_wallets[6].privateKey);
+                const wallet = await this.env.zksyncEthers.getWallet(richWallets[6].privateKey);
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
@@ -289,20 +292,20 @@ describe('Plugin tests', async function () {
             useEnvironment('simple-accounts', 'zkSyncNetworkEmptyAccounts');
             it('get default wallet from empty accounts', async function () {
                 try {
-                    const wallet = await this.env.zksyncEthers.getWallet();
+                    const _ = await this.env.zksyncEthers.getWallet();
                 } catch (err: any) {
                     assert.equal(err.message, 'Accounts are not configured for this network');
                 }
             });
             it('get invalid second wallet with empty accounts', async function () {
                 try {
-                    const wallet = await this.env.zksyncEthers.getWallet(1);
+                    const _ = await this.env.zksyncEthers.getWallet(1);
                 } catch (err: any) {
                     assert.equal(err.message, 'Account private key with specified index is not found');
                 }
             });
             it('get wallet with private key and with empty accounts', async function () {
-                const wallet = await this.env.zksyncEthers.getWallet(rich_wallets[6].privateKey);
+                const wallet = await this.env.zksyncEthers.getWallet(richWallets[6].privateKey);
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);

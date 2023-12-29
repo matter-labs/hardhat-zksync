@@ -1,9 +1,9 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import * as zk from 'zksync-ethers';
 
-import { decodeReturnData, getReturnDataFromError } from './utils';
 import { HttpNetworkConfig } from 'hardhat/types';
 import { toBeHex } from 'ethers';
+import { decodeReturnData, getReturnDataFromError } from './utils';
 
 export function supportReverted(Assertion: Chai.AssertionStatic) {
     Assertion.addProperty('reverted', function (this: any) {
@@ -26,7 +26,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
                 assert(
                     receipt.status === 0,
                     'Expected transaction to be reverted',
-                    'Expected transaction NOT to be reverted'
+                    'Expected transaction NOT to be reverted',
                 );
             } else if (isTransactionReceipt(value)) {
                 const receipt = value;
@@ -34,7 +34,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
                 assert(
                     receipt.status === 0,
                     'Expected transaction to be reverted',
-                    'Expected transaction NOT to be reverted'
+                    'Expected transaction NOT to be reverted',
                 );
             } else {
                 // If the subject of the assertion is not connected to a transaction
@@ -60,15 +60,15 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
                 assert(
                     true,
                     undefined,
-                    `Expected transaction NOT to be reverted, but it reverted with reason '${decodedReturnData.reason}'`
+                    `Expected transaction NOT to be reverted, but it reverted with reason '${decodedReturnData.reason}'`,
                 );
             } else if (decodedReturnData.kind === 'Panic') {
                 assert(
                     true,
                     undefined,
-                    `Expected transaction NOT to be reverted, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
-                        decodedReturnData.description
-                    })`
+                    `Expected transaction NOT to be reverted, but it reverted with panic code ${toBeHex(
+                        decodedReturnData.code,
+                    )} (${decodedReturnData.description})`,
                 );
             } else {
                 const _exhaustiveCheck: never = decodedReturnData;
@@ -87,7 +87,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic) {
 }
 
 async function getTransactionReceipt(hash: string) {
-    const hre = await import("hardhat");
+    const hre = await import('hardhat');
     const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     return provider.getTransactionReceipt(hash);

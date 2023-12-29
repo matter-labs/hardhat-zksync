@@ -1,15 +1,15 @@
 import { AssertionError, expect } from 'chai';
 import * as zk from 'zksync-ethers';
-import path, { resolve } from 'path';
+import path from 'path';
 import util from 'util';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { PANIC_CODES } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
 
+import { HttpNetworkConfig } from 'hardhat/types';
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
-import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -28,7 +28,7 @@ describe('INTEGRATION: Reverted with panic', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            const hre = await import("hardhat");
+            const hre = await import('hardhat');
             provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
@@ -39,14 +39,14 @@ describe('INTEGRATION: Reverted with panic', function () {
 
         describe('calling a method that succeeds', function () {
             it('successful asserts', async function () {
-                //wait some time to update 
+                // wait some time to update
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 await runSuccessfulAsserts({
                     matchers,
                     method: 'succeeds',
                     successfulAssert: (x) => expect(x).not.to.be.revertedWithPanic(),
                 });
-                //wait some time to update 
+                // wait some time to update
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 await runSuccessfulAsserts({
@@ -57,7 +57,7 @@ describe('INTEGRATION: Reverted with panic', function () {
             });
 
             it('failed asserts', async function () {
-                //wait some time to update 
+                // wait some time to update
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 await runFailedAsserts({
                     matchers,
@@ -66,7 +66,7 @@ describe('INTEGRATION: Reverted with panic', function () {
                     failedAssertReason:
                         "Expected transaction to be reverted with some panic code, but it didn't revert",
                 });
-                //wait some time to update 
+                // wait some time to update
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 await runFailedAsserts({
@@ -247,7 +247,7 @@ describe('INTEGRATION: Reverted with panic', function () {
             it('non-errors as subject', async function () {
                 await expect(expect(Promise.reject({})).to.be.revertedWithPanic(1)).to.be.rejectedWith(
                     AssertionError,
-                    'Expected an Error object'
+                    'Expected an Error object',
                 );
             });
         });

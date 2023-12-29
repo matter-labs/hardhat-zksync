@@ -18,6 +18,7 @@
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "eslint": "^8.54.0",
+    "chalk": "4.1.2",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
@@ -30,7 +31,9 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
+    "@matterlabs/hardhat-zksync-verify": "link:../../packages/hardhat-zksync-verify",
     "@matterlabs/hardhat-zksync-verify-vyper": "link:../../packages/hardhat-zksync-verify-vyper",
+    "chalk": "4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",
     "hardhat": "^2.19.2"

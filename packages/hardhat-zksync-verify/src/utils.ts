@@ -1,15 +1,15 @@
 import axios from 'axios';
 import * as zk from 'zksync-ethers';
+import chalk from 'chalk';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
 import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
-import chalk from 'chalk';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
         throw new Error(
-            `Axios error (code: ${error.code}) during the contract verification request\n Reason: ${error.response?.data}`
+            `Axios error (code: ${error.code}) during the contract verification request\n Reason: ${error.response?.data}`,
         );
     } else {
         throw new ZkSyncVerifyPluginError(`Failed to send contract verification request\n Reason: ${error}`);
@@ -42,7 +42,7 @@ export async function executeVeificationWithRetry(
     requestId: number,
     verifyURL: string,
     maxRetries = 5,
-    delayInMs = 1500
+    delayInMs = 1500,
 ): Promise<VerificationStatusResponse | undefined> {
     let retries = 0;
 
@@ -68,7 +68,7 @@ export async function retrieveContractBytecode(address: string, hreNetwork: any)
     if (deployedBytecode.length === 0) {
         throw new ZkSyncVerifyPluginError(
             `The address ${address} has no bytecode. Is the contract deployed to this network?
-  The selected network is ${hreNetwork.name}.`
+  The selected network is ${hreNetwork.name}.`,
         );
     }
     return deployedBytecode;
@@ -82,11 +82,11 @@ export function removeMultipleSubstringOccurrences(inputString: string, stringTo
     for (const line of lines) {
         if (line.trim().includes(stringToRemove)) {
             if (!firstIdentifierFound) {
-                output += line + '\n';
+                output += `${line}\n`;
                 firstIdentifierFound = true;
             }
         } else {
-            output += line + '\n';
+            output += `${line}\n`;
         }
     }
 
@@ -97,5 +97,5 @@ export function parseWrongConstructorArgumentsError(string: string): string {
     // extract the values of the "types" and "values" keys from the string
     const data = JSON.parse(string.split('count=')[1].split(', value=')[0]);
 
-    return `The number of constructor arguments you provided (${data['values']}) does not match the number of constructor arguments the contract has been deployed with (${data['types']}).`;
+    return `The number of constructor arguments you provided (${data.values}) does not match the number of constructor arguments the contract has been deployed with (${data.types}).`;
 }

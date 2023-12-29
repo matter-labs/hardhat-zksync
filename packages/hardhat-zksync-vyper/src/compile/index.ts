@@ -1,6 +1,7 @@
-import { ZkVyperConfig, CompilerOptions, CompilerOutput } from '../types';
-import { compileWithBinary } from './binary';
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
+import { ZkVyperConfig, CompilerOptions, CompilerOutput } from '../types';
+import { ZkSyncVyperPluginError } from '../errors';
+import { compileWithBinary } from './binary';
 import {
     validateDockerIsInstalled,
     createDocker,
@@ -8,36 +9,36 @@ import {
     dockerImage,
     compileWithDocker,
 } from './docker';
-import { ZkSyncVyperPluginError } from '../errors';
 
 export async function compile(
     zkvyperConfig: ZkVyperConfig,
     inputPaths: string[],
     sourcesPath: string,
     rootPath: string,
-    vyperPath?: string
+    vyperPath?: string,
 ) {
     let compiler: ICompiler;
-    if (zkvyperConfig.compilerSource == 'binary') {
-        if (vyperPath == null) {
+    if (zkvyperConfig.compilerSource === 'binary') {
+        if (vyperPath === null) {
             throw new ZkSyncVyperPluginError('vyper executable is not specified');
         }
-        compiler = new BinaryCompiler(vyperPath);
-    } else if (zkvyperConfig.compilerSource == 'docker') {
+        compiler = new BinaryCompiler(vyperPath!);
+    } else if (zkvyperConfig.compilerSource === 'docker') {
         compiler = await DockerCompiler.initialize(zkvyperConfig);
     } else {
         throw new ZkSyncVyperPluginError(`Incorrect compiler source: ${zkvyperConfig.compilerSource}`);
     }
 
-    let output =  await compiler.compile({
-        inputPaths,
-        sourcesPath,
-        compilerPath: zkvyperConfig.settings.compilerPath,
-    },
-        zkvyperConfig
+    const output = await compiler.compile(
+        {
+            inputPaths,
+            sourcesPath,
+            compilerPath: zkvyperConfig.settings.compilerPath,
+        },
+        zkvyperConfig,
     );
 
-    if(process.platform !== 'win32') {
+    if (process.platform !== 'win32') {
         return output;
     }
 
@@ -45,12 +46,12 @@ export async function compile(
 }
 
 function getWindowsOutput(output: CompilerOutput, path: string) {
-    let { version, ...contracts } = output;
-    let changedOutput = {} as CompilerOutput;
+    const { version, ...contracts } = output;
+    const changedOutput = {} as CompilerOutput;
 
-    let specificPath = path.replaceAll('\\', '/');
-    for(let [sourceName, output] of Object.entries(contracts)) {
-        sourceName = sourceName.replace(`//?/${specificPath}/`, '');
+    const specificPath = path.replaceAll('\\', '/');
+    for (const [originalSourceName, _output] of Object.entries(contracts)) {
+        const sourceName = originalSourceName.replace(`//?/${specificPath}/`, '');
         changedOutput[sourceName] = output;
     }
 
@@ -66,12 +67,15 @@ export class BinaryCompiler implements ICompiler {
     constructor(public vyperPath: string) {}
 
     public async compile(paths: CompilerOptions, config: ZkVyperConfig) {
-        return await compileWithBinary(paths, config, this.vyperPath);
+        return compileWithBinary(paths, config, this.vyperPath);
     }
 }
 
 export class DockerCompiler implements ICompiler {
-    protected constructor(public dockerImage: Image, public docker: HardhatDocker) {}
+    protected constructor(
+        public dockerCompilerImage: Image,
+        public docker: HardhatDocker,
+    ) {}
 
     public static async initialize(config: ZkVyperConfig): Promise<ICompiler> {
         await validateDockerIsInstalled();
@@ -84,6 +88,6 @@ export class DockerCompiler implements ICompiler {
     }
 
     public async compile(paths: CompilerOptions, config: ZkVyperConfig) {
-        return await compileWithDocker(paths, this.docker, this.dockerImage, config);
+        return compileWithDocker(paths, this.docker, this.dockerCompilerImage, config);
     }
 }

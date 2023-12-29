@@ -1,6 +1,6 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
-import  './type-extensions';
+import './type-extensions';
 
 import { extendEnvironment, subtask } from 'hardhat/internal/core/config/config-env';
 

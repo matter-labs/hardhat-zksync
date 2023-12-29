@@ -15,7 +15,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
         process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
-        this.env.run(TASK_CLEAN);
+        const _ = this.env.run(TASK_CLEAN);
     });
 
     afterEach('Resetting hardhat', function () {

@@ -1,10 +1,12 @@
 import assert from 'assert';
-import {
-    TASK_CHECK_VERIFICATION_STATUS,
-} from '@matterlabs/hardhat-zksync-verify-vyper/dist/src/constants';
+import { TASK_CHECK_VERIFICATION_STATUS } from '@matterlabs/hardhat-zksync-verify-vyper/dist/src/constants';
 
 import chalk from 'chalk';
-import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
+import {
+    CONTRACT_ALREADY_VERIFIED_ERROR,
+    WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR,
+    useEnvironment,
+} from './helpers';
 
 describe('verify plugin', async function () {
     const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
@@ -30,7 +32,7 @@ describe('verify plugin', async function () {
 
         beforeEach('Deploy Greeter contract', async function () {
             const contractName = 'Greeter';
-            const constructorArgs:any[] = [];
+            const constructorArgs: any[] = [];
 
             const factoryContract = await this.env.zksyncEthers.getContractFactory(contractName);
             const contract = await factoryContract.deploy(constructorArgs);
@@ -41,20 +43,20 @@ describe('verify plugin', async function () {
             assert.equal(this.env.network.verifyURL, testnetVerifyURL);
         });
         it('Test verification happy path of the simple Greeter contract', async function () {
-            const constructorArgs:any[] = [];
+            const constructorArgs: any[] = [];
 
             const verificationId = await this.env.run('verify:verify:vyper', {
                 address: this.deployedAddress,
                 constructorArguments: constructorArgs,
             });
 
-            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
             assert.equal(success, true);
         });
 
         it('Test verification of the already verified contract', async function () {
-            const constructorArgs:any[] = [];
+            const constructorArgs: any[] = [];
 
             await this.env.run('verify:verify:vyper', {
                 address: this.deployedAddress,
@@ -80,10 +82,10 @@ describe('verify plugin', async function () {
                 // Run the verification again on the previously verified contract
                 await this.env.run('verify:verify:vyper', {
                     address: this.deployedAddress,
-                    constructorArguments: ["0x123","Wrong number"],
+                    constructorArguments: ['0x123', 'Wrong number'],
                 });
             } catch (error: any) {
-                console.info(error.message)
+                console.info(error.message);
                 assert(error.message.includes(WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR));
             }
         });
