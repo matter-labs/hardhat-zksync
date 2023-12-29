@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "zksync-ethers":"^6.0.0",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-upgradable": "link:../../packages/hardhat-zksync-upgradable",

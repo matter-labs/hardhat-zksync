@@ -37,7 +37,7 @@
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
     "@openzeppelin/upgrades-core": "^1.31.0",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "fs-extra": "^7.0.1",
     "ethereumjs-util": "^6.2.1",
     "zksync-ethers": "^6.0.0",
