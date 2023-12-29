@@ -97,6 +97,8 @@ describe('zksolc plugin', async function () {
     describe('Compilation jobs', async function () {
         useEnvironment('multiple-contracts');
 
+        const compilerVersion = process.env.SOLC_VERSION || '0.8.17';
+
         let sandbox = sinon.createSandbox();
 
         let isZksolcDownloadedStub: sinon.SinonStub;
@@ -155,7 +157,7 @@ describe('zksolc plugin', async function () {
 
             jobs.forEach((job: any) => {
                 const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.version, compilerVersion);
                 assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
                 assert.equal(solidityConfig.zksolc.settings.compilerPath, "zksolc/zksolc-version-0");
                 //assert.equal(solidityConfig.zksolc.settings.libraries, {});
@@ -199,7 +201,7 @@ describe('zksolc plugin', async function () {
 
             jobs.forEach((job: any) => {
                 const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.version, compilerVersion);
                 assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
                 assert.equal(solidityConfig.zksolc.settings.compilerPath, "zksolc/zksolc-version-0");
                 assert.equal(solidityConfig.zksolc.settings.libraries['contracts/Greeter.sol']['contracts/Greeter.sol'], "0x1234567890123456789012345678901234567890");
