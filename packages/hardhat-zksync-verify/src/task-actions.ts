@@ -25,7 +25,7 @@ import {
     BUILD_INFO_NOT_FOUND_ERROR,
 } from './constants';
 
-import { encodeArguments, retrieveContractBytecode } from './utils';
+import { encodeArguments, extractModule, retrieveContractBytecode } from './utils';
 import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 
@@ -109,7 +109,7 @@ export async function getConstructorArguments(
     const constructorArgsModulePath = path.resolve(process.cwd(), args.constructorArgsModule);
 
     try {
-        const constructorArguments = (await import(constructorArgsModulePath)).default;
+        const constructorArguments = await extractModule(constructorArgsModulePath);
 
         // Since our plugin supports both encoded and decoded constructor arguments, we need to check how are they passed
         if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith('0x')) {
@@ -248,7 +248,7 @@ export async function getContractInfo(
             deployedBytecode,
         );
 
-        if (contractInformation === null) {
+        if (contractInformation === undefined || contractInformation === null) {
             throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
         }
     } else {

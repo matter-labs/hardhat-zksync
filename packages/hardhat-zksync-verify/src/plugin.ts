@@ -3,12 +3,7 @@ import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/type
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
 import chalk from 'chalk';
-import {
-    MULTIPLE_MATCHING_CONTRACTS,
-    CONTRACT_NAME_NOT_FOUND,
-    NO_MATCHING_CONTRACT,
-    LIBRARIES_EXPORT_ERROR,
-} from './constants';
+import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 import { executeVeificationWithRetry } from './utils';
@@ -47,8 +42,6 @@ export async function inferContractArtifacts(
     }
 
     if (contractMatches.length === 0) throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
-
-    if (contractMatches.length > 1) throw new ZkSyncVerifyPluginError(MULTIPLE_MATCHING_CONTRACTS);
 
     return contractMatches[0];
 }

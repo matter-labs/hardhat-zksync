@@ -99,3 +99,8 @@ export function parseWrongConstructorArgumentsError(string: string): string {
 
     return `The number of constructor arguments you provided (${data.values}) does not match the number of constructor arguments the contract has been deployed with (${data.types}).`;
 }
+
+export async function extractModule(constructorArgsModulePath: string) {
+    const constructorArguments = (await import(constructorArgsModulePath)).default;
+    return constructorArguments;
+}

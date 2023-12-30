@@ -1,9 +1,7 @@
 import { assert } from 'chai';
-import { useEnvironment } from './helpers';
+import { useEnvironment } from '../helpers';
 
 describe('verify plugin', async function () {
-    const _sourceName: string = 'contracts/Greeter.sol';
-    const _contractName: string = 'Greeter';
     const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
 
     describe('Testnet verifyURL extraction from config', async function () {
