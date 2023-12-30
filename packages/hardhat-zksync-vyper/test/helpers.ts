@@ -9,13 +9,14 @@ declare module 'mocha' {
     }
 }
 
-export function useEnvironment(fixtureProjectName: string, networkName = 'hardhat') {
+export function useEnvironment(fixtureProjectName: string, networkName = 'hardhat', manualyLoadEnv: boolean = false) {
     beforeEach('Loading hardhat environment', function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
-
-        this.env = require('hardhat');
-        const _ = this.env.run(TASK_CLEAN);
+        if (!manualyLoadEnv) {
+            this.env = require('hardhat');
+            const _ = this.env.run(TASK_CLEAN);
+        }
     });
 
     afterEach('Resetting hardhat', function () {

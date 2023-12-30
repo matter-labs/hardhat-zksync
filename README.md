@@ -40,7 +40,6 @@ You can find more detailed explanations on how to use hardhat zkSync plugins on 
 
 We hope you find these plugins useful in your development efforts.\
 Happy coding!🙌🎉
-
 ## License
 
 hardhat-zkSync is distributed under the terms of both the MIT license and the Apache License (Version 2.0).

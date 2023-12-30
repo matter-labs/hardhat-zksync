@@ -64,7 +64,7 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
             }
         }
         if (!found) {
-            console.error(`Script ${targetScript} was not found, no scripts were run`);
+            throw new ZkSyncDeployPluginError(`Script ${targetScript} was not found, no scripts were run`);
         }
     }
 }
