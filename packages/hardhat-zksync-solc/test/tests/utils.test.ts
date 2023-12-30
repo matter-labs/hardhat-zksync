@@ -102,7 +102,7 @@ describe('Utils', () => {
 
             await writeLibrariesToFile(path, libraries);
 
-            expect(fs.existsSync(path)).to.be.true;
+            expect(fs.existsSync(path)).to.equal(true);
 
             fs.rmSync(path);
         });
@@ -135,7 +135,7 @@ describe('Utils', () => {
 
             await download(url, filePath, userAgent, version);
 
-            expect(fs.existsSync(filePath)).is.true;
+            expect(fs.existsSync(filePath)).to.equal(true);
 
             fs.rmSync(filePath);
         });
@@ -184,7 +184,7 @@ describe('Utils', () => {
 
             await saveDataToFile(testData, path);
 
-            expect(fs.existsSync(path)).to.be.true;
+            expect(fs.existsSync(path)).to.equal(true);
 
             fs.rmSync(path);
         });

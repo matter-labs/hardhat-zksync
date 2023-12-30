@@ -40,7 +40,9 @@
     "chai": "^4.3.6",
     "undici": "^5.14.0",
     "semver": "^7.5.1",
-    "proper-lockfile": "^4.1.2"
+    "proper-lockfile": "^4.1.2",
+    "sinon": "^16.0.0",
+    "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -62,9 +64,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "c8": "^8.0.1",
-    "sinon": "^16.0.0",
-    "sinon-chai": "^3.7.0"
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
     "hardhat": "^2.19.2"

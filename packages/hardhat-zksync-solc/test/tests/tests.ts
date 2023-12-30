@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import {
     TASK_COMPILE,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
@@ -9,7 +8,7 @@ import {
 import chalk from 'chalk';
 import fs from 'fs';
 import sinonChai from 'sinon-chai';
-import chai from 'chai';
+import chai, { assert } from 'chai';
 
 import { DependencyGraph } from 'hardhat/types/builtin-tasks/compile';
 import path from 'path';
@@ -230,18 +229,13 @@ describe('zksolc plugin', async function () {
             useEnvironment('multiple-contracts');
             const sandbox = sinon.createSandbox();
 
-            let isCompilerDownloadedStub: sinon.SinonStub;
-            let downloadCompilerStub: sinon.SinonStub;
-
             async function isCompilerDownloaded(): Promise<boolean> {
                 return true;
             }
 
             beforeEach(() => {
-                isCompilerDownloadedStub = sandbox
-                    .stub(CompilerDownloader.prototype, 'isCompilerDownloaded')
-                    .returns(isCompilerDownloaded());
-                downloadCompilerStub = sandbox.stub(CompilerDownloader.prototype, 'getCompiler').resolves({
+                sandbox.stub(CompilerDownloader.prototype, 'isCompilerDownloaded').returns(isCompilerDownloaded());
+                sandbox.stub(CompilerDownloader.prototype, 'getCompiler').resolves({
                     compilerPath: 'solc/solc-version-0',
                     version: '0.8.17',
                     longVersion: 'solc/solc-version-0-long',
@@ -394,6 +388,9 @@ describe('zksolc plugin', async function () {
                     );
                 }
                 for (const depHash in factoryArtifact.factoryDeps) {
+                    if (!depHash) {
+                        continue;
+                    }
                     const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
                     assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
                 }

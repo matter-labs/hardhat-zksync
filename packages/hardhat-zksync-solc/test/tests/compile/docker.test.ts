@@ -73,7 +73,7 @@ describe.skip('Docker', () => {
 
                 await pullImageIfNecessary(docker, image);
 
-                expect(await docker.hasPulledImage(image)).to.be.false;
+                expect(await docker.hasPulledImage(image)).to.equal(false);
                 sinon.assert.calledOnce(pullImageStub);
             });
 
@@ -90,7 +90,7 @@ describe.skip('Docker', () => {
 
                 await pullImageIfNecessary(docker, image);
 
-                expect(await docker.hasPulledImage(image)).to.be.true;
+                expect(await docker.hasPulledImage(image)).to.equal(true);
                 sinon.assert.calledOnce(isImageUpToDateStub);
                 sinon.assert.notCalled(pullImageStub);
             });
@@ -108,7 +108,7 @@ describe.skip('Docker', () => {
 
                 await pullImageIfNecessary(docker, image);
 
-                expect(await docker.hasPulledImage(image)).to.be.true;
+                expect(await docker.hasPulledImage(image)).to.equal(true);
                 sinon.assert.calledOnce(isImageUpToDateStub);
                 sinon.assert.calledOnce(pullImageStub);
             });
@@ -167,7 +167,6 @@ describe.skip('Docker', () => {
             };
 
             const output = await compileWithDocker(input, docker, image, zksolcConfig);
-            output.contracts['contracts/Greeter.sol'].Greeter.evm.bytecode.object;
             expect(output).to.be.an('object');
             expect(output).to.have.property('contracts');
             expect(output.contracts).to.be.an('object');
