@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "c8 mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha --recursive \"test/tests/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -40,7 +40,9 @@
     "chai": "^4.3.6",
     "undici": "^5.14.0",
     "semver": "^7.5.1",
-    "proper-lockfile": "^4.1.2"
+    "proper-lockfile": "^4.1.2",
+    "sinon": "^16.0.0",
+    "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
