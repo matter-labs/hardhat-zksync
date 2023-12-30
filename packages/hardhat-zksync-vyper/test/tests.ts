@@ -21,6 +21,86 @@ describe('zkvyper plugin', async function () {
         });
     });
 
+    describe('Simple on otherNetwork', async function () {
+        useEnvironment('simple', 'otherNetwork');
+
+        it('Should successfully compile a simple contract on otherNetwork', async function () {
+            await this.env.run(TASK_COMPILE);
+
+            const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
+
+            assert.deepEqual(artifact.factoryDeps, undefined, 'Contract should not have factoryDeps');
+        });
+    });
+
+    describe('Simple using docker without image', async function () {
+        useEnvironment('simple-docker-no-image');
+
+        it('Should fail to compile a simple contract', async function () {
+            try {
+                await this.env.run(TASK_COMPILE);
+                const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
+
+                assert.equal(artifact.contractName, 'Greeter');
+            } catch (e: any) {
+                expect(e.message).to.include('Docker source was chosen but no image was specified');
+            }
+        });
+    });
+
+    describe('Simple using docker', async function () {
+        useEnvironment('simple-docker');
+
+        it('Should compile a simple contract', async function () {
+            await this.env.run(TASK_COMPILE);
+            const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
+
+            assert.equal(artifact.contractName, 'Greeter');
+        });
+    });
+
+    describe('Should not download', async function () {
+        useEnvironment('unsupported-vyper', 'hardhat', true);
+
+        it('Should not download vyper compiler', async function () {
+            try {
+                const hh = require('hardhat');
+                await hh.run(TASK_COMPILE);
+            } catch (e: any) {
+                expect(e.message).to.include('Vyper versions 0.3.4 to 0.3.7 are not supported by zkvyper');
+            }
+        });
+    });
+
+    describe('Should not download', async function () {
+        useEnvironment('unsupported-zkvyper', 'hardhat', true);
+
+        it('Should not download zkvyper compiler', async function () {
+            try {
+                const hh = require('hardhat');
+                await hh.run(TASK_COMPILE);
+            } catch (e: any) {
+                console.info(e.message);
+                expect(e.message).to.include('Please use versions 1.3.9 to 1.3.14');
+            }
+        });
+    });
+
+    describe('Compiling nothing', async function () {
+        useEnvironment('nothing-to-compile');
+
+        it('Should not compile anything', async function () {
+            let isError = false;
+            try {
+                await this.env.run(TASK_COMPILE);
+            } catch (e: any) {
+                isError = true;
+                console.info(e);
+            }
+            assert(isError === false);
+        });
+    });
+
     describe('Factory', async function () {
         useEnvironment('factory');
 
