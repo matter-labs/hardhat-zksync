@@ -49,7 +49,7 @@
   "devDependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^1.1.0",
     "@matterlabs/hardhat-zksync-solc": "^1.0.3",
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
@@ -68,7 +68,7 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.9.2"
+    "@openzeppelin/contracts-upgradeable": "^4.9.5"
   },
   "prettier": {
     "tabWidth": 4,
