@@ -246,8 +246,8 @@ Instead, this name was received: ${contractFQN}`);
             expect(solidityStandardJsonInput.sources['contracts/Contract.sol'].content).to.equal(
                 'contract Contract {}',
             );
-            expect(solidityStandardJsonInput.settings.optimizer.enabled).to.be.true;
-            expect(solidityStandardJsonInput.settings.areLibrariesMissing).to.be.false;
+            expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
+            expect(solidityStandardJsonInput.settings.areLibrariesMissing).to.equal(false);
         });
     });
 
@@ -313,7 +313,7 @@ Instead, this name was received: ${contractFQN}`);
                 consoleInfoSpy,
                 '\u001b[32mContract successfully verified on zkSync block explorer!\u001b[39m',
             );
-            expect(result).to.be.true;
+            expect(result).to.equal(true);
         });
     });
 });

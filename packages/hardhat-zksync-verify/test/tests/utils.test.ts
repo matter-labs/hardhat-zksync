@@ -33,7 +33,7 @@ describe('executeVeificationWithRetry', () => {
         const result = await executeVeificationWithRetry(requestId, verifyURL);
 
         expect(result).to.equal(response);
-        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.be.true;
+        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
     });
 
     it('should return the verification status response when verification is failed', async () => {
@@ -51,7 +51,7 @@ describe('executeVeificationWithRetry', () => {
         const result = await executeVeificationWithRetry(requestId, verifyURL);
 
         expect(result).to.equal(response);
-        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.be.true;
+        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
     });
 
     it('should return undefined when max retries exceeded', async () => {
@@ -71,9 +71,9 @@ describe('executeVeificationWithRetry', () => {
 
         const result = await executeVeificationWithRetry(requestId, verifyURL, maxRetries, delayInMs);
 
-        expect(result).to.be.undefined;
+        expect(result).to.equal(undefined);
         expect(checkVerificationStatusServiceStub.callCount).to.equal(maxRetries + 1);
-        expect(checkVerificationStatusServiceStub.calledWith(requestId, verifyURL)).to.be.true;
+        expect(checkVerificationStatusServiceStub.calledWith(requestId, verifyURL)).to.equal(true);
     });
 });
 

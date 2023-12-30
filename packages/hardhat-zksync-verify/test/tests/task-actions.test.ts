@@ -35,7 +35,7 @@ describe('verifyContract', async function () {
         };
 
         await verifyContract({}, hre as any, runSuperStub as any);
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
     });
 
     it('should throw an error if the address is invalid', async function () {
@@ -65,7 +65,7 @@ describe('verifyContract', async function () {
         };
 
         await verifyContract({}, hre as any, runSuperStub as any);
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
     });
 
     it('should throw an error if the address is invalid', async function () {
@@ -176,7 +176,7 @@ describe('verifyContract', async function () {
         };
 
         await verifyContract(args, hre as any, runSuperStub as any);
-        expect(runSuperStub.calledOnce).to.be.false;
+        expect(runSuperStub.calledOnce).to.equal(false);
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
@@ -201,7 +201,7 @@ describe('getCompilerVersions', async function () {
 
         const result = await getCompilerVersions({}, hre as any, runSuperStub as any);
         expect(result).to.deep.equal([]);
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
     });
 
     it('should return compiler versions if zksync is true', async function () {
@@ -223,7 +223,7 @@ describe('getCompilerVersions', async function () {
 
         const result = await getCompilerVersions({}, hre as any, runSuperStub as any);
         expect(result).to.deep.equal(['0.8.0', '0.7.0', '0.6.0']);
-        expect(runSuperStub.called).to.be.false;
+        expect(runSuperStub.called).to.equal(false);
     });
 });
 
@@ -255,7 +255,7 @@ describe('verify', async function () {
             runSuperStub as any,
         );
 
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
     });
 
     it('should throw an error if address is undefined', async function () {
@@ -312,7 +312,7 @@ describe('verify', async function () {
             runSuperStub as any,
         );
 
-        expect(runSuperStub.calledOnce).to.be.false;
+        expect(runSuperStub.calledOnce).to.equal(false);
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_VERIFY_VERIFY);
         expect(hre.run.secondCall.args[1]).to.deep.equal({
@@ -341,7 +341,7 @@ describe('getConstructorArguments', async function () {
 
         await getConstructorArguments(args, hre as any, runSuperStub as any);
 
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
     });
 
     it('should return constructorArgsParams if constructorArgsModule is not a string', async function () {
@@ -375,7 +375,7 @@ describe('getConstructorArguments', async function () {
 
         const result = await getConstructorArguments(args, hre as any, runSuperStub as any);
 
-        expect(importStub.calledOnce).to.be.true;
+        expect(importStub.calledOnce).to.equal(true);
         expect(importStub.firstCall.args[0]).to.includes('path/to/module');
         expect(result).to.deep.equal('0x1234567890');
     });
@@ -423,7 +423,7 @@ describe('getContractInfo', async function () {
 
         await getContractInfo(args, hre as any, runSuperStub as any);
 
-        expect(runSuperStub.calledOnce).to.be.true;
+        expect(runSuperStub.calledOnce).to.equal(true);
         expect(runSuperStub.firstCall.args[0]).to.deep.equal(args);
     });
 
@@ -580,8 +580,8 @@ describe('getContractInfo', async function () {
         const result = await getContractInfo(args, hre as any, runSuperStub as any);
 
         expect(result).to.deep.equal(contractInformation);
-        expect(runSuperStub.called).to.be.false;
-        expect(extractMatchingContractInformationStub.calledOnce).to.be.true;
+        expect(runSuperStub.called).to.equal(false);
+        expect(extractMatchingContractInformationStub.calledOnce).to.equal(true);
         expect(extractMatchingContractInformationStub.firstCall.args[0]).to.equal('contracts/Contract.sol');
         expect(extractMatchingContractInformationStub.firstCall.args[1]).to.equal('Contract');
         expect(extractMatchingContractInformationStub.firstCall.args[3]).to.equal(args.deployedBytecode);
@@ -672,9 +672,9 @@ describe('getContractInfo', async function () {
         const result = await getContractInfo(args, hre as any, runSuperStub as any);
 
         expect(result).to.deep.equal(contractInformation);
-        expect(runSuperStub.called).to.be.false;
-        expect(hre.artifacts.getBuildInfo.called).to.be.false;
-        expect(inferContractArtifactsStub.calledOnce).to.be.true;
+        expect(runSuperStub.called).to.equal(false);
+        expect(hre.artifacts.getBuildInfo.called).to.equal(false);
+        expect(inferContractArtifactsStub.calledOnce).to.equal(true);
         expect(inferContractArtifactsStub.firstCall.args[0]).to.equal(hre.artifacts);
         expect(inferContractArtifactsStub.firstCall.args[1]).to.equal(args.matchingCompilerVersions);
         expect(inferContractArtifactsStub.firstCall.args[2]).to.equal(args.deployedBytecode);

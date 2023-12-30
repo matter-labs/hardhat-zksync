@@ -36,7 +36,7 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             expect(result).to.be.instanceOf(VerificationStatusResponse);
             expect(result.status).to.equal(response.data.status);
-            expect(result.isVerificationSuccess()).to.be.true;
+            expect(result.isVerificationSuccess()).to.equal(true);
         });
 
         it('should handle axios error', async () => {
@@ -49,8 +49,8 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             try {
                 await checkVerificationStatusService(requestId, verifyURL);
-            } catch (error: any) {
-                expect(error.message).to.equal(error.message);
+            } catch (err: any) {
+                expect(err.message).to.equal(err.message);
             }
         });
     });
@@ -136,8 +136,8 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             try {
                 await verifyContractRequest(req, verifyURL);
-            } catch (error: any) {
-                expect(error.message).to.equal(error.message);
+            } catch (err: any) {
+                expect(err.message).to.equal(err.message);
             }
         });
     });

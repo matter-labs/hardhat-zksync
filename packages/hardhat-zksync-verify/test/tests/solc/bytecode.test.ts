@@ -16,7 +16,7 @@ describe('compareBytecode', () => {
 
         const result = await compareBytecode(deployedBytecode, runtimeBytecodeSymbols as any);
 
-        expect(result).to.be.null;
+        expect(result).to.equal(null);
     });
 
     it('should return null when the normalized bytecode does not match the reference bytecode', async () => {
@@ -38,7 +38,7 @@ describe('compareBytecode', () => {
 
         const result = await compareBytecode(deployedBytecode, runtimeBytecodeSymbols as any);
 
-        expect(result).to.be.null;
+        expect(result).to.equal(null);
     });
 
     it('should return the normalized bytecode when it matches the reference bytecode', async () => {
@@ -77,7 +77,7 @@ describe('extractMatchingContractInformation', () => {
             deployedBytecode,
         );
 
-        expect(result).to.be.null;
+        expect(result).to.equal(null);
     });
 
     it('should return null when the runtime bytecode symbols are null', async () => {
@@ -105,7 +105,7 @@ describe('extractMatchingContractInformation', () => {
             deployedBytecode,
         );
 
-        expect(result).to.be.null;
+        expect(result).to.equal(null);
     });
 
     it('should return the contract information when the bytecode is matched', async () => {
