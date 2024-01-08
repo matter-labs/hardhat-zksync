@@ -1,79 +1,63 @@
-import { MultiSolcUserConfig, SolcUserConfig, SolidityUserConfig } from "hardhat/types";
+import { MultiSolcUserConfig, SolcUserConfig, SolidityUserConfig } from 'hardhat/types';
 
 export interface SolcUserConfigExtractor {
-    extract(solidityConfig: SolidityUserConfig | undefined): SolcUserConfigData;
-    suitable(solidityConfig: SolidityUserConfig | undefined): boolean;
+    extract(_solidityConfig: SolidityUserConfig | undefined): SolcUserConfigData;
+    suitable(_solidityConfig: SolidityUserConfig | undefined): boolean;
 }
 
 export class SolcSoloUserConfigExtractor implements SolcUserConfigExtractor {
-    suitable(solidityConfig: SolidityUserConfig | undefined): boolean {
-        if (!solidityConfig) {
+    public suitable(_solidityConfig: SolidityUserConfig | undefined): boolean {
+        if (!_solidityConfig) {
             return false;
         }
 
-        return isSolcUserConfig(solidityConfig);
+        return isSolcUserConfig(_solidityConfig);
     }
 
-    extract(solidityConfig: SolcUserConfig | undefined): SolcUserConfigData {
-        if (!solidityConfig) {
-            return {
-                compilers: [],
-            };
-        }
-
+    public extract(_solidityConfig: SolcUserConfig | undefined): SolcUserConfigData {
         return {
-            compilers: [solidityConfig]
+            compilers: [_solidityConfig!],
         };
     }
 }
 
 export class SolcMultiUserConfigExtractor implements SolcUserConfigExtractor {
-    suitable(solidityConfig: SolidityUserConfig | undefined): boolean {
-        if (!solidityConfig) {
+    public suitable(_solidityConfig: SolidityUserConfig | undefined): boolean {
+        if (!_solidityConfig) {
             return false;
         }
 
-        return isMultiSolcUserConfig(solidityConfig);
+        return isMultiSolcUserConfig(_solidityConfig);
     }
 
-    extract(solidityConfig: MultiSolcUserConfig | undefined): SolcUserConfigData {
-        if (!solidityConfig) {
-            return {
-                compilers: [],
-            };
-        }
-        let overrides: Map<string, SolcUserConfig> = new Map();
-        for (const [file, compiler] of Object.entries(solidityConfig.overrides ?? {})) {
+    public extract(_solidityConfig: MultiSolcUserConfig | undefined): SolcUserConfigData {
+        const overrides: Map<string, SolcUserConfig> = new Map();
+        for (const [file, compiler] of Object.entries(_solidityConfig!.overrides ?? {})) {
             overrides.set(file, compiler);
         }
+
         return {
-            compilers: solidityConfig.compilers,
+            compilers: _solidityConfig!.compilers,
             overides: overrides,
         };
     }
 }
 
 export class SolcStringUserConfigExtractor implements SolcUserConfigExtractor {
-    suitable(solidityConfig: string | undefined): boolean {
-        if (!solidityConfig) {
+    public suitable(_solidityConfig: string | undefined): boolean {
+        if (!_solidityConfig) {
             return false;
         }
 
-        return typeof solidityConfig === 'string';
+        return typeof _solidityConfig === 'string';
     }
 
-    extract(solidityConfig: MultiSolcUserConfig | undefined): SolcUserConfigData {
+    public extract(_solidityConfig: string | undefined): SolcUserConfigData {
         return {
-            compilers: []
-        }
+            compilers: [],
+        };
     }
 }
-
-export const extractors: SolcUserConfigExtractor[] = [
-    new SolcStringUserConfigExtractor(),
-    new SolcSoloUserConfigExtractor(),
-    new SolcMultiUserConfigExtractor(),
-];
 
 export interface SolcUserConfigEntry {
     config: SolcUserConfig;

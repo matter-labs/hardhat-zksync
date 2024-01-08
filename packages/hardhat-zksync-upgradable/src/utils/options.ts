@@ -29,9 +29,9 @@ export function withDefaults(opts: UpgradeOptions = {}): Required<UpgradeOptions
     };
 }
 
-type Initializer = {
+interface Initializer {
     initializer?: string | false;
-};
+}
 
 export type DeployBeaconProxyOptions = ProxyKindOption & Initializer;
 export type DeployBeaconOptions = StandaloneOptions;

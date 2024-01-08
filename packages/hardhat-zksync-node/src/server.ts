@@ -6,7 +6,8 @@ import { PROCESS_TERMINATION_SIGNALS } from './constants';
 export class JsonRpcServer {
     private serverProcess: ChildProcess | null = null;
 
-    constructor(private readonly serverBinaryPath: string) { }
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    constructor(private readonly serverBinaryPath: string) {}
 
     public listen(args: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -29,7 +30,7 @@ export class JsonRpcServer {
 
             this.serverProcess.on('error', (error) => {
                 console.info(chalk.red('Error running the server:', error));
-                reject(new Error('Error running the server: ' + error.message));
+                reject(new Error(`Error running the server: ${error.message}`));
             });
 
             this.serverProcess.on('exit', (code, signal) => {
@@ -54,7 +55,7 @@ export class JsonRpcServer {
                 // this.serverProcess.on('exit', () => {
                 //     resolve();
                 // });
-            } 
+            }
             resolve();
         });
     }

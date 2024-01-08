@@ -25,7 +25,6 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "chai": "^4.3.7",
     "mocha": "^10.1.0",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
@@ -33,12 +32,13 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "chai": "^4.3.7",
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-node": "link:../../packages/hardhat-zksync-node",
     "@matterlabs/hardhat-zksync-chai-matchers": "link:../../packages/hardhat-zksync-chai-matchers",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "ethers": "^6.7.1",
     "zksync-ethers": "^6.0.0",
     "@matterlabs/zksync-contracts": "^0.6.1",

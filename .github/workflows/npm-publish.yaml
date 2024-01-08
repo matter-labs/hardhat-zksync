@@ -1,0 +1,52 @@
+name: Publish packages to npm
+
+on:
+  workflow_dispatch:
+    inputs: 
+      tag:
+        required: true
+        type: choice
+        description: tag to publish
+        default: latest
+        options: 
+          - latest
+          - beta
+          - alpha
+
+      package:
+        required: true
+        type: choice
+        description: package to publish
+        default: hardhat-zksync-deploy
+        options: 
+          - hardhat-zksync-deploy
+          - hardhat-zksync-solc
+          - hardhat-zksync-upgradable
+          - hardhat-zksync-vyper
+          - hardhat-zksync-verify
+          - hardhat-zksync-toolbox
+          - hardhat-zksync-node
+          - hardhat-zksync-chai-matchers
+          - hardhat-zksync-ethers
+          - hardhat-zksync-verify-vyper
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Setup environment
+        run: yarn && yarn build
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        run: |
+          npm publish @matterlabs/${{inputs.package}} --tag ${{ inputs.tag }} --workspace=packages/${{inputs.package}} --access=public

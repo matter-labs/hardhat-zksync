@@ -6,9 +6,9 @@ import util from 'util';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
+import { HttpNetworkConfig } from 'hardhat/types';
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
-import { HttpNetworkConfig } from 'hardhat/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -27,7 +27,7 @@ describe('INTEGRATION: Reverted without reason', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            const hre = await import("hardhat");
+            const hre = await import('hardhat');
             provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
@@ -122,7 +122,7 @@ describe('INTEGRATION: Reverted without reason', function () {
             it('non-errors as subject', async function () {
                 await expect(expect(Promise.reject({})).to.be.revertedWithoutReason()).to.be.rejectedWith(
                     AssertionError,
-                    'Expected an Error object'
+                    'Expected an Error object',
                 );
             });
         });

@@ -1,4 +1,4 @@
-import { Expression, Project, SourceFile, SyntaxKind } from "ts-morph";
+import { Expression, Project, SourceFile, SyntaxKind } from 'ts-morph';
 import * as fs from 'fs';
 
 export class MorphTsBuilder {
@@ -10,52 +10,66 @@ export class MorphTsBuilder {
         this._sourceFile = project.createSourceFile(_filePath, fileContent, { overwrite: true });
     }
 
-    public intialStep(steps: (MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule)[]) {
+    public intialStep(
+        steps: Array<MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule>,
+    ) {
         return new MorphTs(steps, this._sourceFile, this._filePath);
     }
 }
 
 export class MorphTs {
-    private _currentStep : Expression = undefined as any as Expression;
+    private _currentStep: Expression = undefined as any as Expression;
 
-    constructor(private _steps: (MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule)[], private _sourceFile: SourceFile, private _filePath: string) {
-        let initialValue : any;
+    constructor(
+        private _steps: Array<
+            MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule
+        >,
+        private _sourceFile: SourceFile,
+        private _filePath: string,
+    ) {
+        let initialValue: any;
 
-        for(let _step of _steps) {
+        for (const _step of _steps) {
             if (isMorphBuilderInitialStepType(_step)) {
-                initialValue = _sourceFile.getVariableDeclaration(v => v.getType().getText().includes((_step as MorphBuilderInitialStepType).initialVariableType));
-            
-                if(!initialValue || initialValue === undefined) {
+                initialValue = _sourceFile.getVariableDeclaration((v) =>
+                    v
+                        .getType()
+                        .getText()
+                        .includes((_step as MorphBuilderInitialStepType).initialVariableType),
+                );
+
+                if (!initialValue || initialValue === undefined) {
                     continue;
                 }
 
-                const intialStep = initialValue.getInitializer()
-                ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+                const intialStep = initialValue.getInitializer()?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
                 this._currentStep = intialStep;
                 return;
             } else if (isMorphBuilderInitialStepModule(_step)) {
                 initialValue = _sourceFile
-                .getStatements().find(ea => ea.getText().startsWith((_step as MorphBuilderInitialStepModule).initialModule))
-                ?.asKind(SyntaxKind.ExpressionStatement)
-                ?.getFirstChildByKind(SyntaxKind.BinaryExpression)
-                ?.getRight()
+                    .getStatements()
+                    .find((ea) => ea.getText().startsWith((_step as MorphBuilderInitialStepModule).initialModule))
+                    ?.asKind(SyntaxKind.ExpressionStatement)
+                    ?.getFirstChildByKind(SyntaxKind.BinaryExpression)
+                    ?.getRight();
 
-                if(!initialValue || initialValue === undefined) {
+                if (!initialValue || initialValue === undefined) {
                     continue;
                 }
-                
+
                 this._currentStep = initialValue;
                 return;
             } else {
-                initialValue = _sourceFile.getVariableDeclaration((_step as MorphBuilderInitialStepVariable).initialVariable);
+                initialValue = _sourceFile.getVariableDeclaration(
+                    (_step as MorphBuilderInitialStepVariable).initialVariable,
+                );
 
-                if(!initialValue || initialValue === undefined) {
+                if (!initialValue || initialValue === undefined) {
                     continue;
                 }
 
-                const intialStep = initialValue.getInitializer()
-                ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+                const intialStep = initialValue.getInitializer()?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
                 this._currentStep = intialStep;
                 return;
@@ -68,9 +82,9 @@ export class MorphTs {
     }
 
     public nextStep(step: MorphTsNextStep) {
-        let previousStep = this._currentStep;
+        const previousStep = this._currentStep;
 
-        let presentStep = previousStep
+        const presentStep = previousStep
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
             .getProperty(step.propertyName);
 
@@ -83,12 +97,12 @@ export class MorphTs {
                 ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
                 .addPropertyAssignment({
                     name: step.propertyName,
-                    initializer: JSON.stringify({}, null, 2)
+                    initializer: JSON.stringify({}, null, 2),
                 })
                 .getParentIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
         }
 
-        let newPresentStep = previousStep
+        const newPresentStep = previousStep
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
             .getProperty(step.propertyName)
             ?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
@@ -105,9 +119,9 @@ export class MorphTs {
     public replaceStep(step: MorphTsReplaceStep) {
         this.nextStep({ propertyName: step.propertyName });
 
-        let previousStep = this._currentStep;
+        const previousStep = this._currentStep;
 
-        let presentStep = previousStep
+        const presentStep = previousStep
             ?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression)
             .getParentIfKindOrThrow(SyntaxKind.PropertyAssignment)
             .setInitializer(JSON.stringify(step.replaceObject, null, 2))

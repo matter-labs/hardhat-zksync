@@ -6,8 +6,9 @@ import net from 'net';
 import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
-import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
 import { Provider } from 'zksync-ethers';
+import { getCompilersDir } from 'hardhat/internal/util/global-dir';
+import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -28,9 +29,6 @@ import {
 } from './constants';
 import { ZkSyncNodePluginError } from './errors';
 import { CommandArguments } from './types';
-
-import { getCompilersDir } from 'hardhat/internal/util/global-dir';
-import exp from 'constants';
 
 // Generates command arguments for running the era-test-node binary
 export function constructCommandArgs(args: CommandArguments): string[] {
@@ -104,13 +102,13 @@ export function constructCommandArgs(args: CommandArguments): string[] {
 
     if (args.forkBlockNumber && args.replayTx) {
         throw new ZkSyncNodePluginError(
-            `Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`
+            `Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.`,
         );
     }
 
     if ((args.replayTx || args.forkBlockNumber) && !args.fork) {
         throw new ZkSyncNodePluginError(
-            `Cannot specify --replay-tx or --fork-block-number parameters without --fork param.`
+            `Cannot specify --replay-tx or --fork-block-number parameters without --fork param.`,
         );
     }
 
@@ -155,7 +153,7 @@ export async function getRPCServerBinariesDir(): Promise<string> {
 // Get latest release from GitHub of the era-test-node binary
 export async function getRelease(owner: string, repo: string, userAgent: string, tag?: string): Promise<any> {
     let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
-    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+    url = tag !== 'latest' ? `${url}tags/${tag}` : `${url}latest`;
 
     try {
         const response = await axios.get(url, {
@@ -171,7 +169,7 @@ export async function getRelease(owner: string, repo: string, userAgent: string,
             throw new ZkSyncNodePluginError(
                 `Failed to get ${tag} release for ${owner}/${repo}. Status: ${
                     error.response.status
-                }, Data: ${JSON.stringify(error.response.data)}`
+                }, Data: ${JSON.stringify(error.response.data)}`,
             );
         } else if (error.request) {
             // The request was made but no response was received
@@ -192,7 +190,7 @@ export async function getAssetToDownload(latestRelease: any): Promise<string> {
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    const prefix = 'era_test_node-' + latestRelease.tag_name;
+    const prefix = `era_test_node-${latestRelease.tag_name}`;
     const expectedAssetName = `${prefix}-${getArch()}-${platform}.tar.gz`;
 
     return latestRelease.assets.find((asset: any) => asset.name === expectedAssetName);
@@ -203,7 +201,7 @@ function isTarGzFile(filePath: string): boolean {
 }
 
 function ensureTarGzExtension(filePath: string): string {
-    return filePath.endsWith('.tar.gz') ? filePath : filePath + '.tar.gz';
+    return filePath.endsWith('.tar.gz') ? filePath : `${filePath}.tar.gz`;
 }
 
 async function ensureDirectory(filePath: string): Promise<void> {
@@ -231,7 +229,7 @@ async function extractTarGz(tmpFilePath: string, filePath: string): Promise<void
 
     // Using native tar command for extraction
     await new Promise((resolve, reject) => {
-        exec(`tar -xzf ${tmpFilePath} -C ${tempExtractionDir}`, (error, stdout, stderr) => {
+        exec(`tar -xzf ${tmpFilePath} -C ${tempExtractionDir}`, (error, stdout, _stderr) => {
             if (error) {
                 reject(error);
             } else {
@@ -259,13 +257,13 @@ export async function download(
     userAgent: string,
     version: string,
     timeoutMillis = 10000,
-    extraHeaders: { [name: string]: string } = {}
+    extraHeaders: { [name: string]: string } = {},
 ) {
     const { pipeline } = await import('stream');
     const { getGlobalDispatcher, request } = await import('undici');
     const streamPipeline = util.promisify(pipeline);
 
-    let dispatcher: Dispatcher = getGlobalDispatcher();
+    const dispatcher: Dispatcher = getGlobalDispatcher();
 
     // Fetch the url
     const response = await request(url, {
@@ -391,7 +389,7 @@ function getNetworkConfig(url: string) {
         gasMultiplier: 1,
         httpHeaders: {},
         timeout: 20000,
-        url: url,
+        url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
         zksync: true,
     };

@@ -1,0 +1,41 @@
+{
+    "separate-pull-requests": true,
+    "group-pull-request-title-pattern": "chore(${component}): release at branch ${branch}",
+    "bootstrap-sha": "4d2086931dcebd7e7c21cad9cbd6668c2abbebbf",
+    "bump-minor-pre-major": true,
+    "bump-patch-for-minor-pre-major": false,
+    "packages": {
+        "packages/hardhat-zksync-deploy": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-deploy"
+        },
+        "packages/hardhat-zksync-solc": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-solc"
+        },
+        "packages/hardhat-zksync-upgradable": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-upgradable"
+        },
+        "packages/hardhat-zksync-vyper": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-vyper"
+        },
+        "packages/hardhat-zksync-verify": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-verify"
+        },
+        "packages/hardhat-zksync-toolbox": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-toolbox"
+        },
+        "packages/hardhat-zksync-node": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-node"
+        },
+        "packages/hardhat-zksync-chai-matchers": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-chai-matchers"
+        }
+    }
+}

@@ -11,6 +11,10 @@ const config: HardhatUserConfig = {
         hardhat: {
             zksync: true,
         },
+        otherNetwork: {
+            zksync: false,
+            url: 'http://0.0.0.0:3050',
+        },
     },
     vyper: {
         version: '0.3.3',

@@ -1,9 +1,9 @@
-import path from "path";
-import fsExtra from "fs-extra";
-import chalk from "chalk";
+import path from 'path';
+import fsExtra from 'fs-extra';
+import chalk from 'chalk';
 import { spawnSync } from 'child_process';
 
-import { download, isVersionInRange, saveDataToFile, getLatestRelease, getZkVmSolcUrl } from "../utils";
+import { download, isVersionInRange, saveDataToFile, getLatestRelease, getZkVmSolcUrl } from '../utils';
 import {
     DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD,
     DEFAULT_TIMEOUT_MILISECONDS,
@@ -15,7 +15,8 @@ import {
     COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC,
     COMPILER_VERSION_WARNING_ZKVM_SOLC,
     COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC,
-    ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION} from "../constants";
+    ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION,
+} from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -27,7 +28,6 @@ export interface CompilerVersionInfo {
  * This class is responsible for downloading the zksolc binary.
  */
 export class ZkVmSolcCompilerDownloader {
-
     public static async getDownloaderWithVersionValidated(
         zkVmSolcVersion: string,
         solcVersion: string,
@@ -35,7 +35,10 @@ export class ZkVmSolcCompilerDownloader {
     ): Promise<ZkVmSolcCompilerDownloader> {
         if (!ZkVmSolcCompilerDownloader._instance) {
             let compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            if (compilerVersionInfo === undefined || (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
+            if (
+                compilerVersionInfo === undefined ||
+                (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))
+            ) {
                 await ZkVmSolcCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
                 compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
             }
@@ -47,12 +50,24 @@ export class ZkVmSolcCompilerDownloader {
             if (zkVmSolcVersion === 'latest' || zkVmSolcVersion === compilerVersionInfo.latest) {
                 zkVmSolcVersion = compilerVersionInfo.latest;
             } else if (!isVersionInRange(zkVmSolcVersion, compilerVersionInfo)) {
-                throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(zkVmSolcVersion, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+                throw new ZkSyncSolcPluginError(
+                    COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(
+                        zkVmSolcVersion,
+                        compilerVersionInfo.minVersion,
+                        compilerVersionInfo.latest,
+                    ),
+                );
             } else {
-                console.info(chalk.yellow(COMPILER_VERSION_WARNING_ZKVM_SOLC(zkVmSolcVersion, compilerVersionInfo.latest)));
-            };
+                console.info(
+                    chalk.yellow(COMPILER_VERSION_WARNING_ZKVM_SOLC(zkVmSolcVersion, compilerVersionInfo.latest)),
+                );
+            }
 
-            ZkVmSolcCompilerDownloader._instance = new ZkVmSolcCompilerDownloader(solcVersion, zkVmSolcVersion, compilersDir);
+            ZkVmSolcCompilerDownloader._instance = new ZkVmSolcCompilerDownloader(
+                solcVersion,
+                zkVmSolcVersion,
+                compilersDir,
+            );
         }
 
         return ZkVmSolcCompilerDownloader._instance;
@@ -113,7 +128,10 @@ export class ZkVmSolcCompilerDownloader {
     public async downloadCompiler(): Promise<void> {
         let compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
 
-        if (compilerVersionInfo === undefined || (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))) {
+        if (
+            compilerVersionInfo === undefined ||
+            (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))
+        ) {
             await ZkVmSolcCompilerDownloader._downloadCompilerVersionInfo(this._compilersDirectory);
             compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
         }
@@ -123,7 +141,13 @@ export class ZkVmSolcCompilerDownloader {
         }
 
         if (!isVersionInRange(this._zkVmSolcVersion, compilerVersionInfo)) {
-             throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(this._zkVmSolcVersion, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+            throw new ZkSyncSolcPluginError(
+                COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(
+                    this._zkVmSolcVersion,
+                    compilerVersionInfo.minVersion,
+                    compilerVersionInfo.latest,
+                ),
+            );
         }
 
         try {
@@ -143,11 +167,11 @@ export class ZkVmSolcCompilerDownloader {
         We are currently limited in that each new version requires an update of the plugin version.
     */
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, "");
+        const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '');
         const releaseToSave = {
             latest: latestRelease.split('-')[1],
-            minVersion: ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION
-        }
+            minVersion: ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION,
+        };
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
         await saveDataToFile(releaseToSave, savePath);
     }
@@ -200,7 +224,7 @@ export class ZkVmSolcCompilerDownloader {
             .match(/\d+\.\d+\.\d+/)
             ?.toString();
 
-        if (versionOutput.status !== 0 || version == null) {
+        if (versionOutput.status !== 0 || version === null) {
             throw new ZkSyncSolcPluginError(COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC(compilerPath));
         }
     }

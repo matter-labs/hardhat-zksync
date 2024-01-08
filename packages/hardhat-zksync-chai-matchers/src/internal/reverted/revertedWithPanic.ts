@@ -2,8 +2,8 @@ import { normalizeToBigInt } from 'hardhat/common';
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
-import { decodeReturnData, getReturnDataFromError } from './utils';
 import { toBeHex } from 'ethers';
+import { decodeReturnData, getReturnDataFromError } from './utils';
 
 export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod('revertedWithPanic', function (this: any, expectedCodeArg: any) {
@@ -16,7 +16,7 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             }
         } catch {
             throw new TypeError(
-                `Expected the given panic code to be a number-like value, but got '${expectedCodeArg}'`
+                `Expected the given panic code to be a number-like value, but got '${expectedCodeArg}'`,
             );
         }
 
@@ -47,35 +47,35 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             if (decodedReturnData.kind === 'Empty') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted without a reason`
+                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted without a reason`,
                 );
             } else if (decodedReturnData.kind === 'Error') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with reason '${decodedReturnData.reason}'`
+                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with reason '${decodedReturnData.reason}'`,
                 );
             } else if (decodedReturnData.kind === 'Panic') {
                 if (code !== undefined) {
                     assert(
-                        decodedReturnData.code===(code),
-                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
-                            decodedReturnData.description
-                        })`,
-                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it was`
+                        decodedReturnData.code === code,
+                        `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(
+                            decodedReturnData.code,
+                        )} (${decodedReturnData.description})`,
+                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it was`,
                     );
                 } else {
                     assert(
                         true,
                         undefined,
-                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(decodedReturnData.code)} (${
-                            decodedReturnData.description
-                        })`
+                        `Expected transaction NOT to be reverted with ${formattedPanicCode}, but it reverted with panic code ${toBeHex(
+                            decodedReturnData.code,
+                        )} (${decodedReturnData.description})`,
                     );
                 }
             } else if (decodedReturnData.kind === 'Custom') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with a custom error`
+                    `Expected transaction to be reverted with ${formattedPanicCode}, but it reverted with a custom error`,
                 );
             } else {
                 const _exhaustiveCheck: never = decodedReturnData;
