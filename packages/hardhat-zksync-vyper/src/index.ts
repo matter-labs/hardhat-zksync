@@ -69,7 +69,6 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
         hre.config.zkvyper,
         args.inputPaths,
         hre.config.paths.sources,
-        hre.config.paths.root,
         args.vyperPath,
     );
 
