@@ -80,8 +80,7 @@ describe('zkvyper plugin', async function () {
                 const hh = require('hardhat');
                 await hh.run(TASK_COMPILE);
             } catch (e: any) {
-                console.info(e.message);
-                expect(e.message).to.include('Please use versions 1.3.9 to 1.3.14');
+                expect(e.message).to.include('The zkvyper compiler version (111.1.77) in the hardhat config file is not within the allowed range.');
             }
         });
     });

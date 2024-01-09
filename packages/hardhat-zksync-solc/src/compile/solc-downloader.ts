@@ -11,11 +11,6 @@ import {
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
-export interface CompilerVersionInfo {
-    latest: string;
-    minVersion: string;
-}
-
 /**
  * This class is responsible for downloading the zkvm solc binary.
  */
