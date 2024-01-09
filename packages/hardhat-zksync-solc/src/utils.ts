@@ -333,3 +333,7 @@ export async function saveDataToFile(data: any, targetPath: string) {
     await fse.ensureDir(path.dirname(targetPath));
     await fse.writeJSON(targetPath, data, { spaces: 2 });
 }
+
+export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
+    return `zkVM_${solcVersion}_${zkVmSolcVersion}`;
+}

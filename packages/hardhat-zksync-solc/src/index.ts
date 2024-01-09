@@ -11,6 +11,7 @@ import {
     TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS,
     TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END,
+    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
@@ -19,7 +20,8 @@ import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artif
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import fs from 'fs';
 import chalk from 'chalk';
-import { CompilationJob, CompilerInput, CompilerOutput, SolcBuild } from 'hardhat/types';
+import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, SolcBuild } from 'hardhat/types';
+import debug from 'debug';
 import { compile } from './compile';
 import {
     zeroxlify,
@@ -28,6 +30,7 @@ import {
     saltFromUrl,
     generateSolcJSExecutableCode,
     updateCompilerConf,
+    getZkVmNormalizedVersion,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -48,6 +51,8 @@ import {
     SolcUserConfigExtractor,
 } from './config-extractor';
 import { FactoryDeps } from './types';
+
+const logDebug = debug('hardhat:core:tasks:compile');
 
 const extractors: SolcUserConfigExtractor[] = [
     new SolcStringUserConfigExtractor(),
@@ -325,6 +330,7 @@ subtask(
             const compilersCache = await getCompilersDir();
             let path: string = '';
             let version: string = '';
+            let normalizedVersion: string = '';
 
             const mutex = new Mutex();
             await mutex.use(async () => {
@@ -341,6 +347,10 @@ subtask(
 
                 path = zkVmSolcCompilerDownloader.getCompilerPath();
                 version = zkVmSolcCompilerDownloader.getVersion();
+                normalizedVersion = getZkVmNormalizedVersion(
+                    zkVmSolcCompilerDownloader.getSolcVersion(),
+                    zkVmSolcCompilerDownloader.getZkVmSolcVersion(),
+                );
             });
             console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
 
@@ -348,7 +358,7 @@ subtask(
                 compilerPath: path,
                 isSolcJs: false,
                 version,
-                longVersion: version,
+                longVersion: normalizedVersion,
             };
         } else {
             const solcBuild = await runSuper(args);
@@ -408,6 +418,75 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START).setAction(
         if (count > 0) {
             console.info(chalk.yellow(`Compiling ${count} Solidity ${pluralize(count, 'file')}`));
         }
+    },
+);
+
+subtask(TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS).setAction(
+    async (
+        {
+            compilationJob,
+            input,
+            output,
+            solcBuild,
+        }: {
+            compilationJob: CompilationJob;
+            input: CompilerInput;
+            output: CompilerOutput;
+            solcBuild: SolcBuild;
+        },
+        { artifacts, run, network },
+        runSuper,
+    ): Promise<{
+        artifactsEmittedPerFile: ArtifactsEmittedPerFile;
+    }> => {
+        if (network.zksync !== true) {
+            return await runSuper({
+                compilationJob,
+                input,
+                output,
+                solcBuild,
+            });
+        }
+
+        const version: string = compilationJob.getSolcConfig().eraVersion
+            ? getZkVmNormalizedVersion(
+                  compilationJob.getSolcConfig().version,
+                  compilationJob.getSolcConfig().eraVersion!,
+              )
+            : compilationJob.getSolcConfig().version;
+
+        const pathToBuildInfo = await artifacts.saveBuildInfo(version, solcBuild.longVersion, input, output);
+
+        const artifactsEmittedPerFile: ArtifactsEmittedPerFile = await Promise.all(
+            compilationJob
+                .getResolvedFiles()
+                .filter((f) => compilationJob.emitsArtifacts(f))
+                .map(async (file) => {
+                    const artifactsEmitted = await Promise.all(
+                        Object.entries(output.contracts?.[file.sourceName] ?? {}).map(
+                            async ([contractName, contractOutput]) => {
+                                logDebug(`Emitting artifact for contract '${contractName}'`);
+                                const artifact = await run(TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT, {
+                                    sourceName: file.sourceName,
+                                    contractName,
+                                    contractOutput,
+                                });
+
+                                await artifacts.saveArtifactAndDebugFile(artifact, pathToBuildInfo);
+
+                                return artifact.contractName;
+                            },
+                        ),
+                    );
+
+                    return {
+                        file,
+                        artifactsEmitted,
+                    };
+                }),
+        );
+
+        return { artifactsEmittedPerFile };
     },
 );
 
