@@ -46,7 +46,7 @@ import {
     SolcSoloUserConfigExtractor,
     SolcStringUserConfigExtractor,
     SolcUserConfigExtractor,
-} from './extractor';
+} from './config-extractor';
 import { FactoryDeps } from './types';
 
 const extractors: SolcUserConfigExtractor[] = [

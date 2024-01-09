@@ -3,7 +3,7 @@ import {
     SolcMultiUserConfigExtractor,
     SolcSoloUserConfigExtractor,
     SolcStringUserConfigExtractor,
-} from '../../src/extractor';
+} from '../../src/config-extractor';
 
 describe('SolcMultiUserConfigExtractor', () => {
     describe('suitable', () => {

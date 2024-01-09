@@ -3,19 +3,11 @@ import fsExtra from 'fs-extra';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
 
-import { download, isVersionInRange, saveDataToFile, getLatestRelease, getZkVmSolcUrl } from '../utils';
+import { download, getZkVmSolcUrl } from '../utils';
 import {
-    DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD,
     DEFAULT_TIMEOUT_MILISECONDS,
-    ZKSOLC_BIN_OWNER,
-    USER_AGENT,
     ZKVM_SOLC_BIN_REPOSITORY,
-    ZKVM_SOLC_BIN_REPOSITORY_NAME,
-    COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC,
-    COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC,
-    COMPILER_VERSION_WARNING_ZKVM_SOLC,
     COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC,
-    ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -25,7 +17,7 @@ export interface CompilerVersionInfo {
 }
 
 /**
- * This class is responsible for downloading the zksolc binary.
+ * This class is responsible for downloading the zkvm solc binary.
  */
 export class ZkVmSolcCompilerDownloader {
     public static async getDownloaderWithVersionValidated(
@@ -34,35 +26,6 @@ export class ZkVmSolcCompilerDownloader {
         compilersDir: string,
     ): Promise<ZkVmSolcCompilerDownloader> {
         if (!ZkVmSolcCompilerDownloader._instance) {
-            let compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            if (
-                compilerVersionInfo === undefined ||
-                (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))
-            ) {
-                await ZkVmSolcCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
-                compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            }
-
-            if (compilerVersionInfo === undefined) {
-                throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC);
-            }
-
-            if (zkVmSolcVersion === 'latest' || zkVmSolcVersion === compilerVersionInfo.latest) {
-                zkVmSolcVersion = compilerVersionInfo.latest;
-            } else if (!isVersionInRange(zkVmSolcVersion, compilerVersionInfo)) {
-                throw new ZkSyncSolcPluginError(
-                    COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(
-                        zkVmSolcVersion,
-                        compilerVersionInfo.minVersion,
-                        compilerVersionInfo.latest,
-                    ),
-                );
-            } else {
-                console.info(
-                    chalk.yellow(COMPILER_VERSION_WARNING_ZKVM_SOLC(zkVmSolcVersion, compilerVersionInfo.latest)),
-                );
-            }
-
             ZkVmSolcCompilerDownloader._instance = new ZkVmSolcCompilerDownloader(
                 solcVersion,
                 zkVmSolcVersion,
@@ -74,7 +37,6 @@ export class ZkVmSolcCompilerDownloader {
     }
 
     private static _instance: ZkVmSolcCompilerDownloader;
-    public static compilerVersionInfoCachePeriodMs = DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD;
     private version: string;
 
     /**
@@ -109,47 +71,7 @@ export class ZkVmSolcCompilerDownloader {
         return fsExtra.pathExists(compilerPath);
     }
 
-    private static async _shouldDownloadCompilerVersionInfo(compilersDir: string): Promise<boolean> {
-        const compilerVersionInfoPath = this._getCompilerVersionInfoPath(compilersDir);
-        if (!(await fsExtra.pathExists(compilerVersionInfoPath))) {
-            return true;
-        }
-
-        const stats = await fsExtra.stat(compilerVersionInfoPath);
-        const age = new Date().valueOf() - stats.ctimeMs;
-
-        return age > ZkVmSolcCompilerDownloader.compilerVersionInfoCachePeriodMs;
-    }
-
-    private static _getCompilerVersionInfoPath(compilersDir: string): string {
-        return path.join(compilersDir, 'zkvm-solc', 'compilerVersionInfo.json');
-    }
-
     public async downloadCompiler(): Promise<void> {
-        let compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
-
-        if (
-            compilerVersionInfo === undefined ||
-            (await ZkVmSolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))
-        ) {
-            await ZkVmSolcCompilerDownloader._downloadCompilerVersionInfo(this._compilersDirectory);
-            compilerVersionInfo = await ZkVmSolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
-        }
-
-        if (compilerVersionInfo === undefined) {
-            throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR_ZKVM_SOLC);
-        }
-
-        if (!isVersionInRange(this._zkVmSolcVersion, compilerVersionInfo)) {
-            throw new ZkSyncSolcPluginError(
-                COMPILER_VERSION_RANGE_ERROR_ZKVM_SOLC(
-                    this._zkVmSolcVersion,
-                    compilerVersionInfo.minVersion,
-                    compilerVersionInfo.latest,
-                ),
-            );
-        }
-
         try {
             console.info(chalk.yellow(`Downloading zkvm-solc ${this.version}`));
             await this._downloadCompiler();
@@ -160,20 +82,6 @@ export class ZkVmSolcCompilerDownloader {
 
         await this._postProcessCompilerDownload();
         await this._verifyCompiler();
-    }
-
-    /*
-        Currently, the compiler version info is pulled from the constants and not from the remote origin, in the future we will allow it to be downloaded from CDN-a.
-        We are currently limited in that each new version requires an update of the plugin version.
-    */
-    private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '');
-        const releaseToSave = {
-            latest: latestRelease.split('-')[1],
-            minVersion: ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION,
-        };
-        const savePath = this._getCompilerVersionInfoPath(compilersDir);
-        await saveDataToFile(releaseToSave, savePath);
     }
 
     private async _downloadCompiler(): Promise<string> {
@@ -195,19 +103,6 @@ export class ZkVmSolcCompilerDownloader {
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
         return download(url, downloadPath, 'hardhat-zksync', `${this.version}`, DEFAULT_TIMEOUT_MILISECONDS);
-    }
-
-    private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {
-        return fsExtra.readJSON(compilerVersionInfoPath);
-    }
-
-    private static async _getCompilerVersionInfo(compilersDir: string): Promise<CompilerVersionInfo | undefined> {
-        const compilerVersionInfoPath = this._getCompilerVersionInfoPath(compilersDir);
-        if (!(await fsExtra.pathExists(compilerVersionInfoPath))) {
-            return undefined;
-        }
-
-        return await this._readCompilerVersionInfo(compilerVersionInfoPath);
     }
 
     private async _postProcessCompilerDownload(): Promise<void> {

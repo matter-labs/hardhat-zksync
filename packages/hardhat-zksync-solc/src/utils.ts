@@ -1,6 +1,6 @@
 import semver from 'semver';
 import crypto from 'crypto';
-import { SolcConfig, SolcUserConfig } from 'hardhat/types';
+import { SolcUserConfig } from 'hardhat/types';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import fs from 'fs';
@@ -9,13 +9,14 @@ import util from 'util';
 import type { Dispatcher } from 'undici';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
-import {
-    ZKSOLC_COMPILERS_SELECTOR_MAP,
-    SOLCJS_EXECUTABLE_CODE,
-    DEFAULT_TIMEOUT_MILISECONDS,
-    COMPILERS_CONFLICT_ZKVM_SOLC,
-} from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
+import {
+    CompilerSolcUserConfigUpdater,
+    OverrideCompilerSolcUserConfigUpdater,
+    SolcConfigData,
+    SolcUserConfigUpdater,
+} from './config-update';
 
 const TEMP_FILE_PREFIX = 'tmp-';
 
@@ -49,6 +50,11 @@ export function filterSupportedOutputSelections(
     return filteredOutputSelection;
 }
 
+const solcUpdaters: SolcUserConfigUpdater[] = [
+    new OverrideCompilerSolcUserConfigUpdater(),
+    new CompilerSolcUserConfigUpdater(),
+];
+
 export function updateCompilerConf(
     solcConfigData: SolcConfigData,
     zksolc: ZkSolcConfig,
@@ -81,65 +87,6 @@ export function updateCompilerConf(
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, userConfigCompilers, solcConfigData.file);
 }
-
-export interface SolcConfigData {
-    compiler: SolcConfig;
-    file?: string;
-}
-
-export interface SolcUserConfigUpdater {
-    suituble(_solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, _file?: string): boolean;
-    update(
-        _compiler: SolcConfig,
-        _solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>,
-        _file?: string,
-    ): void;
-}
-
-export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
-    public suituble(_solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, _file?: string): boolean {
-        return _solcUserConfig instanceof Map && _file !== undefined;
-    }
-
-    public update(_compiler: SolcConfig, _userConfigCompilers: Map<string, SolcUserConfig>, _file: string): void {
-        const compilerInfo = _userConfigCompilers.get(_file);
-
-        if (compilerInfo?.eraVersion) {
-            _compiler.eraVersion = compilerInfo.eraVersion;
-        }
-    }
-}
-
-export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
-    public suituble(solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, _file?: string): boolean {
-        return solcUserConfig instanceof Array && _file === undefined;
-    }
-
-    public update(_compiler: SolcConfig, _userConfigCompilers: SolcUserConfig[], _file?: string): void {
-        const compilerInfos = _userConfigCompilers.filter(
-            (userCompilerInfo) => userCompilerInfo.version === _compiler.version,
-        );
-
-        if (compilerInfos.length > 1) {
-            const compilerInfosWithEraVersion = compilerInfos.filter((userCompilerInfo) => userCompilerInfo.eraVersion);
-
-            if (compilerInfosWithEraVersion.length > 0 && compilerInfosWithEraVersion.length !== compilerInfos.length) {
-                throw new ZkSyncSolcPluginError(COMPILERS_CONFLICT_ZKVM_SOLC(_compiler.version));
-            }
-        }
-
-        const compilerInfo = compilerInfos[0];
-
-        if (compilerInfo?.eraVersion) {
-            _compiler.eraVersion = compilerInfo.eraVersion;
-        }
-    }
-}
-
-const solcUpdaters: SolcUserConfigUpdater[] = [
-    new OverrideCompilerSolcUserConfigUpdater(),
-    new CompilerSolcUserConfigUpdater(),
-];
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
