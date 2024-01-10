@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { CompilerInput } from 'hardhat/types';
-import path from 'path';
+import sinon from 'sinon';
 import { compile } from '../../../src/compile';
 import { ZkSolcConfig } from '../../../src/types';
-import sinon from 'sinon';
 import * as binary from '../../../src/compile/binary';
 
 describe('compile', () => {
@@ -33,7 +32,7 @@ describe('compile', () => {
     };
 
     beforeEach(async () => {
-        compileStub = sandbox.stub(binary, 'compileWithBinary').resolves({output: {}, errors: {}});
+        compileStub = sandbox.stub(binary, 'compileWithBinary').resolves({ output: {}, errors: {} });
     });
 
     afterEach(() => {
@@ -51,6 +50,7 @@ describe('compile', () => {
 
         const result = await compile(zksolcConfig, input, 'path/to/solc');
 
+        compileStub.calledOnceWith(input, zksolcConfig, 'path/to/solc');
         expect(result).to.be.an('object');
         expect(result).to.have.property('errors');
     });
@@ -69,6 +69,7 @@ describe('compile', () => {
 
         const result = await compile(zksolcConfig, input);
 
+        compileStub.calledOnceWith(input, zksolcConfig, 'path/to/solc');
         expect(result).to.be.an('object');
         expect(result).to.have.property('errors');
     });
@@ -122,6 +123,7 @@ describe('compile', () => {
 
         const result = await compile(zksolcConfig, input, 'path/to/solc');
 
+        compileStub.calledOnceWith(input, zksolcConfig, 'path/to/solc');
         expect(result).to.be.an('object');
         expect(result).to.have.property('errors');
     });
