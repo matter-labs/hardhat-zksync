@@ -13,9 +13,9 @@ Before initiating the release process, ensure the following prerequisites are me
 
 ### 1. Create Release
 
-1. **Merge Pull Request to Main Branch:**
+1. **Merge Pull Request to appropriate branch:**
    - Ensure that the changes intended for release are encapsulated in a Pull Request.
-   - Merge the approved Pull Request into the main branch.
+   - Merge the approved Pull Request into the `main` or `ethers-v5` branch. Currently, only the `main` and `ethers-v5` branches are allowed for releasing.
 
 2. **Automatic Versioning with `Publish packages to github` Action:**
    - The `Publish packages to github` GitHub Action automates versioning based on conventional commit messages.
@@ -33,7 +33,7 @@ Before initiating the release process, ensure the following prerequisites are me
 
 2. **Workflow Execution:**
    - After selecting the appropriate configuration, click `Run workflow` to execute the action.
-   - The action compiles and publishes the package to npm.
+   - The action builds and publishes the package to npm.
 
 3. **Completion Confirmation:**
    - Verify the successful completion of the workflow execution.
