@@ -17,6 +17,8 @@ export interface ZkSolcConfig {
             enabled?: boolean;
             [key: string]: any;
         };
+        // Try to recompile with -Oz if the bytecode is too large.
+        fallbackOz?: boolean;
         // Remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
         metadata?: {
             bytecodeHash?: 'none';

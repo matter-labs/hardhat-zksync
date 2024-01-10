@@ -128,6 +128,9 @@ export async function compileWithDocker(
     if (zksolcConfig.settings.forceEvmla) {
         command.push('--force-evmla');
     }
+    if (zksolcConfig.settings.fallbackOz) {
+        command.push('--fallback-Oz');
+    }
 
     // @ts-ignore
     const dockerInstance: Docker = docker._docker;

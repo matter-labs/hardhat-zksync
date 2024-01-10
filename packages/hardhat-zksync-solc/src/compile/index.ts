@@ -4,7 +4,7 @@ import { CompilerInput } from 'hardhat/types';
 import { ZkSolcConfig } from '../types';
 import { ZkSyncSolcPluginError } from '../errors';
 import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFile } from '../utils';
-import { DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION } from '../constants';
+import { DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION, ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ } from '../constants';
 import {
     validateDockerIsInstalled,
     createDocker,
@@ -17,6 +17,9 @@ import { compileWithBinary } from './binary';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
+    if(zksolcConfig.settings.fallbackOz && zksolcConfig.version < ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ) {
+        throw new ZkSyncSolcPluginError(`FallbackOz option is not supported for zksolc compiler version ${zksolcConfig.version}. Please use version ${ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`);
+    }
     if (zksolcConfig.compilerSource === 'binary') {
         if (solcPath === null) {
             throw new ZkSyncSolcPluginError('solc executable is not specified');
