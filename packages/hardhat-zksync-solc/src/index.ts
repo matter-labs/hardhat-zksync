@@ -60,6 +60,9 @@ const extractors: SolcUserConfigExtractor[] = [
     new SolcMultiUserConfigExtractor(),
 ];
 
+const zkVmSolcCompilerDownloaderMutex = new Mutex();
+const zkSolcCompilerDownloaderMutex = new Mutex();
+
 extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
@@ -136,8 +139,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
 
     const compilersCache = await getCompilersDir();
 
-    const mutex = new Mutex();
-    await mutex.use(async () => {
+    await zkSolcCompilerDownloaderMutex.use(async () => {
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
             hre.config.zksolc.version,
             hre.config.zksolc.settings.compilerPath ?? '',
@@ -332,8 +334,7 @@ subtask(
             let version: string = '';
             let normalizedVersion: string = '';
 
-            const mutex = new Mutex();
-            await mutex.use(async () => {
+            await zkVmSolcCompilerDownloaderMutex.use(async () => {
                 const zkVmSolcCompilerDownloader = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
                     compiler.eraVersion!,
                     compiler.version,
