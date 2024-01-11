@@ -5,6 +5,7 @@ import {
     delay,
     encodeArguments,
     executeVeificationWithRetry,
+    getZkVmNormalizedVersion,
     handleAxiosError,
     parseWrongConstructorArgumentsError,
     removeMultipleSubstringOccurrences,
@@ -268,5 +269,17 @@ describe('parseWrongConstructorArgumentsError', () => {
         const result = parseWrongConstructorArgumentsError(inputString);
 
         expect(result).to.equal(expectedOutput);
+    });
+});
+
+describe('getZkVmNormalizedVersion', () => {
+    it('should return the normalized version string', () => {
+        const solcVersion = '0.8.17';
+        const zkVmSolcVersion = '1.3.17';
+        const expectedVersion = 'zkVM-0.8.17-1.3.17';
+
+        const version = getZkVmNormalizedVersion(solcVersion, zkVmSolcVersion);
+
+        expect(version).to.equal(expectedVersion);
     });
 });
