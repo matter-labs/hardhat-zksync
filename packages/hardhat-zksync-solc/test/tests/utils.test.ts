@@ -154,7 +154,6 @@ describe('Utils', () => {
             const url = 'https://example.com/';
             const filePath = './file.txt';
             const userAgent = 'Test User Agent';
-            const version = '1.0.0';
 
             const mockPool = mockAgent.get('https://example.com/');
 
@@ -164,14 +163,14 @@ describe('Utils', () => {
                     method: 'GET',
                     headers: {},
                     body: JSON.stringify({
-                        'User-Agent': `${userAgent} ${version}`,
+                        'User-Agent': `${userAgent}`,
                     }),
                 })
                 .reply(200, {
                     message: 'all good',
                 });
 
-            await download(url, filePath, userAgent, version);
+            await download(url, filePath, userAgent);
 
             expect(fs.existsSync(filePath)).to.equal(true);
 

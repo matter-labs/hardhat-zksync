@@ -248,7 +248,6 @@ export async function download(
     url: string,
     filePath: string,
     userAgent: string,
-    version: string,
     timeoutMillis = 10000,
     extraHeaders: { [name: string]: string } = {},
 ) {
@@ -266,7 +265,7 @@ export async function download(
         method: 'GET',
         headers: {
             ...extraHeaders,
-            'User-Agent': `${userAgent} ${version}`,
+            'User-Agent': `${userAgent}`,
         },
     });
 
@@ -335,5 +334,5 @@ export async function saveDataToFile(data: any, targetPath: string) {
 }
 
 export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
-    return `zkVM_${solcVersion}_${zkVmSolcVersion}`;
+    return `zkVM-${solcVersion}-${zkVmSolcVersion}`;
 }

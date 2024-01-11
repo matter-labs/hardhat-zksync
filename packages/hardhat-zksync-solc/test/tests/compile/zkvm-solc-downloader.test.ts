@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon, { SinonStub } from 'sinon';
 import { fail } from 'assert';
-import { ZkVmSolcCompilerDownloader } from '../../../src/compile/solc-downloader';
+import { ZkVmSolcCompilerDownloader } from '../../../src/compile/zkvm-solc-downloader';
 
 describe('ZkVmSolcCompilerDownloader', () => {
     const solcVersion = '0.8.17';

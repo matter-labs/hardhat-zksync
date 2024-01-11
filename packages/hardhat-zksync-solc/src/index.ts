@@ -43,7 +43,7 @@ import {
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
-import { ZkVmSolcCompilerDownloader } from './compile/solc-downloader';
+import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
 import {
     SolcMultiUserConfigExtractor,
     SolcSoloUserConfigExtractor,

@@ -22,6 +22,7 @@ const config: HardhatUserConfig = {
     // For earlier versions you need to use binary releases of zksolc.
     solidity: {
         version: '0.8.17',
+        eraVersion: '1.0.0'
     }
 };
 

@@ -8,8 +8,9 @@ import {
     DEFAULT_TIMEOUT_MILISECONDS,
     ZKVM_SOLC_BIN_REPOSITORY,
     COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC,
+    USER_AGENT,
 } from '../constants';
-import { ZkSyncSolcPluginError } from './../errors';
+import { ZkSyncSolcPluginError } from '../errors';
 
 /**
  * This class is responsible for downloading the zkvm solc binary.
@@ -97,7 +98,7 @@ export class ZkVmSolcCompilerDownloader {
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
-        return download(url, downloadPath, 'hardhat-zksync', `${this.version}`, DEFAULT_TIMEOUT_MILISECONDS);
+        return download(url, downloadPath, USER_AGENT, DEFAULT_TIMEOUT_MILISECONDS);
     }
 
     private async _postProcessCompilerDownload(): Promise<void> {
