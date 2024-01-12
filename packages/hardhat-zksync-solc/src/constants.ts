@@ -55,7 +55,7 @@ export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string)
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
-    `Solidity compiler versions in your Hardhat config file are in conflict for version ${version}. Please specify version of compiler only with zkVm support(eraVersion) or without it`;
+    `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =
     'zksolc compiler detected missing libraries! For more details, visit: https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html.';
 export const COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS =

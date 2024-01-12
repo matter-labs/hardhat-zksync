@@ -32,6 +32,39 @@ describe('ZkVmSolcCompilerDownloader', () => {
             );
 
             expect(downloader1).to.equal(downloader2);
+            expect(downloader1.getSolcVersion()).to.equal(solcVersion);
+            expect(downloader1.getZkVmSolcVersion()).to.equal(zkVmSolcVersion);
+
+            const downloader3 = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                '0.0.1',
+                solcVersion,
+                compilersDir,
+            );
+
+            expect(downloader1).to.not.equal(downloader3);
+            expect(downloader3.getSolcVersion()).to.equal(solcVersion);
+            expect(downloader3.getZkVmSolcVersion()).to.equal('0.0.1');
+
+            const downloader4 = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                zkVmSolcVersion,
+                '0.8.18',
+                compilersDir,
+            );
+
+            expect(downloader1).to.not.equal(downloader4);
+            expect(downloader4.getSolcVersion()).to.equal('0.8.18');
+            expect(downloader4.getZkVmSolcVersion()).to.equal(zkVmSolcVersion);
+
+            const downloader5 = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                '0.0.1',
+                '0.8.18',
+                compilersDir,
+            );
+
+            expect(downloader1).to.not.equal(downloader5);
+            expect(downloader5.getSolcVersion()).to.equal('0.8.18');
+            expect(downloader5.getZkVmSolcVersion()).to.equal('0.0.1');
+
         });
     });
 

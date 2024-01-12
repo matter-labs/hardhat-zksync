@@ -74,7 +74,7 @@ describe('CompilerSolcUserConfigUpdater', () => {
                 expect.fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.equal(
-                    'Solidity compiler versions in your Hardhat config file are in conflict for version 0.8.17. Please specify version of compiler only with zkVm support(eraVersion) or without it',
+                    'Your Hardhat configuration has conflicting Solidity compiler versions for version 0.8.17. Specify either a compiler version with zkVm support (eraVersion) or one without it.',
                 );
             }
         });
