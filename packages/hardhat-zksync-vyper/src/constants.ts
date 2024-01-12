@@ -26,6 +26,7 @@ export const defaultZkVyperConfig: ZkVyperConfig = {
 export const UNSUPPORTED_VYPER_VERSIONS = ['0.3.4', '0.3.5', '0.3.6', '0.3.7'];
 
 export const ZKVYPER_COMPILER_VERSION_MIN_VERSION = '1.3.9';
+export const ZKVYPER_COMPILER_MIN_VERSION_WITH_WINDOWS_PATH_NORMALIZE = '1.3.16';
 
 export const ZKVYPER_BIN_OWNER = 'matter-labs';
 export const ZKVYPER_BIN_REPOSITORY_NAME = 'zkvyper-bin';
