@@ -21,7 +21,11 @@ export class ZkVmSolcCompilerDownloader {
         solcVersion: string,
         compilersDir: string,
     ): Promise<ZkVmSolcCompilerDownloader> {
-        if (!ZkVmSolcCompilerDownloader._instance) {
+        if (
+            !ZkVmSolcCompilerDownloader._instance ||
+            (ZkVmSolcCompilerDownloader._instance.getZkVmSolcVersion() !== zkVmSolcVersion ||
+                ZkVmSolcCompilerDownloader._instance.getSolcVersion() !== solcVersion)
+        ) {
             ZkVmSolcCompilerDownloader._instance = new ZkVmSolcCompilerDownloader(
                 solcVersion,
                 zkVmSolcVersion,
