@@ -1,9 +1,14 @@
-import { assert, expect } from 'chai';
+import chai, { assert, expect } from 'chai';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
-import { spy } from 'sinon';
 import chalk from 'chalk';
-import { ZkSyncArtifact } from '../src/types';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import { compile, getWindowsOutput } from '../src/compile/index';
+import * as compiler from '../src/compile/binary';
+import { ZkSyncArtifact, ZkVyperConfig, CompilerOutput } from '../src/types';
 import { useEnvironment } from './helpers';
+
+chai.use(sinonChai);
 
 describe('zkvyper plugin', async function () {
     describe('Simple', async function () {
@@ -145,7 +150,7 @@ describe('zkvyper plugin', async function () {
         useEnvironment('output');
 
         it('Should successfully compile both solidity and vyper contracts and match their log outputs', async function () {
-            const consoleSpy = spy(console, 'info');
+            const consoleSpy = sinon.spy(console, 'info');
             await this.env.run(TASK_COMPILE);
 
             expect(
@@ -153,5 +158,98 @@ describe('zkvyper plugin', async function () {
             ).to.equal(true);
             consoleSpy.restore();
         });
+    });
+});
+
+describe('getWindowsOutput', () => {
+    it('should return the changed output for Windows path', () => {
+        const output: CompilerOutput = {
+            version: '0.8.0',
+            '//?/C:/path/to/file.sol/contract.sol': {
+                abi: [],
+                metadata: '',
+            },
+            '//?/C:/path/to/file.sol/contract2.sol': {
+                abi: [],
+                metadata: '',
+            },
+        };
+
+        const path = 'C:\\path\\to\\file.sol';
+
+        const result = getWindowsOutput(output, path);
+
+        expect(result).to.be.an('object');
+        expect(result).to.have.property('version');
+        expect(result.version).to.equal('0.8.0');
+        expect(result).to.have.property('contract.sol');
+        expect(result['contract.sol']).to.deep.equal({
+            abi: [],
+            metadata: '',
+        });
+        expect(result).to.have.property('contract2.sol');
+        expect(result['contract2.sol']).to.deep.equal({
+            abi: [],
+            metadata: '',
+        });
+    });
+
+    it('should return the original output for non-Windows path', () => {
+        const output: CompilerOutput = {
+            version: '0.8.0',
+            'path/to/file.sol/contract.sol': {
+                abi: [],
+                metadata: '',
+            },
+            'path/to/file.sol/contract2.sol': {
+                abi: [],
+                metadata: '',
+            },
+        };
+
+        const path = 'path/to/file.sol';
+
+        const result = getWindowsOutput(output, path);
+
+        expect(result).to.deep.equal(output);
+    });
+
+    it.skip('should call get getWindowsOutput from compiler', async () => {
+        sinon.stub(compiler, 'compileWithBinary').resolves();
+
+        const output: CompilerOutput = {
+            version: '0.8.0',
+            'path/to/file.sol/contract.sol': {
+                abi: [],
+                metadata: '',
+            },
+            'path/to/file.sol/contract2.sol': {
+                abi: [],
+                metadata: '',
+            },
+        };
+
+        const getWindowsOutputStub = sinon.stub().returns(output);
+
+        const zkvyperConfig: ZkVyperConfig = {
+            compilerSource: 'binary',
+            version: '1.2.3',
+            settings: {
+                compilerPath: '/path/to/vyper',
+            },
+        };
+
+        const inputPaths = ['/path/to/input1.vy', '/path/to/input2.vy'];
+        const sourcesPath = '/path/to/sources';
+        const rootPath = '/path/to/root';
+        const vyperPath = '/path/to/vyper';
+
+        const result = await compile(zkvyperConfig, inputPaths, sourcesPath, rootPath, vyperPath);
+
+        expect(result).to.be.an('object');
+        expect(result).to.have.property('output');
+        expect(result).to.have.property('version');
+        sinon.assert.calledOnce(getWindowsOutputStub);
+        sinon.restore();
     });
 });

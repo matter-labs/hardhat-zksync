@@ -50,7 +50,7 @@ export async function compile(
     return output;
 }
 
-function getWindowsOutput(output: CompilerOutput, path: string) {
+export function getWindowsOutput(output: CompilerOutput, path: string) {
     const { version, ...contracts } = output;
     const changedOutput = {} as CompilerOutput;
 
