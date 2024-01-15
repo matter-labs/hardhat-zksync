@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## [1.0.6](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.0.5...@matterlabs/hardhat-zksync-vyper-v1.0.6) (2024-01-15)
+
+
+### Bug Fixes
+
+* windows path normalize with compiler ([#663](https://github.com/matter-labs/hardhat-zksync/issues/663)) ([603d2dd](https://github.com/matter-labs/hardhat-zksync/commit/603d2dd089329a00163399925088a898fe1647ea))
+
 ## [1.0.5](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper@1.0.4...@matterlabs/hardhat-zksync-vyper-v1.0.5) (2023-12-22)
 
 
