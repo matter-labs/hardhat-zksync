@@ -57,7 +57,7 @@ function getWindowsOutput(output: CompilerOutput, path: string) {
     const specificPath = path.replaceAll('\\', '/');
     for (const [originalSourceName, _output] of Object.entries(contracts)) {
         const sourceName = originalSourceName.replace(`//?/${specificPath}/`, '');
-        changedOutput[sourceName] = output;
+        changedOutput[sourceName] = _output;
     }
 
     changedOutput.version = version;
