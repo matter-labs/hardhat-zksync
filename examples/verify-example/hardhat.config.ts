@@ -19,6 +19,7 @@ const config: HardhatUserConfig = {
     networks: {     
         zkTestnet: {
             url: 'https://sepolia.era.zksync.dev',
+            ethNetwork: 'ethNetwork',
             zksync: true,
             verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
             accounts: ["PRIVATE_KEY"]
@@ -29,6 +30,7 @@ const config: HardhatUserConfig = {
         },
         testnet:{
             url: `https://sepolia.era.zksync.dev`,
+            ethNetwork: 'ethNetwork',
             zksync:true,
             accounts: ["PRIVATE_KEY"]
         },

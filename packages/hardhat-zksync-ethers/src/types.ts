@@ -3,6 +3,8 @@ import type { Artifact } from 'hardhat/types';
 import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync-ethers';
 import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 
+export type EthNetwork = string;
+
 export interface FactoryDeps {
     // A mapping from the contract hash to the contract bytecode.
     [contractHash: string]: string;
@@ -32,14 +34,6 @@ export declare function getContractFactory<A extends any[] = any[], I = Contract
     deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>>;
 
-export declare function deployContract(
-    contractFactoryOrArtifact: ContractFactory | ZkSyncArtifact,
-    constructorArguments: any[],
-    wallet?: Wallet,
-    overrides?: ethers.Overrides,
-    additionalFactoryDeps?: ethers.BytesLike[],
-): Promise<Contract>;
-
 export declare function getContractFactoryFromArtifact<A extends any[] = any[], I = Contract>(
     artifact: ZkSyncArtifact,
     wallet?: Wallet,
@@ -47,7 +41,8 @@ export declare function getContractFactoryFromArtifact<A extends any[] = any[], 
 ): Promise<ContractFactory<A, I>>;
 
 export interface HardhatZksyncEthersHelpers {
-    provider: Provider;
+    providerL1: ethers.Provider;
+    providerL2: Provider;
     getWallets: () => Promise<Wallet[]>;
     getWallet: (privateKeyOrIndex?: string | number) => Promise<Wallet>;
     getContractFactory: typeof getContractFactory;

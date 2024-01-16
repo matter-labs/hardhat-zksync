@@ -11,7 +11,8 @@ describe('Plugin tests', async function () {
             it('should extend hardhat runtime environment', async function () {
                 assert.isDefined(this.env.zksyncEthers);
                 assert.containsAllKeys(this.env.zksyncEthers, [
-                    'provider',
+                    'providerL1',
+                    'providerL2',
                     'getWallet',
                     'getWallets',
                     'getImpersonatedSigner',
@@ -24,22 +25,25 @@ describe('Plugin tests', async function () {
             });
         });
 
-        describe('Provider', function () {
+        describe('Provider L2', function () {
             it('the provider should handle requests', async function () {
-                const gasPrice = await this.env.zksyncEthers.provider.send('eth_gasPrice', []);
+                const gasPrice = await this.env.zksyncEthers.providerL2.send('eth_gasPrice', []);
 
                 assert.strictEqual('0xee6b280', gasPrice);
             });
-            it('should return fee data', async function () {
-                const feeData = await this.env.zksyncEthers.provider.getFeeData();
-
-                assert.typeOf(feeData.gasPrice, 'bigint');
-            });
             it('should get the gas price', async function () {
-                const feeData = await this.env.zksyncEthers.provider.getFeeData();
+                const feeData = await this.env.zksyncEthers.providerL2.getFeeData();
 
                 assert.isNotNull(feeData.gasPrice);
-                // assert.isTrue(feeData.gasPrice > 0);
+            });
+        });
+
+        describe('Provider L1', function () {
+            it('should return fee data', async function () {
+                const feeData = await this.env.zksyncEthers.providerL1.getFeeData();
+
+                assert.typeOf(feeData.gasPrice, 'bigint');
+                assert.isNotNull(feeData.gasPrice);
             });
         });
 
@@ -59,6 +63,8 @@ describe('Plugin tests', async function () {
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
                 assert.equal(await wallet.getAddress(), '0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
+                assert.isDefined(wallet._providerL1);
+                assert.isDefined(wallet._providerL2);
             });
             it('get specific wallet', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet(richWallets[6].privateKey);
@@ -66,6 +72,8 @@ describe('Plugin tests', async function () {
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
                 assert.equal(await wallet.getAddress(), '0xbd29A1B981925B94eEc5c4F1125AF02a2Ec4d1cA');
+                assert.isDefined(wallet._providerL1);
+                assert.isDefined(wallet._providerL2);
             });
             it('should send a transaction', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet();
@@ -126,7 +134,7 @@ describe('Plugin tests', async function () {
                 const [, secWallet] = await this.env.zksyncEthers.getWallets();
 
                 assert.strictEqual(
-                    await this.env.zksyncEthers.provider.getBalance(secWallet.address),
+                    await this.env.zksyncEthers.providerL2.getBalance(secWallet.address),
                     1000000000000000000000000000000n,
                 );
             });
@@ -134,7 +142,7 @@ describe('Plugin tests', async function () {
                 // we use the second signer because the first one is used in previous tests
                 const [, secWallet] = await this.env.zksyncEthers.getWallets();
 
-                assert.strictEqual(await this.env.zksyncEthers.provider.getTransactionCount(secWallet), 0);
+                assert.strictEqual(await this.env.zksyncEthers.providerL2.getTransactionCount(secWallet), 0);
             });
         });
 
