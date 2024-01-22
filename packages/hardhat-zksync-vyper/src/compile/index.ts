@@ -1,6 +1,8 @@
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
+import semver from 'semver';
 import { ZkVyperConfig, CompilerOptions, CompilerOutput } from '../types';
 import { ZkSyncVyperPluginError } from '../errors';
+import { ZKVYPER_COMPILER_MIN_VERSION_WITH_WINDOWS_PATH_NORMALIZE } from '../constants';
 import { compileWithBinary } from './binary';
 import {
     validateDockerIsInstalled,
@@ -38,21 +40,24 @@ export async function compile(
         zkvyperConfig,
     );
 
-    if (process.platform !== 'win32') {
-        return output;
+    if (
+        process.platform === 'win32' &&
+        semver.lt(zkvyperConfig.version, ZKVYPER_COMPILER_MIN_VERSION_WITH_WINDOWS_PATH_NORMALIZE)
+    ) {
+        return getWindowsOutput(output, rootPath);
     }
 
-    return getWindowsOutput(output, rootPath);
+    return output;
 }
 
-function getWindowsOutput(output: CompilerOutput, path: string) {
+export function getWindowsOutput(output: CompilerOutput, path: string) {
     const { version, ...contracts } = output;
     const changedOutput = {} as CompilerOutput;
 
     const specificPath = path.replaceAll('\\', '/');
     for (const [originalSourceName, _output] of Object.entries(contracts)) {
         const sourceName = originalSourceName.replace(`//?/${specificPath}/`, '');
-        changedOutput[sourceName] = output;
+        changedOutput[sourceName] = _output;
     }
 
     changedOutput.version = version;
