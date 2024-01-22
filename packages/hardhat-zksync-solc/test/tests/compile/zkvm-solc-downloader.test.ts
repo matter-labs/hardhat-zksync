@@ -64,7 +64,6 @@ describe('ZkVmSolcCompilerDownloader', () => {
             expect(downloader1).to.not.equal(downloader5);
             expect(downloader5.getSolcVersion()).to.equal('0.8.18');
             expect(downloader5.getZkVmSolcVersion()).to.equal('0.0.1');
-
         });
     });
 

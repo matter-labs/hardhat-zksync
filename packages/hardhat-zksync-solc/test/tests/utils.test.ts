@@ -155,7 +155,9 @@ describe('Utils', () => {
             try {
                 updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
             } catch (e: any) {
-                expect(e.message).to.equal('zkVm (eraVersion) compiler is supported only with usage of zksolc version >= 1.3.22.');
+                expect(e.message).to.equal(
+                    'zkVm (eraVersion) compiler is supported only with usage of zksolc version >= 1.3.22.',
+                );
             }
         });
     });
