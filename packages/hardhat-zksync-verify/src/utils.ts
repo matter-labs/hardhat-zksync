@@ -1,10 +1,17 @@
 import axios from 'axios';
 import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
+import { SolcUserConfig } from 'hardhat/types';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
 import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import {
+    CompilerSolcUserConfigNormalizer,
+    OverrideCompilerSolcUserConfigNormalizer,
+    SolcConfigData,
+    SolcUserConfigNormalizer,
+} from './config-normalizer';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -103,4 +110,23 @@ export function parseWrongConstructorArgumentsError(string: string): string {
 export async function extractModule(constructorArgsModulePath: string) {
     const constructorArguments = (await import(constructorArgsModulePath)).default;
     return constructorArguments;
+}
+
+export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
+    return `zkVM-${solcVersion}-${zkVmSolcVersion}`;
+}
+
+export function normalizeCompilerVersions(
+    solcConfigData: SolcConfigData,
+    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
+): string | undefined {
+    const noramlizers: SolcUserConfigNormalizer[] = [
+        new OverrideCompilerSolcUserConfigNormalizer(),
+        new CompilerSolcUserConfigNormalizer(),
+    ];
+
+    const compiler = solcConfigData.compiler;
+    return noramlizers
+        .find((normalize) => normalize.suituble(userConfigCompilers, solcConfigData.file))
+        ?.normalize(compiler, userConfigCompilers, solcConfigData.file);
 }
