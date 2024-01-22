@@ -175,6 +175,8 @@ export async function verifyContract(
         libraries,
     });
 
+    const optimizationUsed = contractInformation.compilerInput.settings.optimizer.enabled ?? false;
+
     const solcVersion = contractInformation.solcVersion;
 
     let deployArgumentsEncoded;
@@ -212,7 +214,7 @@ export async function verifyContract(
         compilerSolcVersion: solcVersion,
         compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
-        optimizationUsed: true,
+        optimizationUsed
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
