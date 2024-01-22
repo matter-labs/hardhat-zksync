@@ -9,7 +9,7 @@ import util from 'util';
 import type { Dispatcher } from 'undici';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
+import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS, COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
     CompilerSolcUserConfigUpdater,
@@ -86,6 +86,10 @@ export function updateCompilerConf(
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, userConfigCompilers, solcConfigData.file);
+
+    if(compiler.eraVersion && semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)) {
+        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
+    }
 }
 
 export function zeroxlify(hex: string): string {

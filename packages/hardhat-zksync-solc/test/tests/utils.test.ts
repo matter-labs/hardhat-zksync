@@ -104,7 +104,7 @@ describe('Utils', () => {
                 },
             };
             const zksolc: ZkSolcConfig = {
-                version: '1.3.17',
+                version: '1.3.22',
                 settings: {
                     optimizer: {
                         enabled: false,
@@ -117,6 +117,46 @@ describe('Utils', () => {
             updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
+        });
+
+        it('should not update compiler configuration with zksolc and with zkvm solc', () => {
+            const outputSelection: CompilerOutputSelection = {
+                'file1.sol': {
+                    Contract1: ['abi', 'evm.bytecode'],
+                },
+                'file2.sol': {
+                    Contract2: ['abi', 'evm.bytecode', 'metadata'],
+                },
+            };
+
+            const compiler: SolcConfig = {
+                version: '0.8.17',
+                eraVersion: 'latest',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200,
+                    },
+                    outputSelection,
+                    metadata: {},
+                },
+            };
+            const zksolc: ZkSolcConfig = {
+                version: '1.3.21',
+                settings: {
+                    optimizer: {
+                        enabled: false,
+                        runs: 150,
+                    },
+                    metadata: {},
+                },
+            };
+
+            try {
+                updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
+            } catch (e: any) {
+                expect(e.message).to.equal('zkVm (eraVersion) compiler is supported only with usage of zksolc version >= 1.3.22.');
+            }
         });
     });
 
