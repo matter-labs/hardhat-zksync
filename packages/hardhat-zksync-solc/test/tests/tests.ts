@@ -220,7 +220,7 @@ describe('zksolc plugin', async function () {
                 });
 
                 assert.equal(build.compilerPath, '');
-                assert.equal(build.isSolsJs, false);
+                assert.equal(build.isSolcJs, false);
                 assert.equal(build.version, '0.8.17');
                 assert.equal(build.longVersion, '');
             });
@@ -255,6 +255,13 @@ describe('zksolc plugin', async function () {
                 const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
                     quiet: true,
                     solcVersion: '0.8.17',
+                    compilationJob: {
+                        getSolcConfig: () => {
+                            return {
+                                version: '0.8.17',
+                            };
+                        },
+                    },
                 });
 
                 assert.equal(build.compilerPath, 'solc/solc-version-0');

@@ -203,7 +203,7 @@ export class ZksolcCompilerDownloader {
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
-        return download(url, downloadPath, 'hardhat-zksync', this._version, DEFAULT_TIMEOUT_MILISECONDS);
+        return download(url, downloadPath, USER_AGENT, DEFAULT_TIMEOUT_MILISECONDS);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {

@@ -9,6 +9,9 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START,
     TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
     TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS,
+    TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
+    TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END,
+    TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
@@ -17,7 +20,8 @@ import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artif
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import fs from 'fs';
 import chalk from 'chalk';
-import { CompilationJob } from 'hardhat/types';
+import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, SolcBuild } from 'hardhat/types';
+import debug from 'debug';
 import { compile } from './compile';
 import {
     zeroxlify,
@@ -26,6 +30,7 @@ import {
     saltFromUrl,
     generateSolcJSExecutableCode,
     updateCompilerConf,
+    getZkVmNormalizedVersion,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -35,9 +40,28 @@ import {
     MISSING_LIBRARIES_NOTICE,
     COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS,
     MISSING_LIBRARY_LINK,
+    COMPILING_INFO_MESSAGE_ZKVM_SOLC,
 } from './constants';
-import { FactoryDeps } from './types';
 import { ZksolcCompilerDownloader } from './compile/downloader';
+import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
+import {
+    SolcMultiUserConfigExtractor,
+    SolcSoloUserConfigExtractor,
+    SolcStringUserConfigExtractor,
+    SolcUserConfigExtractor,
+} from './config-extractor';
+import { FactoryDeps } from './types';
+
+const logDebug = debug('hardhat:core:tasks:compile');
+
+const extractors: SolcUserConfigExtractor[] = [
+    new SolcStringUserConfigExtractor(),
+    new SolcSoloUserConfigExtractor(),
+    new SolcMultiUserConfigExtractor(),
+];
+
+const zkVmSolcCompilerDownloaderMutex = new Mutex();
+const zkSolcCompilerDownloaderMutex = new Mutex();
 
 extendConfig((config, userConfig) => {
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
@@ -71,10 +95,18 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
+        const userSolidityConfig = hre.userConfig.solidity;
+
+        const extractedConfigs = extractors
+            .find((extractor) => extractor.suitable(userSolidityConfig))
+            ?.extract(userSolidityConfig);
+
         // Update compilers config.
-        hre.config.solidity.compilers.forEach((compiler) => updateCompilerConf(compiler, hre.config.zksolc));
-        for (const [_file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-            updateCompilerConf(compiler, hre.config.zksolc);
+        hre.config.solidity.compilers.forEach((compiler) =>
+            updateCompilerConf({ compiler }, hre.config.zksolc, extractedConfigs?.compilers ?? []),
+        );
+        for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+            updateCompilerConf({ compiler, file }, hre.config.zksolc, extractedConfigs?.overides ?? new Map());
         }
     }
 });
@@ -107,8 +139,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
 
     const compilersCache = await getCompilersDir();
 
-    const mutex = new Mutex();
-    await mutex.use(async () => {
+    await zkSolcCompilerDownloaderMutex.use(async () => {
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
             hre.config.zksolc.version,
             hre.config.zksolc.settings.compilerPath ?? '',
@@ -205,38 +236,139 @@ subtask(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, async (args: { input: any; solcJsPath:
     return await compile(hre.config.zksolc, args.input, solcPath);
 });
 
+/*
+    * This task is overriden to:
+    * - use valid zkvm solc version if that is needed and return valid SolcBuild object
+
+*/
+subtask(
+    TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
+    async (
+        args: {
+            input: CompilerInput;
+            quiet: boolean;
+            solcVersion: string;
+            compilationJob: CompilationJob;
+            compilationJobs: CompilationJob[];
+            compilationJobIndex: number;
+        },
+        hre,
+        runSuper,
+    ): Promise<{ output: CompilerOutput; solcBuild: SolcBuild }> => {
+        if (hre.network.zksync !== true) {
+            return await runSuper(args);
+        }
+
+        const solcBuild: SolcBuild = await hre.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+            quiet: args.quiet,
+            solcVersion: args.solcVersion,
+            compilationJob: args.compilationJob,
+        });
+
+        await hre.run(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START, {
+            compilationJob: args.compilationJob,
+            compilationJobs: args.compilationJobs,
+            compilationJobIndex: args.compilationJobIndex,
+            quiet: args.quiet,
+        });
+
+        let output;
+        if (solcBuild.isSolcJs) {
+            output = await hre.run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
+                input: args.input,
+                solcJsPath: solcBuild.compilerPath,
+            });
+        } else {
+            output = await hre.run(TASK_COMPILE_SOLIDITY_RUN_SOLC, {
+                input: args.input,
+                solcPath: solcBuild.compilerPath,
+            });
+        }
+
+        await hre.run(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END, {
+            compilationJob: args.compilationJob,
+            compilationJobs: args.compilationJobs,
+            compilationJobIndex: args.compilationJobIndex,
+            output,
+            quiet: args.quiet,
+        });
+
+        return { output, solcBuild };
+    },
+);
+
 // This task is overriden to:
 // - prevent unnecessary solc downloads when using docker
 // - download zksolc binary if needed
 // - validate zksolc binary
-subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
-    if (hre.network.zksync !== true) {
-        return await runSuper(args);
-    }
+subtask(
+    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
+    async (args: { solcVersion: string; compilationJob: CompilationJob }, hre, runSuper) => {
+        if (hre.network.zksync !== true) {
+            return await runSuper(args);
+        }
 
-    if (hre.config.zksolc.compilerSource === 'docker') {
-        // Versions are wrong here when using docker, because there is no
-        // way to know them beforehand except to run the docker image, which
-        // adds 5-10 seconds to startup time. We cannot read them from artifacts,
-        // since that would make cache invalid every time, if the version is
-        // different from the one in the docker image.
-        //
-        // If you wish to know the actual versions from build-info files,
-        // please look at `output.version`, `output.long_version`
-        // and `output.zk_version` in the generated JSON.
-        return {
-            compilerPath: '',
-            isSolsJs: false,
-            version: args.solcVersion,
-            longVersion: '',
-        };
-    }
+        if (hre.config.zksolc.compilerSource === 'docker') {
+            // Versions are wrong here when using docker, because there is no
+            // way to know them beforehand except to run the docker image, which
+            // adds 5-10 seconds to startup time. We cannot read them from artifacts,
+            // since that would make cache invalid every time, if the version is
+            // different from the one in the docker image.
+            //
+            // If you wish to know the actual versions from build-info files,
+            // please look at `output.version`, `output.long_version`
+            // and `output.zk_version` in the generated JSON.
+            return {
+                compilerPath: '',
+                isSolcJs: false,
+                version: args.solcVersion,
+                longVersion: '',
+            };
+        }
 
-    console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+        const compiler = args.compilationJob.getSolcConfig();
 
-    const solcBuild = await runSuper(args);
-    return solcBuild;
-});
+        if (compiler.eraVersion) {
+            const compilersCache = await getCompilersDir();
+            let path: string = '';
+            let version: string = '';
+            let normalizedVersion: string = '';
+
+            await zkVmSolcCompilerDownloaderMutex.use(async () => {
+                const zkVmSolcCompilerDownloader = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                    compiler.eraVersion!,
+                    compiler.version,
+                    compilersCache,
+                );
+
+                const isZksolcDownloaded = await zkVmSolcCompilerDownloader.isCompilerDownloaded();
+                if (!isZksolcDownloaded) {
+                    await zkVmSolcCompilerDownloader.downloadCompiler();
+                }
+
+                path = zkVmSolcCompilerDownloader.getCompilerPath();
+                version = zkVmSolcCompilerDownloader.getVersion();
+                normalizedVersion = getZkVmNormalizedVersion(
+                    zkVmSolcCompilerDownloader.getSolcVersion(),
+                    zkVmSolcCompilerDownloader.getZkVmSolcVersion(),
+                );
+            });
+            console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
+
+            return {
+                compilerPath: path,
+                isSolcJs: false,
+                version,
+                longVersion: normalizedVersion,
+            };
+        } else {
+            const solcBuild = await runSuper(args);
+
+            console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+            return solcBuild;
+        }
+    },
+);
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
@@ -287,6 +419,75 @@ subtask(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START).setAction(
         if (count > 0) {
             console.info(chalk.yellow(`Compiling ${count} Solidity ${pluralize(count, 'file')}`));
         }
+    },
+);
+
+subtask(TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS).setAction(
+    async (
+        {
+            compilationJob,
+            input,
+            output,
+            solcBuild,
+        }: {
+            compilationJob: CompilationJob;
+            input: CompilerInput;
+            output: CompilerOutput;
+            solcBuild: SolcBuild;
+        },
+        { artifacts, run, network },
+        runSuper,
+    ): Promise<{
+        artifactsEmittedPerFile: ArtifactsEmittedPerFile;
+    }> => {
+        if (network.zksync !== true) {
+            return await runSuper({
+                compilationJob,
+                input,
+                output,
+                solcBuild,
+            });
+        }
+
+        const version: string = compilationJob.getSolcConfig().eraVersion
+            ? getZkVmNormalizedVersion(
+                  compilationJob.getSolcConfig().version,
+                  compilationJob.getSolcConfig().eraVersion!,
+              )
+            : compilationJob.getSolcConfig().version;
+
+        const pathToBuildInfo = await artifacts.saveBuildInfo(version, solcBuild.longVersion, input, output);
+
+        const artifactsEmittedPerFile: ArtifactsEmittedPerFile = await Promise.all(
+            compilationJob
+                .getResolvedFiles()
+                .filter((f) => compilationJob.emitsArtifacts(f))
+                .map(async (file) => {
+                    const artifactsEmitted = await Promise.all(
+                        Object.entries(output.contracts?.[file.sourceName] ?? {}).map(
+                            async ([contractName, contractOutput]) => {
+                                logDebug(`Emitting artifact for contract '${contractName}'`);
+                                const artifact = await run(TASK_COMPILE_SOLIDITY_GET_ARTIFACT_FROM_COMPILATION_OUTPUT, {
+                                    sourceName: file.sourceName,
+                                    contractName,
+                                    contractOutput,
+                                });
+
+                                await artifacts.saveArtifactAndDebugFile(artifact, pathToBuildInfo);
+
+                                return artifact.contractName;
+                            },
+                        ),
+                    );
+
+                    return {
+                        file,
+                        artifactsEmitted,
+                    };
+                }),
+        );
+
+        return { artifactsEmittedPerFile };
     },
 );
 
