@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
     settings: {
       // compilerPath: "zkvyper", // optional field with the path to the `zkvyper` binary.
       libraries: {}, // optional. References to non-inlinable libraries
-      fallbackOz: false, // optional. Try to recompile with -Oz if the bytecode is too large
+      fallbackOz: false, // optional. Try to recompile with optimizer mode "z" if the bytecode is too large
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
@@ -53,7 +53,7 @@ const config: HardhatUserConfig = {
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | version                    | zkvyper compiler version. Default value is latest                                                                                    |
 | compilerSource             | Indicates the compiler source and can be either binary. (A docker option is no longer recommended).                                  |
-| fallbackOz             | (optional) indicates that the compiler will try to recompile with `-Oz` if the bytecode is too large.                                  |
+| fallbackOz             | (optional) indicates that the compiler will try to recompile with optimizer mode "z" if the bytecode is too large.                                  |
 | compilerPath               | Optional field with the path to the zkvyper binary. By default, the binary in $PATH is used.                                         |
 | libraries                  | Define any non-inlinable libraries your contracts use as dependencies here                                                           |
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default) recommended for most projects.          |
