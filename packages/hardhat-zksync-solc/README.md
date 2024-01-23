@@ -29,7 +29,7 @@ zksolc: {
       compilerPath: "zksolc",  // optional. Ignored for compilerSource "docker". Can be used if compiler is located in a specific folder
       libraries:{}, // optional. References to non-inlinable libraries
       missingLibrariesPath: "./.zksolc-libraries-cache/missingLibraryDependencies.json" // optional. This path serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. A `hardhat-zksync-deploy` plugin uses this cache later to compile and deploy the libraries, especially when the `deploy-zksync:libraries` task is executed
-      fallbackOz: false, // optional. Try to recompile with -Oz if the bytecode is too large
+      fallbackOz: false, // optional. Try to recompile with optimizer mode "z" if the bytecode is too large
       isSystem: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries
       forceEvmla: false, // optional. Falls back to EVM legacy assembly if there is a bug with Yul
       optimizer: {
@@ -50,7 +50,7 @@ zksolc: {
 | compilerPath                | (optional) field with the path to the zksolc binary. By default, the binary in $PATH is used                         |
 | libraries                   | If your contract uses non-inlinable libraries as dependencies, they have to be defined here.                         |
 | missingLibrariesPath        | (optional) serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. |
-| fallbackOz        | (optional) indicates that the compiler will try to recompile with `-Oz` if the bytecode is too large. |
+| fallbackOz        | (optional) indicates that the compiler will try to recompile with optimizer mode "z" if the bytecode is too large. |
 | isSystem                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries          |
 | forceEvmla                  | Falls back to EVM legacy assembly if there is an issue with the Yul IR compilation pipeline.                         |
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default) recommended for most projects.          |
@@ -65,20 +65,22 @@ Setting the forceEvmla field to true can have the following negative impacts:
 - No support for internal function pointers.
 - Possible contract size and performance impact.
 
-For usage of zkVM compiler, `eraVersion` should be added inside `solidity` property in the `hardhat.config.ts` file:
+### zkSync Era Solidity compiler
+
+Due to the identified limitations in the [Solidity compiler](https://docs.zksync.io/zk-stack/components/compiler/toolchain/solidity.html#limitations), our team has developed a new [zkSync Era compiler](https://github.com/matter-labs/era-solidity) known as EraVM, which effectively addresses and resolves these constraints.
+
+For usage of EraVM  compiler, `eraVersion` should be added inside `solidity` property in the `hardhat.config.ts` file:
 
 ```typescript
 solidity: {
     version: "0.8.17",
-    eraVersion: "1.0.0" //optional. Compile contracts with zkVM compiler
+    eraVersion: "1.0.0" //optional. Compile contracts with EraVM compiler
 },
 ```
 
 | 🔧 Properties               | 📄 Description                                                                                                       |
 |-----------------------------|----------------------------------------------------------------------------------------------------------------------|
-| eraVersion                     | (optional) is field used to specify version of zkVM compiler
-
-zkVM compilers resolve known limitations present in the Solidity compiler for older versions than 0.8. More info about zkVM compilers can be found in [the following repository](https://github.com/matter-labs/era-solidity).
+| eraVersion                     | (optional) is field used to specify version of EraVM compiler
 
 ## 🕹 Commands
 
