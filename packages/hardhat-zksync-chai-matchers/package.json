@@ -47,7 +47,7 @@
     "ordinal":"1.0.3",
     "chai-as-promised": "^7.1.1",
     "@matterlabs/hardhat-zksync-deploy": "1.1.2",
-    "@matterlabs/hardhat-zksync-solc": "1.0.6"
+    "@matterlabs/hardhat-zksync-solc": "1.1.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
