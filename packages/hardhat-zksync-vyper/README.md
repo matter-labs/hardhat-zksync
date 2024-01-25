@@ -39,6 +39,7 @@ const config: HardhatUserConfig = {
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
+        fallback_to_optimizing_for_size: false, // optional. Try to recompile with optimizer mode "z" if the bytecode is too large
       },
       experimental: {
         dockerImage: '', // deprecated
@@ -56,7 +57,7 @@ const config: HardhatUserConfig = {
 | fallbackOz             | (optional) indicates that the compiler will try to recompile with optimizer mode "z" if the bytecode is too large.                                  |
 | compilerPath               | Optional field with the path to the zkvyper binary. By default, the binary in $PATH is used.                                         |
 | libraries                  | Define any non-inlinable libraries your contracts use as dependencies here                                                           |
-| optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default) recommended for most projects.          |
+| optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |
 | dockerImage                 | (deprecated) option used to identify the name of the compiler docker image.                                          |
 
 
