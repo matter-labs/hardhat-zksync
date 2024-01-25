@@ -92,7 +92,7 @@ describe('compile', () => {
         }
     });
 
-    it.only('should throw an error for unsupported zksolc compiler version with fallback_to_optimizing_for_size', async () => {
+    it('should throw an error for unsupported zksolc compiler version with fallback_to_optimizing_for_size', async () => {
         const zksolcConfig: ZkSolcConfig = {
             compilerSource: 'binary',
             version: '1.3.16',
@@ -114,7 +114,7 @@ describe('compile', () => {
         }
     });
 
-    it.only('should zksolc compiler compile with fallback_to_optimizing_for_size', async () => {
+    it('should zksolc compiler compile with fallback_to_optimizing_for_size', async () => {
         const zksolcConfig: ZkSolcConfig = {
             compilerSource: 'binary',
             version: '1.3.21',
