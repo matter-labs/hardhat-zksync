@@ -7,11 +7,11 @@ export async function compileWithBinary(
     solcPath: string,
     detectMissingLibrariesMode: boolean = false,
 ): Promise<any> {
-    const { compilerPath, isSystem, forceEvmla, fallbackOz } = config.settings;
+    const { compilerPath, isSystem, forceEvmla} = config.settings;
 
     const processCommand = `${compilerPath} --standard-json ${isSystem ? '--system-mode' : ''} ${
         forceEvmla ? '--force-evmla' : ''
-    } ${fallbackOz ? '--fallback-Oz' : ''} --solc ${solcPath} ${
+    } --solc ${solcPath} ${
         detectMissingLibrariesMode ? '--detect-missing-libraries' : ''
     }`;
 

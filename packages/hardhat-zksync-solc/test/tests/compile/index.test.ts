@@ -92,12 +92,14 @@ describe('compile', () => {
         }
     });
 
-    it('should throw an error for unsupported zksolc compiler version with fallbackOz', async () => {
+    it.only('should throw an error for unsupported zksolc compiler version with fallback_to_optimizing_for_size', async () => {
         const zksolcConfig: ZkSolcConfig = {
             compilerSource: 'binary',
             version: '1.3.16',
             settings: {
-                fallbackOz: true,
+                optimizer: {
+                    fallback_to_optimizing_for_size: true,
+                },
             },
         };
 
@@ -107,17 +109,19 @@ describe('compile', () => {
             expect.fail('Expected ZkSyncSolcPluginError to be thrown');
         } catch (error: any) {
             expect(error.message).to.equal(
-                'FallbackOz option is not supported for zksolc compiler version 1.3.16. Please use version 1.3.21 or higher.',
+                'fallback_to_optimizing_for_size option in optimizer is not supported for zksolc compiler version 1.3.16. Please use version 1.3.21 or higher.',
             );
         }
     });
 
-    it('should zksolc compiler compile with fallbackOz', async () => {
+    it.only('should zksolc compiler compile with fallback_to_optimizing_for_size', async () => {
         const zksolcConfig: ZkSolcConfig = {
             compilerSource: 'binary',
             version: '1.3.21',
             settings: {
-                fallbackOz: true,
+                optimizer: {
+                    fallback_to_optimizing_for_size: true,
+                },
             },
         };
 

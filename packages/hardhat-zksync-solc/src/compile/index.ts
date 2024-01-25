@@ -21,11 +21,11 @@ import { compileWithBinary } from './binary';
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
     if (
-        zksolcConfig.settings.fallbackOz &&
+        zksolcConfig.settings.optimizer?.fallback_to_optimizing_for_size &&
         semver.lt(zksolcConfig.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
     ) {
         throw new ZkSyncSolcPluginError(
-            `FallbackOz option is not supported for zksolc compiler version ${zksolcConfig.version}. Please use version ${ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
+            `fallback_to_optimizing_for_size option in optimizer is not supported for zksolc compiler version ${zksolcConfig.version}. Please use version ${ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
         );
     }
     if (zksolcConfig.compilerSource === 'binary') {
