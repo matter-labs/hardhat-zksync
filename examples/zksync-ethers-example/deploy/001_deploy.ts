@@ -25,7 +25,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     await tx1.wait();
     console.info(chalk.green(`Greeter greeting set to: ${await greets.greet()}`));
 
-
     const greeterFactory = await hre.zksyncEthers.getContractFactory(artifact.abi, artifact.bytecode);
     const greeter = await greeterFactory.deploy('Hello, world with abi and bytecode!');
     const wallet2 = greeter.runner as Wallet;
@@ -36,7 +35,10 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     await tx.wait();
     console.info(chalk.green(`Greeter greeting set to: ${await greeter.greet()}`));
 
-    const greeterFactoryFromName = await hre.zksyncEthers.getContractFactory('Greeter', await hre.zksyncEthers.getWallet("0xbe79721778b48bcc679b78edac0ce48306a8578186ffcb9f2ee455ae6efeace1"));
+    const greeterFactoryFromName = await hre.zksyncEthers.getContractFactory(
+        'Greeter',
+        await hre.zksyncEthers.getWallet('0xbe79721778b48bcc679b78edac0ce48306a8578186ffcb9f2ee455ae6efeace1'),
+    );
     const greeterFromName = await greeterFactoryFromName.deploy('Hello, world with name!');
     const wallet3 = greeterFromName.runner as Wallet;
     console.info(chalk.yellow(`Deploying Greeter with wallet: ${await wallet3.getAddress()}`));
