@@ -35,7 +35,6 @@ const config: HardhatUserConfig = {
     settings: {
       // compilerPath: "zkvyper", // optional field with the path to the `zkvyper` binary.
       libraries: {}, // optional. References to non-inlinable libraries
-      fallbackOz: false, // optional. Try to recompile with optimizer mode "z" if the bytecode is too large
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
