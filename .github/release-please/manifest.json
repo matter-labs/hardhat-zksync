@@ -7,5 +7,5 @@
     "packages/hardhat-zksync-toolbox": "1.2.1",
     "packages/hardhat-zksync-node": "1.0.1",
     "packages/hardhat-zksync-chai-matchers": "1.2.1",
-    "packages/hardhat-zksync-ethers": "0.0.1-beta.2"
+    "packages/hardhat-zksync-ethers": "1.0.0"
 }
