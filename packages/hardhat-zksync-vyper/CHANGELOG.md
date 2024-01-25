@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## [1.0.7](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.0.6...@matterlabs/hardhat-zksync-vyper-v1.0.7) (2024-01-25)
+
+
+### Bug Fixes
+
+* support an option to fallback to optimizing for size vyper ([#674](https://github.com/matter-labs/hardhat-zksync/issues/674)) ([bb95025](https://github.com/matter-labs/hardhat-zksync/commit/bb95025f966e11466684b79f833d8cd3ce81f931))
+
 ## [1.0.6](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.0.5...@matterlabs/hardhat-zksync-vyper-v1.0.6) (2024-01-15)
 
 

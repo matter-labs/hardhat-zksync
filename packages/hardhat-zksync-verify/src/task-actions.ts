@@ -25,7 +25,7 @@ import {
     BUILD_INFO_NOT_FOUND_ERROR,
 } from './constants';
 
-import { encodeArguments, extractModule, retrieveContractBytecode } from './utils';
+import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
 import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 
@@ -33,6 +33,12 @@ import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
 import { checkContractName, getLibraries, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
+import {
+    SolcMultiUserConfigExtractor,
+    SolcSoloUserConfigExtractor,
+    SolcStringUserConfigExtractor,
+    SolcUserConfigExtractor,
+} from './config-extractor';
 
 export async function verify(
     args: {
@@ -74,6 +80,12 @@ export async function verify(
     });
 }
 
+const extractors: SolcUserConfigExtractor[] = [
+    new SolcStringUserConfigExtractor(),
+    new SolcSoloUserConfigExtractor(),
+    new SolcMultiUserConfigExtractor(),
+];
+
 export async function getCompilerVersions(
     _: TaskArguments,
     hre: HardhatRuntimeEnvironment,
@@ -83,10 +95,22 @@ export async function getCompilerVersions(
         return await runSuper();
     }
 
-    const compilerVersions = hre.config.solidity.compilers.map((c) => c.version);
+    const userSolidityConfig = hre.userConfig.solidity;
+
+    const extractedConfigs = extractors
+        .find((extractor) => extractor.suitable(userSolidityConfig))
+        ?.extract(userSolidityConfig);
+
+    const compilerVersions = hre.config.solidity.compilers.map(
+        (c) => normalizeCompilerVersions({ compiler: c }, extractedConfigs?.compilers ?? []) ?? c.version,
+    );
+
     if (hre.config.solidity.overrides !== undefined) {
-        for (const { version } of Object.values(hre.config.solidity.overrides)) {
-            compilerVersions.push(version);
+        for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+            compilerVersions.push(
+                normalizeCompilerVersions({ compiler, file }, extractedConfigs?.overides ?? new Map()) ??
+                    compiler.version,
+            );
         }
     }
 
@@ -151,6 +175,8 @@ export async function verifyContract(
         libraries,
     });
 
+    const optimizationUsed = contractInformation.compilerInput.settings.optimizer.enabled ?? false;
+
     const solcVersion = contractInformation.solcVersion;
 
     let deployArgumentsEncoded;
@@ -188,7 +214,7 @@ export async function verifyContract(
         compilerSolcVersion: solcVersion,
         compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
-        optimizationUsed: true,
+        optimizationUsed
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);

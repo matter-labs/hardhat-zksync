@@ -25,6 +25,14 @@ declare module 'hardhat/types/config' {
     interface HardhatConfig {
         verifyURL?: string;
     }
+
+    interface SolcConfig {
+        eraVersion?: string;
+    }
+
+    interface SolcUserConfig {
+        eraVersion?: string;
+    }
 }
 
 declare module 'hardhat/types/runtime' {

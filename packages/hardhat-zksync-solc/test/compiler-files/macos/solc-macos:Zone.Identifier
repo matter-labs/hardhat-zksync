@@ -1,4 +1,0 @@
-[ZoneTransfer]
-ZoneId=3
-ReferrerUrl=https://github.com/ethereum/solidity/releases
-HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/40892817/d8c0c93a-8522-4772-be33-c8cb04a26d5d?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20231225%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231225T225829Z&X-Amz-Expires=300&X-Amz-Signature=61e0d8865c9f98cd83643330f76ef3bb17b565f0d77aa45da8f5ca438d673973&X-Amz-SignedHeaders=host&actor_id=131957563&key_id=0&repo_id=40892817&response-content-disposition=attachment%3B%20filename%3Dsolc-macos&response-content-type=application%2Foctet-stream

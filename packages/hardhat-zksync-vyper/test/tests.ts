@@ -26,6 +26,21 @@ describe('zkvyper plugin', async function () {
         });
     });
 
+    describe('Simple compile with fallback', async function () {
+        useEnvironment('simple-fallback');
+
+        it('Should successfully compile a simple contract', async function () {
+            await this.env.run(TASK_COMPILE);
+
+            const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
+
+            assert.equal(artifact.contractName, 'Greeter');
+
+            // Check that zkSync-specific artifact information was added.
+            assert.deepEqual(artifact.factoryDeps, {}, 'Contract unexpectedly has dependencies');
+        });
+    });
+
     describe('Simple on otherNetwork', async function () {
         useEnvironment('simple', 'otherNetwork');
 

@@ -26,6 +26,14 @@ declare module 'hardhat/types/config' {
     interface HttpNetworkConfig {
         zksync: boolean;
     }
+
+    interface SolcConfig {
+        eraVersion?: string;
+    }
+
+    interface SolcUserConfig {
+        eraVersion?: string;
+    }
 }
 
 declare module 'hardhat/types/runtime' {

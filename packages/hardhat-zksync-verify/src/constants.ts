@@ -105,3 +105,6 @@ export const UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE = `Compiling your contract
 Trying again with the full solc input used to compile and deploy it.
 This means that unrelated contracts may be displayed on the zksync block explorer.
 `;
+
+export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
+    `Solidity compiler versions in your Hardhat config file are in conflict for version ${version}. Please specify version of compiler only with zkVm support(eraVersion) or without it`;

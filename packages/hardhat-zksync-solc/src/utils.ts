@@ -1,16 +1,28 @@
 import semver from 'semver';
 import crypto from 'crypto';
-import { SolcConfig } from 'hardhat/types';
+import { SolcUserConfig } from 'hardhat/types';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
-import { ZkSyncSolcPluginError } from './errors';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
-import { ZKSOLC_COMPILERS_SELECTOR_MAP, SOLCJS_EXECUTABLE_CODE, DEFAULT_TIMEOUT_MILISECONDS } from './constants';
+import {
+    ZKSOLC_COMPILERS_SELECTOR_MAP,
+    SOLCJS_EXECUTABLE_CODE,
+    DEFAULT_TIMEOUT_MILISECONDS,
+    COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR,
+    ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
+} from './constants';
+import { ZkSyncSolcPluginError } from './errors';
+import {
+    CompilerSolcUserConfigUpdater,
+    OverrideCompilerSolcUserConfigUpdater,
+    SolcConfigData,
+    SolcUserConfigUpdater,
+} from './config-update';
 
 const TEMP_FILE_PREFIX = 'tmp-';
 
@@ -44,7 +56,17 @@ export function filterSupportedOutputSelections(
     return filteredOutputSelection;
 }
 
-export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig) {
+const solcUpdaters: SolcUserConfigUpdater[] = [
+    new OverrideCompilerSolcUserConfigUpdater(),
+    new CompilerSolcUserConfigUpdater(),
+];
+
+export function updateCompilerConf(
+    solcConfigData: SolcConfigData,
+    zksolc: ZkSolcConfig,
+    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
+) {
+    const compiler = solcConfigData.compiler;
     const [major, minor] = getVersionComponents(compiler.version);
     if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
         console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
@@ -66,6 +88,14 @@ export function updateCompilerConf(compiler: SolcConfig, zksolc: ZkSolcConfig) {
         compiler.settings.outputSelection,
         zksolc.version,
     );
+
+    solcUpdaters
+        .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
+        ?.update(compiler, userConfigCompilers, solcConfigData.file);
+
+    if (compiler.eraVersion && semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)) {
+        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
+    }
 }
 
 export function zeroxlify(hex: string): string {
@@ -103,6 +133,19 @@ export function getZksolcUrl(repo: string, version: string, isRelease: boolean =
     }
 
     return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+}
+
+export function getZkVmSolcUrl(repo: string, version: string, isRelease: boolean = true): string {
+    // @ts-ignore
+    const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
+    // @ts-ignore
+    const arch = process.arch === 'x64' ? 'amd64' : process.arch;
+    const ext = process.platform === 'win32' ? '.exe' : '';
+    if (isRelease) {
+        return `${repo}/releases/download/${version}/solc-${platform}-${arch}-${version}${ext}`;
+    }
+
+    return `${repo}/raw/main/${platform}-${arch}/solc-${platform}-${arch}-${version}${ext}`;
 }
 
 export function pluralize(n: number, singular: string, plural?: string) {
@@ -215,7 +258,6 @@ export async function download(
     url: string,
     filePath: string,
     userAgent: string,
-    version: string,
     timeoutMillis = 10000,
     extraHeaders: { [name: string]: string } = {},
 ) {
@@ -233,7 +275,7 @@ export async function download(
         method: 'GET',
         headers: {
             ...extraHeaders,
-            'User-Agent': `${userAgent} ${version}`,
+            'User-Agent': `${userAgent}`,
         },
     });
 
@@ -258,10 +300,11 @@ export async function getLatestRelease(
     owner: string,
     repo: string,
     userAgent: string,
+    tagPrefix: string = 'v',
     timeout: number = DEFAULT_TIMEOUT_MILISECONDS,
 ): Promise<any> {
     const url = `https://github.com/${owner}/${repo}/releases/latest`;
-    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
+    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/${tagPrefix}`;
 
     const { request } = await import('undici');
 
@@ -298,4 +341,8 @@ export async function getLatestRelease(
 export async function saveDataToFile(data: any, targetPath: string) {
     await fse.ensureDir(path.dirname(targetPath));
     await fse.writeJSON(targetPath, data, { spaces: 2 });
+}
+
+export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
+    return `zkVM-${solcVersion}-${zkVmSolcVersion}`;
 }
