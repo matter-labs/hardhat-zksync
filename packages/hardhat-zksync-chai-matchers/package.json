@@ -40,7 +40,7 @@
     "bracketSpacing": true
   },
   "dependencies": {
-    "chai": "^4.3.7",
+    "chai": "^5.0.3",
     "zksync-ethers": "^6.0.0",
     "ethers": "^6.7.1",
     "hardhat": "^2.19.4",
