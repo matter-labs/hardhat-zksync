@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-vyper",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "Hardhat plugin to compile Vyper smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
@@ -38,7 +38,11 @@
     "chalk": "4.1.2",
     "dockerode": "^4.0.0",
     "fs-extra": "^11.1.1",
-    "semver": "^7.5.4"
+    "sinon": "^9.0.0",
+    "chai": "^4.3.6",
+    "undici": "^5.14.0",
+    "semver": "^7.5.4",
+    "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
@@ -52,24 +56,22 @@
     "@types/fs-extra": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
-    "chai": "^4.3.6",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "mocha": "^9.2.1",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
-    "sinon": "^15.0.1",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
     "c8": "^8.0.1"
   },
   "peerDependencies": {
     "@nomiclabs/hardhat-vyper": "^3.0.5",
-    "hardhat": "^2.19.2"
+    "hardhat": "^2.19.4"
   },
   "prettier": {
     "tabWidth": 4,

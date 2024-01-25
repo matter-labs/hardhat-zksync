@@ -10,9 +10,9 @@ import {
 import Docker, { ContainerCreateOptions } from 'dockerode';
 import { CompilerInput } from 'hardhat/types';
 import { Writable } from 'stream';
+import chalk from 'chalk';
 import { ZkSyncSolcPluginError } from '../errors';
 import { ZkSolcConfig } from '../types';
-import chalk from 'chalk';
 
 async function runContainer(docker: Docker, image: Image, command: string[], input: string) {
     const createOptions: ContainerCreateOptions = {
@@ -32,7 +32,7 @@ async function runContainer(docker: Docker, image: Image, command: string[], inp
     let output = Buffer.from('');
     let chunk = Buffer.from('');
     const stream = new Writable({
-        write: function (incoming: Buffer, _encoding, next) {
+        write(incoming: Buffer, _encoding, next) {
             // Please refer to the 'Stream format' chapter at
             // https://docs.docker.com/engine/api/v1.37/#operation/ContainerAttach
             // to understand the details of this implementation.
@@ -80,7 +80,7 @@ export async function validateDockerIsInstalled() {
     if (!(await HardhatDocker.isInstalled())) {
         throw new ZkSyncSolcPluginError(
             'Docker Desktop is not installed.\n' +
-                'Please install it by following the instructions on https://www.docker.com/get-started'
+                'Please install it by following the instructions on https://www.docker.com/get-started',
         );
     }
 }
@@ -119,7 +119,7 @@ export async function compileWithDocker(
     input: CompilerInput,
     docker: HardhatDocker,
     image: Image,
-    zksolcConfig: ZkSolcConfig
+    zksolcConfig: ZkSolcConfig,
 ) {
     const command = ['zksolc', '--standard-json'];
     if (zksolcConfig.settings.isSystem) {
@@ -139,7 +139,7 @@ export async function compileWithDocker(
             } catch {
                 throw new ZkSyncSolcPluginError(compilerOutput);
             }
-        })()
+        })(),
     );
 }
 
@@ -150,7 +150,7 @@ export async function getSolcVersion(docker: HardhatDocker, image: Image) {
         (async () => {
             const versionOutput = await runContainer(dockerInstance, image, ['solc', '--version'], '');
             return versionOutput.split('\n')[1];
-        })()
+        })(),
     );
 }
 
@@ -161,14 +161,14 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof DockerNotRunningError || error instanceof DockerBadGatewayError) {
             throw new ZkSyncSolcPluginError(
                 'Docker Desktop is not running.\nPlease open it and wait until it finishes booting.',
-                error
+                error,
             );
         }
 
         if (error instanceof DockerHubConnectionError) {
             throw new ZkSyncSolcPluginError(
                 'Error connecting to Docker Hub.\nPlease check your internet connection.',
-                error
+                error,
             );
         }
 
@@ -179,7 +179,7 @@ async function handleCommonErrors<T>(promise: Promise<T>): Promise<T> {
         if (error instanceof ImageDoesntExistError) {
             throw new ZkSyncSolcPluginError(
                 `Docker image ${HardhatDocker.imageToRepoTag(error.image)} doesn't exist.\n` +
-                    'Make sure you chose a valid zksolc version.'
+                    'Make sure you chose a valid zksolc version.',
             );
         }
 

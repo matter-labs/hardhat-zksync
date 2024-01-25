@@ -22,7 +22,7 @@ extendEnvironment((hre: HardhatRuntimeEnvironment) => {
 });
 
 task(TASK_VERIFY, 'Verifies contract on Ethereum and zkSync networks')
-    .addFlag("noCompile", "Run verify without compile")
+    .addFlag('noCompile', 'Run verify without compile')
     .setAction(verify);
 
 subtask(TASK_VERIFY_VERIFY).setAction(verifyContract);

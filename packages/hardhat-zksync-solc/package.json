@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-solc",
-  "version": "1.0.6",
+  "version": "1.1.2",
   "description": "Hardhat plugin to compile smart contracts for the zkSync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-solc",
@@ -22,7 +22,7 @@
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "c8 mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha --recursive \"test/tests/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -37,8 +37,13 @@
     "chalk": "4.1.2",
     "dockerode": "^4.0.0",
     "fs-extra": "^11.1.1",
+    "chai": "^4.3.6",
+    "undici": "^5.14.0",
+    "debug": "^4.3.4",
     "semver": "^7.5.1",
-    "proper-lockfile": "^4.1.2"
+    "proper-lockfile": "^4.1.2",
+    "sinon": "^16.0.0",
+    "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -49,13 +54,12 @@
     "@types/fs-extra": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
-    "chai": "^4.3.6",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "mocha": "^9.2.1",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
@@ -64,7 +68,7 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "hardhat": "^2.19.2"
+    "hardhat": "^2.19.4"
   },
   "prettier": {
     "tabWidth": 4,

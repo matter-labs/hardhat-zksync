@@ -4,6 +4,8 @@ import { extendEnvironment } from 'hardhat/config';
 import { lazyObject } from 'hardhat/plugins';
 import './type-extensions';
 
+import { ethers } from 'ethers';
+import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 import {
     extractFactoryDeps,
     getContractAt,
@@ -17,8 +19,6 @@ import {
     deployContract,
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
-import { ethers } from 'ethers';
-import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 
 extendEnvironment((hre) => {
     hre.zksyncEthers = lazyObject(() => {
@@ -36,9 +36,12 @@ extendEnvironment((hre) => {
             getContractFactoryFromArtifact: (
                 artifact: ZkSyncArtifact,
                 walletOrOptions?: Wallet | FactoryOptions,
-                deploymentType?: DeploymentType) => getContractFactoryFromArtifact(hre, artifact, walletOrOptions, deploymentType),
-            getContractAt: (nameOrAbi: string | any[], address: string | Address, wallet?: Wallet) => getContractAt(hre, nameOrAbi, address, wallet),
-            getContractAtFromArtifact: (artifact: ZkSyncArtifact, address: string | Address, wallet?: Wallet) => getContractAtFromArtifact(hre, artifact, address, wallet),
+                deploymentType?: DeploymentType,
+            ) => getContractFactoryFromArtifact(hre, artifact, walletOrOptions, deploymentType),
+            getContractAt: (nameOrAbi: string | any[], address: string | Address, wallet?: Wallet) =>
+                getContractAt(hre, nameOrAbi, address, wallet),
+            getContractAtFromArtifact: (artifact: ZkSyncArtifact, address: string | Address, wallet?: Wallet) =>
+                getContractAtFromArtifact(hre, artifact, address, wallet),
             extractFactoryDeps: (artifact: ZkSyncArtifact) => extractFactoryDeps(hre, artifact),
             loadArtifact: (name: string) => loadArtifact(hre, name),
             deployContract: (
@@ -46,7 +49,7 @@ extendEnvironment((hre) => {
                 constructorArguments: any[],
                 wallet?: Wallet,
                 overrides?: ethers.Overrides,
-                additionalFactoryDeps?: ethers.BytesLike[]
+                additionalFactoryDeps?: ethers.BytesLike[],
             ) => deployContract(hre, artifact, wallet, (constructorArguments = []), overrides, additionalFactoryDeps),
         };
     });

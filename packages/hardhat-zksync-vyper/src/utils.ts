@@ -1,9 +1,9 @@
 import semver from 'semver';
-import fs from "fs";
-import path from "path";
-import util from "util";
-import fse from "fs-extra";
-import type { Dispatcher } from "undici";
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
+import fse from 'fs-extra';
+import type { Dispatcher } from 'undici';
 
 import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 
@@ -11,7 +11,7 @@ import { CompilerVersionInfo } from './compile/downloader';
 import { DEFAULT_TIMEOUT_MILISECONDS, UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
 import { ZkSyncVyperPluginError } from './errors';
 
-const TEMP_FILE_PREFIX = "tmp-";
+const TEMP_FILE_PREFIX = 'tmp-';
 
 export function zeroxlify(hex: string): string {
     hex = hex.toLowerCase();
@@ -23,8 +23,8 @@ export function getZkvyperUrl(repo: string, version: string, isRelease: boolean 
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     // @ts-ignore
     const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
-    const arch = process.arch == 'x64' ? 'amd64' : process.arch;
-    const ext = process.platform == 'win32' ? '.exe' : '';
+    const arch = process.arch === 'x64' ? 'amd64' : process.arch;
+    const ext = process.platform === 'win32' ? '.exe' : '';
 
     if (isRelease) {
         return `${repo}/releases/download/v${version}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;
@@ -85,23 +85,23 @@ export async function download(
     userAgent: string,
     version: string,
     timeoutMillis = 10000,
-    extraHeaders: { [name: string]: string } = {}
+    extraHeaders: { [name: string]: string } = {},
 ) {
-    const { pipeline } = await import("stream");
-    const { getGlobalDispatcher, request } = await import("undici");
+    const { pipeline } = await import('stream');
+    const { getGlobalDispatcher, request } = await import('undici');
     const streamPipeline = util.promisify(pipeline);
 
-    let dispatcher: Dispatcher = getGlobalDispatcher();
+    const dispatcher: Dispatcher = getGlobalDispatcher();
 
     // Fetch the url
     const response = await request(url, {
         dispatcher,
         headersTimeout: timeoutMillis,
         maxRedirections: 10,
-        method: "GET",
+        method: 'GET',
         headers: {
             ...extraHeaders,
-            "User-Agent": `${userAgent} ${version}`,
+            'User-Agent': `${userAgent} ${version}`,
         },
     });
 
@@ -122,18 +122,23 @@ export async function download(
     );
 }
 
-export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number = DEFAULT_TIMEOUT_MILISECONDS): Promise<any> {
-    let url = `https://github.com/${owner}/${repo}/releases/latest`;
-    let redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`
+export async function getLatestRelease(
+    owner: string,
+    repo: string,
+    userAgent: string,
+    timeout: number = DEFAULT_TIMEOUT_MILISECONDS,
+): Promise<any> {
+    const url = `https://github.com/${owner}/${repo}/releases/latest`;
+    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
 
-    const { request } = await import("undici");
+    const { request } = await import('undici');
 
     const response = await request(url, {
         headersTimeout: timeout,
         maxRedirections: 0,
-        method: "GET",
+        method: 'GET',
         headers: {
-            "User-Agent": `${userAgent}`,
+            'User-Agent': `${userAgent}`,
         },
     });
 

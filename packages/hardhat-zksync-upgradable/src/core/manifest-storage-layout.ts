@@ -11,16 +11,16 @@ import { Manifest } from './manifest';
 export async function getStorageLayoutForAddress(
     manifest: Manifest,
     validations: ValidationData,
-    implAddress: string
+    implAddress: string,
 ): Promise<StorageLayout> {
     const data = await manifest.read();
     const versionWithoutMetadata = Object.keys(data.impls).find(
-        (v) => data.impls[v]?.address === implAddress || data.impls[v]?.allAddresses?.includes(implAddress)
+        (v) => data.impls[v]?.address === implAddress || data.impls[v]?.allAddresses?.includes(implAddress),
     );
     if (versionWithoutMetadata === undefined) {
         throw new UpgradesError(
             `Deployment at address ${implAddress} is not registered`,
-            () => 'To register a previously deployed proxy for upgrading, use the forceImport function.'
+            () => 'To register a previously deployed proxy for upgrading, use the forceImport function.',
         );
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -34,10 +34,10 @@ export async function getStorageLayoutForAddress(
             return layout;
         } else {
             await manifest.lockedRun(async () => {
-                const data = await manifest.read();
+                const manifestData = await manifest.read();
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                data.impls[versionWithoutMetadata]!.layout = updatedLayout;
-                await manifest.write(data);
+                manifestData.impls[versionWithoutMetadata]!.layout = updatedLayout;
+                await manifest.write(manifestData);
             });
             return updatedLayout;
         }
@@ -52,7 +52,7 @@ export async function getStorageLayoutForAddress(
 export function getUpdatedStorageLayout(
     data: ValidationData,
     versionWithoutMetadata: string,
-    layout: StorageLayout
+    layout: StorageLayout,
 ): StorageLayout | undefined {
     // In this map we store the candidate storage layouts, based on having the
     // same versionWithoutMetadata and a sufficiently similar layout. The keys of
@@ -62,7 +62,7 @@ export function getUpdatedStorageLayout(
 
     outer: for (const [contractName, validationRun] of findVersionWithoutMetadataMatches(
         data,
-        versionWithoutMetadata
+        versionWithoutMetadata,
     )) {
         const updatedLayout = unfoldStorageLayout(validationRun, contractName);
 

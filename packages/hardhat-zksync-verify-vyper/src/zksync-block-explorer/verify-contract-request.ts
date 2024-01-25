@@ -1,4 +1,3 @@
-
 export interface ZkSyncVyperBlockExplorerVerifyRequest {
     contractAddress: string;
     contractName: string;
