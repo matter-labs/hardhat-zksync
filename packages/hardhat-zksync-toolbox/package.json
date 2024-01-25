@@ -36,7 +36,7 @@
     "hardhat": "^2.19.4",
     "zksync-ethers": "^6.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
-    "chai": "^4.3.7"
+    "chai": "^5.0.3"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^1.2.0",
