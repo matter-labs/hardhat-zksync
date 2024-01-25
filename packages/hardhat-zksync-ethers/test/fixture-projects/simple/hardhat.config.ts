@@ -17,11 +17,13 @@ const config: HardhatUserConfig = {
         zkSyncNetwork: {
             allowUnlimitedContractSize: true,
             url: 'http://localhost:3050',
+            ethNetwork: 'http://localhost:8545',
             zksync: true,
         },
         zkSyncTestnet: {
             allowUnlimitedContractSize: true,
             url: 'https://sepolia.era.zksync.dev',
+            ethNetwork: 'https://sepolia.infura.io/v3/1d9d3e9f5c0b4b0e8b2e1b2b8b0b0b0b',
             zksync: true,
         },
     },

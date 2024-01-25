@@ -1,4 +1,4 @@
-import { Provider, Wallet } from 'zksync-ethers';
+import { Wallet } from 'zksync-ethers';
 
 import { extendEnvironment } from 'hardhat/config';
 import { lazyObject } from 'hardhat/plugins';
@@ -19,16 +19,16 @@ import {
     deployContract,
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
+import { createProviders } from './utils';
 
 extendEnvironment((hre) => {
     hre.zksyncEthers = lazyObject(() => {
         const { zksyncEthers } = require('zksync-ethers');
-        const config: any = hre.network.config;
-        const provider: Provider = new Provider(config.url);
-
+        const { ethWeb3Provider, zkWeb3Provider } = createProviders(hre.config.networks, hre.network);
         return {
             ...zksyncEthers,
-            provider,
+            providerL1: ethWeb3Provider,
+            providerL2: zkWeb3Provider,
             getWallet: (privateKeyOrIndex?: string | number) => getWallet(hre, privateKeyOrIndex),
             getWallets: () => getWallets(hre),
             getImpersonatedSigner: (address: string) => getImpersonatedSigner(hre, address),
@@ -50,7 +50,7 @@ extendEnvironment((hre) => {
                 wallet?: Wallet,
                 overrides?: ethers.Overrides,
                 additionalFactoryDeps?: ethers.BytesLike[],
-            ) => deployContract(hre, artifact, wallet, (constructorArguments = []), overrides, additionalFactoryDeps),
+            ) => deployContract(hre, artifact, constructorArguments, wallet, overrides, additionalFactoryDeps),
         };
     });
 });
