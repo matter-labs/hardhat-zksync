@@ -28,7 +28,7 @@ export async function compile(
         semver.lt(zkvyperConfig.version, ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
     ) {
         throw new ZkSyncVyperPluginError(
-            `FallbackOz option is not supported for zksolc compiler version ${zkvyperConfig.version}. Please use version ${ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
+            `FallbackOz option is not supported for zkvyper compiler version ${zkvyperConfig.version}. Please use version ${ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
         );
     }
     if (zkvyperConfig.compilerSource === 'binary') {
