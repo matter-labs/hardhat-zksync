@@ -12,7 +12,7 @@ module.exports = {
         "format": ["camelCase", "PascalCase", "snake_case"],
         "leadingUnderscore": "allow",
         "filter": {
-          "regex": "^[a-zA-Z0-9-_]+$",
+          "regex": "^[a-zA-Z0-9-_/*\\.?:]+$",
           "match": false
         }
       },

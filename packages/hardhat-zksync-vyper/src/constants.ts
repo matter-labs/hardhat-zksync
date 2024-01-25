@@ -33,6 +33,8 @@ export const ZKVYPER_BIN_REPOSITORY_NAME = 'zkvyper-bin';
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
+export const ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ = '1.3.15';
+
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR =
     'Could not find zkvyper compiler version info file. Please check your internet connection and try again.';
 export const COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR =
