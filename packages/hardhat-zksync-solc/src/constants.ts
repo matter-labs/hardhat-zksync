@@ -29,7 +29,7 @@ export const ZKSOLC_COMPILERS_SELECTOR_MAP = {
     '1.3.5': ['abi', 'evm.methodIdentifiers', 'storageLayout', 'irOptimized', 'evm.legacyAssembly', 'ast'],
 };
 /* eslint-enable @typescript-eslint/naming-convention */
-
+export const ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ = '1.3.21';
 export const ZKSOLC_COMPILER_VERSION_MIN_VERSION = '1.3.13';
 export const ZKSOLC_BIN_OWNER = 'matter-labs';
 export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
