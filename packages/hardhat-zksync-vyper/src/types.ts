@@ -16,8 +16,6 @@ export interface ZkVyperConfig {
                 [library: string]: string;
             };
         };
-        // Try to recompile with -Oz if the bytecode is too large.
-        fallbackOz?: boolean;
         experimental?: {
             dockerImage?: string;
             tag?: string;

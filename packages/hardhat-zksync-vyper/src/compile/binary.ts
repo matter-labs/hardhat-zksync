@@ -9,7 +9,7 @@ export async function compileWithBinary(
     const settings = config.settings;
 
     const optimizationMode = settings.optimizer?.mode;
-    const fallbackOz = settings.fallbackOz;
+    const fallbackOz = settings.optimizer?.fallback_to_optimizing_for_size;
 
     const processCommand = `${paths.compilerPath} ${optimizationMode ? `-O ${optimizationMode}` : ''}  ${
         fallbackOz ? '--fallback-Oz' : ''

@@ -7,7 +7,9 @@ const config: HardhatUserConfig = {
         version: 'latest',
         compilerSource: 'binary',
         settings: {
-            fallbackOz: true,
+            optimizer: {
+                fallback_to_optimizing_for_size: true,
+            },
         },
     },
     networks: {

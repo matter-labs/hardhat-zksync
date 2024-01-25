@@ -24,11 +24,11 @@ export async function compile(
 ) {
     let compiler: ICompiler;
     if (
-        zkvyperConfig.settings.fallbackOz &&
+        zkvyperConfig.settings.optimizer?.fallback_to_optimizing_for_size &&
         semver.lt(zkvyperConfig.version, ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
     ) {
         throw new ZkSyncVyperPluginError(
-            `FallbackOz option is not supported for zkvyper compiler version ${zkvyperConfig.version}. Please use version ${ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
+            `fallback_to_optimizing_for_size option in optimizer is not supported for zkvyper compiler version ${zkvyperConfig.version}. Please use version ${ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
         );
     }
     if (zkvyperConfig.compilerSource === 'binary') {

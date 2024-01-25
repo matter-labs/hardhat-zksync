@@ -20,7 +20,6 @@ export const defaultZkVyperConfig: ZkVyperConfig = {
         },
         compilerPath: '',
         experimental: {},
-        fallbackOz: false,
     },
 };
 
