@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.0.1-beta.2...@matterlabs/hardhat-zksync-ethers-v0.1.0-beta.2) (2024-01-25)
+## [1.0.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.0.1-beta.2...@matterlabs/hardhat-zksync-ethers-v1.0.0) (2024-01-25)
 
 
 ### Features
