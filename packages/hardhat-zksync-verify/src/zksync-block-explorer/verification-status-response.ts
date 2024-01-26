@@ -1,14 +1,14 @@
 enum VerificationStatusEnum {
-    successful = 'successful',
-    failed = 'failed',
-    queued = 'queued',
-    inProgress = 'in_progress',
+    SUCCESSFUL = 'successful',
+    FAILED = 'failed',
+    QUEUED = 'queued',
+    IN_PROGRESS = 'in_progress',
 }
 
 export class VerificationStatusResponse {
     public readonly status: VerificationStatusEnum;
     public readonly error: string | undefined;
-    public readonly compilationErrors: Array<string> | undefined;
+    public readonly compilationErrors: string[] | undefined;
 
     constructor(response: any) {
         this.status = response.data.status;
@@ -35,18 +35,18 @@ export class VerificationStatusResponse {
     }
 
     public isPending() {
-        return this.status === VerificationStatusEnum.inProgress;
+        return this.status === VerificationStatusEnum.IN_PROGRESS;
     }
 
     public isVerificationFailure() {
-        return this.status === VerificationStatusEnum.failed;
+        return this.status === VerificationStatusEnum.FAILED;
     }
 
     public isQueued() {
-        return this.status === VerificationStatusEnum.queued;
+        return this.status === VerificationStatusEnum.QUEUED;
     }
 
     public isVerificationSuccess() {
-        return this.status === VerificationStatusEnum.successful;
+        return this.status === VerificationStatusEnum.SUCCESSFUL;
     }
 }

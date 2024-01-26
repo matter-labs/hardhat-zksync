@@ -16,12 +16,13 @@
     "zkSync"
   ],
   "scripts": {
-    "lint": "yarn prettier --check && yarn eslint",
+    "lint": "yarn eslint",
+    "prettier:check": "yarn prettier --check",
     "lint:fix": "yarn eslint --fix",
     "fmt": "yarn prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "NODE_ENV=test mocha test/tests.ts --no-timeout --exit",
+    "test": "c8 mocha --recursive \"test/tests/**/*.ts\" --exit",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -32,34 +33,42 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "^1.0.5",
-    "@nomicfoundation/hardhat-verify": "^1.0.2",
-    "axios": "^1.4.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "axios": "^1.6.2",
+    "chai": "^4.3.6",
+    "hardhat": "^2.14.0",
     "chalk": "4.1.2",
-    "dockerode": "^3.3.4",
-    "zksync-ethers": "^5.0.0"
+    "@ethersproject/abi": "^5.1.2",
+    "@ethersproject/address": "5.7.0",
+    "zksync-ethers": "^5.0.0",
+    "cbor": "^8.1.0",
+    "debug": "^4.1.1",
+    "@openzeppelin/contracts": "^4.9.2",
+    "sinon-chai": "^3.7.0",
+    "sinon": "^16.0.0"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.0.2",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
-    "@typescript-eslint/eslint-plugin": "5.13.0",
-    "@typescript-eslint/parser": "5.13.0",
-    "chai": "^4.3.6",
-    "eslint": "^8.10.0",
-    "eslint-config-prettier": "8.4.0",
-    "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-prettier": "4.0.0",
-    "hardhat": "^2.14.0",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-no-only-tests": "3.1.0",
+    "eslint-plugin-prettier": "5.0.1",
     "mocha": "^10.1.0",
-    "prettier": "2.5.1",
+    "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
-    "typescript": "^4.6.2"
+    "typescript": "^5.1.6",
+    "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^1.0.2"
+    "@nomicfoundation/hardhat-verify": "^2.0.0"
   },
   "prettier": {
     "tabWidth": 4,

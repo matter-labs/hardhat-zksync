@@ -40,7 +40,7 @@ If your constructor arguments are already encoded, they should be passed as a no
 `;
 
 export const BUILD_INFO_NOT_FOUND_ERROR = (
-    contractFQN: string
+    contractFQN: string,
 ) => `We couldn't find the sources of your "${contractFQN}" contract in the project.
 Please make sure that it has been compiled by Hardhat and that it is written in Solidity.`;
 
@@ -52,7 +52,7 @@ export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: st
     `Please export a list of constructor arguments or a single string starting with "0x".`;
 
 export const CONSTRUCTOR_MODULE_IMPORTING_ERROR = (
-    errorMessage: string
+    errorMessage: string,
 ) => `Importing the module for the constructor arguments list failed.
 Reason: ${errorMessage}`;
 
@@ -105,3 +105,6 @@ export const UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE = `Compiling your contract
 Trying again with the full solc input used to compile and deploy it.
 This means that unrelated contracts may be displayed on the zksync block explorer.
 `;
+
+export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
+    `Solidity compiler versions in your Hardhat config file are in conflict for version ${version}. Please specify version of compiler only with zkVm support(eraVersion) or without it`;

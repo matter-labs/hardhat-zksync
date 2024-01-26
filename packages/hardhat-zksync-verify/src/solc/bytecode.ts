@@ -50,7 +50,7 @@ export async function extractMatchingContractInformation(
     sourceName: SourceName,
     contractName: ContractName,
     buildInfo: BuildInfo,
-    deployedBytecode: Bytecode
+    deployedBytecode: Bytecode,
 ): Promise<ContractInformation | null> {
     const contract = buildInfo.output.contracts[sourceName][contractName];
 
@@ -80,7 +80,7 @@ export async function extractMatchingContractInformation(
 
 export async function compareBytecode(
     deployedBytecode: Bytecode,
-    runtimeBytecodeSymbols: CompilerOutputBytecode
+    runtimeBytecodeSymbols: CompilerOutputBytecode,
 ): Promise<BytecodeExtractedData | null> {
     // We will ignore metadata information when comparing. Etherscan seems to do the same.
     const deployedExecutableSection = deployedBytecode.getExecutableSection();
@@ -95,7 +95,7 @@ export async function compareBytecode(
 
     const { normalizedBytecode: referenceBytecode } = await normalizeBytecode(
         runtimeBytecodeSymbols.object,
-        runtimeBytecodeSymbols
+        runtimeBytecodeSymbols,
     );
 
     if (
@@ -113,7 +113,7 @@ export async function compareBytecode(
 
 export async function normalizeBytecode(
     bytecode: string,
-    symbols: CompilerOutputBytecode
+    symbols: CompilerOutputBytecode,
 ): Promise<BytecodeExtractedData> {
     const nestedSliceReferences: NestedSliceReferences = [];
 
