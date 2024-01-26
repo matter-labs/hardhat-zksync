@@ -1,22 +1,17 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
 import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import {
-    MULTIPLE_MATCHING_CONTRACTS,
-    CONTRACT_NAME_NOT_FOUND,
-    NO_MATCHING_CONTRACT,
-    LIBRARIES_EXPORT_ERROR,
-} from './constants';
+import path from 'path';
+import chalk from 'chalk';
+import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 import { executeVeificationWithRetry } from './utils';
-import path from 'path';
-import chalk from 'chalk';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
     matchingCompilerVersions: string[],
-    deployedBytecode: Bytecode
+    deployedBytecode: Bytecode,
 ): Promise<any> {
     const contractMatches = [];
     const fqNames = await artifacts.getAllFullyQualifiedNames();
@@ -38,7 +33,7 @@ export async function inferContractArtifacts(
             sourceName,
             contractName,
             buildInfo,
-            deployedBytecode
+            deployedBytecode,
         );
         if (contractInformation !== null) {
             contractMatches.push(contractInformation);
@@ -47,8 +42,6 @@ export async function inferContractArtifacts(
     }
 
     if (contractMatches.length === 0) throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
-
-    if (contractMatches.length > 1) throw new ZkSyncVerifyPluginError(MULTIPLE_MATCHING_CONTRACTS);
 
     return contractMatches[0];
 }
@@ -64,7 +57,7 @@ export async function checkContractName(artifacts: Artifacts, contractFQN: strin
         if (!isFullyQualifiedName(contractFQN)) {
             throw new ZkSyncVerifyPluginError(
                 `A valid fully qualified name was expected. Fully qualified names look like this: "contracts/AContract.sol:TheContract"
-Instead, this name was received: ${contractFQN}`
+Instead, this name was received: ${contractFQN}`,
             );
         }
 
@@ -80,7 +73,7 @@ export function getSolidityStandardJsonInput(hre: HardhatRuntimeEnvironment, res
     return {
         language: 'Solidity',
         sources: Object.fromEntries(
-            resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }])
+            resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }]),
         ),
         settings: hre.config.zksolc.settings,
     };
@@ -104,16 +97,16 @@ export async function getLibraries(librariesModule: string) {
     } catch (error: any) {
         throw new ZkSyncVerifyPluginError(
             `Importing the module for the libraries dictionary failed. Reason: ${error.message}`,
-            error
+            error,
         );
     }
 }
 
 export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
+    const isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
 
     if (isValidVerification?.errorExists()) {
-        throw new ZkSyncVerifyPluginError(isValidVerification.getError());
+        throw new ZkSyncVerifyPluginError(`Backend verification error: ${isValidVerification.getError()}`);
     }
     console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
     return true;
