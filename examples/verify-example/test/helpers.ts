@@ -2,7 +2,7 @@ import { TASK_COMPILE } from "@matterlabs/hardhat-zksync-verify/dist/src/constan
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-export const PRIVATE_KEY = '0x11a886803cd3d49695b838f18ab9697feafd8465dc423c12eb6c3722727a4bba';
+export const PRIVATE_KEY = 'PRIVATE_KEY';
 export const MOCK_ADDRESS = '0x110eb1e16A63c608787236E728Fa1817C72e6950';
 export const WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR =
     'The number of constructor arguments you provided (0) does not match the number of constructor arguments the contract has been deployed with (1).';
