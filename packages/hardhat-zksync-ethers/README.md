@@ -18,7 +18,8 @@ or
 
 | 🙏 Helper                                     | 📄 Description                                                                                                |
 |-----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| provider                                      | Retruns a Provider automatically connected to the selected network.                                           |
+| providerL2                                      | Retruns a Provider for L2 automatically connected to the selected network.                                           |
+| providerL1                                      | Retruns a Provider for L1 automatically connected to the selected network.                                           |
 | getWallet                                     | Returns Wallet for the given private key or index.                                                            |
 | getContractFactory variant1                   | Returns a ContractFactory for provided artifact name.                                                         |
 | getContractFactory variant2                   | Returns a ContractFactory for provided artifact abi and bytecode.                                             |

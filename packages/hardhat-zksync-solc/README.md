@@ -34,6 +34,7 @@ zksolc: {
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
+        fallback_to_optimizing_for_size: false, // optional. Try to recompile with optimizer mode "z" if the bytecode is too large
       },
       experimental: {
         dockerImage: '', // deprecated
@@ -51,7 +52,7 @@ zksolc: {
 | missingLibrariesPath        | (optional) serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. |
 | isSystem                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries          |
 | forceEvmla                  | Falls back to EVM legacy assembly if there is an issue with the Yul IR compilation pipeline.                         |
-| optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default) recommended for most projects.          |
+| optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |
 | metadata                    | Metadata settings. If the option is omitted, the metadata hash appends by default: bytecodeHash. Can only be none.   |
 | dockerImage                 | (deprecated) option used to identify the name of the compiler docker image.                                          |
 
@@ -62,6 +63,23 @@ Setting the forceEvmla field to true can have the following negative impacts:
 - No support for recursion.
 - No support for internal function pointers.
 - Possible contract size and performance impact.
+
+### zkSync Era Solidity compiler
+
+Due to [the identified limitations](https://docs.zksync.io/zk-stack/components/compiler/toolchain/solidity.html#limitations) of the [upstream Solidity compiler](https://github.com/ethereum/solidity), our team has developed [a new edition](https://github.com/matter-labs/era-solidity) of the compiler, which effectively addresses and resolves these constraints.
+
+For usage of EraVM  compiler, `eraVersion` should be added inside `solidity` property in the `hardhat.config.ts` file:
+
+```typescript
+solidity: {
+    version: "0.8.17",
+    eraVersion: "1.0.0" //optional. Compile contracts with EraVM compiler
+},
+```
+
+| 🔧 Properties               | 📄 Description                                                                                                       |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------|
+| eraVersion                     | (optional) is field used to specify version of EraVM compiler
 
 ## 🕹 Commands
 

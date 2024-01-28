@@ -6,12 +6,18 @@ export async function compileWithBinary(
     config: ZkVyperConfig,
     vyperPath: string,
 ): Promise<any> {
-    const optimizationMode = config.settings.optimizer?.mode;
+    const settings = config.settings;
+
+    const optimizationMode = settings.optimizer?.mode;
+    const fallbackOz = settings.optimizer?.fallback_to_optimizing_for_size;
+
+    const processCommand = `${paths.compilerPath} ${optimizationMode ? `-O ${optimizationMode}` : ''}  ${
+        fallbackOz ? '--fallback-Oz' : ''
+    }  -f combined_json ${paths.inputPaths.join(' ')} --vyper ${vyperPath}`;
+
     const output: string = await new Promise((resolve, reject) => {
         exec(
-            `${paths.compilerPath} ${
-                optimizationMode ? `-O ${optimizationMode}` : ''
-            } -f combined_json ${paths.inputPaths.join(' ')} --vyper ${vyperPath}`,
+            processCommand,
             {
                 maxBuffer: 1024 * 1024 * 500,
             },

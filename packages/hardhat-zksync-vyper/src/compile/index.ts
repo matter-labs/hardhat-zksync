@@ -2,7 +2,10 @@ import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import semver from 'semver';
 import { ZkVyperConfig, CompilerOptions, CompilerOutput } from '../types';
 import { ZkSyncVyperPluginError } from '../errors';
-import { ZKVYPER_COMPILER_MIN_VERSION_WITH_WINDOWS_PATH_NORMALIZE } from '../constants';
+import {
+    ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ,
+    ZKVYPER_COMPILER_MIN_VERSION_WITH_WINDOWS_PATH_NORMALIZE,
+} from '../constants';
 import { compileWithBinary } from './binary';
 import {
     validateDockerIsInstalled,
@@ -20,6 +23,14 @@ export async function compile(
     vyperPath?: string,
 ) {
     let compiler: ICompiler;
+    if (
+        zkvyperConfig.settings.optimizer?.fallback_to_optimizing_for_size &&
+        semver.lt(zkvyperConfig.version, ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
+    ) {
+        throw new ZkSyncVyperPluginError(
+            `fallback_to_optimizing_for_size option in optimizer is not supported for zkvyper compiler version ${zkvyperConfig.version}. Please use version ${ZKVYPER_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
+        );
+    }
     if (zkvyperConfig.compilerSource === 'binary') {
         if (vyperPath === null) {
             throw new ZkSyncVyperPluginError('vyper executable is not specified');
