@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.1...@matterlabs/hardhat-zksync-upgradable-v1.2.2) (2024-01-29)
+
+
+### Bug Fixes
+
+* add support for sepolia and zksync era test node ([#705](https://github.com/matter-labs/hardhat-zksync/issues/705)) ([d2ab4aa](https://github.com/matter-labs/hardhat-zksync/commit/d2ab4aa6f469e4ecb7531f516b38c1f64bf0ca6f))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable@1.2.0...@matterlabs/hardhat-zksync-upgradable-v1.2.1) (2023-12-22)
 
 
