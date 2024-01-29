@@ -8,6 +8,12 @@
 * add era test node and sepolia to supported networks ([#709](https://github.com/matter-labs/hardhat-zksync/issues/709)) ([415b185](https://github.com/matter-labs/hardhat-zksync/commit/415b185182028d96ddce13a76c718290f2568f62))
 * **docs:** update readme fils ([6fce5bd](https://github.com/matter-labs/hardhat-zksync/commit/6fce5bdd0ebc7d61519b5cc637f962c1390944ea))
 
+## 0.2.0
+
+### Minor Changes
+
+- 4fe1ebb: Migration from zksync-web3 to zksync-ethers
+
 ## 0.1.3
 
 ### Patch Changes
