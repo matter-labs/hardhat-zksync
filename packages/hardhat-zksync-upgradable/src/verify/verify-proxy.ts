@@ -29,11 +29,11 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
     const proxyAddress = args.address;
 
     if (await isTransparentOrUUPSProxy(provider, proxyAddress)) {
-        await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
+        await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else if (await isBeaconProxy(provider, proxyAddress)) {
-        await fullVerifyBeaconProxy(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
+        await fullVerifyBeaconProxy(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else if (await isBeacon(provider, proxyAddress)) {
-        await fullVerifyBeacon(hre, proxyAddress, hardhatZkSyncVerify, runSuper);
+        await fullVerifyBeacon(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else {
         return hardhatZkSyncVerify(proxyAddress);
     }
@@ -70,9 +70,10 @@ export async function verifyWithArtifact(
     address: string,
     possibleContractInfo: VerifiableContractInfo[],
     runSuper: RunSuperFunction<any>,
+    noCompile: boolean,
 ) {
     try {
-        await attemptVerifyWithCreationEvent(hre, address, possibleContractInfo, runSuper);
+        await attemptVerifyWithCreationEvent(hre, address, possibleContractInfo, runSuper, noCompile);
         return true;
     } catch (fallbackError: any) {
         if (fallbackError.message.toLowerCase().includes('already verified')) {
@@ -101,6 +102,7 @@ async function attemptVerifyWithCreationEvent(
     address: string,
     possibleContractInfo: VerifiableContractInfo[],
     runSuper: RunSuperFunction<any>,
+    noCompile: boolean,
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new zk.Provider(networkConfig.url);
@@ -119,5 +121,5 @@ async function attemptVerifyWithCreationEvent(
     );
     const constructorArgs = decodedInputData[2];
 
-    await runSuper({ address, constructorArguments: constructorArgs, libraries: {} });
+    await runSuper({ address, constructorArguments: constructorArgs, libraries: {}, noCompile });
 }

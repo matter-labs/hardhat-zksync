@@ -10,5 +10,5 @@ export const networkNames: { [chainId in number]?: string } = Object.freeze({
     280: 'zkSync-testnet-goerli',
     270: 'zkSync-local-setup',
     300: 'zkSync-testnet-sepolia',
-    260: 'zkSync-era-test-node'
+    260: 'zkSync-era-test-node',
 });
