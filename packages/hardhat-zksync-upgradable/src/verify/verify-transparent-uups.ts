@@ -27,6 +27,7 @@ export async function fullVerifyTransparentOrUUPS(
     proxyAddress: any,
     hardhatVerify: (address: string) => Promise<any>,
     runSuper: RunSuperFunction<any>,
+    noCompile:boolean = false,
     quiet: boolean = false,
 ) {
     const networkConfig: any = hre.network.config;
@@ -44,7 +45,7 @@ export async function fullVerifyTransparentOrUUPS(
                 console.info(chalk.cyan(`Verifying proxy admin: ${adminAddress}`));
             }
             try {
-                await verifyWithArtifact(hre, adminAddress, [verifiableContracts.proxyAdmin], runSuper);
+                await verifyWithArtifact(hre, adminAddress, [verifiableContracts.proxyAdmin], runSuper,noCompile);
             } catch (e: any) {
                 console.error(chalk.red(`Error verifying proxy admin: ${e.message}`));
             }
@@ -60,6 +61,7 @@ export async function fullVerifyTransparentOrUUPS(
             proxyAddress,
             [verifiableContracts.transparentUpgradeableProxy, verifiableContracts.erc1967proxy],
             runSuper,
+            noCompile
         );
     }
 }
