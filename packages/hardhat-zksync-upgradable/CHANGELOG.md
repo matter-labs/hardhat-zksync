@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.2.1...@matterlabs/hardhat-zksync-upgradable-v0.2.2) (2024-01-31)
+
+
+### Bug Fixes
+
+* add no compile flag propagation for ethers-v5 ([#721](https://github.com/matter-labs/hardhat-zksync/issues/721)) ([32c0bf2](https://github.com/matter-labs/hardhat-zksync/commit/32c0bf227d8c3011cc0910e01cb33deba88b4125))
+
 ## [0.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable@0.2.0...@matterlabs/hardhat-zksync-upgradable-v0.2.1) (2024-01-29)
 
 
