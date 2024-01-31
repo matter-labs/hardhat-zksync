@@ -41,7 +41,7 @@ describe('Miscellaneous tests', function () {
             await getAddressOf(invalidAccount as any);
             throw new Error('Expected error was not thrown');
         } catch (e: any) {
-            expect(e.message).to.include(`Expected string or addressable, got ${invalidAccount}`);
+            expect(e.message).to.include(`account.getAddress is not a function`);
         }
     });
 
