@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.2.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.2...@matterlabs/hardhat-zksync-upgradable-v1.2.3) (2024-01-31)
+
+
+### Bug Fixes
+
+* add no compile flag propagation ([#720](https://github.com/matter-labs/hardhat-zksync/issues/720)) ([2cdc982](https://github.com/matter-labs/hardhat-zksync/commit/2cdc982e31f6816feecc585e57354c08800b44d6))
+
 ## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.1...@matterlabs/hardhat-zksync-upgradable-v1.2.2) (2024-01-29)
 
 
