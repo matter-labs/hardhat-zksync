@@ -153,38 +153,44 @@ export async function getRPCServerBinariesDir(): Promise<string> {
 }
 
 // Get latest release from GitHub of the era-test-node binary
-export async function getRelease(owner: string, repo: string, userAgent: string, tag?: string): Promise<any> {
-    let url = `https://api.github.com/repos/${owner}/${repo}/releases/`;
-    url = tag != 'latest' ? url + `tags/${tag}` : url + `latest`;
+export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
+    const url = `https://github.com/${owner}/${repo}/releases/latest`;
+    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
 
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                'User-Agent': userAgent,
-            },
-        });
+    const { request } = await import('undici');
 
-        return response.data;
-    } catch (error: any) {
-        if (error.response) {
-            // The request was made and the server responded with a status code outside of the range of 2xx
-            throw new ZkSyncNodePluginError(
-                `Failed to get ${tag} release for ${owner}/${repo}. Status: ${
-                    error.response.status
-                }, Data: ${JSON.stringify(error.response.data)}`
-            );
-        } else if (error.request) {
-            // The request was made but no response was received
-            throw new ZkSyncNodePluginError(`No response received for ${owner}/${repo}. Error: ${error.message}`);
+    const response = await request(url, {
+        headersTimeout: timeout,
+        maxRedirections: 0,
+        method: 'GET',
+        headers: {
+            'User-Agent': `${userAgent}`,
+        },
+    });
+
+    // Check if the response is a redirect
+    if (response.statusCode >= 300 && response.statusCode < 400) {
+        // Get the URL from the 'location' header
+        if (response.headers.location) {
+            // Check if the redirect URL matches the expected pattern
+            if (response.headers.location.startsWith(redirectUrlPattern)) {
+                // Extract the tag from the redirect URL
+                return response.headers.location.substring(redirectUrlPattern.length);
+            }
+
+            throw new ZkSyncNodePluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
         } else {
-            // Something happened in setting up the request that triggered an Error
-            throw new ZkSyncNodePluginError(`Failed to set up the request for ${owner}/${repo}: ${error.message}`);
+            // Throw an error if the 'location' header is missing in a redirect response
+            throw new ZkSyncNodePluginError(`Redirect location not found for URL: ${url}`);
         }
+    } else {
+        // Throw an error for non-redirect responses
+        throw new ZkSyncNodePluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
     }
 }
 
 // Get the asset to download from the latest release of the era-test-node binary
-export async function getAssetToDownload(latestRelease: any): Promise<string> {
+export async function getNodeUrl(repo: string, release: string): Promise<string> {
     const platform = getPlatform();
 
     // TODO: Add support for Windows
@@ -192,10 +198,7 @@ export async function getAssetToDownload(latestRelease: any): Promise<string> {
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    const prefix = 'era_test_node-' + latestRelease.tag_name;
-    const expectedAssetName = `${prefix}-${getArch()}-${platform}.tar.gz`;
-
-    return latestRelease.assets.find((asset: any) => asset.name === expectedAssetName);
+    return `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
 }
 
 function isTarGzFile(filePath: string): boolean {
