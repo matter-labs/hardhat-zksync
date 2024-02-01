@@ -2,6 +2,10 @@ export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-node';
 
 export const ZKNODE_BIN_OWNER = 'matter-labs';
 export const ZKNODE_BIN_REPOSITORY_NAME = 'era-test-node';
+export const ZKNODE_BIN_REPOSITORY = 'https://github.com/matter-labs/era-test-node';
+
+export const USER_AGENT =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export const TASK_NODE_ZKSYNC = 'node-zksync';
 export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
@@ -48,6 +52,8 @@ export const NETWORK_GAS_PRICE = {
 export const NETWORK_ETH = {
     LOCALHOST: 'localhost',
 };
+
+export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 
 // export const TOOLCHAIN_MAP: Record<string, string> = {
 //     linux: '-musl',
