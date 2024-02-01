@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.0.1...@matterlabs/hardhat-zksync-node-v1.1.0) (2024-02-01)
+
+
+### Features
+
+* get release tag from redirect url at node plugin ([#668](https://github.com/matter-labs/hardhat-zksync/issues/668)) ([5d53b27](https://github.com/matter-labs/hardhat-zksync/commit/5d53b270428fc3bd7a6338d0bab38a7f52d485d1))
+
 ## [1.0.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node@1.0.0...@matterlabs/hardhat-zksync-node-v1.0.1) (2023-12-22)
 
 
