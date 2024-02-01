@@ -13,12 +13,12 @@ export function supportWithArgs(Assertion: Chai.AssertionStatic, utils: Chai.Cha
 
         if (!emitCalled && !revertedWithCustomErrorCalled) {
             throw new Error(
-                'withArgs can only be used in combination with a previous .emit or .revertedWithCustomError assertion'
+                'withArgs can only be used in combination with a previous .emit or .revertedWithCustomError assertion',
             );
         }
         if (emitCalled && revertedWithCustomErrorCalled) {
             throw new Error(
-                'withArgs called with both .emit and .revertedWithCustomError, but these assertions cannot be combined'
+                'withArgs called with both .emit and .revertedWithCustomError, but these assertions cannot be combined',
             );
         }
 

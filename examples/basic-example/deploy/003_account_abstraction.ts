@@ -5,7 +5,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
-    //return;
+    // return;
     console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -58,15 +58,15 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     aaTx = {
         ...aaTx,
         from: multisigAddress,
-        gasLimit: gasLimit,
-        gasPrice: gasPrice,
+        gasLimit,
+        gasPrice,
         chainId: (await provider.getNetwork()).chainId,
         nonce: await provider.getTransactionCount(multisigAddress),
         type: 113,
         customData: {
             gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
         } as zk.types.Eip712Meta,
-        value: ethers.toBigInt(0)
+        value: ethers.toBigInt(0),
     };
     const signedTxHash = zk.EIP712Signer.getSignedDigest(aaTx);
 
@@ -84,11 +84,11 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     console.log(`The multisig's nonce before the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
 
-    const serialized = zk.utils.serializeEip712(aaTx)
-   
+    const serialized = zk.utils.serializeEip712(aaTx);
+
     const tx = await provider.broadcastTransaction(serialized);
     await tx.wait();
-    
+
     console.log(`The multisig's nonce after the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
     const greetingFromContract = await greeterContract.greet();
     if (greetingFromContract === newGreeting) {
@@ -96,5 +96,4 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     } else {
         throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
     }
-
 }

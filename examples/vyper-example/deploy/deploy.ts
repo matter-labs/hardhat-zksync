@@ -47,7 +47,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // Call the deployed contract.
     const forwarderContract = new ethers.Contract(forwarderAddress, greeter.abi, deployer.zkWallet.provider);
     const greeting = await forwarderContract.greet();
-    if (greeting == 'Hello world') {
+    if (greeting === 'Hello world') {
         console.info(chalk.green(`Successful greeting from the contract!`));
     } else {
         throw new Error(`Contract returned unexpected greeting: ${greeting}`);

@@ -2,7 +2,6 @@ import {
     getStorageLayout,
     getVersion,
     StorageLayout,
-    UpgradesError,
     ValidationDataCurrent,
     Version,
 } from '@openzeppelin/upgrades-core';
@@ -10,15 +9,15 @@ import {
 import * as zk from 'zksync-ethers';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
+import { TransactionResponse } from 'zksync-ethers/src/types';
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
 import { validateBeaconImpl, validateProxyImpl } from '../validations/validate-impl';
 import { readValidations } from '../validations/validations';
 
-import { deploy } from './deploy';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
-import { TransactionResponse } from 'zksync-ethers/src/types';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { deploy } from './deploy';
 
 export interface DeployData {
     provider: zk.Provider;
@@ -33,7 +32,7 @@ export interface DeployData {
 export async function getDeployData(
     hre: HardhatRuntimeEnvironment,
     contractFactory: zk.ContractFactory,
-    opts: UpgradeOptions
+    opts: UpgradeOptions,
 ): Promise<DeployData> {
     const provider = opts.provider;
     const validations = await readValidations(hre);
@@ -49,7 +48,7 @@ export async function deployProxyImpl(
     hre: HardhatRuntimeEnvironment,
     contractFactory: zk.ContractFactory,
     opts: DeployProxyOptions,
-    proxyAddress?: string
+    proxyAddress?: string,
 ): Promise<any> {
     const deployData = await getDeployData(hre, contractFactory, opts);
     await validateProxyImpl(deployData, opts, proxyAddress);
@@ -60,7 +59,7 @@ async function deployImpl(
     hre: HardhatRuntimeEnvironment,
     deployData: DeployData,
     factory: zk.ContractFactory,
-    opts: UpgradeOptions
+    opts: UpgradeOptions,
 ): Promise<any> {
     const layout = deployData.layout;
 
@@ -68,20 +67,20 @@ async function deployImpl(
         deployData.version,
         deployData.provider,
         async () => {
-            const abi = factory.interface.format(FORMAT_TYPE_MINIMAL==='minimal') as string[];
+            const abi = factory.interface.format(FORMAT_TYPE_MINIMAL === 'minimal') as string[];
             const attemptDeploy = async () => {
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const deployed = await deploy(factory,...deployData.fullOpts.constructorArgs);
+                    const deployed = await deploy(factory, ...deployData.fullOpts.constructorArgs);
 
                     return deployed;
                 }
             };
-            const deployment = Object.assign({ abi }, await attemptDeploy());
-            return { ...deployment, layout };
+            const deploymentInternal = { abi, ...(await attemptDeploy()) };
+            return { ...deploymentInternal, layout };
         },
-        opts
+        opts,
     );
 
     return { impl: deployment.address, kind: opts.kind };
@@ -96,7 +95,7 @@ export async function deployBeaconImpl(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
     opts: UpgradeOptions,
-    beaconAddress?: string
+    beaconAddress?: string,
 ): Promise<DeployedBeaconImpl> {
     const deployData = await getDeployData(hre, factory, opts);
     await validateBeaconImpl(deployData, opts, beaconAddress);

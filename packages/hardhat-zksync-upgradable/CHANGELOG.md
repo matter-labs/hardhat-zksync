@@ -1,5 +1,26 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.2.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.2...@matterlabs/hardhat-zksync-upgradable-v1.2.3) (2024-01-31)
+
+
+### Bug Fixes
+
+* add no compile flag propagation ([#720](https://github.com/matter-labs/hardhat-zksync/issues/720)) ([2cdc982](https://github.com/matter-labs/hardhat-zksync/commit/2cdc982e31f6816feecc585e57354c08800b44d6))
+
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.1...@matterlabs/hardhat-zksync-upgradable-v1.2.2) (2024-01-29)
+
+
+### Bug Fixes
+
+* add support for sepolia and zksync era test node ([#705](https://github.com/matter-labs/hardhat-zksync/issues/705)) ([d2ab4aa](https://github.com/matter-labs/hardhat-zksync/commit/d2ab4aa6f469e4ecb7531f516b38c1f64bf0ca6f))
+
+## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable@1.2.0...@matterlabs/hardhat-zksync-upgradable-v1.2.1) (2023-12-22)
+
+
+### Fixes
+
+* **docs:** update readme files ([#612](https://github.com/matter-labs/hardhat-zksync/issues/612)) ([682338e](https://github.com/matter-labs/hardhat-zksync/commit/682338e60f52021206325ff6eeec2c394a118642))
+
 ## 1.2.0
 
 ### Minor Changes

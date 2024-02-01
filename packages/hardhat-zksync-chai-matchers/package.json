@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-chai-matchers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Hardhat plugin that adds zkSync-specific capabilities to the Chaiassertion library, making your smart contract tests easy to write and read",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-chai-matchers",
@@ -39,7 +39,16 @@
     "singleQuote": true,
     "bracketSpacing": true
   },
-  "dependencies": {},
+  "dependencies": {
+    "chai": "^4.3.7",
+    "zksync-ethers": "^6.0.0",
+    "ethers": "^6.7.1",
+    "hardhat": "^2.19.4",
+    "ordinal":"1.0.3",
+    "chai-as-promised": "^7.1.1",
+    "@matterlabs/hardhat-zksync-deploy": "1.1.2",
+    "@matterlabs/hardhat-zksync-solc": "1.0.6"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@types/chai": "^4.2.0",
@@ -48,20 +57,16 @@
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "bignumber.js": "^9.1.0",
-    "chai": "^4.3.7",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "ethers": "^6.7.1",
-    "hardhat": "^2.19.2",
     "mocha": "^10.1.0",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "zksync-ethers": "^6.0.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.8.3",
     "c8": "^8.0.1"

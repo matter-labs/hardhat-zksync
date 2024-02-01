@@ -3,18 +3,14 @@ import * as zk from 'zksync-ethers';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
-import { Account, getAddressOf } from './misc/account';
 import { HttpNetworkConfig } from 'hardhat/types';
-import { BaseContract, BaseContractMethod, BigNumberish, ContractTransactionResponse, toBigInt } from 'ethers';
+import { BaseContractMethod, BigNumberish, ContractTransactionResponse, toBigInt } from 'ethers';
+import { Account, getAddressOf } from './misc/account';
 
 export type Token = zk.Contract & {
     balanceOf: BaseContractMethod<[string], bigint, bigint>;
     name: BaseContractMethod<[], string, string>;
-    transfer: BaseContractMethod<
-      [string, BigNumberish],
-      boolean,
-      ContractTransactionResponse
-    >;
+    transfer: BaseContractMethod<[string, BigNumberish], boolean, ContractTransactionResponse>;
     symbol: BaseContractMethod<[], string, string>;
 };
 
@@ -22,7 +18,6 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     Assertion.addMethod(
         'changeTokenBalance',
         function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
-
             const negated = this.__flags.negate;
 
             let subject = this._obj;
@@ -38,7 +33,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 assert(
                     actualChange === toBigInt(balanceChange),
                     `Expected the balance of ${tokenDescription} tokens for "${address}" to change by ${balanceChange.toString()}, but it changed by ${actualChange.toString()}`,
-                    `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`
+                    `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`,
                 );
             };
 
@@ -52,7 +47,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
             return this;
-        }
+        },
     );
 
     Assertion.addMethod(
@@ -69,19 +64,19 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 
             if (accounts.length !== balanceChanges.length) {
                 throw new Error(
-                    `The number of accounts (${accounts.length}) is different than the number of expected balance changes (${balanceChanges.length})`
+                    `The number of accounts (${accounts.length}) is different than the number of expected balance changes (${balanceChanges.length})`,
                 );
             }
 
             const balanceChangesPromise = Promise.all(
-                accounts.map((account) => getBalanceChange(subject, token, account))
+                accounts.map((account) => getBalanceChange(subject, token, account)),
             );
             const addressesPromise = Promise.all(accounts.map(getAddressOf));
 
             const checkBalanceChanges = ([actualChanges, addresses, tokenDescription]: [
                 bigint[],
                 string[],
-                string
+                string,
             ]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
@@ -92,7 +87,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                     }, respectively, but they changed by ${actualChanges as any}`,
                     `Expected the balances of ${tokenDescription} tokens for ${addresses as any} NOT to change by ${
                         balanceChanges as any
-                    }, respectively, but they did`
+                    }, respectively, but they did`,
                 );
             };
 
@@ -106,14 +101,14 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
             return this;
-        }
+        },
     );
 }
 
 function checkToken(token: unknown, method: string) {
     if (typeof token !== 'object' || token === null || !('interface' in token)) {
         throw new Error(`The first argument of ${method} must be the contract instance of the token`);
-    } else if ((token as any).interface.getFunction("balanceOf") === null) {
+    } else if ((token as any).interface.getFunction('balanceOf') === null) {
         throw new Error('The given contract instance is not an ERC20 token');
     }
 }
@@ -121,9 +116,9 @@ function checkToken(token: unknown, method: string) {
 export async function getBalanceChange(
     transaction: zk.types.TransactionResponse | Promise<zk.types.TransactionResponse>,
     token: Token,
-    account: Account | string
+    account: Account | string,
 ) {
-    const hre = await import("hardhat");
+    const hre = await import('hardhat');
     const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     const txResponse = await transaction;

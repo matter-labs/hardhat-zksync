@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 import { handleAxiosError } from '../utils';
-import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncVerifyPluginError } from '../errors';
+import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncBlockExplorerVerifyRequest } from './verify-contract-request';
 
 export class ZkSyncBlockExplorerResponse {
@@ -21,12 +21,12 @@ export class ZkSyncBlockExplorerResponse {
 
 export async function checkVerificationStatusService(
     requestId: number,
-    verifyURL: string
+    verifyURL: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
 
     try {
-        let data = await axios.get(verifyURL + `/${requestId}`);
+        const data = await axios.get(`${verifyURL}/${requestId}`);
         verificationStatusResponse = new VerificationStatusResponse(data);
 
         return verificationStatusResponse;
@@ -37,7 +37,7 @@ export async function checkVerificationStatusService(
 
 export async function verifyContractRequest(
     req: ZkSyncBlockExplorerVerifyRequest,
-    verifyURL: string
+    verifyURL: string,
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
@@ -57,7 +57,7 @@ export async function verifyContractRequest(
 
 export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
     try {
-        const response = await axios.get(verifyURL + '/solc_versions');
+        const response = await axios.get(`${verifyURL}/solc_versions`);
         return response.data;
     } catch (error) {
         handleAxiosError(error);

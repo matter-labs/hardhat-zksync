@@ -3,6 +3,8 @@ import type { Artifact } from 'hardhat/types';
 import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync-ethers';
 import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 
+export type EthNetwork = string;
+
 export interface FactoryDeps {
     // A mapping from the contract hash to the contract bytecode.
     [contractHash: string]: string;
@@ -19,44 +21,28 @@ export interface FactoryOptions {
     wallet?: Wallet;
 }
 
-export declare function getContractFactory<
-    A extends any[] = any[],
-    I = Contract
->(
+export declare function getContractFactory<A extends any[] = any[], I = Contract>(
     name: string,
     wallet?: Wallet,
-    deploymentType?: DeploymentType
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>>;
 
-export declare function getContractFactory<
-    A extends any[] = any[],
-    I = Contract
->(
+export declare function getContractFactory<A extends any[] = any[], I = Contract>(
     abi: any[],
     bytecode: ethers.BytesLike,
     wallet?: Wallet,
-    deploymentType?: DeploymentType
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>>;
 
-export declare function deployContract(
-    contractFactoryOrArtifact: ContractFactory | ZkSyncArtifact,
-    constructorArguments: any[],
-    wallet?: Wallet,
-    overrides?: ethers.Overrides,
-    additionalFactoryDeps?: ethers.BytesLike[]
-): Promise<Contract>;
-
-export declare function getContractFactoryFromArtifact<
-    A extends any[] = any[],
-    I = Contract
->(
+export declare function getContractFactoryFromArtifact<A extends any[] = any[], I = Contract>(
     artifact: ZkSyncArtifact,
     wallet?: Wallet,
-    deploymentType?: DeploymentType
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>>;
 
 export interface HardhatZksyncEthersHelpers {
-    provider: Provider;
+    providerL1: ethers.Provider;
+    providerL2: Provider;
     getWallets: () => Promise<Wallet[]>;
     getWallet: (privateKeyOrIndex?: string | number) => Promise<Wallet>;
     getContractFactory: typeof getContractFactory;
@@ -71,6 +57,6 @@ export interface HardhatZksyncEthersHelpers {
         constructorArguments: any[],
         wallet?: Wallet,
         overrides?: ethers.Overrides,
-        additionalFactoryDeps?: ethers.BytesLike[]
+        additionalFactoryDeps?: ethers.BytesLike[],
     ) => Promise<Contract>;
 }

@@ -24,18 +24,20 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "hardhat": "^2.19.2",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
-    "typescript": "^5.1.6",
-    "zksync-ethers":"^6.0.0"
+    "typescript": "^5.1.6"
   },
   "dependencies": {
+    "zksync-ethers":"^6.0.0",
+    "hardhat": "^2.19.4",
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "link:../../packages/hardhat-zksync-solc",
     "@matterlabs/hardhat-zksync-upgradable": "link:../../packages/hardhat-zksync-upgradable",
     "@matterlabs/hardhat-zksync-verify": "link:../../packages/hardhat-zksync-verify",
+    "chalk": "4.1.2",
+    "ethers": "^6.7.1",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "zksync": "^0.13.1"
   },

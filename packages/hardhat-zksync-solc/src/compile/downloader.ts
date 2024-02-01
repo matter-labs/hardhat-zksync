@@ -1,9 +1,17 @@
-import path from "path";
-import fsExtra from "fs-extra";
-import chalk from "chalk";
+import path from 'path';
+import fsExtra from 'fs-extra';
+import chalk from 'chalk';
 import { spawnSync } from 'child_process';
 
-import { download, getZksolcUrl, isURL, isVersionInRange, saltFromUrl, saveDataToFile, getLatestRelease } from "../utils";
+import {
+    download,
+    getZksolcUrl,
+    isURL,
+    isVersionInRange,
+    saltFromUrl,
+    saveDataToFile,
+    getLatestRelease,
+} from '../utils';
 import {
     COMPILER_BINARY_CORRUPTION_ERROR,
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
@@ -15,7 +23,8 @@ import {
     ZKSOLC_COMPILER_VERSION_MIN_VERSION,
     ZKSOLC_BIN_OWNER,
     ZKSOLC_BIN_REPOSITORY_NAME,
-    USER_AGENT} from "../constants";
+    USER_AGENT,
+} from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
 export interface CompilerVersionInfo {
@@ -27,7 +36,6 @@ export interface CompilerVersionInfo {
  * This class is responsible for downloading the zksolc binary.
  */
 export class ZksolcCompilerDownloader {
-
     public static async getDownloaderWithVersionValidated(
         version: string,
         configCompilerPath: string,
@@ -35,7 +43,10 @@ export class ZksolcCompilerDownloader {
     ): Promise<ZksolcCompilerDownloader> {
         if (!ZksolcCompilerDownloader._instance) {
             let compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
-            if (compilerVersionInfo === undefined || (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))) {
+            if (
+                compilerVersionInfo === undefined ||
+                (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(compilersDir))
+            ) {
                 await ZksolcCompilerDownloader._downloadCompilerVersionInfo(compilersDir);
                 compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(compilersDir);
             }
@@ -47,12 +58,18 @@ export class ZksolcCompilerDownloader {
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
             } else if (!isVersionInRange(version, compilerVersionInfo)) {
-                throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+                throw new ZkSyncSolcPluginError(
+                    COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
+                );
             } else {
                 console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
-            };
+            }
 
-            ZksolcCompilerDownloader._instance = new ZksolcCompilerDownloader(version, configCompilerPath, compilersDir);
+            ZksolcCompilerDownloader._instance = new ZksolcCompilerDownloader(
+                version,
+                configCompilerPath,
+                compilersDir,
+            );
         }
 
         return ZksolcCompilerDownloader._instance;
@@ -119,7 +136,10 @@ export class ZksolcCompilerDownloader {
     public async downloadCompiler(): Promise<void> {
         let compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
 
-        if (compilerVersionInfo === undefined || (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))) {
+        if (
+            compilerVersionInfo === undefined ||
+            (await ZksolcCompilerDownloader._shouldDownloadCompilerVersionInfo(this._compilersDirectory))
+        ) {
             await ZksolcCompilerDownloader._downloadCompilerVersionInfo(this._compilersDirectory);
             compilerVersionInfo = await ZksolcCompilerDownloader._getCompilerVersionInfo(this._compilersDirectory);
         }
@@ -128,7 +148,9 @@ export class ZksolcCompilerDownloader {
             throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
         }
         if (!isVersionInRange(this._version, compilerVersionInfo)) {
-            throw new ZkSyncSolcPluginError(COMPILER_VERSION_RANGE_ERROR(this._version, compilerVersionInfo.minVersion, compilerVersionInfo.latest));
+            throw new ZkSyncSolcPluginError(
+                COMPILER_VERSION_RANGE_ERROR(this._version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
+            );
         }
 
         try {
@@ -152,8 +174,8 @@ export class ZksolcCompilerDownloader {
 
         const releaseToSave = {
             latest: latestRelease,
-            minVersion: ZKSOLC_COMPILER_VERSION_MIN_VERSION
-        }
+            minVersion: ZKSOLC_COMPILER_VERSION_MIN_VERSION,
+        };
         const savePath = this._getCompilerVersionInfoPath(compilersDir);
         await saveDataToFile(releaseToSave, savePath);
     }
@@ -181,7 +203,7 @@ export class ZksolcCompilerDownloader {
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
-        return download(url, downloadPath, 'hardhat-zksync', this._version, DEFAULT_TIMEOUT_MILISECONDS);
+        return download(url, downloadPath, USER_AGENT, DEFAULT_TIMEOUT_MILISECONDS);
     }
 
     private static async _readCompilerVersionInfo(compilerVersionInfoPath: string): Promise<CompilerVersionInfo> {
@@ -193,7 +215,6 @@ export class ZksolcCompilerDownloader {
         if (!(await fsExtra.pathExists(compilerVersionInfoPath))) {
             return undefined;
         }
-
         return await this._readCompilerVersionInfo(compilerVersionInfoPath);
     }
 
@@ -211,7 +232,7 @@ export class ZksolcCompilerDownloader {
             .match(/\d+\.\d+\.\d+/)
             ?.toString();
 
-        if (versionOutput.status !== 0 || version == null) {
+        if (versionOutput.status !== 0 || version === null) {
             throw new ZkSyncSolcPluginError(COMPILER_BINARY_CORRUPTION_ERROR(compilerPath));
         }
     }

@@ -39,13 +39,17 @@ export async function verifyContractRequest(
     }
 }
 
-export enum COMPILER_TYPE {
-    VYPER, ZKVYPER
+export enum CompilerType {
+    VYPER,
+    ZKVYPER,
 }
 
-export async function getSupportedCompilerVersions(verifyURL: string | undefined, compilerType: COMPILER_TYPE): Promise<string[]> {
+export async function getSupportedCompilerVersions(
+    verifyURL: string | undefined,
+    compilerType: CompilerType
+): Promise<string[]> {
     try {
-        const compilerTypePath = compilerType == COMPILER_TYPE.VYPER ? '/vyper_versions' : '/zkvyper_versions'
+        const compilerTypePath = compilerType === CompilerType.VYPER ? '/vyper_versions' : '/zkvyper_versions';
         const response = await axios.get(verifyURL + compilerTypePath);
         return response.data;
     } catch (error) {
@@ -60,7 +64,7 @@ export async function checkVerificationStatusService(
     let verificationStatusResponse;
 
     try {
-        let data = await axios.get(verifyURL + `/${requestId}`);
+        const data = await axios.get(`${verifyURL}/${requestId}`);
         verificationStatusResponse = new VerificationStatusResponse(data);
 
         return verificationStatusResponse;

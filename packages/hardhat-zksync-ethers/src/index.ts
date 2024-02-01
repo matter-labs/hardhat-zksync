@@ -1,9 +1,11 @@
-import { Provider, Wallet } from 'zksync-ethers';
+import { Wallet } from 'zksync-ethers';
 
 import { extendEnvironment } from 'hardhat/config';
 import { lazyObject } from 'hardhat/plugins';
 import './type-extensions';
 
+import { ethers } from 'ethers';
+import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
 import {
     extractFactoryDeps,
     getContractAt,
@@ -17,18 +19,16 @@ import {
     deployContract,
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
-import { ethers } from 'ethers';
-import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
+import { createProviders } from './utils';
 
 extendEnvironment((hre) => {
     hre.zksyncEthers = lazyObject(() => {
         const { zksyncEthers } = require('zksync-ethers');
-        const config: any = hre.network.config;
-        const provider: Provider = new Provider(config.url);
-
+        const { ethWeb3Provider, zkWeb3Provider } = createProviders(hre.config.networks, hre.network);
         return {
             ...zksyncEthers,
-            provider,
+            providerL1: ethWeb3Provider,
+            providerL2: zkWeb3Provider,
             getWallet: (privateKeyOrIndex?: string | number) => getWallet(hre, privateKeyOrIndex),
             getWallets: () => getWallets(hre),
             getImpersonatedSigner: (address: string) => getImpersonatedSigner(hre, address),
@@ -36,9 +36,12 @@ extendEnvironment((hre) => {
             getContractFactoryFromArtifact: (
                 artifact: ZkSyncArtifact,
                 walletOrOptions?: Wallet | FactoryOptions,
-                deploymentType?: DeploymentType) => getContractFactoryFromArtifact(hre, artifact, walletOrOptions, deploymentType),
-            getContractAt: (nameOrAbi: string | any[], address: string | Address, wallet?: Wallet) => getContractAt(hre, nameOrAbi, address, wallet),
-            getContractAtFromArtifact: (artifact: ZkSyncArtifact, address: string | Address, wallet?: Wallet) => getContractAtFromArtifact(hre, artifact, address, wallet),
+                deploymentType?: DeploymentType,
+            ) => getContractFactoryFromArtifact(hre, artifact, walletOrOptions, deploymentType),
+            getContractAt: (nameOrAbi: string | any[], address: string | Address, wallet?: Wallet) =>
+                getContractAt(hre, nameOrAbi, address, wallet),
+            getContractAtFromArtifact: (artifact: ZkSyncArtifact, address: string | Address, wallet?: Wallet) =>
+                getContractAtFromArtifact(hre, artifact, address, wallet),
             extractFactoryDeps: (artifact: ZkSyncArtifact) => extractFactoryDeps(hre, artifact),
             loadArtifact: (name: string) => loadArtifact(hre, name),
             deployContract: (
@@ -46,8 +49,8 @@ extendEnvironment((hre) => {
                 constructorArguments: any[],
                 wallet?: Wallet,
                 overrides?: ethers.Overrides,
-                additionalFactoryDeps?: ethers.BytesLike[]
-            ) => deployContract(hre, artifact, wallet, (constructorArguments = []), overrides, additionalFactoryDeps),
+                additionalFactoryDeps?: ethers.BytesLike[],
+            ) => deployContract(hre, artifact, constructorArguments, wallet, overrides, additionalFactoryDeps),
         };
     });
 });

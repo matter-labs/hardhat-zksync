@@ -1,5 +1,19 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.2.2...@matterlabs/hardhat-zksync-verify-v1.3.0) (2024-01-22)
+
+
+### Features
+
+* support for zkvm solc compiler verification ([#662](https://github.com/matter-labs/hardhat-zksync/issues/662)) ([a1fef16](https://github.com/matter-labs/hardhat-zksync/commit/a1fef1662ae5d9687d48bfa0e076cf3313e222df))
+
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify@1.2.1...@matterlabs/hardhat-zksync-verify-v1.2.2) (2023-12-22)
+
+
+### Fixes
+
+* **docs:** update readme files ([#612](https://github.com/matter-labs/hardhat-zksync/issues/612)) ([682338e](https://github.com/matter-labs/hardhat-zksync/commit/682338e60f52021206325ff6eeec2c394a118642))
+
 ## 1.2.1
 
 ### Patch Changes
