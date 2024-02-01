@@ -1,14 +1,16 @@
 import path from 'path';
 import fse from 'fs-extra';
 import chalk from 'chalk';
-import { download, getAssetToDownload, getRelease } from './utils';
+import { download, getLatestRelease, getNodeUrl } from './utils';
 import { ZkSyncNodePluginError } from './errors';
 import {
     DEFAULT_RELEASE_CACHE_FILE_NAME,
     DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD,
+    DEFAULT_TIMEOUT_MILISECONDS,
     PLUGIN_NAME,
     USER_AGENT,
     ZKNODE_BIN_OWNER,
+    ZKNODE_BIN_REPOSITORY,
     ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
 
@@ -26,25 +28,33 @@ export class RPCServerDownloader {
 
     public async downloadIfNeeded(force: boolean): Promise<void> {
         if (force) {
-            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag));
+            const releaseTag = this._isLatestTag()
+                ? await getLatestRelease(
+                      ZKNODE_BIN_OWNER,
+                      ZKNODE_BIN_REPOSITORY_NAME,
+                      USER_AGENT,
+                      DEFAULT_TIMEOUT_MILISECONDS,
+                  )
+                : this._tag;
+            await this._download(releaseTag);
             return;
         }
 
         if (this._isLatestTag()) {
             if (!(await this._isLatestReleaseInfoValid())) {
-                const releaseData = await getRelease(
+                const latestTag = await getLatestRelease(
                     ZKNODE_BIN_OWNER,
                     ZKNODE_BIN_REPOSITORY_NAME,
                     USER_AGENT,
-                    this._tag,
+                    DEFAULT_TIMEOUT_MILISECONDS,
                 );
 
-                if (await this._isBinaryPathExists(releaseData.tag_name)) {
-                    await this._postProcessDownload(releaseData.tag_name);
+                if (await this._isBinaryPathExists(latestTag)) {
+                    await this._postProcessDownload(latestTag);
                     return;
                 }
 
-                await this._download(releaseData);
+                await this._download(latestTag);
                 return;
             }
 
@@ -53,38 +63,35 @@ export class RPCServerDownloader {
                 return;
             }
 
-            const release = await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag);
+            const latestTag = await getLatestRelease(
+                ZKNODE_BIN_OWNER,
+                ZKNODE_BIN_REPOSITORY_NAME,
+                USER_AGENT,
+                DEFAULT_TIMEOUT_MILISECONDS,
+            );
 
-            if (info && info.latest === release.tag_name && (await this._isBinaryPathExists(release.tag_name))) {
-                await this._postProcessDownload(release.tag_name);
+            if (info && info.latest === latestTag && (await this._isBinaryPathExists(latestTag))) {
+                await this._postProcessDownload(latestTag);
                 return;
             }
-            await this._download(release);
+            await this._download(latestTag);
             return;
         }
 
         if (!(await this._isBinaryPathExists(this._tag))) {
-            await this._download(await getRelease(ZKNODE_BIN_OWNER, ZKNODE_BIN_REPOSITORY_NAME, USER_AGENT, this._tag));
+            await this._download(this._tag);
         }
     }
 
-    private async _download(release: any): Promise<void> {
-        const assetToDownload: any = await getAssetToDownload(release);
+    private async _download(tag: any): Promise<void> {
+        const url: any = await getNodeUrl(ZKNODE_BIN_REPOSITORY, tag);
         try {
-            console.info(chalk.yellow(`Downloading era-test-node binary, release: ${release.tag_name}`));
-            await download(
-                assetToDownload.browser_download_url,
-                await this._createBinaryPath(release.tag_name),
-                PLUGIN_NAME,
-                release.tag_name,
-                30000,
-            );
-            await this._postProcessDownload(release.tag_name);
+            console.info(chalk.yellow(`Downloading era-test-node binary, release: ${tag}`));
+            await download(url, await this._createBinaryPath(tag), PLUGIN_NAME, tag, 30000);
+            await this._postProcessDownload(tag);
             console.info(chalk.green('era-test-node binary downloaded successfully'));
         } catch (error: any) {
-            throw new ZkSyncNodePluginError(
-                `Error downloading binary from URL ${assetToDownload.browser_download_url}: ${error.message}`,
-            );
+            throw new ZkSyncNodePluginError(`Error downloading binary from URL ${url}: ${error.message}`);
         }
     }
 
