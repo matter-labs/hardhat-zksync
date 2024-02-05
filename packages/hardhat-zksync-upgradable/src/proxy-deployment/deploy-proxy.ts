@@ -7,7 +7,7 @@ import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import assert from 'assert';
-import { getInitializerData } from '../utils/utils-general';
+import { extractFactoryDeps, getInitializerData } from '../utils/utils-general';
 import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
@@ -36,9 +36,12 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             args = [];
         }
         opts.provider = wallet.provider;
+        opts.factoryDeps = await extractFactoryDeps(hre, artifact);
+
         const manifest = await Manifest.forNetwork(wallet.provider);
 
         const factory = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
+
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
         if (!quiet) {
             console.info(chalk.green(`Implementation contract was deployed to ${impl}`));

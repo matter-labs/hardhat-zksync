@@ -41,7 +41,15 @@ export async function getDeployData(
     const version = getVersion(unlinkedBytecode, contractFactory.bytecode, encodedArgs);
     const layout = getStorageLayout(validations, version);
     const fullOpts = withDefaults(opts);
-    return { provider, validations, unlinkedBytecode, encodedArgs, version, layout, fullOpts };
+    return {
+        provider,
+        validations,
+        unlinkedBytecode,
+        encodedArgs,
+        version,
+        layout,
+        fullOpts,
+    };
 }
 
 export async function deployProxyImpl(
@@ -72,8 +80,13 @@ async function deployImpl(
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const deployed = await deploy(factory, ...deployData.fullOpts.constructorArgs);
-
+                    const deployed = await deploy(
+                        factory,
+                        ...[
+                            ...deployData.fullOpts.constructorArgs,
+                            { customData: { factoryDeps: deployData.fullOpts.factoryDeps } },
+                        ],
+                    );
                     return deployed;
                 }
             };

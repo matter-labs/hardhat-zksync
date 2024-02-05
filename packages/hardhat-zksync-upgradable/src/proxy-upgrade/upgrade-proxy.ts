@@ -10,7 +10,7 @@ import chalk from 'chalk';
 import assert from 'assert';
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { getContractAddress } from '../utils/utils-general';
+import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
@@ -33,6 +33,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
     ): Promise<zk.Contract> {
         const proxyAddress = await getContractAddress(proxy);
         opts.provider = wallet.provider;
+        opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
 
         const newImplementationFactory = new zk.ContractFactory<any[], zk.Contract>(
             newImplementationArtifact.abi,

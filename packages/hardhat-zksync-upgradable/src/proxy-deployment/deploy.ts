@@ -11,6 +11,7 @@ export async function deploy(
     ...args: any[]
 ): Promise<Required<Deployment & DeployTransaction> & RemoteDeploymentId> {
     const contractInstance = await factory.deploy(...args);
+
     const deploymentTransaction = contractInstance.deploymentTransaction();
 
     const deployTransaction = contractInstance.deploymentTransaction();

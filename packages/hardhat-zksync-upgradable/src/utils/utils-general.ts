@@ -2,10 +2,16 @@ import { keccak256 } from 'ethereumjs-util';
 import { Interface, ethers } from 'ethers';
 import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
-import { SolcConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, SolcConfig } from 'hardhat/types';
 import { UpgradesError } from '@openzeppelin/upgrades-core';
-import { TOPIC_LOGS_NOT_FOUND_ERROR } from '../constants';
+import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
+import {
+    TOPIC_LOGS_NOT_FOUND_ERROR,
+    ZKSOLC_ARTIFACT_FORMAT_VERSION,
+    ZKVYPER_ARTIFACT_FORMAT_VERSION,
+} from '../constants';
 import { MaybeSolcOutput } from '../interfaces';
+import { ZkSyncUpgradablePluginError } from '../errors';
 
 export type ContractAddressOrInstance = string | { getAddress(): Promise<string> };
 
@@ -133,4 +139,48 @@ export function extendCompilerOutputSelection(compiler: SolcConfig) {
 
 export function convertGasPriceToEth(gasPrice: bigint): string {
     return ethers.formatEther(gasPrice.toString());
+}
+
+export async function loadArtifact(
+    hre: HardhatRuntimeEnvironment,
+    contractNameOrFullyQualifiedName: string,
+): Promise<ZkSyncArtifact> {
+    const artifact = await hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
+
+    // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
+    if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
+        throw new ZkSyncUpgradablePluginError(
+            `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`,
+        );
+    }
+    return artifact as ZkSyncArtifact;
+}
+
+export async function extractFactoryDeps(hre: HardhatRuntimeEnvironment, artifact: ZkSyncArtifact): Promise<string[]> {
+    const visited = new Set<string>();
+    visited.add(`${artifact.sourceName}:${artifact.contractName}`);
+    return await extractFactoryDepsRecursive(hre, artifact, visited);
+}
+
+export async function extractFactoryDepsRecursive(
+    hre: HardhatRuntimeEnvironment,
+    artifact: ZkSyncArtifact,
+    visited: Set<string>,
+): Promise<string[]> {
+    // Load all the dependency bytecodes.
+    // We transform it into an array of bytecodes.
+    const factoryDeps: string[] = [];
+    for (const dependencyHash in artifact.factoryDeps) {
+        if (!dependencyHash) continue;
+        const dependencyContract = artifact.factoryDeps[dependencyHash];
+        if (!visited.has(dependencyContract)) {
+            const dependencyArtifact = await loadArtifact(hre, dependencyContract);
+            factoryDeps.push(dependencyArtifact.bytecode);
+            visited.add(dependencyContract);
+            const transitiveDeps = await extractFactoryDepsRecursive(hre, dependencyArtifact, visited);
+            factoryDeps.push(...transitiveDeps);
+        }
+    }
+
+    return factoryDeps;
 }
