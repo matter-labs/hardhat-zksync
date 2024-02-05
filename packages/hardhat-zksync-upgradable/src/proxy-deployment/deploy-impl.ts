@@ -29,6 +29,7 @@ export interface DeployData {
     version: Version;
     layout: StorageLayout;
     fullOpts: Required<UpgradeOptions>;
+    factoryDeps: string[];
 }
 
 export async function getDeployData(
@@ -43,26 +44,24 @@ export async function getDeployData(
     const version = getVersion(unlinkedBytecode, contractFactory.bytecode, encodedArgs);
     const layout = getStorageLayout(validations, version);
     const fullOpts = withDefaults(opts);
-    return { provider, validations, unlinkedBytecode, encodedArgs, version, layout, fullOpts };
+    return { provider, validations, unlinkedBytecode, encodedArgs, version, layout, fullOpts, factoryDeps: opts.factoryDeps ?? [] };
 }
 
 export async function deployProxyImpl(
     hre: HardhatRuntimeEnvironment,
     contractFactory: zk.ContractFactory,
-    artifact: ZkSyncArtifact,
     opts: DeployProxyOptions,
     proxyAddress?: string,
 ): Promise<any> {
     const deployData = await getDeployData(hre, contractFactory, opts);
     await validateProxyImpl(deployData, opts, proxyAddress);
-    return await deployImpl(hre, deployData, contractFactory, artifact, opts);
+    return await deployImpl(hre, deployData, contractFactory, opts);
 }
 
 async function deployImpl(
     hre: HardhatRuntimeEnvironment,
     deployData: DeployData,
     factory: zk.ContractFactory,
-    artifact: ZkSyncArtifact,
     opts: UpgradeOptions,
 ): Promise<any> {
     const layout = deployData.layout;
@@ -76,9 +75,7 @@ async function deployImpl(
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const factoryDeps = await extractFactoryDeps(hre, artifact);
-                    const deployed = await deploy(factory, factoryDeps, ...deployData.fullOpts.constructorArgs);
-
+                    const deployed = await deploy(factory, ...[...deployData.fullOpts.constructorArgs, { customData: {factoryDeps: deployData.fullOpts.factoryDeps}}]);
                     return deployed;
                 }
             };
@@ -99,11 +96,10 @@ interface DeployedBeaconImpl {
 export async function deployBeaconImpl(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
-    artifact: ZkSyncArtifact,
     opts: UpgradeOptions,
     beaconAddress?: string,
 ): Promise<DeployedBeaconImpl> {
     const deployData = await getDeployData(hre, factory, opts);
     await validateBeaconImpl(deployData, opts, beaconAddress);
-    return await deployImpl(hre, deployData, factory, artifact, opts);
+    return await deployImpl(hre, deployData, factory, opts);
 }

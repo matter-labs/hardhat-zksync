@@ -37,7 +37,6 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         const { impl: nextImpl } = await deployBeaconImpl(
             hre,
             factory,
-            newImplementationArtifact,
             opts,
             beaconImplementationAddress,
         );

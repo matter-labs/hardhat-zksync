@@ -30,7 +30,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         opts.provider = wallet.provider;
-        const { impl } = await deployBeaconImpl(hre, beaconImplFactory, artifact, opts);
+        const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
         if (!quiet) {
             console.info(chalk.green('Beacon impl deployed at', impl));
         }
@@ -48,7 +48,6 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         );
         const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(
             upgradeableBeaconFactory,
-            [],
             impl,
         );
         if (!quiet) {
