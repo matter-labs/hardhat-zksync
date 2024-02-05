@@ -27,7 +27,6 @@ export interface DeployData {
     version: Version;
     layout: StorageLayout;
     fullOpts: Required<UpgradeOptions>;
-    factoryDeps: string[];
 }
 
 export async function getDeployData(
@@ -50,7 +49,6 @@ export async function getDeployData(
         version,
         layout,
         fullOpts,
-        factoryDeps: opts.factoryDeps ?? [],
     };
 }
 
