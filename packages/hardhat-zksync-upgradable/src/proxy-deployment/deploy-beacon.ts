@@ -46,10 +46,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
             upgradeableBeaconContract.bytecode,
             wallet,
         );
-        const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(
-            upgradeableBeaconFactory,
-            impl,
-        );
+        const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(upgradeableBeaconFactory, impl);
         if (!quiet) {
             console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
         }

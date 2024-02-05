@@ -10,7 +10,6 @@ import * as zk from 'zksync-ethers';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { TransactionResponse } from 'zksync-ethers/src/types';
-import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
 import { validateBeaconImpl, validateProxyImpl } from '../validations/validate-impl';
 import { readValidations } from '../validations/validations';
@@ -18,7 +17,6 @@ import { readValidations } from '../validations/validations';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import { extractFactoryDeps } from '../utils/utils-general';
 import { deploy } from './deploy';
 
 export interface DeployData {
@@ -44,7 +42,16 @@ export async function getDeployData(
     const version = getVersion(unlinkedBytecode, contractFactory.bytecode, encodedArgs);
     const layout = getStorageLayout(validations, version);
     const fullOpts = withDefaults(opts);
-    return { provider, validations, unlinkedBytecode, encodedArgs, version, layout, fullOpts, factoryDeps: opts.factoryDeps ?? [] };
+    return {
+        provider,
+        validations,
+        unlinkedBytecode,
+        encodedArgs,
+        version,
+        layout,
+        fullOpts,
+        factoryDeps: opts.factoryDeps ?? [],
+    };
 }
 
 export async function deployProxyImpl(
@@ -75,7 +82,13 @@ async function deployImpl(
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const deployed = await deploy(factory, ...[...deployData.fullOpts.constructorArgs, { customData: {factoryDeps: deployData.fullOpts.factoryDeps}}]);
+                    const deployed = await deploy(
+                        factory,
+                        ...[
+                            ...deployData.fullOpts.constructorArgs,
+                            { customData: { factoryDeps: deployData.fullOpts.factoryDeps } },
+                        ],
+                    );
                     return deployed;
                 }
             };

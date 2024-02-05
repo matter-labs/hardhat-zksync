@@ -41,7 +41,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         const factory = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
         const factoryDeps = await extractFactoryDeps(hre, artifact);
         opts.factoryDeps = factoryDeps;
-        
+
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
         if (!quiet) {
             console.info(chalk.green(`Implementation contract was deployed to ${impl}`));
