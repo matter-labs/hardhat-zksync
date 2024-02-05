@@ -39,7 +39,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         const manifest = await Manifest.forNetwork(wallet.provider);
 
         const factory = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
-        const { impl, kind } = await deployProxyImpl(hre, factory, opts);
+        const { impl, kind } = await deployProxyImpl(hre, factory, artifact, opts);
         if (!quiet) {
             console.info(chalk.green(`Implementation contract was deployed to ${impl}`));
         }
@@ -71,7 +71,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
                 const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
-                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data)) };
+                proxyDeployment = { kind, ...(await deploy(proxyFactory, [], impl, data)) };
 
                 if (!quiet) {
                     console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
@@ -90,7 +90,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const TUPContract = await import(TUPPath);
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
-                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, adminAddress, data)) };
+                proxyDeployment = { kind, ...(await deploy(TUPFactory, [], impl, adminAddress, data)) };
 
                 if (!quiet) {
                     console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));

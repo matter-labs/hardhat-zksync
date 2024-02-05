@@ -10,6 +10,7 @@ import * as zk from 'zksync-ethers';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { TransactionResponse } from 'zksync-ethers/src/types';
+import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
 import { validateBeaconImpl, validateProxyImpl } from '../validations/validate-impl';
 import { readValidations } from '../validations/validations';
@@ -17,6 +18,7 @@ import { readValidations } from '../validations/validations';
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { extractFactoryDeps } from '../utils/utils-general';
 import { deploy } from './deploy';
 
 export interface DeployData {
@@ -47,18 +49,20 @@ export async function getDeployData(
 export async function deployProxyImpl(
     hre: HardhatRuntimeEnvironment,
     contractFactory: zk.ContractFactory,
+    artifact: ZkSyncArtifact,
     opts: DeployProxyOptions,
     proxyAddress?: string,
 ): Promise<any> {
     const deployData = await getDeployData(hre, contractFactory, opts);
     await validateProxyImpl(deployData, opts, proxyAddress);
-    return await deployImpl(hre, deployData, contractFactory, opts);
+    return await deployImpl(hre, deployData, contractFactory, artifact, opts);
 }
 
 async function deployImpl(
     hre: HardhatRuntimeEnvironment,
     deployData: DeployData,
     factory: zk.ContractFactory,
+    artifact: ZkSyncArtifact,
     opts: UpgradeOptions,
 ): Promise<any> {
     const layout = deployData.layout;
@@ -72,7 +76,8 @@ async function deployImpl(
                 if (opts.useDeployedImplementation) {
                     throw new ZkSyncUpgradablePluginError(IMPL_CONTRACT_NOT_DEPLOYED_ERROR);
                 } else {
-                    const deployed = await deploy(factory, ...deployData.fullOpts.constructorArgs);
+                    const factoryDeps = await extractFactoryDeps(hre, artifact);
+                    const deployed = await deploy(factory, factoryDeps, ...deployData.fullOpts.constructorArgs);
 
                     return deployed;
                 }
@@ -94,10 +99,11 @@ interface DeployedBeaconImpl {
 export async function deployBeaconImpl(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
+    artifact: ZkSyncArtifact,
     opts: UpgradeOptions,
     beaconAddress?: string,
 ): Promise<DeployedBeaconImpl> {
     const deployData = await getDeployData(hre, factory, opts);
     await validateBeaconImpl(deployData, opts, beaconAddress);
-    return await deployImpl(hre, deployData, factory, opts);
+    return await deployImpl(hre, deployData, factory, artifact, opts);
 }

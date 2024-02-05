@@ -34,7 +34,13 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
 
         opts.provider = wallet.provider;
         const beaconImplementationAddress = await getContractAddress(beaconImplementation);
-        const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);
+        const { impl: nextImpl } = await deployBeaconImpl(
+            hre,
+            factory,
+            newImplementationArtifact,
+            opts,
+            beaconImplementationAddress,
+        );
         if (!quiet) {
             console.info(chalk.green('New beacon impl deployed at', nextImpl));
         }

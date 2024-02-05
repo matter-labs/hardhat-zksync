@@ -39,7 +39,13 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             newImplementationArtifact.bytecode,
             wallet,
         );
-        const { impl: nextImpl } = await deployProxyImpl(hre, newImplementationFactory, opts, proxyAddress);
+        const { impl: nextImpl } = await deployProxyImpl(
+            hre,
+            newImplementationFactory,
+            newImplementationArtifact,
+            opts,
+            proxyAddress,
+        );
 
         const upgradeTo = await getUpgrader(proxyAddress, wallet);
         const call = encodeCall(newImplementationFactory, opts.call);

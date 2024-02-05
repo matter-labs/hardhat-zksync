@@ -8,9 +8,17 @@ export interface DeployTransaction {
 
 export async function deploy(
     factory: ContractFactory,
+    factoryDeps: string[] = [],
     ...args: any[]
 ): Promise<Required<Deployment & DeployTransaction> & RemoteDeploymentId> {
-    const contractInstance = await factory.deploy(...args);
+    const contractInstance = await factory.deploy(...args, {
+        ...[],
+        customData: {
+            salt: ethers.ZeroHash,
+            factoryDeps,
+        },
+    });
+
     const deploymentTransaction = contractInstance.deploymentTransaction();
 
     const deployTransaction = contractInstance.deploymentTransaction();
