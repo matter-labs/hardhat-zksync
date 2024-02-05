@@ -38,7 +38,7 @@
     "@matterlabs/hardhat-zksync-node": "link:../../packages/hardhat-zksync-node",
     "@matterlabs/hardhat-zksync-chai-matchers": "link:../../packages/hardhat-zksync-chai-matchers",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.19.5",
     "ethers": "^6.7.1",
     "zksync-ethers": "^6.0.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
