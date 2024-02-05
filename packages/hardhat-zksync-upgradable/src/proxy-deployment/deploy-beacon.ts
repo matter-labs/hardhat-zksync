@@ -10,6 +10,7 @@ import assert from 'assert';
 import path from 'path';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import { DeployBeaconOptions } from '../utils/options';
+import { extractFactoryDeps } from '../utils/utils-general';
 import { deployBeaconImpl } from './deploy-impl';
 import { deploy, DeployTransaction } from './deploy';
 
@@ -30,6 +31,8 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         opts.provider = wallet.provider;
+        opts.factoryDeps = await extractFactoryDeps(hre, artifact);
+
         const { impl } = await deployBeaconImpl(hre, beaconImplFactory, opts);
         if (!quiet) {
             console.info(chalk.green('Beacon impl deployed at', impl));

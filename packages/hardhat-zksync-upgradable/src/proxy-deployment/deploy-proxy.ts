@@ -36,11 +36,11 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             args = [];
         }
         opts.provider = wallet.provider;
+        opts.factoryDeps = await extractFactoryDeps(hre, artifact);
+
         const manifest = await Manifest.forNetwork(wallet.provider);
 
         const factory = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
-        const factoryDeps = await extractFactoryDeps(hre, artifact);
-        opts.factoryDeps = factoryDeps;
 
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
         if (!quiet) {
