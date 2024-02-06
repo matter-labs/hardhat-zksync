@@ -17,10 +17,10 @@ async function main() {
     await factory.deployed();
 
     const FactoryV2 = await deployer.loadArtifact('FactoryV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, factory.address, FactoryV2);
+    const upgradedFactory = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, factory.address, FactoryV2);
     console.info(chalk.green('Successfully upgraded Factory to FactoryV2'));
 
-    upgradedBox.connect(zkWallet);
+    upgradedFactory.connect(zkWallet);
     const number = await factory.getNumberOfDeployedContracts();
     if(number===0){
         throw new Error("Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.")
