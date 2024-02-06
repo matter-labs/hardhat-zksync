@@ -10,6 +10,9 @@ export const LOCAL_SETUP_ZKSYNC_NETWORK = 'http://localhost:3050';
 export const FORMAT_TYPE_MINIMAL = 'minimal';
 export const MANIFEST_DEFAULT_DIR = '.upgradable';
 
+export const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
+export const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
+
 export const PROXY_SOURCE_NAMES = [
     '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
     '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',

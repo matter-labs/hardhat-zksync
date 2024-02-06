@@ -3,7 +3,7 @@ import * as zk from 'zksync-ethers';
 import path from 'path';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
-import { ContractAddressOrInstance } from '../utils/utils-general';
+import { ContractAddressOrInstance,extractFactoryDeps } from '../utils/utils-general';
 import { UpgradeBeaconOptions } from '../utils/options';
 import { deployBeaconImpl } from '../proxy-deployment/deploy-impl';
 import { getContractAddress } from '../utils/utils-general';
@@ -34,6 +34,8 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         );
 
         opts.provider = wallet.provider;
+        opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+        
         const beaconImplementationAddress = getContractAddress(beaconImplementation);
         const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);
         if (!quiet) {

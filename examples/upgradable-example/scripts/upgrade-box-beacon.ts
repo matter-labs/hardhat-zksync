@@ -32,7 +32,7 @@ async function main() {
         deployer.zkWallet,
         deployer.deploymentType
     );
-    const upgradedBox = await attachTo.attach(boxBeaconProxy.address);
+    const upgradedBox = attachTo.attach(boxBeaconProxy.address);
 
     upgradedBox.connect(zkWallet);
     // wait some time before the next call
