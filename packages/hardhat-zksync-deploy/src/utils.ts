@@ -1,8 +1,9 @@
 // @ts-nocheck
 import {
-    HardhatNetworkAccountConfig,
+    HardhatNetworkAccountsConfig,
     HardhatNetworkHDAccountsConfig,
     HardhatRuntimeEnvironment,
+    HttpNetworkAccountsConfig,
     HttpNetworkConfig,
     NetworkConfig,
 } from 'hardhat/types';
@@ -11,6 +12,8 @@ import { Wallet } from 'zksync-ethers';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
 import { MorphTsBuilder } from './morph-ts-builder';
 import { ZkSyncDeployPluginError } from './errors';
+import { LOCAL_CHAIN_IDS } from './constants';
+import { richWallets } from './rich-wallets';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
@@ -91,45 +94,52 @@ export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts
     await hre.run('compile', { force: true });
 }
 
-export function getWallet(hre: HardhatRuntimeEnvironment, privateKey: string, accountNumber: number) {
-    if (privateKey) {
-        return new Wallet(privateKey);
-    }
-
-    const accounts = hre.network.config.accounts;
-
-    if (!accounts) {
-        throw new ZkSyncDeployPluginError('Accounts for selected newtwork are not specified');
-    }
-
-    if (isHardhatNetworkAccountsConfigStrings(accounts)) {
-        const accountPrivateKey = (accounts as string[])[accountNumber];
-
-        if (!accountPrivateKey) {
-            throw new ZkSyncDeployPluginError('Account private key with specified index is not found');
-        }
-
-        return new Wallet(accountPrivateKey);
-    }
-
-    if (isHardhatNetworkHDAccountsConfig(accounts)) {
-        const hdAccount = accounts as HardhatNetworkHDAccountsConfig;
-        return Wallet.fromMnemonic(hdAccount.mnemonic);
-    }
-
-    const account = (accounts as HardhatNetworkAccountConfig[])[accountNumber];
-
-    if (!account) {
-        throw new ZkSyncDeployPluginError('Account with specified index is not found');
-    }
-
-    return new Wallet(account.privateKey);
-}
-
-function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
+export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
     return 'mnemonic' in object;
 }
 
-function isHardhatNetworkAccountsConfigStrings(object: any): object is string[] {
+export function isHardhatNetworkAccountsConfigStrings(object: any): object is string[] {
     return typeof object[0] === 'string';
 }
+
+export function isString(object: any): object is string {
+    return typeof object === 'string';
+}
+
+export function isNumber(object: any): object is number {
+    return typeof object === 'number';
+}
+
+export async function getWalletsFromAccount(
+    hre: HardhatRuntimeEnvironment,
+    accounts: HardhatNetworkAccountsConfig | HttpNetworkAccountsConfig,
+): Promise<Wallet[]> {
+    if (!accounts || accounts === 'remote') {
+        const chainId = await hre.network.provider.send('eth_chainId', []);
+        if (LOCAL_CHAIN_IDS.includes(chainId)) {
+            return richWallets.map((wallet) =>
+                new Wallet(wallet.privateKey)
+            );
+        }
+        return [];
+    }
+
+    if (isHardhatNetworkAccountsConfigStrings(accounts)) {
+        const accountPrivateKeys = accounts as string[];
+
+        const wallets = accountPrivateKeys.map((accountPrivateKey) =>
+            new Wallet(accountPrivateKey)
+        );
+        return wallets;
+    }
+
+    if (isHardhatNetworkHDAccountsConfig(accounts)) {
+        const account = accounts as HardhatNetworkHDAccountsConfig;
+
+        const wallet = Wallet.fromMnemonic(account.mnemonic);
+        return [wallet];
+    }
+
+    return [];
+}
+

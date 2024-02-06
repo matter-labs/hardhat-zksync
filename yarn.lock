@@ -800,7 +800,7 @@
     hardhat "^2.19.4"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
-  version "1.0.1"
+  version "1.0.2"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     axios "^1.6.2"
@@ -840,7 +840,7 @@
     undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "1.2.2"
+  version "1.2.4"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^1.1.0"
     "@matterlabs/hardhat-zksync-solc" "^1.0.3"
@@ -1487,6 +1487,14 @@
   dependencies:
     "@types/node" "*"
 
+"@types/glob@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-8.1.0.tgz#b63e70155391b0584dce44e7ea25190bbc38f2fc"
+  integrity sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==
+  dependencies:
+    "@types/minimatch" "^5.1.2"
+    "@types/node" "*"
+
 "@types/is-ci@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/is-ci/-/is-ci-3.0.0.tgz#7e8910af6857601315592436f030aaa3ed9783c3"
@@ -1557,6 +1565,11 @@
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@types/lru-cache/-/lru-cache-5.1.1.tgz#c48c2e27b65d2a153b19bfc1a317e30872e01eef"
   integrity sha512-ssE3Vlrys7sdIzs5LOxCzTVMsU7i9oa/IaW92wF32JFb3CVczqOkru2xspuKczHEbG3nvmPY7IFqVmGGHdNbYw==
+
+"@types/minimatch@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-5.1.2.tgz#07508b45797cb81ec3f273011b054cd0755eddca"
+  integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
 
 "@types/minimist@^1.2.0":
   version "1.2.2"

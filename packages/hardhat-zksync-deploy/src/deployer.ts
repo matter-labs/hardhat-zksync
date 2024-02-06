@@ -6,6 +6,7 @@ import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
+import { getWallet } from './plugin';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -15,7 +16,7 @@ const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli
  * An entity capable of deploying contracts to the zkSync network.
  */
 export class Deployer {
-    public hre: HardhatRuntimeEnvironment;
+    private hre: HardhatRuntimeEnvironment;
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
     public deploymentType?: zk.types.DeploymentType;
@@ -221,6 +222,12 @@ export class Deployer {
         await contract.waitForDeployment();
 
         return contract;
+    }
+
+    public async changeWallet(privateKeyOrIndex: string | number) {
+        const wallet = await getWallet(this.hre, privateKeyOrIndex);
+        this.zkWallet = wallet.connect(this.zkWallet._providerL2()).connectToL1(this.zkWallet._providerL1());
+        this.ethWallet = this.zkWallet.ethWallet();
     }
 
     /**

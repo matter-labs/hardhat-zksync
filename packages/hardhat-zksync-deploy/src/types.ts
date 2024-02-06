@@ -38,3 +38,7 @@ export interface ContractFullQualifiedName {
     contractName: string;
     contractPath: string;
 }
+
+export interface DeployerAccount {
+    [networkName: string]: number | undefined;
+}

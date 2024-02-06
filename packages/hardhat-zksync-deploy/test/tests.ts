@@ -3,7 +3,6 @@ import * as path from 'path';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
 import chalk from 'chalk';
-import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../src/task-names';
 import { Deployer } from '../src/deployer';
 import { useEnvironment } from './helpers';
@@ -27,17 +26,17 @@ describe('Plugin tests', async function () {
 
         it('Should find deploy scripts', async function () {
             const baseDir = this.env.config.paths.root;
-            const files = findDeployScripts(this.env);
+            const files = await this.scriptManager.findAllDeployScripts();
 
             assert.deepEqual(files, [path.join(baseDir, 'deploy', '001_deploy.ts')], 'Incorrect deploy script list');
         });
 
         it('Should call deploy scripts', async function () {
-            await callDeployScripts(this.env, '');
+            await this.scriptManager.callDeployScripts('');
         });
 
         it('Should call deploy script', async function () {
-            await callDeployScripts(this.env, '001_deploy.ts');
+            await this.scriptManager.callDeployScripts('001_deploy.ts');
         });
 
         it('Should call deploy scripts through HRE', async function () {
@@ -49,11 +48,12 @@ describe('Plugin tests', async function () {
         useEnvironment('missing-deploy-folder');
 
         it('Should not find deploy scripts', async function () {
+            const deployPath = path.join(this.env.config.paths.root, 'deploy')
             try {
-                const _files = findDeployScripts(this.env);
+                const _files = await this.scriptManager.findAllDeployScripts();
                 assert.fail('Expected ZkSyncDeployPluginError was not thrown');
             } catch (error: any) {
-                assert.strictEqual(error.message, 'No deploy folder was found', 'Error message does not match');
+                assert.include(error.message, `Deploy folder '${deployPath}' not found`, 'Error message does not match');
             }
         });
     });
@@ -76,7 +76,7 @@ describe('Plugin tests', async function () {
             );
             chalk.yellow('Deploying libraries...');
             await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, {
-                privateKey: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
+                privateKeyOrIndex: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
             });
         });
     });
@@ -184,10 +184,10 @@ describe('Plugin tests', async function () {
             const targetScript = '002_deploy.ts';
 
             try {
-                await callDeployScripts(this.env, targetScript);
+                await this.scriptManager.callDeployScripts(targetScript);
                 assert.fail('Function did not throw expected error');
             } catch (error: any) {
-                const expectedMessage = `Script ${targetScript} was not found, no scripts were run`;
+                const expectedMessage = `Deploy script '${targetScript}' not found, in deploy folders:`;
                 assert.include(
                     error.message,
                     expectedMessage,
@@ -198,7 +198,7 @@ describe('Plugin tests', async function () {
 
         it('Should not find deploy function', async function () {
             try {
-                await callDeployScripts(this.env, 'invalid_script.ts');
+                await this.scriptManager.callDeployScripts('invalid_script.ts');
                 assert.fail('Function did not throw expected error');
             } catch (error: any) {
                 assert.include(
@@ -224,7 +224,7 @@ describe('Plugin tests', async function () {
 
         it('Should fail deploying because zksync is not set to true', async function () {
             try {
-                await callDeployScripts(this.env, '001_deploy.ts');
+                await this.scriptManager.callDeployScripts('001_deploy.ts');
                 throw new Error('Expected an error but none was thrown');
             } catch (error: any) {
                 expect(error.message).to.include("'zksync' flag set to 'true'");
@@ -248,6 +248,29 @@ describe('Plugin tests', async function () {
             }
 
             expect(errorOccurred).to.equal(true);
+        });
+    });
+
+    describe('Test with integritated deployer in hre', function () {
+        useEnvironment('deployer-in-hre', 'zkSyncNetwork2');
+
+        it('should deploy with integrated wallet', async function () {
+            await this.env.run('compile');
+            const artifact = await this.env.deployer.loadArtifact('Greeter');
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            expect(this.env.deployer.zkWallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
+            expect(contract).to.be.an('object');
+            expect(await contract.getAddress()).to.be.a('string');
+        });
+
+        it('should deploy with provided wallet', async function () {
+            await this.env.run('compile');
+            const artifact = await this.env.deployer.loadArtifact('Greeter');
+            await this.env.deployer.changeWallet(4);
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            expect(this.env.deployer.zkWallet.address).to.be.equal('0x8002cD98Cfb563492A6fB3E7C8243b7B9Ad4cc92');
+            expect(contract).to.be.an('object');
+            expect(await contract.getAddress()).to.be.a('string');
         });
     });
 });

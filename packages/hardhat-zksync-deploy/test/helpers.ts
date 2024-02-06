@@ -1,6 +1,7 @@
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import path from 'path';
+import { ScriptManager } from '../src/script-manager';
 
 declare module 'mocha' {
     interface Context {
@@ -14,6 +15,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
         process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
+        this.scriptManager = new ScriptManager(this.env);
     });
 
     afterEach('Resetting hardhat', function () {

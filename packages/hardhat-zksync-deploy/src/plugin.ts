@@ -1,6 +1,4 @@
-import fs, { existsSync } from 'fs';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as path from 'path';
 
 import chalk from 'chalk';
 import { ZkSyncDeployPluginError } from './errors';
@@ -11,89 +9,23 @@ import {
     fillLibrarySettings,
     generateFullQuailfiedNameString,
     getLibraryInfos,
-    getWallet,
+    getWalletsFromAccount,
+    isNumber,
+    isString,
     removeLibraryInfoFile,
     updateHardhatConfigFile,
 } from './utils';
-
-function getAllFiles(dir: string): string[] {
-    const files = [];
-    const entries = fs.readdirSync(dir);
-    for (const entry of entries) {
-        const entryPath = path.join(dir, entry);
-        if (fs.lstatSync(entryPath).isDirectory()) {
-            files.push(...getAllFiles(entryPath));
-        } else {
-            files.push(entryPath);
-        }
-    }
-    return files;
-}
-
-export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
-    const workDir = hre.config.paths.root;
-    const deployScriptsDir = path.join(workDir, 'deploy');
-
-    if (!existsSync(deployScriptsDir)) {
-        throw new ZkSyncDeployPluginError('No deploy folder was found');
-    }
-
-    const deployScripts = getAllFiles(deployScriptsDir).filter(
-        (file) => path.extname(file) === '.ts' || path.extname(file) === '.js',
-    );
-
-    return deployScripts;
-}
-
-export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
-    const scripts = findDeployScripts(hre);
-
-    if (targetScript === '') {
-        // Target script not specified, run everything.
-        for (const script of scripts) {
-            await runScript(hre, script);
-        }
-    } else {
-        // TODO: Not efficient.
-        let found = false;
-        for (const script of scripts) {
-            if (script.includes(targetScript)) {
-                await runScript(hre, script);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            throw new ZkSyncDeployPluginError(`Script ${targetScript} was not found, no scripts were run`);
-        }
-    }
-}
-
-async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
-    delete require.cache[script];
-    let deployFn: any = require(script);
-
-    if (typeof deployFn.default === 'function') {
-        deployFn = deployFn.default;
-    }
-
-    if (typeof deployFn !== 'function') {
-        throw new ZkSyncDeployPluginError('Deploy function does not exist or exported invalidly');
-    }
-
-    await deployFn(hre);
-}
+import { Wallet } from 'zksync-ethers';
 
 export async function deployLibraries(
     hre: HardhatRuntimeEnvironment,
-    privateKey: string,
-    accountNumber: number,
+    privateKeyOrAccountNumber: string | number,
     externalConfigObjectPath: string,
     exportedConfigObject: string,
     noAutoPopulateConfig: boolean,
     compileAllContracts: boolean,
 ) {
-    const wallet = getWallet(hre, privateKey, accountNumber);
+    const wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAddress(hre));
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
@@ -211,4 +143,38 @@ async function compileAndDeploy(
     await compileContracts(hre, [contractFQN.contractPath]);
 
     return await deployOneLibrary(deployer, contractFQN, allDeployedLibraries);
+}
+
+export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrIndex?: string | number): Promise<Wallet> {
+    const privateKey = isString(privateKeyOrIndex) ? (privateKeyOrIndex as string) : undefined;
+    const accountNumber = isNumber(privateKeyOrIndex) ? (privateKeyOrIndex as number) : undefined;
+
+    if (privateKey) {
+        return new Wallet(privateKey);
+    }
+
+    const accounts = hre.network.config.accounts;
+
+    const wallets = await getWalletsFromAccount(hre, accounts);
+
+    if (accountNumber && accountNumber >= wallets.length) {
+        throw new ZkSyncDeployPluginError('Account private key with specified index is not found');
+    }
+
+    if (wallets.length === 0) {
+        throw new ZkSyncDeployPluginError('Accounts are not configured for this network');
+    }
+
+    return wallets[accountNumber || 0];
+}
+
+export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet[]> {
+    const accounts = hre.network.config.accounts;
+
+    return await getWalletsFromAccount(hre, accounts);
+}
+
+export function getNetworkAddress(hre: HardhatRuntimeEnvironment): number {
+    const networkName = hre.network.name;
+    return hre.config.deployerAccounts[networkName] ?? (hre.config.deployerAccounts['default'] ?? 0);
 }
