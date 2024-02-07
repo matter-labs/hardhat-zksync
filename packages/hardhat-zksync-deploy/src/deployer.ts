@@ -7,6 +7,7 @@ import { ZkSyncDeployPluginError } from './errors';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 import { getWallet } from './plugin';
+import { loadDeployment, saveDeployment } from './deployment-saver';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -195,9 +196,19 @@ export class Deployer {
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
+        forceDeploy: boolean = false,
         overrides?: ethers.Overrides,
-        additionalFactoryDeps?: ethers.BytesLike[],
+        additionalFactoryDeps?: ethers.BytesLike[]
     ): Promise<zk.Contract> {
+
+        const deployment = await loadDeployment(this.hre, artifact);
+
+        if (!forceDeploy && deployment) {
+            const contract = new zk.Contract(deployment.address, artifact.abi, this.zkWallet);
+            console.log(`Contract ${artifact.contractName} already deployed at ${deployment.address}`);
+            return contract;
+        }
+
         const baseDeps = await this._extractFactoryDeps(artifact);
         const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
         const factoryDeps = [...baseDeps, ...additionalDeps];
@@ -220,6 +231,8 @@ export class Deployer {
             },
         });
         await contract.waitForDeployment();
+
+        await saveDeployment(this.hre, contract, artifact);
 
         return contract;
     }

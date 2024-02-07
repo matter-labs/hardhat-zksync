@@ -1,7 +1,6 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import { deployLibraries } from './plugin';
 import { ScriptManager } from './script-manager';
-import { lazyObject } from 'hardhat/plugins';
 
 export async function zkSyncDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
     let tags = taskArgs.tags;
