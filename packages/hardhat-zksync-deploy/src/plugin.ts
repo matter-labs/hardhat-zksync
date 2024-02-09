@@ -1,13 +1,20 @@
-import { existsSync } from 'fs';
+import fs, { existsSync } from 'fs';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as path from 'path';
-import fs from 'fs';
 
+import chalk from 'chalk';
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
-import chalk from 'chalk';
-import { compileContracts, fillLibrarySettings, generateFullQuailfiedNameString, getLibraryInfos, getWallet, removeLibraryInfoFile, updateHardhatConfigFile } from './utils';
+import {
+    compileContracts,
+    fillLibrarySettings,
+    generateFullQuailfiedNameString,
+    getLibraryInfos,
+    getWallet,
+    removeLibraryInfoFile,
+    updateHardhatConfigFile,
+} from './utils';
 
 function getAllFiles(dir: string): string[] {
     const files = [];
@@ -32,7 +39,7 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
     }
 
     const deployScripts = getAllFiles(deployScriptsDir).filter(
-        (file) => path.extname(file) == '.ts' || path.extname(file) == '.js'
+        (file) => path.extname(file) === '.ts' || path.extname(file) === '.js',
     );
 
     return deployScripts;
@@ -41,7 +48,7 @@ export function findDeployScripts(hre: HardhatRuntimeEnvironment): string[] {
 export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetScript: string) {
     const scripts = findDeployScripts(hre);
 
-    if (targetScript == '') {
+    if (targetScript === '') {
         // Target script not specified, run everything.
         for (const script of scripts) {
             await runScript(hre, script);
@@ -57,7 +64,7 @@ export async function callDeployScripts(hre: HardhatRuntimeEnvironment, targetSc
             }
         }
         if (!found) {
-            console.error(`Script ${targetScript} was not found, no scripts were run`);
+            throw new Error(`Script ${targetScript} was not found, no scripts were run`);
         }
     }
 }
@@ -78,13 +85,13 @@ async function runScript(hre: HardhatRuntimeEnvironment, script: string) {
 }
 
 export async function deployLibraries(
-    hre: HardhatRuntimeEnvironment, 
+    hre: HardhatRuntimeEnvironment,
     privateKey: string,
-    accountNumber: number, 
-    externalConfigObjectPath: string, 
+    accountNumber: number,
+    externalConfigObjectPath: string,
     exportedConfigObject: string,
-    noAutoPopulateConfig: boolean, 
-    compileAllContracts: boolean
+    noAutoPopulateConfig: boolean,
+    compileAllContracts: boolean,
 ) {
     const wallet = getWallet(hre, privateKey, accountNumber);
     const deployer = new Deployer(hre, wallet);
@@ -96,7 +103,7 @@ export async function deployLibraries(
 
     for (const libraryInfo of libraryInfos) {
         const compileInfo = await deployLibrary(hre, deployer, libraryInfo, libraryInfos, allDeployedLibraries);
-        fillLibrarySettings(hre, [compileInfo]);
+        const _ = fillLibrarySettings(hre, [compileInfo]);
     }
 
     console.info(chalk.green('All libraries deployed successfully!'));
@@ -107,7 +114,7 @@ export async function deployLibraries(
 
     removeLibraryInfoFile(hre);
 
-    if(compileAllContracts) {
+    if (compileAllContracts) {
         console.info(chalk.yellow('Compiling all contracts'));
         await compileContracts(hre, []);
     } else {
@@ -120,12 +127,13 @@ async function deployLibrary(
     deployer: Deployer,
     missingLibrary: MissingLibrary,
     missingLibraries: MissingLibrary[],
-    allDeployedLibraries: ContractInfo[]
+    allDeployedLibraries: ContractInfo[],
 ): Promise<ContractInfo> {
-    const deployedLibrary = allDeployedLibraries
-        .find(deployedLibrary => generateFullQuailfiedNameString(missingLibrary)
-            .includes(generateFullQuailfiedNameString(deployedLibrary.contractFQN))
-        );
+    const deployedLibrary = allDeployedLibraries.find((deployedLibraryElement) =>
+        generateFullQuailfiedNameString(missingLibrary).includes(
+            generateFullQuailfiedNameString(deployedLibraryElement.contractFQN),
+        ),
+    );
 
     if (deployedLibrary) {
         return deployedLibrary;
@@ -133,36 +141,36 @@ async function deployLibrary(
 
     const contractFQN = {
         contractName: missingLibrary.contractName,
-        contractPath: missingLibrary.contractPath
+        contractPath: missingLibrary.contractPath,
     };
 
-    if (missingLibrary.missingLibraries.length == 0) {
+    if (missingLibrary.missingLibraries.length === 0) {
         return await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
     }
 
     const dependentLibraries = findDependentLibraries(missingLibrary.missingLibraries, missingLibraries);
     const contractInfos = await Promise.all(
-        Array.from(dependentLibraries)
-            .map(async dependentLibrary =>
-                await deployLibrary(hre, deployer, dependentLibrary, missingLibraries, allDeployedLibraries)
-            )
+        Array.from(dependentLibraries).map(
+            async (dependentLibrary) =>
+                await deployLibrary(hre, deployer, dependentLibrary, missingLibraries, allDeployedLibraries),
+        ),
     );
 
-    fillLibrarySettings(hre, contractInfos);
+    const _ = fillLibrarySettings(hre, contractInfos);
     return await compileAndDeploy(hre, deployer, contractFQN, allDeployedLibraries);
 }
 
 function findDependentLibraries(dependentLibraries: string[], missingLibraries: MissingLibrary[]): MissingLibrary[] {
-    return dependentLibraries.map(dependentLibrary => {
+    return dependentLibraries.map((dependentLibrary) => {
         const dependentFQNString = dependentLibrary.split(':');
         const dependentFQN = {
             contractName: dependentFQNString[1],
-            contractPath: dependentFQNString[0]
-        }
+            contractPath: dependentFQNString[0],
+        };
 
-        const foundMissingLibrary = missingLibraries
-            .find(missingLibrary => generateFullQuailfiedNameString(missingLibrary)
-                .includes(generateFullQuailfiedNameString(dependentFQN)));
+        const foundMissingLibrary = missingLibraries.find((missingLibrary) =>
+            generateFullQuailfiedNameString(missingLibrary).includes(generateFullQuailfiedNameString(dependentFQN)),
+        );
 
         if (!foundMissingLibrary) {
             throw new ZkSyncDeployPluginError(`Missing library ${dependentLibrary} not found`);
@@ -175,7 +183,7 @@ function findDependentLibraries(dependentLibraries: string[], missingLibraries: 
 async function deployOneLibrary(
     deployer: Deployer,
     contractFQN: ContractFullQualifiedName,
-    allDeployedLibraries: ContractInfo[]
+    allDeployedLibraries: ContractInfo[],
 ): Promise<ContractInfo> {
     const artifact = await deployer.loadArtifact(generateFullQuailfiedNameString(contractFQN));
 
@@ -185,7 +193,7 @@ async function deployOneLibrary(
 
     const contractInfo = {
         contractFQN,
-        address: contract.address
+        address: contract.address,
     };
 
     allDeployedLibraries.push(contractInfo);
@@ -196,7 +204,7 @@ async function compileAndDeploy(
     hre: HardhatRuntimeEnvironment,
     deployer: Deployer,
     contractFQN: ContractFullQualifiedName,
-    allDeployedLibraries: ContractInfo[]
+    allDeployedLibraries: ContractInfo[],
 ): Promise<ContractInfo> {
     await compileContracts(hre, [contractFQN.contractPath]);
 

@@ -48,13 +48,10 @@ export function parseWrongConstructorArgumentsError(string: string): string {
     // extract the values of the "types" and "values" keys from the string
     const data = JSON.parse(string.split('count=')[1].split(', value=')[0]);
 
-    return `The number of constructor arguments you provided (${data['values']}) does not match the number of constructor arguments the contract has been deployed with (${data['types']}).`;
+    return `The number of constructor arguments you provided (${data.values}) does not match the number of constructor arguments the contract has been deployed with (${data.types}).`;
 }
 
-export function areSameBytecodes(
-    deployedBytecode: string,
-    runtimeBytecode: string
-): boolean {
+export function areSameBytecodes(deployedBytecode: string, runtimeBytecode: string): boolean {
     if (deployedBytecode !== runtimeBytecode) {
         return false;
     }

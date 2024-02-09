@@ -6,21 +6,21 @@ import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-co
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
+import chalk from 'chalk';
+import assert from 'assert';
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
 import { getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
-import chalk from 'chalk';
-import assert from 'assert';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
     proxy: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
     opts?: UpgradeProxyOptions,
-    quiet?: boolean
+    quiet?: boolean,
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
@@ -29,7 +29,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         proxy,
         newImplementationArtifact,
         opts: UpgradeProxyOptions = {},
-        quiet: boolean = false
+        quiet: boolean = false,
     ) {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
@@ -37,7 +37,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const newImplementationFactory = new zk.ContractFactory(
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
-            wallet
+            wallet,
         );
         const { impl: nextImpl } = await deployProxyImpl(hre, newImplementationFactory, opts, proxyAddress);
 
@@ -71,7 +71,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             const transparentUpgradeableProxyFactory = new zk.ContractFactory(
                 transparentUpgradeableProxyContract.abi,
                 transparentUpgradeableProxyContract.bytecode,
-                wallet
+                wallet,
             );
             const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
 
@@ -80,7 +80,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             const manifest = await Manifest.forNetwork(provider);
 
             const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                x.includes(path.sep + PROXY_ADMIN_JSON)
+                x.includes(path.sep + PROXY_ADMIN_JSON),
             );
             assert(proxyAdminPath, 'Proxy admin artifact not found');
             const proxyAdminContract = await import(proxyAdminPath);
@@ -88,7 +88,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             const proxyAdminFactory = new zk.ContractFactory(
                 proxyAdminContract.abi,
                 proxyAdminContract.bytecode,
-                wallet
+                wallet,
             );
 
             const admin = proxyAdminFactory.attach(adminAddress);

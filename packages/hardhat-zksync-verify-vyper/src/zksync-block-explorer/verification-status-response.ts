@@ -8,7 +8,7 @@ enum VerificationStatusEnum {
 export class VerificationStatusResponse {
     public readonly status: VerificationStatusEnum;
     public readonly error: string | undefined;
-    public readonly compilationErrors: Array<string> | undefined;
+    public readonly compilationErrors: string[] | undefined;
 
     constructor(response: any) {
         this.status = response.data.status;

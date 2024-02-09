@@ -8,7 +8,7 @@ function serializeParameterType(parameter: VariableDeclaration, deref: ASTDerefe
 
     if (storageLocation === 'storage') {
         assert(typeof typeName.typeDescriptions.typeString === 'string');
-        return typeName.typeDescriptions.typeString.replace(/^struct /, '') + ' storage';
+        return `${typeName.typeDescriptions.typeString.replace(/^struct /, '')} storage`;
     }
 
     return serializeTypeName(typeName, deref);
@@ -25,11 +25,11 @@ function serializeTypeName(typeName: TypeName, deref: ASTDereferencer): string {
         case 'UserDefinedTypeName': {
             const userDefinedType = deref(
                 ['StructDefinition', 'EnumDefinition', 'ContractDefinition', 'UserDefinedValueTypeDefinition'],
-                typeName.referencedDeclaration
+                typeName.referencedDeclaration,
             );
             switch (userDefinedType.nodeType) {
                 case 'StructDefinition':
-                    return '(' + userDefinedType.members.map((member) => serializeParameterType(member, deref)) + ')';
+                    return `(${userDefinedType.members.map((member) => serializeParameterType(member, deref))})`;
 
                 case 'EnumDefinition':
                     assert(userDefinedType.members.length < 256);

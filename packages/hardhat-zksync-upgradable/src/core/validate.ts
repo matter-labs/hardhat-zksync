@@ -6,8 +6,8 @@ import { isNodeType, findAll, ASTDereferencer } from 'solidity-ast/utils';
 import { Node } from 'solidity-ast/node';
 import type { ContractDefinition, FunctionDefinition } from 'solidity-ast';
 
-import { getFunctionSignature } from './function';
 import { isNullish } from '../utils/utils-general';
+import { getFunctionSignature } from './function';
 
 export type ValidationError =
     | ValidationErrorConstructor
@@ -29,7 +29,7 @@ const errorKinds = [
 
 interface ValidationErrorBase {
     src: string;
-    kind: typeof errorKinds[number];
+    kind: (typeof errorKinds)[number];
 }
 
 interface ValidationErrorWithName extends ValidationErrorBase {
@@ -73,7 +73,9 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
     const delegateCallCache = initOpcodeCache();
 
     for (const source in solcOutput.contracts) {
+        if (!source) continue;
         for (const contractName in solcOutput.contracts[source]) {
+            if (!contractName) continue;
             const bytecode = solcOutput.contracts[source][contractName].evm.bytecode?.object || null;
 
             const version = bytecode === null ? undefined : getVersion(bytecode);
@@ -113,7 +115,7 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
                     contractDef,
                     decodeSrc,
                     deref,
-                    solcOutput.contracts[source][contractDef.name].storageLayout
+                    solcOutput.contracts[source][contractDef.name].storageLayout,
                 );
 
                 validation[key].methods = [...findAll('FunctionDefinition', contractDef)]
@@ -124,10 +126,12 @@ export function validate(solcOutput: SolcOutput, decodeSrc: SrcDecoder, solcVers
     }
 
     for (const key in inheritIds) {
+        if (!key) continue;
         validation[key].inherit = inheritIds[key].map((id) => fromId[id]);
     }
 
     for (const key in libraryIds) {
+        if (!key) continue;
         validation[key].libraries = libraryIds[key].map((id) => fromId[id]);
     }
 
@@ -162,7 +166,7 @@ function* getOpcodeErrors(
     contractDef: ContractDefinition,
     deref: ASTDereferencer,
     decodeSrc: SrcDecoder,
-    delegateCallCache: OpcodeCache
+    delegateCallCache: OpcodeCache,
 ): Generator<ValidationErrorOpcode, void, undefined> {
     yield* getContractOpcodeErrors(contractDef, deref, decodeSrc, OPCODES.delegatecall, 'main', delegateCallCache);
 }
@@ -178,7 +182,7 @@ function* getContractOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache
+    cache: OpcodeCache,
 ): Generator<ValidationErrorOpcode, void, undefined> {
     const cached = getCachedOpcodes(contractDef.id, scope, cache);
     if (cached !== undefined) {
@@ -188,7 +192,7 @@ function* getContractOpcodeErrors(
         setCachedOpcodes(contractDef.id, scope, cache, errors);
         errors.push(
             ...getFunctionOpcodeErrors(contractDef, deref, decodeSrc, opcode, scope, cache),
-            ...getInheritedContractOpcodeErrors(contractDef, deref, decodeSrc, opcode, cache)
+            ...getInheritedContractOpcodeErrors(contractDef, deref, decodeSrc, opcode, cache),
         );
         yield* errors;
     }
@@ -200,7 +204,7 @@ function* getFunctionOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache
+    cache: OpcodeCache,
 ): Generator<ValidationErrorOpcode, void, undefined> {
     const parentContractDef = getParentDefinition(deref, contractOrFunctionDef);
     if (parentContractDef === undefined || !skipCheck(opcode.kind, parentContractDef)) {
@@ -226,7 +230,7 @@ function* getInheritedContractOpcodeErrors(
     deref: ASTDereferencer,
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
-    cache: OpcodeCache
+    cache: OpcodeCache,
 ) {
     if (!skipCheckReachable(opcode.kind, contractDef)) {
         for (const base of contractDef.baseContracts) {
@@ -246,7 +250,7 @@ function isInternalFunction(node: Node) {
 
 function* getStateVariableErrors(
     contractDef: ContractDefinition,
-    decodeSrc: SrcDecoder
+    decodeSrc: SrcDecoder,
 ): Generator<ValidationErrorWithName> {
     for (const varDecl of contractDef.nodes) {
         if (isNodeType('VariableDeclaration', varDecl)) {
@@ -293,12 +297,12 @@ function* getDirectFunctionOpcodeErrors(
     contractOrFunctionDef: ContractDefinition | FunctionDefinition,
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
-    scope: Scope
+    scope: Scope,
 ) {
     for (const fnCall of findAll(
         'FunctionCall',
         contractOrFunctionDef,
-        (node) => skipCheck(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node))
+        (node) => skipCheck(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node)),
     )) {
         const fn = fnCall.expression;
         if (fn.typeDescriptions.typeIdentifier?.match(opcode.pattern)) {
@@ -316,12 +320,12 @@ function* getReferencedFunctionOpcodeErrors(
     decodeSrc: SrcDecoder,
     opcode: OpcodePattern,
     scope: Scope,
-    cache: OpcodeCache
+    cache: OpcodeCache,
 ) {
     for (const fnCall of findAll(
         'FunctionCall',
         contractOrFunctionDef,
-        (node) => skipCheckReachable(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node))
+        (node) => skipCheckReachable(opcode.kind, node) || (scope === 'inherited' && isInternalFunction(node)),
     )) {
         const fn = fnCall.expression;
         if ('referencedDeclaration' in fn && fn.referencedDeclaration && fn.referencedDeclaration > 0) {
@@ -380,7 +384,7 @@ export function getAnnotationArgs(doc: string, tag: string) {
     const result: string[] = [];
     for (const { groups } of execall(
         /^\s*(?:@(?<title>\w+)(?::(?<tag>[a-z][a-z-]*))? )?(?<args>(?:(?!^\s*@\w+)[^])*)/m,
-        doc
+        doc,
     )) {
         if (groups && groups.title === 'custom' && groups.tag === tag) {
             const trimmedArgs = groups.args.trim();

@@ -17,7 +17,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             options?: {
                 balanceChangeOptions?: BalanceChangeOptions;
                 overrides?: ethers.Overrides;
-            }
+            },
         ) {
             const { BigNumber } = require('ethers');
 
@@ -30,7 +30,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
                 assert(
                     actualChange.eq(BigNumber.from(balanceChange)),
                     `Expected the ether balance of "${address}" to change by ${balanceChange.toString()} wei, but it changed by ${actualChange.toString()} wei`,
-                    `Expected the ether balance of "${address}" NOT to change by ${balanceChange.toString()} wei, but it did`
+                    `Expected the ether balance of "${address}" NOT to change by ${balanceChange.toString()} wei, but it did`,
                 );
             };
 
@@ -42,7 +42,7 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
             this.promise = derivedPromise;
             return this;
-        }
+        },
     );
 }
 
@@ -53,7 +53,7 @@ export async function getBalanceChange(
         | (() => Promise<zk.types.TransactionResponse> | zk.types.TransactionResponse),
     account: Account | string,
     options?: BalanceChangeOptions,
-    overrides?: ethers.Overrides
+    overrides?: ethers.Overrides,
 ) {
     const { BigNumber } = await import('ethers');
     const provider = zk.Provider.getDefaultProvider();

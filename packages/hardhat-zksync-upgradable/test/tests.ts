@@ -1,19 +1,19 @@
 import assert from 'assert';
-import { useEnvironment } from './helpers';
 import { ContractFactory, Provider, Contract } from 'zksync-ethers';
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import path from 'path';
 
-import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
+import { getAdminAddress } from '@openzeppelin/upgrades-core';
+import { ethers } from 'ethers';
 import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constants';
 import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../src/proxy-deployment/deploy';
 import { getManifestAdmin } from '../src/admin';
+import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
 import richWallets from './rich-wallets.json';
 
-import { getAdminAddress } from '@openzeppelin/upgrades-core';
-import { ethers } from 'ethers';
+import { useEnvironment } from './helpers';
 
 describe('Upgradable plugin tests', async function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
@@ -24,7 +24,7 @@ describe('Upgradable plugin tests', async function () {
         before('Deploy Box proxy and contract implementation', async function () {
             const contractName = 'Box';
 
-            console.info(chalk.yellow('Deploying ' + contractName + ' transparent proxy...'));
+            console.info(chalk.yellow(`Deploying ${contractName} transparent proxy...`));
 
             const boxArtifact = await this.deployer.loadArtifact(contractName);
             boxProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
@@ -44,7 +44,7 @@ describe('Upgradable plugin tests', async function () {
         it('Should update proxy contract implementation', async function () {
             const contractName = 'BoxV2';
 
-            console.info(chalk.yellow('Upgrading Box to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading Box to ${contractName}...`));
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxProxy.address, BoxV2);
@@ -57,7 +57,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should fail to deploy proxy for implementation that is not upgrade safe', async function () {
             const contractName = 'BoxUpgradeUnsafe';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
 
@@ -71,7 +71,7 @@ describe('Upgradable plugin tests', async function () {
                         error.message.includes(standaloneValidationErrors.STATE_VARIABLE_ASSIGNMENT) &&
                         error.message.includes(standaloneValidationErrors.STATE_VARIABLE_IMMUTABLE)
                     );
-                }
+                },
             );
         });
     });
@@ -86,14 +86,14 @@ describe('Upgradable plugin tests', async function () {
             const contractName1 = 'BoxUups';
             const contractName2 = 'BoxUupsPublic';
 
-            console.info(chalk.yellow('Deploying ' + contractName1 + ' uups proxy...'));
+            console.info(chalk.yellow(`Deploying ${contractName1} uups proxy...`));
 
             const boxArtifact = await this.deployer.loadArtifact(contractName1);
             boxUupsProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'initialize',
             });
 
-            console.info(chalk.yellow('Deploying ' + contractName2 + ' uups proxy...'));
+            console.info(chalk.yellow(`Deploying ${contractName2} uups proxy...`));
 
             const boxPublicArtifact = await this.deployer.loadArtifact(contractName2);
             boxUupsPublicProxy = await this.env.zkUpgrades.deployProxy(
@@ -102,7 +102,7 @@ describe('Upgradable plugin tests', async function () {
                 [42],
                 {
                     initializer: 'initialize',
-                }
+                },
             );
         });
 
@@ -118,7 +118,7 @@ describe('Upgradable plugin tests', async function () {
         it('Should update proxy contract implementation', async function () {
             const contractName = 'BoxUupsV2';
 
-            console.info(chalk.yellow('Upgrading BoxUups to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading BoxUups to ${contractName}...`));
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxUupsProxy.address, BoxV2);
@@ -136,14 +136,14 @@ describe('Upgradable plugin tests', async function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(this.zkWallet2, boxUupsProxy.address, BoxV2),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER)
+                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
             );
         });
 
         it('Should allow other wallets to upgrade the contract', async function () {
             const contractName = 'BoxUupsV2';
 
-            console.info(chalk.yellow('Upgrading BoxUupsPublic to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading BoxUupsPublic to ${contractName}...`));
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(this.zkWallet2, boxUupsPublicProxy.address, BoxV2);
@@ -157,7 +157,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should throw a missing public upgradeTo error when deploying', async function () {
             const contractName = 'BoxUupsMissingUpgradeTo';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
 
@@ -166,13 +166,13 @@ describe('Upgradable plugin tests', async function () {
                     initializer: 'initialize',
                     kind: 'uups',
                 }),
-                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO)
+                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO),
             );
         });
 
         it('Should throw a missing public upgradeTo error when upgrading', async function () {
             const contractName = 'BoxUupsMissingUpgradeTo';
-            console.info(chalk.yellow('Upgrading BoxUups to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading BoxUups to ${contractName}...`));
 
             const boxV2 = await this.deployer.loadArtifact(contractName);
 
@@ -180,7 +180,7 @@ describe('Upgradable plugin tests', async function () {
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxUupsProxy.address, boxV2, {
                     kind: 'uups',
                 }),
-                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO)
+                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO),
             );
         });
     });
@@ -194,7 +194,7 @@ describe('Upgradable plugin tests', async function () {
         before('Deploy beacon proxy and contract implementation', async function () {
             const contractName = 'Box';
 
-            console.info(chalk.yellow('Deploying ' + contractName + ' beacon proxy...'));
+            console.info(chalk.yellow(`Deploying ${contractName} beacon proxy...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             beaconImplementation = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
@@ -203,7 +203,7 @@ describe('Upgradable plugin tests', async function () {
                 this.deployer.zkWallet,
                 beaconImplementation,
                 contract,
-                [42]
+                [42],
             );
         });
 
@@ -223,16 +223,16 @@ describe('Upgradable plugin tests', async function () {
             await this.env.zkUpgrades.upgradeBeacon(
                 this.deployer.zkWallet,
                 beaconImplementation.address,
-                boxV2Implementation
+                boxV2Implementation,
             );
 
             const attachTo = new ContractFactory(
                 boxV2Implementation.abi,
                 boxV2Implementation.bytecode,
                 this.deployer.zkWallet,
-                this.deployer.deploymentType
+                this.deployer.deploymentType,
             );
-            const boxV2 = await attachTo.attach(beaconProxy.address);
+            const boxV2 = attachTo.attach(beaconProxy.address);
 
             boxV2.connect(this.deployer.zkWallet);
             // wait 2 seconds before the next call
@@ -249,7 +249,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should return the smart contract admin instance', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -267,13 +267,13 @@ describe('Upgradable plugin tests', async function () {
             await fsExtra.remove(path.join(this.env.config.paths.root, MANIFEST_DEFAULT_DIR));
 
             await assert.rejects(this.env.zkUpgrades.admin.getInstance(this.deployer.zkWallet), (error: any) =>
-                error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND)
+                error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND),
             );
         });
 
         it('Should change the admin of an upgradable smart contract', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -284,7 +284,7 @@ describe('Upgradable plugin tests', async function () {
             await this.env.zkUpgrades.admin.changeProxyAdmin(
                 deployedContract.address,
                 richWallets[1].address,
-                this.deployer.zkWallet
+                this.deployer.zkWallet,
             );
 
             // wait 2 seconds before the next call
@@ -298,7 +298,7 @@ describe('Upgradable plugin tests', async function () {
         it('Should fail to upgrade the proxy without admin', async function () {
             const contractName = 'Box';
             const contractV2Name = 'BoxV2';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const contractV2 = await this.deployer.loadArtifact(contractV2Name);
@@ -312,7 +312,7 @@ describe('Upgradable plugin tests', async function () {
             await this.env.zkUpgrades.admin.changeProxyAdmin(
                 deployedContract.address,
                 newAdminContract.address,
-                this.deployer.zkWallet
+                this.deployer.zkWallet,
             );
 
             // wait 2 seconds before the next call
@@ -320,13 +320,13 @@ describe('Upgradable plugin tests', async function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, deployedContract.address, contractV2),
-                (error: any) => error.message.includes(authorizationErrors.WRONG_PROXY_ADMIN)
+                (error: any) => error.message.includes(authorizationErrors.WRONG_PROXY_ADMIN),
             );
         });
 
         it('Should fail to change the admin - wrong signer', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -337,18 +337,18 @@ describe('Upgradable plugin tests', async function () {
                 this.env.zkUpgrades.admin.changeProxyAdmin(
                     deployedContract.address,
                     richWallets[1].address,
-                    this.zkWallet2
+                    this.zkWallet2,
                 ),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER)
+                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
             );
         });
 
         it('Should change the owner of the upgradable smart contract', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
-            const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
+            const _ = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
             });
 
@@ -362,7 +362,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should fail to change the owner - wrong signer', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Deploying ' + contractName + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -371,7 +371,7 @@ describe('Upgradable plugin tests', async function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.admin.transferProxyAdminOwnership(TEST_ADDRESS, this.zkWallet2),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER)
+                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
             );
         });
 
@@ -381,7 +381,7 @@ describe('Upgradable plugin tests', async function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.admin.transferProxyAdminOwnership(TEST_ADDRESS, this.zkWallet2),
-                (error: any) => error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND)
+                (error: any) => error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND),
             );
         });
     });
@@ -396,14 +396,14 @@ describe('Upgradable plugin tests', async function () {
             const contractName1 = 'Box';
             const contractName2 = 'BoxWithStorageGap';
 
-            console.info(chalk.yellow('Deploying ' + contractName1 + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName1}...`));
 
             const boxArtifact = await this.deployer.loadArtifact(contractName1);
             boxProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'store',
             });
 
-            console.info(chalk.yellow('Deploying ' + contractName2 + '...'));
+            console.info(chalk.yellow(`Deploying ${contractName2}...`));
 
             const boxWithStorageGapArtifact = await this.deployer.loadArtifact(contractName2);
             boxWithStorageGap = await this.env.zkUpgrades.deployProxy(
@@ -412,7 +412,7 @@ describe('Upgradable plugin tests', async function () {
                 [42],
                 {
                     initializer: 'store',
-                }
+                },
             );
 
             // wait 2 seconds before the next call
@@ -421,13 +421,13 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should upgrade Box proxy to compatible implementation', async function () {
             const contractName = 'BoxV2';
-            console.info(chalk.yellow('Upgrading Box to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading Box to ${contractName}...`));
 
             const boxV2Artifact = await this.deployer.loadArtifact(contractName);
             const boxV2 = await this.env.zkUpgrades.upgradeProxy(
                 this.deployer.zkWallet,
                 boxProxy.address,
-                boxV2Artifact
+                boxV2Artifact,
             );
 
             boxV2.connect(this.deployer.zkWallet);
@@ -437,7 +437,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should fail do upgrade proxy to the implementation that violates storage layout restrictions', async function () {
             const contractName = 'BoxV2Invalid';
-            console.info(chalk.yellow('Upgrading Box to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading Box to ${contractName}...`));
 
             const boxV2 = await this.deployer.loadArtifact(contractName);
 
@@ -448,13 +448,13 @@ describe('Upgradable plugin tests', async function () {
                     error.message.includes(storageLayoutErrors.INSERTED_VARIABLE) &&
                     error.message.includes(storageLayoutErrors.CHANGE_VARIABLE_TYPE) &&
                     error.message.includes(storageLayoutErrors.RENAMED_VARIABLE) &&
-                    error.message.includes(storageLayoutErrors.DELETED_VARIABLE)
+                    error.message.includes(storageLayoutErrors.DELETED_VARIABLE),
             );
         });
 
         it('Should fail do upgrade proxy to the implementation that does not reduce storage gap properly', async function () {
             const contractName = 'BoxWithStorageGapV2Invalid';
-            console.info(chalk.yellow('Upgrading BoxWithStorageGap to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading BoxWithStorageGap to ${contractName}...`));
 
             const boxV2Artifact = await this.deployer.loadArtifact(contractName);
 
@@ -462,19 +462,19 @@ describe('Upgradable plugin tests', async function () {
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxWithStorageGap.address, boxV2Artifact),
                 (error: any) =>
                     error.message.includes(storageLayoutErrors.INCOMPATIBLE_STORAGE_LAYOUT) &&
-                    error.message.includes(storageLayoutErrors.STORAGE_GAP_SIZE)
+                    error.message.includes(storageLayoutErrors.STORAGE_GAP_SIZE),
             );
         });
 
         it('Should upgrade BoxWithStorageGap proxy to compatible implementation', async function () {
             const contractName = 'BoxWithStorageGapV2';
-            console.info(chalk.yellow('Upgrading BoxWithStorageGap to ' + contractName + '...'));
+            console.info(chalk.yellow(`Upgrading BoxWithStorageGap to ${contractName}...`));
 
             const boxV2Artifact = await this.deployer.loadArtifact(contractName);
             const boxV2 = await this.env.zkUpgrades.upgradeProxy(
                 this.deployer.zkWallet,
                 boxWithStorageGap.address,
-                boxV2Artifact
+                boxV2Artifact,
             );
 
             boxV2.connect(this.deployer.zkWallet);
@@ -490,7 +490,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should estimate gas for transparent proxy deployment on local setup', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+            console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -511,7 +511,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should estimate gas for uups proxy deployment on local setup', async function () {
             const contractName = 'BoxUups';
-            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+            console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -521,7 +521,7 @@ describe('Upgradable plugin tests', async function () {
                 contract,
                 [],
                 { kind: 'uups' },
-                true
+                true,
             );
 
             const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
@@ -537,7 +537,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should estimate gas for beacon contract deployment on local setup', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+            console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -554,7 +554,7 @@ describe('Upgradable plugin tests', async function () {
 
         it('Should estimate gas for beacon proxy deployment on local setup', async function () {
             const contractName = 'Box';
-            console.info(chalk.yellow('Estimating gas for ' + contractName + '...'));
+            console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
             const balance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -564,13 +564,13 @@ describe('Upgradable plugin tests', async function () {
                 contract,
                 [],
                 {},
-                true
+                true,
             );
             const gasEstimationProxy = await this.env.zkUpgrades.estimation.estimateGasBeaconProxy(
                 this.deployer,
                 [],
                 {},
-                true
+                true,
             );
             const gasEstimation = gasEstimationBeacon.add(gasEstimationProxy);
 
@@ -579,7 +579,7 @@ describe('Upgradable plugin tests', async function () {
                 this.deployer.zkWallet,
                 boxBeacon.address,
                 contract,
-                [42]
+                [42],
             );
             await boxProxy.deployed();
 

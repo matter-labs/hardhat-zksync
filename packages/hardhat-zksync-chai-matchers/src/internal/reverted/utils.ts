@@ -35,65 +35,60 @@ export function getReturnDataFromError(error: any): string {
 
 type DecodedReturnData =
     | {
-        kind: 'Error';
-        reason: string;
-    }
+          kind: 'Error';
+          reason: string;
+      }
     | {
-        kind: 'Empty';
-    }
+          kind: 'Empty';
+      }
     | {
-        kind: 'Panic';
-        code: BigNumber;
-        description: string;
-    }
+          kind: 'Panic';
+          code: BigNumber;
+          description: string;
+      }
     | {
-        kind: 'Custom';
-        id: string;
-        data: string;
-    };
-
-type FuncSelectorWithData = {
-    funcSelector: string;
-    data: string;
-};
+          kind: 'Custom';
+          id: string;
+          data: string;
+      };
 
 export function decodeReturnData(returnData: string): DecodedReturnData {
-    const { defaultAbiCoder: abi } = require("@ethersproject/abi");
-    if (returnData === "0x") {
-        return { kind: "Empty" };
+    const { defaultAbiCoder: abi } = require('@ethersproject/abi');
+    if (returnData === '0x') {
+        return { kind: 'Empty' };
     } else if (returnData.startsWith(ERROR_STRING_PREFIX)) {
         const encodedReason = returnData.slice(ERROR_STRING_PREFIX.length);
         let reason: string;
         try {
-            reason = abi.decode(["string"], `0x${encodedReason}`)[0];
+            reason = abi.decode(['string'], `0x${encodedReason}`)[0];
         } catch (e: any) {
-            throw new ZkSyncChaiMatchersPluginError(encodedReason, "string", e);
+            throw new ZkSyncChaiMatchersPluginError(encodedReason, 'string', e);
         }
 
         return {
-            kind: "Error",
+            kind: 'Error',
             reason,
         };
     } else if (returnData.startsWith(PANIC_CODE_PREFIX)) {
         const encodedReason = returnData.slice(PANIC_CODE_PREFIX.length);
         let code: BigNumber;
         try {
-            code = abi.decode(["uint256"], `0x${encodedReason}`)[0];
+            code = abi.decode(['uint256'], `0x${encodedReason}`)[0];
         } catch (e: any) {
-            throw new ZkSyncChaiMatchersPluginError(encodedReason, "uint256", e);
+            throw new ZkSyncChaiMatchersPluginError(encodedReason, 'uint256', e);
         }
 
-        const description = panicErrorCodeToReason(code) ?? "unknown panic code";
+        const description = panicErrorCodeToReason(code) ?? 'unknown panic code';
 
         return {
-            kind: "Panic",
+            kind: 'Panic',
             code,
             description,
         };
     }
 
     return {
-        kind: "Custom",
+        kind: 'Custom',
         id: returnData.slice(0, 10),
         data: `0x${returnData.slice(10)}`,
     };

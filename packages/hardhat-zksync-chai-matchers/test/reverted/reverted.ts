@@ -40,7 +40,7 @@ describe('INTEGRATION: Reverted', function () {
             matchers = await deployer.deploy(artifact);
 
             aaDeployer = new Deployer(this.hre, wallet1, 'createAccount');
-            artifact = await deployer.loadArtifact("TwoUserMultisig");
+            artifact = await deployer.loadArtifact('TwoUserMultisig');
             aaAccount = await aaDeployer.deploy(artifact, [wallet1.address, wallet2.address], undefined, []);
         });
 
@@ -53,24 +53,24 @@ describe('INTEGRATION: Reverted', function () {
             it('invalid string', async function () {
                 await expect(expect('0x123').to.be.reverted).to.be.rejectedWith(
                     TypeError,
-                    "Expected a valid transaction hash, but got '0x123'"
+                    "Expected a valid transaction hash, but got '0x123'",
                 );
 
                 await expect(expect('0x123').to.not.be.reverted).to.be.rejectedWith(
                     TypeError,
-                    "Expected a valid transaction hash, but got '0x123'"
+                    "Expected a valid transaction hash, but got '0x123'",
                 );
             });
 
             it('promise of an invalid string', async function () {
                 await expect(expect(Promise.resolve('0x123')).to.be.reverted).to.be.rejectedWith(
                     TypeError,
-                    "Expected a valid transaction hash, but got '0x123'"
+                    "Expected a valid transaction hash, but got '0x123'",
                 );
 
                 await expect(expect(Promise.resolve('0x123')).to.not.be.reverted).to.be.rejectedWith(
                     TypeError,
-                    "Expected a valid transaction hash, but got '0x123'"
+                    "Expected a valid transaction hash, but got '0x123'",
                 );
             });
         });
@@ -185,17 +185,17 @@ describe('INTEGRATION: Reverted', function () {
 
                 const gasLimit = await provider.estimateGas(aaTx);
                 const gasPrice = await provider.getGasPrice();
-            
+
                 aaTx = {
                     ...aaTx,
                     from: aaAccount.address,
-                    gasLimit: gasLimit,
-                    gasPrice: gasPrice,
+                    gasLimit,
+                    gasPrice,
                     chainId: (await provider.getNetwork()).chainId,
                     nonce: await provider.getTransactionCount(aaAccount.address),
                     type: 113,
                     customData: {
-                      gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+                        gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
                     } as zk.types.Eip712Meta,
                     value: ethers.BigNumber.from(0),
                 };

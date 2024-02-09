@@ -1,15 +1,15 @@
-import { expect } from "chai";
-import { decodeReturnData, getReturnDataFromError } from "../../src/internal/reverted/utils";
-import { getAddressOf, isWalletOrContract } from "../../src/internal/misc/account";
+import { expect } from 'chai';
 import * as zk from 'zksync-ethers';
-import { assertIsNotNull } from "../../src/internal/utils";
+import { decodeReturnData, getReturnDataFromError } from '../../src/internal/reverted/utils';
+import { getAddressOf, isWalletOrContract } from '../../src/internal/misc/account';
+import { assertIsNotNull } from '../../src/internal/utils';
 
 class TestError extends Error {
-    data?: any;
+    private _data?: any;
 
     constructor(message: string, data?: any) {
         super(message);
-        this.data = data;
+        this._data = data;
     }
 }
 
@@ -17,23 +17,21 @@ describe('Miscellaneous tests', function () {
     it('fails to decode return data', async function () {
         try {
             const ERROR_STRING_PREFIX = '0x08c379a0';
-            const malformedReturnData = ERROR_STRING_PREFIX + 'ThisIsNotValidEncodedData';
+            const malformedReturnData = `${ERROR_STRING_PREFIX}ThisIsNotValidEncodedData`;
             decodeReturnData(malformedReturnData);
         } catch (e: any) {
-            expect(e.message.includes("There was an error decoding"), "Should have fail to decode return data");
+            expect(e.message.includes('There was an error decoding'), 'Should have fail to decode return data');
         }
-    })
-
+    });
 
     it('fails because its null', async function () {
         const valueName = 'test-case';
         try {
-            assertIsNotNull(null, valueName)
+            assertIsNotNull(null, valueName);
         } catch (e: any) {
-            expect(e.message.includes(`${valueName} should not be null`), "Should have thrown an error");
+            expect(e.message.includes(`${valueName} should not be null`), 'Should have thrown an error');
         }
-    })
-
+    });
 
     it('should throw ZkSyncChaiMatchersPluginAssertionError for invalid account input', async () => {
         const invalidAccount = 12345;
@@ -50,14 +48,14 @@ describe('Miscellaneous tests', function () {
         const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
         const result = isWalletOrContract(zkWallet);
-        expect(result).to.be.true;
+        expect(result);
     });
 
     it('returns false for a non-wallet/non-contract account', async () => {
         const nonWalletAccount = {} as any;
 
         const result = isWalletOrContract(nonWalletAccount);
-        expect(result).to.be.false;
+        expect(!result);
     });
 
     it('should throw the original error when returnData is undefined', async () => {
@@ -66,7 +64,7 @@ describe('Miscellaneous tests', function () {
             getReturnDataFromError(error);
             throw new Error('Expected error was not thrown');
         } catch (e: any) {
-            expect(e.message.includes('Test error'), "Should have included test error");
+            expect(e.message.includes('Test error'), 'Should have included test error');
         }
     });
 
@@ -76,8 +74,7 @@ describe('Miscellaneous tests', function () {
             getReturnDataFromError(error);
             throw new Error('Expected error was not thrown');
         } catch (e: any) {
-            expect(e.message.includes('Test error with wrong data'), "Should have included test error");
+            expect(e.message.includes('Test error with wrong data'), 'Should have included test error');
         }
     });
-
-})
+});

@@ -10,16 +10,15 @@ import {
 import * as zk from 'zksync-ethers';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
-import { ContractAddressOrInstance, getContractAddress } from '../utils/utils-general';
-import { DeployBeaconProxyOptions } from '../utils/options';
-import { getInitializerData } from '../utils/utils-general';
-import { deploy, DeployTransaction } from './deploy';
-import { BEACON_PROXY_JSON } from '../constants';
-import { ZkSyncUpgradablePluginError } from '../errors';
-import { Manifest } from '../core/manifest';
 import chalk from 'chalk';
 import assert from 'assert';
 import path from 'path';
+import { ContractAddressOrInstance, getContractAddress, getInitializerData } from '../utils/utils-general';
+import { DeployBeaconProxyOptions } from '../utils/options';
+import { BEACON_PROXY_JSON } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
+import { Manifest } from '../core/manifest';
+import { deploy, DeployTransaction } from './deploy';
 
 export interface DeployBeaconProxyFunction {
     (
@@ -28,7 +27,7 @@ export interface DeployBeaconProxyFunction {
         artifact: ZkSyncArtifact,
         args?: unknown[],
         opts?: DeployBeaconProxyOptions,
-        quiet?: boolean
+        quiet?: boolean,
     ): Promise<zk.Contract>;
     (
         wallet: zk.Wallet,
@@ -45,14 +44,14 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         artifact: ZkSyncArtifact,
         args: unknown[] | DeployBeaconProxyOptions = [],
         opts: DeployBeaconProxyOptions = {},
-        quiet: boolean = false
+        quiet: boolean = false,
     ) {
         const attachTo = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
 
         if (!(attachTo instanceof zk.ContractFactory)) {
             throw new ZkSyncUpgradablePluginError(
                 `attachTo must specify a contract factory\n` +
-                    `Include the contract factory for the beacon's current implementation in the attachTo parameter`
+                    `Include the contract factory for the beacon's current implementation in the attachTo parameter`,
             );
         }
         if (!Array.isArray(args)) {
@@ -80,13 +79,13 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
                     chalk.yellow(`A proxy admin was previously deployed on this network`, [
                         `This is not natively used with the current kind of proxy ('beacon').`,
                         `Changes to the admin will have no effect on this new proxy.`,
-                    ])
+                    ]),
                 );
             }
         }
 
         const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
-            artifactPath.includes(path.sep + BEACON_PROXY_JSON)
+            artifactPath.includes(path.sep + BEACON_PROXY_JSON),
         );
         assert(beaconProxyPath, 'Beacon proxy artifact not found');
         const beaconProxyContract = await import(beaconProxyPath);
@@ -94,13 +93,13 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         const beaconProxyFactory = new zk.ContractFactory(
             beaconProxyContract.abi,
             beaconProxyContract.bytecode,
-            wallet
+            wallet,
         );
 
-        const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = Object.assign(
-            { kind: opts.kind },
-            await deploy(beaconProxyFactory, beaconAddress, data)
-        );
+        const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
+            kind: opts.kind,
+            ...(await deploy(beaconProxyFactory, beaconAddress, data)),
+        };
         if (!quiet) {
             console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
         }

@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { Contract } from 'ethers';
-import { Manifest } from './core/manifest';
 import { Wallet } from 'zksync-ethers';
+import { Manifest } from './core/manifest';
 import { getAdminFactory } from './proxy-deployment/deploy-proxy-admin';
 import { ZkSyncUpgradablePluginError } from './errors';
 
@@ -34,7 +34,7 @@ export function makeTransferProxyAdminOwnership(hre: HardhatRuntimeEnvironment):
         const manifest = await Manifest.forNetwork(wallet.provider);
         const { proxies } = await manifest.read();
         for (const { address, kind } of proxies) {
-            if (admin.address == (await getAdminAddress(wallet.provider, address))) {
+            if (admin.address === (await getAdminAddress(wallet.provider, address))) {
                 console.info(chalk.green(`${address} (${kind}) proxy ownership transfered through admin proxy`));
             } else {
                 console.info(chalk.red(`${address} (${kind}) proxy ownership not affected by admin proxy`));

@@ -6,9 +6,9 @@ import util from 'util';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 
+import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { useEnvironmentWithLocalSetup } from './helpers';
 import '../src/internal/add-chai-matchers';
-import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
@@ -28,8 +28,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
         let contract: zk.Contract;
         let gasPrice: number;
         let gasUsed: number;
-        let txGasFees: number;
-        let overrides: {};
+        let _txGasFees: number;
+        let _overrides: {};
 
         beforeEach(async function () {
             provider = zk.Provider.getDefaultProvider();
@@ -42,9 +42,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
 
             gasPrice = 250000000;
             gasUsed = 157263;
-            txGasFees = gasPrice * gasUsed;
+            _txGasFees = gasPrice * gasUsed;
 
-            overrides = {
+            _overrides = {
                 type: 2,
                 maxFeePerGas: 1 * gasPrice,
                 maxPriorityFeePerGas: 1 * gasPrice,
@@ -58,7 +58,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, '-200');
                 });
 
@@ -67,7 +67,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender.address, '-200');
                 });
 
@@ -76,7 +76,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender.address, '-200');
                 });
 
@@ -85,7 +85,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigInt('-200'));
                 });
 
@@ -94,7 +94,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigInt('-200'));
                 });
 
@@ -103,7 +103,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from('-200'));
                 });
 
@@ -112,7 +112,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from('-200'));
                 });
 
@@ -121,7 +121,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -130,7 +130,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -142,7 +142,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             overrides: {
                                 gasPrice,
                             },
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200, {
                         balanceChangeOptions: {
                             includeFee: true,
@@ -154,9 +154,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     await expect(() =>
                         sender.sendTransaction({
                             to: receiver.address,
-                            gasPrice: gasPrice,
+                            gasPrice,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -200);
                 });
 
@@ -168,7 +168,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             overrides: {
                                 gasPrice,
                             },
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -200);
                 });
 
@@ -177,7 +177,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, BigNumber.from(200));
                 });
 
@@ -186,7 +186,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, BigNumber.from(200));
                 });
 
@@ -195,7 +195,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -204,7 +204,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -214,11 +214,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -228,11 +228,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -242,11 +242,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
 
@@ -256,24 +256,24 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
 
                 it('Should pass when given zero value tx', async () => {
                     await expect(() =>
-                        sender.sendTransaction({ to: receiver.address, value: 0 })
+                        sender.sendTransaction({ to: receiver.address, value: 0 }),
                     ).to.changeEtherBalance(sender, 0);
                 });
 
                 it('Should pass when given zero value tx - zkSync transfer', async () => {
                     await expect(() => sender.transfer({ to: receiver.address, amount: 0 })).to.changeEtherBalance(
                         sender,
-                        0
+                        0,
                     );
                 });
 
@@ -284,11 +284,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -200);
 
                     const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(
-                        receiverBalanceBefore
+                        receiverBalanceBefore,
                     );
 
                     expect(receiverBalanceChange.toNumber()).to.equal(200);
@@ -301,11 +301,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -200);
 
                     const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(
-                        receiverBalanceBefore
+                        receiverBalanceBefore,
                     );
 
                     expect(receiverBalanceChange.toNumber()).to.equal(200);
@@ -318,7 +318,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: contract.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(contract, 200);
                 });
 
@@ -327,7 +327,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: contract.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(contract, 200);
                 });
 
@@ -344,9 +344,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                            overrides,
-                        })
-                    ).to.changeEtherBalance(sender, '-200', { overrides });
+                            overrides: _overrides,
+                        }),
+                    ).to.changeEtherBalance(sender, '-200', { overrides: _overrides });
                 });
 
                 it('Should pass when expected balance change is passed as int and is equal to an actual', async () => {
@@ -354,9 +354,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                            ...overrides,
-                        })
-                    ).to.changeEtherBalance(receiver, 200, { overrides });
+                            ..._overrides,
+                        }),
+                    ).to.changeEtherBalance(receiver, 200, { overrides: _overrides });
                 });
 
                 it('Should pass when expected balance change is passed as int and is equal to an actual - zkSync transfer', async () => {
@@ -364,9 +364,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                            overrides,
-                        })
-                    ).to.changeEtherBalance(receiver, 200, { overrides });
+                            overrides: _overrides,
+                        }),
+                    ).to.changeEtherBalance(receiver, 200, { overrides: _overrides });
                 });
 
                 it("Should ignore fee if receiver's wallet is being checked and includeFee was set", async () => {
@@ -374,13 +374,13 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                            ...overrides,
-                        })
+                            ..._overrides,
+                        }),
                     ).to.changeEtherBalance(receiver, 200, {
                         balanceChangeOptions: {
                             includeFee: true,
                         },
-                        overrides,
+                        overrides: _overrides,
                     });
                 });
 
@@ -389,13 +389,13 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                            overrides,
-                        })
+                            overrides: _overrides,
+                        }),
                     ).to.changeEtherBalance(receiver, 200, {
                         balanceChangeOptions: {
                             includeFee: true,
                         },
-                        overrides,
+                        overrides: _overrides,
                     });
                 });
 
@@ -404,9 +404,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                            ...overrides,
-                        })
-                    ).to.changeEtherBalance(sender, -200, { overrides });
+                            ..._overrides,
+                        }),
+                    ).to.changeEtherBalance(sender, -200, { overrides: _overrides });
                 });
 
                 it('Should take into account transaction fee by default - zkSync transfer', async () => {
@@ -414,9 +414,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                            overrides,
-                        })
-                    ).to.changeEtherBalance(sender, -200, { overrides });
+                            overrides: _overrides,
+                        }),
+                    ).to.changeEtherBalance(sender, -200, { overrides: _overrides });
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual', async () => {
@@ -424,8 +424,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides });
+                        }),
+                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides: _overrides });
                 });
 
                 it('Should pass when expected balance change is passed as BN and is equal to an actual - zkSync transfer', async () => {
@@ -433,8 +433,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
-                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides });
+                        }),
+                    ).to.changeEtherBalance(receiver, BigNumber.from(200), { overrides: _overrides });
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual', async () => {
@@ -442,9 +442,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                            ...overrides,
-                        })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides });
+                            ..._overrides,
+                        }),
+                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides: _overrides });
                 });
 
                 it('Should pass on negative case when expected balance change is not equal to an actual - zkSync transfer', async () => {
@@ -452,9 +452,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                            overrides,
-                        })
-                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides });
+                            overrides: _overrides,
+                        }),
+                    ).to.not.changeEtherBalance(receiver, BigNumber.from(300), { overrides: _overrides });
                 });
 
                 it('Should throw when expected balance change value was different from an actual', async () => {
@@ -463,12 +463,12 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                                ...overrides,
-                            })
-                        ).to.changeEtherBalance(sender, '-500', { overrides })
+                                ..._overrides,
+                            }),
+                        ).to.changeEtherBalance(sender, '-500', { overrides: _overrides }),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -478,12 +478,12 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                                overrides,
-                            })
-                        ).to.changeEtherBalance(sender, '-500', { overrides })
+                                overrides: _overrides,
+                            }),
+                        ).to.changeEtherBalance(sender, '-500', { overrides: _overrides }),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -493,12 +493,12 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                                ...overrides,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200', { overrides })
+                                ..._overrides,
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200', { overrides: _overrides }),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
 
@@ -508,12 +508,12 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                                overrides,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200', { overrides })
+                                overrides: _overrides,
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200', { overrides: _overrides }),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
             });
@@ -524,9 +524,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: contract.address,
                             value: 200,
-                            ...overrides,
-                        })
-                    ).to.changeEtherBalance(contract, 200, { overrides });
+                            ..._overrides,
+                        }),
+                    ).to.changeEtherBalance(contract, 200, { overrides: _overrides });
                 });
 
                 it('Should pass when expected balance change is passed as int and is equal to an actual - zkSync transfer', async () => {
@@ -534,9 +534,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: contract.address,
                             amount: 200,
-                            overrides,
-                        })
-                    ).to.changeEtherBalance(contract, 200, { overrides });
+                            overrides: _overrides,
+                        }),
+                    ).to.changeEtherBalance(contract, 200, { overrides: _overrides });
                 });
 
                 // it('should pass when calling function that returns half the sent ether', async () => {
@@ -556,9 +556,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     sender.sendTransaction({
                         to: receiver.address,
                         value: 200,
-                        ...overrides,
-                    })
-                ).to.changeEtherBalance(sender, -200, { overrides });
+                        ..._overrides,
+                    }),
+                ).to.changeEtherBalance(sender, -200, { overrides: _overrides });
 
                 const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(receiverBalanceBefore);
 
@@ -572,9 +572,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     sender.transfer({
                         to: receiver.address,
                         amount: 200,
-                        overrides,
-                    })
-                ).to.changeEtherBalance(sender, -200, { overrides });
+                        overrides: _overrides,
+                    }),
+                ).to.changeEtherBalance(sender, -200, { overrides: _overrides });
 
                 const receiverBalanceChange = (await provider.getBalance(receiver.address)).sub(receiverBalanceBefore);
 
@@ -589,7 +589,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, '-200');
                 });
 
@@ -598,7 +598,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, '-200');
                 });
 
@@ -607,7 +607,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -616,7 +616,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -625,7 +625,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from(-200));
                 });
 
@@ -634,7 +634,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from(-200));
                 });
 
@@ -643,7 +643,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -652,7 +652,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -662,11 +662,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             await sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -676,11 +676,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             await sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -690,11 +690,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             await sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
 
@@ -704,11 +704,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             await sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
             });
@@ -719,7 +719,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.sendTransaction({
                             to: contract.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(contract, 200);
                 });
 
@@ -728,7 +728,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         await sender.transfer({
                             to: contract.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(contract, 200);
                 });
             });
@@ -741,7 +741,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, '-200');
                 });
 
@@ -750,7 +750,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, '-200');
                 });
 
@@ -759,7 +759,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -768,7 +768,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(receiver, 200);
                 });
 
@@ -777,7 +777,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from(-200));
                 });
 
@@ -786,7 +786,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, BigNumber.from(-200));
                 });
 
@@ -795,7 +795,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -804,7 +804,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.not.changeEtherBalance(receiver, BigNumber.from(300));
                 });
 
@@ -814,11 +814,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -828,11 +828,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.changeEtherBalance(sender, '-500')
+                            }),
+                        ).to.changeEtherBalance(sender, '-500'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`
+                        `Expected the ether balance of "${sender.address}" to change by -500 wei, but it changed by -200 wei`,
                     );
                 });
 
@@ -842,11 +842,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.sendTransaction({
                                 to: receiver.address,
                                 value: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
 
@@ -856,11 +856,11 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                             sender.transfer({
                                 to: receiver.address,
                                 amount: 200,
-                            })
-                        ).to.not.changeEtherBalance(sender, '-200')
+                            }),
+                        ).to.not.changeEtherBalance(sender, '-200'),
                     ).to.be.eventually.rejectedWith(
                         AssertionError,
-                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`
+                        `Expected the ether balance of "${sender.address}" NOT to change by -200 wei, but it did`,
                     );
                 });
             });
@@ -873,7 +873,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.sendTransaction({
                             to: receiver.address,
                             value: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -100);
                 } catch (e: any) {
                     expect(util.inspect(e)).to.include(path.join('test', 'changeEtherBalance.ts'));
@@ -890,7 +890,7 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         sender.transfer({
                             to: receiver.address,
                             amount: 200,
-                        })
+                        }),
                     ).to.changeEtherBalance(sender, -100);
                 } catch (e: any) {
                     expect(util.inspect(e)).to.include(path.join('test', 'changeEtherBalance.ts'));

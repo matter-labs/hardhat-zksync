@@ -1,47 +1,63 @@
-import { HardhatNetworkAccountConfig, HardhatNetworkHDAccountsConfig, HardhatRuntimeEnvironment, HttpNetworkConfig, NetworkConfig } from 'hardhat/types';
+import {
+    HardhatNetworkAccountConfig,
+    HardhatNetworkHDAccountsConfig,
+    HardhatRuntimeEnvironment,
+    HttpNetworkConfig,
+    NetworkConfig,
+} from 'hardhat/types';
+import fs from 'fs';
+import { Wallet } from 'zksync-ethers';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
 import { MorphTsBuilder } from './morph-ts-builder';
-import fs from 'fs';
 import { ZkSyncDeployPluginError } from './errors';
-import { Wallet } from 'zksync-ethers';
 
 export function isHttpNetworkConfig(networkConfig: NetworkConfig): networkConfig is HttpNetworkConfig {
     return 'url' in networkConfig;
 }
 
-export function updateHardhatConfigFile(hre: HardhatRuntimeEnvironment, externalConfigObjectPath: string, exportedConfigObject: string) {
-    try { 
+export function updateHardhatConfigFile(
+    hre: HardhatRuntimeEnvironment,
+    externalConfigObjectPath: string,
+    exportedConfigObject: string,
+) {
+    try {
         new MorphTsBuilder(externalConfigObjectPath ?? hre.config.paths.configFile)
-        .intialStep([{initialVariableType: "HardhatUserConfig"}, {initialVariable: exportedConfigObject}, {initialModule: "module.exports"}])
-        .nextStep({propertyName: 'zksolc', isRequired: true})
-        .nextStep({ propertyName: 'settings'})
-        .replaceStep({ propertyName: 'libraries', replaceObject: hre.config.zksolc.settings.libraries})
-        .save();
+            .intialStep([
+                { initialVariableType: 'HardhatUserConfig' },
+                { initialVariable: exportedConfigObject },
+                { initialModule: 'module.exports' },
+            ])
+            .nextStep({ propertyName: 'zksolc', isRequired: true })
+            .nextStep({ propertyName: 'settings' })
+            .replaceStep({ propertyName: 'libraries', replaceObject: hre.config.zksolc.settings.libraries })
+            .save();
     } catch (error) {
-        throw new ZkSyncDeployPluginError('Failed to update hardhat config file, please use addresses from console output');
+        throw new ZkSyncDeployPluginError(
+            'Failed to update hardhat config file, please use addresses from console output',
+        );
     }
 }
 
 export function generateFullQuailfiedNameString(contractFQN: ContractFullQualifiedName | MissingLibrary): string {
-    return contractFQN.contractPath + ":" + contractFQN.contractName;
+    return `${contractFQN.contractPath}:${contractFQN.contractName}`;
 }
 
 export async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[]) {
     libraries.forEach((library) => {
-        let contractPath = library.contractFQN.contractPath;
-        let contractName = library.contractFQN.contractName;
+        const contractPath = library.contractFQN.contractPath;
+        const contractName = library.contractFQN.contractName;
 
         if (!hre.config.zksolc.settings.libraries) {
             hre.config.zksolc.settings.libraries = {};
         }
 
         hre.config.zksolc.settings.libraries[contractPath] = {
-            [contractName]: library.address
+            [contractName]: library.address,
         };
     });
 }
 
-export function isValidEthNetworkURL(string:string) {
+export function isValidEthNetworkURL(string: string) {
     try {
         new URL(string);
         return true;
@@ -50,7 +66,7 @@ export function isValidEthNetworkURL(string:string) {
     }
 }
 
-export function getLibraryInfos(hre: HardhatRuntimeEnvironment): Array<MissingLibrary> {
+export function getLibraryInfos(hre: HardhatRuntimeEnvironment): MissingLibrary[] {
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
 
     if (!fs.existsSync(libraryPathFile)) {
@@ -81,28 +97,28 @@ export function getWallet(hre: HardhatRuntimeEnvironment, privateKey: string, ac
 
     const accounts = hre.network.config.accounts;
 
-    if(!accounts) {
+    if (!accounts) {
         throw new ZkSyncDeployPluginError('Accounts for selected newtwork are not specified');
     }
 
-    if(isHardhatNetworkAccountsConfigStrings(accounts)) {
+    if (isHardhatNetworkAccountsConfigStrings(accounts)) {
         const accountPrivateKey = (accounts as string[])[accountNumber];
 
-        if(!accountPrivateKey) {
+        if (!accountPrivateKey) {
             throw new ZkSyncDeployPluginError('Account private key with specified index is not found');
         }
 
         return new Wallet(accountPrivateKey);
     }
 
-    if(isHardhatNetworkHDAccountsConfig(accounts)) {
-        const account = (accounts as HardhatNetworkHDAccountsConfig);
-        return Wallet.fromMnemonic(account.mnemonic, account.path);
+    if (isHardhatNetworkHDAccountsConfig(accounts)) {
+        const accountHD = accounts as HardhatNetworkHDAccountsConfig;
+        return Wallet.fromMnemonic(accountHD.mnemonic, accountHD.path);
     }
 
     const account = (accounts as HardhatNetworkAccountConfig[])[accountNumber];
 
-    if(!account) {
+    if (!account) {
         throw new ZkSyncDeployPluginError('Account with specified index is not found');
     }
 

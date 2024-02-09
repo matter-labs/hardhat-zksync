@@ -33,20 +33,20 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
-    "axios": "^1.6.2",
-    "chai": "^4.3.6",
-    "hardhat": "^2.14.0",
-    "chalk": "4.1.2",
     "@ethersproject/abi": "^5.1.2",
     "@ethersproject/address": "5.7.0",
-    "zksync-ethers": "^5.0.0",
-    "cbor": "^8.1.0",
-    "debug": "^4.1.1",
+    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@openzeppelin/contracts": "^4.9.2",
+    "axios": "^1.6.2",
+    "cbor": "^8.1.0",
+    "chai": "^4.3.6",
+    "chalk": "4.1.2",
+    "debug": "^4.1.1",
+    "hardhat": "^2.14.0",
+    "sinon": "^17.0.1",
     "sinon-chai": "^3.7.0",
-    "sinon": "^17.0.1"
+    "zksync-ethers": "^5.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.0",
@@ -55,6 +55,7 @@
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
+    "c8": "^8.0.1",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
@@ -64,8 +65,7 @@
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
-    "typescript": "^5.1.6",
-    "c8": "^8.0.1"
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.0"

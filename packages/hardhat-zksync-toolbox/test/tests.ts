@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { TASK_DEPLOY_ZKSYNC } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
-import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
+import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 
 import { useEnvironmentWithLocalSetup } from './helpers';
 
@@ -15,7 +15,7 @@ describe('zksync toolbox plugin', function () {
         useEnvironmentWithLocalSetup('simple');
 
         it('All tasks should be registered in HRE', async function () {
-            const taskNames = Object.keys(this.env['tasks']);
+            const taskNames = Object.keys(this.env.tasks);
 
             assert(taskNames.includes(TASK_COMPILE));
             assert(taskNames.includes(TASK_DEPLOY_ZKSYNC));

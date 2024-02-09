@@ -20,7 +20,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
 
             if (typeof contract === 'string' || contract?.interface === undefined) {
                 throw new TypeError(
-                    'The first argument of .revertedWithCustomError must be the contract that defines the custom error'
+                    'The first argument of .revertedWithCustomError must be the contract that defines the custom error',
                 );
             }
 
@@ -41,7 +41,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
 
                 assert(
                     false,
-                    `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it didn't revert`
+                    `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it didn't revert`,
                 );
             };
 
@@ -54,19 +54,19 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                 if (decodedReturnData.kind === 'Empty') {
                     assert(
                         false,
-                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted without a reason`
+                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted without a reason`,
                     );
                 } else if (decodedReturnData.kind === 'Error') {
                     assert(
                         false,
-                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with reason '${decodedReturnData.reason}'`
+                        `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with reason '${decodedReturnData.reason}'`,
                     );
                 } else if (decodedReturnData.kind === 'Panic') {
                     assert(
                         false,
                         `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
                             decodedReturnData.description
-                        })`
+                        })`,
                     );
                 } else if (decodedReturnData.kind === 'Custom') {
                     if (decodedReturnData.id === expectedCustomError.id) {
@@ -81,7 +81,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                         assert(
                             true,
                             undefined,
-                            `Expected transaction NOT to be reverted with custom error '${expectedCustomErrorName}', but it was`
+                            `Expected transaction NOT to be reverted with custom error '${expectedCustomErrorName}', but it was`,
                         );
                     } else {
                         // try to decode the actual custom error
@@ -91,12 +91,12 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
                         if (actualCustomError === undefined) {
                             assert(
                                 false,
-                                `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with a different custom error`
+                                `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with a different custom error`,
                             );
                         } else {
                             assert(
                                 false,
-                                `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with custom error '${actualCustomError.name}'`
+                                `Expected transaction to be reverted with custom error '${expectedCustomErrorName}', but it reverted with custom error '${actualCustomError.name}'`,
                             );
                         }
                     }
@@ -115,7 +115,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
             return this;
-        }
+        },
     );
 }
 
@@ -124,7 +124,7 @@ export async function revertedWithCustomErrorWithArgs(
     Assertion: Chai.AssertionStatic,
     utils: Chai.ChaiUtils,
     expectedArgs: any[],
-    ssfi: Ssfi
+    ssfi: Ssfi,
 ) {
     const negated = false; // .withArgs cannot be negated
     const assert = buildAssert(negated, ssfi);
@@ -143,7 +143,7 @@ export async function revertedWithCustomErrorWithArgs(
 
     new Assertion(actualArgs).to.have.same.length(
         expectedArgs.length,
-        `expected ${expectedArgs.length} args but got ${actualArgs.length}`
+        `expected ${expectedArgs.length} args but got ${actualArgs.length}`,
     );
 
     for (const [i, actualArg] of actualArgs.entries()) {
@@ -153,7 +153,7 @@ export async function revertedWithCustomErrorWithArgs(
             try {
                 assert(
                     expectedArg(actualArg),
-                    `${errorPrefix} returned false`
+                    `${errorPrefix} returned false`,
                     // no need for a negated message, since we disallow mixing .not. with
                     // .withArgs
                 );
@@ -161,7 +161,7 @@ export async function revertedWithCustomErrorWithArgs(
                 if (e instanceof AssertionError) {
                     assert(
                         false,
-                        `${errorPrefix} threw an AssertionError: ${e.message}`
+                        `${errorPrefix} threw an AssertionError: ${e.message}`,
                         // no need for a negated message, since we disallow mixing .not. with
                         // .withArgs
                     );
@@ -205,7 +205,7 @@ function findCustomErrorById(iface: any, id: string): CustomError | undefined {
     const ethers = require('ethers');
 
     const customErrorEntry: any = Object.entries(iface.errors).find(
-        ([signature]: any) => ethers.utils.id(signature).slice(0, 10) === id
+        ([signature]: any) => ethers.utils.id(signature).slice(0, 10) === id,
     );
 
     if (customErrorEntry === undefined) {

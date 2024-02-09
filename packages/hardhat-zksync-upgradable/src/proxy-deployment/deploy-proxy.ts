@@ -6,18 +6,22 @@ import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
-import { DeployTransaction, deploy } from './deploy';
-import { deployProxyImpl } from './deploy-impl';
+import assert from 'assert';
 import { getInitializerData } from '../utils/utils-general';
 import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import assert from 'assert';
+import { deployProxyImpl } from './deploy-impl';
+import { DeployTransaction, deploy } from './deploy';
 
-export interface DeployFunction {
-    (wallet: zk.Wallet, artifact: ZkSyncArtifact, args?: unknown[], opts?: DeployProxyOptions, quiet?: boolean): Promise<zk.Contract>;
-}
+export type DeployFunction = (
+    wallet: zk.Wallet,
+    artifact: ZkSyncArtifact,
+    args?: unknown[],
+    opts?: DeployProxyOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
 
 export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction {
     return async function deployProxy(
@@ -25,7 +29,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         artifact,
         args: unknown[] | DeployProxyOptions = [],
         opts: DeployProxyOptions = {},
-        quiet: boolean = false
+        quiet: boolean = false,
     ) {
         if (!Array.isArray(args)) {
             opts = args;
@@ -38,7 +42,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
         const { impl, kind } = await deployProxyImpl(hre, factory, opts);
         if (!quiet) {
-            console.info(chalk.green('Implementation contract was deployed to ' + impl));
+            console.info(chalk.green(`Implementation contract was deployed to ${impl}`));
         }
 
         const contractInterface = factory.interface;
@@ -49,8 +53,8 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 if (!quiet) {
                     console.info(
                         chalk.yellow(
-                            `A proxy admin was previously deployed on this network\nThis is not natively used with the current kind of proxy ('uups')\nChanges to the admin will have no effect on this new proxy`
-                        )
+                            `A proxy admin was previously deployed on this network\nThis is not natively used with the current kind of proxy ('uups')\nChanges to the admin will have no effect on this new proxy`,
+                        ),
                     );
                 }
             }
@@ -64,12 +68,12 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
             case 'uups': {
                 const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                    x.includes(path.sep + ERC1967_PROXY_JSON)
+                    x.includes(path.sep + ERC1967_PROXY_JSON),
                 );
                 assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
                 const proxyContract = await import(ERC1967ProxyPath);
                 const proxyFactory = new zk.ContractFactory(proxyContract.abi, proxyContract.bytecode, wallet);
-                proxyDeployment = Object.assign({ kind }, await deploy(proxyFactory, impl, data));
+                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data)) };
                 if (!quiet) {
                     console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
                 }
@@ -79,7 +83,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             case 'transparent': {
                 const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
                 if (!quiet) {
-                    console.info(chalk.green('Admin was deployed to ' + adminAddress));
+                    console.info(chalk.green(`Admin was deployed to ${adminAddress}`));
                 }
 
                 const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
@@ -87,7 +91,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                 const TUPContract = await import(TUPPath);
 
                 const TUPFactory = new zk.ContractFactory(TUPContract.abi, TUPContract.bytecode, wallet);
-                proxyDeployment = Object.assign({ kind }, await deploy(TUPFactory, impl, adminAddress, data));
+                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, adminAddress, data)) };
                 if (!quiet) {
                     console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
                 }

@@ -13,8 +13,8 @@
     "@npmcli/promise-spawn": "^6.0.2",
     "commander": "^10.0.0",
     "get-monorepo-packages": "^1.2.0",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.3",
+    "prettier": "^3.1.0",
+    "typescript": "^5.1.6",
     "wsrun": "^5.2.2"
   },
   "scripts": {
@@ -23,6 +23,7 @@
     "clean": "wsrun --exclude-missing clean",
     "lint": "wsrun --exclude-missing --stages lint",
     "lint:fix": "wsrun --exclude-missing --stages lint:fix",
+    "prettier:check": "wsrun --exclude-missing --stages prettier:check",
     "test:release-script": "mocha scripts/test/tests.js"
   },
   "dependencies": {},

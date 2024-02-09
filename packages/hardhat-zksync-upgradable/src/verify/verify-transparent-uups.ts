@@ -1,12 +1,12 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
-import { verifyWithArtifact } from './verify-proxy';
-import { verifyImplementation } from './verify-impl';
-import { verifiableContracts } from '../constants';
 
 import { getImplementationAddress, isEmptySlot, getAdminAddress } from '@openzeppelin/upgrades-core';
 
 import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
+import { verifiableContracts } from '../constants';
+import { verifyImplementation } from './verify-impl';
+import { verifyWithArtifact } from './verify-proxy';
 
 /**
  * Fully verifies all contracts related to the given transparent or UUPS proxy address: implementation, admin (if any), and proxy.
@@ -28,7 +28,7 @@ export async function fullVerifyTransparentOrUUPS(
     hardhatVerify: (address: string) => Promise<any>,
     runSuper: RunSuperFunction<any>,
     noCompile: boolean = false,
-    quiet: boolean = false
+    quiet: boolean = false,
 ) {
     const networkConfig: any = hre.network.config;
     const provider = new zk.Provider(networkConfig.url);
@@ -61,7 +61,7 @@ export async function fullVerifyTransparentOrUUPS(
             proxyAddress,
             [verifiableContracts.transparentUpgradeableProxy, verifiableContracts.erc1967proxy],
             runSuper,
-            noCompile
+            noCompile,
         );
     }
 }
