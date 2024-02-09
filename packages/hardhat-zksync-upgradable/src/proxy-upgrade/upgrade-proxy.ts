@@ -8,7 +8,7 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { getContractAddress } from '../utils/utils-general';
+import { extractFactoryDeps,getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
@@ -33,7 +33,8 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
     ) {
         const proxyAddress = getContractAddress(proxy);
         opts.provider = wallet.provider;
-
+        opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+        
         const newImplementationFactory = new zk.ContractFactory(
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
