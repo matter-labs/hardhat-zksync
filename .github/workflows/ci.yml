@@ -95,12 +95,12 @@ jobs:
           yarn hardhat test
 
       - name: Test noninline libraries example
-       run: |
+        run: |
          cd examples/noninline-libraries-example
-         yarn hardhat compile
-         yarn hardhat deploy-zksync:libraries --private-key 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
-         yarn hardhat compile
-         yarn hardhat deploy-zksync
+          yarn hardhat compile
+          yarn hardhat deploy-zksync:libraries --private-key 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
+          yarn hardhat compile
+          yarn hardhat deploy-zksync
 
       - name: Test zkvyper example
         run: |
