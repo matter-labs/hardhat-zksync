@@ -204,9 +204,7 @@ export class Deployer {
         const deployment = await loadDeployment(this.hre, artifact);
 
         if (!forceDeploy && deployment) {
-            const contract = new zk.Contract(deployment.address, artifact.abi, this.zkWallet);
-            console.log(`Contract ${artifact.contractName} already deployed at ${deployment.address}`);
-            return contract;
+            return new zk.Contract(deployment.address, artifact.abi, this.zkWallet);
         }
 
         const baseDeps = await this._extractFactoryDeps(artifact);

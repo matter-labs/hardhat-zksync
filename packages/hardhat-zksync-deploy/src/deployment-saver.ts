@@ -19,7 +19,7 @@ export async function saveDeployment(hre: HardhatRuntimeEnvironment, contract: z
     const deployment: Deployment = {
         contractName: artifact.contractName,
         abi: artifact.abi,
-        bytecode: artifact.bytecode,
+        bytecode: artifact.deployedBytecode,
         address: await contract.getAddress(),
     };
 

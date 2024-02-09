@@ -5,18 +5,19 @@ import { glob } from 'glob';
 import { promisify } from 'util';
 
 import { ZkSyncDeployPluginError } from './errors';
-import { DEFAULT_DEPLOY_SCRIPTS_PATH } from './constants';
 
 const globPromise = promisify(glob);
 
 export class ScriptManager {
-    private funcByFilePath: {[filename: string]: any};
+    private funcByFilePath: { [filename: string]: any };
     private filePaths: string[];
     private deployPaths: string[];
 
     constructor(private hre: HardhatRuntimeEnvironment) {
         this.hre = hre;
-        this.deployPaths = [path.join(hre.config.paths.root, DEFAULT_DEPLOY_SCRIPTS_PATH)];
+        this.deployPaths = hre.network.deployPaths
+            ? hre.network.deployPaths : typeof (hre.config.paths.deployPaths) === 'string'
+                ? [hre.config.paths.deployPaths] : hre.config.paths.deployPaths;
         this.funcByFilePath = {};
         this.filePaths = [];
     }
@@ -61,15 +62,18 @@ export class ScriptManager {
     }
 
     public async callDeployScripts(targetScript: string, tags?: string[] | undefined) {
+        let scripts: string[] = [];
         if (targetScript === '') {
-            const scripts = await this.findAllDeployScripts();
-            const filePathsByTag = await this.collectTags(scripts, tags);
-            const scriptsToRun = await this.getScriptsToRun(filePathsByTag);
-            for (const script of scriptsToRun) {
-                await this.runScript(script);
-            }
+            scripts = await this.findAllDeployScripts();
         } else {
-            await this.runScript(this.findDeployScript(targetScript));
+            scripts = [this.findDeployScript(targetScript)];
+        }
+
+        const filePathsByTag = await this.collectTags(scripts, tags);
+
+        const scriptsToRun = await this.getScriptsToRun(filePathsByTag);
+        for (const script of scriptsToRun) {
+            await this.runScript(script);
         }
     }
 
@@ -95,7 +99,7 @@ export class ScriptManager {
     }
 
     public async collectTags(scripts: string[], tags?: string[] | undefined) {
-        const filePathsByTag: {[tag: string]: string[]} = {};
+        const filePathsByTag: { [tag: string]: string[] } = {};
 
         // Clear state every time collecting tags is executed
         this.filePaths = [];
@@ -111,34 +115,34 @@ export class ScriptManager {
             if (scriptTags !== undefined) {
               if (typeof scriptTags === 'string') {
                 scriptTags = [scriptTags];
-              }
+            }
 
-              for (const tag of scriptTags) {
+            for (const tag of scriptTags) {
                 if (tag.includes(',')) {
-                  throw new ZkSyncDeployPluginError('Tag cannot contains commas.');
+                    throw new ZkSyncDeployPluginError('Tag cannot contains commas.');
                 }
 
                 const tagFilePaths = filePathsByTag[tag] || [];
                 filePathsByTag[tag] = tagFilePaths;
                 tagFilePaths.push(filePath);
-              }
+            }
 
-              if (tags !== undefined) {
+            if (tags !== undefined) {
                 const filteredTags = tags.filter(value => scriptTags.includes(value));
                 if (filteredTags.length) {
                     this.filePaths.push(filePath);
                 }
-              } else {
-                this.filePaths.push(filePath);
-              }
             }
+        } else {
+            this.filePaths.push(filePath);
         }
+    }
 
         return filePathsByTag;
     }
 
-    public async getScriptsToRun(filePathsByTag: {[tag: string]: string[]}): Promise<string[]> {    
-        const filePathRegistered: {[filePath: string]: boolean} = {};
+    public async getScriptsToRun(filePathsByTag: { [tag: string]: string[] }): Promise<string[]> {
+        const filePathRegistered: { [filePath: string]: boolean } = {};
         const scriptsToRun: string[] = []
 
         const recurseDependencies = (filePath: string) => {
@@ -147,12 +151,12 @@ export class ScriptManager {
             const deployFn = this.funcByFilePath[filePath];
             if (deployFn.dependencies) {
                 for (const dependency of deployFn.dependencies) {
-                  const tagFilePaths = filePathsByTag[dependency];
-                  if (tagFilePaths.length) {
-                    for (const tagFilePath of tagFilePaths) {
-                        recurseDependencies(tagFilePath);
+                    const tagFilePaths = filePathsByTag[dependency];
+                    if (tagFilePaths.length) {
+                        for (const tagFilePath of tagFilePaths) {
+                            recurseDependencies(tagFilePath);
+                        }
                     }
-                  }
                 }
             }
 
@@ -161,7 +165,7 @@ export class ScriptManager {
                 filePathRegistered[filePath] = true;
             }
         }
-        
+
         for (const filePath of this.filePaths) {
             recurseDependencies(filePath);
         }
