@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.2.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.2.2...@matterlabs/hardhat-zksync-upgradable-v0.2.3) (2024-02-09)
+
+
+### Bug Fixes
+
+* add factory deps for implementation deployment ([#760](https://github.com/matter-labs/hardhat-zksync/issues/760)) ([ee9af05](https://github.com/matter-labs/hardhat-zksync/commit/ee9af05e7f37ef7e14e9e8cda2112306c2af9fb1))
+
 ## [0.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.2.1...@matterlabs/hardhat-zksync-upgradable-v0.2.2) (2024-01-31)
 
 
