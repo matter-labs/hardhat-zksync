@@ -14,6 +14,7 @@ export type StandaloneOptions = StandaloneValidationOptions &
         constructorArgs?: unknown[];
         useDeployedImplementation?: boolean;
         provider?: any;
+        factoryDeps?: string[];
     };
 
 export type UpgradeOptions = ValidationOptions & StandaloneOptions;
@@ -25,6 +26,7 @@ export function withDefaults(opts: UpgradeOptions = {}): Required<UpgradeOptions
         provider: opts.provider ?? new zk.Provider(LOCAL_SETUP_ZKSYNC_NETWORK),
         pollingInterval: opts.pollingInterval ?? 5e3,
         useDeployedImplementation: opts.useDeployedImplementation ?? true,
+        factoryDeps: opts.factoryDeps ?? [],
         ...withValidationDefaults(opts),
     };
 }
