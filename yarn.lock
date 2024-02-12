@@ -800,10 +800,10 @@
     hardhat "^2.19.4"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
-  version "1.0.1"
+  version "1.0.2"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.5"
-    axios "^1.6.2"
+    axios "^1.6.7"
     chai "^4.3.6"
     chalk "4.1.2"
     fs-extra "^11.1.1"
@@ -840,7 +840,7 @@
     undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "1.2.2"
+  version "1.2.4"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^1.1.0"
     "@matterlabs/hardhat-zksync-solc" "^1.0.3"
@@ -862,7 +862,7 @@
     "@ethersproject/address" "5.7.0"
     "@matterlabs/hardhat-zksync-vyper" "^1.0.0"
     "@nomiclabs/hardhat-vyper" "^3.0.5"
-    axios "^1.6.2"
+    axios "^1.6.7"
     chai "^4.3.6"
     chalk "4.1.2"
     zksync-ethers "^6.0.0"
@@ -875,7 +875,7 @@
     "@matterlabs/hardhat-zksync-solc" "^1.0.3"
     "@nomicfoundation/hardhat-verify" "^2.0.0"
     "@openzeppelin/contracts" "^4.9.2"
-    axios "^1.6.2"
+    axios "^1.6.7"
     cbor "^8.1.0"
     chai "^4.3.6"
     chalk "4.1.2"
@@ -2201,12 +2201,12 @@ axios@^0.21.2:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
-  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
+axios@^1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.7.tgz#7b48c2e27c96f9c68a2f8f31e2ab19f59b06b0a7"
+  integrity sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==
   dependencies:
-    follow-redirects "^1.15.0"
+    follow-redirects "^1.15.4"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
@@ -3949,10 +3949,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-follow-redirects@^1.12.1, follow-redirects@^1.14.0, follow-redirects@^1.15.0:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
-  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+follow-redirects@^1.12.1, follow-redirects@^1.14.0, follow-redirects@^1.15.4:
+  version "1.15.5"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
+  integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
 
 for-each@^0.3.3:
   version "0.3.3"
