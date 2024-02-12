@@ -800,7 +800,7 @@
     hardhat "^2.19.4"
 
 "@matterlabs/hardhat-zksync-node@link:packages/hardhat-zksync-node":
-  version "1.0.1"
+  version "1.0.2"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     axios "^1.6.2"
@@ -840,7 +840,7 @@
     undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "1.2.2"
+  version "1.2.4"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^1.1.0"
     "@matterlabs/hardhat-zksync-solc" "^1.0.3"
@@ -876,7 +876,7 @@
     "@nomicfoundation/hardhat-verify" "^2.0.0"
     "@openzeppelin/contracts" "^4.9.2"
     axios "^1.6.2"
-    cbor "^8.1.0"
+    cbor "^9.0.2"
     chai "^4.3.6"
     chalk "4.1.2"
     debug "^4.1.1"
@@ -2550,10 +2550,10 @@ cbor@^8.1.0:
   dependencies:
     nofilter "^3.1.0"
 
-cbor@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/cbor/-/cbor-9.0.1.tgz#b16e393d4948d44758cd54ac6151379d443b37ae"
-  integrity sha512-/TQOWyamDxvVIv+DY9cOLNuABkoyz8K/F3QE56539pGVYohx0+MEA1f4lChFTX79dBTBS7R1PF6ovH7G+VtBfQ==
+cbor@^9.0.0, cbor@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/cbor/-/cbor-9.0.2.tgz#536b4f2d544411e70ec2b19a2453f10f83cd9fdb"
+  integrity sha512-JPypkxsB10s9QOWwa6zwPzqE1Md3vqpPc+cai4sAecuCsRyAtAl/pMyhPlMbT/xtPnm2dznJZYRLui57qiRhaQ==
   dependencies:
     nofilter "^3.1.0"
 
