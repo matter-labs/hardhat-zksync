@@ -5,7 +5,7 @@ import { ScriptManager } from './script-manager';
 export async function zkSyncDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
     let tags = taskArgs.tags;
     if (typeof tags === 'string') {
-      tags = tags.split(',');
+        tags = tags.split(',');
     }
 
     const scriptManager = new ScriptManager(hre);

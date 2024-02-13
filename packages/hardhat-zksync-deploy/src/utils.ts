@@ -117,9 +117,7 @@ export async function getWalletsFromAccount(
     if (!accounts || accounts === 'remote') {
         const chainId = await hre.network.provider.send('eth_chainId', []);
         if (LOCAL_CHAIN_IDS.includes(chainId)) {
-            return richWallets.map((wallet) =>
-                new Wallet(wallet.privateKey)
-            );
+            return richWallets.map((wallet) => new Wallet(wallet.privateKey));
         }
         return [];
     }
@@ -127,9 +125,7 @@ export async function getWalletsFromAccount(
     if (isHardhatNetworkAccountsConfigStrings(accounts)) {
         const accountPrivateKeys = accounts as string[];
 
-        const wallets = accountPrivateKeys.map((accountPrivateKey) =>
-            new Wallet(accountPrivateKey)
-        );
+        const wallets = accountPrivateKeys.map((accountPrivateKey) => new Wallet(accountPrivateKey));
         return wallets;
     }
 
@@ -142,4 +138,3 @@ export async function getWalletsFromAccount(
 
     return [];
 }
-

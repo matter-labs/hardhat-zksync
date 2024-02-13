@@ -1,9 +1,9 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
-import { ZkSyncArtifact } from './types';
 import * as fse from 'fs-extra';
 import path from 'path';
 import lodash from 'lodash';
+import { ZkSyncArtifact } from './types';
 
 export interface Deployment {
     contractName: string;
@@ -12,10 +12,14 @@ export interface Deployment {
     address: string;
 }
 
-export const DEPLOYMENT_PATH : string = 'deployments';
-export const CHAIN_ID_FILE : string = '.chainId';
+export const DEPLOYMENT_PATH: string = 'deployments';
+export const CHAIN_ID_FILE: string = '.chainId';
 
-export async function saveDeployment(hre: HardhatRuntimeEnvironment, contract: zk.Contract, artifact: ZkSyncArtifact): Promise<void> {
+export async function saveDeployment(
+    hre: HardhatRuntimeEnvironment,
+    contract: zk.Contract,
+    artifact: ZkSyncArtifact,
+): Promise<void> {
     const deployment: Deployment = {
         contractName: artifact.contractName,
         abi: artifact.abi,
@@ -35,7 +39,10 @@ export async function saveDeployment(hre: HardhatRuntimeEnvironment, contract: z
     fse.writeJsonSync(deploymentFile, deployment, { spaces: 2 });
 }
 
-export async function loadDeployment(hre: HardhatRuntimeEnvironment, artifact: ZkSyncArtifact): Promise<Deployment | undefined> {
+export async function loadDeployment(
+    hre: HardhatRuntimeEnvironment,
+    artifact: ZkSyncArtifact,
+): Promise<Deployment | undefined> {
     const baseDir = path.join(hre.config.paths.root, DEPLOYMENT_PATH, hre.network.name);
     const deploymentFile = path.join(baseDir, `${artifact.contractName}.json`);
 
@@ -58,7 +65,7 @@ export async function loadDeployment(hre: HardhatRuntimeEnvironment, artifact: Z
         return undefined;
     }
 
-    if(!lodash.isEqual(deployment.abi, artifact.abi)) {
+    if (!lodash.isEqual(deployment.abi, artifact.abi)) {
         return undefined;
     }
 

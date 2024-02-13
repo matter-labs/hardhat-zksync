@@ -87,6 +87,11 @@ jobs:
           cd examples/basic-example
           yarn hardhat compile
           yarn hardhat deploy-zksync
+      - name: Test zksolc example
+        run: |
+          cd examples/deploy-example
+          yarn hardhat compile
+          yarn hardhat deploy-zksync
 
       - name: Test node example
         run: |

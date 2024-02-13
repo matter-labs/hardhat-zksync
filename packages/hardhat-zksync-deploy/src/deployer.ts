@@ -1,22 +1,22 @@
-import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 
 import { ZkSyncArtifact } from './types';
-import { ZkSyncDeployPluginError } from './errors';
-import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
-import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
-import { getWallet } from './plugin';
-import { loadDeployment, saveDeployment } from './deployment-saver';
-
-const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
-const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
-const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli', 'sepolia'];
+import {
+    Providers,
+    createProviders,
+    deploy,
+    estimateDeployFee,
+    estimateDeployGas,
+    loadArtifact,
+} from './deployer-helper';
+import { AbstractDeployer } from './abstract-deployer';
 
 /**
  * An entity capable of deploying contracts to the zkSync network.
  */
-export class Deployer {
+export class Deployer implements AbstractDeployer {
     private hre: HardhatRuntimeEnvironment;
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
@@ -26,12 +26,8 @@ export class Deployer {
         this.hre = hre;
         this.deploymentType = deploymentType;
 
-        interface Providers {
-            ethWeb3Provider: ethers.Provider;
-            zkWeb3Provider: zk.Provider;
-        }
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
-        const { ethWeb3Provider, zkWeb3Provider }: Providers = this._createProviders(hre.config.networks, hre.network);
+        const { ethWeb3Provider, zkWeb3Provider }: Providers = createProviders(hre.config.networks, hre.network);
 
         const l2Provider = zkWallet.provider === null ? zkWeb3Provider : zkWallet.provider;
         this.zkWallet = zkWallet.connect(l2Provider).connectToL1(ethWeb3Provider);
@@ -46,230 +42,34 @@ export class Deployer {
         return new Deployer(hre, new zk.Wallet(ethWallet.privateKey), deploymentType);
     }
 
-    private _createProviders(
-        networks: NetworksConfig,
-        network: Network,
-    ): {
-        ethWeb3Provider: ethers.Provider;
-        zkWeb3Provider: zk.Provider;
-    } {
-        const networkName = network.name;
-
-        if (!network.zksync) {
-            throw new ZkSyncDeployPluginError(
-                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`,
-            );
-        }
-
-        if (networkName === 'hardhat') {
-            return {
-                ethWeb3Provider: this._createDefaultEthProvider(),
-                zkWeb3Provider: this._createDefaultZkProvider(),
-            };
-        }
-
-        const networkConfig = network.config;
-
-        if (!isHttpNetworkConfig(networkConfig)) {
-            throw new ZkSyncDeployPluginError(
-                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`,
-            );
-        }
-
-        if (networkConfig.ethNetwork === undefined) {
-            throw new ZkSyncDeployPluginError(
-                `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`,
-            );
-        }
-
-        let ethWeb3Provider;
-        const ethNetwork = networkConfig.ethNetwork;
-
-        if (SUPPORTED_L1_TESTNETS.includes(ethNetwork)) {
-            ethWeb3Provider =
-                ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
-                    ? new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
-                    : ethers.getDefaultProvider(ethNetwork);
-        } else {
-            if (ethNetwork === 'localhost' || ethNetwork === '') {
-                ethWeb3Provider = this._createDefaultEthProvider();
-            } else if (isValidEthNetworkURL(ethNetwork)) {
-                ethWeb3Provider = new ethers.JsonRpcProvider(ethNetwork);
-            } else {
-                ethWeb3Provider =
-                    ethNetwork in networks && isHttpNetworkConfig(networks[ethNetwork])
-                        ? new ethers.JsonRpcProvider((networks[ethNetwork] as HttpNetworkConfig).url)
-                        : ethers.getDefaultProvider(ethNetwork);
-            }
-        }
-
-        const zkWeb3Provider = new zk.Provider((network.config as HttpNetworkConfig).url);
-
-        return { ethWeb3Provider, zkWeb3Provider };
-    }
-
-    private _createDefaultEthProvider(): ethers.Provider {
-        return new ethers.JsonRpcProvider(ETH_DEFAULT_NETWORK_RPC_URL);
-    }
-
-    private _createDefaultZkProvider(): zk.Provider {
-        return zk.Provider.getDefaultProvider()!;
-    }
-
-    /**
-     * Loads an artifact and verifies that it was compiled by `zksolc`.
-     *
-     * @param contractNameOrFullyQualifiedName The name of the contract.
-     *   It can be a contract bare contract name (e.g. "Token") if it's
-     *   unique in your project, or a fully qualified contract name
-     *   (e.g. "contract/token.sol:Token") otherwise.
-     *
-     * @throws Throws an error if a non-unique contract name is used,
-     *   indicating which fully qualified names can be used instead.
-     *
-     * @throws Throws an error if an artifact was not compiled by `zksolc`.
-     */
-    public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact> {
-        const artifact = await this.hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
-
-        // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
-        if (
-            artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION &&
-            artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION
-        ) {
-            throw new ZkSyncDeployPluginError(
-                `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`,
-            );
-        }
-        return artifact as ZkSyncArtifact;
-    }
-
-    /**
-     * Estimates the price of calling a deploy transaction in ETH.
-     *
-     * @param artifact The previously loaded artifact object.
-     * @param constructorArguments List of arguments to be passed to the contract constructor.
-     *
-     * @returns Calculated fee in ETH wei
-     */
     public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
-        const gas = await this.estimateDeployGas(artifact, constructorArguments);
-        const gasPrice = await this.zkWallet.provider.getGasPrice();
-        return gas * gasPrice;
+        return await estimateDeployFee(this.hre, artifact, constructorArguments, this.zkWallet);
     }
 
-    /**
-     * Estimates the amount of gas needed to execute a deploy transaction.
-     *
-     * @param artifact The previously loaded artifact object.
-     * @param constructorArguments List of arguments to be passed to the contract constructor.
-     *
-     * @returns Calculated amount of gas.
-     */
     public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<any> {
-        const factoryDeps = await this._extractFactoryDeps(artifact);
-        const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, this.zkWallet, this.deploymentType);
-
-        // Encode deploy transaction so it can be estimated.
-        const deployTx = await factory.getDeployTransaction(...constructorArguments, {
-            customData: {
-                factoryDeps,
-            },
-        });
-        deployTx.from = this.zkWallet.address;
-
-        return await this.zkWallet.provider.estimateGas(deployTx);
+        return await estimateDeployGas(this.hre, artifact, constructorArguments, this.zkWallet, this.deploymentType);
     }
 
-    /**
-     * Sends a deploy transaction to the zkSync network.
-     * For now, it will use defaults for the transaction parameters:
-     * - fee amount is requested automatically from the zkSync server.
-     *
-     * @param artifact The previously loaded artifact object.
-     * @param constructorArguments List of arguments to be passed to the contract constructor.
-     * @param overrides Optional object with additional deploy transaction parameters.
-     * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
-     *
-     * @returns A contract object.
-     */
+    public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact> {
+        return await loadArtifact(this.hre, contractNameOrFullyQualifiedName);
+    }
+
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
         forceDeploy: boolean = false,
         overrides?: ethers.Overrides,
-        additionalFactoryDeps?: ethers.BytesLike[]
+        additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
-
-        const deployment = await loadDeployment(this.hre, artifact);
-
-        if (!forceDeploy && deployment) {
-            return new zk.Contract(deployment.address, artifact.abi, this.zkWallet);
-        }
-
-        const baseDeps = await this._extractFactoryDeps(artifact);
-        const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
-        const factoryDeps = [...baseDeps, ...additionalDeps];
-
-        const factory = new zk.ContractFactory<any[], zk.Contract>(
-            artifact.abi,
-            artifact.bytecode,
+        return await deploy(
+            this.hre,
+            artifact,
+            constructorArguments,
+            forceDeploy,
             this.zkWallet,
             this.deploymentType,
+            overrides,
+            additionalFactoryDeps,
         );
-        const { customData, ..._overrides } = overrides ?? {};
-
-        // Encode and send the deploy transaction providing factory dependencies.
-        const contract = await factory.deploy(...constructorArguments, {
-            ..._overrides,
-            customData: {
-                ...customData,
-                salt: ethers.ZeroHash,
-                factoryDeps,
-            },
-        });
-        await contract.waitForDeployment();
-
-        await saveDeployment(this.hre, contract, artifact);
-
-        return contract;
-    }
-
-    public async changeWallet(privateKeyOrIndex: string | number) {
-        const wallet = await getWallet(this.hre, privateKeyOrIndex);
-        this.zkWallet = wallet.connect(this.zkWallet._providerL2()).connectToL1(this.zkWallet._providerL1());
-        this.ethWallet = this.zkWallet.ethWallet();
-    }
-
-    /**
-     * Extracts factory dependencies from the artifact.
-     *
-     * @param artifact Artifact to extract dependencies from
-     *
-     * @returns Factory dependencies in the format expected by SDK.
-     */
-    private async _extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
-        const visited = new Set<string>();
-        visited.add(`${artifact.sourceName}:${artifact.contractName}`);
-        return await this._extractFactoryDepsRecursive(artifact, visited);
-    }
-
-    private async _extractFactoryDepsRecursive(artifact: ZkSyncArtifact, visited: Set<string>): Promise<string[]> {
-        // Load all the dependency bytecodes.
-        // We transform it into an array of bytecodes.
-        const factoryDeps: string[] = [];
-        for (const dependencyHash in artifact.factoryDeps) {
-            if (!dependencyHash) continue;
-            const dependencyContract = artifact.factoryDeps[dependencyHash];
-            if (!visited.has(dependencyContract)) {
-                const dependencyArtifact = await this.loadArtifact(dependencyContract);
-                factoryDeps.push(dependencyArtifact.bytecode);
-                visited.add(dependencyContract);
-                const transitiveDeps = await this._extractFactoryDepsRecursive(dependencyArtifact, visited);
-                factoryDeps.push(...transitiveDeps);
-            }
-        }
-
-        return factoryDeps;
     }
 }

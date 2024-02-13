@@ -2,11 +2,10 @@ import '../../../src/index';
 import { HardhatUserConfig } from 'hardhat/types';
 import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, ZKSYNC_NETWORK_RPC_URL } from '../../constants';
 
-import "@matterlabs/hardhat-zksync-solc";
+import '@matterlabs/hardhat-zksync-solc';
 
 const config: HardhatUserConfig = {
-    zksolc: {
-    },
+    zksolc: {},
     solidity: {
         version: '0.8.17',
     },

@@ -13,7 +13,6 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
     beforeEach('Loading hardhat environment', function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
-
         this.env = require('hardhat');
         this.scriptManager = new ScriptManager(this.env);
     });

@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import chalk from 'chalk';
+import { Wallet } from 'zksync-ethers';
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
@@ -15,7 +16,6 @@ import {
     removeLibraryInfoFile,
     updateHardhatConfigFile,
 } from './utils';
-import { Wallet } from 'zksync-ethers';
 
 export async function deployLibraries(
     hre: HardhatRuntimeEnvironment,
@@ -176,5 +176,5 @@ export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet
 
 export function getNetworkAddress(hre: HardhatRuntimeEnvironment): number {
     const networkName = hre.network.name;
-    return hre.config.deployerAccounts[networkName] ?? (hre.config.deployerAccounts['default'] ?? 0);
+    return hre.config.deployerAccounts[networkName] ?? hre.config.deployerAccounts.default ?? 0;
 }

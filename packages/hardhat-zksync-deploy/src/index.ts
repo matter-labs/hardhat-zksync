@@ -1,14 +1,11 @@
 import { extendConfig, extendEnvironment, task } from 'hardhat/config';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
-import { int, string } from 'hardhat/internal/core/params/argumentTypes';
+import { string } from 'hardhat/internal/core/params/argumentTypes';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from './task-names';
 import './type-extensions';
 import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
-import { lazyObject } from 'hardhat/plugins';
-import { Deployer } from './deployer';
-import { getNetworkAddress, getWallet } from './plugin';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
+import { DeployerExtension } from './deployer-extension';
 
 export * from './deployer';
 
@@ -17,25 +14,29 @@ extendConfig((config, userConfig) => {
     config.deployerAccounts = { ...defaultAccountDeployerSettings, ...userConfig?.deployerAccounts };
 });
 
-extendEnvironment(async (hre: HardhatRuntimeEnvironment) => {
+extendEnvironment((hre) => {
     hre.network.zksync = hre.network.config.zksync ?? false;
-    const wallet = await getWallet(hre, getNetworkAddress(hre));
-    const deployer: Deployer = new Deployer(hre, wallet);
-    hre.deployer = lazyObject(() => deployer);
+    hre.network.deployPaths = hre.network.config.deployPaths
+        ? typeof hre.network.config.deployPaths === 'string'
+            ? [hre.network.config.deployPaths]
+            : hre.network.config.deployPaths
+        : typeof hre.config.paths.deployPaths === 'string'
+          ? [hre.config.paths.deployPaths]
+          : hre.config.paths.deployPaths;
+    hre.deployer = new DeployerExtension(hre);
 });
 
 task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for zkSync network')
     .addParam('script', 'A certain deploy script to be launched', '')
-    .addOptionalParam(
-        'tags',
-        'specify which deploy script to execute via tags, separated by commas',
-        undefined,
-        string
-    )
+    .addOptionalParam('tags', 'specify which deploy script to execute via tags, separated by commas', undefined, string)
     .setAction(zkSyncDeploy);
 
 task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
-    .addOptionalParam('privateKeyOrIndex', 'Private key or index of the account that will deploy the libraries', undefined)
+    .addOptionalParam(
+        'privateKeyOrIndex',
+        'Private key or index of the account that will deploy the libraries',
+        undefined,
+    )
     .addOptionalParam(
         'externalConfigObjectPath',
         'Config file imported in hardhat config file that represent HardhatUserConfig type variable',

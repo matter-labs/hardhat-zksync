@@ -1,14 +1,13 @@
-import '@matterlabs/hardhat-zksync-deploy';
+import '../../../src/index';
 import '@matterlabs/hardhat-zksync-solc';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     paths: {
-        deployPaths: 'deploy-scripts',
+        deployPaths: ['./deploy-scripts', 'dependent-scripts'],
     },
-    zksolc: {
-    },
+    zksolc: {},
     defaultNetwork: 'zkSyncNetwork',
     networks: {
         ethNetwork: {
@@ -18,6 +17,10 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
             zksync: true,
+        },
+        hardhat: {
+            zksync: true,
+            deployPaths: 'deploy-scripts',
         },
     },
     // Docker image only works for solidity ^0.8.0.

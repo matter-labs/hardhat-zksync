@@ -1,23 +1,17 @@
 import { existsSync } from 'fs';
-import { HardhatRuntimeEnvironment, Network } from 'hardhat/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as path from 'path';
 import { glob } from 'glob';
-import { promisify } from 'util';
 
 import { ZkSyncDeployPluginError } from './errors';
 
-const globPromise = promisify(glob);
-
 export class ScriptManager {
     private funcByFilePath: { [filename: string]: any };
-    private filePaths: string[];
+    private filePaths: any[];
     private deployPaths: string[];
 
-    constructor(private hre: HardhatRuntimeEnvironment) {
-        this.hre = hre;
-        this.deployPaths = hre.network.deployPaths
-            ? hre.network.deployPaths : typeof (hre.config.paths.deployPaths) === 'string'
-                ? [hre.config.paths.deployPaths] : hre.config.paths.deployPaths;
+    constructor(private _hre: HardhatRuntimeEnvironment) {
+        this.deployPaths = _hre.network.deployPaths;
         this.funcByFilePath = {};
         this.filePaths = [];
     }
@@ -31,8 +25,8 @@ export class ScriptManager {
             }
 
             const [tsFilesInDir, jsFilesInDir] = await Promise.all([
-                globPromise(path.join(dir, '**', '*.ts')),
-                globPromise(path.join(dir, '**', '*.js')),
+                await glob(path.join(dir, '**', '*.ts'), {}),
+                await glob(path.join(dir, '**', '*.js'), {}),
             ]);
 
             const filesInDir = tsFilesInDir.concat(jsFilesInDir);
@@ -57,7 +51,7 @@ export class ScriptManager {
         }
 
         throw new ZkSyncDeployPluginError(
-            `Deploy script '${script}' not found, in deploy folders:\n${this.deployPaths.join(',\n')}.`
+            `Deploy script '${script}' not found, in deploy folders:\n${this.deployPaths.join(',\n')}.`,
         );
     }
 
@@ -73,17 +67,17 @@ export class ScriptManager {
 
         const scriptsToRun = await this.getScriptsToRun(filePathsByTag);
         for (const script of scriptsToRun) {
-            await this.runScript(script);
+            await this._runScript(script);
         }
     }
 
-    private async runScript(script: string) {
-        const deployFn = await this.getDeployFunc(script);
+    private async _runScript(script: string) {
+        const deployFn = await this._getDeployFunc(script);
 
-        await deployFn(this.hre);
+        await deployFn(this._hre);
     }
 
-    private async getDeployFunc(script: string) {
+    private async _getDeployFunc(script: string) {
         delete require.cache[script];
         let deployFn: any = require(script);
 
@@ -100,21 +94,23 @@ export class ScriptManager {
 
     public async collectTags(scripts: string[], tags?: string[] | undefined) {
         const filePathsByTag: { [tag: string]: string[] } = {};
-
         // Clear state every time collecting tags is executed
         this.filePaths = [];
         this.funcByFilePath = [];
 
         for (const script of scripts) {
             const filePath = path.resolve(script);
-            const deployFn = await this.getDeployFunc(filePath);
+            const deployFn = await this._getDeployFunc(filePath);
 
             this.funcByFilePath[filePath] = deployFn;
 
             let scriptTags = deployFn.tags;
             if (scriptTags !== undefined) {
-              if (typeof scriptTags === 'string') {
-                scriptTags = [scriptTags];
+                if (typeof scriptTags === 'string') {
+                    scriptTags = [scriptTags];
+                }
+            } else {
+                scriptTags = ['default'];
             }
 
             for (const tag of scriptTags) {
@@ -128,22 +124,21 @@ export class ScriptManager {
             }
 
             if (tags !== undefined) {
-                const filteredTags = tags.filter(value => scriptTags.includes(value));
+                const filteredTags = tags.filter((value) => scriptTags.includes(value));
                 if (filteredTags.length) {
-                    this.filePaths.push(filePath);
+                    this.filePaths.push({ priority: deployFn.priority ?? 500, path: filePath });
                 }
+            } else {
+                this.filePaths.push({ priority: deployFn.priority ?? 500, path: filePath });
             }
-        } else {
-            this.filePaths.push(filePath);
         }
-    }
 
         return filePathsByTag;
     }
 
     public async getScriptsToRun(filePathsByTag: { [tag: string]: string[] }): Promise<string[]> {
         const filePathRegistered: { [filePath: string]: boolean } = {};
-        const scriptsToRun: string[] = []
+        const scriptsToRun: string[] = [];
 
         const recurseDependencies = (filePath: string) => {
             if (filePathRegistered[filePath]) return;
@@ -152,6 +147,11 @@ export class ScriptManager {
             if (deployFn.dependencies) {
                 for (const dependency of deployFn.dependencies) {
                     const tagFilePaths = filePathsByTag[dependency];
+                    if (!tagFilePaths) {
+                        throw new ZkSyncDeployPluginError(
+                            `Not found tag at script: ${filePath} for dependency: ${dependency}`,
+                        );
+                    }
                     if (tagFilePaths.length) {
                         for (const tagFilePath of tagFilePaths) {
                             recurseDependencies(tagFilePath);
@@ -164,9 +164,11 @@ export class ScriptManager {
                 scriptsToRun.push(filePath);
                 filePathRegistered[filePath] = true;
             }
-        }
+        };
 
-        for (const filePath of this.filePaths) {
+        const sortedFiles = this.filePaths.sort((a, b) => b.priority - a.priority).flatMap((a) => a.path);
+
+        for (const filePath of sortedFiles) {
             recurseDependencies(filePath);
         }
 

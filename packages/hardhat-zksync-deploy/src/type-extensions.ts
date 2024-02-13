@@ -2,7 +2,7 @@ import 'hardhat/types/config';
 import '@matterlabs/hardhat-zksync-solc/dist/src/type-extensions';
 
 import { DeployerAccount, EthNetwork } from './types';
-import { Deployer } from './deployer';
+import { DeployerExtension } from './deployer-extension';
 
 declare module 'hardhat/types/config' {
     interface HardhatUserConfig {
@@ -51,6 +51,6 @@ declare module 'hardhat/types/runtime' {
     }
 
     interface HardhatRuntimeEnvironment {
-        deployer: Deployer;
+        deployer: DeployerExtension;
     }
 }
