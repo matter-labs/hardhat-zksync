@@ -15,7 +15,7 @@ Ensure you are using the correct version of the plugin with ethers:
 - For plugin version **≥1.0.0**:
   - Compatible with ethers **v6** (⭐ Recommended)
 
-  ## ⚠️ New feature support
+## ⚠️ New feature support
 
 To use new features like the deployer extension inside Hardhat Runtime Environment (HRE), caching mechanism, and support for script paths, tags, dependencies, and priority, the plugin versions should be as follows:
 
@@ -143,16 +143,19 @@ networks: {
 
 The described objects work together to provide users with a better deployment experience, eliminating the need for manual wallet initialization.
 
-:::tip Accounts on zkSync Era Test Node or zksync-cli Local Node
-
 `accounts` object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
 
-:::
-
 ### Methods
+```
+   * Set deployment type
+   *
+   * @param deployment type for future deployments 
+   *
+   */
+```
+ - `public setDeploymentType(deploymentType: zk.types.DeploymentType): void`
 
-```typescript
-  /**
+```
    * Loads an artifact and verifies that it was compiled by `zksolc`.
    *
    * @param contractNameOrFullyQualifiedName The name of the contract.
@@ -164,12 +167,10 @@ The described objects work together to provide users with a better deployment ex
    *   indicating which fully qualified names can be used instead.
    *
    * @throws Throws an error if an artifact was not compiled by `zksolc`.
-   */
-  public async loadArtifact(
-    contractNameOrFullyQualifiedName: string
-  ): Promise<ZkSyncArtifact>
+```
+ - `public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact>`
 
-  /**
+```
    * Estimates the price of calling a deploy transaction in a certain fee token.
    *
    * @param artifact The previously loaded artifact object.
@@ -177,63 +178,53 @@ The described objects work together to provide users with a better deployment ex
    *
    * @returns Calculated fee in ETH wei.
    */
-  public async estimateDeployFee(
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[]
-  ): Promise<ethers.BigNumber>
+```
+ - `public async estimateDeployFee(artifact: ZkSyncArtifact,constructorArguments: any[]): Promise<ethers.BigNumber>`
 
-  /**
-    * Sends a deploy transaction to the zkSync network.
-    * For now it uses default values for the transaction parameters:
-    *
-    * @param artifact The previously loaded artifact object.
-    * @param constructorArguments The list of arguments to be passed to the contract constructor.
-    * @param forceDeploy Override cached deployment of the contract on the same network.
-    * @param overrides Optional object with additional deploy transaction parameters.
-    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
-    * The fee amount is requested automatically from the zkSync Era server.
-    *
-    * @returns A contract object.
-    */
-  public async deploy(
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[],
-    forceDeploy: boolean = false,
-    overrides?: Overrides,
-    additionalFactoryDeps?: ethers.BytesLike[],
-  ): Promise<zk.Contract>
+```
+   * Sends a deploy transaction to the zkSync network.
+   * For now it uses defaults values for the transaction parameters:
+   *
+   * @param artifact The previously loaded artifact object.
+   * @param constructorArguments The list of arguments to be passed to the contract constructor.
+   * @param forceDeploy Override cached deployment of the contract on the same network.
+   * @param overrides Optional object with additional deploy transaction parameters.
+   * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
+   * The fee amount is requested automatically from the zkSync Era server.
+   *
+   * @returns A contract object.
+```
+ - `public async deploy(artifact: ZkSyncArtifact, constructorArguments: any[], forceDeploy: boolean = false, overrides?: OverridesadditionalFactoryDeps?: ethers.BytesLike[],): Promise<zk.Contract>`
 
-
-  /**
+```
+   /**
     * Set a new Wallet
     *
     * @param wallet object to be used in further deployment actions
     *
-  */
-  public async setWallet(
-    wallet: zk.Wallet
-  ): void
+    */
+```
+- `async setWallet(wallet: zk.Wallet): void`
 
-  /**
+```
+   /**
     * Returns a new Wallet connected to the selected network
     *
     * @param privateKeyOrAccountNumber Optional private key or index of the account
     *
     * @returns A wallet object. If param is not provided, default wallet will be returned.
-  */
-  public async getWallet(
-    privateKeyOrAccountNumber?: string | number
-  ): Promise<zk.Wallet>
+    */
+```
+- `async getWallet(privateKeyOrAccountNumber?: string | number): Promise<zk.Wallet>`
 
-    /**
+```
    * Extracts factory dependencies from the artifact.
    *
    * @param artifact Artifact to extract dependencies from
    *
    * @returns Factory dependencies in the format expected by SDK.
-   */
-  async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>
 ```
+ - `async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>`
 
 ### Tranistion from `Deployer` object to the `hre.deployer`
 
@@ -311,11 +302,7 @@ paths: {
 
 - `deployPaths` Specify deployment directories, you can use either a single object or an array structure.
 
-:::note default path
-
 The default path, if not explicitly set, is the `deploy` folder inside the project's root directory.
-
-:::
 
 #### Network-Specific Deployment Paths
 
@@ -338,11 +325,7 @@ networks: {
 }
 ```
 
-::: note override of global paths
-
 Network-specific paths will override a global path, ensuring that only scripts within the directories configured for the specific network are executed.
-
-:::
 
 ### Deployment scripts tags, dependencies and priority
 
@@ -395,9 +378,7 @@ For the specific scripts, we observe that `001_deploy.ts` and `002_deploys.ts` a
 2. `002_deploy.ts`: This script needs to be executed second because it is tagged with `second`, and `001_deploy.ts` depends on that script.
 3. `001_deploy.ts`: Although this script has a higher priority than `002_deploy.ts`, it depends on the latter, so it will be executed last.
 
-:::note default values
 The default value for **tags** is `default`, and the default value for **priority** is `500`.
-:::
 
 ## 📖 Example
 
