@@ -69,7 +69,7 @@ export async function deploy(
         return new zk.Contract(deployment.address, artifact.abi, zkWallet);
     }
 
-    const baseDeps = await extractFactoryDeps(hre, artifact);
+    const baseDeps = await _extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
     const factoryDeps = [...baseDeps, ...additionalDeps];
 
@@ -131,7 +131,7 @@ export async function estimateDeployGas(
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
 ): Promise<any> {
-    const factoryDeps = await extractFactoryDeps(hre, artifact);
+    const factoryDeps = await _extractFactoryDeps(hre, artifact);
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, zkWallet, deploymentType);
 
     // Encode deploy transaction so it can be estimated.
@@ -152,7 +152,7 @@ export async function estimateDeployGas(
  *
  * @returns Factory dependencies in the format expected by SDK.
  */
-export async function extractFactoryDeps(hre: HardhatRuntimeEnvironment, artifact: ZkSyncArtifact): Promise<string[]> {
+export async function _extractFactoryDeps(hre: HardhatRuntimeEnvironment, artifact: ZkSyncArtifact): Promise<string[]> {
     const visited = new Set<string>();
     visited.add(`${artifact.sourceName}:${artifact.contractName}`);
     return await _extractFactoryDepsRecursive(hre, artifact, visited);

@@ -9,7 +9,6 @@ import {
     deploy,
     estimateDeployFee,
     estimateDeployGas,
-    extractFactoryDeps,
     loadArtifact,
 } from './deployer-helper';
 import { AbstractDeployer } from './abstract-deployer';
@@ -74,9 +73,5 @@ export class Deployer implements AbstractDeployer {
             overrides,
             additionalFactoryDeps,
         );
-    }
-
-    public async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
-        return await extractFactoryDeps(this._hre, artifact);
     }
 }

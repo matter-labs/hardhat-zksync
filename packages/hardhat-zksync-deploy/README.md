@@ -146,6 +146,9 @@ The described objects work together to provide users with a better deployment ex
 `accounts` object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
 
 ### Methods
+
+Methods available for use in `hre.deployer` are the same as those available in the `Deployer` class object, as described above. Additionally, `hre.deployer` is extended with specific methods to facilitate the deployment process, making it more straightforward.
+
 ```
    * Set deployment type
    *
@@ -156,47 +159,6 @@ The described objects work together to provide users with a better deployment ex
  - `public setDeploymentType(deploymentType: zk.types.DeploymentType): void`
 
 ```
-   * Loads an artifact and verifies that it was compiled by `zksolc`.
-   *
-   * @param contractNameOrFullyQualifiedName The name of the contract.
-   *   It can be a bare contract name (e.g. "Token") if it's
-   *   unique in your project, or a fully qualified contract name
-   *   (e.g. "contract/token.sol:Token") otherwise.
-   *
-   * @throws Throws an error if a non-unique contract name is used,
-   *   indicating which fully qualified names can be used instead.
-   *
-   * @throws Throws an error if an artifact was not compiled by `zksolc`.
-```
- - `public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact>`
-
-```
-   * Estimates the price of calling a deploy transaction in a certain fee token.
-   *
-   * @param artifact The previously loaded artifact object.
-   * @param constructorArguments The list of arguments to be passed to the contract constructor.
-   *
-   * @returns Calculated fee in ETH wei.
-   */
-```
- - `public async estimateDeployFee(artifact: ZkSyncArtifact,constructorArguments: any[]): Promise<ethers.BigNumber>`
-
-```
-   * Sends a deploy transaction to the zkSync network.
-   * For now it uses defaults values for the transaction parameters:
-   *
-   * @param artifact The previously loaded artifact object.
-   * @param constructorArguments The list of arguments to be passed to the contract constructor.
-   * @param forceDeploy Override cached deployment of the contract on the same network.
-   * @param overrides Optional object with additional deploy transaction parameters.
-   * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
-   * The fee amount is requested automatically from the zkSync Era server.
-   *
-   * @returns A contract object.
-```
- - `public async deploy(artifact: ZkSyncArtifact, constructorArguments: any[], forceDeploy: boolean = false, overrides?: OverridesadditionalFactoryDeps?: ethers.BytesLike[],): Promise<zk.Contract>`
-
-```
    /**
     * Set a new Wallet
     *
@@ -204,7 +166,7 @@ The described objects work together to provide users with a better deployment ex
     *
     */
 ```
-- `async setWallet(wallet: zk.Wallet): void`
+- `setWallet(wallet: zk.Wallet): void`
 
 ```
    /**
@@ -216,15 +178,6 @@ The described objects work together to provide users with a better deployment ex
     */
 ```
 - `async getWallet(privateKeyOrAccountNumber?: string | number): Promise<zk.Wallet>`
-
-```
-   * Extracts factory dependencies from the artifact.
-   *
-   * @param artifact Artifact to extract dependencies from
-   *
-   * @returns Factory dependencies in the format expected by SDK.
-```
- - `async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>`
 
 ### Tranistion from `Deployer` object to the `hre.deployer`
 

@@ -6,5 +6,4 @@ export interface AbstractDeployer {
     estimateDeployFee(...args: any[]): Promise<bigint>;
     estimateDeployGas(...args: any[]): Promise<any>;
     loadArtifact(...args: any[]): Promise<ZkSyncArtifact>;
-    extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>;
 }

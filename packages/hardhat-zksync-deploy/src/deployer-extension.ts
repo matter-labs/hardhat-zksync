@@ -9,7 +9,7 @@ import {
     deploy,
     estimateDeployFee,
     estimateDeployGas,
-    extractFactoryDeps,
+    _extractFactoryDeps,
     loadArtifact,
 } from './deployer-helper';
 
@@ -70,10 +70,6 @@ export class DeployerExtension implements AbstractDeployer {
         }
 
         return await estimateDeployGas(this._hre, artifact, constructorArguments, this.wallet, this._deploymentType);
-    }
-
-    public async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
-        return await extractFactoryDeps(this._hre, artifact);
     }
 
     public setWallet(wallet: zk.Wallet): void{
