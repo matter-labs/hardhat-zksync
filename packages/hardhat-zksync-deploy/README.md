@@ -382,6 +382,12 @@ The default value for **tags** is `default`, and the default value for **priorit
 
 ## 📖 Example
 
+Note:
+- **hre** - hardhat runtime enviroment
+- **zkWallet** - instace of Wallet using [zksync-ethers](https://www.npmjs.com/package/zksync-ethers) plugin 
+
+### Deployer class usage
+
 After installing it, add the plugin to your Hardhat config:
 
 `import "@matterlabs/hardhat-zksync-deploy";`
@@ -402,10 +408,6 @@ Create a deployer instance:
 
 `const deployer = new Deployer(hre, zkWallet);`
 
-Note:
-- **hre** - hardhat runtime enviroment
-- **zkWallet** - instace of Wallet using [zksync-ethers](https://www.npmjs.com/package/zksync-ethers) plugin 
-
 Load your contract artifacts:
 
 `const artifact = await deployer.loadArtifact('Greeter');`
@@ -418,12 +420,35 @@ Check the deployed address:
 
 `const address = await myContract.getAddress()`
 
+### hre.deployer usage
+
+After installing it, add the plugin to your Hardhat config:
+
+`import "@matterlabs/hardhat-zksync-deploy";`
+
+Create your script in **deploy** folder,
+
+Load your contract artifacts:
+
+`const artifact = await hre.deployer.loadArtifact('Greeter');`
+
+Deploy your contract:
+
+`const myContract = await hre.deployer.deploy(artifact, [...contractArguments]);`
+
+Check the deployed address:
+
+`const address = await myContract.getAddress()`
+
 ## 🕹 Commands
 
 `yarn hardhat deploy-zksync` -- runs through all the scripts.
+
 To run a specific script, add the `--script` argument, e.g. `yarn hardhat deploy-zksync --script 001_deploy.ts`. Runs script with name `001_deploy.ts`.
+
 To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat deploy-zksync --tags all`. Run all scripts with tag `all`.
-`yarn hardhat deploy-zksync:libraries --private-key-or-index <PRIVATE_KEY>` -- uns compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+
+`yarn hardhat deploy-zksync:libraries --private-key-or-index <PRIVATE_KEY_OR_INDEX>` -- uns compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 
 ## 📝 Documentation
 
