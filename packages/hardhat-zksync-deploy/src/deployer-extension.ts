@@ -76,7 +76,7 @@ export class DeployerExtension implements AbstractDeployer {
         return await extractFactoryDeps(this._hre, artifact);
     }
 
-    public async setWallet(wallet: zk.Wallet): Promise<void> {
+    public setWallet(wallet: zk.Wallet): void{
         this.wallet = wallet;
     }
 
