@@ -25,7 +25,7 @@ export async function deployLibraries(
     noAutoPopulateConfig: boolean,
     compileAllContracts: boolean,
 ) {
-    const wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAddress(hre));
+    const wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAccount(hre));
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
@@ -174,7 +174,7 @@ export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet
     return await getWalletsFromAccount(hre, accounts);
 }
 
-export function getNetworkAddress(hre: HardhatRuntimeEnvironment): number {
+export function getNetworkAccount(hre: HardhatRuntimeEnvironment): number {
     const networkName = hre.network.name;
     return hre.config.deployerAccounts[networkName] ?? hre.config.deployerAccounts.default ?? 0;
 }

@@ -13,7 +13,7 @@ import {
     loadArtifact,
 } from './deployer-helper';
 
-import { getNetworkAddress, getWallet } from './plugin';
+import { getNetworkAccount, getWallet } from './plugin';
 
 export class DeployerExtension implements AbstractDeployer {
     private ethWeb3Provider?: ethers.Provider;
@@ -90,7 +90,7 @@ export class DeployerExtension implements AbstractDeployer {
             this.zkWeb3Provider = zkWeb3Provider;
         }
 
-        const wallet = (await getWallet(this._hre, privateKeyOrAccountNumber ?? getNetworkAddress(this._hre)))
+        const wallet = (await getWallet(this._hre, privateKeyOrAccountNumber ?? getNetworkAccount(this._hre)))
             .connect(this.zkWeb3Provider)
             .connectToL1(this.ethWeb3Provider);
         this.wallet = wallet;
