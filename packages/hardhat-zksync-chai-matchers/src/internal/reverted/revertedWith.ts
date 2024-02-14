@@ -4,17 +4,25 @@ import { toBeHex } from 'ethers';
 import { decodeReturnData, getReturnDataFromError } from './utils';
 
 export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
-    Assertion.addMethod('revertedWith', function (this: any, expectedReason: unknown) {
+    Assertion.addMethod('revertedWith', function (this: any, expectedReason: string | RegExp) {
         const negated = this.__flags.negate;
 
-        if (typeof expectedReason !== 'string') {
-            throw new TypeError('Expected the revert reason to be a string');
+        if (!(expectedReason instanceof RegExp) && typeof expectedReason !== "string") {
+            throw new TypeError(
+                "Expected the revert reason to be a string or a regular expression"
+            );
         }
+
+        const expectedReasonString =
+            expectedReason instanceof RegExp
+                ? expectedReason.source
+                : expectedReason;
+
 
         const onSuccess = () => {
             const assert = buildAssert(negated, onSuccess);
 
-            assert(false, `Expected transaction to be reverted with reason '${expectedReason}', but it didn't revert`);
+            assert(false, `Expected transaction to be reverted with reason '${expectedReasonString}', but it didn't revert`);
         };
 
         const onError = (error: any) => {
@@ -26,25 +34,29 @@ export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
             if (decodedReturnData.kind === 'Empty') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted without a reason`,
+                    `Expected transaction to be reverted with reason '${expectedReasonString}', but it reverted without a reason`,
                 );
             } else if (decodedReturnData.kind === 'Error') {
+                const isReverted =
+                    expectedReason instanceof RegExp
+                        ? expectedReason.test(decodedReturnData.reason)
+                        : decodedReturnData.reason === expectedReasonString;
                 assert(
-                    decodedReturnData.reason === expectedReason,
-                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted with reason '${decodedReturnData.reason}'`,
-                    `Expected transaction NOT to be reverted with reason '${expectedReason}', but it was`,
+                    isReverted,
+                    `Expected transaction to be reverted with reason '${expectedReasonString}', but it reverted with reason '${decodedReturnData.reason}'`,
+                    `Expected transaction NOT to be reverted with reason '${expectedReasonString}', but it was`,
                 );
             } else if (decodedReturnData.kind === 'Panic') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted with panic code ${toBeHex(
+                    `Expected transaction to be reverted with reason '${expectedReasonString}', but it reverted with panic code ${toBeHex(
                         decodedReturnData.code,
                     )} (${decodedReturnData.description})`,
                 );
             } else if (decodedReturnData.kind === 'Custom') {
                 assert(
                     false,
-                    `Expected transaction to be reverted with reason '${expectedReason}', but it reverted with a custom error`,
+                    `Expected transaction to be reverted with reason '${expectedReasonString}', but it reverted with a custom error`,
                 );
             } else {
                 const _exhaustiveCheck: never = decodedReturnData;
