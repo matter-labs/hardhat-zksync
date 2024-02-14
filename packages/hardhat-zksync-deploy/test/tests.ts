@@ -259,13 +259,16 @@ describe('Plugin tests', async function () {
             expect(wallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
             expect(contract).to.be.an('object');
             expect(await contract.getAddress()).to.be.a('string');
+            const walletFromDeployer = await this.env.deployer.getWallet();
+            expect(walletFromDeployer.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
         });
 
         it('should deploy with provided wallet', async function () {
             await this.env.run('compile');
             const artifact = await this.env.deployer.loadArtifact('Greeter');
             const wallet = await this.env.deployer.getWallet(4);
-            const contract = await this.env.deployer.deploy(artifact, ['Hi there!'], false, wallet);
+            this.env.deployer.setWallet(wallet);
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!'], false);
             const walletRunner = contract.runner as Wallet;
             expect(walletRunner.address).to.be.equal('0x8002cD98Cfb563492A6fB3E7C8243b7B9Ad4cc92');
             expect(contract).to.be.an('object');

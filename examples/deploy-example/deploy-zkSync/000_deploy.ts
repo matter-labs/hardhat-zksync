@@ -7,6 +7,7 @@ const deployScript = async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy script for the Foo contract`));
 
     const zkWallet = await hre.deployer.getWallet(0);
+    hre.deployer.setWallet(zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
     const depositHandle = await zkWallet.deposit({

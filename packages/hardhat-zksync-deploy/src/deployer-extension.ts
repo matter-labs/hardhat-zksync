@@ -9,6 +9,7 @@ import {
     deploy,
     estimateDeployFee,
     estimateDeployGas,
+    extractFactoryDeps,
     loadArtifact,
 } from './deployer-helper';
 
@@ -17,6 +18,7 @@ import { getNetworkAddress, getWallet } from './plugin';
 export class DeployerExtension implements AbstractDeployer {
     private ethWeb3Provider?: ethers.Provider;
     private zkWeb3Provider?: zk.Provider;
+    private wallet?: zk.Wallet;
 
     constructor(
         private _hre: HardhatRuntimeEnvironment,
@@ -35,12 +37,11 @@ export class DeployerExtension implements AbstractDeployer {
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
         forceDeploy: boolean = false,
-        zkWallet?: zk.Wallet,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
-        if (!zkWallet) {
-            zkWallet = await this.getWallet(getNetworkAddress(this._hre));
+        if (!this.wallet) {
+            this.wallet = await this.getWallet();
         }
 
         return await deploy(
@@ -48,38 +49,38 @@ export class DeployerExtension implements AbstractDeployer {
             artifact,
             constructorArguments,
             forceDeploy,
-            zkWallet,
+            this.wallet,
             this._deploymentType,
             overrides,
             additionalFactoryDeps,
         );
     }
 
-    public async estimateDeployFee(
-        artifact: ZkSyncArtifact,
-        constructorArguments: any[],
-        zkWallet?: zk.Wallet,
-    ): Promise<bigint> {
-        if (!zkWallet) {
-            zkWallet = await this.getWallet(getNetworkAddress(this._hre));
+    public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
+        if (!this.wallet) {
+            this.wallet = await this.getWallet();
         }
 
-        return await estimateDeployFee(this._hre, artifact, constructorArguments, zkWallet);
+        return await estimateDeployFee(this._hre, artifact, constructorArguments, this.wallet);
     }
 
-    public async estimateDeployGas(
-        artifact: ZkSyncArtifact,
-        constructorArguments: any[],
-        zkWallet?: zk.Wallet,
-    ): Promise<any> {
-        if (!zkWallet) {
-            zkWallet = await this.getWallet(getNetworkAddress(this._hre));
+    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<any> {
+        if (!this.wallet) {
+            this.wallet = await this.getWallet();
         }
 
-        return await estimateDeployGas(this._hre, artifact, constructorArguments, zkWallet, this._deploymentType);
+        return await estimateDeployGas(this._hre, artifact, constructorArguments, this.wallet, this._deploymentType);
     }
 
-    public async getWallet(privateKeyOrAccountNumber: string | number): Promise<zk.Wallet> {
+    public async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]> {
+        return await extractFactoryDeps(this._hre, artifact);
+    }
+
+    public async setWallet(wallet: zk.Wallet): Promise<void> {
+        this.wallet = wallet;
+    }
+
+    public async getWallet(privateKeyOrAccountNumber?: string | number): Promise<zk.Wallet> {
         if (!this.ethWeb3Provider || !this.zkWeb3Provider) {
             const { ethWeb3Provider, zkWeb3Provider }: Providers = createProviders(
                 this._hre.config.networks,
@@ -89,7 +90,10 @@ export class DeployerExtension implements AbstractDeployer {
             this.zkWeb3Provider = zkWeb3Provider;
         }
 
-        const wallet = await getWallet(this._hre, privateKeyOrAccountNumber);
-        return wallet.connect(this.zkWeb3Provider).connectToL1(this.ethWeb3Provider);
+        const wallet = (await getWallet(this._hre, privateKeyOrAccountNumber ?? getNetworkAddress(this._hre)))
+            .connect(this.zkWeb3Provider)
+            .connectToL1(this.ethWeb3Provider);
+        this.wallet = wallet;
+        return wallet;
     }
 }
