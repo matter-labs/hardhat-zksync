@@ -536,8 +536,6 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         }),
                     ).to.changeEtherBalance(contract, 200, { overrides: _overrides });
                 });
-
-
             });
 
             it("shouldn't run the transaction twice", async function () {
@@ -571,8 +569,6 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
 
                 expect(receiverBalanceChange).to.equal(200);
             });
-
-
         });
 
         describe('Transaction Response', () => {
@@ -894,20 +890,20 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 expect.fail('Expected an exception but none was thrown');
             });
         });
-        
-        describe('Non Chainable method', function (){
-            it("Should throw if chained to another non-chainable method", () => {
+
+        describe('Non Chainable method', function () {
+            it('Should throw if chained to another non-chainable method', () => {
                 expect(() =>
-                  expect(
-                    sender.sendTransaction({
-                      to: receiver.address,
-                      value: 200,
-                    })
-                  )
-                    .to.be.a.nonChainableMatcher()
-                    .and.to.changeEtherBalance(sender, "-200")
+                    expect(
+                        sender.sendTransaction({
+                            to: receiver.address,
+                            value: 200,
+                        }),
+                    )
+                        .to.be.a.nonChainableMatcher()
+                        .and.to.changeEtherBalance(sender, '-200'),
                 ).to.throw(/changeEtherBalance is not chainable./);
             });
-        })
+        });
     }
 });

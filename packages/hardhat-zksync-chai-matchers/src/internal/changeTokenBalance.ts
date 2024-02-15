@@ -5,9 +5,9 @@ import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOn
 
 import { HttpNetworkConfig } from 'hardhat/types';
 import { BaseContractMethod, BigNumberish, ContractTransactionResponse, toBigInt } from 'ethers';
+import { CHANGE_TOKEN_BALANCES_MATCHER, CHANGE_TOKEN_BALANCE_MATCHER } from '../constants';
 import { Account, getAddressOf } from './misc/account';
 
-import { CHANGE_TOKEN_BALANCES_MATCHER, CHANGE_TOKEN_BALANCE_MATCHER } from '../constants';
 import { preventAsyncMatcherChaining } from './utils';
 
 export type Token = zk.Contract & {
@@ -17,7 +17,7 @@ export type Token = zk.Contract & {
     symbol: BaseContractMethod<[], string, string>;
 };
 
-export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic,chaiUtils: Chai.ChaiUtils) {
+export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
         CHANGE_TOKEN_BALANCE_MATCHER,
         function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
@@ -28,11 +28,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic,chaiUt
                 subject = subject();
             }
 
-            preventAsyncMatcherChaining(
-                this,
-                CHANGE_TOKEN_BALANCE_MATCHER,
-                chaiUtils
-              );
+            preventAsyncMatcherChaining(this, CHANGE_TOKEN_BALANCE_MATCHER, chaiUtils);
 
             checkToken(token, CHANGE_TOKEN_BALANCE_MATCHER);
 
@@ -68,13 +64,8 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic,chaiUt
             if (typeof subject === 'function') {
                 subject = subject();
             }
-            
 
-            preventAsyncMatcherChaining(
-                this,
-                CHANGE_TOKEN_BALANCES_MATCHER,
-                chaiUtils
-              );
+            preventAsyncMatcherChaining(this, CHANGE_TOKEN_BALANCES_MATCHER, chaiUtils);
 
             checkToken(token, CHANGE_TOKEN_BALANCES_MATCHER);
 

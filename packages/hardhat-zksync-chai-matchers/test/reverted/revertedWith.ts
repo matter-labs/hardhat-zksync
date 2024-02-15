@@ -85,11 +85,10 @@ describe('INTEGRATION: Reverted with', function () {
 
                 await runSuccessfulAsserts({
                     matchers,
-                    method: "revertsWith",
-                    args: ["regular expression reason"],
-                    successfulAssert: (x) =>
-                      expect(x).to.be.revertedWith(/regular .* reason/),
-                  });
+                    method: 'revertsWith',
+                    args: ['regular expression reason'],
+                    successfulAssert: (x) => expect(x).to.be.revertedWith(/regular .* reason/),
+                });
             });
 
             it('failed asserts: expected reason not to match', async function () {
@@ -113,17 +112,16 @@ describe('INTEGRATION: Reverted with', function () {
                 });
             });
 
-            it("failed asserts: expected a different regular expression reason ", async function () {
+            it('failed asserts: expected a different regular expression reason ', async function () {
                 await runFailedAsserts({
-                  matchers,
-                  method: "revertsWith",
-                  args: ["another regular expression reason"],
-                  failedAssert: (x) =>
-                    expect(x).to.be.revertedWith(/some regular .* reason/),
-                  failedAssertReason:
-                    "Expected transaction to be reverted with reason 'some regular .* reason', but it reverted with reason 'another regular expression reason'",
+                    matchers,
+                    method: 'revertsWith',
+                    args: ['another regular expression reason'],
+                    failedAssert: (x) => expect(x).to.be.revertedWith(/some regular .* reason/),
+                    failedAssertReason:
+                        "Expected transaction to be reverted with reason 'some regular .* reason', but it reverted with reason 'another regular expression reason'",
                 });
-              });
+            });
         });
 
         describe('calling a method that reverts with a panic code', function () {

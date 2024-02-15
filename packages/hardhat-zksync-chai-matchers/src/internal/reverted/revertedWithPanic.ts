@@ -2,11 +2,11 @@ import { normalizeToBigInt } from 'hardhat/common';
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { toBeHex } from 'ethers';
-import { decodeReturnData, getReturnDataFromError } from './utils';
-import { ASYNC_MATCHER_CALLED, REVERTED_WITH_PANIC_MATCHER } from '../../constants';
+import { REVERTED_WITH_PANIC_MATCHER } from '../../constants';
 import { preventAsyncMatcherChaining } from '../utils';
+import { decodeReturnData, getReturnDataFromError } from './utils';
 
-export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic,chaiUtils: Chai.ChaiUtils) {
+export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(REVERTED_WITH_PANIC_MATCHER, function (this: any, expectedCodeArg: any) {
         const negated = this.__flags.negate;
 

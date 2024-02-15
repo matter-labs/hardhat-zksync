@@ -3,14 +3,13 @@ import * as zk from 'zksync-ethers';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-import type { BalanceChangeOptions } from './misc/balance';
-import { getAddressOf, Account } from './misc/account';
-import { getAddresses, getBalances } from './misc/balance';
-
 import { CHANGE_ETHER_BALANCES_MATCHER } from '../constants';
+import { getAddressOf, Account } from './misc/account';
+import { getAddresses, getBalances, BalanceChangeOptions } from './misc/balance';
+
 import { preventAsyncMatcherChaining } from './utils';
 
-export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic,chaiUtils: Chai.ChaiUtils) {
+export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
         CHANGE_ETHER_BALANCES_MATCHER,
         function (
@@ -29,11 +28,7 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic,chaiU
                 subject = subject();
             }
 
-            preventAsyncMatcherChaining(
-                this,
-                CHANGE_ETHER_BALANCES_MATCHER,
-                chaiUtils
-              );
+            preventAsyncMatcherChaining(this, CHANGE_ETHER_BALANCES_MATCHER, chaiUtils);
 
             const checkBalanceChanges = ([actualChanges, accountAddresses]: [bigint[], string[]]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);

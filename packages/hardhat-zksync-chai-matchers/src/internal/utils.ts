@@ -7,13 +7,9 @@ export function assertIsNotNull<T>(value: T, valueName: string): asserts value i
     }
 }
 
-export function preventAsyncMatcherChaining(
-    context: object,
-    matcherName: string,
-    chaiUtils: Chai.ChaiUtils
-  ) {
+export function preventAsyncMatcherChaining(context: object, matcherName: string, chaiUtils: Chai.ChaiUtils) {
     if (chaiUtils.flag(context, ASYNC_MATCHER_CALLED) === true) {
-      throw new ZkSyncChaiMatchersNonChainableMatcherError(matcherName);
+        throw new ZkSyncChaiMatchersNonChainableMatcherError(matcherName);
     }
     chaiUtils.flag(context, ASYNC_MATCHER_CALLED, true);
 }

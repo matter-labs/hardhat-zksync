@@ -140,8 +140,6 @@ describe('INTEGRATION: Reverted', function () {
             });
         });
 
-        
-
         describe('calling a method that reverts with a custom error', function () {
             it('successful asserts', async function () {
                 await runSuccessfulAsserts({
@@ -219,49 +217,42 @@ describe('INTEGRATION: Reverted', function () {
             });
         });
 
-        describe('it throws because of non chainable methods',async function(){
-            it("reverted: should throw if chained to another non-chainable method", async function () {
-                const txPromise = matchers.revertsWith("Should revert here");
-                expect(
-                  () =>
-                    expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.reverted
-                ).to.throw(/reverted is not chainable./);
-              });
-              it("revertedWith: should throw if chained to another non-chainable method", async function () {
-                const txPromise = matchers.revertsWith("Should revert here");
+        describe('it throws because of non chainable methods', async function () {
+            it('reverted: should throw if chained to another non-chainable method', async function () {
+                const txPromise = matchers.revertsWith('Should revert here');
+                expect(() => expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.reverted).to.throw(
+                    /reverted is not chainable./,
+                );
+            });
+            it('revertedWith: should throw if chained to another non-chainable method', async function () {
+                const txPromise = matchers.revertsWith('Should revert here');
                 expect(() =>
-                  expect(txPromise)
-                    .to.be.a.nonChainableMatcher()
-                    .and.to.be.revertedWith("an error message")
+                    expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.revertedWith('an error message'),
                 ).to.throw(/revertedWith is not chainable./);
-              });
-        
-              it("revertedWithCustomError: should throw if chained to another non-chainable method", async function () {
-                const txPromise = matchers.revertsWith("Should revert here");
+            });
+
+            it('revertedWithCustomError: should throw if chained to another non-chainable method', async function () {
+                const txPromise = matchers.revertsWith('Should revert here');
                 expect(() =>
-                  expect(txPromise)
-                    .to.be.a.nonChainableMatcher()
-                    .and.to.be.revertedWithCustomError(matchers, "SomeCustomError")
+                    expect(txPromise)
+                        .to.be.a.nonChainableMatcher()
+                        .and.to.be.revertedWithCustomError(matchers, 'SomeCustomError'),
                 ).to.throw(/revertedWithCustomError is not chainable./);
-              });
-        
-              it("revertedWithoutReason: should throw if chained to another non-chainable method", async function () {
-                const txPromise = matchers.revertsWith("Should revert here");
+            });
+
+            it('revertedWithoutReason: should throw if chained to another non-chainable method', async function () {
+                const txPromise = matchers.revertsWith('Should revert here');
                 expect(() =>
-                  expect(txPromise)
-                    .to.be.a.nonChainableMatcher()
-                    .and.to.be.revertedWithoutReason()
+                    expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.revertedWithoutReason(),
                 ).to.throw(/revertedWithoutReason is not chainable./);
-              });
-        
-              it("revertedWithPanic: should throw if chained to another non-chainable method", async function () {
-                const txPromise = matchers.revertsWith("Should revert here");
-                expect(() =>
-                  expect(txPromise)
-                    .to.be.a.nonChainableMatcher()
-                    .and.to.be.revertedWithPanic()
-                ).to.throw(/revertedWithPanic is not chainable./);
-              });
-        })
+            });
+
+            it('revertedWithPanic: should throw if chained to another non-chainable method', async function () {
+                const txPromise = matchers.revertsWith('Should revert here');
+                expect(() => expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.revertedWithPanic()).to.throw(
+                    /revertedWithPanic is not chainable./,
+                );
+            });
+        });
     }
 });

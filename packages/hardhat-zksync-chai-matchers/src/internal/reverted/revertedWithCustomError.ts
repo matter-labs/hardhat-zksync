@@ -6,8 +6,8 @@ import { AssertionError } from 'chai';
 import { buildAssert, Ssfi } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
 import { assertIsNotNull, preventAsyncMatcherChaining } from '../utils';
+import { REVERTED_WITH_CUSTOM_ERROR_MATCHER } from '../../constants';
 import { decodeReturnData, getReturnDataFromError } from './utils';
-import { ASYNC_MATCHER_CALLED, REVERTED_WITH_CUSTOM_ERROR_MATCHER } from '../../constants';
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = 'customErrorAssertionCalled';
 
@@ -25,11 +25,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
 
             const { iface, expectedCustomError } = validateInput(this._obj, contract, expectedCustomErrorName);
 
-            preventAsyncMatcherChaining(
-                this,
-                REVERTED_WITH_CUSTOM_ERROR_MATCHER,
-                chaiUtils
-              );
+            preventAsyncMatcherChaining(this, REVERTED_WITH_CUSTOM_ERROR_MATCHER, chaiUtils);
 
             const onSuccess = () => {
                 const assert = buildAssert(negated, onSuccess);

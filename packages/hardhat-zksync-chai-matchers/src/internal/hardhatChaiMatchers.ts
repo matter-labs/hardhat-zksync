@@ -22,13 +22,13 @@ export function hardhatChaiMatchers(chai: Chai.ChaiStatic, chaiUtils: Chai.ChaiU
     supportProperAddress(chai.Assertion);
     supportProperHex(chai.Assertion);
     supportProperPrivateKey(chai.Assertion);
-    supportChangeEtherBalance(chai.Assertion,chaiUtils);
-    supportChangeEtherBalances(chai.Assertion,chaiUtils);
-    supportChangeTokenBalance(chai.Assertion,chaiUtils);
-    supportReverted(chai.Assertion,chaiUtils);
-    supportRevertedWith(chai.Assertion,chaiUtils);
+    supportChangeEtherBalance(chai.Assertion, chaiUtils);
+    supportChangeEtherBalances(chai.Assertion, chaiUtils);
+    supportChangeTokenBalance(chai.Assertion, chaiUtils);
+    supportReverted(chai.Assertion, chaiUtils);
+    supportRevertedWith(chai.Assertion, chaiUtils);
     supportRevertedWithCustomError(chai.Assertion, chaiUtils);
-    supportRevertedWithPanic(chai.Assertion,chaiUtils);
-    supportRevertedWithoutReason(chai.Assertion,chaiUtils);
+    supportRevertedWithPanic(chai.Assertion, chaiUtils);
+    supportRevertedWithoutReason(chai.Assertion, chaiUtils);
     supportWithArgs(chai.Assertion, chaiUtils);
 }
