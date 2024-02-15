@@ -42,9 +42,9 @@ async function main() {
     const value = await upgradedBox.retrieve();
     console.info(chalk.cyan('New box value is', value));
 
-    const chainId = await hre.network.provider.send('eth_chainId',[]) 
-    if (chainId==="0x12c"){
-        hre.run("verify:verify",{address:await upgradedBox.getAddress()})
+    const chainId = await hre.network.provider.send('eth_chainId', []);
+    if (chainId === '0x12c') {
+        let _ = hre.run('verify:verify', { address: await upgradedBox.getAddress() });
     }
 }
 
