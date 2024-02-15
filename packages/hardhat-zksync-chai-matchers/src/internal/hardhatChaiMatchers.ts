@@ -15,20 +15,20 @@ import { supportRevertedWithCustomError } from './reverted/revertedWithCustomErr
 import { supportRevertedWithoutReason } from './reverted/revertedWithoutReason';
 import { supportRevertedWithPanic } from './reverted/revertedWithPanic';
 
-export function hardhatChaiMatchers(chai: Chai.ChaiStatic, utils: Chai.ChaiUtils) {
-    supportBigNumber(chai.Assertion, utils);
-    supportEmit(chai.Assertion, utils);
+export function hardhatChaiMatchers(chai: Chai.ChaiStatic, chaiUtils: Chai.ChaiUtils) {
+    supportBigNumber(chai.Assertion, chaiUtils);
+    supportEmit(chai.Assertion, chaiUtils);
     supportHexEqual(chai.Assertion);
     supportProperAddress(chai.Assertion);
     supportProperHex(chai.Assertion);
     supportProperPrivateKey(chai.Assertion);
-    supportChangeEtherBalance(chai.Assertion);
-    supportChangeEtherBalances(chai.Assertion);
-    supportChangeTokenBalance(chai.Assertion);
-    supportReverted(chai.Assertion);
-    supportRevertedWith(chai.Assertion);
-    supportRevertedWithCustomError(chai.Assertion, utils);
-    supportRevertedWithPanic(chai.Assertion);
-    supportRevertedWithoutReason(chai.Assertion);
-    supportWithArgs(chai.Assertion, utils);
+    supportChangeEtherBalance(chai.Assertion,chaiUtils);
+    supportChangeEtherBalances(chai.Assertion,chaiUtils);
+    supportChangeTokenBalance(chai.Assertion,chaiUtils);
+    supportReverted(chai.Assertion,chaiUtils);
+    supportRevertedWith(chai.Assertion,chaiUtils);
+    supportRevertedWithCustomError(chai.Assertion, chaiUtils);
+    supportRevertedWithPanic(chai.Assertion,chaiUtils);
+    supportRevertedWithoutReason(chai.Assertion,chaiUtils);
+    supportWithArgs(chai.Assertion, chaiUtils);
 }

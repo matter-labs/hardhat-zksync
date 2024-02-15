@@ -1,14 +1,17 @@
-import { AssertionError, expect } from 'chai';
+import { AssertionError, expect, use } from 'chai';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { resetHardhatContext } from 'hardhat/plugins-testing';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import path from 'path';
+import { preventAsyncMatcherChaining } from "../src/internal/utils";
+
 
 declare module 'mocha' {
     interface Context {
         hre: HardhatRuntimeEnvironment;
     }
 }
+
 
 export function useEnvironmentWithLocalSetup(fixtureProjectName: string, networkName = 'zkSyncNetwork') {
     const fixtureProjectDir = path.resolve(__dirname, 'fixture-projects', fixtureProjectName);
@@ -83,3 +86,20 @@ export async function runFailedAsserts({
         failedAssertReason,
     );
 }
+
+
+/**
+ * Used to test that non-chainable matchers like changeEtherBalance,
+ * changeTokenBalance and reverted throw an error when used along with other
+ * non-chainable matchers.
+ */
+function supportNonChainableMatcher(chai: Chai.ChaiStatic,
+    chaiUtils: Chai.ChaiUtils
+) {
+    chai.Assertion.addMethod("nonChainableMatcher", function (this: any) {
+        preventAsyncMatcherChaining(this, "nonChainableMatcher", chaiUtils);
+        this.assert(true);
+    });
+}
+
+use(supportNonChainableMatcher)

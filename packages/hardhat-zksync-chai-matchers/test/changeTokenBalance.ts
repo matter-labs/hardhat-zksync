@@ -402,6 +402,7 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                     ).to.be.rejectedWith(AssertionError);
                 });
 
+
                 it("uses the token name if the contract doesn't have a symbol", async function () {
                     const TokenWithOnlyNameArtifact = await deployer.loadArtifact('TokenWithOnlyName');
                     const tokenWithOnlyName = await deployer.deploy(TokenWithOnlyNameArtifact);
@@ -455,6 +456,26 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                         /Expected the balance of <token at 0x\w{40}> tokens for "0x\w{40}" NOT to change by 50, but it did/,
                     );
                 });
+
+                // it("changeTokenBalance: Should throw if chained to another non-chainable method", () => {
+                //     expect(() =>
+                //       expect(mockToken.transfer(receiver.address, 50))
+                //         .to.be.a.nonChainableMatcher()
+                //         .and.to.changeTokenBalance(mockToken, receiver, 50)
+                //     ).to.throw(/changeTokenBalance is not chainable./);
+                //   });
+          
+                //   it("changeTokenBalances: should throw if chained to another non-chainable method", () => {
+                //     expect(() =>
+                //       expect(mockToken.transfer(receiver.address, 50))
+                //         .to.be.a.nonChainableMatcher()
+                //         .and.to.changeTokenBalances(
+                //           mockToken,
+                //           [sender, receiver],
+                //           [-50, 100]
+                //         )
+                //     ).to.throw(/changeTokenBalances is not chainable./);
+                //   });
             });
         });
 

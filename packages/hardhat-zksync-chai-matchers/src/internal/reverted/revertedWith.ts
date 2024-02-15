@@ -1,10 +1,11 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-
 import { toBeHex } from 'ethers';
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { ASYNC_MATCHER_CALLED, REVERTED_WITH_MATCHER } from '../../constants';
+import { preventAsyncMatcherChaining } from '../utils';
 
-export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
-    Assertion.addMethod('revertedWith', function (this: any, expectedReason: string | RegExp) {
+export function supportRevertedWith(Assertion: Chai.AssertionStatic,chaiUtils: Chai.ChaiUtils) {
+    Assertion.addMethod(REVERTED_WITH_MATCHER, function (this: any, expectedReason: string | RegExp) {
         const negated = this.__flags.negate;
 
         if (!(expectedReason instanceof RegExp) && typeof expectedReason !== "string") {
@@ -18,6 +19,8 @@ export function supportRevertedWith(Assertion: Chai.AssertionStatic) {
                 ? expectedReason.source
                 : expectedReason;
 
+
+        preventAsyncMatcherChaining(this, REVERTED_WITH_MATCHER, chaiUtils);
 
         const onSuccess = () => {
             const assert = buildAssert(negated, onSuccess);

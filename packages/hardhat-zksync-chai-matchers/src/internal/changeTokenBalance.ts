@@ -7,6 +7,9 @@ import { HttpNetworkConfig } from 'hardhat/types';
 import { BaseContractMethod, BigNumberish, ContractTransactionResponse, toBigInt } from 'ethers';
 import { Account, getAddressOf } from './misc/account';
 
+import { CHANGE_TOKEN_BALANCES_MATCHER, CHANGE_TOKEN_BALANCE_MATCHER } from '../constants';
+import { preventAsyncMatcherChaining } from './utils';
+
 export type Token = zk.Contract & {
     balanceOf: BaseContractMethod<[string], bigint, bigint>;
     name: BaseContractMethod<[], string, string>;
@@ -14,9 +17,9 @@ export type Token = zk.Contract & {
     symbol: BaseContractMethod<[], string, string>;
 };
 
-export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
+export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic,chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
-        'changeTokenBalance',
+        CHANGE_TOKEN_BALANCE_MATCHER,
         function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
             const negated = this.__flags.negate;
 
@@ -25,7 +28,13 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            checkToken(token, 'changeTokenBalance');
+            preventAsyncMatcherChaining(
+                this,
+                CHANGE_TOKEN_BALANCE_MATCHER,
+                chaiUtils
+              );
+
+            checkToken(token, CHANGE_TOKEN_BALANCE_MATCHER);
 
             const checkBalanceChange = ([actualChange, address, tokenDescription]: [bigint, string, string]) => {
                 const assert = buildAssert(negated, checkBalanceChange);
@@ -51,7 +60,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     );
 
     Assertion.addMethod(
-        'changeTokenBalances',
+        CHANGE_TOKEN_BALANCES_MATCHER,
         function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: BigNumberish[]) {
             const negated = this.__flags.negate;
 
@@ -59,8 +68,15 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             if (typeof subject === 'function') {
                 subject = subject();
             }
+            
 
-            checkToken(token, 'changeTokenBalances');
+            preventAsyncMatcherChaining(
+                this,
+                CHANGE_TOKEN_BALANCES_MATCHER,
+                chaiUtils
+              );
+
+            checkToken(token, CHANGE_TOKEN_BALANCES_MATCHER);
 
             if (accounts.length !== balanceChanges.length) {
                 throw new Error(

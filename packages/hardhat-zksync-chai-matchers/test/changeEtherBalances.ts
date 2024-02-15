@@ -316,6 +316,19 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                         `Expected the ether balance of ${sender.address} (the 1st address in the list) NOT to change by -200 wei`,
                     );
                 });
+
+                it("Should throw if chained to another non-chainable method", () => {
+                    expect(() =>
+                      expect(
+                        sender.sendTransaction({
+                          to: contract,
+                          value: 200,
+                        })
+                      )
+                        .to.be.a.nonChainableMatcher()
+                        .and.to.changeEtherBalances([sender, contract], [-200, 200])
+                    ).to.throw(/changeEtherBalances is not chainable./);
+                });
             });
 
             it("shouldn't run the transaction twice", async function () {
