@@ -23,6 +23,11 @@ async function main() {
     box.connect(zkWallet);
     const value = await box.retrieve();
     console.info(chalk.cyan('Box value is: ', value));
+
+    const chainId = await hre.network.provider.send('eth_chainId', []);
+    if (chainId === '0x12c') {
+        let _ = hre.run('verify:verify', { address: await box.getAddress() });
+    }
 }
 
 main().catch((error) => {
