@@ -889,6 +889,17 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
 
                 expect.fail('Expected an exception but none was thrown');
             });
+
+            it('changeEtherBalance: should throw if chained to another non-chainable method', async function () {
+                const transferPromise = sender.transfer({
+                    to: receiver.address,
+                    amount: 200,
+                });
+                 expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
+                                                  .and.to.changeEtherBalance(receiver,'200'))
+                .to.throw(/changeEtherBalance is not chainable./)
+                await transferPromise;
+            });
         });
     }
 });

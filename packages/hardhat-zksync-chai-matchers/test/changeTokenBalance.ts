@@ -44,6 +44,15 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
             artifact = await deployer.loadArtifact('MockToken');
             mockToken = await deployer.deploy(artifact);
         });
+
+        it('changeTokenBalance: should throw if chained to another non-chainable method', async function () {
+            const transferPromise = mockToken.transfer(receiver.address, 50);
+             expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
+                                              .and.to.changeTokenBalance(mockToken,[sender,receiver],[-200,'200']))
+            .to.throw(/changeTokenBalance is not chainable./)
+            await transferPromise;
+        });
+
         describe("transaction that doesn't move tokens", () => {
             it('with a promise of a TxResponse', async function () {
                 await runAllAsserts(

@@ -53,6 +53,17 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             };
         });
 
+        it('changeEtherBalance: should throw if chained to another non-chainable method', async function () {
+            const transferPromise = sender.transfer({
+                to: receiver.address,
+                amount: 200,
+            });
+             expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
+                                              .and.to.changeEtherBalances([sender,receiver],[-200,'200']))
+            .to.throw(/changeEtherBalances is not chainable./)
+            await transferPromise;
+        });
+
         describe('Transaction Callback', () => {
             describe('Change balances, one account, one contract', () => {
                 it('Should pass when all expected balance changes are equal to actual values', async () => {
