@@ -1,12 +1,14 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-
 import { toBeHex } from 'ethers';
+import { REVERTED_WITHOUT_REASON_MATCHER } from '../../constants';
+import { preventAsyncMatcherChaining } from '../utils';
 import { decodeReturnData, getReturnDataFromError } from './utils';
 
-export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
-    Assertion.addMethod('revertedWithoutReason', function (this: any) {
+export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
+    Assertion.addMethod(REVERTED_WITHOUT_REASON_MATCHER, function (this: any) {
         const negated = this.__flags.negate;
 
+        preventAsyncMatcherChaining(this, REVERTED_WITHOUT_REASON_MATCHER, chaiUtils);
         const onSuccess = () => {
             const assert = buildAssert(negated, onSuccess);
 

@@ -1,15 +1,18 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import * as zk from 'zksync-ethers';
-
 import { HttpNetworkConfig } from 'hardhat/types';
 import { toBeHex } from 'ethers';
+import { REVERTED_MATCHER } from '../../constants';
+import { preventAsyncMatcherChaining } from '../utils';
 import { decodeReturnData, getReturnDataFromError } from './utils';
 
-export function supportReverted(Assertion: Chai.AssertionStatic) {
-    Assertion.addProperty('reverted', function (this: any) {
+export function supportReverted(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
+    Assertion.addProperty(REVERTED_MATCHER, function (this: any) {
         const negated = this.__flags.negate;
 
         const subject: unknown = this._obj;
+
+        preventAsyncMatcherChaining(this, REVERTED_MATCHER, chaiUtils);
 
         const onSuccess = async (value: unknown) => {
             const assert = buildAssert(negated, onSuccess);

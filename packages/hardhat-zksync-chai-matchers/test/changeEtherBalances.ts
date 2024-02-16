@@ -53,6 +53,23 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             };
         });
 
+        it('changeEtherBalances: should throw if chained to another non-chainable method', async function () {
+            try {
+                // eslint-disable-next-line
+                expect(
+                    await sender.transfer({
+                        to: receiver.address,
+                        amount: 200,
+                    }),
+                )
+                    .to.nonChainableMatcher()
+                    .and.to.changeEtherBalances([sender, receiver], [-200, '200']);
+            } catch (e: any) {
+                expect(e.message).to.match(/changeEtherBalances is not chainable./);
+                return;
+            }
+        });
+
         describe('Transaction Callback', () => {
             describe('Change balances, one account, one contract', () => {
                 it('Should pass when all expected balance changes are equal to actual values', async () => {
@@ -316,40 +333,39 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                         `Expected the ether balance of ${sender.address} (the 1st address in the list) NOT to change by -200 wei`,
                     );
                 });
-            });
 
-            it("shouldn't run the transaction twice", async function () {
-                const receiverBalanceBefore = await provider.getBalance(receiver.address);
-
-                await expect(() =>
-                    sender.sendTransaction({
-                        to: receiver.address,
-                        value: 200,
-                        gasPrice,
-                    }),
-                ).to.changeEtherBalances([sender, receiver], [-200, 200]);
-
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
-
-                expect(receiverBalanceChange).to.equal(200);
-            });
-
-            it("shouldn't run the transaction twice - zkSync transfer", async function () {
-                const receiverBalanceBefore = await provider.getBalance(receiver.address);
-
-                await expect(() =>
-                    sender.transfer({
-                        to: receiver.address,
-                        amount: 200,
-                        overrides: {
+                it("shouldn't run the transaction twice", async function () {
+                    const receiverBalanceBefore = await provider.getBalance(receiver.address);
+                    await expect(() =>
+                        sender.sendTransaction({
+                            to: receiver.address,
+                            value: 200,
                             gasPrice,
-                        },
-                    }),
-                ).to.changeEtherBalances([sender, receiver], [-200, 200]);
+                        }),
+                    ).to.changeEtherBalances([sender, receiver], [-200, 200]);
 
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
 
-                expect(receiverBalanceChange).to.equal(200);
+                    expect(receiverBalanceChange).to.equal(200);
+                });
+
+                it("shouldn't run the transaction twice - zkSync transfer", async function () {
+                    const receiverBalanceBefore = await provider.getBalance(receiver.address);
+
+                    await expect(() =>
+                        sender.transfer({
+                            to: receiver.address,
+                            amount: 200,
+                            overrides: {
+                                gasPrice,
+                            },
+                        }),
+                    ).to.changeEtherBalances([sender, receiver], [-200, 200]);
+
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
+
+                    expect(receiverBalanceChange).to.equal(200);
+                });
             });
         });
 
