@@ -50,7 +50,7 @@
     "@matterlabs/hardhat-zksync-solc": "1.0.6"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -72,6 +72,6 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2"
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6"
   }
 }
