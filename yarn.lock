@@ -852,7 +852,7 @@
     fs-extra "^7.0.1"
     hardhat "^2.19.4"
     proper-lockfile "^4.1.1"
-    solidity-ast "^0.4.51"
+    solidity-ast "^0.4.55"
     zksync-ethers "^6.0.0"
 
 "@matterlabs/hardhat-zksync-verify-vyper@link:packages/hardhat-zksync-verify-vyper":
@@ -6545,10 +6545,10 @@ solc@0.7.3:
     semver "^5.5.0"
     tmp "0.0.33"
 
-solidity-ast@^0.4.51:
-  version "0.4.52"
-  resolved "https://registry.yarnpkg.com/solidity-ast/-/solidity-ast-0.4.52.tgz#9f1a9abc7e5ba28bbf91146ecd07aec7e70f3c85"
-  integrity sha512-iOya9BSiB9jhM8Vf40n8lGELGzwrUc57rl5BhfNtJ5cvAaMvRcNlHeAMNvqJJyjoUnczqRbHqdivEqK89du3Cw==
+solidity-ast@^0.4.51, solidity-ast@^0.4.55:
+  version "0.4.55"
+  resolved "https://registry.yarnpkg.com/solidity-ast/-/solidity-ast-0.4.55.tgz#00b685e6eefb2e8dfb67df1fe0afbe3b3bfb4b28"
+  integrity sha512-qeEU/r/K+V5lrAw8iswf2/yfWAnSGs3WKPHI+zAFKFjX0dIBVXEU/swQ8eJQYHf6PJWUZFO2uWV4V1wEOkeQbA==
   dependencies:
     array.prototype.findlast "^1.2.2"
 
