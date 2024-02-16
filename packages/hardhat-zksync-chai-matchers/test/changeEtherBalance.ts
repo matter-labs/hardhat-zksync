@@ -895,9 +895,9 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                     to: receiver.address,
                     amount: 200,
                 });
-                 expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
-                                                  .and.to.changeEtherBalance(receiver,'200'))
-                .to.throw(/changeEtherBalance is not chainable./)
+                expect(() =>
+                    expect(transferPromise).to.be.a.nonChainableMatcher().and.to.changeEtherBalance(receiver, '200'),
+                ).to.throw(/changeEtherBalance is not chainable./);
                 await transferPromise;
             });
         });

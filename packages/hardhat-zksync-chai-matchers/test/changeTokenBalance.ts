@@ -47,9 +47,11 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
 
         it('changeTokenBalance: should throw if chained to another non-chainable method', async function () {
             const transferPromise = mockToken.transfer(receiver.address, 50);
-             expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
-                                              .and.to.changeTokenBalance(mockToken,[sender,receiver],[-200,'200']))
-            .to.throw(/changeTokenBalance is not chainable./)
+            expect(() =>
+                expect(transferPromise)
+                    .to.be.a.nonChainableMatcher()
+                    .and.to.changeTokenBalance(mockToken, [sender, receiver], [-200, '200']),
+            ).to.throw(/changeTokenBalance is not chainable./);
             await transferPromise;
         });
 

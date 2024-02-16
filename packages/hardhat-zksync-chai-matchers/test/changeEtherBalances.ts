@@ -58,9 +58,11 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                 to: receiver.address,
                 amount: 200,
             });
-             expect(()=>expect(transferPromise).to.be.a.nonChainableMatcher()
-                                              .and.to.changeEtherBalances([sender,receiver],[-200,'200']))
-            .to.throw(/changeEtherBalances is not chainable./)
+            expect(() =>
+                expect(transferPromise)
+                    .to.be.a.nonChainableMatcher()
+                    .and.to.changeEtherBalances([sender, receiver], [-200, '200']),
+            ).to.throw(/changeEtherBalances is not chainable./);
             await transferPromise;
         });
 
