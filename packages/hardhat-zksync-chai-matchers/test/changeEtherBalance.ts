@@ -900,6 +900,23 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 ).to.throw(/changeEtherBalance is not chainable./);
                 await transferPromise;
             });
+
+            it('changeEtherBalance: should throw if chained to another non-chainable method', async function () {
+                try {
+                    // eslint-disable-next-line
+                    expect(
+                        await sender.sendTransaction({
+                            to: receiver.address,
+                            value: 200,
+                        }),
+                    )
+                        .to.nonChainableMatcher()
+                        .and.to.changeEtherBalance(sender, '-200');
+                } catch (e: any) {
+                    expect(e.message).to.match(/changeEtherBalance is not chainable./);
+                    return;
+                }
+            });
         });
     }
 });

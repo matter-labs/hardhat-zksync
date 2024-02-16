@@ -232,7 +232,7 @@ describe('INTEGRATION: Reverted', function () {
             });
 
             it('revertedWithCustomError: should throw if chained to another non-chainable method', async function () {
-                const txPromise = matchers.revertsWith('Should revert here');
+                const txPromise = matchers.revertWithSomeCustomError();
                 expect(() =>
                     expect(txPromise)
                         .to.be.a.nonChainableMatcher()
@@ -241,14 +241,14 @@ describe('INTEGRATION: Reverted', function () {
             });
 
             it('revertedWithoutReason: should throw if chained to another non-chainable method', async function () {
-                const txPromise = matchers.revertsWith('Should revert here');
+                const txPromise = matchers.revertsWithoutReason();
                 expect(() =>
                     expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.revertedWithoutReason(),
                 ).to.throw(/revertedWithoutReason is not chainable./);
             });
 
             it('revertedWithPanic: should throw if chained to another non-chainable method', async function () {
-                const txPromise = matchers.revertsWith('Should revert here');
+                const txPromise = matchers.panicAssert();
                 expect(() => expect(txPromise).to.be.a.nonChainableMatcher().and.to.be.revertedWithPanic()).to.throw(
                     /revertedWithPanic is not chainable./,
                 );
