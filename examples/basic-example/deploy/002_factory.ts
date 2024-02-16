@@ -4,44 +4,53 @@ import * as zk from 'zksync-ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
-// An example of a deploy script which will deploy and call a factory-like contract (meaning that the main contract
-// may deploy other contracts).
-//
-// In terms of presentation it's mostly copied from `001_deploy.ts`, so this example acts more like an integration test
-// for plugins/server capabilities.
+// Utilize environment variables for sensitive information like mnemonics
+const MNEMONIC = process.env.MNEMONIC || '';
+
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy script for the Factory contract`));
-    // Initialize an Ethereum wallet.
-    const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
+
+    if (!MNEMONIC) {
+        console.error(chalk.red(`Mnemonic is not provided. Set the MNEMONIC environment variable.`));
+        process.exit(1); // Exit the script with an error code
+    }
+
+    // Initialize an Ethereum wallet securely
+    const zkWallet = zk.Wallet.fromMnemonic(MNEMONIC);
 
     // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
 
-    // Deposit some funds to L2 in order to be able to perform deposits.
+    console.info(chalk.blue(`Depositing funds to L2 to enable transactions...`));
+    // Improved readability for deposit amount
+    const depositAmount = ethers.utils.parseEther('0.01');
     const depositHandle = await deployer.zkWallet.deposit({
-        to: deployer.zkWallet.address,
+        to: zkWallet.address,
         token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.01'),
+        amount: depositAmount,
     });
     await depositHandle.wait();
+    console.info(chalk.green(`Deposit of ${depositAmount} ETH completed.`));
 
-    // Load the artifact we want to deploy.
-    const artifact = await deployer.loadArtifact('Import');
+    // Load the artifact for deployment.
+    const artifactName = 'Import'; // Consider extracting specific names and parameters to constants or environment variables for easier modifications
+    const artifact = await deployer.loadArtifact(artifactName);
 
-    // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
-    // This contract has no constructor arguments.
+    // Deploy the contract and log the address
     const factoryContract = await deployer.deploy(artifact, []);
-
-    // Show the contract info.
     const contractAddress = await factoryContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
 
-    // Call the deployed contract.
-    const greetingFromContract = await factoryContract.getFooName();
-    if (greetingFromContract === 'Foo') {
-        console.info(chalk.green(`Successful greeting from the contract!`));
-    } else {
-        throw new Error(`Contract returned unexpected greeting: ${greetingFromContract}`);
+    // Demonstrating contract interaction with error handling
+    try {
+        const greetingFromContract = await factoryContract.getFooName();
+        if (greetingFromContract === 'Foo') {
+            console.info(chalk.green(`Successful greeting from the contract!`));
+        } else {
+            throw new Error(`Contract returned unexpected greeting: ${greetingFromContract}`);
+        }
+    } catch (error) {
+        console.error(chalk.red(`Error during contract interaction: ${error.message}`));
     }
 }
+

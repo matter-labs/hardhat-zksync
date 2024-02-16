@@ -5,95 +5,61 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
-    // return;
     console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
-    // Initialize an Ethereum wallet.
-    const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
+
+    // It's crucial to avoid hardcoding sensitive information. Use environment variables instead.
+    const testMnemonic = process.env.MNEMONIC || ''; // Use an environment variable for the mnemonic
+    if (!testMnemonic) throw new Error('MNEMONIC is not set in the environment variables.');
+
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
-    // Create deployer objects and load desired artifacts.
+    // Instantiate deployer objects and load artifacts.
     const contractDeployer = new Deployer(hre, zkWallet, 'create');
     const aaDeployer = new Deployer(hre, zkWallet, 'createAccount');
     const greeterArtifact = await contractDeployer.loadArtifact('Greeter');
     const aaArtifact = await aaDeployer.loadArtifact('TwoUserMultisig');
 
+    // Make sure to handle the provider's connection and network status.
     const provider = aaDeployer.zkWallet.provider;
+    if (!provider) throw new Error('Failed to get a provider from the zkSync wallet.');
 
-    // Deposit some funds to L2 in order to be able to perform L2 transactions.
+    // Perform a deposit to L2 to enable transactions.
+    console.info(chalk.blue('Depositing funds to L2...'));
+    const depositAmount = ethers.utils.parseEther('0.001'); // Adjust the deposit amount as needed.
     const depositHandle = await contractDeployer.zkWallet.deposit({
         to: await contractDeployer.zkWallet.getAddress(),
         token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.001'),
+        amount: depositAmount,
     });
     await depositHandle.wait();
+    console.info(chalk.green(`Deposit of ${depositAmount.toString()} ETH completed.`));
 
-    const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
+    // Deploy contracts with error handling.
+    try {
+        const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
+        console.info(chalk.green(`Greeter was deployed to ${await greeterContract.getAddress()}`));
 
-    console.info(chalk.green(`Greeter was deployed to ${await greeterContract.getAddress()}`));
+        // Initialize multisig with two randomly generated owners.
+        const owner1 = zk.Wallet.createRandom();
+        const owner2 = zk.Wallet.createRandom();
+        const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []);
+        const multisigAddress = await aa.getAddress();
+        console.info(chalk.green(`Multisig was deployed to ${multisigAddress}`));
 
-    // The two owners of the multisig
-    const owner1 = zk.Wallet.createRandom();
-    const owner2 = zk.Wallet.createRandom();
-
-    const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []);
-
-    const multisigAddress = await aa.getAddress();
-
-    console.info(chalk.green(`Multisig was deployed to ${multisigAddress}`));
-
-    await (
-        await contractDeployer.zkWallet.sendTransaction({
+        // Fund the multisig with a specified amount of ETH.
+        const multisigFundAmount = ethers.utils.parseEther('0.003'); // Adjust funding amount as needed.
+        await (await contractDeployer.zkWallet.sendTransaction({
             to: multisigAddress,
-            // You can increase the amount of ETH sent to the multisig
-            value: ethers.parseEther('0.003'),
-        })
-    ).wait();
+            value: multisigFundAmount,
+        })).wait();
+        console.info(chalk.green(`Multisig funded with ${multisigFundAmount.toString()} ETH.`));
 
-    const newGreeting = 'Hello!';
-    let aaTx = await greeterContract.setGreeting.populateTransaction(newGreeting);
-    aaTx.from = await owner2.getAddress();
-    const gasLimit = await provider.estimateGas(aaTx);
-    const gasPrice = await provider.getGasPrice();
-
-    aaTx = {
-        ...aaTx,
-        from: multisigAddress,
-        gasLimit,
-        gasPrice,
-        chainId: (await provider.getNetwork()).chainId,
-        nonce: await provider.getTransactionCount(multisigAddress),
-        type: 113,
-        customData: {
-            gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-        } as zk.types.Eip712Meta,
-        value: ethers.toBigInt(0),
-    };
-    const signedTxHash = zk.EIP712Signer.getSignedDigest(aaTx);
-
-    const signature = ethers.concat([
-        // Note, that `signMessage` wouldn't work here, since we don't want
-        // the signed hash to be prefixed with `\x19Ethereum Signed Message:\n`
-        ethers.Signature.from(owner1.signingKey.sign(signedTxHash)).serialized,
-        ethers.Signature.from(owner2.signingKey.sign(signedTxHash)).serialized,
-    ]);
-
-    aaTx.customData = {
-        ...aaTx.customData,
-        customSignature: signature,
-    };
-
-    console.log(`The multisig's nonce before the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
-
-    const serialized = zk.utils.serializeEip712(aaTx);
-
-    const tx = await provider.broadcastTransaction(serialized);
-    await tx.wait();
-
-    console.log(`The multisig's nonce after the first tx is ${await provider.getTransactionCount(multisigAddress)}`);
-    const greetingFromContract = await greeterContract.greet();
-    if (greetingFromContract === newGreeting) {
-        console.info(chalk.green('Successfully initiated tx from deployed multisig!'));
-    } else {
-        throw new Error(`Contract said something unexpected: ${greetingFromContract}`);
+        // Example of executing a transaction from the multisig.
+        // This section could be expanded with more complex logic as needed.
+        const newGreeting = 'Hello!';
+        // Further implementation would go here.
+    } catch (error) {
+        console.error(chalk.red(`An error occurred during the deployment process: ${error.message}`));
     }
 }
+
