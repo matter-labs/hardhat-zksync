@@ -44,7 +44,6 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
             artifact = await deployer.loadArtifact('MockToken');
             mockToken = await deployer.deploy(artifact);
         });
-
         describe("transaction that doesn't move tokens", () => {
             it('with a promise of a TxResponse', async function () {
                 await runAllAsserts(
@@ -455,26 +454,6 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
                         /Expected the balance of <token at 0x\w{40}> tokens for "0x\w{40}" NOT to change by 50, but it did/,
                     );
                 });
-
-                // it("changeTokenBalance: Should throw if chained to another non-chainable method", () => {
-                //     expect(() =>
-                //       expect(mockToken.transfer(receiver.address, 50))
-                //         .to.be.a.nonChainableMatcher()
-                //         .and.to.changeTokenBalance(mockToken, receiver, 50)
-                //     ).to.throw(/changeTokenBalance is not chainable./);
-                //   });
-
-                //   it("changeTokenBalances: should throw if chained to another non-chainable method", () => {
-                //     expect(() =>
-                //       expect(mockToken.transfer(receiver.address, 50))
-                //         .to.be.a.nonChainableMatcher()
-                //         .and.to.changeTokenBalances(
-                //           mockToken,
-                //           [sender, receiver],
-                //           [-50, 100]
-                //         )
-                //     ).to.throw(/changeTokenBalances is not chainable./);
-                //   });
             });
         });
 

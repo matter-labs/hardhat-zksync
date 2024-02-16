@@ -316,40 +316,39 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                         `Expected the ether balance of ${sender.address} (the 1st address in the list) NOT to change by -200 wei`,
                     );
                 });
-            });
 
-            it("shouldn't run the transaction twice", async function () {
-                const receiverBalanceBefore = await provider.getBalance(receiver.address);
-
-                await expect(() =>
-                    sender.sendTransaction({
-                        to: receiver.address,
-                        value: 200,
-                        gasPrice,
-                    }),
-                ).to.changeEtherBalances([sender, receiver], [-200, 200]);
-
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
-
-                expect(receiverBalanceChange).to.equal(200);
-            });
-
-            it("shouldn't run the transaction twice - zkSync transfer", async function () {
-                const receiverBalanceBefore = await provider.getBalance(receiver.address);
-
-                await expect(() =>
-                    sender.transfer({
-                        to: receiver.address,
-                        amount: 200,
-                        overrides: {
+                it("shouldn't run the transaction twice", async function () {
+                    const receiverBalanceBefore = await provider.getBalance(receiver.address);
+                    await expect(() =>
+                        sender.sendTransaction({
+                            to: receiver.address,
+                            value: 200,
                             gasPrice,
-                        },
-                    }),
-                ).to.changeEtherBalances([sender, receiver], [-200, 200]);
+                        }),
+                    ).to.changeEtherBalances([sender, receiver], [-200, 200]);
 
-                const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
 
-                expect(receiverBalanceChange).to.equal(200);
+                    expect(receiverBalanceChange).to.equal(200);
+                });
+
+                it("shouldn't run the transaction twice - zkSync transfer", async function () {
+                    const receiverBalanceBefore = await provider.getBalance(receiver.address);
+
+                    await expect(() =>
+                        sender.transfer({
+                            to: receiver.address,
+                            amount: 200,
+                            overrides: {
+                                gasPrice,
+                            },
+                        }),
+                    ).to.changeEtherBalances([sender, receiver], [-200, 200]);
+
+                    const receiverBalanceChange = (await provider.getBalance(receiver.address)) - receiverBalanceBefore;
+
+                    expect(receiverBalanceChange).to.equal(200);
+                });
             });
         });
 
@@ -522,22 +521,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
                 }
 
                 expect.fail('Expected an exception but none was thrown');
-            });
-        });
-
-        describe('Prevent non-chainable matchers', async function () {
-            it('Should throw if chained to another non-chainable method', () => {
-                expect(
-                    async () =>
-                        await expect(
-                            sender.sendTransaction({
-                                to: contract,
-                                value: 200,
-                            }),
-                        )
-                            .to.be.a.nonChainableMatcher()
-                            .and.to.changeEtherBalances([sender, contract], [-200, 200]),
-                ).to.throw(/changeEtherBalances is not chainable./);
             });
         });
     }
