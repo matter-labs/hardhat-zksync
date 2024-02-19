@@ -118,6 +118,12 @@ jobs:
           yarn hardhat run scripts/upgrade-box-beacon.ts 
           yarn hardhat run scripts/upgrade-box-uups.ts 
           yarn hardhat run scripts/upgrade-box.ts 
+          yarn hardhat run scripts/deploy-factory-beacon.ts 
+          yarn hardhat run scripts/deploy-factory-proxy.ts 
+          yarn hardhat run scripts/deploy-factory-uups.ts 
+          yarn hardhat run scripts/upgrade-factory-beacon.ts 
+          yarn hardhat run scripts/upgrade-factory-uups.ts 
+          yarn hardhat run scripts/upgrade-factory.ts 
 
       - name: Test zksync-ethers example
         run: |

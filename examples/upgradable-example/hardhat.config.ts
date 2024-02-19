@@ -2,6 +2,7 @@ import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
+import '@matterlabs/hardhat-zksync-upgradable/dist/src/type-extensions';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -15,8 +16,13 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork:'zkSyncNetwork',
+    defaultNetwork:'sepolia',
     networks: {
+        sepolia:{
+            url: 'https://sepolia.era.zksync.dev',
+            ethNetwork: 'https://eth-sepolia.g.alchemy.com/v2/KaTL0rhcEuEBNLqU2tqlqvIwLpoClqTH',
+            zksync:true,
+          },
         hardhat: {
             zksync: true,
         },
