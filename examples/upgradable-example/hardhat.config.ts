@@ -16,13 +16,8 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork:'sepolia',
+    defaultNetwork:'zkSyncNetwork',
     networks: {
-        sepolia:{
-            url: 'https://sepolia.era.zksync.dev',
-            ethNetwork: 'https://eth-sepolia.g.alchemy.com/v2/KaTL0rhcEuEBNLqU2tqlqvIwLpoClqTH',
-            zksync:true,
-          },
         hardhat: {
             zksync: true,
         },
