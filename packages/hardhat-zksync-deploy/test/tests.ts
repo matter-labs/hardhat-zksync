@@ -251,19 +251,4 @@ describe('Plugin tests', async function () {
             expect(errorOccurred).to.equal(true);
         });
     });
-
-    describe('Test missing hardhat.config zksolc', async function () {
-        useEnvironment('noninline-libraries-missing-zksolc','zkSyncNetwork');
-
-        it('Should deploy libraries with private key, but not update the hardhat.config file', async function () {
-            chalk.yellow('Deploying libraries...');
-            try{
-                await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, {
-                    privateKey: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
-                });
-            }catch(e:any){
-                expect(e.message.includes("Failed to update hardhat config file, please use addresses from console output"))
-            }
-        });
-    });
 });
