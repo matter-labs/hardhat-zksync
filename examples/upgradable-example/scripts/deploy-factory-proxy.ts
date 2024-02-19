@@ -24,6 +24,11 @@ async function main() {
             'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
         );
     }
+
+    const chainId = await hre.network.provider.send('eth_chainId', []);
+    if (chainId === '0x12c') {
+        let _ = hre.run('verify:verify', { address: factory.address });
+    }
 }
 
 main().catch((error) => {
