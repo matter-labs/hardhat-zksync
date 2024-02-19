@@ -29,7 +29,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
         let gasPrice: number;
         let gasUsed: number;
         let txGasFees: number;
-        let overrides: {};
 
         beforeEach(async function () {
             provider = zk.Provider.getDefaultProvider();
@@ -43,14 +42,6 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             gasPrice = 250000000;
             gasUsed = 157263;
             txGasFees = gasPrice * gasUsed;
-
-            overrides = {
-                type: 2,
-                maxFeePerGas: 1 * gasPrice,
-                maxPriorityFeePerGas: 1 * gasPrice,
-            };
-
-            const _ = overrides;
         });
 
         describe('Transaction Callback', () => {
