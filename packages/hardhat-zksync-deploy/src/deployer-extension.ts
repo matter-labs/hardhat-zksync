@@ -89,7 +89,6 @@ export class DeployerExtension implements AbstractDeployer {
         const wallet = (await getWallet(this._hre, privateKeyOrAccountNumber ?? getNetworkAccount(this._hre)))
             .connect(this.zkWeb3Provider)
             .connectToL1(this.ethWeb3Provider);
-        this.wallet = wallet;
         return wallet;
     }
 }
