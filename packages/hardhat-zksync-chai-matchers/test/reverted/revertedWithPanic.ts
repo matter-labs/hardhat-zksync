@@ -238,7 +238,7 @@ describe('INTEGRATION: Reverted with panic', function () {
             it('non-errors as subject', async function () {
                 await expect(expect(Promise.reject({})).to.be.revertedWithPanic(1)).to.be.rejectedWith(
                     AssertionError,
-                    'Expected an Error object'
+                    'Expected an Error object',
                 );
             });
         });

@@ -1,4 +1,4 @@
-import type { BigNumberish, BigNumber, ethers } from 'ethers';
+import type { BigNumberish, BigNumber } from 'ethers';
 import * as zk from 'zksync-ethers';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
@@ -31,7 +31,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 assert(
                     actualChange.eq(BigNumber.from(balanceChange)),
                     `Expected the balance of ${tokenDescription} tokens for "${address}" to change by ${balanceChange.toString()}, but it changed by ${actualChange.toString()}`,
-                    `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`
+                    `Expected the balance of ${tokenDescription} tokens for "${address}" NOT to change by ${balanceChange.toString()}, but it did`,
                 );
             };
 
@@ -45,7 +45,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
             return this;
-        }
+        },
     );
 
     Assertion.addMethod(
@@ -64,19 +64,19 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
 
             if (accounts.length !== balanceChanges.length) {
                 throw new Error(
-                    `The number of accounts (${accounts.length}) is different than the number of expected balance changes (${balanceChanges.length})`
+                    `The number of accounts (${accounts.length}) is different than the number of expected balance changes (${balanceChanges.length})`,
                 );
             }
 
             const balanceChangesPromise = Promise.all(
-                accounts.map((account) => getBalanceChange(subject, token, account))
+                accounts.map((account) => getBalanceChange(subject, token, account)),
             );
             const addressesPromise = Promise.all(accounts.map(getAddressOf));
 
             const checkBalanceChanges = ([actualChanges, addresses, tokenDescription]: [
                 BigNumber[],
                 string[],
-                string
+                string,
             ]) => {
                 const assert = buildAssert(negated, checkBalanceChanges);
 
@@ -87,7 +87,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                     }, respectively, but they changed by ${actualChanges as any}`,
                     `Expected the balances of ${tokenDescription} tokens for ${addresses as any} NOT to change by ${
                         balanceChanges as any
-                    }, respectively, but they did`
+                    }, respectively, but they did`,
                 );
             };
 
@@ -101,7 +101,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
             this.catch = derivedPromise.catch.bind(derivedPromise);
 
             return this;
-        }
+        },
     );
 }
 
@@ -116,7 +116,7 @@ function checkToken(token: unknown, method: string) {
 export async function getBalanceChange(
     transaction: zk.types.TransactionResponse | Promise<zk.types.TransactionResponse>,
     token: Token,
-    account: Account | string
+    account: Account | string,
 ) {
     const { BigNumber } = require('ethers');
     const provider = zk.Provider.getDefaultProvider();

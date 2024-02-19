@@ -3,14 +3,14 @@ import { getTransactionByHash, isTransparentOrUUPSProxy, isBeacon, isBeaconProxy
 import { HardhatRuntimeEnvironment, RunSuperFunction } from 'hardhat/types';
 
 import chalk from 'chalk';
-import { fullVerifyBeacon, fullVerifyBeaconProxy } from './verify-beacon';
-import { fullVerifyTransparentOrUUPS } from './verify-transparent-uups';
+import * as zk from 'zksync-ethers';
+import { ethers } from 'ethers';
 import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
 import { getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import * as zk from 'zksync-ethers';
-import { ethers } from 'ethers';
+import { fullVerifyTransparentOrUUPS } from './verify-transparent-uups';
+import { fullVerifyBeacon, fullVerifyBeaconProxy } from './verify-beacon';
 
 /**
  * Overrides verify's plugin `verify:verify` subtask to fully verify a proxy or beacon.
@@ -52,8 +52,7 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
  * @returns the xHash for the first event found
  */
 async function searchEvent(provider: zk.Provider, address: string, possibleContractInfo: VerifiableContractInfo[]) {
-    for (let i = 0; i < possibleContractInfo.length; i++) {
-        const contractInfo = possibleContractInfo[i];
+    for (const contractInfo of possibleContractInfo) {
         const txHash = await getContractCreationTxHash(provider, address, contractInfo.event);
         if (txHash !== undefined) {
             return { contractInfo, txHash };
@@ -113,14 +112,14 @@ async function attemptVerifyWithCreationEvent(
     const tx = await getTransactionByHash(provider, txHash);
     if (tx === null) {
         throw new ZkSyncUpgradablePluginError(
-            `The transaction hash ${txHash} from the contract's logs was not found on the network`
+            `The transaction hash ${txHash} from the contract's logs was not found on the network`,
         );
     }
     const decodedInputData = ethers.utils.defaultAbiCoder.decode(
         ['bytes32', 'bytes32', 'bytes'],
-        ethers.utils.hexDataSlice(tx.input, 4)
+        ethers.utils.hexDataSlice(tx.input, 4),
     );
     const constructorArgs = decodedInputData[2];
 
-    await runSuper({ address: address, constructorArguments: constructorArgs, libraries: {}, noCompile });
+    await runSuper({ address, constructorArguments: constructorArgs, libraries: {}, noCompile });
 }

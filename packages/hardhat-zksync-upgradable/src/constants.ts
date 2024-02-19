@@ -31,7 +31,7 @@ export const TOPIC_LOGS_NOT_FOUND_ERROR = (topic: string, address: string) =>
 
 export const EVENT_NOT_FOUND_ERROR = (address: string, events: string[]) =>
     `Could not find an event with any of the following topics in the logs for address ${address}: ${events.join(
-        ', '
+        ', ',
     )}` +
     'If the proxy was recently deployed, the transaction may not be available on Block Explorer yet. Try running the verify task again after waiting a few blocks.';
 

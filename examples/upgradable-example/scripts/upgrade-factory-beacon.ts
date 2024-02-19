@@ -10,7 +10,6 @@ async function main() {
     const zkWallet = Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
     const deployer = new Deployer(hre, zkWallet);
 
-
     const contractName = 'Factory';
     const contract = await deployer.loadArtifact(contractName);
     const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, contract);
@@ -29,13 +28,15 @@ async function main() {
         factoryV2Implementation.abi,
         factoryV2Implementation.bytecode,
         deployer.zkWallet,
-        deployer.deploymentType
+        deployer.deploymentType,
     );
     const upgradedFactory = attachTo.attach(factoryBeaconProxy.address);
     upgradedFactory.connect(zkWallet);
     const number = await upgradedFactory.getNumberOfDeployedContracts();
-    if(number===0){
-        throw new Error("Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.")
+    if (number === 0) {
+        throw new Error(
+            'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
+        );
     }
 }
 

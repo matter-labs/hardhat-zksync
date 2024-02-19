@@ -21,7 +21,7 @@ export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
             if (decodedReturnData.kind === 'Error') {
                 assert(
                     false,
-                    `Expected transaction to be reverted without a reason, but it reverted with reason '${decodedReturnData.reason}'`
+                    `Expected transaction to be reverted without a reason, but it reverted with reason '${decodedReturnData.reason}'`,
                 );
             } else if (decodedReturnData.kind === 'Empty') {
                 assert(true, undefined, 'Expected transaction NOT to be reverted without a reason, but it was');
@@ -30,12 +30,12 @@ export function supportRevertedWithoutReason(Assertion: Chai.AssertionStatic) {
                     false,
                     `Expected transaction to be reverted without a reason, but it reverted with panic code ${decodedReturnData.code.toHexString()} (${
                         decodedReturnData.description
-                    })`
+                    })`,
                 );
             } else if (decodedReturnData.kind === 'Custom') {
                 assert(
                     false,
-                    `Expected transaction to be reverted without a reason, but it reverted with a custom error`
+                    `Expected transaction to be reverted without a reason, but it reverted with a custom error`,
                 );
             } else {
                 const _exhaustiveCheck: never = decodedReturnData;

@@ -5,11 +5,11 @@ import { compare as compareVersions } from 'compare-versions';
 
 import type { Deployment } from '@openzeppelin/upgrades-core/src/deployment';
 import type { StorageLayout } from '@openzeppelin/upgrades-core/src/storage';
-import { mapValues, pick } from '../utils/utils-general';
 import * as zk from 'zksync-ethers';
-import { getChainId, networkNames } from './provider';
+import { mapValues, pick } from '../utils/utils-general';
 import { MANIFEST_DEFAULT_DIR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { getChainId, networkNames } from './provider';
 
 const currentManifestVersion = '3.2';
 
@@ -42,8 +42,8 @@ function defaultManifest(): ManifestData {
 }
 
 export class Manifest {
-    readonly chainId: number;
-    readonly file: string;
+    public readonly chainId: number;
+    public readonly file: string;
     private readonly dir: string;
 
     private readonly chainIdSuffix: string;
@@ -51,7 +51,7 @@ export class Manifest {
 
     private locked = false;
 
-    static async forNetwork(provider: zk.Provider): Promise<Manifest> {
+    public static async forNetwork(provider: zk.Provider): Promise<Manifest> {
         const chainId = await getChainId(provider);
         return new Manifest(chainId);
     }
@@ -65,14 +65,14 @@ export class Manifest {
         this.file = path.join(MANIFEST_DEFAULT_DIR, `${networkName}.json`);
     }
 
-    async getAdmin(): Promise<Deployment | undefined> {
+    public async getAdmin(): Promise<Deployment | undefined> {
         return (await this.read()).admin;
     }
 
-    async getDeploymentFromAddress(address: string): Promise<ImplDeployment> {
+    public async getDeploymentFromAddress(address: string): Promise<ImplDeployment> {
         const data = await this.read();
         const deployment = Object.values(data.impls).find(
-            (d) => d?.address === address || d?.allAddresses?.includes(address)
+            (d) => d?.address === address || d?.allAddresses?.includes(address),
         );
 
         if (deployment === undefined) {
@@ -81,7 +81,7 @@ export class Manifest {
         return deployment;
     }
 
-    async getProxyFromAddress(address: string): Promise<ProxyDeployment> {
+    public async getProxyFromAddress(address: string): Promise<ProxyDeployment> {
         const data = await this.read();
         const deployment = data.proxies.find((d) => d?.address === address);
         if (deployment === undefined) {
@@ -90,7 +90,7 @@ export class Manifest {
         return deployment;
     }
 
-    async addProxy(proxy: ProxyDeployment): Promise<void> {
+    public async addProxy(proxy: ProxyDeployment): Promise<void> {
         await this.lockedRun(async () => {
             const data = await this.read();
             const existing = data.proxies.findIndex((p) => p.address === proxy.address);
@@ -110,7 +110,7 @@ export class Manifest {
         await fs.writeFile(this.file, content);
     }
 
-    async read(retries?: number): Promise<ManifestData> {
+    public async read(retries?: number): Promise<ManifestData> {
         const release = this.locked ? undefined : await this.lock(retries);
         try {
             const data = JSON.parse(await this.readFile()) as ManifestData;
@@ -130,15 +130,15 @@ export class Manifest {
         }
     }
 
-    async write(data: ManifestData): Promise<void> {
+    public async write(data: ManifestData): Promise<void> {
         if (!this.locked) {
             throw new ZkSyncUpgradablePluginError('Manifest must be locked');
         }
         const normalized = normalizeManifestData(data);
-        await this.writeFile(JSON.stringify(normalized, null, 2) + '\n');
+        await this.writeFile(`${JSON.stringify(normalized, null, 2)}\n`);
     }
 
-    async lockedRun<T>(cb: () => Promise<T>): Promise<T> {
+    public async lockedRun<T>(cb: () => Promise<T>): Promise<T> {
         if (this.locked) {
             throw new ZkSyncUpgradablePluginError('Manifest is already locked');
         }
@@ -168,7 +168,7 @@ function validateOrUpdateManifestVersion(data: ManifestData): ManifestData {
         throw new ZkSyncUpgradablePluginError('Manifest version is missing');
     } else if (compareVersions(data.manifestVersion, '3.0', '<')) {
         throw new ZkSyncUpgradablePluginError(
-            'Found a manifest file for OpenZeppelin CLI. An automated migration is not yet available.'
+            'Found a manifest file for OpenZeppelin CLI. An automated migration is not yet available.',
         );
     } else if (compareVersions(data.manifestVersion, currentManifestVersion, '<')) {
         return migrateManifest(data);
@@ -203,7 +203,7 @@ function normalizeDeployment<D extends Deployment>(input: D): Deployment;
 function normalizeDeployment<D extends Deployment, K extends keyof D>(input: D, include: K[]): Deployment & Pick<D, K>;
 function normalizeDeployment<D extends Deployment, K extends keyof D>(
     input: D,
-    include: K[] = []
+    include: K[] = [],
 ): Deployment & Pick<D, K> {
     return pick(input, ['address', 'txHash', ...include]);
 }

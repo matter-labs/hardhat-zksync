@@ -148,7 +148,7 @@ describe('INTEGRATION: Reverted with', function () {
             it('non-errors as subject', async function () {
                 await expect(expect(Promise.reject({})).to.be.revertedWith('some reason')).to.be.rejectedWith(
                     AssertionError,
-                    'Expected an Error object'
+                    'Expected an Error object',
                 );
             });
         });

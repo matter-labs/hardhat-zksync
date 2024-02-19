@@ -58,13 +58,13 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     aaTx = {
         ...aaTx,
         from: multisigAddress,
-        gasLimit: gasLimit,
-        gasPrice: gasPrice,
+        gasLimit,
+        gasPrice,
         chainId: (await provider.getNetwork()).chainId,
         nonce: await provider.getTransactionCount(multisigAddress),
         type: 113,
         customData: {
-          gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            gasPerPubdata: zk.utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
         } as zk.types.Eip712Meta,
         value: ethers.BigNumber.from(0),
     };

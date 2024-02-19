@@ -1,5 +1,12 @@
 import { Artifact, Artifacts, HardhatRuntimeEnvironment } from 'hardhat/types';
 import { isFullyQualifiedName } from 'hardhat/utils/contract-names';
+import chalk from 'chalk';
+import { VyperFilesCache, getVyperFilesCachePath } from '@nomiclabs/hardhat-vyper/dist/src/cache';
+import { Parser } from '@nomiclabs/hardhat-vyper/dist/src/parser';
+import { Resolver, ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
+import { TASK_COMPILE_VYPER_READ_FILE } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
+import { areSameBytecodes, encodeArguments } from './utils';
+import { ZkSyncVerifyPluginError } from './errors';
 import {
     MULTIPLE_MATCHING_CONTRACTS,
     CONTRACT_NAME_NOT_FOUND,
@@ -7,21 +14,11 @@ import {
     CONST_ARGS_ARRAY_ERROR,
     PENDING_CONTRACT_INFORMATION_MESSAGE,
 } from './constants';
-import { ZkSyncVerifyPluginError } from './errors';
-import { areSameBytecodes, encodeArguments } from './utils';
-import chalk from 'chalk';
-import { VyperFilesCache, getVyperFilesCachePath } from '@nomiclabs/hardhat-vyper/dist/src/cache';
-import { Parser } from '@nomiclabs/hardhat-vyper/dist/src/parser';
-import { Resolver, ResolvedFile } from '@nomiclabs/hardhat-vyper/dist/src/resolver';
-import { TASK_COMPILE_VYPER_READ_FILE } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { CacheResolveFileInfo } from './types';
 
-export async function inferContractArtifacts(
-    artifacts: Artifacts,
-    deployedBytecode: string
-): Promise<any> {
+export async function inferContractArtifacts(artifacts: Artifacts, deployedBytecode: string): Promise<any> {
     const artifactMatches = [];
     const fqNames = await artifacts.getAllFullyQualifiedNames();
 
@@ -61,14 +58,13 @@ Instead, this name was received: ${contractFQN}`
         if (!(await artifacts.artifactExists(contractFQN))) {
             throw new ZkSyncVerifyPluginError(`The contract ${contractFQN} is not present in your project.`);
         }
-    }
-    else {
+    } else {
         throw new ZkSyncVerifyPluginError(CONTRACT_NAME_NOT_FOUND);
     }
 }
 
 export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    let isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
+    const isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
 
     if (isValidVerification?.errorExists()) {
         throw new ZkSyncVerifyPluginError(isValidVerification.getError());
@@ -77,7 +73,6 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     return true;
 }
 
-
 export async function getDeployArgumentEncoded(constructorArguments: any, artifact: Artifact): Promise<string> {
     if (!Array.isArray(constructorArguments)) {
         if (!constructorArguments.startsWith('0x')) {
@@ -85,15 +80,17 @@ export async function getDeployArgumentEncoded(constructorArguments: any, artifa
         }
         return constructorArguments;
     }
-    return '0x' + (await encodeArguments(artifact.abi, constructorArguments));
+    return `0x${await encodeArguments(artifact.abi, constructorArguments)}`;
 }
 
-export async function getCacheResolvedFileInformation(contractFQN: string, sourceName: string, hre: HardhatRuntimeEnvironment): Promise<CacheResolveFileInfo> {
+export async function getCacheResolvedFileInformation(
+    contractFQN: string,
+    sourceName: string,
+    hre: HardhatRuntimeEnvironment
+): Promise<CacheResolveFileInfo> {
     const vyperFilesCachePath = getVyperFilesCachePath(hre.config.paths);
 
-    let vyperFilesCache = await VyperFilesCache.readFromFile(
-        vyperFilesCachePath
-    );
+    const vyperFilesCache = await VyperFilesCache.readFromFile(vyperFilesCachePath);
 
     const contractCache = vyperFilesCache.getEntries().find((entry) => contractFQN.includes(entry.sourceName));
 
@@ -103,11 +100,8 @@ export async function getCacheResolvedFileInformation(contractFQN: string, sourc
 
     const parser = new Parser(vyperFilesCache);
 
-    const resolver = new Resolver(
-        hre.config.paths.root,
-        parser,
-        (absolutePath: string) =>
-            hre.run(TASK_COMPILE_VYPER_READ_FILE, { absolutePath })
+    const resolver = new Resolver(hre.config.paths.root, parser, (absolutePath: string) =>
+        hre.run(TASK_COMPILE_VYPER_READ_FILE, { absolutePath })
     );
 
     const resolvedFile = await resolver.resolveSourceName(sourceName);
@@ -117,9 +111,9 @@ export async function getCacheResolvedFileInformation(contractFQN: string, sourc
     }
 
     return {
-        resolvedFile: resolvedFile,
-        contractCache: contractCache
-    }
+        resolvedFile,
+        contractCache,
+    };
 }
 
 export async function executeVeificationWithRetry(
@@ -148,9 +142,7 @@ export function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-
 export async function getResolvedFiles(hre: HardhatRuntimeEnvironment): Promise<ResolvedFile[]> {
-
     const resolvedFiles: ResolvedFile[] = [];
     const fqNames = await hre.artifacts.getAllFullyQualifiedNames();
 
@@ -162,4 +154,3 @@ export async function getResolvedFiles(hre: HardhatRuntimeEnvironment): Promise<
 
     return resolvedFiles;
 }
-

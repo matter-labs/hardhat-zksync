@@ -30,7 +30,7 @@ async function main() {
         boxV2Implementation.abi,
         boxV2Implementation.bytecode,
         deployer.zkWallet,
-        deployer.deploymentType
+        deployer.deploymentType,
     );
     const upgradedBox = attachTo.attach(boxBeaconProxy.address);
 

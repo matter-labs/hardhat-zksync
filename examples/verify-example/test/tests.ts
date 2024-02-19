@@ -1,12 +1,16 @@
 import assert from 'assert';
-import {
-    TASK_CHECK_VERIFICATION_STATUS,
-} from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
+import { TASK_CHECK_VERIFICATION_STATUS } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 
 import chalk from 'chalk';
-import { CONTRACT_ALREADY_VERIFIED_ERROR, MOCK_ADDRESS, PRIVATE_KEY, WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR, useEnvironment } from './helpers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { Wallet } from 'zksync-ethers';
+import {
+    CONTRACT_ALREADY_VERIFIED_ERROR,
+    MOCK_ADDRESS,
+    PRIVATE_KEY,
+    WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR,
+    useEnvironment,
+} from './helpers';
 
 describe('verify plugin', async function () {
     const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
@@ -33,13 +37,13 @@ describe('verify plugin', async function () {
         beforeEach('Deploy Greeter contract', async function () {
             const contractName = 'Greeter';
             const constructorArgs = 'Hi there!';
-           
+
             const wallet = new Wallet(PRIVATE_KEY);
             const deployer = new Deployer(this.env, wallet);
 
             const artifact = await deployer.loadArtifact(contractName);
             const contract = await deployer.deploy(artifact, [constructorArgs]);
-    
+
             this.deployedAddress = contract.address;
             console.info(chalk.green(`${contractName} was deployed to ${this.deployedAddress}`));
 
@@ -54,7 +58,7 @@ describe('verify plugin', async function () {
                 constructorArguments: constructorArgs,
             });
 
-            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
             assert.equal(success, true);
         });
@@ -122,7 +126,12 @@ describe('verify plugin', async function () {
             const deployer = new Deployer(this.env, wallet);
 
             const artifact = await deployer.loadArtifact(contractName);
-            const contract = await deployer.deploy(artifact, ['ContractName', 'ContractSymbol', MOCK_ADDRESS, [MOCK_ADDRESS, MOCK_ADDRESS]]);
+            const contract = await deployer.deploy(artifact, [
+                'ContractName',
+                'ContractSymbol',
+                MOCK_ADDRESS,
+                [MOCK_ADDRESS, MOCK_ADDRESS],
+            ]);
 
             this.deployedAddress = contract.address;
             console.info(chalk.green(`${contractName} was deployed to ${this.deployedAddress}`));
@@ -138,7 +147,7 @@ describe('verify plugin', async function () {
                 constructorArguments: constructorArgs,
             });
 
-            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: verificationId });
+            const success = await this.env.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
 
             assert.equal(success, true);
         });

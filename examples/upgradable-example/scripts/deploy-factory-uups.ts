@@ -6,7 +6,7 @@ import * as hre from 'hardhat';
 
 async function main() {
     const contractName = 'FactoryUups';
-    console.info(chalk.yellow('Deploying ' + contractName + '...'));
+    console.info(chalk.yellow(`Deploying ${contractName}...`));
 
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0");
@@ -20,8 +20,10 @@ async function main() {
 
     factory.connect(zkWallet);
     const number = await factory.getNumberOfDeployedContracts();
-    if(number===0){
-        throw new Error("Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.")
+    if (number === 0) {
+        throw new Error(
+            'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
+        );
     }
 }
 

@@ -1,17 +1,17 @@
-import { MaybeSolcOutput } from '../interfaces';
 import { keccak256 } from 'ethereumjs-util';
 import { Interface } from '@ethersproject/abi';
 import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
 import { HardhatRuntimeEnvironment, SolcConfig } from 'hardhat/types';
 import { ethers } from 'ethers';
+import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import {
     TOPIC_LOGS_NOT_FOUND_ERROR,
     ZKSOLC_ARTIFACT_FORMAT_VERSION,
     ZKVYPER_ARTIFACT_FORMAT_VERSION,
 } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
+import { MaybeSolcOutput } from '../interfaces';
 
 export type ContractAddressOrInstance = string | { address: string };
 
@@ -26,7 +26,7 @@ export function getContractAddress(addressOrInstance: ContractAddressOrInstance)
 export function getInitializerData(
     contractInterface: Interface,
     args: unknown[],
-    initializer?: string | false
+    initializer?: string | false,
 ): string {
     if (initializer === false) {
         return '0x';
@@ -73,8 +73,8 @@ export async function getContractCreationTxHash(provider: zk.Provider, address: 
     const params = {
         fromBlock: 0,
         toBlock: 'latest',
-        address: address,
-        topics: ['0x' + keccak256(Buffer.from(topic)).toString('hex')],
+        address,
+        topics: [`0x${keccak256(Buffer.from(topic)).toString('hex')}`],
     };
 
     const logs = await provider.getLogs(params);
@@ -97,25 +97,26 @@ export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
 export function mapValues<V, W>(obj: Record<string, V>, fn: (value: V) => W): Record<string, W> {
     const res: Partial<Record<string, W>> = {};
     for (const k in obj) {
+        if (!k) continue;
         res[k] = fn(obj[k]);
     }
     return res as Record<string, W>;
 }
 
 export function isFullZkSolcOutput(output: MaybeSolcOutput | undefined): boolean {
-    if (output?.contracts == undefined || output?.sources == undefined) {
+    if (output?.contracts === undefined || output?.sources === undefined) {
         return false;
     }
 
     for (const fileName of Object.keys(output.contracts)) {
         const file = output.contracts[fileName];
-        if (file == undefined) {
+        if (file === undefined) {
             return false;
         }
     }
 
     for (const file of Object.values(output.sources)) {
-        if (file?.ast == undefined || file?.id == undefined) {
+        if (file?.ast === undefined || file?.id === undefined) {
             return false;
         }
     }
@@ -128,7 +129,7 @@ export function isNullish(value: unknown): value is null | undefined {
 }
 
 export function extendCompilerOutputSelection(compiler: SolcConfig) {
-    if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o == 'storageLayout')) {
+    if (!compiler.settings.outputSelection['*']['*'].find((o: string) => o === 'storageLayout')) {
         compiler.settings.outputSelection['*']['*'].push('storageLayout');
     }
 }
@@ -136,7 +137,6 @@ export function extendCompilerOutputSelection(compiler: SolcConfig) {
 export function convertGasPriceToEth(gasPrice: ethers.BigNumber): string {
     return ethers.utils.formatEther(gasPrice.toString());
 }
-
 
 export async function loadArtifact(
     hre: HardhatRuntimeEnvironment,

@@ -22,8 +22,10 @@ async function main() {
 
     upgradedFactory.connect(zkWallet);
     const number = await factory.getNumberOfDeployedContracts();
-    if(number===0){
-        throw new Error("Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.")
+    if (number === 0) {
+        throw new Error(
+            'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
+        );
     }
 }
 

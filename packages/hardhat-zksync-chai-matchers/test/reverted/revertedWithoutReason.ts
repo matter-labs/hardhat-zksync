@@ -120,7 +120,7 @@ describe('INTEGRATION: Reverted without reason', function () {
             it('non-errors as subject', async function () {
                 await expect(expect(Promise.reject({})).to.be.revertedWithoutReason()).to.be.rejectedWith(
                     AssertionError,
-                    'Expected an Error object'
+                    'Expected an Error object',
                 );
             });
         });

@@ -10,7 +10,7 @@ import chalk from 'chalk';
 // In terms of presentation it's mostly copied from `001_deploy.ts`, so this example acts more like an integration test
 // for plugins/server capabilities.
 export default async function (hre: HardhatRuntimeEnvironment) {
-    //return;
+    // return;
     console.info(chalk.yellow(`Running deploy script for the Factory contract`));
 
     // Initialize an Ethereum wallet.
@@ -41,7 +41,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Call the deployed contract.
     const greetingFromContract = await factoryContract.getFooName();
-    if (greetingFromContract == 'Foo') {
+    if (greetingFromContract === 'Foo') {
         console.info(chalk.green(`Successful greeting from the contract!`));
     } else {
         throw new Error(`Contract returned unexpected greeting: ${greetingFromContract}`);

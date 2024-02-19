@@ -1,5 +1,6 @@
 import path from 'path';
 import fse from 'fs-extra';
+import chalk from 'chalk';
 import { download, getLatestRelease, getNodeUrl } from './utils';
 import { ZkSyncNodePluginError } from './errors';
 import {
@@ -12,7 +13,6 @@ import {
     ZKNODE_BIN_REPOSITORY,
     ZKNODE_BIN_REPOSITORY_NAME,
 } from './constants';
-import chalk from 'chalk';
 
 export class RPCServerDownloader {
     private readonly _binaryDir: string;
@@ -30,11 +30,11 @@ export class RPCServerDownloader {
         if (force) {
             const releaseTag = this.isLatestTag()
                 ? await getLatestRelease(
-                    ZKNODE_BIN_OWNER,
-                    ZKNODE_BIN_REPOSITORY_NAME,
-                    USER_AGENT,
-                    DEFAULT_TIMEOUT_MILISECONDS,
-                )
+                      ZKNODE_BIN_OWNER,
+                      ZKNODE_BIN_REPOSITORY_NAME,
+                      USER_AGENT,
+                      DEFAULT_TIMEOUT_MILISECONDS,
+                  )
                 : this._tag;
             await this._download(releaseTag);
             return;
@@ -42,19 +42,19 @@ export class RPCServerDownloader {
 
         if (this.isLatestTag()) {
             if (!(await this._isLatestReleaseInfoValid())) {
-                const latestTag = await getLatestRelease(
+                const latestTagInner = await getLatestRelease(
                     ZKNODE_BIN_OWNER,
                     ZKNODE_BIN_REPOSITORY_NAME,
                     USER_AGENT,
                     DEFAULT_TIMEOUT_MILISECONDS,
                 );
 
-                if (await this._isBinaryPathExists(latestTag)) {
-                    await this._postProcessDownload(latestTag);
+                if (await this._isBinaryPathExists(latestTagInner)) {
+                    await this._postProcessDownload(latestTagInner);
                     return;
                 }
 
-                await this._download(latestTag);
+                await this._download(latestTagInner);
                 return;
             }
 

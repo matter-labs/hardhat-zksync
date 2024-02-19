@@ -17,7 +17,7 @@ export function useEnvironmentWithLocalSetup(fixtureProjectName: string, network
         process.env.HARDHAT_NETWORK = networkName;
 
         this.env = require('hardhat');
-        this.env.run(TASK_CLEAN);
+        const _ = await this.env.run(TASK_CLEAN);
     });
 
     after(async function () {
