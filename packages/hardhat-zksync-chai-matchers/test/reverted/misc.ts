@@ -5,7 +5,7 @@ import { getAddressOf, isWalletOrContract } from '../../src/internal/misc/accoun
 import { assertIsNotNull } from '../../src/internal/utils';
 
 class TestError extends Error {
-    private _data?: any;
+    public _data?: any;
 
     constructor(message: string, data?: any) {
         super(message);

@@ -21,3 +21,9 @@ export class ZkSyncChaiMatchersPluginAssertionError extends HardhatPluginError {
         super(PLUGIN_NAME, `Assertion error: ${message}`);
     }
 }
+
+export class ZkSyncChaiMatchersNonChainableMatcherError extends HardhatPluginError {
+    constructor(matcherName: string) {
+        super(PLUGIN_NAME, `${matcherName} is not chainable.`);
+    }
+}

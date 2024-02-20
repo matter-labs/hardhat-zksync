@@ -833,7 +833,7 @@
   uid ""
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "0.2.2"
+  version "0.2.3"
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@matterlabs/hardhat-zksync-deploy" "^0.7.0"

@@ -4,15 +4,18 @@ import * as zk from 'zksync-ethers';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
+import { CHANGE_TOKEN_BALANCES_MATCHER, CHANGE_TOKEN_BALANCE_MATCHER } from '../constants';
 import { Account, getAddressOf } from './misc/account';
+
+import { preventAsyncMatcherChaining } from './utils';
 
 interface Token extends zk.Contract {
     balanceOf(address: string, overrides?: any): Promise<BigNumber>;
 }
 
-export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
+export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
-        'changeTokenBalance',
+        CHANGE_TOKEN_BALANCE_MATCHER,
         function (this: any, token: Token, account: Account | string, balanceChange: BigNumberish) {
             const { BigNumber } = require('ethers');
 
@@ -23,7 +26,9 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            checkToken(token, 'changeTokenBalance');
+            preventAsyncMatcherChaining(this, CHANGE_TOKEN_BALANCE_MATCHER, chaiUtils);
+
+            checkToken(token, CHANGE_TOKEN_BALANCE_MATCHER);
 
             const checkBalanceChange = ([actualChange, address, tokenDescription]: [BigNumber, string, string]) => {
                 const assert = buildAssert(negated, checkBalanceChange);
@@ -49,7 +54,7 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
     );
 
     Assertion.addMethod(
-        'changeTokenBalances',
+        CHANGE_TOKEN_BALANCES_MATCHER,
         function (this: any, token: Token, accounts: Array<Account | string>, balanceChanges: BigNumberish[]) {
             const { BigNumber } = require('ethers');
 
@@ -60,7 +65,9 @@ export function supportChangeTokenBalance(Assertion: Chai.AssertionStatic) {
                 subject = subject();
             }
 
-            checkToken(token, 'changeTokenBalances');
+            preventAsyncMatcherChaining(this, CHANGE_TOKEN_BALANCES_MATCHER, chaiUtils);
+
+            checkToken(token, CHANGE_TOKEN_BALANCES_MATCHER);
 
             if (accounts.length !== balanceChanges.length) {
                 throw new Error(
