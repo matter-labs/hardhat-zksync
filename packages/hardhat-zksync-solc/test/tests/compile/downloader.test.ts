@@ -259,13 +259,13 @@ describe('Downloader', async () => {
 
             sinon.assert.calledOnce((downloader as any)._postProcessCompilerDownload);
             sinon.assert.calledOnce((downloader as any)._verifyCompilerAndSetVersionIfNeeded);
-            sinon.assert.calledWithExactly(
-                consoleInfoSpy,
+            sinon.assert.calledWith(
+                consoleInfoSpy.firstCall,
                 '\u001b[33mDownloading zksolc from the remote origin\u001b[39m',
             );
 
             sinon.assert.calledWithExactly(
-                consoleInfoSpy,
+                consoleInfoSpy.secondCall,
                 '\u001b[32mzksolc from the remote origin successfully downloaded\u001b[39m',
             );
         });
