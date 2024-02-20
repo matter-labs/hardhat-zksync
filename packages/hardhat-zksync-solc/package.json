@@ -16,10 +16,10 @@
     "zkSync"
   ],
   "scripts": {
-    "lint": "yarn eslint",
-    "prettier:check": "yarn prettier --check",
-    "lint:fix": "yarn eslint --fix",
-    "fmt": "yarn prettier --write",
+    "lint": "pnpm eslint",
+    "prettier:check": "pnpm prettier --check",
+    "lint:fix": "pnpm eslint --fix",
+    "fmt": "pnpm prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
     "test": "c8 mocha --recursive \"test/tests/**/*.ts\" --exit",
@@ -38,12 +38,10 @@
     "dockerode": "^4.0.2",
     "fs-extra": "^11.1.1",
     "chai": "^4.3.6",
-    "undici": "^5.14.0",
+    "undici": "^5.28.3",
     "debug": "^4.3.4",
     "semver": "^7.5.1",
-    "proper-lockfile": "^4.1.2",
-    "sinon": "^17.0.1",
-    "sinon-chai": "^3.7.0"
+    "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -52,6 +50,10 @@
     "@types/node": "^18.11.17",
     "@types/semver": "^7.3.9",
     "@types/fs-extra": "^5.1.0",
+    "@types/sinon": "^17.0.1",
+    "@types/sinon-chai": "^3.2.12",
+    "@types/debug": "^4.1.12",
+    "@types/proper-lockfile": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "eslint": "^8.54.0",
@@ -65,6 +67,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
+    "sinon": "^17.0.1",
+    "sinon-chai": "^3.7.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {

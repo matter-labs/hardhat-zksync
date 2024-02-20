@@ -2,6 +2,8 @@ import assert from 'assert';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { expect } from 'chai';
 
+import '@matterlabs/hardhat-zksync-chai-matchers/src/index';
+
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { TASK_DEPLOY_ZKSYNC } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
 import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
