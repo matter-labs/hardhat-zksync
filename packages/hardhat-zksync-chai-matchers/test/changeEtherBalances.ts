@@ -44,6 +44,23 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
             txGasFees = gasPrice * gasUsed;
         });
 
+        it('changeEtherBalances: should throw if chained to another non-chainable method', async function () {
+            try {
+                // eslint-disable-next-line
+                expect(
+                    await sender.transfer({
+                        to: receiver.address,
+                        amount: 200,
+                    }),
+                )
+                    .to.nonChainableMatcher()
+                    .and.to.changeEtherBalances([sender, receiver], [-200, '200']);
+            } catch (e: any) {
+                expect(e.message).to.match(/changeEtherBalances is not chainable./);
+                return;
+            }
+        });
+
         describe('Transaction Callback', () => {
             describe('Change balances, one account, one contract', () => {
                 it('Should pass when all expected balance changes are equal to actual values', async () => {
