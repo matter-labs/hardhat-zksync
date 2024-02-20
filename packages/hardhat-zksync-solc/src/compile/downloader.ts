@@ -166,7 +166,7 @@ export class ZksolcCompilerDownloader {
         try {
             console.info(chalk.yellow(`Downloading zksolc ${!this._configCompilerPath ? this._version : "from the remote origin"}`));
             await this._downloadCompiler();
-            console.info(chalk.green(`zksolc ${!this._configCompilerPath ? 'version' + this._version : 'from the remote origin'} successfully downloaded`));
+            console.info(chalk.green(`zksolc ${!this._configCompilerPath ? 'version ' + this._version : 'from the remote origin'} successfully downloaded`));
         } catch (e: any) {
             throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
         }
