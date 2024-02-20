@@ -152,7 +152,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
         if (!isZksolcDownloaded) {
             await zksolcDownloader.downloadCompiler();
         }
-        
+
         hre.config.zksolc.settings.compilerPath = zksolcDownloader.getCompilerPath();
         hre.config.zksolc.version = zksolcDownloader.getVersion();
     });

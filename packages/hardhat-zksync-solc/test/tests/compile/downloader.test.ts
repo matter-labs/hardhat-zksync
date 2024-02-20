@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { ZksolcCompilerDownloader } from '../../../src/compile/downloader';
 import fse from 'fs-extra';
+import { ZksolcCompilerDownloader } from '../../../src/compile/downloader';
 import { COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, COMPILER_VERSION_RANGE_ERROR } from '../../../src/constants';
 
 describe('Downloader', async () => {
@@ -66,11 +66,7 @@ describe('Downloader', async () => {
         });
 
         it('should return the compiler path is not provided', async () => {
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                '1.3.23',
-                '',
-                'cache/',
-            );
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.3.23', '', 'cache/');
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             const result = downloader.getCompilerPath();
@@ -80,7 +76,9 @@ describe('Downloader', async () => {
 
     describe('isCompilerDownloaded', async () => {
         beforeEach(() => {
-            sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves({ latest: '1.1.0', minVersion: '0.0.1' });
+            sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves({ latest: '1.1.0', minVersion: '0.0.1' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
         });
 
@@ -90,13 +88,13 @@ describe('Downloader', async () => {
                 'path/zksolc',
                 'zksolc/0.1.0',
             );
-            
+
             sandbox.stub(downloader as any, '_verifyCompilerAndSetVersionIfNeeded').resolves();
             sandbox.stub(fse, 'pathExists').resolves(true);
 
             const result = await downloader.isCompilerDownloaded();
 
-            expect(result).to.be.true;
+            expect(result).to.be.equal(true);
         });
 
         it('should return true if the compiler is downloaded and verified when the compiler path is a URL', async () => {
@@ -105,13 +103,13 @@ describe('Downloader', async () => {
                 'http://example.com/zksolc',
                 'zksolc/0.1.0',
             );
-            
+
             sandbox.stub(downloader as any, '_verifyCompilerAndSetVersionIfNeeded').resolves();
             sandbox.stub(fse, 'pathExists').resolves(true);
 
             const result = await downloader.isCompilerDownloaded();
 
-            expect(result).to.be.true;
+            expect(result).to.be.equal(true);
         });
 
         it('should return false if the compiler is not downloaded', async () => {
@@ -120,13 +118,15 @@ describe('Downloader', async () => {
                 'path/zksolc',
                 'zksolc/0.1.0',
             );
-            
+
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             try {
-            const _ = await downloader.isCompilerDownloaded();
+                const _ = await downloader.isCompilerDownloaded();
             } catch (e: any) {
-                expect(e.message).to.equal('The zksolc binary at path path/zksolc is corrupted. Please delete it and try again.');
+                expect(e.message).to.equal(
+                    'The zksolc binary at path path/zksolc is corrupted. Please delete it and try again.',
+                );
             }
         });
 
@@ -136,18 +136,19 @@ describe('Downloader', async () => {
                 'http://example.com/zksolc',
                 'zksolc/',
             );
-        
+
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             const result = await downloader.isCompilerDownloaded();
-            expect(result).to.be.false;
+            expect(result).to.be.equal(false);
         });
     });
 
-    describe('downloadCompiler', function() {
-        it('should download the compiler if the version info is not available', async function() {
-
-            const compilerStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves(undefined);
+    describe('downloadCompiler', function () {
+        it('should download the compiler if the version info is not available', async function () {
+            const compilerStub = sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves(undefined);
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(true);
             sandbox.stub(ZksolcCompilerDownloader as any, '_downloadCompilerVersionInfo').resolves();
             compilerStub.resolves({ latest: '1.3.50', minVersion: '1.3.16' });
@@ -172,10 +173,12 @@ describe('Downloader', async () => {
             sinon.assert.calledOnce((downloader as any)._verifyCompilerAndSetVersionIfNeeded);
         });
 
-        it('should throw an error if the version info file is not found', async function() {
-            const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves({ latest: '1.3.50', minVersion: '1.3.16' });
+        it('should throw an error if the version info file is not found', async function () {
+            const compilerInfoStub = sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves({ latest: '1.3.50', minVersion: '1.3.16' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
-            
+
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
                 '1.3.21',
                 '',
@@ -186,14 +189,15 @@ describe('Downloader', async () => {
                 compilerInfoStub.resolves(undefined);
                 sandbox.stub(ZksolcCompilerDownloader as any, '_downloadCompilerVersionInfo').resolves();
                 await downloader.downloadCompiler();
-            }
-            catch (e: any) {
+            } catch (e: any) {
                 expect(e.message).to.equal(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
         });
 
-        it('should throw an error if the compiler version is not in the specified range', async function() {
-            const compilerVersionInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves({ latest: '1.3.25', minVersion: '1.3.18' });
+        it('should throw an error if the compiler version is not in the specified range', async function () {
+            const compilerVersionInfoStub = sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves({ latest: '1.3.25', minVersion: '1.3.18' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
@@ -202,7 +206,7 @@ describe('Downloader', async () => {
                 'zksolc/',
             );
 
-            try{
+            try {
                 compilerVersionInfoStub.resolves({ latest: '1.3.26', minVersion: '1.3.20' });
                 await downloader.downloadCompiler();
             } catch (e: any) {
@@ -210,8 +214,10 @@ describe('Downloader', async () => {
             }
         });
 
-        it('should download the compiler and perform post-processing and verification', async function() {
-            sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves({ latest: '1.3.25', minVersion: '1.3.0' });
+        it('should download the compiler and perform post-processing and verification', async function () {
+            sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves({ latest: '1.3.25', minVersion: '1.3.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
@@ -219,7 +225,7 @@ describe('Downloader', async () => {
                 '',
                 'zksolc/',
             );
-            
+
             sandbox.stub(downloader as any, '_downloadCompiler').resolves();
             sandbox.stub(downloader as any, '_postProcessCompilerDownload').resolves();
             sandbox.stub(downloader as any, '_verifyCompilerAndSetVersionIfNeeded').resolves();
@@ -229,19 +235,18 @@ describe('Downloader', async () => {
 
             sinon.assert.calledOnce((downloader as any)._postProcessCompilerDownload);
             sinon.assert.calledOnce((downloader as any)._verifyCompilerAndSetVersionIfNeeded);
-            sinon.assert.calledWithExactly(
-                consoleInfoSpy,
-                '\u001b[33mDownloading zksolc 1.3.21\u001b[39m',
-            );
+            sinon.assert.calledWith(consoleInfoSpy.firstCall, sinon.match('Downloading zksolc 1.3.21'));
 
-            sinon.assert.calledWithExactly(
-                consoleInfoSpy,
-                '\u001b[32mzksolc version 1.3.21 successfully downloaded\u001b[39m',
+            sinon.assert.calledWith(
+                consoleInfoSpy.secondCall,
+                sinon.match('zksolc version 1.3.21 successfully downloaded'),
             );
         });
 
-        it('should download the compiler and perform post-processing and verification when compiler is provided with URL', async function() {
-            sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo').resolves({ latest: '1.3.25', minVersion: '1.3.0' });
+        it('should download the compiler and perform post-processing and verification when compiler is provided with URL', async function () {
+            sandbox
+                .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
+                .resolves({ latest: '1.3.25', minVersion: '1.3.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
@@ -259,14 +264,11 @@ describe('Downloader', async () => {
 
             sinon.assert.calledOnce((downloader as any)._postProcessCompilerDownload);
             sinon.assert.calledOnce((downloader as any)._verifyCompilerAndSetVersionIfNeeded);
-            sinon.assert.calledWith(
-                consoleInfoSpy.firstCall,
-                '\u001b[33mDownloading zksolc from the remote origin\u001b[39m',
-            );
+            sinon.assert.calledWith(consoleInfoSpy.firstCall, sinon.match('Downloading zksolc from the remote origin'));
 
-            sinon.assert.calledWithExactly(
+            sinon.assert.calledWith(
                 consoleInfoSpy.secondCall,
-                '\u001b[32mzksolc from the remote origin successfully downloaded\u001b[39m',
+                sinon.match('zksolc from the remote origin successfully downloaded'),
             );
         });
     });

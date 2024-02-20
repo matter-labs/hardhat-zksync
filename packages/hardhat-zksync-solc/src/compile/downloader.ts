@@ -104,7 +104,11 @@ export class ZksolcCompilerDownloader {
             return this._configCompilerPath;
         }
 
-        return path.join(this._compilersDirectory, 'zksolc', `zksolc-${this._configCompilerPath ? 'remote' : 'v' + this._version}${salt ? '-' : ''}${salt}`);
+        return path.join(
+            this._compilersDirectory,
+            'zksolc',
+            `zksolc-${this._configCompilerPath ? 'remote' : `v${this._version}`}${salt ? '-' : ''}${salt}`,
+        );
     }
 
     public async isCompilerDownloaded(): Promise<boolean> {
@@ -114,8 +118,8 @@ export class ZksolcCompilerDownloader {
         }
 
         if (this._configCompilerPath && this._isCompilerPathURL) {
-            const compilerPath = this.getCompilerPath();
-            if (await fsExtra.pathExists(compilerPath)) {
+            const compilerPathFromUrl = this.getCompilerPath();
+            if (await fsExtra.pathExists(compilerPathFromUrl)) {
                 await this._verifyCompilerAndSetVersionIfNeeded();
                 return true;
             }
@@ -164,9 +168,19 @@ export class ZksolcCompilerDownloader {
         }
 
         try {
-            console.info(chalk.yellow(`Downloading zksolc ${!this._configCompilerPath ? this._version : "from the remote origin"}`));
+            console.info(
+                chalk.yellow(
+                    `Downloading zksolc ${!this._configCompilerPath ? this._version : 'from the remote origin'}`,
+                ),
+            );
             await this._downloadCompiler();
-            console.info(chalk.green(`zksolc ${!this._configCompilerPath ? 'version ' + this._version : 'from the remote origin'} successfully downloaded`));
+            console.info(
+                chalk.green(
+                    `zksolc ${
+                        !this._configCompilerPath ? `version ${this._version}` : 'from the remote origin'
+                    } successfully downloaded`,
+                ),
+            );
         } catch (e: any) {
             throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
         }
