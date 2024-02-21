@@ -4,12 +4,15 @@ import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
+import { CHANGE_ETHER_BALANCES_MATCHER } from '../constants';
 import { getAddressOf, Account } from './misc/account';
 import { BalanceChangeOptions, getAddresses, getBalances } from './misc/balance';
 
-export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
+import { preventAsyncMatcherChaining } from './utils';
+
+export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
-        'changeEtherBalances',
+        CHANGE_ETHER_BALANCES_MATCHER,
         function (
             this: any,
             accounts: Array<Account | string>,
@@ -22,6 +25,8 @@ export function supportChangeEtherBalances(Assertion: Chai.AssertionStatic) {
             const { BigNumber } = require('ethers');
 
             const negated = this.__flags.negate;
+
+            preventAsyncMatcherChaining(this, CHANGE_ETHER_BALANCES_MATCHER, chaiUtils);
 
             let subject = this._obj;
             if (typeof subject === 'function') {

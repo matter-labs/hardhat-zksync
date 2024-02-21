@@ -1,4 +1,4 @@
-import type { BigNumber } from 'ethers';
+import { BigNumber } from 'ethers';
 import { AssertionError } from 'chai';
 
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';

@@ -2,6 +2,8 @@ import { AssertionError } from 'chai';
 
 import { buildAssert, Ssfi } from '@nomicfoundation/hardhat-chai-matchers/utils';
 
+import { preventAsyncMatcherChaining } from '../utils';
+import { REVERTED_WITH_CUSTOM_ERROR_MATCHER } from '../../constants';
 import { decodeReturnData, getReturnDataFromError } from './utils';
 
 export const REVERTED_WITH_CUSTOM_ERROR_CALLED = 'customErrorAssertionCalled';
@@ -12,9 +14,9 @@ interface CustomErrorAssertionData {
     customError: CustomError;
 }
 
-export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, utils: Chai.ChaiUtils) {
+export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
-        'revertedWithCustomError',
+        REVERTED_WITH_CUSTOM_ERROR_MATCHER,
         function (this: any, contract: any, expectedCustomErrorName: string) {
             const negated = this.__flags.negate;
 
@@ -35,6 +37,8 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             if (expectedCustomError === undefined) {
                 throw new Error(`The given contract doesn't have a custom error named '${expectedCustomErrorName}'`);
             }
+
+            preventAsyncMatcherChaining(this, REVERTED_WITH_CUSTOM_ERROR_MATCHER, chaiUtils);
 
             const onSuccess = () => {
                 const assert = buildAssert(negated, onSuccess);
@@ -108,7 +112,7 @@ export function supportRevertedWithCustomError(Assertion: Chai.AssertionStatic, 
             const derivedPromise = Promise.resolve(this._obj).then(onSuccess, onError);
 
             // needed for .withArgs
-            utils.flag(this, REVERTED_WITH_CUSTOM_ERROR_CALLED, true);
+            chaiUtils.flag(this, REVERTED_WITH_CUSTOM_ERROR_CALLED, true);
             this.promise = derivedPromise;
 
             this.then = derivedPromise.then.bind(derivedPromise);
