@@ -1,13 +1,13 @@
 import "hardhat/types/runtime";
 
-import type {
-  HardhatViemPublicClient,
-} from "./types";
+import type {PublicClient, PublicClientConfig} from "viem";
 
 declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
-    viem: {
-      getPublicClient(): Promise<HardhatViemPublicClient>;
+    zkViem: {
+      getPublicClient(
+        publicClientConfig?: Partial<PublicClientConfig>
+      ): Promise<PublicClient>;
     };
   }
 }
