@@ -13,7 +13,7 @@ export const USER_AGENT =
 export const ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION = 'remote';
 
 export const defaultZkSolcConfig: ZkSolcConfig = {
-    version: 'latest',
+    version: 'latest' || ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION,
     compilerSource: 'binary',
     settings: {
         optimizer: {

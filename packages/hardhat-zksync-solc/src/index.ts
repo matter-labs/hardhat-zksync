@@ -65,6 +65,9 @@ const zkVmSolcCompilerDownloaderMutex = new Mutex();
 const zkSolcCompilerDownloaderMutex = new Mutex();
 
 extendConfig((config, userConfig) => {
+    defaultZkSolcConfig.version = userConfig.zksolc?.settings?.compilerPath
+        ? ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION
+        : 'latest';
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
     config.zksolc.settings.optimizer = {
@@ -141,10 +144,9 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
     const compilersCache = await getCompilersDir();
 
     await zkSolcCompilerDownloaderMutex.use(async () => {
-        const compilerPath = hre.config.zksolc.settings.compilerPath ?? '';
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-            compilerPath ? ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION : hre.config.zksolc.version,
-            compilerPath,
+            hre.config.zksolc.version,
+            hre.config.zksolc.settings.compilerPath ?? '',
             compilersCache,
         );
 

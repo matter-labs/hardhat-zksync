@@ -56,13 +56,23 @@ export class ZksolcCompilerDownloader {
                 throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
 
+            if (version !== ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION && configCompilerPath) {
+                throw new ZkSyncSolcPluginError(
+                    `The zksolc compiler versions in the hardhat are not supported for remote origin. Please don't specify version or use '${ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION}' as a version.`,
+                );
+            }
+
+            if (version === 'remote' && !configCompilerPath) {
+                throw new ZkSyncSolcPluginError(`The zksolc compiler path is not specified for remote origin.`);
+            }
+
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
-            } else if (!configCompilerPath && !isVersionInRange(version, compilerVersionInfo)) {
+            } else if (version !== 'remote' && !isVersionInRange(version, compilerVersionInfo)) {
                 throw new ZkSyncSolcPluginError(
                     COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
                 );
-            } else if (!configCompilerPath) {
+            } else if (version !== 'remote') {
                 console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
             }
 
