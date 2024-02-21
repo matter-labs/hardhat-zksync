@@ -89,6 +89,22 @@ describe('Downloader', async () => {
             expect(version).to.equal('remote');
         });
 
+        it('create downloader with remote version with URL compiler path', async () => {
+            const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
+            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+                'remote',
+                'http://example.com/zksolc',
+                'cache/',
+            );
+            const compilerPath = downloader.getCompilerPath();
+            const version = downloader.getVersion();
+
+            expect(compilerPath).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d');
+            expect(version).to.equal('remote');
+        });
+
         it('create downloader with remote version and with without compiler path', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
             compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
