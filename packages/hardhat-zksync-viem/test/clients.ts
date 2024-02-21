@@ -4,7 +4,7 @@ import * as chains from "viem/chains";
 import {innerGetPublicClient} from '../src/internal/clients'
 import { assert } from "chai";
 
-describe.only("clients",() => {
+describe("clients",() => {
     describe("innerGetPublicClient", () => {
         const provider = new ZkSyncProviderAdapter(new Provider());
 
@@ -28,7 +28,6 @@ describe.only("clients",() => {
       
           it("should return a public client with default parameters for development networks", async () => {
             const client = await innerGetPublicClient(provider, chains.hardhat);
-      
             assert.equal(client.pollingInterval, 50);
             assert.equal(client.cacheTime, 0);
           });

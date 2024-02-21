@@ -5,12 +5,13 @@ import "./internal/type-extensions";
 import {
   getPublicClient,
 } from "./internal/clients";
-import "./type-extensions";
-import "./internal/tasks";
 
 extendEnvironment((hre) => {
+  const { provider } = hre.network;
+
+  // TODO: Lazy object
   hre.zkViem = {
     getPublicClient: (publicClientConfig) =>
-      getPublicClient(hre.network.provider, publicClientConfig),
+      getPublicClient(provider, publicClientConfig),
   };
 });

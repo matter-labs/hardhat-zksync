@@ -36,7 +36,7 @@ export async function getChain(provider: EthereumProvider): Promise<Chain> {
     return matchingChains[0];
 }
 
-// TODO: Hardhat + Era Test Node / Local Setup
+// TODO: Hardhat + Era Test Node + Local Setup
 export function isDevelopmentNetwork(chainId: number) {
     return chainId === 31337;
 }
