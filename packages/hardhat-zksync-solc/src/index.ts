@@ -41,7 +41,7 @@ import {
     COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS,
     MISSING_LIBRARY_LINK,
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
-    ZKSOLC_COMPILER_PATH_VERSION,
+    ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -143,7 +143,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
     await zkSolcCompilerDownloaderMutex.use(async () => {
         const compilerPath = hre.config.zksolc.settings.compilerPath ?? '';
         const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-            compilerPath ? ZKSOLC_COMPILER_PATH_VERSION : hre.config.zksolc.version,
+            compilerPath ? ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION : hre.config.zksolc.version,
             compilerPath,
             compilersCache,
         );

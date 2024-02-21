@@ -24,6 +24,7 @@ import {
     ZKSOLC_BIN_OWNER,
     ZKSOLC_BIN_REPOSITORY_NAME,
     USER_AGENT,
+    ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -107,7 +108,9 @@ export class ZksolcCompilerDownloader {
         return path.join(
             this._compilersDirectory,
             'zksolc',
-            `zksolc-${this._configCompilerPath ? 'remote' : `v${this._version}`}${salt ? '-' : ''}${salt}`,
+            `zksolc-${
+                this._configCompilerPath ? `${ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION}` : `v${this._version}`
+            }${salt ? '-' : ''}${salt}`,
         );
     }
 
