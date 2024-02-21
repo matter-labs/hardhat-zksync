@@ -14,7 +14,7 @@ import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import chalk from 'chalk';
 import { CompilationJob } from 'hardhat/types';
-import { ZkArtifacts } from './artifacts';
+import { PROXY_NAME, ProxtContractOutput, ZkArtifacts, proxyNames } from './artifacts';
 import { compile } from './compile';
 import { checkSupportedVyperVersions, pluralize } from './utils';
 import {
@@ -78,10 +78,17 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
     delete compilerOutput.zk_version;
     delete compilerOutput.long_version;
 
-    if (compilerOutput.__VYPER_FORWARDER_CONTRACT) {
-        (hre.artifacts as ZkArtifacts).forwarderOutput = compilerOutput.__VYPER_FORWARDER_CONTRACT;
-        delete compilerOutput.__VYPER_FORWARDER_CONTRACT;
-    }
+    proxyNames.forEach((proxyName) => {
+        if (compilerOutput[proxyName]) {
+            const proxyContractOutput: ProxtContractOutput = {
+                proxyName: proxyName as PROXY_NAME,
+                output: compilerOutput[proxyName],
+            };
+
+            (hre.artifacts as ZkArtifacts).proxyContractOutput = proxyContractOutput;
+            delete compilerOutput[proxyName];
+        }
+    });
 
     (hre.artifacts as ZkArtifacts).compilerOutput = compilerOutput;
 

@@ -7,25 +7,37 @@ import { zeroxlify } from './utils';
 
 const ZK_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 
+export enum PROXY_NAME {
+    __VYPER_MINIMAL_PROXY_CONTRACT = '__VYPER_MINIMAL_PROXY_CONTRACT',
+    __VYPER_FORWARDER_CONTRACT = '__VYPER_FORWARDER_CONTRACT',
+}
+
+export const proxyNames = Object.values(PROXY_NAME).map((name) => name.toString());
+
+export interface ProxtContractOutput {
+    proxyName: PROXY_NAME;
+    output: ContractOutput;
+}
+
 export class ZkArtifacts extends Artifacts {
     public compilerOutput?: VyperOutput;
-    public forwarderOutput?: ContractOutput;
+    public proxyContractOutput?: ProxtContractOutput;
 
     public override async saveArtifactAndDebugFile(artifact: Artifact, pathToBuildInfo?: string) {
         /* eslint-disable */
-        if (this.forwarderOutput != null) {
-            const forwarderArtifact = {
-                ...getArtifactFromVyperOutput(".__VYPER_FORWARDER_CONTRACT", this.forwarderOutput),
-                contractName: "__VYPER_FORWARDER_CONTRACT",
+        if (this.proxyContractOutput != null) {
+            const proxyArtifact = {
+                ...getArtifactFromVyperOutput(`.${this.proxyContractOutput.proxyName}`, this.proxyContractOutput.output),
+                contractName: this.proxyContractOutput.proxyName,
                 _format: ZK_ARTIFACT_FORMAT_VERSION,
             };
             /* eslint-disable */
-            await super.saveArtifactAndDebugFile(forwarderArtifact, pathToBuildInfo);
+            await super.saveArtifactAndDebugFile(proxyArtifact, pathToBuildInfo);
 
-            this.forwarderOutput = undefined;
+            this.proxyContractOutput = undefined;
             this.addValidArtifacts([{
-                sourceName: forwarderArtifact.sourceName,
-                artifacts: [forwarderArtifact.contractName]
+                sourceName: proxyArtifact.sourceName,
+                artifacts: [proxyArtifact.contractName]
             }]);
         }
 
@@ -35,10 +47,7 @@ export class ZkArtifacts extends Artifacts {
             // @ts-ignore
             let entries: Array<[string, string]> = Object.entries(this.compilerOutput[artifact.sourceName]?.factory_deps ?? {});
             for (const [hash, dependency] of entries) {
-                factoryDeps[zeroxlify(hash)] = 
-                    dependency == "__VYPER_FORWARDER_CONTRACT" 
-                        ? ".__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT" 
-                        : dependency;
+                factoryDeps[zeroxlify(hash)] = proxyNames.includes(dependency) ? `.${dependency}:${dependency}` : dependency;
             }
 
             return await super.saveArtifactAndDebugFile({
