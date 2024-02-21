@@ -1,0 +1,66 @@
+{
+    "name": "@matterlabs/hardhat-zksync-viem",
+    "version": "1.0.0",
+    "description": "Hardhat plugin for integration with viem library",
+    "repository": "github:matter-labs/hardhat-zksync",
+    "homepage": "TODO",
+    "author": "Matter Labs",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "keywords": [
+      "ethereum",
+      "smart-contracts",
+      "hardhat",
+      "hardhat-plugin",
+      "zkSync"
+    ],
+    "scripts": {
+      "lint": "yarn eslint",
+      "prettier:check": "yarn prettier --check",
+      "lint:fix": "yarn eslint --fix",
+      "fmt": "yarn prettier --write",
+      "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
+      "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
+      "test": "NODE_ENV=test c8 mocha tests/**/*.ts --no-timeout --exit",
+      "build": "tsc --build .",
+      "clean": "rimraf dist"
+    },
+    "files": [
+      "dist/",
+      "src/",
+      "LICENSE",
+      "README.md"
+    ],
+"devDependencies": {
+    "@types/chai": "^4.2.0",
+    "@types/lodash.memoize": "^4.1.7",
+    "@types/mocha": ">=9.1.0",
+    "@types/sinon": "^10.0.16",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "5.61.0",
+    "@typescript-eslint/parser": "5.61.0",
+    "chai": "^4.2.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-no-only-tests": "3.0.0",
+    "eslint-plugin-prettier": "3.4.0",
+    "chai-as-promised": "^7.1.1",
+    "hardhat": "^2.19.4",
+    "mocha": "^10.0.0",
+    "prettier": "2.4.1",
+    "sinon": "^17.0.1",
+    "ts-node": "^10.8.0",
+    "typescript": "~5.0.0",
+    "viem": "^2.7.11",
+    "zksync-ethers":"6.1.0"
+  },
+  "peerDependencies": {
+    "hardhat": "^2.19.4",
+    "viem": "^2.7.11"
+  },
+  "dependencies": {
+    "lodash.memoize": "^4.1.2"
+  }
+}
