@@ -24,7 +24,7 @@ import {
     ZKSOLC_BIN_OWNER,
     ZKSOLC_BIN_REPOSITORY_NAME,
     USER_AGENT,
-    ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION,
+    ZKSOLC_COMPILER_PATH_VERSION,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -56,23 +56,25 @@ export class ZksolcCompilerDownloader {
                 throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
 
-            if (version !== ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION && configCompilerPath) {
+            if (version !== ZKSOLC_COMPILER_PATH_VERSION && configCompilerPath) {
                 throw new ZkSyncSolcPluginError(
-                    `The zksolc compiler versions in the hardhat are not supported for remote origin. Please don't specify version or use '${ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION}' as a version.`,
+                    `When a compiler path is provided, specifying a version of the zksolc compiler in Hardhat is not allowed. Please omit the version and try again.`,
                 );
             }
 
-            if (version === 'remote' && !configCompilerPath) {
-                throw new ZkSyncSolcPluginError(`The zksolc compiler path is not specified for remote origin.`);
+            if (version === ZKSOLC_COMPILER_PATH_VERSION && !configCompilerPath) {
+                throw new ZkSyncSolcPluginError(
+                    `The zksolc compiler path is not specified for local or remote origin.`,
+                );
             }
 
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
-            } else if (version !== 'remote' && !isVersionInRange(version, compilerVersionInfo)) {
+            } else if (version !== ZKSOLC_COMPILER_PATH_VERSION && !isVersionInRange(version, compilerVersionInfo)) {
                 throw new ZkSyncSolcPluginError(
                     COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
                 );
-            } else if (version !== 'remote') {
+            } else if (version !== ZKSOLC_COMPILER_PATH_VERSION) {
                 console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
             }
 
@@ -118,9 +120,7 @@ export class ZksolcCompilerDownloader {
         return path.join(
             this._compilersDirectory,
             'zksolc',
-            `zksolc-${
-                this._configCompilerPath ? `${ZKSOLC_COMPILER_PATH_REMOTE_ORIGIN_VERSION}` : `v${this._version}`
-            }${salt ? '-' : ''}${salt}`,
+            `zksolc-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}`,
         );
     }
 

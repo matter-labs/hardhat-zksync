@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import fse from 'fs-extra';
 import { ZksolcCompilerDownloader } from '../../../src/compile/downloader';
-import { COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR, COMPILER_VERSION_RANGE_ERROR } from '../../../src/constants';
+import {
+    COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
+    COMPILER_VERSION_RANGE_ERROR,
+    ZKSOLC_COMPILER_PATH_VERSION,
+} from '../../../src/constants';
 
 describe('Downloader', async () => {
     const sandbox = sinon.createSandbox();
@@ -78,7 +82,7 @@ describe('Downloader', async () => {
             compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'zksolc/zksolc-custom',
                 'cache/',
             );
@@ -86,7 +90,7 @@ describe('Downloader', async () => {
             const version = downloader.getVersion();
 
             expect(compilerPath).to.equal('zksolc/zksolc-custom');
-            expect(version).to.equal('remote');
+            expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
         it('create downloader with remote version with URL compiler path', async () => {
@@ -94,7 +98,7 @@ describe('Downloader', async () => {
             compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'http://example.com/zksolc',
                 'cache/',
             );
@@ -102,7 +106,7 @@ describe('Downloader', async () => {
             const version = downloader.getVersion();
 
             expect(compilerPath).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d');
-            expect(version).to.equal('remote');
+            expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
         it('create downloader with remote version and with without compiler path', async () => {
@@ -111,9 +115,13 @@ describe('Downloader', async () => {
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             try {
-                await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('remote', '', 'cache/');
+                await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+                    ZKSOLC_COMPILER_PATH_VERSION,
+                    '',
+                    'cache/',
+                );
             } catch (e: any) {
-                expect(e.message).to.equal('The zksolc compiler path is not specified for remote origin.');
+                expect(e.message).to.equal('The zksolc compiler path is not specified for local or remote origin.');
             }
         });
 
@@ -130,7 +138,7 @@ describe('Downloader', async () => {
                 );
             } catch (e: any) {
                 expect(e.message).to.equal(
-                    `The zksolc compiler versions in the hardhat are not supported for remote origin. Please don't specify version or use 'remote' as a version.`,
+                    `When a compiler path is provided, specifying a version of the zksolc compiler in Hardhat is not allowed. Please omit the version and try again.`,
                 );
             }
 
@@ -142,7 +150,7 @@ describe('Downloader', async () => {
                 );
             } catch (e: any) {
                 expect(e.message).to.equal(
-                    `The zksolc compiler versions in the hardhat are not supported for remote origin. Please don't specify version or use 'remote' as a version.`,
+                    `When a compiler path is provided, specifying a version of the zksolc compiler in Hardhat is not allowed. Please omit the version and try again.`,
                 );
             }
         });
@@ -172,7 +180,7 @@ describe('Downloader', async () => {
                 .returns(isCompilerDownloaded(false));
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'path/zksolc/zksolc-custom',
                 'cache/',
             );
@@ -183,7 +191,7 @@ describe('Downloader', async () => {
 
         it('should return the compiler path when the compiler path is a URL', async () => {
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'http://example.com/zksolc',
                 'cache/',
             );
@@ -204,7 +212,7 @@ describe('Downloader', async () => {
 
         it('should return true if the compiler is downloaded and verified', async () => {
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'path/zksolc',
                 'zksolc/0.1.0',
             );
@@ -219,7 +227,7 @@ describe('Downloader', async () => {
 
         it('should return true if the compiler is downloaded and verified when the compiler path is a URL', async () => {
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'http://example.com/zksolc',
                 'zksolc/0.1.0',
             );
@@ -248,7 +256,7 @@ describe('Downloader', async () => {
 
         it('should return false if the compiler is not downloaded when the compiler path is a URL', async () => {
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'http://example.com/zksolc',
                 'cache/',
             );
@@ -362,7 +370,7 @@ describe('Downloader', async () => {
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                'remote',
+                ZKSOLC_COMPILER_PATH_VERSION,
                 'http://example.com/zksolc',
                 'cache/',
             );
