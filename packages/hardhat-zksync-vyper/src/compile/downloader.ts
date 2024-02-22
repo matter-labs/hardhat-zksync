@@ -125,7 +125,9 @@ export class ZkVyperCompilerDownloader {
         return path.join(
             this._compilersDirectory,
             'zkvyper',
-            `zkvyper-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}.0`,
+            `zkvyper-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}${
+                this._configCompilerPath ? '.0' : ''
+            }`,
         );
     }
 
