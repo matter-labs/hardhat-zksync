@@ -121,7 +121,7 @@ export class ZkVyperCompilerDownloader {
             return this._configCompilerPath;
         }
 
-        //Add mock extension '0' to the path so windows can execute it
+        // Add mock extension '0' to the path so windows can execute it
         return path.join(
             this._compilersDirectory,
             'zkvyper',
