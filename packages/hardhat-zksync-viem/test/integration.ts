@@ -10,14 +10,14 @@ describe("Integration tests", function () {
 
   describe("Hardhat Runtime Environment extension", function () {
     it("should add the viem object and it's properties", function () {
-      assert.isDefined(this.hre.zkViem);
-      assert.isFunction(this.hre.zkViem.getPublicClient);
+      assert.isDefined(this.hre.zksyncViem);
+      assert.isFunction(this.hre.zksyncViem.getPublicClient);
     });
   });
 
   describe("Viem plugin", function () {
     it("should be able to query the blockchain using the public client", async function () {
-      const client = await this.hre.zkViem.getPublicClient();
+      const client = await this.hre.zksyncViem.getPublicClient();
       const blockNumber = await client.getBlockNumber();
 
       assert.equal(blockNumber, 0n);
@@ -25,7 +25,7 @@ describe("Integration tests", function () {
 
     describe("should be able to query the blockchain using the public client on zksync sepolia testnet", async function () {
       it("should be able to query the blockNumber", async function () {
-        const client = await this.hre.zkViem.getPublicClient({
+        const client = await this.hre.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
           transport: http()
         });
@@ -34,7 +34,7 @@ describe("Integration tests", function () {
       });
 
       it("should be able to query the account balance", async function () {
-        const client = await this.hre.zkViem.getPublicClient({
+        const client = await this.hre.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
           transport: http()
         });
@@ -43,7 +43,7 @@ describe("Integration tests", function () {
       });
 
       it("should be able to query the block", async function () {
-        const client = await this.hre.zkViem.getPublicClient({
+        const client = await this.hre.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
           transport: http()
         });
@@ -54,7 +54,7 @@ describe("Integration tests", function () {
       });
 
       it("should be able to query the gas price", async function () {
-        const client = await this.hre.zkViem.getPublicClient({
+        const client = await this.hre.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
           transport: http()
         });
@@ -63,7 +63,7 @@ describe("Integration tests", function () {
       });
 
       it("should be able to query the gas price", async function () {
-        const client = await this.hre.zkViem.getPublicClient({
+        const client = await this.hre.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
           transport: http()
         });

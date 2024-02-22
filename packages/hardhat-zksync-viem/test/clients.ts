@@ -1,5 +1,5 @@
 import { Provider } from "zksync-ethers";
-import { ZkSyncProviderAdapter } from "../src/provider-adapter";
+import { ZkSyncProviderAdapter } from "./provider-adapter-mock";
 import * as chains from "viem/chains";
 import {innerGetPublicClient} from '../src/internal/clients'
 import { assert } from "chai";

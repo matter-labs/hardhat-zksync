@@ -10,7 +10,7 @@ extendEnvironment((hre) => {
   const { provider } = hre.network;
 
   // TODO: Lazy object
-  hre.zkViem = {
+  hre.zksyncViem = {
     getPublicClient: (publicClientConfig) =>
       getPublicClient(provider, publicClientConfig),
   };

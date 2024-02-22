@@ -1,6 +1,6 @@
 import {Provider} from 'zksync-ethers'
 import {getChain, isDevelopmentNetwork} from '../src/internal/chains'
-import { ZkSyncProviderAdapter } from '../src/provider-adapter';
+import { ZkSyncProviderAdapter } from './provider-adapter-mock';
 import { expect } from 'chai';
 import sinon from "sinon";
 import * as chains from "viem/chains"

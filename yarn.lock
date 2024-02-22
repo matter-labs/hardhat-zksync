@@ -1139,6 +1139,14 @@
     table "^6.8.0"
     undici "^5.14.0"
 
+"@nomicfoundation/hardhat-viem@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-viem/-/hardhat-viem-2.0.0.tgz#4f5de792028a5607984ea9fd1e17727a71e3cdb8"
+  integrity sha512-ilXQKTc1jWHqJ66fAN6TIyCRyormoChOn1yQTCGoBQ+G6QcVCu5FTaGL2r0KUOY4IkTohtphK+UXQrKcxQX5Yw==
+  dependencies:
+    abitype "^0.9.8"
+    lodash.memoize "^4.1.2"
+
 "@nomicfoundation/solidity-analyzer-darwin-arm64@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@nomicfoundation/solidity-analyzer-darwin-arm64/-/solidity-analyzer-darwin-arm64-0.1.0.tgz#83a7367342bd053a76d04bbcf4f373fef07cf760"
@@ -1957,6 +1965,11 @@ abitype@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.0.0.tgz#237176dace81d90d018bebf3a45cb42f2a2d9e97"
   integrity sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==
+
+abitype@^0.9.8:
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.9.10.tgz#fa6fa30a6465da98736f98b6c601a02ed49f6eec"
+  integrity sha512-FIS7U4n7qwAT58KibwYig5iFG4K61rbhAqaQh/UWj8v1Y8mjX3F8TC9gd8cz9yT1TYel9f8nS5NO5kZp2RW0jQ==
 
 abstract-level@^1.0.0, abstract-level@^1.0.2, abstract-level@^1.0.3:
   version "1.0.3"
