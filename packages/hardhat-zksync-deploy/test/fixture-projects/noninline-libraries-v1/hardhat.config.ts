@@ -1,6 +1,5 @@
-// eslint-disable-next-line
-import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-solc';
+import '../../../src/index';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
