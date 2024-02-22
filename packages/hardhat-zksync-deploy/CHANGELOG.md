@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [0.7.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy@0.7.0...@matterlabs/hardhat-zksync-deploy-v0.7.1) (2024-02-22)
+
+
+### Bug Fixes
+
+* **docs:** update readme fils ([6fce5bd](https://github.com/matter-labs/hardhat-zksync/commit/6fce5bdd0ebc7d61519b5cc637f962c1390944ea))
+
 ## 0.6.5
 
 ### Patch Changes
