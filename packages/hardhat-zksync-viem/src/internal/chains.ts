@@ -9,7 +9,6 @@ import {
     MultipleMatchingNetworksError,
 } from "./errors";
 
-
 export async function getChain(provider: EthereumProvider): Promise<Chain> {
     const chains: Record<string, Chain> = require("viem/chains");
     const chainId = await getChainId(provider);

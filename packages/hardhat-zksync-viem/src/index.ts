@@ -4,6 +4,8 @@ import "./internal/type-extensions";
 
 import {
   getPublicClient,
+  getWalletClient,
+  getWalletClients
 } from "./internal/clients";
 
 extendEnvironment((hre) => {
@@ -13,5 +15,9 @@ extendEnvironment((hre) => {
   hre.zksyncViem = {
     getPublicClient: (publicClientConfig) =>
       getPublicClient(provider, publicClientConfig),
+    getWalletClient: (address, walletClientConfig) =>
+      getWalletClient(provider, address, walletClientConfig),
+    getWalletClients: (walletClientConfig) =>
+      getWalletClients(hre.network.provider, walletClientConfig),
   };
 });

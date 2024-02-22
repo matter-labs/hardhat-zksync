@@ -1,13 +1,5 @@
-import type { EthereumProvider } from "hardhat/types";
-import type { Address } from "viem";
+import { getAccounts } from "@nomicfoundation/hardhat-viem/src/internal/accounts";
 
-import memoize from "lodash.memoize";
-
-export async function getAccounts(provider: EthereumProvider) {
-  return _memoizedGetAccounts(provider);
+export {
+  getAccounts
 }
-
-const _memoizedGetAccounts = memoize(
-  async (provider: EthereumProvider): Promise<Address[]> =>
-    provider.send("eth_accounts")
-);

@@ -1,6 +1,6 @@
-import type * as viemTypes from "viem";
+import { PublicClient, WalletClient } from "@nomicfoundation/hardhat-viem/src/types";
 
-export type PublicClient = viemTypes.PublicClient<
-  viemTypes.Transport,
-  viemTypes.Chain
->;
+export {
+  PublicClient,
+  WalletClient
+}
