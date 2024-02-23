@@ -1,6 +1,7 @@
-import { PublicClient, WalletClient } from "@nomicfoundation/hardhat-viem/src/types";
+import { PublicClient, WalletClient,TestClient } from "@nomicfoundation/hardhat-viem/src/types";
 
 export {
   PublicClient,
-  WalletClient
+  WalletClient,
+  TestClient
 }

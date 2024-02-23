@@ -3,6 +3,7 @@ import { ZkSyncProviderAdapter } from "./provider-adapter-mock";
 import * as chains from "viem/chains";
 import {innerGetPublicClient,innerGetWalletClients,getWalletClient} from '../src/internal/clients'
 import { assert } from "chai";
+import { innerGetTestClient } from "@nomicfoundation/hardhat-viem/internal/clients";
 
 describe("clients",() => {
     describe("innerGetPublicClient", () => {
@@ -87,6 +88,53 @@ describe("clients",() => {
           assert.equal(client.pollingInterval, 4000);
           assert.equal(client.cacheTime, 4000);
         });
+      });
+    });
+
+    describe("innerGetTestClient", () => {
+      it("should return a test client with hardhat mode", async () => {
+        const provider = new ZkSyncProviderAdapter(new Provider());
+  
+        const client = await innerGetTestClient(
+          provider,
+          chains.hardhat,
+          "hardhat"
+        );
+  
+        assert.isDefined(client);
+        assert.equal(client.type, "testClient");
+        assert.equal(client.chain.id, chains.hardhat.id);
+        assert.equal(client.mode, "hardhat");
+      });
+  
+      it("should return a test client with custom parameters", async () => {
+        const provider = new ZkSyncProviderAdapter(new Provider());
+  
+        const client = await innerGetTestClient(
+          provider,
+          chains.hardhat,
+          "hardhat",
+          {
+            pollingInterval: 1000,
+            cacheTime: 2000,
+          }
+        );
+  
+        assert.equal(client.pollingInterval, 1000);
+        assert.equal(client.cacheTime, 2000);
+      });
+  
+      it("should return a test client with default parameters for development networks", async () => {
+        const provider = new ZkSyncProviderAdapter(new Provider());
+  
+        const client = await innerGetTestClient(
+          provider,
+          chains.hardhat,
+          "hardhat"
+        );
+  
+        assert.equal(client.pollingInterval, 50);
+        assert.equal(client.cacheTime, 0);
       });
     });
 });

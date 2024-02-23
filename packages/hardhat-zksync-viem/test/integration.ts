@@ -16,6 +16,7 @@ describe("Integration tests", function () {
           "getPublicClient",
           "getWalletClients",
           "getWalletClient",
+          "getTestClient"
         ]);
     });
   });
@@ -65,6 +66,17 @@ describe("Integration tests", function () {
         fromBalanceBefore - etherAmount - transactionFee
       );
       assert.equal(toBalanceAfter, toBalanceBefore + etherAmount);
+    });
+
+    it("should be able to query the blockchain using the test client", async function () {
+      const publicClient = await this.hre.zksyncViem.getPublicClient();
+      const testClient = await this.hre.zksyncViem.getTestClient();
+
+      await testClient.mine({
+        blocks: 1000000,
+      });
+      const blockNumber = await publicClient.getBlockNumber();
+      assert.equal(blockNumber, 1000001n);
     });
 
     describe("should be able to query the blockchain using the public client on zksync sepolia testnet", async function () {

@@ -5,7 +5,8 @@ import "./internal/type-extensions";
 import {
   getPublicClient,
   getWalletClient,
-  getWalletClients
+  getWalletClients,
+  getTestClient
 } from "./internal/clients";
 
 extendEnvironment((hre) => {
@@ -19,5 +20,7 @@ extendEnvironment((hre) => {
       getWalletClient(provider, address, walletClientConfig),
     getWalletClients: (walletClientConfig) =>
       getWalletClients(hre.network.provider, walletClientConfig),
+    getTestClient: (testClientConfig) =>
+      getTestClient(provider, testClientConfig),
   };
 });

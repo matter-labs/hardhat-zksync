@@ -1,6 +1,7 @@
 
-import type {Address, PublicClient, PublicClientConfig, WalletClient, WalletClientConfig} from "viem";
+import type {Address, PublicClient, PublicClientConfig, TestClientConfig, WalletClient, WalletClientConfig} from "viem";
 import "hardhat/types/runtime";
+import { TestClient } from "./types";
 
 declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
@@ -15,6 +16,9 @@ declare module "hardhat/types/runtime" {
       getWalletClients(
         walletClientConfig?: Partial<WalletClientConfig>
       ): Promise<WalletClient[]>;
+      getTestClient(
+        testClientConfig?: Partial<TestClientConfig>
+      ): Promise<TestClient>;
     }
   }
 }

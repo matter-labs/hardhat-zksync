@@ -1,9 +1,10 @@
-import { getPublicClient,innerGetPublicClient,getWalletClient,getWalletClients,innerGetWalletClients } from "@nomicfoundation/hardhat-viem/internal/clients"
+import { getPublicClient,innerGetPublicClient,getWalletClient,getWalletClients,innerGetWalletClients,getTestClient } from "@nomicfoundation/hardhat-viem/internal/clients"
 
 export {
     getPublicClient,
     innerGetPublicClient,
     getWalletClient,
     innerGetWalletClients,
-    getWalletClients
+    getWalletClients,
+    getTestClient
 }
