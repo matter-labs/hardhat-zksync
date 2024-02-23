@@ -265,7 +265,6 @@ const config: HardhatUserConfig = {
 
 ```
 
-
 If the `forceDeploy` flag is set to `true` for a specific network in your hardhat.config.ts file, it indicates that the deployment process will force deploy contracts to that network, bypassing any cache mechanism.
 
 Conversely, if the `forceDeploy` flag is set to `false` or not specified for a network, `hardhat-zksync-deploy` will use caching mechanism during deployment. This means it will check whether the contracts have changed since the last deployment, and if not, it will reuse the already deployed contracts instead of redeploying them.

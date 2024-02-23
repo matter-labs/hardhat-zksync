@@ -43,7 +43,7 @@ describe('INTEGRATION: Reverted', function () {
 
             aaDeployer = new Deployer(this.hre, wallet1, 'createAccount');
             artifact = await deployer.loadArtifact('TwoUserMultisig');
-            aaAccount = await aaDeployer.deploy(artifact, [wallet1.address, wallet2.address], false, undefined, []);
+            aaAccount = await aaDeployer.deploy(artifact, [wallet1.address, wallet2.address], undefined, []);
         });
 
         // helpers
