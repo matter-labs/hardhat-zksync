@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.1.2...@matterlabs/hardhat-zksync-deploy-v1.2.0) (2024-02-23)
+
+
+### Features
+
+* support for scripts tags, order, integrated deployer inside HRE ([#762](https://github.com/matter-labs/hardhat-zksync/issues/762)) ([a6b7828](https://github.com/matter-labs/hardhat-zksync/commit/a6b7828cd390087f426c97439eb1a2aeb686cf95))
+
 ## [1.1.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy@1.1.1...@matterlabs/hardhat-zksync-deploy-v1.1.2) (2023-12-22)
 
 
