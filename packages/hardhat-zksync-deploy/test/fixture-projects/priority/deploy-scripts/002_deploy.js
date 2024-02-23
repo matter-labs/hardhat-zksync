@@ -3,4 +3,4 @@ var deployScript = async function (_) {
 }
 
 module.exports["default"] = deployScript;
-deployScript.priority = 400;
+deployScript.priority = -2;

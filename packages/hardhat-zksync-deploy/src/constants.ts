@@ -10,6 +10,8 @@ export const LOCAL_CHAIN_IDS = [
 
 export const DEFAULT_DEPLOY_SCRIPTS_PATH = 'deploy';
 
+export const SCRIPT_DEFAULT_PRIORITY = 0;
+
 export const defaultAccountDeployerSettings: DeployerAccount = {
     default: 0,
 };

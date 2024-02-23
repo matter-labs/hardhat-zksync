@@ -17,22 +17,26 @@ declare module 'hardhat/types/config' {
         zksync?: boolean;
         ethNetwork?: EthNetwork;
         deployPaths?: string | string[];
+        forceDeploy?: boolean;
     }
 
     interface HttpNetworkConfig {
         zksync: boolean;
         ethNetwork?: EthNetwork;
         deployPaths?: string | string[];
+        forceDeploy?: boolean;
     }
 
     interface HardhatNetworkUserConfig {
         zksync?: boolean;
         deployPaths?: string | string[];
+        forceDeploy?: boolean;
     }
 
     interface HardhatNetworkConfig {
         zksync: boolean;
         deployPaths?: string | string[];
+        forceDeploy?: boolean;
     }
 
     interface ProjectPathsUserConfig {
@@ -48,6 +52,7 @@ declare module 'hardhat/types/runtime' {
     interface Network {
         zksync: boolean;
         deployPaths: string[];
+        forceDeploy: boolean;
     }
 
     interface HardhatRuntimeEnvironment {

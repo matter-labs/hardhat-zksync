@@ -5,5 +5,5 @@ const deployScript = async function (_: HardhatRuntimeEnvironment) {
 };
 
 export default deployScript;
-deployScript.priority = 650;
+deployScript.priority = 6;
 deployScript.tags = ['second'];

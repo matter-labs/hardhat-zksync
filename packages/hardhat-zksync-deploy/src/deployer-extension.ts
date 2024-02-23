@@ -36,7 +36,6 @@ export class DeployerExtension implements AbstractDeployer {
     public async deploy(
         artifact: ZkSyncArtifact,
         constructorArguments: any[] = [],
-        forceDeploy: boolean = false,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
@@ -48,7 +47,6 @@ export class DeployerExtension implements AbstractDeployer {
             this._hre,
             artifact,
             constructorArguments,
-            forceDeploy,
             this.wallet,
             this._deploymentType,
             overrides,
@@ -64,7 +62,7 @@ export class DeployerExtension implements AbstractDeployer {
         return await estimateDeployFee(this._hre, artifact, constructorArguments, this.wallet);
     }
 
-    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<any> {
+    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
         if (!this.wallet) {
             this.wallet = await this.getWallet();
         }

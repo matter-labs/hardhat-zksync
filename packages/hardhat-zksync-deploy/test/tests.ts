@@ -268,7 +268,7 @@ describe('Plugin tests', async function () {
             const artifact = await this.env.deployer.loadArtifact('Greeter');
             const wallet = await this.env.deployer.getWallet(4);
             this.env.deployer.setWallet(wallet);
-            const contract = await this.env.deployer.deploy(artifact, ['Hi there!'], false);
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
             const walletRunner = contract.runner as Wallet;
             expect(walletRunner.address).to.be.equal('0x8002cD98Cfb563492A6fB3E7C8243b7B9Ad4cc92');
             expect(contract).to.be.an('object');

@@ -4,6 +4,7 @@ import * as path from 'path';
 import { glob } from 'glob';
 
 import { ZkSyncDeployPluginError } from './errors';
+import { SCRIPT_DEFAULT_PRIORITY } from './constants';
 
 export class ScriptManager {
     private funcByFilePath: { [filename: string]: any };
@@ -126,10 +127,10 @@ export class ScriptManager {
             if (tags !== undefined) {
                 const filteredTags = tags.filter((value) => scriptTags.includes(value));
                 if (filteredTags.length) {
-                    this.filePaths.push({ priority: deployFn.priority ?? 500, path: filePath });
+                    this.filePaths.push({ priority: deployFn.priority ?? SCRIPT_DEFAULT_PRIORITY, path: filePath });
                 }
             } else {
-                this.filePaths.push({ priority: deployFn.priority ?? 500, path: filePath });
+                this.filePaths.push({ priority: deployFn.priority ?? SCRIPT_DEFAULT_PRIORITY, path: filePath });
             }
         }
 

@@ -14,8 +14,7 @@ const config: HardhatUserConfig = {
         }
     },
     deployerAccounts: {
-        'zkSyncNetwork': 1,
-        'zkSyncNetworkV2': 5
+        'zkSyncNetwork': 1
     },
     defaultNetwork: "zkSyncNetwork",
     networks: {
@@ -36,6 +35,10 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
             zksync: true,
+            forceDeploy: true,
+            accounts: {
+                mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
+            }
         }
     },
     // Docker image only works for solidity ^0.8.0.

@@ -16,6 +16,7 @@ extendConfig((config, userConfig) => {
 
 extendEnvironment((hre) => {
     hre.network.zksync = hre.network.config.zksync ?? false;
+    hre.network.forceDeploy = hre.network.config.forceDeploy ?? false;
     hre.network.deployPaths = hre.network.config.deployPaths
         ? typeof hre.network.config.deployPaths === 'string'
             ? [hre.network.config.deployPaths]

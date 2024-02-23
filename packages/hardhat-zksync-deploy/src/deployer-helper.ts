@@ -13,6 +13,11 @@ const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 
 const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 'goerli', 'sepolia'];
 
+export interface Providers {
+    ethWeb3Provider: ethers.Provider;
+    zkWeb3Provider: zk.Provider;
+}
+
 /**
  * Loads an artifact and verifies that it was compiled by `zksolc`.
  *
@@ -57,7 +62,6 @@ export async function deploy(
     hre: HardhatRuntimeEnvironment,
     artifact: ZkSyncArtifact,
     constructorArguments: any[] = [],
-    forceDeploy: boolean = false,
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
     overrides?: ethers.Overrides,
@@ -65,7 +69,7 @@ export async function deploy(
 ): Promise<zk.Contract> {
     const deployment = await loadDeployment(hre, artifact);
 
-    if (!forceDeploy && deployment) {
+    if (!hre.network.forceDeploy && deployment) {
         return new zk.Contract(deployment.address, artifact.abi, zkWallet);
     }
 
@@ -130,7 +134,7 @@ export async function estimateDeployGas(
     constructorArguments: any[],
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
-): Promise<any> {
+): Promise<bigint> {
     const factoryDeps = await _extractFactoryDeps(hre, artifact);
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, zkWallet, deploymentType);
 
@@ -179,11 +183,6 @@ export async function _extractFactoryDepsRecursive(
     }
 
     return factoryDeps;
-}
-
-export interface Providers {
-    ethWeb3Provider: ethers.Provider;
-    zkWeb3Provider: zk.Provider;
 }
 
 export function createProviders(

@@ -9,7 +9,7 @@ const deployScript = async function (hre: HardhatRuntimeEnvironment) {
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // This contract has no constructor arguments.
-    const factoryContract = await hre.deployer.deploy(artifact, [], true);
+    const factoryContract = await hre.deployer.deploy(artifact, []);
 
     // Show the contract info.
     const contractAddress = await factoryContract.getAddress();
