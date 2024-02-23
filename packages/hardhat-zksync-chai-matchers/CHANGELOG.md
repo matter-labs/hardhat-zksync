@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-chai-matchers
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v1.2.2...@matterlabs/hardhat-zksync-chai-matchers-v1.3.0) (2024-02-23)
+
+
+### Features
+
+* bump dependecies to newer versions ([#833](https://github.com/matter-labs/hardhat-zksync/issues/833)) ([6c27ad4](https://github.com/matter-labs/hardhat-zksync/commit/6c27ad40cf4c2b7c55b049c2cd33dafcaff7f55e))
+* support for scripts tags, order, integrated deployer inside HRE ([#762](https://github.com/matter-labs/hardhat-zksync/issues/762)) ([a6b7828](https://github.com/matter-labs/hardhat-zksync/commit/a6b7828cd390087f426c97439eb1a2aeb686cf95))
+
 ## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v1.2.1...@matterlabs/hardhat-zksync-chai-matchers-v1.2.2) (2024-02-16)
 
 
