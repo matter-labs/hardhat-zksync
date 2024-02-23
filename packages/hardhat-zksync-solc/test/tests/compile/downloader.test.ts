@@ -105,7 +105,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d');
+            expect(compilerPath).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
             expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
@@ -198,7 +198,7 @@ describe('Downloader', async () => {
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             const result = downloader.getCompilerPath();
-            expect(result).to.be.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d');
+            expect(result).to.be.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
         });
     });
 
