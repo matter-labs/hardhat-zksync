@@ -536,15 +536,6 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                         }),
                     ).to.changeEtherBalance(contract, 200, { overrides: _overrides });
                 });
-
-                // it('should pass when calling function that returns half the sent ether', async () => {
-                //     await expect(async () =>
-                //         contract.returnHalf({
-                //             value: 200,
-                //             ...overrides,
-                //         })
-                //     ).to.changeEtherBalance(sender, -100, { overrides });
-                // });
             });
 
             it("shouldn't run the transaction twice", async function () {
@@ -897,6 +888,34 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
                 }
 
                 expect.fail('Expected an exception but none was thrown');
+            });
+
+            it('changeEtherBalance: should throw if chained to another non-chainable method', async function () {
+                const transferPromise = sender.transfer({
+                    to: receiver.address,
+                    amount: 200,
+                });
+                expect(() =>
+                    expect(transferPromise).to.be.a.nonChainableMatcher().and.to.changeEtherBalance(receiver, '200'),
+                ).to.throw(/changeEtherBalance is not chainable./);
+                await transferPromise;
+            });
+
+            it('changeEtherBalance: should throw if chained to another non-chainable method', async function () {
+                try {
+                    // eslint-disable-next-line
+                    expect(
+                        await sender.sendTransaction({
+                            to: receiver.address,
+                            value: 200,
+                        }),
+                    )
+                        .to.nonChainableMatcher()
+                        .and.to.changeEtherBalance(sender, '-200');
+                } catch (e: any) {
+                    expect(e.message).to.match(/changeEtherBalance is not chainable./);
+                    return;
+                }
             });
         });
     }

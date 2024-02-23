@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-toolbox
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-toolbox-v1.2.1...@matterlabs/hardhat-zksync-toolbox-v1.3.0) (2024-02-16)
+
+
+### Features
+
+* dependencies version bump ([#792](https://github.com/matter-labs/hardhat-zksync/issues/792)) ([e5bff9c](https://github.com/matter-labs/hardhat-zksync/commit/e5bff9cc6af74537fbf0dbbca07be8e9d23e5e89))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-toolbox@1.2.0...@matterlabs/hardhat-zksync-toolbox-v1.2.1) (2023-12-22)
 
 

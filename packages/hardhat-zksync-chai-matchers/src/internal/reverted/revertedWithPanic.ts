@@ -1,12 +1,13 @@
 import { normalizeToBigInt } from 'hardhat/common';
 import { panicErrorCodeToReason } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-
 import { toBeHex } from 'ethers';
+import { REVERTED_WITH_PANIC_MATCHER } from '../../constants';
+import { preventAsyncMatcherChaining } from '../utils';
 import { decodeReturnData, getReturnDataFromError } from './utils';
 
-export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
-    Assertion.addMethod('revertedWithPanic', function (this: any, expectedCodeArg: any) {
+export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
+    Assertion.addMethod(REVERTED_WITH_PANIC_MATCHER, function (this: any, expectedCodeArg: any) {
         const negated = this.__flags.negate;
 
         let expectedCode: bigint | undefined;
@@ -31,6 +32,8 @@ export function supportRevertedWithPanic(Assertion: Chai.AssertionStatic) {
             description = panicErrorCodeToReason(codeBN) ?? 'unknown panic code';
             formattedPanicCode = `panic code ${toBeHex(codeBN)} (${description})`;
         }
+
+        preventAsyncMatcherChaining(this, REVERTED_WITH_PANIC_MATCHER, chaiUtils);
 
         const onSuccess = () => {
             const assert = buildAssert(negated, onSuccess);

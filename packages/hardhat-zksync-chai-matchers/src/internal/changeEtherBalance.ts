@@ -5,12 +5,15 @@ import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
 
 import { HttpNetworkConfig } from 'hardhat/types';
+import { CHANGE_ETHER_BALANCE_MATCHER } from '../constants';
 import { Account, getAddressOf } from './misc/account';
-import { BalanceChangeOptions } from './misc/balance';
+import type { BalanceChangeOptions } from './misc/balance';
 
-export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
+import { preventAsyncMatcherChaining } from './utils';
+
+export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addMethod(
-        'changeEtherBalance',
+        CHANGE_ETHER_BALANCE_MATCHER,
         function (
             this: any,
             account: Account | string,
@@ -22,6 +25,8 @@ export function supportChangeEtherBalance(Assertion: Chai.AssertionStatic) {
         ) {
             const negated = this.__flags.negate;
             const subject = this._obj;
+
+            preventAsyncMatcherChaining(this, CHANGE_ETHER_BALANCE_MATCHER, chaiUtils);
 
             const checkBalanceChange = ([actualChange, address]: [bigint, string]) => {
                 const assert = buildAssert(negated, checkBalanceChange);

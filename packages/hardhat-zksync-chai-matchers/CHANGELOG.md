@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-chai-matchers
 
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v1.2.1...@matterlabs/hardhat-zksync-chai-matchers-v1.2.2) (2024-02-16)
+
+
+### Bug Fixes
+
+* add regex support ([#781](https://github.com/matter-labs/hardhat-zksync/issues/781)) ([f90c995](https://github.com/matter-labs/hardhat-zksync/commit/f90c99594f1ab9764c5b8ff722c81831b271b8d4))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers@1.2.0...@matterlabs/hardhat-zksync-chai-matchers-v1.2.1) (2023-12-22)
 
 
