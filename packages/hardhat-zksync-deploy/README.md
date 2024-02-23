@@ -130,7 +130,7 @@ const config: HardhatUserConfig = {
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
-      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'] // The private keys for the accounts used in the deployment process.
+      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'], // The private keys for the accounts used in the deployment process.
       accounts: {
           mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
       }
@@ -161,7 +161,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
-      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959']  // The private keys for the accounts used in the deployment process.
+      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'],  // The private keys for the accounts used in the deployment process.
       accounts: {
           mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
       }  // Mnemonic used in the deployment process
@@ -265,7 +265,7 @@ const config: HardhatUserConfig = {
 
 ```
 
-If the `forceDeploy` flag is set to `true` for a specific network in your hardhat.config.ts file, it indicates that the deployment process will force deploy contracts to that network, bypassing any cache mechanism.
+If the `forceDeploy` flag is set to `true` for a specific network in your `hardhat.config.ts` file, it indicates that the deployment process will force deploy contracts to that network, bypassing any cache mechanism.
 
 Conversely, if the `forceDeploy` flag is set to `false` or not specified for a network, `hardhat-zksync-deploy` will use caching mechanism during deployment. This means it will check whether the contracts have changed since the last deployment, and if not, it will reuse the already deployed contracts instead of redeploying them.
 
