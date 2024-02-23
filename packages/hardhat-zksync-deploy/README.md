@@ -169,7 +169,7 @@ const config: HardhatUserConfig = {
   },
 };
 ```
-- `deployerAccounts` represents an object where the default index of the accounts is provided and automatically used in the deployment scripts. If the network name is not specified inside the object, the default index of the account will be 0. We can change and deafult index for not specified networks if we override `default` name with index that we want.
+- `deployerAccounts` represents an object where the default index of the accounts is provided and automatically used in the deployment scripts. If the network name is not specified inside the object, the default index of the account will be `0`. We can change and deafult index for not specified networks if we override `default` name with index that we want.
 
 The described objects work together to provide users with a better deployment experience, eliminating the need for manual wallet initialization.
 
@@ -288,10 +288,8 @@ To enable the plugin's usage of global custom deploy scripts, specify the direct
 const config: HardhatUserConfig = {
   // ADDITON
   paths: {
-    //single deployment directory
-    deployPaths: "deploy-zkSync",
-    //multiple deployment directories
-    deployPaths: ["deploy", "deploy-zkSync"],
+    deployPaths: "deploy-zkSync",  //single deployment directory
+    deployPaths: ["deploy", "deploy-zkSync"], //multiple deployment directories
   }
   networks: {
     sepolia: {
@@ -315,6 +313,7 @@ The default path, if not explicitly set, is the `deploy` folder inside the proje
 To configure network-specific paths, the `hardhat.config.ts` configuration needs to be extended with a `deployPaths` property inside the network object inside `networks` section.
 
 ```typescript
+const config: HardhatUserConfig = {
 networks: {
     sepolia: {
       url: "https://sepolia.infura.io/v3/<API_KEY>"
@@ -322,12 +321,12 @@ networks: {
     zkTestnet: {
       url: "https://sepolia.era.zksync.dev",
       ethNetwork: "sepolia",
-      //single deployment directory
-      deployPaths: 'deploy-zkSync'
-      //multiple deployment directories
-      deployPaths: ['deploy', 'deploy-zkSync']
+      // ADDITION
+      deployPaths: 'deploy-zkSync', //single deployment directory
+      deployPaths: ['deploy', 'deploy-zkSync'], //multiple deployment directories
       zksync: true
     }
+  }
 }
 ```
 
