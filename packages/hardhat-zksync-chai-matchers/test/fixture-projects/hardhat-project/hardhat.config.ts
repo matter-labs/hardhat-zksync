@@ -17,8 +17,7 @@ const config: HardhatUserConfig = {
         zkSyncNetwork: {
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
-            zksync: true,
-            forceDeploy: true,
+            zksync: true
         },
     },
 };
