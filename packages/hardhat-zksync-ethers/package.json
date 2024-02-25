@@ -38,7 +38,7 @@
     "hardhat": "^2.19.4",
     "chai": "^4.2.0",
     "@matterlabs/hardhat-zksync-solc": "^1.1.2",
-    "@matterlabs/hardhat-zksync-deploy": "^1.1.2"
+    "@matterlabs/hardhat-zksync-deploy": "^1.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
