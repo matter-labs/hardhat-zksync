@@ -214,7 +214,7 @@ export async function verifyContract(
         compilerSolcVersion: solcVersion,
         compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
-        optimizationUsed
+        optimizationUsed,
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);

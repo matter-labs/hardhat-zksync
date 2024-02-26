@@ -70,7 +70,7 @@ export class DeployerExtension implements AbstractDeployer {
         return await estimateDeployGas(this._hre, artifact, constructorArguments, this.wallet, this._deploymentType);
     }
 
-    public setWallet(wallet: zk.Wallet): void{
+    public setWallet(wallet: zk.Wallet): void {
         this.wallet = wallet;
     }
 
