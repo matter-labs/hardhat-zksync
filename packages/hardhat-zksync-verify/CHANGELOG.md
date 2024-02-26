@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.3.0...@matterlabs/hardhat-zksync-verify-v1.4.0) (2024-02-26)
+
+
+### Features
+
+* bump hardhat-zksync-deploy and hardhat-zksync-solc dependencies… ([#840](https://github.com/matter-labs/hardhat-zksync/issues/840)) ([b570877](https://github.com/matter-labs/hardhat-zksync/commit/b570877c78c74f3c88c7e62498e5f477d4ada616))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.2.2...@matterlabs/hardhat-zksync-verify-v1.3.0) (2024-01-22)
 
 
