@@ -4,7 +4,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import * as hre from 'hardhat';
 import { Contract } from 'ethers';
 import * as zk from 'zksync-ethers';
-import { TASK_VERIFY, ZKSYNC_SEPOLIA_CHAIN_ID, useEnvironment } from './helpers';
+import { TASK_VERIFY, useEnvironment } from './helpers';
 
 describe('verify upgradable smart contracts', async function () {
     useEnvironment();
@@ -30,10 +30,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await box.retrieve();
         console.info(chalk.cyan('Box value is: ', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = hre.run(TASK_VERIFY, { address: await box.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
     });
 
     it('Deploy and verify box proxy', async function () {
@@ -53,10 +50,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await box.retrieve();
         console.info(chalk.cyan('Box value is: ', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
     });
 
     it('Deploy and verify box uups', async function () {
@@ -76,10 +70,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await box.retrieve();
         console.info(chalk.cyan('Box value is: ', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
     });
 
     it('Deploy, upgrade and verify box becaon', async function () {
@@ -118,10 +109,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await upgradedBox.retrieve();
         console.info(chalk.cyan('New box value is', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
     });
 
     it('Deploy, upgrade and verify box uups', async function () {
@@ -148,10 +136,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await upgradedBox.retrieve();
         console.info(chalk.cyan('BoxUups value is', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
     });
 
     it('Deploy, upgrade and verify box', async function () {
@@ -177,10 +162,7 @@ describe('verify upgradable smart contracts', async function () {
         const value = await upgradedBox.retrieve();
         console.info(chalk.cyan('Box value is', value));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedBox.getAddress() });
     });
 
     it('Deploy factory beacon', async function () {
@@ -205,10 +187,7 @@ describe('verify upgradable smart contracts', async function () {
             );
         }
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
     });
 
     it('Deploy factory proxy', async function () {
@@ -233,10 +212,7 @@ describe('verify upgradable smart contracts', async function () {
             );
         }
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
     });
 
     it('Deploy factory uups', async function () {
@@ -272,10 +248,7 @@ describe('verify upgradable smart contracts', async function () {
             );
         }
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
     });
 
     it('Deploy factory, upgrade and verify beacon', async function () {
@@ -300,10 +273,8 @@ describe('verify upgradable smart contracts', async function () {
                 'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
             );
         }
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
-        }
+
+        const _ = await hre.run(TASK_VERIFY, { address: await factory.getAddress() });
     });
 
     it('Deploy factory, upgrade and verify uups', async function () {
@@ -330,10 +301,7 @@ describe('verify upgradable smart contracts', async function () {
         );
         console.info(chalk.green('Successfully upgraded FactoryUups to FactoryUupsV2'));
 
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
     });
 
     it('Deploy factory, upgrade and verify', async function () {
@@ -364,9 +332,6 @@ describe('verify upgradable smart contracts', async function () {
                 'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
             );
         }
-        const chainId = await hre.network.provider.send('eth_chainId', []);
-        if (chainId === ZKSYNC_SEPOLIA_CHAIN_ID) {
-            const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
-        }
+        const _ = await hre.run(TASK_VERIFY, { address: await upgradedFactory.getAddress() });
     });
 });
