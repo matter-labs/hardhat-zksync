@@ -63,18 +63,22 @@ export class RPCServerDownloader {
                 return;
             }
 
-            const latestTag = await getLatestRelease(
+            const latestTagForLatestRelease = await getLatestRelease(
                 ZKNODE_BIN_OWNER,
                 ZKNODE_BIN_REPOSITORY_NAME,
                 USER_AGENT,
                 DEFAULT_TIMEOUT_MILISECONDS,
             );
 
-            if (info && info.latest === latestTag && (await this._isBinaryPathExists(latestTag))) {
-                await this._postProcessDownload(latestTag);
+            if (
+                info &&
+                info.latest === latestTagForLatestRelease &&
+                (await this._isBinaryPathExists(latestTagForLatestRelease))
+            ) {
+                await this._postProcessDownload(latestTagForLatestRelease);
                 return;
             }
-            await this._download(latestTag);
+            await this._download(latestTagForLatestRelease);
             return;
         }
 

@@ -11,8 +11,9 @@
   "include": [
     "./hardhat.config.ts",
     "./scripts",
-    "deploy-local",
     "./test",
-    "typechain/**/*"
+    "typechain/**/*",
+    "deploy/*",
+    "deploy-zkSync/*"
   ]
 }
