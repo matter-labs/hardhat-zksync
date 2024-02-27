@@ -771,7 +771,7 @@
     read-yaml-file "^1.1.0"
 
 "@matterlabs/hardhat-zksync-chai-matchers@link:packages/hardhat-zksync-chai-matchers":
-  version "1.2.2"
+  version "1.3.0"
   dependencies:
     "@matterlabs/hardhat-zksync-deploy" "^1.2.0"
     "@matterlabs/hardhat-zksync-solc" "^1.1.3"
@@ -780,7 +780,7 @@
     ethers "^6.7.1"
     hardhat "^2.19.4"
     ordinal "1.0.3"
-    zksync-ethers "^6.0.0"
+    zksync-ethers "^6.3.0"
 
 "@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
   version "1.2.0"
@@ -831,10 +831,10 @@
     undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "1.2.4"
+  version "1.3.0"
   dependencies:
-    "@matterlabs/hardhat-zksync-deploy" "^1.1.0"
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-deploy" "^1.2.0"
+    "@matterlabs/hardhat-zksync-solc" "^1.1.4"
     "@openzeppelin/upgrades-core" "^1.31.3"
     chalk "4.1.2"
     compare-versions "^6.0.0"
@@ -844,7 +844,7 @@
     hardhat "^2.19.4"
     proper-lockfile "^4.1.1"
     solidity-ast "^0.4.51"
-    zksync-ethers "^6.0.0"
+    zksync-ethers "^6.3.0"
 
 "@matterlabs/hardhat-zksync-verify-vyper@link:packages/hardhat-zksync-verify-vyper":
   version "0.0.1-alpha.6"
@@ -856,14 +856,14 @@
     axios "^1.6.2"
     chai "^4.3.6"
     chalk "4.1.2"
-    zksync-ethers "^6.0.0"
+    zksync-ethers "^6.3.0"
 
 "@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
-  version "1.3.0"
+  version "1.4.0"
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@ethersproject/address" "5.7.0"
-    "@matterlabs/hardhat-zksync-solc" "^1.0.3"
+    "@matterlabs/hardhat-zksync-solc" "^1.1.4"
     "@nomicfoundation/hardhat-verify" "^2.0.0"
     "@openzeppelin/contracts" "^4.9.2"
     axios "^1.6.2"
@@ -874,7 +874,7 @@
     hardhat "^2.19.4"
     sinon "^17.0.1"
     sinon-chai "^3.7.0"
-    zksync-ethers "^6.0.0"
+    zksync-ethers "^6.3.0"
 
 "@matterlabs/hardhat-zksync-vyper@link:packages/hardhat-zksync-vyper":
   version "1.0.8"
@@ -7618,10 +7618,10 @@ zksync-crypto@^0.6.1:
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.6.2.tgz#319dc9b1a274c1c8feaa40f81636ef326eb2c28b"
   integrity sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==
 
-zksync-ethers@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/zksync-ethers/-/zksync-ethers-6.0.0.tgz#60ec1c38bb2a0b844433fa59a33633e258cb00d6"
-  integrity sha512-eQv8V3eK6dDHobI27mHydT1liqlKAoVJzdhxYfP4weE7emPMCcHfJBVVxN5HyitEkuwZC7ir7fa1Q7PK6ox+Cw==
+zksync-ethers@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/zksync-ethers/-/zksync-ethers-6.3.0.tgz#604c57250974ccad121510a2c84c1dd8b990722f"
+  integrity sha512-ApQIJSFevxFNVQTO1MxkmXxmx9N0qZHNvMzjFvu5v40QPFGkpUt09pY/WHy3b5BlsXzybQ3q2YnHaz/c/TgilA==
 
 zksync@^0.13.1:
   version "0.13.1"
