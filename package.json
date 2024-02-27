@@ -13,6 +13,7 @@
     "@npmcli/promise-spawn": "^6.0.2",
     "commander": "^10.0.0",
     "get-monorepo-packages": "^1.2.0",
+    "husky": "^8.0.3",
     "prettier": "^3.1.0",
     "typescript": "^5.1.6",
     "wsrun": "^5.2.2"
@@ -24,8 +25,8 @@
     "lint": "wsrun --exclude-missing --stages lint",
     "lint:fix": "wsrun --exclude-missing --stages lint:fix",
     "prettier:check": "wsrun --exclude-missing --stages prettier:check",
-    "test:release-script": "mocha scripts/test/tests.js"
+    "test:release-script": "mocha scripts/test/tests.js",
+    "prepare": "yarn husky install"
   },
-  "dependencies": {},
   "type": "module"
 }
