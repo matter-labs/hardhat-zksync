@@ -40,6 +40,12 @@
         "packages/hardhat-zksync-ethers": {
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-ethers"
+        },
+        "packages/hardhat-zksync-verify-vyper": {
+            "prerelease-type": "alpha",
+            "prerelease": true,
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-verify-vyper"
         }
     }
 }
