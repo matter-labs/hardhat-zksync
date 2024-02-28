@@ -860,9 +860,22 @@
     sinon-chai "^3.7.0"
     undici "^5.14.0"
 
-"@matterlabs/hardhat-zksync-solc@link:packages/hardhat-zksync-solc":
-  version "0.0.0"
-  uid ""
+"@matterlabs/hardhat-zksync-solc@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.1.4.tgz#04a2fad6fb6b6944c64ad969080ee65b9af3f617"
+  integrity sha512-4/usbogh9neewR2/v8Dn2OzqVblZMUuT/iH2MyPZgPRZYQlL4SlZtMvokU9UQjZT6iSoaKCbbdWESHDHSzfUjA==
+  dependencies:
+    "@nomiclabs/hardhat-docker" "^2.0.0"
+    chai "^4.3.6"
+    chalk "4.1.2"
+    debug "^4.3.4"
+    dockerode "^4.0.2"
+    fs-extra "^11.1.1"
+    proper-lockfile "^4.1.2"
+    semver "^7.5.1"
+    sinon "^17.0.1"
+    sinon-chai "^3.7.0"
+    undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
   version "0.2.3"
@@ -911,16 +924,20 @@
     fs-extra "^11.1.1"
     semver "^7.5.4"
 
-"@matterlabs/hardhat-zksync-vyper@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-vyper/-/hardhat-zksync-vyper-1.0.3.tgz#c45c8c599d71cc39dcdbfd3abc30ff4e9379cfc4"
-  integrity sha512-4DJR3NY7hmReELVpV0X/VhmCd7uxKjKpkBuM465J2JMC/8OQxJhjGOh9VLf1+kY4BHYOEEY8ci/L/OiOW7SKvw==
+"@matterlabs/hardhat-zksync-vyper@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-vyper/-/hardhat-zksync-vyper-1.0.8.tgz#d5bd496715a1e322b0bf3926b4146b4e18ab64ff"
+  integrity sha512-XR7rbfDuBG5/LZWYfhQTP9gD+U24hSJHDuZ9U55wgIfiQTOxPoztFwEbQNiC39vjT5MjP/Nv8/IDrlEBkaVCgw==
   dependencies:
     "@nomiclabs/hardhat-docker" "^2.0.0"
+    chai "^4.3.6"
     chalk "4.1.2"
-    dockerode "^4.0.0"
+    dockerode "^4.0.2"
     fs-extra "^11.1.1"
     semver "^7.5.4"
+    sinon "^17.0.1"
+    sinon-chai "^3.7.0"
+    undici "^5.14.0"
 
 "@matterlabs/zksync-contracts@^0.6.1":
   version "0.6.1"
