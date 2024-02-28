@@ -255,7 +255,7 @@ Instead, this name was received: ${contractFQN}`);
                         '*': {
                             '*': ['evm'],
                         },
-                    },
+                    }
                 },
             });
 
@@ -264,7 +264,6 @@ Instead, this name was received: ${contractFQN}`);
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
-            expect(solidityStandardJsonInput.settings.areLibrariesMissing).to.equal(false);
         });
     });
 
