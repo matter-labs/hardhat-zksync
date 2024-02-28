@@ -1,0 +1,249 @@
+[
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    },
+    {
+        "contractName": "ChildChildLib",
+        "contractPath": "contracts/ChildChildLib.sol",
+        "missingLibraries": []
+    },
+    {
+        "contractName": "ChildLib",
+        "contractPath": "contracts/ChildLib.sol",
+        "missingLibraries": [
+            "contracts/ChildChildLib.sol:ChildChildLib"
+        ]
+    },
+    {
+        "contractName": "MathLib",
+        "contractPath": "contracts/MathLib.sol",
+        "missingLibraries": [
+            "contracts/ChildLib.sol:ChildLib"
+        ]
+    }
+]

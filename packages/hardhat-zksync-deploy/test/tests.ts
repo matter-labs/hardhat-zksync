@@ -3,7 +3,6 @@ import * as path from 'path';
 import chalk from 'chalk';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
-import { callDeployScripts, findDeployScripts } from '../src/plugin';
 import { Deployer } from '../src/deployer';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../src/task-names';
 import { useEnvironment } from './helpers';
@@ -11,7 +10,7 @@ import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLE
 import '@matterlabs/hardhat-zksync-solc/dist/src/type-extensions';
 
 describe('Plugin tests', async function () {
-    describe('successful-compilation artifact', async function () {
+    describe('successful-compilation artifact', function () {
         useEnvironment('successful-compilation');
 
         it('Should load artifacts', async function () {
@@ -26,18 +25,16 @@ describe('Plugin tests', async function () {
         });
 
         it('Should find deploy scripts', async function () {
-            const baseDir = this.env.config.paths.root;
-            const files = findDeployScripts(this.env);
-
-            assert.deepEqual(files, [path.join(baseDir, 'deploy', '001_deploy.ts')], 'Incorrect deploy script list');
+            const files = await this.scriptManager.findAllDeployScripts();
+            assert.deepEqual(files, ['deploy/001_deploy.ts'], 'Incorrect deploy script list');
         });
 
         it('Should call deploy scripts', async function () {
-            await callDeployScripts(this.env, '');
+            await this.scriptManager.callDeployScripts('');
         });
 
-        it('Should call deploy script', async function () {
-            await callDeployScripts(this.env, '001_deploy.ts');
+        it('Should call deploy provided script', async function () {
+            await this.scriptManager.callDeployScripts('001_deploy.ts');
         });
 
         it('Should call deploy scripts through HRE', async function () {
@@ -50,10 +47,10 @@ describe('Plugin tests', async function () {
 
         it('Should not find deploy scripts', async function () {
             try {
-                const _files = findDeployScripts(this.env);
+                const _files = await this.scriptManager.findAllDeployScripts();
                 assert.fail('Expected ZkSyncDeployPluginError was not thrown');
             } catch (error: any) {
-                assert.strictEqual(error.message, 'No deploy folder was found', 'Error message does not match');
+                assert.include(error.message, `Deploy folder 'deploy' not found.`, 'Error message does not match');
             }
         });
     });
@@ -76,7 +73,7 @@ describe('Plugin tests', async function () {
             );
             chalk.yellow('Deploying libraries...');
             await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, {
-                privateKey: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
+                privateKeyOrIndex: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
             });
         });
     });
@@ -170,10 +167,10 @@ describe('Plugin tests', async function () {
             const targetScript = '002_deploy.ts';
 
             try {
-                await callDeployScripts(this.env, targetScript);
+                await this.scriptManager.callDeployScripts(targetScript);
                 assert.fail('Function did not throw expected error');
             } catch (error: any) {
-                const expectedMessage = `Script ${targetScript} was not found, no scripts were run`;
+                const expectedMessage = `Deploy script '${targetScript}' not found, in deploy folders:`;
                 assert.include(
                     error.message,
                     expectedMessage,
@@ -184,7 +181,7 @@ describe('Plugin tests', async function () {
 
         it('Should not find deploy function', async function () {
             try {
-                await callDeployScripts(this.env, 'invalid_script.ts');
+                await this.scriptManager.callDeployScripts('invalid_script.ts');
                 assert.fail('Function did not throw expected error');
             } catch (error: any) {
                 assert.include(
@@ -210,7 +207,7 @@ describe('Plugin tests', async function () {
 
         it('Should fail deploying because zksync is not set to true', async function () {
             try {
-                await callDeployScripts(this.env, '001_deploy.ts');
+                await this.scriptManager.callDeployScripts('001_deploy.ts');
                 throw new Error('Expected an error but none was thrown');
             } catch (error: any) {
                 expect(error.message).to.include("'zksync' flag set to 'true'");
@@ -234,6 +231,191 @@ describe('Plugin tests', async function () {
             }
 
             expect(errorOccurred).to.equal(true);
+        });
+    });
+
+    describe('Test with integritated deployer in hre', async function () {
+        useEnvironment('deployer-in-hre', 'zkSyncNetwork2');
+
+        it('should deploy with integrated wallet', async function () {
+            await this.env.run('compile');
+            const artifact = await this.env.deployer.loadArtifact('Greeter');
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            const wallet = contract.signer as Wallet;
+            expect(wallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
+            expect(contract).to.be.an('object');
+            expect(contract.address).to.be.a('string');
+            const walletFromDeployer = await this.env.deployer.getWallet();
+            expect(walletFromDeployer.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
+        });
+
+        it('should deploy with provided wallet', async function () {
+            await this.env.run('compile');
+            const artifact = await this.env.deployer.loadArtifact('Greeter');
+            const wallet = await this.env.deployer.getWallet(4);
+            this.env.deployer.setWallet(wallet);
+            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            const walletRunner = contract.signer as Wallet;
+            expect(walletRunner.address).to.be.equal('0x8002cD98Cfb563492A6fB3E7C8243b7B9Ad4cc92');
+            expect(contract).to.be.an('object');
+            expect(contract.address).to.be.a('string');
+        });
+
+        it('should deploy scripts with integrated deployer', async function () {
+            await this.env.run('compile');
+            await this.env.run('deploy-zksync');
+        });
+    });
+
+    describe('Deply scripts with tags and dependencies', async function () {
+        useEnvironment('tags-and-dependecies');
+
+        it('Should collect specified tags', async function () {
+            const scripts = await this.scriptManager.findAllDeployScripts();
+            const filePathsByTag = await this.scriptManager.collectTags(scripts);
+
+            assert.deepEqual(
+                Object.keys(filePathsByTag),
+                ['second', 'all', 'third', 'first', 'default'],
+                "Collected tags don't match",
+            );
+        });
+
+        it('Should match tags with file paths', async function () {
+            const baseDir = this.env.config.paths.root;
+            const scripts = await this.scriptManager.findAllDeployScripts();
+            const filePathsByTag = await this.scriptManager.collectTags(scripts);
+
+            const firstTagFilePaths = [path.join(baseDir, 'deploy-scripts', '003_deploy.ts')];
+            const secondTagFilePaths = [path.join(baseDir, 'deploy-scripts', '001_deploy.ts')];
+            const thirdTagFilePaths = [path.join(baseDir, 'deploy-scripts', '002_deploy.js')];
+            const allTagFilePaths = [
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'),
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'),
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'),
+            ];
+
+            assert.deepEqual(filePathsByTag.first, firstTagFilePaths, 'Incorrect file paths list by tag');
+            assert.deepEqual(filePathsByTag.second, secondTagFilePaths, 'Incorrect file paths list by tag');
+            assert.deepEqual(filePathsByTag.third, thirdTagFilePaths, 'Incorrect file paths list by tag');
+            assert.deepEqual(filePathsByTag.all, allTagFilePaths, 'Incorrect file paths list by tag');
+        });
+
+        it('Should filter scripts to run by specified tags, when collecting', async function () {
+            const baseDir = this.env.config.paths.root;
+            const scripts = await this.scriptManager.findAllDeployScripts();
+
+            const firstTagFilePaths = [path.join(baseDir, 'deploy-scripts', '003_deploy.ts')];
+            const secondTagFilePaths = [path.join(baseDir, 'deploy-scripts', '001_deploy.ts')];
+            const thirdTagFilePaths = [path.join(baseDir, 'deploy-scripts', '002_deploy.js')];
+            const allTagFilePaths = [
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'),
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'),
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'),
+            ];
+
+            const withoutTagAllScripts = [
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'),
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'),
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'),
+                path.join(baseDir, 'deploy-scripts', '004_deploy.ts'),
+            ];
+
+            let filePathsByTag = await this.scriptManager.collectTags(scripts, ['first']);
+            let scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+            assert.deepEqual(
+                scriptsToRun,
+                firstTagFilePaths,
+                "List of scripts to run doesn't match with filtered file paths",
+            );
+
+            filePathsByTag = await this.scriptManager.collectTags(scripts, ['all']);
+            scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+            assert.deepEqual(
+                scriptsToRun,
+                allTagFilePaths,
+                "List of scripts to run doesn't match with filtered file paths",
+            );
+
+            filePathsByTag = await this.scriptManager.collectTags(scripts, ['first', 'second']);
+            scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+            assert.deepEqual(
+                scriptsToRun,
+                firstTagFilePaths.concat(secondTagFilePaths),
+                "List of scripts to run doesn't match with filtered file paths",
+            );
+
+            filePathsByTag = await this.scriptManager.collectTags(scripts, ['first', 'second', 'third']);
+            scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+            assert.deepEqual(
+                scriptsToRun,
+                firstTagFilePaths.concat(secondTagFilePaths).concat(thirdTagFilePaths),
+                "List of scripts to run doesn't match with filtered file paths",
+            );
+
+            filePathsByTag = await this.scriptManager.collectTags(scripts);
+            scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+            assert.deepEqual(scriptsToRun, withoutTagAllScripts, 'List of all scripts without tag specified!');
+        });
+
+        it('Should run scripts in specified order', async function () {
+            const baseDir = this.env.config.paths.root;
+            const scripts = await this.scriptManager.findAllDeployScripts();
+
+            const expectedScriptToRunOrder = [
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'), // first tag
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'), // second tag
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'), // third tag
+                path.join(baseDir, 'deploy-scripts', '004_deploy.ts'), // wthout tag
+            ];
+
+            const filePathsByTag = await this.scriptManager.collectTags(scripts);
+            const scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+
+            assert.deepEqual(scriptsToRun, expectedScriptToRunOrder, "Order of executing scripts doesn't match");
+        });
+    });
+
+    describe('Deply scripts with priority for all deploy folders', async function () {
+        useEnvironment('priority', 'zkSyncNetwork');
+        it('Should run scripts is order with priority', async function () {
+            const baseDir = this.env.config.paths.root;
+
+            const expectedScriptToRunOrder = [
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'), // 1200
+                path.join(baseDir, 'deploy-scripts', '004_deploy.ts'), // 1000
+                path.join(baseDir, 'dependent-scripts', '006_deploy.ts'), // 650 but 005_deploy.ts is dependent
+                path.join(baseDir, 'dependent-scripts', '005_deploy.ts'), // 800
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'), // default 500
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'), // 400
+            ];
+
+            const scripts = await this.scriptManager.findAllDeployScripts();
+            const filePathsByTag = await this.scriptManager.collectTags(scripts);
+            const scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+
+            assert.deepEqual(scriptsToRun, expectedScriptToRunOrder, "Order of executing scripts doesn't match");
+        });
+    });
+
+    describe('Deply scripts with priority for all deploy-scripts folders', function () {
+        useEnvironment('priority', 'hardhat');
+
+        it('Should run scripts is order with priority', async function () {
+            const baseDir = this.env.config.paths.root;
+
+            const expectedScriptToRunOrder = [
+                path.join(baseDir, 'deploy-scripts', '001_deploy.ts'), // 1200
+                path.join(baseDir, 'deploy-scripts', '004_deploy.ts'), // 1000
+                path.join(baseDir, 'deploy-scripts', '003_deploy.ts'), // default 500
+                path.join(baseDir, 'deploy-scripts', '002_deploy.js'), // 400
+            ];
+
+            const scripts = await this.scriptManager.findAllDeployScripts();
+            const filePathsByTag = await this.scriptManager.collectTags(scripts);
+            const scriptsToRun = await this.scriptManager.getScriptsToRun(filePathsByTag);
+
+            assert.deepEqual(scriptsToRun, expectedScriptToRunOrder, "Order of executing scripts doesn't match");
         });
     });
 });
