@@ -240,14 +240,30 @@ Instead, this name was received: ${contractFQN}`);
                 },
             ];
 
-            const solidityStandardJsonInput = getSolidityStandardJsonInput(this.env, resolvedFiles);
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(resolvedFiles, {
+                language: 'Solidity',
+                sources: {
+                    'contracts/Contract.sol': {
+                        content: 'contract Contract {}',
+                    },
+                },
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                    },
+                    outputSelection: {
+                        '*': {
+                            '*': ['evm'],
+                        },
+                    }
+                },
+            });
 
             expect(solidityStandardJsonInput.language).to.equal('Solidity');
             expect(solidityStandardJsonInput.sources['contracts/Contract.sol'].content).to.equal(
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
-            expect(solidityStandardJsonInput.settings.areLibrariesMissing).to.equal(false);
         });
     });
 
