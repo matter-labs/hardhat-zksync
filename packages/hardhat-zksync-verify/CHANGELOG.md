@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [0.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v0.5.0...@matterlabs/hardhat-zksync-verify-v0.5.1) (2024-02-29)
+
+
+### Bug Fixes
+
+* send to verify service compiler input settings ([#856](https://github.com/matter-labs/hardhat-zksync/issues/856)) ([f9fea75](https://github.com/matter-labs/hardhat-zksync/commit/f9fea7557b94b7567bcd857acefd90624a1f404d))
+
 ## [0.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify@0.4.0...@matterlabs/hardhat-zksync-verify-v0.5.0) (2024-01-26)
 
 
