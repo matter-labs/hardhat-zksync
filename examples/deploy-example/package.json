@@ -34,7 +34,7 @@
     "chalk": "4.1.2",
     "hardhat": "^2.19.4",
     "ethers": "^6.7.1",
-    "zksync-ethers": "^6.0.0"
+    "zksync-ethers": "^6.4.0"
   },
   "prettier": {
     "tabWidth": 4,
