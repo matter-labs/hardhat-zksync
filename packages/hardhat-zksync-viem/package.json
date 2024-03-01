@@ -53,15 +53,19 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.8.0",
     "typescript": "~5.0.0",
-    "viem": "^2.7.11",
-    "zksync-ethers":"6.1.0"
+    "zksync-ethers":"^6.0.0"
   },
   "peerDependencies": {
-    "hardhat": "^2.19.4",
-    "viem": "^2.7.11"
+    "hardhat": "^2.19.4"
   },
   "dependencies": {
     "lodash.memoize": "^4.1.2",
-    "@nomicfoundation/hardhat-viem":"2.0.0"
+    "zksync-ethers":"^6.0.0",
+    "@nomicfoundation/hardhat-viem":"2.0.0",
+    "@matterlabs/hardhat-zksync-solc":"1.1.4",
+    "viem":"link:/home/nikola/Documents/txfusion/viem-mimi/src",
+    "chai":"^4.2.0",
+    "chai-as-promised":"^7.1.1",
+    "sinon":"^17.0.1"
   }
 }

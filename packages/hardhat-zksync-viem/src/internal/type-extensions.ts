@@ -1,7 +1,18 @@
-
-import type {Address, PublicClient, PublicClientConfig, TestClientConfig, WalletClient, WalletClientConfig} from "viem";
+import type {
+  Address,
+  GetContractReturnType,
+  PublicClientConfig,
+  TestClientConfig,
+  WalletClientConfig,
+} from "viem";
 import "hardhat/types/runtime";
-import { TestClient } from "./types";
+import {
+  PublicClient,
+  WalletClient,
+  TestClient,
+  getContractAt,
+  DeployContractConfig,
+} from "./types";
 
 declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
@@ -19,6 +30,12 @@ declare module "hardhat/types/runtime" {
       getTestClient(
         testClientConfig?: Partial<TestClientConfig>
       ): Promise<TestClient>;
-    }
+      deployContract(
+        contractName: string,
+        constructorArgs: any[],
+        config: DeployContractConfig
+      ): Promise<GetContractReturnType>;
+      getContractAt: typeof getContractAt;
+    };
   }
 }

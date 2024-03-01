@@ -1,27 +1,23 @@
-import type { HardhatRuntimeEnvironment } from "hardhat/types";
-
-import path from "path";
+import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
 import { resetHardhatContext } from "hardhat/plugins-testing";
-import "../src/internal/type-extensions";
+import type { HardhatRuntimeEnvironment } from "hardhat/types";
+import path from "path";
 
 declare module "mocha" {
   interface Context {
-    hre: HardhatRuntimeEnvironment;
+    env: HardhatRuntimeEnvironment;
   }
 }
 
-
-export const useEnvironment = (fixtureProjectName: string): void => {
-  before("Loading hardhat environment", function () {
+export function useEnvironment(fixtureProjectName: string,networkName: string = "hardhat") {
+  before("Loading hardhat environment", async function () {
     process.chdir(path.join(__dirname, "fixture-projects", fixtureProjectName));
-    process.env.HARDHAT_NETWORK = "hardhat";
-
-    this.hre = require("hardhat");
+    process.env.HARDHAT_NETWORK = networkName;
+    this.env = require("hardhat");
+    await this.env.run(TASK_COMPILE);
   });
 
-  after("Resetting hardhat context", async function () {
-    process.chdir(path.resolve(`${__dirname}/..`));
+  after("Resetting hardhat context", function () {
     resetHardhatContext();
-    delete process.env.HARDHAT_NETWORK;
   });
 };
