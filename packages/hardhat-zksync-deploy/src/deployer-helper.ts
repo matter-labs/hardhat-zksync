@@ -67,12 +67,10 @@ export async function deploy(
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
-    let artifact: ZkSyncArtifact;
-    if (typeof contractNameOrArtifact === 'string') {
-        artifact = await loadArtifact(hre, contractNameOrArtifact);
-    } else {
-        artifact = contractNameOrArtifact;
-    }
+    const artifact: ZkSyncArtifact =
+        typeof contractNameOrArtifact === 'string'
+            ? await loadArtifact(hre, contractNameOrArtifact)
+            : contractNameOrArtifact;
 
     const baseDeps = await _extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];

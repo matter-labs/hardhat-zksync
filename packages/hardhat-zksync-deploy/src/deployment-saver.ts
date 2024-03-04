@@ -166,8 +166,21 @@ export async function loadDeploymentEntry(
             return undefined;
         }
 
+        if (isDeploymentEntry(deploymentForFound)) {
+            if (foundEntry.txHash !== deploymentForFound.txHash && deploymentForFound.address !== foundEntry.address) {
+                const newEntry = { ...foundEntry };
+                newEntry.txHash = deploymentForFound.txHash;
+                newEntry.address = deploymentForFound.address;
+                deployment.entries.splice(entryIndex, 1, newEntry);
+            }
+        }
+
         return foundEntry;
     }
 
     return undefined;
+}
+
+export function isDeploymentEntry(object: any): object is DeploymentEntry {
+    return 'address' in object && 'txHash' in object;
 }
