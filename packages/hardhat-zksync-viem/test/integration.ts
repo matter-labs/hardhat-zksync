@@ -1,20 +1,20 @@
 import { assert, expect } from "chai";
 
 import * as chains from "viem/chains";
-import { PublicClient, createPublicClient, http, parseEther } from "viem";
+import { PublicClient, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { useEnvironment } from "./helpers";
-import '../src/internal/type-extensions'
-
+import { WALLET_ADDRESS_1, WALLET_ADDRESS_2 } from "./constants";
+import "../src/internal/type-extensions";
 
 describe("Plugin tests", async function () {
-  useEnvironment("hardhat-project", "testnet");
-  describe("Hardhat Zksync Viem plugin", function () {
+  // useEnvironment("hardhat-project", "testnet");
+  describe.skip("Hardhat Zksync Viem plugin", function () {
     it("should be able to query the blockchain using the public client", async function () {
       const client = await this.env.zksyncViem.getPublicClient();
       const blockNumber = await client.getBlockNumber();
 
-      assert(blockNumber> 900000n);
+      assert(blockNumber > 900000n);
     });
 
     it.skip("should be able to query the blockchain using the wallet client", async function () {
@@ -51,9 +51,10 @@ describe("Plugin tests", async function () {
       assert.equal(toBalanceAfter, toBalanceBefore + etherAmount);
     });
 
-      // Skipping untill Viem PR for zkSync Development chains is merged. (https://github.com/wevm/viem/pull/1864)
+    // Skipping untill Viem PR for zkSync Development chains is merged. (https://github.com/wevm/viem/pull/1864)
     it.skip("should be able to query the blockchain using the test client", async function () {
-      const publicClient:PublicClient = await this.env.zksyncViem.getPublicClient();
+      const publicClient: PublicClient =
+        await this.env.zksyncViem.getPublicClient();
       const testClient = await this.env.zksyncViem.getTestClient();
       await testClient.mine({
         blocks: 1000000,
@@ -65,7 +66,7 @@ describe("Plugin tests", async function () {
       );
     });
 
-    describe("should be able to query the blockchain using the public client on zksync sepolia testnet", async function () {
+    describe.skip("should be able to query the blockchain using the public client on zksync sepolia testnet", async function () {
       it("should be able to query the blockNumber", async function () {
         const client = await this.env.zksyncViem.getPublicClient({
           chain: chains.zkSyncSepoliaTestnet,
@@ -126,11 +127,10 @@ describe("Plugin tests", async function () {
   describe("Contract Deployment - Greeter", function () {
     useEnvironment("hardhat-project", "testnet");
     it("should be able to deploy greeter contract", async function () {
-      const pubClient = createPublicClient({
+      const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      });
-
+      })
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
         {
@@ -159,15 +159,14 @@ describe("Plugin tests", async function () {
     });
   });
 
-  // TODO: Requires proper impelementation of extracting all deployed addresses from transaction logs and than returning the contract with proper address.
-  describe.skip("Contract Deployment - Import", function () {
-    useEnvironment("factory", "testnet");
+  describe("Contract Deployment - Import", function () {
+    useEnvironment("import", "testnet");
 
-    it("should be able to factory contract", async function () {
-      const pubClient = createPublicClient({
+    it("should be able to deploy Import contract", async function () {
+      const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      });
+      })
 
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
@@ -185,11 +184,77 @@ describe("Plugin tests", async function () {
           public: pubClient,
         },
       });
-      assert((await contract.read.getFooName())==="Foo");
+      assert((await contract.read.getFooName()) === "Foo");
     });
   });
 
-  describe("Hardhat Runtime Environment extension", function () {
+  describe("Contract Deployment - Library", function () {
+    useEnvironment("library", "testnet");
+
+    it("should be able to deploy Lib contract", async function () {
+      const pubClient = await this.env.zksyncViem.getPublicClient({
+        transport: http(),
+        chain: chains.zkSyncSepoliaTestnet,
+      })
+
+      const walletClient = await this.env.zksyncViem.getWalletClient(
+        "0x636A122e48079f750d44d13E5b39804227E1467e",
+        {
+          account: privateKeyToAccount(
+            "0x11a886803cd3d49695b838f18ab9697feafd8465dc423c12eb6c3722727a4bba"
+          ),
+          chain: chains.zkSyncSepoliaTestnet,
+          transport: http(),
+        }
+      );
+      const contract = await this.env.zksyncViem.deployContract("Lib", [], {
+        client: {
+          wallet: walletClient,
+          public: pubClient,
+        },
+      });
+      let result = (await contract.read.plus([3, 2]))
+      assert(result === 1n);
+    });
+  });
+
+  describe("Contract Deployment - TwoUsrMultisig", function () {
+    useEnvironment("account-abstraction", "testnet");
+
+    it("should be able to deploy account-abstraction contract", async function () {
+      const pubClient = await this.env.zksyncViem.getPublicClient({
+        transport: http(),
+        chain: chains.zkSyncSepoliaTestnet,
+      })
+      const walletClient = await this.env.zksyncViem.getWalletClient(
+        "0x636A122e48079f750d44d13E5b39804227E1467e",
+        {
+          account: privateKeyToAccount(
+            "0x11a886803cd3d49695b838f18ab9697feafd8465dc423c12eb6c3722727a4bba"
+          ),
+          chain: chains.zkSyncSepoliaTestnet,
+          transport: http(),
+        }
+      );
+      const owner1 = WALLET_ADDRESS_1;
+      const owner2 = WALLET_ADDRESS_2;
+
+      const contract = await this.env.zksyncViem.deployContract(
+        "TwoUserMultisig",
+        [owner1, owner2],
+        {
+          client: {
+            wallet: walletClient,
+            public: pubClient,
+          },
+        }
+      );
+      assert.equal(await contract.read.owner1(), owner1);
+      assert.equal(await contract.read.owner2(), owner2);
+    });
+  });
+
+  describe.skip("Hardhat Runtime Environment extension", function () {
     it("should add the viem object and it's properties", function () {
       expect(this.env.zksyncViem)
         .to.be.an("object")

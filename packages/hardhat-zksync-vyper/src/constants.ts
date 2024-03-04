@@ -7,6 +7,8 @@ export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 export const TASK_COMPILE_VYPER_CHECK_ERRORS = 'compile:vyper:check-errors';
 export const TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS = 'compile:vyper:log:compilation-errors';
 
+export const ZKVYPER_COMPILER_PATH_VERSION = 'local_or_remote';
+
 // User agent of MacOSX Chrome 120.0.0.0
 export const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';

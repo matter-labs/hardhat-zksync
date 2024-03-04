@@ -1,4 +1,5 @@
 import semver from 'semver';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
@@ -54,6 +55,13 @@ export function isURL(url: string): boolean {
     }
 }
 
+export function sha1(str: string): string {
+    return crypto.createHash('sha1').update(str).digest('hex');
+}
+
+export function saltFromUrl(url: string): string {
+    return sha1(url);
+}
 export function isVersionInRange(version: string, versionInfo: CompilerVersionInfo): boolean {
     const latest = versionInfo.latest;
     const minVersion = versionInfo.minVersion;

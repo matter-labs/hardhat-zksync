@@ -241,6 +241,24 @@ describe('INTEGRATION: Reverted with panic', function () {
                     successfulAssert: (x) => expect(x).not.to.be.revertedWithPanic(1),
                 });
             });
+            it('invalid string', async function () {
+                try {
+                    await runFailedAsserts({
+                        matchers,
+                        method: 'panicAssert',
+                        failedAssert: (x) => expect(x).not.to.be.revertedWithPanic('invalid'),
+                        failedAssertReason:
+                            "Expected the given panic code to be a number-like value, but got 'invalid'",
+                    });
+                } catch (e: any) {
+                    expect(
+                        e.message.includes(
+                            "Expected the given panic code to be a number-like value, but got 'invalid'",
+                        ),
+                        'should have failed with the invalid string',
+                    );
+                }
+            });
         });
 
         describe('invalid values', function () {

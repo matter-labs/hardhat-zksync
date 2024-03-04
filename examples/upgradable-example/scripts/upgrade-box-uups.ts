@@ -31,7 +31,7 @@ async function main() {
 
     const chainId = await hre.network.provider.send('eth_chainId', []);
     if (chainId === '0x12c') {
-        let _ = hre.run('verify:verify', { address: await upgradedBox.getAddress() });
+        const _ = hre.run('verify:verify', { address: await upgradedBox.getAddress() });
     }
 }
 

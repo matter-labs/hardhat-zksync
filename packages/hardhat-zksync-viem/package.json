@@ -53,7 +53,9 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.8.0",
     "typescript": "~5.0.0",
-    "zksync-ethers":"^6.0.0"
+    "zksync-ethers":"^6.0.0",
+    "@matterlabs/zksync-contracts": "^0.6.1",
+    "@openzeppelin/contracts": "^4.9.2"
   },
   "peerDependencies": {
     "hardhat": "^2.19.4"

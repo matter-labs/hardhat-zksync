@@ -1,11 +1,9 @@
 import type {
   Address,
-  GetContractReturnType,
   PublicClientConfig,
   TestClientConfig,
   WalletClientConfig,
 } from "viem";
-import "hardhat/types/runtime";
 import {
   PublicClient,
   WalletClient,
@@ -13,6 +11,10 @@ import {
   getContractAt,
   DeployContractConfig,
 } from "./types";
+import { Eip712WalletActions } from "viem/zksync";
+
+import { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
+
 
 declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
@@ -23,10 +25,10 @@ declare module "hardhat/types/runtime" {
       getWalletClient(
         address: Address,
         walletClientConfig?: Partial<WalletClientConfig>
-      ): Promise<WalletClient>;
+      ): Promise<WalletClient & Eip712WalletActions>;
       getWalletClients(
         walletClientConfig?: Partial<WalletClientConfig>
-      ): Promise<WalletClient[]>;
+      ): Promise<(WalletClient & Eip712WalletActions)[]>;
       getTestClient(
         testClientConfig?: Partial<TestClientConfig>
       ): Promise<TestClient>;

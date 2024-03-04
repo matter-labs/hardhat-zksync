@@ -208,13 +208,13 @@ export async function verifyContract(
 
     const request = {
         contractAddress: address,
-        sourceCode: getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles()),
+        sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), contractInformation.compilerInput),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
         compilerSolcVersion: solcVersion,
         compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
-        optimizationUsed
+        optimizationUsed,
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);

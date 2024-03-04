@@ -24,6 +24,7 @@ import {
     ZKSOLC_BIN_OWNER,
     ZKSOLC_BIN_REPOSITORY_NAME,
     USER_AGENT,
+    ZKSOLC_COMPILER_PATH_VERSION,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -55,13 +56,25 @@ export class ZksolcCompilerDownloader {
                 throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
 
+            if (version !== ZKSOLC_COMPILER_PATH_VERSION && configCompilerPath) {
+                throw new ZkSyncSolcPluginError(
+                    `When a compiler path is provided, specifying a version of the zksolc compiler in Hardhat is not allowed. Please omit the version and try again.`,
+                );
+            }
+
+            if (version === ZKSOLC_COMPILER_PATH_VERSION && !configCompilerPath) {
+                throw new ZkSyncSolcPluginError(
+                    `The zksolc compiler path is not specified for local or remote origin.`,
+                );
+            }
+
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
-            } else if (!isVersionInRange(version, compilerVersionInfo)) {
+            } else if (version !== ZKSOLC_COMPILER_PATH_VERSION && !isVersionInRange(version, compilerVersionInfo)) {
                 throw new ZkSyncSolcPluginError(
                     COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
                 );
-            } else {
+            } else if (version !== ZKSOLC_COMPILER_PATH_VERSION) {
                 console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
             }
 
@@ -104,13 +117,29 @@ export class ZksolcCompilerDownloader {
             return this._configCompilerPath;
         }
 
-        return path.join(this._compilersDirectory, 'zksolc', `zksolc-v${this._version}${salt ? '-' : ''}${salt}`);
+        // Add mock extension '0' so windowns can run the binary
+        return path.join(
+            this._compilersDirectory,
+            'zksolc',
+            `zksolc-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}${
+                this._configCompilerPath ? '.0' : ''
+            }`,
+        );
     }
 
     public async isCompilerDownloaded(): Promise<boolean> {
         if (this._configCompilerPath && !this._isCompilerPathURL) {
-            await this._verifyCompiler();
+            await this._verifyCompilerAndSetVersionIfNeeded();
             return true;
+        }
+
+        if (this._configCompilerPath && this._isCompilerPathURL) {
+            const compilerPathFromUrl = this.getCompilerPath();
+            if (await fsExtra.pathExists(compilerPathFromUrl)) {
+                await this._verifyCompilerAndSetVersionIfNeeded();
+                return true;
+            }
+            return false;
         }
 
         const compilerPath = this.getCompilerPath();
@@ -147,22 +176,33 @@ export class ZksolcCompilerDownloader {
         if (compilerVersionInfo === undefined) {
             throw new ZkSyncSolcPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
         }
-        if (!isVersionInRange(this._version, compilerVersionInfo)) {
+
+        if (!this._configCompilerPath && !isVersionInRange(this._version, compilerVersionInfo)) {
             throw new ZkSyncSolcPluginError(
                 COMPILER_VERSION_RANGE_ERROR(this._version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
             );
         }
 
         try {
-            console.info(chalk.yellow(`Downloading zksolc ${this._version}`));
+            console.info(
+                chalk.yellow(
+                    `Downloading zksolc ${!this._configCompilerPath ? this._version : 'from the remote origin'}`,
+                ),
+            );
             await this._downloadCompiler();
-            console.info(chalk.green(`zksolc version ${this._version} successfully downloaded`));
+            console.info(
+                chalk.green(
+                    `zksolc ${
+                        !this._configCompilerPath ? `version ${this._version}` : 'from the remote origin'
+                    } successfully downloaded`,
+                ),
+            );
         } catch (e: any) {
             throw new ZkSyncSolcPluginError(e.message.split('\n')[0]);
         }
 
         await this._postProcessCompilerDownload();
-        await this._verifyCompiler();
+        await this._verifyCompilerAndSetVersionIfNeeded();
     }
 
     /*
@@ -223,7 +263,7 @@ export class ZksolcCompilerDownloader {
         fsExtra.chmodSync(compilerPath, 0o755);
     }
 
-    private async _verifyCompiler(): Promise<void> {
+    private async _verifyCompilerAndSetVersionIfNeeded(): Promise<void> {
         const compilerPath = this.getCompilerPath();
 
         const versionOutput = spawnSync(compilerPath, ['--version']);
@@ -234,6 +274,10 @@ export class ZksolcCompilerDownloader {
 
         if (versionOutput.status !== 0 || version === null) {
             throw new ZkSyncSolcPluginError(COMPILER_BINARY_CORRUPTION_ERROR(compilerPath));
+        }
+
+        if (this._configCompilerPath) {
+            this._version = version!;
         }
     }
 }

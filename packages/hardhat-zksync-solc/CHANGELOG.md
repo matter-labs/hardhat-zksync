@@ -1,5 +1,20 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.1.4](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.1.3...@matterlabs/hardhat-zksync-solc-v1.1.4) (2024-02-26)
+
+
+### Bug Fixes
+
+* add mock extension for compiler path remote origins ([#824](https://github.com/matter-labs/hardhat-zksync/issues/824)) ([14e3e80](https://github.com/matter-labs/hardhat-zksync/commit/14e3e80df60cc74ae2c26f6bfa487b17bd212f73))
+* adjust solc message for missing libraries ([#783](https://github.com/matter-labs/hardhat-zksync/issues/783)) ([aa2b48b](https://github.com/matter-labs/hardhat-zksync/commit/aa2b48b98d5fc11570161a6b7cdfa1944ef5e8a4))
+
+## [1.1.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.1.2...@matterlabs/hardhat-zksync-solc-v1.1.3) (2024-02-21)
+
+
+### Bug Fixes
+
+* set zksolc compiler version for specified compiler path ([#804](https://github.com/matter-labs/hardhat-zksync/issues/804)) ([7d2aa6c](https://github.com/matter-labs/hardhat-zksync/commit/7d2aa6cd180d601161af0399bd8fad884f598683))
+
 ## [1.1.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.1.1...@matterlabs/hardhat-zksync-solc-v1.1.2) (2024-01-25)
 
 

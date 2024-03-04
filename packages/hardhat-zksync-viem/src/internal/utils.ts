@@ -1,8 +1,26 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { Address ,toFunctionSelector} from "viem";
 import { ZkSyncArtifact } from "./types";
+import { addressBytesLength, contractDeployerAddress } from "./constants";
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = "hh-zksolc-artifact-1";
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = "hh-zkvyper-artifact-1";
+
+export function extractDeployedAddress(receipt: any): Address {
+  const filteredLogs = receipt.logs.filter(
+    (log: any) => toFunctionSelector('ContractDeployed(address,bytes32,address)') && log.address === contractDeployerAddress
+  );
+  const contractAddresses = filteredLogs
+    .map((log: any) => {
+      if (log.topics.length > 3) {
+        return `0x${log.topics[3].slice(-addressBytesLength)}`;
+      }
+      return null;
+    })
+    .filter((address: Address) => address !== null);
+
+  return contractAddresses[contractAddresses.length - 1];
+}
 
 export function formatContractBytecode(
   contractBytecode: string

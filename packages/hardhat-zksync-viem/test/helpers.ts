@@ -9,7 +9,10 @@ declare module "mocha" {
   }
 }
 
-export function useEnvironment(fixtureProjectName: string,networkName: string = "hardhat") {
+export function useEnvironment(
+  fixtureProjectName: string,
+  networkName: string = "hardhat"
+) {
   before("Loading hardhat environment", async function () {
     process.chdir(path.join(__dirname, "fixture-projects", fixtureProjectName));
     process.env.HARDHAT_NETWORK = networkName;
@@ -20,4 +23,4 @@ export function useEnvironment(fixtureProjectName: string,networkName: string = 
   after("Resetting hardhat context", function () {
     resetHardhatContext();
   });
-};
+}

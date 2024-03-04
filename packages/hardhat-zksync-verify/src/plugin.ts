@@ -1,5 +1,5 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
-import { Artifacts, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
+import { Artifacts, CompilerInput, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
 import chalk from 'chalk';
@@ -69,13 +69,13 @@ Instead, this name was received: ${contractFQN}`,
     }
 }
 
-export function getSolidityStandardJsonInput(hre: HardhatRuntimeEnvironment, resolvedFiles: ResolvedFile[]): any {
+export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[], input: CompilerInput): any {
     return {
-        language: 'Solidity',
+        language: input.language,
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }]),
         ),
-        settings: hre.config.zksolc.settings,
+        settings: input.settings,
     };
 }
 

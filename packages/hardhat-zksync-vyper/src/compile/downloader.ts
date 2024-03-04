@@ -3,7 +3,15 @@ import fsExtra from 'fs-extra';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
 
-import { download, getLatestRelease, getZkvyperUrl, isURL, isVersionInRange, saveDataToFile } from '../utils';
+import {
+    download,
+    getLatestRelease,
+    getZkvyperUrl,
+    isURL,
+    isVersionInRange,
+    saltFromUrl,
+    saveDataToFile,
+} from '../utils';
 import {
     COMPILER_BINARY_CORRUPTION_ERROR,
     COMPILER_VERSION_INFO_FILE_DOWNLOAD_ERROR,
@@ -16,6 +24,7 @@ import {
     ZKVYPER_BIN_OWNER,
     ZKVYPER_BIN_REPOSITORY,
     ZKVYPER_BIN_REPOSITORY_NAME,
+    ZKVYPER_COMPILER_PATH_VERSION,
     ZKVYPER_COMPILER_VERSION_MIN_VERSION,
 } from '../constants';
 import { ZkSyncVyperPluginError } from '../errors';
@@ -52,13 +61,25 @@ export class ZkVyperCompilerDownloader {
                 throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
             }
 
+            if (version !== ZKVYPER_COMPILER_PATH_VERSION && configCompilerPath) {
+                throw new ZkSyncVyperPluginError(
+                    `When a compiler path is provided, specifying a version of the zkvyper compiler in Hardhat is not allowed. Please omit the version and try again.`,
+                );
+            }
+
+            if (version === ZKVYPER_COMPILER_PATH_VERSION && !configCompilerPath) {
+                throw new ZkSyncVyperPluginError(
+                    `The zkvyper compiler path is not specified for local or remote origin.`,
+                );
+            }
+
             if (version === 'latest' || version === compilerVersionInfo.latest) {
                 version = compilerVersionInfo.latest;
-            } else if (!isVersionInRange(version, compilerVersionInfo)) {
+            } else if (version !== ZKVYPER_COMPILER_PATH_VERSION && !isVersionInRange(version, compilerVersionInfo)) {
                 throw new ZkSyncVyperPluginError(
                     COMPILER_VERSION_RANGE_ERROR(version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
                 );
-            } else {
+            } else if (version !== ZKVYPER_COMPILER_PATH_VERSION) {
                 console.info(chalk.yellow(COMPILER_VERSION_WARNING(version, compilerVersionInfo.latest)));
             }
 
@@ -74,7 +95,7 @@ export class ZkVyperCompilerDownloader {
 
     private static _instance: ZkVyperCompilerDownloader;
     public static compilerVersionInfoCachePeriodMs = DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD;
-
+    private _isCompilerPathURL: boolean;
     /**
      * Use `getDownloaderWithVersionValidated` to create an instance of this class.
      */
@@ -82,24 +103,47 @@ export class ZkVyperCompilerDownloader {
         private _version: string,
         private readonly _configCompilerPath: string,
         private readonly _compilersDirectory: string,
-    ) {}
+    ) {
+        this._isCompilerPathURL = isURL(_configCompilerPath);
+    }
 
     public getVersion(): string {
         return this._version;
     }
 
     public getCompilerPath(): string {
-        if (this._configCompilerPath) {
+        let salt = '';
+
+        if (this._isCompilerPathURL) {
+            // hashed url used as a salt to avoid name collisions
+            salt = saltFromUrl(this._configCompilerPath);
+        } else if (this._configCompilerPath) {
             return this._configCompilerPath;
         }
 
-        return path.join(this._compilersDirectory, 'zkvyper', `zkvyper-v${this._version}`);
+        // Add mock extension '0' to the path so windows can execute it
+        return path.join(
+            this._compilersDirectory,
+            'zkvyper',
+            `zkvyper-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}${
+                this._configCompilerPath ? '.0' : ''
+            }`,
+        );
     }
 
     public async isCompilerDownloaded(): Promise<boolean> {
-        if (this._configCompilerPath) {
-            await this._verifyCompiler();
+        if (this._configCompilerPath && !this._isCompilerPathURL) {
+            await this._verifyCompilerAndSetVersionIfNeeded();
             return true;
+        }
+
+        if (this._configCompilerPath && this._isCompilerPathURL) {
+            const compilerPathFromUrl = this.getCompilerPath();
+            if (await fsExtra.pathExists(compilerPathFromUrl)) {
+                await this._verifyCompilerAndSetVersionIfNeeded();
+                return true;
+            }
+            return false;
         }
 
         const compilerPath = this.getCompilerPath();
@@ -141,22 +185,32 @@ export class ZkVyperCompilerDownloader {
         if (compilerVersionInfo === undefined) {
             throw new ZkSyncVyperPluginError(COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR);
         }
-        if (!isVersionInRange(this._version, compilerVersionInfo)) {
+        if (!this._configCompilerPath && !isVersionInRange(this._version, compilerVersionInfo)) {
             throw new ZkSyncVyperPluginError(
                 COMPILER_VERSION_RANGE_ERROR(this._version, compilerVersionInfo.minVersion, compilerVersionInfo.latest),
             );
         }
 
         try {
-            console.info(chalk.yellow(`Downloading zkvyper ${this._version}`));
+            console.info(
+                chalk.yellow(
+                    `Downloading zkvyper ${!this._configCompilerPath ? this._version : 'from the remote origin'}`,
+                ),
+            );
             await this._downloadCompiler();
-            console.info(chalk.green(`zkvyper version ${this._version} successfully downloaded`));
+            console.info(
+                chalk.green(
+                    `zkvyper ${
+                        !this._configCompilerPath ? `version ${this._version}` : 'from the remote origin'
+                    } successfully downloaded`,
+                ),
+            );
         } catch (e: any) {
             throw new ZkSyncVyperPluginError(e.message.split('\n')[0]);
         }
 
         await this._postProcessCompilerDownload();
-        await this._verifyCompiler();
+        await this._verifyCompilerAndSetVersionIfNeeded();
     }
 
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
@@ -215,7 +269,7 @@ export class ZkVyperCompilerDownloader {
         fsExtra.chmodSync(compilerPath, 0o755);
     }
 
-    private async _verifyCompiler(): Promise<void> {
+    private async _verifyCompilerAndSetVersionIfNeeded(): Promise<void> {
         const compilerPath = this.getCompilerPath();
 
         const versionOutput = spawnSync(compilerPath, ['--version']);
@@ -226,6 +280,10 @@ export class ZkVyperCompilerDownloader {
 
         if (versionOutput.status !== 0 || version === null) {
             throw new ZkSyncVyperPluginError(COMPILER_BINARY_CORRUPTION_ERROR(compilerPath));
+        }
+
+        if (this._configCompilerPath) {
+            this._version = version!;
         }
     }
 }

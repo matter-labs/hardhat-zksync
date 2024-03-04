@@ -8,11 +8,9 @@ import {
   type Address,
   type Hex,
   Hash,
-  GetContractReturnType,
-  PrivateKeyAccount,
+  Account,
 } from "viem";
 import type { PublicClient } from "@nomicfoundation/hardhat-viem/types";
-
 import { Eip712WalletActions } from "viem/zksync";
 import { getPublicClient, getWalletClients } from "./clients";
 import {
@@ -24,8 +22,14 @@ import {
 
 import { isZksyncNetwork } from "./chains";
 import { gasPerPubdata, gasPrice } from "./constants";
-import { extractFactoryDeps, loadArtifact } from "./utils";
-import { DeployContractConfig } from "./types";
+import {
+  extractDeployedAddress,
+  extractFactoryDeps,
+  loadArtifact,
+} from "./utils";
+import { DeployContractConfig, WalletClient } from "./types";
+
+import { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 
 export async function deployContract(
   hre: HardhatRuntimeEnvironment,
@@ -43,8 +47,6 @@ export async function deployContract(
   const artifact = await loadArtifact(hre, contractName);
   const factoryDeps = await extractFactoryDeps(hre, artifact);
 
-  // TODO: Check for additional factory deps, like in deploy/deployer plugin.
-
   return innerDeployContract(
     publicClient,
     walletClient.account,
@@ -60,8 +62,8 @@ export async function deployContract(
 
 export async function innerDeployContract(
   publicClient: PublicClient,
-  account: PrivateKeyAccount,
-  eip712walletClientActions: Eip712WalletActions,
+  account: Account,
+  eip712walletClientActions: WalletClient & Eip712WalletActions,
   contractAbi: Abi,
   contractBytecode: Hex,
   constructorArgs: any[],
@@ -95,10 +97,14 @@ export async function innerDeployContract(
     throw new InvalidConfirmationsError();
   }
 
-  const { contractAddress } = await publicClient.waitForTransactionReceipt({
+  await publicClient.waitForTransactionReceipt({
     hash: deploymentTxHash,
-    confirmations,
   });
+  const receipt = await publicClient.getTransactionReceipt({
+    hash: deploymentTxHash,
+  });
+
+  const contractAddress = extractDeployedAddress(receipt);
 
   if (contractAddress === null) {
     const transaction = await publicClient.getTransaction({
@@ -119,7 +125,7 @@ export async function innerDeployContract(
 
 async function innerGetContractAt(
   publicClient: PublicClient,
-  walletClient: Eip712WalletActions,
+  walletClient: WalletClient,
   contractAbi: Abi,
   address: Address
 ): Promise<GetContractReturnType> {
@@ -139,7 +145,7 @@ async function innerGetContractAt(
 async function getDefaultWalletClient(
   provider: EthereumProvider,
   networkName: string
-): Promise<Eip712WalletActions> {
+): Promise<WalletClient & Eip712WalletActions> {
   const [defaultWalletClient] = await getWalletClients(provider);
 
   if (defaultWalletClient === undefined) {
