@@ -11,7 +11,12 @@ export class MorphTsBuilder {
     }
 
     public intialStep(
-        steps: Array<MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule>,
+        steps: Array<
+            | MorphBuilderInitialStepType
+            | MorphBuilderInitialStepVariable
+            | MorphBuilderInitialStepModule
+            | MorphBuilderInitialDefaultAssignment
+        >,
     ) {
         return new MorphTs(steps, this._sourceFile, this._filePath);
     }
@@ -22,7 +27,10 @@ export class MorphTs {
 
     constructor(
         private _steps: Array<
-            MorphBuilderInitialStepType | MorphBuilderInitialStepVariable | MorphBuilderInitialStepModule
+            | MorphBuilderInitialStepType
+            | MorphBuilderInitialStepVariable
+            | MorphBuilderInitialStepModule
+            | MorphBuilderInitialDefaultAssignment
         >,
         private _sourceFile: SourceFile,
         private _filePath: string,
@@ -60,7 +68,7 @@ export class MorphTs {
 
                 this._currentStep = initialValue;
                 return;
-            } else {
+            } else if (isMorphBuilderInitialStepVariable(_step)) {
                 initialValue = _sourceFile.getVariableDeclaration(
                     (_step as MorphBuilderInitialStepVariable).initialVariable,
                 );
@@ -72,6 +80,17 @@ export class MorphTs {
                 const intialStep = initialValue.getInitializer()?.asKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 
                 this._currentStep = intialStep;
+                return;
+            } else {
+                initialValue = _sourceFile
+                    .getExportAssignment(() => true)
+                    ?.getExpressionIfKind(SyntaxKind.ObjectLiteralExpression);
+
+                if (!initialValue || initialValue === undefined) {
+                    continue;
+                }
+
+                this._currentStep = initialValue;
                 return;
             }
         }
@@ -166,10 +185,17 @@ export interface MorphBuilderInitialStepModule {
     initialModule: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MorphBuilderInitialDefaultAssignment {}
+
 function isMorphBuilderInitialStepType(object: any): object is MorphBuilderInitialStepType {
     return 'initialVariableType' in object;
 }
 
 function isMorphBuilderInitialStepModule(object: any): object is MorphBuilderInitialStepModule {
     return 'initialModule' in object;
+}
+
+function isMorphBuilderInitialStepVariable(object: any): object is MorphBuilderInitialStepVariable {
+    return 'initialVariable' in object;
 }
