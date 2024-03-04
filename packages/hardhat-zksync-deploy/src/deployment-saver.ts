@@ -1,32 +1,81 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-ethers';
 import * as fse from 'fs-extra';
 import path from 'path';
 import lodash from 'lodash';
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 import { ZkSyncArtifact } from './types';
+import { retrieveContractBytecode } from './utils';
+
+export interface DeploymentEntry {
+    constructorArgs: any[];
+    salt: string;
+    deploymentType: DeploymentType;
+    address: string;
+    txHash: string;
+}
+
+export interface EntryToFind {
+    constructorArgs: any[];
+    salt: string;
+    deploymentType: DeploymentType;
+}
 
 export interface Deployment {
     contractName: string;
+    sourceName: string;
     abi: {};
     bytecode: string;
-    address: string;
+    entries: DeploymentEntry[];
 }
 
 export const DEPLOYMENT_PATH: string = 'deployments';
 export const CHAIN_ID_FILE: string = '.chainId';
 
-export async function saveDeployment(
+export async function saveCache(
     hre: HardhatRuntimeEnvironment,
-    contract: zk.Contract,
     artifact: ZkSyncArtifact,
+    deployEntry: DeploymentEntry,
 ): Promise<void> {
-    const deployment: Deployment = {
-        contractName: artifact.contractName,
-        abi: artifact.abi,
-        bytecode: artifact.deployedBytecode,
-        address: await contract.getAddress(),
+    let deployment = await loadDeployment(hre, artifact);
+
+    if (!deployment) {
+        deployment = {
+            sourceName: artifact.sourceName,
+            contractName: artifact.contractName,
+            abi: artifact.abi,
+            bytecode: artifact.bytecode,
+            entries: [],
+        };
+    }
+
+    await addDeploymentEntry(hre, deployment, deployEntry);
+
+    await saveDeployment(hre, deployment);
+}
+
+export async function loadCache(
+    hre: HardhatRuntimeEnvironment,
+    artifact: ZkSyncArtifact,
+    deploymentType: DeploymentType,
+    constructorArgs: any[],
+    salt: string,
+): Promise<DeploymentEntry | undefined> {
+    const deployment = await loadDeployment(hre, artifact);
+
+    if (!deployment) {
+        return undefined;
+    }
+
+    const entryToFind: EntryToFind = {
+        constructorArgs,
+        salt,
+        deploymentType,
     };
 
+    return loadDeploymentEntry(hre, deployment, entryToFind);
+}
+
+export async function saveDeployment(hre: HardhatRuntimeEnvironment, deployment: Deployment): Promise<void> {
     const baseDir = path.join(hre.config.paths.root, DEPLOYMENT_PATH, hre.network.name);
     fse.mkdirpSync(baseDir);
 
@@ -35,7 +84,10 @@ export async function saveDeployment(
     const chainIdFile = path.join(baseDir, CHAIN_ID_FILE);
     fse.writeFileSync(chainIdFile, chainId);
 
-    const deploymentFile = path.join(baseDir, `${artifact.contractName}.json`);
+    const contractDir = path.join(baseDir, deployment.sourceName);
+    fse.mkdirpSync(contractDir);
+
+    const deploymentFile = path.join(contractDir, `${deployment.contractName}.json`);
     fse.writeJsonSync(deploymentFile, deployment, { spaces: 2 });
 }
 
@@ -44,7 +96,8 @@ export async function loadDeployment(
     artifact: ZkSyncArtifact,
 ): Promise<Deployment | undefined> {
     const baseDir = path.join(hre.config.paths.root, DEPLOYMENT_PATH, hre.network.name);
-    const deploymentFile = path.join(baseDir, `${artifact.contractName}.json`);
+
+    const deploymentFile = path.join(baseDir, artifact.sourceName, `${artifact.contractName}.json`);
 
     if (!fse.existsSync(deploymentFile)) {
         return undefined;
@@ -70,4 +123,46 @@ export async function loadDeployment(
     }
 
     return deployment;
+}
+
+export async function addDeploymentEntry(
+    hre: HardhatRuntimeEnvironment,
+    deployment: Deployment,
+    deploymentEntry: DeploymentEntry,
+): Promise<void> {
+    const existedEntry = await loadDeploymentEntry(hre, deployment, deploymentEntry);
+
+    if (existedEntry) {
+        return;
+    }
+
+    deployment.entries.push(deploymentEntry);
+}
+
+export async function loadDeploymentEntry(
+    hre: HardhatRuntimeEnvironment,
+    deployment: Deployment,
+    deploymentForFound: DeploymentEntry | EntryToFind,
+): Promise<DeploymentEntry | undefined> {
+    const foundEntry = deployment.entries.find(
+        (entry) =>
+            lodash.isEqual(entry.constructorArgs, deploymentForFound.constructorArgs) &&
+            lodash.isEqual(entry.salt, deploymentForFound.salt) &&
+            lodash.isEqual(entry.deploymentType, deploymentForFound.deploymentType),
+    );
+
+    if (foundEntry) {
+        const entryIndex = deployment.entries.indexOf(foundEntry);
+        const retrievedContractBytecode = await retrieveContractBytecode(foundEntry.address, hre.network.provider);
+
+        if (retrievedContractBytecode !== deployment.bytecode) {
+            deployment.entries.splice(entryIndex, 1);
+            await saveDeployment(hre, deployment);
+            return undefined;
+        }
+
+        return foundEntry;
+    }
+
+    return undefined;
 }

@@ -255,7 +255,7 @@ Instead, this name was received: ${contractFQN}`);
                         '*': {
                             '*': ['evm'],
                         },
-                    }
+                    },
                 },
             });
 

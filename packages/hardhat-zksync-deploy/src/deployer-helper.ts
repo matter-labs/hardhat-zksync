@@ -5,7 +5,7 @@ import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
-import { loadDeployment, saveDeployment } from './deployment-saver';
+import { loadCache, saveCache } from './deployment-saver';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
@@ -67,10 +67,16 @@ export async function deploy(
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
-    const deployment = await loadDeployment(hre, artifact);
+    const deploymentEntry = await loadCache(
+        hre,
+        artifact,
+        deploymentType,
+        constructorArguments,
+        overrides?.customData?.salt ?? ethers.ZeroHash,
+    );
 
-    if (!hre.network.forceDeploy && deployment) {
-        return new zk.Contract(deployment.address, artifact.abi, zkWallet);
+    if (!hre.network.forceDeploy && deploymentEntry) {
+        return new zk.Contract(deploymentEntry.address, artifact.abi, zkWallet);
     }
 
     const baseDeps = await _extractFactoryDeps(hre, artifact);
@@ -96,7 +102,13 @@ export async function deploy(
     });
     await contract.waitForDeployment();
 
-    await saveDeployment(hre, contract, artifact);
+    await saveCache(hre, artifact, {
+        constructorArgs: constructorArguments,
+        salt: overrides?.customData?.salt ?? ethers.ZeroHash,
+        deploymentType,
+        address: await contract.getAddress(),
+        txHash: contract.deploymentTransaction()!.hash,
+    });
 
     return contract;
 }
