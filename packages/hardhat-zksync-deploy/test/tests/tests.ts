@@ -3,10 +3,10 @@ import * as path from 'path';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
 import chalk from 'chalk';
-import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../src/task-names';
-import { Deployer } from '../src/deployer';
-import { useEnvironment } from './helpers';
-import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from './constants';
+import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../../src/task-names';
+import { Deployer } from '../../src/deployer';
+import { useEnvironment } from '../helpers';
+import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from '../constants';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', function () {
@@ -253,8 +253,7 @@ describe('Plugin tests', async function () {
 
         it('should deploy with integrated wallet', async function () {
             await this.env.run('compile');
-            const artifact = await this.env.deployer.loadArtifact('Greeter');
-            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            const contract = await this.env.deployer.deploy('Greeter', ['Hi there!']);
             const wallet = contract.runner as Wallet;
             expect(wallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
             expect(contract).to.be.an('object');

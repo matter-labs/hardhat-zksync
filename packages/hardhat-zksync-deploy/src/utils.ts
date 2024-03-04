@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {
+    EthereumProvider,
     HardhatNetworkAccountsConfig,
     HardhatNetworkHDAccountsConfig,
     HardhatRuntimeEnvironment,
@@ -137,4 +138,13 @@ export async function getWalletsFromAccount(
     }
 
     return [];
+}
+
+export async function retrieveContractBytecode(address: string, provider: EthereumProvider): Promise<string> {
+    const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
+
+    if (!bytecodeString || bytecodeString.length === 0) {
+        return undefined;
+    }
+    return bytecodeString;
 }
