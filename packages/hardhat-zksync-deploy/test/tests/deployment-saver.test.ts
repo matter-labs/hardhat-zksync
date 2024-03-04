@@ -57,7 +57,7 @@ describe('Deployment Saver', () => {
             expect(result).to.be.equal(undefined);
             expect(
                 existsSyncStub.calledOnceWithExactly(
-                    '/path/to/root/deployments/zkSyncNetwork/contracts/MyContract.sol/MyContract.json',
+                    '/path/to/root/deployments-zk/zkSyncNetwork/contracts/MyContract.sol/MyContract.json',
                 ),
             ).to.be.equal(true);
         });
@@ -140,7 +140,10 @@ describe('Deployment Saver', () => {
             );
 
             expect(
-                writeFileSyncStub.calledOnceWithExactly('/path/to/root/deployments/zkSyncNetwork/.chainId', '123456'),
+                writeFileSyncStub.calledOnceWithExactly(
+                    '/path/to/root/deployments-zk/zkSyncNetwork/.chainId',
+                    '123456',
+                ),
             ).to.be.eqls(true);
         });
 
@@ -157,7 +160,7 @@ describe('Deployment Saver', () => {
 
             expect(
                 writeJsonSyncStub.calledOnceWithExactly(
-                    '/path/to/root/deployments/zkSyncNetwork/contracts/subFolder/MyContract.sol/MyContract.json',
+                    '/path/to/root/deployments-zk/zkSyncNetwork/contracts/subFolder/MyContract.sol/MyContract.json',
                     deployment,
                     { spaces: 2 },
                 ),
@@ -178,12 +181,14 @@ describe('Deployment Saver', () => {
                         salt: 'salt1',
                         deploymentType: 'type1',
                         address: '0x1234567890',
+                        factoryDeps: ['1234', '3242'],
                     },
                     {
                         constructorArgs: [4, 5, 6],
                         salt: 'salt2',
                         deploymentType: 'type2',
                         address: '0x0987654321',
+                        factoryDeps: [],
                     },
                 ],
                 bytecode: '0x1234567890',
@@ -194,6 +199,7 @@ describe('Deployment Saver', () => {
                 constructorArgs: [1, 2, 3],
                 salt: 'salt1',
                 deploymentType: 'type1',
+                factoryDeps: ['3242', '1234'],
             };
         });
 
@@ -204,6 +210,7 @@ describe('Deployment Saver', () => {
                 constructorArgs: [1, 2, 3],
                 salt: 'salt1',
                 deploymentType: 'type1',
+                factoryDeps: ['1234', '3242'],
                 address: '0x1234567890',
             });
 
@@ -215,6 +222,7 @@ describe('Deployment Saver', () => {
                 constructorArgs: [7, 8, 9],
                 salt: 'salt3',
                 deploymentType: 'type3',
+                factoryDeps: [],
             };
 
             const entry = await loadDeploymentEntry(hre as any, deployment, deploymentForFound);

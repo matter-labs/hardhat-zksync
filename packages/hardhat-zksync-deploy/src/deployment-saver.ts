@@ -10,6 +10,7 @@ export interface DeploymentEntry {
     constructorArgs: any[];
     salt: string;
     deploymentType: DeploymentType;
+    factoryDeps: string[];
     address: string;
     txHash: string;
 }
@@ -18,6 +19,7 @@ export interface EntryToFind {
     constructorArgs: any[];
     salt: string;
     deploymentType: DeploymentType;
+    factoryDeps: string[];
 }
 
 export interface Deployment {
@@ -28,7 +30,7 @@ export interface Deployment {
     entries: DeploymentEntry[];
 }
 
-export const DEPLOYMENT_PATH: string = 'deployments';
+export const DEPLOYMENT_PATH: string = 'deployments-zk';
 export const CHAIN_ID_FILE: string = '.chainId';
 
 export async function saveCache(
@@ -59,6 +61,7 @@ export async function loadCache(
     deploymentType: DeploymentType,
     constructorArgs: any[],
     salt: string,
+    factoryDeps: string[],
 ): Promise<DeploymentEntry | undefined> {
     const deployment = await loadDeployment(hre, artifact);
 
@@ -70,6 +73,7 @@ export async function loadCache(
         constructorArgs,
         salt,
         deploymentType,
+        factoryDeps,
     };
 
     return loadDeploymentEntry(hre, deployment, entryToFind);
@@ -148,7 +152,8 @@ export async function loadDeploymentEntry(
         (entry) =>
             lodash.isEqual(entry.constructorArgs, deploymentForFound.constructorArgs) &&
             lodash.isEqual(entry.salt, deploymentForFound.salt) &&
-            lodash.isEqual(entry.deploymentType, deploymentForFound.deploymentType),
+            lodash.isEqual(entry.deploymentType, deploymentForFound.deploymentType) &&
+            lodash.isEqual(entry.factoryDeps.sort(), deploymentForFound.factoryDeps.sort()),
     );
 
     if (foundEntry) {

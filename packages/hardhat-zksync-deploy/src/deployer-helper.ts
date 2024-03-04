@@ -60,28 +60,36 @@ export async function loadArtifact(
  */
 export async function deploy(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
+    contractNameOrArtifact: ZkSyncArtifact | string,
     constructorArguments: any[] = [],
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
+    let artifact: ZkSyncArtifact;
+    if (typeof contractNameOrArtifact === 'string') {
+        artifact = await loadArtifact(hre, contractNameOrArtifact);
+    } else {
+        artifact = contractNameOrArtifact;
+    }
+
+    const baseDeps = await _extractFactoryDeps(hre, artifact);
+    const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
+    const factoryDeps = [...baseDeps, ...additionalDeps];
+
     const deploymentEntry = await loadCache(
         hre,
         artifact,
         deploymentType,
         constructorArguments,
         overrides?.customData?.salt ?? ethers.ZeroHash,
+        factoryDeps,
     );
 
     if (!hre.network.forceDeploy && deploymentEntry) {
         return new zk.Contract(deploymentEntry.address, artifact.abi, zkWallet);
     }
-
-    const baseDeps = await _extractFactoryDeps(hre, artifact);
-    const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
-    const factoryDeps = [...baseDeps, ...additionalDeps];
 
     const factory = new zk.ContractFactory<any[], zk.Contract>(
         artifact.abi,
@@ -96,7 +104,6 @@ export async function deploy(
         ..._overrides,
         customData: {
             ...customData,
-            salt: ethers.ZeroHash,
             factoryDeps,
         },
     });
@@ -106,6 +113,7 @@ export async function deploy(
         constructorArgs: constructorArguments,
         salt: overrides?.customData?.salt ?? ethers.ZeroHash,
         deploymentType,
+        factoryDeps,
         address: await contract.getAddress(),
         txHash: contract.deploymentTransaction()!.hash,
     });

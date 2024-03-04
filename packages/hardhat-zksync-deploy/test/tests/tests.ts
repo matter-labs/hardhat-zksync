@@ -253,8 +253,7 @@ describe('Plugin tests', async function () {
 
         it('should deploy with integrated wallet', async function () {
             await this.env.run('compile');
-            const artifact = await this.env.deployer.loadArtifact('Greeter');
-            const contract = await this.env.deployer.deploy(artifact, ['Hi there!']);
+            const contract = await this.env.deployer.deploy('Greeter', ['Hi there!']);
             const wallet = contract.runner as Wallet;
             expect(wallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
             expect(contract).to.be.an('object');
