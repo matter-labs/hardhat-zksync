@@ -4,9 +4,9 @@ set -e
 
 . ../../helpers.sh
 
-echo "Running zkSync inMemory node: $(basename "$(pwd)")"
+echo "Running zkSync inMemory node"
 
-# Kill any existing process occupying port 8011
+# Kill any existing process on port 8011
 PORT=8011
 if lsof -ti:$PORT; then
     echo "Port $PORT is in use. Attempting to kill the occupying process..."
@@ -15,16 +15,6 @@ if lsof -ti:$PORT; then
 fi
 
 yarn hardhat node-zksync &
-
-NODE_PID=$!
-
-cleanup() {
-    echo "Cleaning up..."
-    kill $NODE_PID
-    wait $NODE_PID 2>/dev/null # redirect all error messages to nothing
-}
-
-trap cleanup EXIT
 
 sleep 3
 
