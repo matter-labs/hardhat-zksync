@@ -16,6 +16,11 @@ cp tsconfig.json "$TEMP_TEST_DIR/tsconfig.json"
 for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
     if [ -d "$dir" ]; then
 
+      if [ -n "$1" ] && [ "$(basename "$dir")" != "$1" ]; then
+        # only execute the tests for the project passed as argument to this script, if any
+        continue
+      fi
+
       echo "[e2e] Running test in $(basename "$dir")"  
       cd "$dir"
 
@@ -27,6 +32,7 @@ for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
       cd -
       
       printf "[e2e] Finished test in $dir\n\n"
+      
     fi
 done
 
