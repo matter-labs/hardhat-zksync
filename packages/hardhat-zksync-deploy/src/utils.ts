@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {
+    EthereumProvider,
     HardhatNetworkAccountsConfig,
     HardhatNetworkHDAccountsConfig,
     HardhatRuntimeEnvironment,
@@ -10,7 +11,7 @@ import {
 import fs from 'fs';
 import { Wallet } from 'zksync-ethers';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
-import { MorphTsBuilder } from './morph-ts-builder';
+import { MorphBuilderInitialDefaultAssignment, MorphTsBuilder } from './morph-ts-builder';
 import { ZkSyncDeployPluginError } from './errors';
 import { LOCAL_CHAIN_IDS } from './constants';
 import { richWallets } from './rich-wallets';
@@ -27,11 +28,12 @@ export function updateHardhatConfigFile(
     try {
         new MorphTsBuilder(externalConfigObjectPath ?? hre.config.paths.configFile)
             .intialStep([
+                { initialModule: 'module.exports' },
+                {} as MorphBuilderInitialDefaultAssignment,
                 { initialVariableType: 'HardhatUserConfig' },
                 { initialVariable: exportedConfigObject },
-                { initialModule: 'module.exports' },
             ])
-            .nextStep({ propertyName: 'zksolc', isRequired: true })
+            .nextStep({ propertyName: 'zksolc' })
             .nextStep({ propertyName: 'settings' })
             .replaceStep({ propertyName: 'libraries', replaceObject: hre.config.zksolc.settings.libraries })
             .save();
@@ -137,4 +139,13 @@ export async function getWalletsFromAccount(
     }
 
     return [];
+}
+
+export async function retrieveContractBytecode(address: string, provider: EthereumProvider): Promise<string> {
+    const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
+
+    if (!bytecodeString || bytecodeString.length === 0) {
+        return undefined;
+    }
+    return bytecodeString;
 }

@@ -34,7 +34,7 @@ export class DeployerExtension implements AbstractDeployer {
     }
 
     public async deploy(
-        artifact: ZkSyncArtifact,
+        contractNameOrArtifact: ZkSyncArtifact | string,
         constructorArguments: any[] = [],
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
@@ -45,7 +45,7 @@ export class DeployerExtension implements AbstractDeployer {
 
         return await deploy(
             this._hre,
-            artifact,
+            contractNameOrArtifact,
             constructorArguments,
             this.wallet,
             this._deploymentType,
