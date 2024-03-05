@@ -3,7 +3,6 @@
 # fail if any commands fails
 set -e
 
-# import helpers functions
 . ../../helpers.sh
 
 echo "Running tests: $(basename "$(pwd)")"
