@@ -13,7 +13,7 @@ export { getPublicClient, innerGetPublicClient, getTestClient };
 export async function getWalletClients(
   provider: EthereumProvider,
   walletClientConfig?: Partial<WalletClientConfig>
-): Promise<(WalletClient &Eip712WalletActions)[]> {
+): Promise<Array<WalletClient & Eip712WalletActions>> {
   const { getAccounts } = await import("./accounts");
   const { getChain } = await import("./chains");
   const chain = walletClientConfig?.chain ?? (await getChain(provider));
@@ -38,7 +38,7 @@ export async function innerGetWalletClients(
   chain: Chain,
   accounts: Address[],
   walletClientConfig?: Partial<WalletClientConfig>
-): Promise<(WalletClient & Eip712WalletActions)[]> {
+): Promise<Array<WalletClient & Eip712WalletActions>> {
   const viem = await import("viem");
   const { isDevelopmentNetwork } = await import("./chains");
   const defaultParameters = isDevelopmentNetwork(chain.id)

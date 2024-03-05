@@ -3,14 +3,11 @@ import type {
   EthereumProvider,
   HardhatRuntimeEnvironment,
 } from "hardhat/types";
-import {
-  type Abi,
-  type Address,
-  type Hex,
-  Hash,
-  Account,
-} from "viem";
-import type { PublicClient } from "@nomicfoundation/hardhat-viem/types";
+import { type Abi, type Address, type Hex, Hash, Account } from "viem";
+import type {
+  PublicClient,
+  GetContractReturnType,
+} from "@nomicfoundation/hardhat-viem/types";
 import { Eip712WalletActions } from "viem/zksync";
 import { getPublicClient, getWalletClients } from "./clients";
 import {
@@ -28,8 +25,6 @@ import {
   loadArtifact,
 } from "./utils";
 import { DeployContractConfig, WalletClient } from "./types";
-
-import { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 
 export async function deployContract(
   hre: HardhatRuntimeEnvironment,

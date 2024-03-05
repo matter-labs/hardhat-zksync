@@ -130,7 +130,7 @@ describe("Plugin tests", async function () {
       const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      })
+      });
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
         {
@@ -166,7 +166,7 @@ describe("Plugin tests", async function () {
       const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      })
+      });
 
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
@@ -195,7 +195,7 @@ describe("Plugin tests", async function () {
       const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      })
+      });
 
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
@@ -213,7 +213,7 @@ describe("Plugin tests", async function () {
           public: pubClient,
         },
       });
-      let result = (await contract.read.plus([3, 2]))
+      const result = await contract.read.plus([3, 2]);
       assert(result === 1n);
     });
   });
@@ -225,7 +225,7 @@ describe("Plugin tests", async function () {
       const pubClient = await this.env.zksyncViem.getPublicClient({
         transport: http(),
         chain: chains.zkSyncSepoliaTestnet,
-      })
+      });
       const walletClient = await this.env.zksyncViem.getWalletClient(
         "0x636A122e48079f750d44d13E5b39804227E1467e",
         {
