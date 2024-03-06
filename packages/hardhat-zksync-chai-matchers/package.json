@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@ethersproject/abi": "^5.1.2",
-    "@matterlabs/hardhat-zksync-deploy": "^0.7.0",
-    "@matterlabs/hardhat-zksync-solc": "1.0.6",
+    "@matterlabs/hardhat-zksync-deploy": "^0.8.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "ethers": "~5.7.2",

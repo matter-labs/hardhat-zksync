@@ -35,7 +35,7 @@
   "dependencies": {
     "@ethersproject/abi": "^5.1.2",
     "@ethersproject/address": "5.7.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.0.3",
+    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@openzeppelin/contracts": "^4.9.2",
     "axios": "^1.6.2",
