@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
 import { SolcUserConfig } from 'hardhat/types';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
@@ -68,7 +67,8 @@ export async function executeVeificationWithRetry(
 }
 
 export async function retrieveContractBytecode(address: string, hreNetwork: any): Promise<string> {
-    const provider = new zk.Provider(hreNetwork.config.url);
+    const hre = await import("hardhat");
+    const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
     const deployedBytecode = bytecodeString.startsWith('0x') ? bytecodeString.slice(2) : bytecodeString;
 
