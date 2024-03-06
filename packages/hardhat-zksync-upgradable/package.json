@@ -47,8 +47,6 @@
     "compare-versions": "^6.0.0"
   },
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "^1.2.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.17",
