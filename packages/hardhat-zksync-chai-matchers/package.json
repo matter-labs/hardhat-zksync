@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "chai": "^4.3.7",
-    "zksync-ethers": "^6.0.0",
+    "zksync-ethers": "^6.5.0",
     "ethers": "^6.7.1",
     "hardhat": "^2.19.4",
     "ordinal": "1.0.3",
