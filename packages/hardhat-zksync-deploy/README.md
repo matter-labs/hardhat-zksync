@@ -90,7 +90,7 @@ It's main methods are:
    * Sends a deploy transaction to the zkSync network.
    * For now it uses defaults values for the transaction parameters:
    *
-   * @param artifact The previously loaded artifact object.
+   * @param contractNameOrArtifact The previously loaded artifact object, or contract name that will be resolved to artifact in the background.
    * @param constructorArguments The list of arguments to be passed to the contract constructor.
    * @param overrides Optional object with additional deploy transaction parameters.
    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
@@ -98,7 +98,21 @@ It's main methods are:
    *
    * @returns A contract object.
 ```
- - `public async deploy(artifact: ZkSyncArtifact,constructorArguments: any[],overrides?: OverridesAdditionalFactoryDeps?: ethers.BytesLike[]): Promise<zk.Contract>`
+ - `public async deploy(contractNameOrArtifact: ZkSyncArtifact | strin, constructorArguments: any[],o verrides?: OverridesAdditionalFactoryDeps?: ethers.BytesLike[]): Promise<zk.Contract>`
+
+ In the `deploy` method description, it's evident that `contractNameOrArtifact` can accept two types of objects. One type represents a loaded artifact, while the other type is a string representing a contract name, which the `deploy` method will internally convert to the corresponding artifact.
+
+```typescript
+
+const wallet = new zk.Wallet("PRIVATE_KEY");
+const deployer = new Deployer(hre, zkWallet);
+............
+// Provided previously loaded artifact
+const artifact = await deployer.loadArtifact("ContractName");
+const contract = await deployer.deploy(artifact);
+// Provided contract name
+const contract = await deployer.deploy("ContractName");
+```
 
 ## Environment extensions
 
@@ -234,7 +248,7 @@ const contract = await hre.deployer.deploy(artifact, []);
 ## Caching mechanism
 
 The `hardhat-zksync-deploy` plugin supports a caching mechanism for contracts deployed on the same network, and by default, this feature is enabled for every deployment with specific network unless specified otherwise.
-For each deployment within your project, a new `deployments` folder is created. Inside this folder, you can find subfolders for each network specified in the `hardhat.config.ts` file. Each network folder contains JSON files named after deployed contracts where caching purposes information are stored, and additionally, a `.chainId` file contains the chainId specific to that network.
+For each deployment within your project, a new `deployments-zk` folder is created. Inside this folder, you can find subfolders for each network specified in the `hardhat.config.ts` file. Each network folder contains JSON files named after deployed contracts where caching purposes information are stored, and additionally, a `.chainId` file contains the chainId specific to that network.
 
 To explicitly use a cache mechanism or force deploy for a specific network in your `hardhat.config.ts` file, you would indeed need to set the `forceDeploy` flag for that network in the networks section.
 
@@ -259,6 +273,8 @@ const config: HardhatUserConfig = {
 If the `forceDeploy` flag is set to `true` for a specific network in your `hardhat.config.ts` file, it indicates that the deployment process will force deploy contracts to that network, bypassing any cache mechanism.
 
 Conversely, if the `forceDeploy` flag is set to `false` or not specified for a network, `hardhat-zksync-deploy` will use caching mechanism during deployment. This means it will check whether the contracts have changed since the last deployment, and if not, it will reuse the already deployed contracts instead of redeploying them.
+
+If a `forceDeploy` isn't explicitly defined, it automatically defaults to `true`.
 
 ## Scripts configuration
 
@@ -404,13 +420,9 @@ Create a deployer instance:
 
 `const deployer = new Deployer(hre, zkWallet);`
 
-Load your contract artifacts:
-
-`const artifact = await deployer.loadArtifact('Greeter');`
-
 Deploy your contract:
 
-`const myContract = await deployer.deploy(artifact, [...contractArguments]);`
+`const myContract = await deployer.deploy('Greeter', [...contractArguments]);`
 
 Check the deployed address:
 
@@ -424,13 +436,9 @@ After installing it, add the plugin to your Hardhat config:
 
 Create your script in the **deploy** folder or in any folder that you have specified inside the `hardhat.config.ts` file,
 
-Load your contract artifacts:
-
-`const artifact = await hre.deployer.loadArtifact('Greeter');`
-
 Deploy your contract:
 
-`const myContract = await hre.deployer.deploy(artifact, [...contractArguments]);`
+`const myContract = await hre.deployer.deploy('Greeter', [...contractArguments]);`
 
 Check the deployed address:
 
