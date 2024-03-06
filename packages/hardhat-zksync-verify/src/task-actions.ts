@@ -159,7 +159,7 @@ export async function verifyContract(
         throw new ZkSyncVerifyPluginError(`${address} is an invalid address.`);
     }
 
-    const deployedBytecodeHex = await retrieveContractBytecode(address, hre.network);
+    const deployedBytecodeHex = await retrieveContractBytecode(address, hre);
     const deployedBytecode = new Bytecode(deployedBytecodeHex);
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
