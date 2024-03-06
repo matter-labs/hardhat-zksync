@@ -198,46 +198,6 @@ jobs:
           cd packages/hardhat-zksync-upgradable
           yarn test
 
-  verify-vyper:
-    runs-on: ubuntu-latest
-    name: verify-vyper
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Setup environment
-        run: |
-          yarn install
-          yarn build
-      - name: Test zksync verify vyper plugin
-        run: |
-          cd packages/hardhat-zksync-verify-vyper
-          yarn test
-
-  verify:
-    runs-on: ubuntu-latest
-    name: verify
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Setup environment
-        run: |
-          yarn install
-          yarn build
-      - name: Test zksync verify plugin
-        run: |
-          cd packages/hardhat-zksync-verify
-          yarn test
-
   deploy:
     runs-on: ubuntu-latest
     name: deploy

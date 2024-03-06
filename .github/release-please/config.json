@@ -13,10 +13,6 @@
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-upgradable"
         },
-        "packages/hardhat-zksync-verify": {
-            "release-type": "node",
-            "component": "@matterlabs/hardhat-zksync-verify"
-        },
         "packages/hardhat-zksync-toolbox": {
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-toolbox"
