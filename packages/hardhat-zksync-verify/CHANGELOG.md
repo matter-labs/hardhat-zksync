@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.4.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.1...@matterlabs/hardhat-zksync-verify-v1.4.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* update deploy cache logic with script load path support for windows ([#865](https://github.com/matter-labs/hardhat-zksync/issues/865)) ([c30e276](https://github.com/matter-labs/hardhat-zksync/commit/c30e276903e97b12283bb742659e513bdb9dafe6))
+
 ## [1.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.0...@matterlabs/hardhat-zksync-verify-v1.4.1) (2024-02-29)
 
 
