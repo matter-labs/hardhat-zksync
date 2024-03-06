@@ -26,8 +26,8 @@ export class ScriptManager {
             }
 
             const [tsFilesInDir, jsFilesInDir] = await Promise.all([
-                await glob(path.join(dir, '**', '*.ts'), {}),
-                await glob(path.join(dir, '**', '*.js'), {}),
+                await glob(path.join(dir, '**', '*.ts').replace(/\\/g, '/'), {}),
+                await glob(path.join(dir, '**', '*.js').replace(/\\/g, '/'), {}),
             ]);
 
             const filesInDir = tsFilesInDir.concat(jsFilesInDir);
@@ -44,7 +44,7 @@ export class ScriptManager {
                 continue;
             }
 
-            const matchedFiles = glob.sync(path.join(dir, '**', script));
+            const matchedFiles = glob.sync(path.join(dir, '**', script).replace(/\\/g, '/'));
 
             if (matchedFiles.length) {
                 return matchedFiles[0];

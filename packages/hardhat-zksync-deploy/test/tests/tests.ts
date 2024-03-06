@@ -3,10 +3,10 @@ import * as path from 'path';
 import chalk from 'chalk';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
-import { Deployer } from '../src/deployer';
-import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../src/task-names';
-import { useEnvironment } from './helpers';
-import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from './constants';
+import { Deployer } from '../../src/deployer';
+import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../../src/task-names';
+import { useEnvironment } from '../helpers';
+import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from '../constants';
 import '@matterlabs/hardhat-zksync-solc/dist/src/type-extensions';
 
 describe('Plugin tests', async function () {

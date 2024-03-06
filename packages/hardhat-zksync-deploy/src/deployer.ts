@@ -51,14 +51,14 @@ export class Deployer implements AbstractDeployer {
     }
 
     public async deploy(
-        artifact: ZkSyncArtifact,
+        contractNameOrArtifact: ZkSyncArtifact | string,
         constructorArguments: any[] = [],
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
         return await deploy(
             this._hre,
-            artifact,
+            contractNameOrArtifact,
             constructorArguments,
             this.zkWallet,
             this.deploymentType,

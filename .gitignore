@@ -25,7 +25,7 @@ dist
 artifacts-zk/
 cache-zk/
 deployments/
-
+deployments-zk/
 # Code coverage artifacts
 coverage
 .nyc_output

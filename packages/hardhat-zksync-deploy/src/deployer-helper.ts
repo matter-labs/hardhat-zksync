@@ -5,8 +5,8 @@ import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
-import { loadDeployment, saveDeployment } from './deployment-saver';
 import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
+import { loadCache, saveCache } from './deployment-saver';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -54,22 +54,35 @@ export async function loadArtifact(
  */
 export async function deploy(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
+    contractNameOrArtifact: ZkSyncArtifact | string,
     constructorArguments: any[] = [],
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
-    const deployment = await loadDeployment(hre, artifact);
-
-    if (!hre.network.forceDeploy && deployment) {
-        return new zk.Contract(deployment.address, artifact.abi, zkWallet);
-    }
+    const artifact: ZkSyncArtifact =
+    typeof contractNameOrArtifact === 'string'
+        ? await loadArtifact(hre, contractNameOrArtifact)
+        : contractNameOrArtifact;
 
     const baseDeps = await extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val)) : [];
     const factoryDeps = [...baseDeps, ...additionalDeps];
+
+    const deploymentEntry = await loadCache(
+        hre,
+        artifact,
+        deploymentType,
+        constructorArguments,
+        overrides?.customData?.salt ?? ethers.constants.HashZero,
+        factoryDeps,
+    );
+
+    if (!hre.network.forceDeploy && deploymentEntry) {
+        return new zk.Contract(deploymentEntry.address, artifact.abi, zkWallet);
+    }
+
 
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, zkWallet, deploymentType);
     const { customData, ..._overrides } = overrides ?? {};
@@ -84,7 +97,14 @@ export async function deploy(
     });
     await contract.deployed();
 
-    await saveDeployment(hre, contract, artifact);
+    await saveCache(hre, artifact, {
+        constructorArgs: constructorArguments,
+        salt: overrides?.customData?.salt ?? ethers.constants.HashZero,
+        deploymentType,
+        factoryDeps,
+        address: contract.address,
+        txHash: contract.deployTransaction.hash,
+    });
 
     return contract;
 }
