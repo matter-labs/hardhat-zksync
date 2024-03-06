@@ -1,8 +1,8 @@
 {
     "packages/hardhat-zksync-deploy": "0.8.0",
-    "packages/hardhat-zksync-upgradable": "0.2.3",
+    "packages/hardhat-zksync-upgradable": "0.3.0",
     "packages/hardhat-zksync-verify": "0.5.1",
     "packages/hardhat-zksync-toolbox": "0.4.1",
     "packages/hardhat-zksync-node": "0.1.0",
-    "packages/hardhat-zksync-chai-matchers": "0.2.1"
+    "packages/hardhat-zksync-chai-matchers": "0.3.0"
 }
