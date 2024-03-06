@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as zk from 'zksync-ethers';
 import { ZkSyncVerifyPluginError } from './errors';
 import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 
@@ -32,7 +31,8 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
 }
 
 export async function retrieveContractBytecode(address: string, hreNetwork: any): Promise<string> {
-    const provider = new zk.Provider(hreNetwork.config.url);
+    const hre = await import('hardhat');
+    const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
 
     if (bytecodeString.length === 0) {

@@ -38,7 +38,6 @@
     "axios": "^1.6.2",
     "chai": "^4.3.6",
     "chalk": "4.1.2",
-    "zksync-ethers": "^6.0.0",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "@ethersproject/abi":"^5.1.2",
     "@ethersproject/address": "5.7.0"
