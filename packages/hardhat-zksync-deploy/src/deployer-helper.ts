@@ -62,9 +62,9 @@ export async function deploy(
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
     const artifact: ZkSyncArtifact =
-    typeof contractNameOrArtifact === 'string'
-        ? await loadArtifact(hre, contractNameOrArtifact)
-        : contractNameOrArtifact;
+        typeof contractNameOrArtifact === 'string'
+            ? await loadArtifact(hre, contractNameOrArtifact)
+            : contractNameOrArtifact;
 
     const baseDeps = await extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.utils.hexlify(val)) : [];
@@ -82,7 +82,6 @@ export async function deploy(
     if (!hre.network.forceDeploy && deploymentEntry) {
         return new zk.Contract(deploymentEntry.address, artifact.abi, zkWallet);
     }
-
 
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, zkWallet, deploymentType);
     const { customData, ..._overrides } = overrides ?? {};

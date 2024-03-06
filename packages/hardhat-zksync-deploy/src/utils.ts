@@ -139,7 +139,10 @@ export async function getWalletsFromAccount(
     return [];
 }
 
-export async function retrieveContractBytecode(address: string, provider: EthereumProvider): Promise<string | undefined> {
+export async function retrieveContractBytecode(
+    address: string,
+    provider: EthereumProvider,
+): Promise<string | undefined> {
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
 
     if (!bytecodeString || bytecodeString.length === 0) {
