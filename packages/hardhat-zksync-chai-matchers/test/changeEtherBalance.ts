@@ -5,6 +5,7 @@ import path from 'path';
 import util from 'util';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { useEnvironmentWithLocalSetup } from './helpers';
@@ -32,7 +33,8 @@ describe('INTEGRATION: changeEtherBalance matcher', function () {
         let _overrides: {};
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import('hardhat');
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 

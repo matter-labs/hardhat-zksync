@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 import * as zk from 'zksync-ethers';
 import path from 'path';
 import util from 'util';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
@@ -31,7 +32,8 @@ describe('INTEGRATION: changeEtherBalances matcher', function () {
         let txGasFees: number;
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import('hardhat');
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 

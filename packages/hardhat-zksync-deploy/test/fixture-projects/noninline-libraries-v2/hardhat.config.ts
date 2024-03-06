@@ -4,7 +4,19 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        settings: {},
+        settings: {
+            libraries: {
+                  "contracts/ChildChildLib.sol": {
+                    "ChildChildLib": "0xEE4c64d0712198F2fddF9e2431D37bE554B5dED0"
+                  },
+                  "contracts/ChildLib.sol": {
+                    "ChildLib": "0x38a568ba3574E0C1591085665Ae1E6A13CA7AdFE"
+                  },
+                  "contracts/MathLib.sol": {
+                    "MathLib": "0x055C9Ce9bA76b978095A4f8f3fb127567Bc6C792"
+                  }
+                }
+        },
     },
     defaultNetwork: 'zkSyncNetwork',
     networks: {

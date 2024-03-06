@@ -3,6 +3,7 @@ import * as zk from 'zksync-ethers';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import { ensure } from '@nomicfoundation/hardhat-chai-matchers/internal/calledOnContract/utils';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 import { CHANGE_ETHER_BALANCE_MATCHER } from '../constants';
 import { Account, getAddressOf } from './misc/account';
@@ -62,7 +63,8 @@ export async function getBalanceChange(
     overrides?: ethers.Overrides,
 ) {
     const { BigNumber } = await import('ethers');
-    const provider = zk.Provider.getDefaultProvider();
+    const hre = await import('hardhat');
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     let txResponse: zk.types.TransactionResponse;
 

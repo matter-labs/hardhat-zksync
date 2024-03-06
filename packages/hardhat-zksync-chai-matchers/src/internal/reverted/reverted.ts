@@ -3,6 +3,7 @@ import * as zk from 'zksync-ethers';
 import { REVERTED_MATCHER } from '../../constants';
 import { preventAsyncMatcherChaining } from '../utils';
 import { decodeReturnData, getReturnDataFromError } from './utils';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 export function supportReverted(Assertion: Chai.AssertionStatic, chaiUtils: Chai.ChaiUtils) {
     Assertion.addProperty(REVERTED_MATCHER, function (this: any) {
@@ -88,8 +89,8 @@ export function supportReverted(Assertion: Chai.AssertionStatic, chaiUtils: Chai
 }
 
 async function getTransactionReceipt(hash: string) {
-    const provider = zk.Provider.getDefaultProvider();
-
+    const hre = await import('hardhat');
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
     return provider.getTransactionReceipt(hash);
 }
 

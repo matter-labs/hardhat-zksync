@@ -3,6 +3,7 @@ import { AssertionError, expect } from 'chai';
 import { BigNumber } from 'ethers';
 import * as zk from 'zksync-ethers';
 import path from 'path';
+import { HttpNetworkConfig } from 'hardhat/types';
 import util from 'util';
 
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
@@ -34,7 +35,8 @@ describe('INTEGRATION: changeTokenBalance and changeTokenBalances matchers', fun
         let mockToken: zk.Contract;
 
         beforeEach(async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import('hardhat');
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             sender = new zk.Wallet(RICH_WALLET_PK, provider);
             receiver = zk.Wallet.createRandom();
 

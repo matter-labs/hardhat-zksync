@@ -3,7 +3,7 @@ import path from 'path';
 import util from 'util';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
-
+import { HttpNetworkConfig } from 'hardhat/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
@@ -31,7 +31,8 @@ describe('INTEGRATION: Reverted', function () {
         let aaDeployer: Deployer;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import('hardhat');
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet1 = new zk.Wallet(RICH_WALLET_1_PK, provider);
             wallet2 = new zk.Wallet(RICH_WALLET_2_PK, provider);
 

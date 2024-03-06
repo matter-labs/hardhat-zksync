@@ -3,6 +3,7 @@ import * as zk from 'zksync-ethers';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 import { CHANGE_ETHER_BALANCES_MATCHER } from '../constants';
 import { getAddressOf, Account } from './misc/account';
@@ -109,7 +110,8 @@ async function getTxFees(
     overrides?: ethers.Overrides,
 ) {
     const { BigNumber } = require('ethers');
-    const _provider = zk.Provider.getDefaultProvider();
+    const hre = await import('hardhat');
+    const p_rovider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
 
     return Promise.all(
         accounts.map(async (account) => {
