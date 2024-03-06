@@ -1,6 +1,6 @@
 import axios from 'axios';
 import chalk from 'chalk';
-import { SolcUserConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
@@ -66,8 +66,7 @@ export async function executeVeificationWithRetry(
     }
 }
 
-export async function retrieveContractBytecode(address: string, hreNetwork: any): Promise<string> {
-    const hre = await import("hardhat");
+export async function retrieveContractBytecode(address: string, hre:HardhatRuntimeEnvironment): Promise<string> {
     const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
     const deployedBytecode = bytecodeString.startsWith('0x') ? bytecodeString.slice(2) : bytecodeString;
@@ -75,7 +74,7 @@ export async function retrieveContractBytecode(address: string, hreNetwork: any)
     if (deployedBytecode.length === 0) {
         throw new ZkSyncVerifyPluginError(
             `The address ${address} has no bytecode. Is the contract deployed to this network?
-  The selected network is ${hreNetwork.name}.`,
+  The selected network is ${hre.network.name}.`,
         );
     }
     return deployedBytecode;
