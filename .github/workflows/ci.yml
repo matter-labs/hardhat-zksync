@@ -52,9 +52,9 @@ jobs:
   #        cd packages/hardhat-zksync-vyper
   #        yarn test
 
-  deploy:
+  examples:
     runs-on: ubuntu-latest
-    name: deploy
+    name: examples
     steps:
       - uses: actions/checkout@v2
 
@@ -87,6 +87,12 @@ jobs:
           cd examples/basic-example
           yarn hardhat compile
           yarn hardhat deploy-zksync
+      
+      - name: Test deploy example
+        run: |
+          cd examples/deploy-example
+          yarn hardhat compile
+          yarn hardhat deploy-zksync
 
       - name: Test node example
         run: |
@@ -98,7 +104,7 @@ jobs:
         run: |
          cd examples/noninline-libraries-example
           yarn hardhat compile
-          yarn hardhat deploy-zksync:libraries --private-key 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
+          yarn hardhat deploy-zksync:libraries --private-key-or-index 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
           yarn hardhat compile
           yarn hardhat deploy-zksync
 
@@ -231,6 +237,46 @@ jobs:
         run: |
           cd packages/hardhat-zksync-verify
           yarn test
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: matter-labs/local-setup
+          path: local-setup
+
+      - name: Run server
+        run: |
+          cd local-setup
+          ./start.sh &>../server.log &
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: yarn
+
+      - name: Setup environment
+        run: |
+          yarn install
+          yarn build
+
+      - name: Wait until server is up
+        run: |
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+
+      - name: Test deploy package
+        run: |
+          cd packages/hardhat-zksync-deploy
+          yarn test
+
+      - name: Show logs
+        if: always()
+        run: |
+          cat server.log
 
   node:
     runs-on: ubuntu-latest
