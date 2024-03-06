@@ -1,7 +1,7 @@
 import axios from 'axios';
-import * as zk from 'zksync-ethers';
 import { ZkSyncVerifyPluginError } from './errors';
 import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -31,14 +31,14 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     return deployArgumentsEncoded;
 }
 
-export async function retrieveContractBytecode(address: string, hreNetwork: any): Promise<string> {
-    const provider = new zk.Provider(hreNetwork.config.url);
+export async function retrieveContractBytecode(address: string, hre:HardhatRuntimeEnvironment): Promise<string> {
+    const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
 
     if (bytecodeString.length === 0) {
         throw new ZkSyncVerifyPluginError(
             `The address ${address} has no bytecode. Is the contract deployed to this network?
-  The selected network is ${hreNetwork.name}.`
+  The selected network is ${hre.network.name}.`
         );
     }
     return bytecodeString;

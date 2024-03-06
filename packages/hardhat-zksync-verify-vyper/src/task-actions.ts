@@ -64,7 +64,7 @@ export async function verifyContract(
 ): Promise<number> {
     await hre.run(TASK_COMPILE_VYPER, { quiet: true });
 
-    const deployedBytecode = await retrieveContractBytecode(address, hre.network);
+    const deployedBytecode = await retrieveContractBytecode(address, hre);
 
     const artifact = await hre.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
     const artificatBytecode = artifact.bytecode;
