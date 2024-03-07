@@ -48,7 +48,7 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
             const rpcServerBinaryDir = await getRPCServerBinariesDir();
 
             // Get the latest release of the binary
-            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'v0.0.1-vm1.5.0');
 
             // Download binary if needed
             await downloader.downloadIfNeeded(force);
