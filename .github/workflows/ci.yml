@@ -37,7 +37,7 @@ jobs:
           SOLC_VERSION: ${{ matrix.solc }}
 
   zkvyper:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -65,7 +65,7 @@ jobs:
           pnpm test
 
   examples:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -195,7 +195,7 @@ jobs:
           pnpm test
 
   upgradable:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -238,7 +238,7 @@ jobs:
           pnpm test
 
   verify-vyper:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -267,7 +267,7 @@ jobs:
           pnpm test
 
   verify:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -296,7 +296,7 @@ jobs:
           pnpm test
 
   deploy:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -344,7 +344,7 @@ jobs:
           cat server.log
 
   zksync-ethers:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos, windows]
@@ -392,7 +392,7 @@ jobs:
           cat server.log
 
   node:
-      strategy:
+    strategy:
       matrix:
         node: ["16", "18"]
         os: [ubuntu, macos]
