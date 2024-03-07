@@ -4,4 +4,4 @@ import '@matterlabs/hardhat-zksync-chai-matchers';
 import '@matterlabs/hardhat-zksync-verify';
 
 // Export Deployer class.
-export { Deployer } from '@matterlabs/hardhat-zksync-deploy';
+export { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';

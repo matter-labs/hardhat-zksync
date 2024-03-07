@@ -6,6 +6,8 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { TASK_DEPLOY_ZKSYNC } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
 import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
 
+import '@matterlabs/hardhat-zksync-chai-matchers/src/index';
+
 import { useEnvironmentWithLocalSetup } from './helpers';
 
 const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';

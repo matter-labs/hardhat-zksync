@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { ZkSyncVerifyPluginError } from './errors';
 import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
@@ -31,7 +31,7 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     return deployArgumentsEncoded;
 }
 
-export async function retrieveContractBytecode(address: string, hre:HardhatRuntimeEnvironment): Promise<string> {
+export async function retrieveContractBytecode(address: string, hre: HardhatRuntimeEnvironment): Promise<string> {
     const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
 

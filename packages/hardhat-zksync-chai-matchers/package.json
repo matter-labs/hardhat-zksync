@@ -16,10 +16,10 @@
     "zkSync"
   ],
   "scripts": {
-    "lint": "yarn eslint",
-    "prettier:check": "yarn prettier --check",
-    "lint:fix": "yarn eslint --fix",
-    "fmt": "yarn prettier --write",
+    "lint": "pnpm eslint",
+    "prettier:check": "pnpm prettier --check",
+    "lint:fix": "pnpm eslint --fix",
+    "fmt": "pnpm prettier --write",
     "eslint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier 'src/**/*.ts' 'test/**/*.ts'",
     "test": "c8 mocha --recursive \"test/**/*.ts\" --exit",
@@ -43,6 +43,7 @@
     "chai": "^4.3.7",
     "zksync-ethers": "^6.0.0",
     "ethers": "^6.7.1",
+    "ethers-v5": "npm:ethers@5",
     "hardhat": "^2.19.4",
     "ordinal": "1.0.3",
     "chai-as-promised": "^7.1.1",
@@ -51,6 +52,8 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.5",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "semver": "^6.3.1",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
