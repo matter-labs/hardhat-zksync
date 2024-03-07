@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
-        os: [ubuntu, macos]
+        os: [ubuntu, macos, windows]
+        node: [16.17, 18.11]
 
     runs-on: ${{ matrix.os }}-latest
 
@@ -16,9 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -33,14 +37,22 @@ jobs:
           SOLC_VERSION: ${{ matrix.solc }}
 
   zkvyper:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+        node: [16.17, 18.11]
+
+    runs-on: ${{ matrix.os }}-latest
     name: zkvyper
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -68,9 +80,12 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -146,9 +161,12 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -181,9 +199,12 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -206,9 +227,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -227,9 +251,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -243,7 +270,10 @@ jobs:
           pnpm test
 
   deploy:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+        node: [16.17, 18.11]
     name: deploy
     steps:
       - uses: actions/checkout@v2
@@ -258,9 +288,12 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -283,7 +316,10 @@ jobs:
           cat server.log
 
   zksync-ethers:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+        node: [16.17, 18.11]
     name: zksync-ethers
     steps:
       - uses: actions/checkout@v2
@@ -298,9 +334,12 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
@@ -323,14 +362,20 @@ jobs:
           cat server.log
 
   node:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu, macos]
+        node: [16.17, 18.11]
     name: node
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
