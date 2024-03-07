@@ -9,7 +9,7 @@ jobs:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
         node: ["16", "18"]
-        os: [ubuntu, macos]
+        os: [ubuntu, macos, windows]
 
     runs-on: ${{ matrix.os }}-latest
 
@@ -37,7 +37,12 @@ jobs:
           SOLC_VERSION: ${{ matrix.solc }}
 
   zkvyper:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: zkvyper
     steps:
       - uses: actions/checkout@v2
@@ -60,7 +65,12 @@ jobs:
           pnpm test
 
   examples:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: examples
     steps:
       - uses: actions/checkout@v2
@@ -185,7 +195,12 @@ jobs:
           pnpm test
 
   upgradable:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: upgradable
     steps:
       - uses: actions/checkout@v2
@@ -223,7 +238,12 @@ jobs:
           pnpm test
 
   verify-vyper:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: verify-vyper
     steps:
       - uses: actions/checkout@v2
@@ -247,7 +267,12 @@ jobs:
           pnpm test
 
   verify:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: verify
     steps:
       - uses: actions/checkout@v2
@@ -271,7 +296,12 @@ jobs:
           pnpm test
 
   deploy:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: deploy
     steps:
       - uses: actions/checkout@v2
@@ -314,7 +344,12 @@ jobs:
           cat server.log
 
   zksync-ethers:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos, windows]
+
+    runs-on: ${{ matrix.os }}-latest
     name: zksync-ethers
     steps:
       - uses: actions/checkout@v2
@@ -357,7 +392,12 @@ jobs:
           cat server.log
 
   node:
-    runs-on: ubuntu-latest
+      strategy:
+      matrix:
+        node: ["16", "18"]
+        os: [ubuntu, macos]
+
+    runs-on: ${{ matrix.os }}-latest
     name: node
     steps:
       - uses: actions/checkout@v2
