@@ -26,7 +26,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Test zksolc compiler plugin
         run: |
@@ -48,7 +48,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Test zkvyper compiler plugin
         run: |
@@ -81,7 +81,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Wait until server is up
@@ -168,7 +168,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Wait until server is up
@@ -206,7 +206,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Wait until server is up
@@ -234,7 +234,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Test zksync verify vyper plugin
@@ -258,7 +258,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Test zksync verify plugin
@@ -292,7 +292,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Wait until server is up
@@ -335,7 +335,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Wait until server is up
@@ -368,7 +368,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Test zksync node plugin
