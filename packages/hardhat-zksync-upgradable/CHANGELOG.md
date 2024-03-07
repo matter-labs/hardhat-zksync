@@ -1,5 +1,19 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.3.0...@matterlabs/hardhat-zksync-upgradable-v1.3.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* remove unnecessary devDependencies, remove hardhat-zksync-deploy import from index.ts ([#870](https://github.com/matter-labs/hardhat-zksync/issues/870)) ([8955d34](https://github.com/matter-labs/hardhat-zksync/commit/8955d3481c48b8fbe0034485e7b675cee57d7455))
+
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.4...@matterlabs/hardhat-zksync-upgradable-v1.3.0) (2024-02-26)
+
+
+### Features
+
+* bump hardhat-zksync-deploy and hardhat-zksync-solc dependencies… ([#840](https://github.com/matter-labs/hardhat-zksync/issues/840)) ([b570877](https://github.com/matter-labs/hardhat-zksync/commit/b570877c78c74f3c88c7e62498e5f477d4ada616))
+
 ## [1.2.4](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.2.3...@matterlabs/hardhat-zksync-upgradable-v1.2.4) (2024-02-05)
 
 

@@ -22,10 +22,14 @@ import {
     defaultZkVyperConfig,
     TASK_COMPILE_VYPER_CHECK_ERRORS,
     TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS,
+    ZKVYPER_COMPILER_PATH_VERSION,
 } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
 
 extendConfig((config, userConfig) => {
+    defaultZkVyperConfig.version = userConfig.zkvyper?.settings?.compilerPath
+        ? ZKVYPER_COMPILER_PATH_VERSION
+        : 'latest';
     config.zkvyper = { ...defaultZkVyperConfig, ...userConfig?.zkvyper };
     config.zkvyper.settings = { ...defaultZkVyperConfig.settings, ...userConfig?.zkvyper?.settings };
     config.zkvyper.settings.optimizer = {

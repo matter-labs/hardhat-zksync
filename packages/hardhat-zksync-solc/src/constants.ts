@@ -64,7 +64,7 @@ export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
 export const MISSING_LIBRARIES_NOTICE =
     'zksolc compiler detected missing libraries! For more details, visit: https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html.';
 export const COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS =
-    'To compile and deploy libraries, please run: `yarn hardhat deploy-zksync:libraries --private-key <PRIVATE_KEY>`';
+    'To compile and deploy libraries, please run: `yarn hardhat deploy-zksync:libraries`';
 export const MISSING_LIBRARY_LINK =
     'For more details on how to use deploy-zksync:libraries task from hardhat-zksync-deploy plugin, visit: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html.';
 

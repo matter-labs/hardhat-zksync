@@ -24,6 +24,8 @@ build-test/
 dist
 artifacts-zk/
 cache-zk/
+deployments-zk/
+deployments/
 
 # Code coverage artifacts
 coverage

@@ -117,10 +117,13 @@ export class ZksolcCompilerDownloader {
             return this._configCompilerPath;
         }
 
+        // Add mock extension '0' so windowns can run the binary
         return path.join(
             this._compilersDirectory,
             'zksolc',
-            `zksolc-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}`,
+            `zksolc-${this._configCompilerPath ? `remote` : `v${this._version}`}${salt ? '-' : ''}${salt}${
+                this._configCompilerPath ? '.0' : ''
+            }`,
         );
     }
 

@@ -1,15 +1,22 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
-import { callDeployScripts, deployLibraries } from './plugin';
+import { deployLibraries } from './plugin';
+import { ScriptManager } from './script-manager';
 
 export async function zkSyncDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
-    await callDeployScripts(hre, taskArgs.script);
+    let tags = taskArgs.tags;
+    if (typeof tags === 'string') {
+        tags = tags.split(',');
+    }
+
+    const scriptManager = new ScriptManager(hre);
+
+    await scriptManager.callDeployScripts(taskArgs.script, tags);
 }
 
 export async function zkSyncLibraryDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
     await deployLibraries(
         hre,
-        taskArgs.privateKey,
-        taskArgs.accountNumber,
+        taskArgs.privateKeyOrIndex,
         taskArgs.externalConfigObjectPath,
         taskArgs.exportedConfigObject,
         taskArgs.noAutoPopulateConfig,

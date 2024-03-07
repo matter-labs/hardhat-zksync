@@ -159,7 +159,7 @@ export async function verifyContract(
         throw new ZkSyncVerifyPluginError(`${address} is an invalid address.`);
     }
 
-    const deployedBytecodeHex = await retrieveContractBytecode(address, hre.network);
+    const deployedBytecodeHex = await retrieveContractBytecode(address, hre);
     const deployedBytecode = new Bytecode(deployedBytecodeHex);
 
     const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
@@ -208,13 +208,13 @@ export async function verifyContract(
 
     const request = {
         contractAddress: address,
-        sourceCode: getSolidityStandardJsonInput(hre, dependencyGraph.getResolvedFiles()),
+        sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), contractInformation.compilerInput),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
         compilerSolcVersion: solcVersion,
         compilerZksolcVersion,
         constructorArguments: deployArgumentsEncoded,
-        optimizationUsed
+        optimizationUsed,
     };
 
     const response = await verifyContractRequest(request, hre.network.verifyURL);
