@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
+        node: ["16", "18"]
         os: [ubuntu, macos]
 
     runs-on: ${{ matrix.os }}-latest
@@ -21,12 +22,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
 
       - name: Test zksolc compiler plugin
         run: |
@@ -41,14 +42,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
 
       - name: Test zkvyper compiler plugin
         run: |
@@ -76,12 +80,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Wait until server is up
@@ -168,7 +172,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Wait until server is up
@@ -201,12 +205,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Wait until server is up
@@ -229,12 +233,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Test zksync verify vyper plugin
@@ -253,12 +257,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Test zksync verify plugin
@@ -287,12 +291,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Wait until server is up
@@ -330,12 +334,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Wait until server is up
@@ -363,12 +367,12 @@ jobs:
           version: 8
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Setup environment
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Test zksync node plugin

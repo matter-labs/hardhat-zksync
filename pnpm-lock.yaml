@@ -1081,6 +1081,12 @@ importers:
       semver:
         specifier: ^7.5.1
         version: 7.6.0
+      sinon:
+        specifier: ^17.0.1
+        version: 17.0.1
+      sinon-chai:
+        specifier: ^3.7.0
+        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
       undici:
         specifier: ^5.14.0
         version: 5.28.3
@@ -1151,12 +1157,6 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
-      sinon:
-        specifier: ^17.0.1
-        version: 17.0.1
-      sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
       ts-node:
         specifier: ^10.6.0
         version: 10.9.2(@types/node@18.19.16)(typescript@5.3.3)
@@ -7216,6 +7216,7 @@ packages:
     dependencies:
       chai: 4.4.1
       sinon: 17.0.1
+    dev: false
 
   /sinon@17.0.1:
     resolution: {integrity: sha512-wmwE19Lie0MLT+ZYNpDymasPHUKTaZHUH/pKEubRXIzySv9Atnlw+BUMGCzWgV7b7wO+Hw6f1TEOr0IUnmU8/g==}
