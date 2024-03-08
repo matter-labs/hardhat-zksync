@@ -14,7 +14,7 @@ const deployScript = async function (hre: HardhatRuntimeEnvironment) {
     // Show the contract info.
     const contractAddress = factoryContract.address;
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
-}
+};
 
 export default deployScript;
 
