@@ -64,3 +64,19 @@ for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
 done
 
 rm -fr "$TEMP_TEST_DIR"
+
+
+# Post-processing step
+for dir in "${BASE_FIXTURE_PROJECTS_DIR}"/*; do
+    if [ -d "$dir" ]; then
+        if [ -n "$1" ] && [ "$(basename "$dir")" != "$1" ]; then
+            continue
+        fi
+
+        package_json="${dir}/package.json"
+        if [ -f "$package_json" ]; then
+            rm "$package_json"
+            echo "[e2e] Deleted package.json in $(basename "$dir")"
+        fi
+    fi
+done
