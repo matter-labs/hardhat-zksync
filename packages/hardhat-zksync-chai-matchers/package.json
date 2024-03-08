@@ -43,7 +43,7 @@
     "chai": "^4.3.7",
     "zksync-ethers": "^6.0.0",
     "ethers": "^6.7.1",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.21.0",
     "ordinal": "1.0.3",
     "chai-as-promised": "^7.1.1",
     "@matterlabs/hardhat-zksync-deploy": "^1.2.0",
