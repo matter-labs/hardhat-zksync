@@ -32,11 +32,11 @@ describe('zksolc plugin', async function () {
             assert.isDefined(this.env.config.zksolc.settings.missingLibrariesPath);
 
             assert.include(
-                this.env.config.paths.artifacts.replace(this.pathEscape, '/'),
+                this.env.config.paths.artifacts.replaceAll(this.pathEscape, '/'),
                 '/fixture-projects/multiple-compilers/artifacts-zk',
             );
             assert.include(
-                this.env.config.paths.cache.replace(this.pathEscape, '/'),
+                this.env.config.paths.cache.replaceAll(this.pathEscape, '/'),
                 '/fixture-projects/multiple-compilers/cache-zk',
             );
 
