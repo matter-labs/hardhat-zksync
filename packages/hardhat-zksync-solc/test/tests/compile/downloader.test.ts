@@ -10,7 +10,7 @@ import {
 
 describe('Downloader', async () => {
     const sandbox = sinon.createSandbox();
-    const pathEscape = process.env.PLATFORM_OS?.includes('windows') ? '\\' : "/";
+    const pathEscape = process.env.PLATFORM_OS?.includes('windows') ? '\\' : '/';
 
     async function isCompilerDownloaded(isZksolcDownloaded: boolean): Promise<boolean> {
         return isZksolcDownloaded;
@@ -106,7 +106,9 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal(
+                'cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0',
+            );
             expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
@@ -199,7 +201,9 @@ describe('Downloader', async () => {
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             const result = downloader.getCompilerPath();
-            expect(result.replace(pathEscape, '/')).to.be.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
+            expect(result.replace(pathEscape, '/')).to.be.equal(
+                'cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0',
+            );
         });
     });
 

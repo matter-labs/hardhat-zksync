@@ -16,7 +16,7 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
 
         this.env = require('hardhat');
         const _ = this.env.run(TASK_CLEAN);
-        this.pathEscape = process.env.PLATFORM_OS?.includes('windows') ? '\\' : "/";
+        this.pathEscape = process.env.PLATFORM_OS?.includes('windows') ? '\\' : '/';
     });
 
     afterEach('Resetting hardhat', function () {

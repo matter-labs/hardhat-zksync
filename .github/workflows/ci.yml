@@ -35,7 +35,7 @@ jobs:
           pnpm test
         env:
           SOLC_VERSION: ${{ matrix.solc }}
-          PLATFORM_OS: ${{ runner.os }}
+          PLATFORM_OS: ${{ matrix.os }}
 
   zkvyper:
     strategy:
@@ -65,7 +65,7 @@ jobs:
           cd packages/hardhat-zksync-vyper
           pnpm test
         env:
-          PLATFORM_OS: ${{ runner.os }}
+          PLATFORM_OS: ${{ matrix.os }}
 
   examples:
     strategy:
