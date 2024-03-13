@@ -294,11 +294,11 @@ describe('zksolc plugin', async function () {
             assert.isTrue(fs.existsSync(this.env.config.paths.artifacts));
 
             assert.include(
-                this.env.config.paths.artifacts.replace(this.pathEscape, '/'),
+                this.env.config.paths.artifacts.replaceAll(this.pathEscape, '/'),
                 'fixture-projects/no-zksync/artifacts',
             );
             assert.include(
-                this.env.config.paths.cache.replace(this.pathEscape, '/'),
+                this.env.config.paths.cache.replaceAll(this.pathEscape, '/'),
                 'fixture-projects/no-zksync/cache',
             );
         });
