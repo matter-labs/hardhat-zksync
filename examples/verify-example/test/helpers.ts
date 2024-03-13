@@ -6,6 +6,7 @@ export const MOCK_ADDRESS = '0x110eb1e16A63c608787236E728Fa1817C72e6950';
 export const WRONG_NUMBER_OF_CONSTRUCTOR_ARGUMENTS_ERROR =
     'The number of constructor arguments you provided (0) does not match the number of constructor arguments the contract has been deployed with (1).';
 export const CONTRACT_ALREADY_VERIFIED_ERROR = 'This contract is already verified';
+export const TASK_VERIFY = 'verify:verify';
 
 declare module 'mocha' {
     interface Context {
