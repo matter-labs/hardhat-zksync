@@ -10,6 +10,7 @@ import {
 
 describe('Downloader', async () => {
     const sandbox = sinon.createSandbox();
+    const pathEscape = process.env.PLATFORM_OS?.includes('windows') ? '\\' : "/";
 
     async function isCompilerDownloaded(isZksolcDownloaded: boolean): Promise<boolean> {
         return isZksolcDownloaded;
@@ -34,7 +35,7 @@ describe('Downloader', async () => {
             const version = downloader.getVersion();
             const compilerDownloaded = await downloader.isCompilerDownloaded();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-v0.0.4');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.0.4');
             expect(version).to.equal('0.0.4');
             expect(compilerDownloaded).to.equal(false);
         });
@@ -48,7 +49,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-v0.0.4');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.0.4');
             expect(version).to.equal('0.0.4');
         });
 
@@ -61,7 +62,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-v0.1.0');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
             expect(version).to.equal('0.1.0');
         });
 
@@ -73,7 +74,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-v0.1.0');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
             expect(version).to.equal('0.1.0');
         });
 
@@ -89,7 +90,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('zksolc/zksolc-custom');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('zksolc/zksolc-custom');
             expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
@@ -105,7 +106,7 @@ describe('Downloader', async () => {
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
             expect(version).to.equal(ZKSOLC_COMPILER_PATH_VERSION);
         });
 
@@ -168,7 +169,7 @@ describe('Downloader', async () => {
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('0.1.0', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
 
-            expect(compilerPath).to.equal('cache/zksolc/zksolc-v0.1.0');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
         });
 
         it('should return the default compiler path with configured compiler path', async () => {
@@ -186,7 +187,7 @@ describe('Downloader', async () => {
             );
             const compilerPath = downloader.getCompilerPath();
 
-            expect(compilerPath).to.equal('path/zksolc/zksolc-custom');
+            expect(compilerPath.replace(pathEscape, '/')).to.equal('path/zksolc/zksolc-custom');
         });
 
         it('should return the compiler path when the compiler path is a URL', async () => {
@@ -198,7 +199,7 @@ describe('Downloader', async () => {
             sandbox.stub(fse, 'pathExists').resolves(false);
 
             const result = downloader.getCompilerPath();
-            expect(result).to.be.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
+            expect(result.replace(pathEscape, '/')).to.be.equal('cache/zksolc/zksolc-remote-b2f43f92a73c853b1c1cd4cd578d3d8489c00d5d.0');
         });
     });
 

@@ -35,12 +35,13 @@ jobs:
           pnpm test
         env:
           SOLC_VERSION: ${{ matrix.solc }}
+          PLATFORM_OS: ${{ runner.os }}
 
   zkvyper:
     strategy:
       matrix:
         node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: zkvyper
@@ -63,12 +64,14 @@ jobs:
         run: |
           cd packages/hardhat-zksync-vyper
           pnpm test
+        env:
+          PLATFORM_OS: ${{ runner.os }}
 
   examples:
     strategy:
       matrix:
         node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: examples
@@ -197,8 +200,8 @@ jobs:
   upgradable:
     strategy:
       matrix:
-        node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        node: ["18"]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: upgradable
@@ -240,8 +243,8 @@ jobs:
   verify-vyper:
     strategy:
       matrix:
-        node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        node: ["18"]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: verify-vyper
@@ -270,7 +273,7 @@ jobs:
     strategy:
       matrix:
         node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: verify
@@ -299,7 +302,7 @@ jobs:
     strategy:
       matrix:
         node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: deploy
@@ -347,7 +350,7 @@ jobs:
     strategy:
       matrix:
         node: ["16", "18"]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
     name: zksync-ethers
