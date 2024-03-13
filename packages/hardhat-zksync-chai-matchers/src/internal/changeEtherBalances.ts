@@ -3,7 +3,6 @@ import * as zk from 'zksync-ethers';
 import ordinal from 'ordinal';
 
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
-import { HttpNetworkConfig } from 'hardhat/types';
 
 import { CHANGE_ETHER_BALANCES_MATCHER } from '../constants';
 import { getAddressOf, Account } from './misc/account';

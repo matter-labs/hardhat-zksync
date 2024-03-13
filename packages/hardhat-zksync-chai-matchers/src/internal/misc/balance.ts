@@ -1,7 +1,7 @@
 import * as zk from 'zksync-ethers';
 
-import { Account, getAddressOf } from './account';
 import { HttpNetworkConfig } from 'hardhat/types';
+import { Account, getAddressOf } from './account';
 
 export interface BalanceChangeOptions {
     includeFee?: boolean;
@@ -15,7 +15,6 @@ export async function getBalances(accounts: Array<Account | string>, blockNumber
     const { BigNumber } = await import('ethers');
     const hre = await import('hardhat');
     const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
-
 
     return Promise.all(
         accounts.map(async (account) => {
