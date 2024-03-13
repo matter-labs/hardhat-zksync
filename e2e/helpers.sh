@@ -58,3 +58,28 @@ assert_directory_not_empty() {
     exit 1
   fi
 }
+
+kill_process_on_port() {
+    PORT=$1
+    if lsof -ti:$PORT; then
+        echo "Port $PORT is in use. Attempting to kill the occupying process..."
+        lsof -ti:$PORT | xargs kill -9
+        echo "Process occupying port $PORT has been terminated."
+    else
+        echo "No process found on port $PORT."
+    fi
+}
+
+check_log_value() {
+    local output="$1"
+    local expected_value="$2"
+    
+    echo "$output"
+
+    if echo "$output" | grep -q "$expected_value"; then
+        echo "Success:log $expected_value is found!"
+    else
+        echo "Error: $expected_value not found or incorrect!"
+        exit 1
+    fi
+}

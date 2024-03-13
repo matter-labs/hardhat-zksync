@@ -66,7 +66,7 @@ export async function executeVeificationWithRetry(
     }
 }
 
-export async function retrieveContractBytecode(address: string, hre:HardhatRuntimeEnvironment): Promise<string> {
+export async function retrieveContractBytecode(address: string, hre: HardhatRuntimeEnvironment): Promise<string> {
     const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
     const deployedBytecode = bytecodeString.startsWith('0x') ? bytecodeString.slice(2) : bytecodeString;
