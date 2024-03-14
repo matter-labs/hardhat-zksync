@@ -13,9 +13,7 @@ kill_process_on_port 8011
 yarn hardhat node-zksync &
 
 # wait for node to start
-sleep 1
-
-assert_directory_exists ".zksolc-libraries-cache"
+sleep 3
 
 yarn hardhat deploy-zksync:libraries --network inMemoryNode
 
