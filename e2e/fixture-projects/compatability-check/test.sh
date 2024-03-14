@@ -12,8 +12,10 @@ kill_process_on_port 8011
 
 yarn hardhat node-zksync &
 
-# wait for node to start
-sleep 3
+while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do
+    echo "Waiting for node-zksync to start..."
+    sleep 1
+done
 
 yarn hardhat deploy-zksync:libraries --network inMemoryNode
 
