@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "^1.1.4",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.5",
     "axios": "^1.6.2",
     "chai": "^4.3.6",
     "hardhat": "^2.19.4",
@@ -48,7 +48,7 @@
     "sinon": "^17.0.1"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.5",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
@@ -67,7 +67,7 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0"
+    "@nomicfoundation/hardhat-verify": "^2.0.5"
   },
   "prettier": {
     "tabWidth": 4,
