@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.3.0...@matterlabs/hardhat-zksync-upgradable-v0.3.1) (2024-03-14)
+
+
+### Bug Fixes
+
+* use hardhat with caret to use single version of hardhat ([#906](https://github.com/matter-labs/hardhat-zksync/issues/906)) ([edead87](https://github.com/matter-labs/hardhat-zksync/commit/edead87ed1f2e0d495918fe8b8a68d0e378b76b0))
+
 ## [0.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.2.3...@matterlabs/hardhat-zksync-upgradable-v0.3.0) (2024-03-06)
 
 
