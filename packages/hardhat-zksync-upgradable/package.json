@@ -43,7 +43,7 @@
     "ethers": "~5.7.2",
     "@ethersproject/abi": "^5.1.2",
     "fs-extra": "^11.1.1",
-    "hardhat": "2.14.0",
+    "hardhat": "^2.14.0",
     "proper-lockfile": "^4.1.1",
     "solidity-ast": "npm:solidity-ast@0.4.45",
     "zksync-ethers": "^5.0.0"
