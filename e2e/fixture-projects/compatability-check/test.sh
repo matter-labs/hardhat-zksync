@@ -17,7 +17,7 @@ yarn hardhat deploy-zksync --network dockerizedNode
 assert_directory_exists "artifacts-zk"
 assert_directory_exists "cache-zk"
 
-yarn hardhat run scripts/deploy-factory-uups.ts --network inMemoryNode
+yarn hardhat run scripts/deploy-factory-uups.ts --network dockerizedNode
 
 
 
