@@ -1,11 +1,13 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
+import sinon, { SinonStub } from 'sinon';
 import fse from 'fs-extra';
 import { ZkSyncArtifact } from '../../src/types';
 import { loadDeployment, loadDeploymentEntry, saveDeployment } from '../../src/deployment-saver';
 
 describe('Deployment Saver', () => {
-    const providerSentStub = sinon.stub();
+    const sandbox = sinon.createSandbox();
+
+    const providerSentStub = sandbox.stub();
     const provider = {
         send: providerSentStub,
     };
@@ -24,12 +26,12 @@ describe('Deployment Saver', () => {
                 compilers: [],
             },
         },
-        run: sinon.stub(),
+        run: sandbox.stub(),
     };
 
-    const existsSyncStub = sinon.stub(fse, 'existsSync').returns(false);
-    const readFileSyncStub = sinon.stub(fse, 'readFileSync').returns('123456');
-    const readJsonSyncStub = sinon.stub(fse, 'readJsonSync');
+    let existsSyncStub: SinonStub;
+    let readFileSyncStub: SinonStub;
+    let readJsonSyncStub: SinonStub;
 
     let artifact: ZkSyncArtifact;
 
@@ -46,6 +48,14 @@ describe('Deployment Saver', () => {
             deployedLinkReferences: {},
             linkReferences: {},
         };
+
+        existsSyncStub = sandbox.stub(fse, 'existsSync');
+        readFileSyncStub = sandbox.stub(fse, 'readFileSync').returns('123456');
+        readJsonSyncStub = sandbox.stub(fse, 'readJsonSync');
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 
     describe('loadDeployment', () => {
@@ -118,14 +128,18 @@ describe('Deployment Saver', () => {
     });
 
     describe('saveDeployment', () => {
-        const mkdirpSyncStub = sinon.stub(fse, 'mkdirpSync');
-        const writeFileSyncStub = sinon.stub(fse, 'writeFileSync');
-        const writeJsonSyncStub = sinon.stub(fse, 'writeJsonSync');
+        let mkdirpSyncStub: SinonStub;
+        let writeFileSyncStub: SinonStub;
+        let writeJsonSyncStub: SinonStub;
 
         beforeEach(() => {
-            mkdirpSyncStub.reset();
-            writeFileSyncStub.reset();
-            writeJsonSyncStub.reset();
+            mkdirpSyncStub = sandbox.stub(fse, 'mkdirpSync');
+            writeFileSyncStub = sandbox.stub(fse, 'writeFileSync');
+            writeJsonSyncStub = sandbox.stub(fse, 'writeJsonSync');
+        });
+
+        afterEach(() => {
+            sandbox.restore();
         });
 
         it('should write the chain ID to a file', async () => {
@@ -145,6 +159,8 @@ describe('Deployment Saver', () => {
                     '123456',
                 ),
             ).to.be.eqls(true);
+
+            expect(mkdirpSyncStub.calledOnceWithExactly('/path/to/root/deployments-zk/zkSyncNetwork/contracts/'));
         });
 
         it('should write the deployment to a JSON file', async () => {
@@ -165,6 +181,8 @@ describe('Deployment Saver', () => {
                     { spaces: 2 },
                 ),
             ).to.be.equal(true);
+
+            expect(mkdirpSyncStub.calledOnceWithExactly('/path/to/root/deployments-zk/zkSyncNetwork'));
         });
     });
 
@@ -203,6 +221,10 @@ describe('Deployment Saver', () => {
             };
         });
 
+        afterEach(() => {
+            sandbox.restore();
+        });
+
         it('should return the deployment entry if found', async () => {
             const entry = await loadDeploymentEntry(hre as any, deployment, deploymentForFound);
 
@@ -232,6 +254,10 @@ describe('Deployment Saver', () => {
 
         it('should return undefined if retrieved contract bytecode does not match deployment bytecode', async () => {
             deployment.bytecode = '0x0987654321';
+
+            sandbox.stub(fse, 'mkdirpSync').resolves();
+            sandbox.stub(fse, 'writeFileSync');
+            sandbox.stub(fse, 'writeJsonSync');
 
             const entry = await loadDeploymentEntry(hre as any, deployment, deploymentForFound);
 
