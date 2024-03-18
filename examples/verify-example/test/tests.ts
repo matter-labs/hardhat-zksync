@@ -95,7 +95,7 @@ describe('verify plugin', async function () {
             }
         });
 
-        it('Test verification with the wrong nubmer of contructor arguments', async function () {
+        it('Test verification with the wrong numer of contructor arguments', async function () {
             try {
                 // Run the verification again on the previously verified contract
                 await this.env.run('verify:verify', {

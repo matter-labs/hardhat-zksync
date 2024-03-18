@@ -166,7 +166,7 @@ describe('verify plugin', async function () {
             }
         });
 
-        it('Fails to encode because missmatch in length', async function () {
+        it('Fails to encode because mismatch in length', async function () {
             try {
                 const artifact = await this.env.run(TASK_VERIFY_GET_ARTIFACT, { contractFQN, deployedBytecode });
                 await getDeployArgumentEncoded([], artifact);

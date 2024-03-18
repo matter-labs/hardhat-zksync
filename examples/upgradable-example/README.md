@@ -61,7 +61,7 @@ yarn hardhat compile
 To run a specific end-to-end script in the `scripts` folder, use the following command
 
 ```
-yarn hardhad run ./scipts/<SCRIPT_NAME>
+yarn hardhat run ./scipts/<SCRIPT_NAME>
 ```
 
 - Example: `yarn hardhat run ./scripts/deploy-box-proxy.ts`
