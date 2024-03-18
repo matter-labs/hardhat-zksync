@@ -1,4 +1,4 @@
-# hardhat-zksync-toolbox 🚀
+# hardhat-zksync 🚀
 
 zkSync Era [Hardhat](https://hardhat.org/) plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins.
 
@@ -15,17 +15,17 @@ Ensure you are using the correct version of the plugin with ethers:
 
 ## 📥 Installation
 
-To install **hardhat-zksync-toolbox** plugin, run:
+To install **hardhat-zksync** plugin, run:
 
-`npm i -D @matterlabs/hardhat-zksync-toolbox`
+`npm i -D @matterlabs/hardhat-zksync`
 
 or
 
-`yarn add -D @matterlabs/hardhat-zksync-toolbox ethers zksync-ethers`
+`yarn add -D @matterlabs/hardhat-zksync ethers zksync-ethers`
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-toolbox](https://era.zksync.io/docs/tools/hardhat/plugins.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync](https://era.zksync.io/docs/tools/hardhat/plugins.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
 [Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
 [Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\

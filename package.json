@@ -19,8 +19,8 @@
     "wsrun": "^5.2.2"
   },
   "scripts": {
-    "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync-toolbox",
-    "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync-toolbox",
+    "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync",
+    "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync",
     "clean": "wsrun --exclude-missing clean",
     "lint": "wsrun --exclude-missing --stages lint",
     "lint:fix": "wsrun --exclude-missing --stages lint:fix",
