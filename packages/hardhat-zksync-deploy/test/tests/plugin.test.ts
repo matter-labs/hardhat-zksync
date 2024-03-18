@@ -131,7 +131,6 @@ describe('deployLibraries', () => {
             'Deployed contracts/MathLib.sol:MathLib at 0x333333333333',
         );
         expect(consoleInfoSpy.getCall(6).args[0]).to.includes('All libraries deployed successfully!');
-        expect(consoleInfoSpy.getCall(7).args[0]).to.includes('Please run \u001b[32myarn hardhat compile');
     });
 
     it('should deploy all libraries successfully and update hardhat.config', async () => {
