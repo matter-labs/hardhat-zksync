@@ -1,3 +1,4 @@
+import * as chai from 'chai';
 import { expect } from 'chai';
 import { Contract, ethers } from 'ethers';
 export * as zk from 'zksync-ethers';
