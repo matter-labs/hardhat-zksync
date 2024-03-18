@@ -67,7 +67,7 @@ export function getLibraryInfos(hre: HardhatRuntimeEnvironment): MissingLibrary[
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
 
     if (!fs.existsSync(libraryPathFile)) {
-        throw new ZkSyncDeployPluginError('Missing librararies file not found');
+        throw new ZkSyncDeployPluginError('Missing libraries file not found');
     }
 
     return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));

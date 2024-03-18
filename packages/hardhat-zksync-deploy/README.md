@@ -207,7 +207,7 @@ Methods available for use in `hre.deployer` are the same as those available in t
 ```
 - `async getWallet(privateKeyOrAccountNumber?: string | number): Promise<zk.Wallet>`
 
-### Tranistion from `Deployer` object to the `hre.deployer`
+### Transition from `Deployer` object to the `hre.deployer`
 
 The deployment logic remains the same, but instead of instantiating a `Deployer` class, you directly access the deployer object provided by `hre.deployer`. This simplifies the deployment process and enhances the developer experience.
 
@@ -258,7 +258,7 @@ const config: HardhatUserConfig = {
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
-      forceDeploy: true // Specify is deploy proccess will use cache mechanism or it will force deploy of the contracts
+      forceDeploy: true // Specify is deploy process will use cache mechanism or it will force deploy of the contracts
     }
   },
 }
@@ -388,8 +388,8 @@ The default value for **tags** is `default`, and the default value for **priorit
 ## 📖 Example
 
 Note:
-- **hre** - hardhat runtime enviroment
-- **zkWallet** - instace of Wallet using [zksync-ethers](https://www.npmjs.com/package/zksync-ethers) SDK 
+- **hre** - hardhat runtime environment
+- **zkWallet** - instance of Wallet using [zksync-ethers](https://www.npmjs.com/package/zksync-ethers) SDK 
 
 ### Deployer class usage
 
