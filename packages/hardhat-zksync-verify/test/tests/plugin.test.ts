@@ -14,7 +14,7 @@ import {
 import { Bytecode } from '../../src/solc/bytecode';
 import * as bytecodes from '../../src/solc/bytecode';
 import { useEnvironment } from '../helpers';
-import { NO_MATCHING_CONTRACT } from '../../src/constants';
+import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from '../../src/constants';
 import { ContractInformation } from '../../src/solc/types';
 import { VerificationStatusResponse } from '../../src/zksync-block-explorer/verification-status-response';
 
@@ -94,6 +94,9 @@ describe('Plugin', () => {
                     solcVersion: '0.8.0',
                 }),
             );
+
+            expect(!bytecode.hasMetadata());
+            expect(bytecode.getInferredSolcVersion() !== undefined);
 
             try {
                 await inferContractArtifacts(artifacts, [], bytecode);
@@ -181,6 +184,17 @@ describe('Plugin', () => {
     });
 
     describe('checkContractName', async function () {
+        it('should throw ZkSyncVerifyPluginError when contractFQN is undefined', async function () {
+            const contractFQN = undefined as any;
+
+            try {
+                await checkContractName(artifacts, contractFQN);
+                fail('Expected an error to be thrown');
+            } catch (error: any) {
+                expect(error.message).to.equal(CONTRACT_NAME_NOT_FOUND);
+            }
+        });
+
         it('should throw ZkSyncVerifyPluginError when contractFQN is not a valid fully qualified name', async function () {
             artifacts.artifactExists = sinon.stub().resolves(false);
             artifacts.getAllFullyQualifiedNames = sinon.stub().resolves(['contracts/Contract.sol:Contract']);
@@ -284,6 +298,22 @@ Instead, this name was received: ${contractFQN}`);
             }
         });
 
+        it('should throw ZkSyncVerifyPluginError when importing the libraries module fails', async function () {
+            const librariesModule = '../wrongArgs.js';
+
+            try {
+                await getLibraries(librariesModule);
+                fail('Expected an error to be thrown');
+            } catch (error: any) {
+                expect(error.message).to.includes(
+                    `Importing the module for the libraries dictionary failed. Reason: Cannot find module '${path.resolve(
+                        process.cwd(),
+                        librariesModule,
+                    )}'`,
+                );
+            }
+        });
+
         it('should return the libraries object when importing the libraries module succeeds', async function () {
             const librariesModule = '../localGreeter/args.js';
 
@@ -315,7 +345,7 @@ Instead, this name was received: ${contractFQN}`);
             }
         });
 
-        it.skip('should log a success message and return true when verification is successful', async function () {
+        it('should log a success message and return true when verification is successful', async function () {
             sinon.stub(VerificationStatusResponse.prototype, 'errorExists').returns(false);
 
             const args = {
@@ -330,6 +360,19 @@ Instead, this name was received: ${contractFQN}`);
                 '\u001b[32mContract successfully verified on zkSync block explorer!\u001b[39m',
             );
             expect(result).to.equal(true);
+        });
+    });
+
+    describe('normalizeBytecode', () => {
+        it('should not modify bytecode when it does not start with the expected placeholder', async () => {
+            const mockBytecode = 'abcdef1234567890';
+            const symbols = {
+                object: '73',
+            };
+
+            const result = await bytecodes.normalizeBytecode(mockBytecode, symbols as any);
+
+            expect(result.normalizedBytecode).to.equal(mockBytecode);
         });
     });
 });
