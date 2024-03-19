@@ -455,6 +455,10 @@ To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat
 
 `yarn hardhat deploy-zksync:libraries --private-key-or-index <PRIVATE_KEY_OR_INDEX>` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 
+`yarn hardhat deploy-zksync:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--no-compile]`
+
+When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. Optionally, the `no-compile` parameter allows the task to skip the compilation process.
+
 ## 📝 Documentation
 
 In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:

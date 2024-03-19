@@ -21,7 +21,13 @@ To install **hardhat-zksync** plugin, run:
 
 or
 
-`yarn add -D @matterlabs/hardhat-zksync ethers zksync-ethers`
+`yarn add -D @matterlabs/hardhat-zksync`
+
+## 🕹 Commands
+
+`yarn hardhat deploy-zksync:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--verify] [--no-compile]`
+
+When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. Using the `verify` parameter verifies the contract after deployment, while `no-compile` skips the compilation process.
 
 ## 📝 Documentation
 
