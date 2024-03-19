@@ -109,7 +109,6 @@ async function getTxFees(
     overrides?: ethers.Overrides,
 ) {
     const { BigNumber } = require('ethers');
-    const _provider = zk.Provider.getDefaultProvider();
 
     return Promise.all(
         accounts.map(async (account) => {

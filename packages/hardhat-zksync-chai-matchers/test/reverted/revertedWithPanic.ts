@@ -7,6 +7,7 @@ import util from 'util';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { PANIC_CODES } from '@nomicfoundation/hardhat-chai-matchers/internal/reverted/panic';
+import { HttpNetworkConfig } from 'hardhat/types';
 
 import { runSuccessfulAsserts, runFailedAsserts, useEnvironmentWithLocalSetup } from '../helpers';
 import '../../src/internal/add-chai-matchers';
@@ -28,7 +29,8 @@ describe('INTEGRATION: Reverted with panic', function () {
         let artifact: ZkSyncArtifact;
 
         beforeEach('deploy matchers contract', async function () {
-            provider = zk.Provider.getDefaultProvider();
+            const hre = await import('hardhat');
+            provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
             wallet = new zk.Wallet(RICH_WALLET_PK, provider);
 
             deployer = new Deployer(this.hre, wallet);

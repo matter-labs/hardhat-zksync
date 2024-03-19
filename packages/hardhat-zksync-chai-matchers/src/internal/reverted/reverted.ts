@@ -1,5 +1,6 @@
 import { buildAssert } from '@nomicfoundation/hardhat-chai-matchers/utils';
 import * as zk from 'zksync-ethers';
+import { HttpNetworkConfig } from 'hardhat/types';
 import { REVERTED_MATCHER } from '../../constants';
 import { preventAsyncMatcherChaining } from '../utils';
 import { decodeReturnData, getReturnDataFromError } from './utils';
@@ -88,8 +89,8 @@ export function supportReverted(Assertion: Chai.AssertionStatic, chaiUtils: Chai
 }
 
 async function getTransactionReceipt(hash: string) {
-    const provider = zk.Provider.getDefaultProvider();
-
+    const hre = await import('hardhat');
+    const provider = new zk.Provider((hre.network.config as HttpNetworkConfig).url);
     return provider.getTransactionReceipt(hash);
 }
 
