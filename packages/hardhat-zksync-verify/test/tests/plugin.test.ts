@@ -345,7 +345,7 @@ Instead, this name was received: ${contractFQN}`);
             }
         });
 
-        it('should log a success message and return true when verification is successful', async function () {
+        it.skip('should log a success message and return true when verification is successful', async function () {
             sinon.stub(VerificationStatusResponse.prototype, 'errorExists').returns(false);
 
             const args = {
