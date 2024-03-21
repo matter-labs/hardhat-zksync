@@ -15,12 +15,12 @@ jobs:
 
     name: zksolc
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -46,12 +46,12 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: zkvyper
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -76,9 +76,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: examples
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -88,10 +88,10 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -163,9 +163,9 @@ jobs:
     runs-on: ubuntu-latest
     name: chai-matchers
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -175,10 +175,10 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: pnpm
@@ -206,9 +206,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: upgradable
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -218,10 +218,10 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -249,12 +249,12 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: verify-vyper
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -278,12 +278,12 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: verify
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -307,9 +307,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: deploy
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -319,10 +319,10 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -355,9 +355,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: zksync-ethers
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -367,10 +367,10 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -403,12 +403,12 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     name: node
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
