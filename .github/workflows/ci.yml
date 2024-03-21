@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu, macos, windows]
 
     runs-on: ${{ matrix.os }}-latest
@@ -40,7 +40,7 @@ jobs:
   zkvyper:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
@@ -70,7 +70,7 @@ jobs:
   examples:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
@@ -272,7 +272,7 @@ jobs:
   verify:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
@@ -301,7 +301,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
@@ -349,7 +349,7 @@ jobs:
   zksync-ethers:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
@@ -397,7 +397,7 @@ jobs:
   node:
     strategy:
       matrix:
-        node: ["16", "18"]
+        node: ["18"]
         os: [ubuntu, macos]
 
     runs-on: ${{ matrix.os }}-latest
