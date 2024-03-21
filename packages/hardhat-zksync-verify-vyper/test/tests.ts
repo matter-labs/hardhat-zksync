@@ -43,7 +43,7 @@ describe('verify plugin', async function () {
             const { resolvedFile, contractCache } = await getCacheResolvedFileInformation(
                 sourceName,
                 artifact.sourceName,
-                this.env
+                this.env,
             );
 
             assert.equal(resolvedFile.sourceName, sourceName);
@@ -91,9 +91,9 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes(
-                        'A valid fully qualified name was expected. Fully qualified names look like this: '
+                        'A valid fully qualified name was expected. Fully qualified names look like this: ',
                     ),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });
@@ -104,7 +104,7 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes('is not present in your project'),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });
@@ -125,7 +125,7 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes('You did not provide any contract name.'),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });
@@ -139,7 +139,7 @@ describe('verify plugin', async function () {
                 const resolvedFiles = await getResolvedFiles(this.env);
                 assert(
                     resolvedFiles[0].sourceName === 'contracts/Greeter.vy',
-                    'Greeter.vy not found at position 0 of resolved files.'
+                    'Greeter.vy not found at position 0 of resolved files.',
                 );
             } catch (e: any) {
                 isErr = 1;
@@ -161,7 +161,7 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes('Wrong constructor arguments format:'),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });
@@ -173,9 +173,9 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes(
-                        'The number of constructor arguments you provided (0) does not match the number of constructor arguments the contract has been deployed with (1).'
+                        'The number of constructor arguments you provided (0) does not match the number of constructor arguments the contract has been deployed with (1).',
                     ),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });
@@ -188,7 +188,7 @@ describe('verify plugin', async function () {
                 assert(
                     result ===
                         '0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000',
-                    'Invalid encoding!'
+                    'Invalid encoding!',
                 );
             } catch (e: any) {
                 isErr = 1;
@@ -205,7 +205,7 @@ describe('verify plugin', async function () {
                 assert(
                     result ===
                         '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
-                    '"Invalid encoding!"'
+                    '"Invalid encoding!"',
                 );
             } catch (e: any) {
                 isErr = 1;
@@ -230,9 +230,9 @@ describe('verify plugin', async function () {
             } catch (e: any) {
                 assert(
                     e.message.includes(
-                        "The address provided as argument contains a contract, but its bytecode doesn't match any of your local contracts."
+                        "The address provided as argument contains a contract, but its bytecode doesn't match any of your local contracts.",
                     ),
-                    'Error message does not include the expected text'
+                    'Error message does not include the expected text',
                 );
             }
         });

@@ -42,7 +42,7 @@ export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: st
     `Please export a list of constructor arguments or a single string starting with "0x".`;
 
 export const CONSTRUCTOR_MODULE_IMPORTING_ERROR = (
-    errorMessage: string
+    errorMessage: string,
 ) => `Importing the module for the constructor arguments list failed.
 Reason: ${errorMessage}`;
 
