@@ -18,14 +18,7 @@ assert_directory_exists "artifacts-zk/contracts/Constant.sol"
 assert_directory_not_empty "artifacts-zk"
 assert_directory_not_empty "cache-zk"
 
-kill_process_on_port 8011
-
-yarn hardhat node-zksync &
-
-# wait for node to start
-sleep 1
-
-DEPLOY_GREETER_OUTPUT=$(yarn hardhat run scripts/deploy-greeter.ts --network inMemoryNode)
+DEPLOY_GREETER_OUTPUT=$(yarn hardhat run scripts/deploy-greeter.ts --network dockerizedNode)
 
 check_log_value "$DEPLOY_GREETER_OUTPUT" "Successful greeting from the contract"
 
@@ -38,6 +31,6 @@ UPGRADE_BOX_OUTPUT=$(yarn hardhat run scripts/upgrade-box.ts --network dockerize
 
 check_log_value "$UPGRADE_BOX_OUTPUT" "Successfully upgraded Box to BoxV2"
 
-DEPLOY_VOTING_OUTPUT=$(yarn hardhat deploy-zksync --network inMemoryNode)
+DEPLOY_VOTING_OUTPUT=$(yarn hardhat deploy-zksync --network dockerizedNode)
 
 check_log_value "$DEPLOY_VOTING_OUTPUT" "Voting sucessfull!"
