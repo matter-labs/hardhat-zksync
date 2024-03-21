@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import sinon from 'sinon';
 import { fail } from 'assert';
 import { TASK_COMPILE, TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
@@ -408,6 +408,18 @@ describe('getConstructorArguments', async function () {
             expect(error.message).to.includes('Importing the module for the constructor arguments list failed.');
         }
     });
+
+    it('should throw an error if importing the module fails', async function () {
+        const mockPath = 'path/to/constructorArguments';
+
+        const resolvedArgs = { args: [] };
+        sinon.stub(utils, 'extractModule').resolves(resolvedArgs);
+
+        const args = await utils.extractModule(mockPath);
+
+        console.info(args);
+        assert.equal(args, resolvedArgs, 'Constructor arguments not correct');
+    });
 });
 
 describe('getContractInfo', async function () {
@@ -456,6 +468,29 @@ describe('getContractInfo', async function () {
             fail('Expected an error to be thrown');
         } catch (error: any) {
             expect(error.message).to.equal('contractFQN is undefined');
+        }
+    });
+
+    it('should throw an error if contractFQN is undefined', async function () {
+        const args = {
+            contractFQN: 'Greeter',
+            deployedBytecode: '0x1234567890',
+            matchingCompilerVersions: [],
+            libraries: {},
+        };
+        const hre = {
+            artifacts: { getBuildInfo: () => {} },
+            network: {
+                zksync: true,
+            },
+        };
+        const runSuperStub = sinon.stub().resolves({});
+        sinon.stub(plugin, 'inferContractArtifacts').throws(new Error('contractFQN is undefined'));
+
+        try {
+            await getContractInfo(args, hre as any, runSuperStub as any);
+        } catch (error: any) {
+            expect(error.message.includes("We couldn't find the sources of your Greeter contract in the project."));
         }
     });
 
