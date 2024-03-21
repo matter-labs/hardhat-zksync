@@ -1,15 +1,15 @@
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
-import { Wallet } from 'zksync-ethers';
-import chalk from 'chalk';
+import { Provider, Wallet } from 'zksync-ethers';
 
 import * as hre from 'hardhat';
 
 async function main() {
     const contractName = 'Box';
-    console.info(chalk.yellow(`Deploying ${contractName}...`));
+    console.info(`Deploying ${contractName}...`);
 
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = Wallet.fromMnemonic(testMnemonic);
+    const provider = new Provider("http://localhost:8011",undefined,{cacheTimeout:-1})
+    const zkWallet = Wallet.fromMnemonic(testMnemonic,provider);
 
     const deployer = new Deployer(hre, zkWallet);
 
@@ -20,7 +20,7 @@ async function main() {
 
     box.connect(zkWallet);
     const value = await box.retrieve();
-    console.info(chalk.cyan('Box value is: ', value));
+    console.info('Box value is: ', value);
 }
 
 main().catch((error) => {
