@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.0.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node@1.0.2...@matterlabs/hardhat-zksync-node-v1.0.3) (2024-03-21)
+
+
+### Bug Fixes
+
+* properly constructor fork arguments ([#927](https://github.com/matter-labs/hardhat-zksync/issues/927)) ([bfe8970](https://github.com/matter-labs/hardhat-zksync/commit/bfe897019bae72abd1ae0f3d6f69c2c4bb6038cd))
+
 ## [1.0.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.0.1...@matterlabs/hardhat-zksync-node-v1.0.2) (2024-02-01)
 
 
