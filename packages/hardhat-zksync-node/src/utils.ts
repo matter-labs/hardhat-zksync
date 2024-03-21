@@ -119,11 +119,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         }
 
         if (args.forkBlockNumber) {
-            commandArgs.push(`fork --fork-at ${args.forkBlockNumber} ${args.fork}`);
+            commandArgs.push('fork', args.fork, '--fork-at', args.forkBlockNumber.toString());
         } else if (args.replayTx) {
-            commandArgs.push(`replay_tx ${args.fork} ${args.replayTx}`);
+            commandArgs.push('replay_tx', args.fork, '--tx', args.replayTx);
         } else {
-            commandArgs.push(`fork ${args.fork}`);
+            commandArgs.push('fork', args.fork);
         }
     } else {
         commandArgs.push('run');
