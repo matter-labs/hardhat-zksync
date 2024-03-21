@@ -40,7 +40,7 @@
     "chalk": "4.1.2",
     "hardhat": "^2.19.4",
     "ethers": "^6.7.1",
-    "zksync-ethers": "^6.0.0",
+    "zksync-ethers": "^6.6.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.9.2",
     "@openzeppelin/contracts-upgradeable": "^4.9.2"
