@@ -237,8 +237,8 @@ importers:
         specifier: ^4.9.2
         version: 4.9.5
       chai:
-        specifier: ^4.3.7
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -694,11 +694,11 @@ importers:
         specifier: ^1.1.3
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^4.3.7
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chai-as-promised:
         specifier: ^7.1.1
-        version: 7.1.1(chai@4.4.1)
+        version: 7.1.1(chai@5.1.0)
       ethers:
         specifier: ^6.7.1
         version: 6.11.1
@@ -720,7 +720,7 @@ importers:
         version: 0.6.1(@openzeppelin/contracts-upgradeable@4.6.0)(@openzeppelin/contracts@4.9.5)
       '@nomicfoundation/hardhat-chai-matchers':
         specifier: ^2.0.5
-        version: 2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@4.4.1)(ethers@6.11.1)(hardhat@2.20.0)
+        version: 2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@5.1.0)(ethers@6.11.1)(hardhat@2.20.0)
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.0
         version: 3.0.5(ethers@6.11.1)(hardhat@2.20.0)
@@ -788,8 +788,8 @@ importers:
         specifier: ^1.0.4
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -807,7 +807,7 @@ importers:
         version: 17.0.1
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+        version: 3.7.0(chai@5.1.0)(sinon@17.0.1)
       ts-morph:
         specifier: ^21.0.1
         version: 21.0.1
@@ -885,8 +885,8 @@ importers:
         specifier: ^1.1.2
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^4.2.0
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 5.3.0
         version: 5.3.0
@@ -973,8 +973,8 @@ importers:
         specifier: ^1.6.2
         version: 1.6.7(debug@4.3.4)
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -989,7 +989,7 @@ importers:
         version: 17.0.1
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+        version: 3.7.0(chai@5.1.0)(sinon@17.0.1)
       undici:
         specifier: ^5.14.0
         version: 5.28.3
@@ -1064,8 +1064,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.2
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -1089,7 +1089,7 @@ importers:
         version: 17.0.1
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+        version: 3.7.0(chai@5.1.0)(sinon@17.0.1)
       undici:
         specifier: ^5.14.0
         version: 5.28.3
@@ -1171,10 +1171,10 @@ importers:
     dependencies:
       '@nomicfoundation/hardhat-chai-matchers':
         specifier: ^2.0.2
-        version: 2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@4.4.1)(ethers@6.11.1)(hardhat@2.20.0)
+        version: 2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@5.1.0)(ethers@6.11.1)(hardhat@2.20.0)
       chai:
-        specifier: ^4.3.7
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       hardhat:
         specifier: ^2.19.4
         version: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
@@ -1367,8 +1367,8 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -1383,7 +1383,7 @@ importers:
         version: 17.0.1
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+        version: 3.7.0(chai@5.1.0)(sinon@17.0.1)
     devDependencies:
       '@types/chai':
         specifier: ^4.2.0
@@ -1452,8 +1452,8 @@ importers:
         specifier: ^1.6.2
         version: 1.6.7(debug@4.3.4)
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -1534,8 +1534,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.2
       chai:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: ^5.1.0
+        version: 5.1.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -1553,7 +1553,7 @@ importers:
         version: 17.0.1
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+        version: 3.7.0(chai@5.1.0)(sinon@17.0.1)
       undici:
         specifier: ^5.14.0
         version: 5.28.3
@@ -2513,7 +2513,7 @@ packages:
       - c-kzg
       - supports-color
 
-  /@nomicfoundation/hardhat-chai-matchers@2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@4.4.1)(ethers@6.11.1)(hardhat@2.20.0):
+  /@nomicfoundation/hardhat-chai-matchers@2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@5.1.0)(ethers@6.11.1)(hardhat@2.20.0):
     resolution: {integrity: sha512-BCuaJ5sN6sJMxgE2oyNipaycpxPvfU/PW/Fb0uliEObv3xI/EShcyBmgpLAcKqr6xLd0K7uzhkqVn/5FBYDXzg==}
     peerDependencies:
       '@nomicfoundation/hardhat-ethers': ^3.0.0
@@ -2523,8 +2523,8 @@ packages:
     dependencies:
       '@nomicfoundation/hardhat-ethers': 3.0.5(ethers@6.11.1)(hardhat@2.20.0)
       '@types/chai-as-promised': 7.1.8
-      chai: 4.4.1
-      chai-as-promised: 7.1.1(chai@4.4.1)
+      chai: 5.1.0
+      chai-as-promised: 7.1.1(chai@5.1.0)
       deep-eql: 4.1.3
       ethers: 6.11.1
       hardhat: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
@@ -3563,8 +3563,9 @@ packages:
       safer-buffer: 2.1.2
     dev: false
 
-  /assertion-error@1.1.0:
-    resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
+  /assertion-error@2.0.1:
+    resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
+    engines: {node: '>=12'}
 
   /astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
@@ -3843,25 +3844,23 @@ packages:
       nofilter: 3.1.0
     dev: false
 
-  /chai-as-promised@7.1.1(chai@4.4.1):
+  /chai-as-promised@7.1.1(chai@5.1.0):
     resolution: {integrity: sha512-azL6xMoi+uxu6z4rhWQ1jbdUhOMhis2PvscD/xjLqNMkv3BPPp2JyyuTHOrf9BOosGpNQ11v6BKv/g57RXbiaA==}
     peerDependencies:
       chai: '>= 2.1.2 < 5'
     dependencies:
-      chai: 4.4.1
+      chai: 5.1.0
       check-error: 1.0.3
 
-  /chai@4.4.1:
-    resolution: {integrity: sha512-13sOfMv2+DWduEU+/xbun3LScLoqN17nBeTLUsmDfKdoiC1fr0n9PU4guu4AhRcOVFk/sW8LyZWHuhWtQZiF+g==}
-    engines: {node: '>=4'}
+  /chai@5.1.0:
+    resolution: {integrity: sha512-kDZ7MZyM6Q1DhR9jy7dalKohXQ2yrlXkk59CR52aRKxJrobmlBNqnFQxX9xOX8w+4mz8SYlKJa/7D7ddltFXCw==}
+    engines: {node: '>=12'}
     dependencies:
-      assertion-error: 1.1.0
-      check-error: 1.0.3
-      deep-eql: 4.1.3
-      get-func-name: 2.0.2
-      loupe: 2.3.7
-      pathval: 1.1.1
-      type-detect: 4.0.8
+      assertion-error: 2.0.1
+      check-error: 2.0.0
+      deep-eql: 5.0.1
+      loupe: 3.1.0
+      pathval: 2.0.0
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -3891,6 +3890,10 @@ packages:
     resolution: {integrity: sha512-iKEoDYaRmd1mxM90a2OEfWhjsjPpYPuQ+lMYsoxB126+t8fw7ySEO48nmDg5COTjxDI65/Y2OWpeEHk3ZOe8zg==}
     dependencies:
       get-func-name: 2.0.2
+
+  /check-error@2.0.0:
+    resolution: {integrity: sha512-tjLAOBHKVxtPoHe/SA7kNOMvhCRdCJ3vETdeY0RuAc9popf+hyaSV6ZEg9hr4cpWF7jmo/JSWEnLDrnijS9Tog==}
+    engines: {node: '>= 16'}
 
   /chnl@1.2.0:
     resolution: {integrity: sha512-g5gJb59edwCliFbX2j7G6sBfY4sX9YLy211yctONI2GRaiX0f2zIbKWmBm+sPqFNEpM7Ljzm7IJX/xrjiEbPrw==}
@@ -4211,6 +4214,10 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       type-detect: 4.0.8
+
+  /deep-eql@5.0.1:
+    resolution: {integrity: sha512-nwQCf6ne2gez3o1MxWifqkciwt0zhl0LO1/UwVu4uMBuPmflWM4oQ70XMqHqnBJA+nhzncaqL9HVL6KkHJ28lw==}
+    engines: {node: '>=6'}
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -5944,8 +5951,8 @@ packages:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  /loupe@2.3.7:
-    resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
+  /loupe@3.1.0:
+    resolution: {integrity: sha512-qKl+FrLXUhFuHUoDJG7f8P8gEMHq9NFS0c6ghXG1J0rldmZFQZoNVv/vyirE9qwCIhWZDsvEFd1sbFu3GvRQFg==}
     dependencies:
       get-func-name: 2.0.2
 
@@ -6497,8 +6504,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /pathval@1.1.1:
-    resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
+  /pathval@2.0.0:
+    resolution: {integrity: sha512-vE7JKRyES09KiunauX7nd2Q9/L7lhok4smP9RZTDeD4MVs72Dp2qNFVz39Nz5a0FVEW0BJR6C0DYrq6unoziZA==}
+    engines: {node: '>= 14.16'}
 
   /pbkdf2@3.1.2:
     resolution: {integrity: sha512-iuh7L6jA7JEGu2WxDwtQP1ddOpaJNC4KlDEFfdQajSGgGPNi4OyDc2R7QnbY2bR9QjBVGwgvTdNJZoE7RaxUMA==}
@@ -6960,13 +6968,13 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  /sinon-chai@3.7.0(chai@4.4.1)(sinon@17.0.1):
+  /sinon-chai@3.7.0(chai@5.1.0)(sinon@17.0.1):
     resolution: {integrity: sha512-mf5NURdUaSdnatJx3uhoBOrY9dtL19fiOtAdT1Azxg3+lNJFiuN0uzaU3xX1LeAfL17kHQhTAJgpsfhbMJMY2g==}
     peerDependencies:
       chai: ^4.0.0
       sinon: '>=4.0.0'
     dependencies:
-      chai: 4.4.1
+      chai: 5.1.0
       sinon: 17.0.1
     dev: false
 
