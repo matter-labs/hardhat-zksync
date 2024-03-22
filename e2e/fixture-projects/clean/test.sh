@@ -6,7 +6,7 @@ set -e
 . ../../helpers.sh
 
 echo "Running tests: $(basename "$(pwd)")"
-run_test_and_handle_failure "yarn hardhat compile" 0
+run_test_and_handle_failure "pnpm hardhat compile" 0
 
 assert_directory_exists "artifacts-zk"
 assert_directory_exists "cache-zk"

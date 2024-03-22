@@ -7,4 +7,4 @@ set -e
 
 echo "Running tests: $(basename "$(pwd)")"
 echo "it should fail the compilation"
-run_test_and_handle_failure "yarn hardhat compile" 1
+run_test_and_handle_failure "pnpm hardhat compile" 1

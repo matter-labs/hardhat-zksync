@@ -4,12 +4,12 @@ set -e
 
 . ../../helpers.sh
 
-echo "Running zkSync inMemory node"
+echo "Running node"
 
 # Kill any existing process on port 8011
 kill_process_on_port 8011
 
-yarn hardhat node-zksync &
+pnpm hardhat node-zksync &
 
 sleep 3
 

@@ -5,7 +5,7 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
-# Create the package.json file dynamically so yarn does not pick it up when installing dependencies.
+# Create the package.json file dynamically so pnpm does not pick it up when installing dependencies.
 cat <<EOF > "$SCRIPT_DIR/package.json"
 {
     "name": "e2e-mixed",
@@ -13,10 +13,10 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "author": "Matter Labs",
     "license": "MIT",
     "scripts": {
-      "lint": "yarn eslint",
-      "prettier:check": "yarn prettier --check",
-      "lint:fix": "yarn eslint --fix",
-      "fmt": "yarn prettier --write",
+      "lint": "pnpm eslint",
+      "prettier:check": "pnpm prettier --check",
+      "lint:fix": "pnpm eslint --fix",
+      "fmt": "pnpm prettier --write",
       "eslint": "eslint deploy/*.ts",
       "prettier": "prettier deploy/*.ts",
       "test": "mocha test/tests.ts --exit",

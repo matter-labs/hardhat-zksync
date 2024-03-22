@@ -6,9 +6,9 @@ set -e
 
 echo "Running tests: $(basename "$(pwd)")"
 
-run_test_and_handle_failure "yarn hardhat compile" 0
+run_test_and_handle_failure "pnpm hardhat compile" 0
 
-DEPLOY_OUTPUT=$(yarn hardhat run scripts/deploy-box-proxy.ts)
+DEPLOY_OUTPUT=$(pnpm hardhat run scripts/deploy-box-proxy.ts)
 
 echo "$DEPLOY_OUTPUT"
 

@@ -51,7 +51,7 @@ for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
       cd "$dir"
 
       echo "[e2e] Installing modules in $dir"
-      yarn
+      pnpm i
 
       chmod +x ./test.sh
       ./test.sh
