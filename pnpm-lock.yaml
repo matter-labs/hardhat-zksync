@@ -33,203 +33,6 @@ importers:
         specifier: ^5.2.2
         version: 5.2.4
 
-  e2e/fixture-projects/node:
-    dependencies:
-      '@matterlabs/hardhat-zksync-node':
-        specifier: workspace:1.0.3
-        version: link:../../../packages/hardhat-zksync-node
-      '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.0.5
-        version: link:../../../packages/hardhat-zksync-solc
-      axios:
-        specifier: ^1.6.2
-        version: 1.6.7
-      chai:
-        specifier: ^4.3.6
-        version: 4.4.1
-      chalk:
-        specifier: 4.1.2
-        version: 4.1.2
-      ethers:
-        specifier: 6.0.0
-        version: 6.0.0
-      fs-extra:
-        specifier: ^11.1.1
-        version: 11.2.0
-      proxyquire:
-        specifier: ^2.1.3
-        version: 2.1.3
-      sinon:
-        specifier: ^17.0.1
-        version: 17.0.1
-      sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
-      undici:
-        specifier: ^5.14.0
-        version: 5.28.3
-    devDependencies:
-      '@types/chai':
-        specifier: ^4.2.0
-        version: 4.3.11
-      '@types/fs-extra':
-        specifier: ^5.1.0
-        version: 5.1.0
-      '@types/mocha':
-        specifier: ^9.1.0
-        version: 9.1.1
-      '@types/node':
-        specifier: ^18.11.17
-        version: 18.19.16
-      '@types/proxyquire':
-        specifier: ^1.3.29
-        version: 1.3.31
-      '@types/sinon-chai':
-        specifier: ^3.2.10
-        version: 3.2.12
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.13.1
-        version: 6.13.1(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: 6.13.1
-        version: 6.13.1(eslint@8.56.0)(typescript@5.3.3)
-      c8:
-        specifier: ^8.0.1
-        version: 8.0.1
-      eslint:
-        specifier: ^8.54.0
-        version: 8.56.0
-      eslint-config-prettier:
-        specifier: 9.0.0
-        version: 9.0.0(eslint@8.56.0)
-      eslint-plugin-import:
-        specifier: 2.29.0
-        version: 2.29.0(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)
-      eslint-plugin-no-only-tests:
-        specifier: 3.1.0
-        version: 3.1.0
-      eslint-plugin-prettier:
-        specifier: 5.0.1
-        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.56.0)(prettier@3.1.0)
-      hardhat:
-        specifier: ^2.19.4
-        version: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
-      mocha:
-        specifier: ^9.2.1
-        version: 9.2.2
-      prettier:
-        specifier: 3.1.0
-        version: 3.1.0
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-      ts-node:
-        specifier: ^10.6.0
-        version: 10.9.2(@types/node@18.19.16)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.3.3
-      zksync-ethers:
-        specifier: ^6.0.0
-        version: 6.3.0(ethers@6.0.0)
-
-  e2e/fixture-projects/upgradeable:
-    dependencies:
-      '@matterlabs/hardhat-zksync-deploy':
-        specifier: ^1.2.0
-        version: link:../../../packages/hardhat-zksync-deploy
-      '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: link:../../../packages/hardhat-zksync-solc
-      '@matterlabs/hardhat-zksync-upgradable':
-        specifier: workspace:1.3.1
-        version: link:../../../packages/hardhat-zksync-upgradable
-      '@openzeppelin/contracts':
-        specifier: 4.9.5
-        version: 4.9.5
-      '@openzeppelin/upgrades-core':
-        specifier: ^1.31.3
-        version: 1.32.4
-      chalk:
-        specifier: 4.1.2
-        version: 4.1.2
-      compare-versions:
-        specifier: ^6.0.0
-        version: 6.1.0
-      ethereumjs-util:
-        specifier: ^7.1.5
-        version: 7.1.5
-      ethers:
-        specifier: ^6.7.1
-        version: 6.11.1
-      fs-extra:
-        specifier: ^7.0.1
-        version: 7.0.1
-      hardhat:
-        specifier: ^2.19.4
-        version: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
-      proper-lockfile:
-        specifier: ^4.1.1
-        version: 4.1.2
-      solidity-ast:
-        specifier: ^0.4.51
-        version: 0.4.55
-      zksync-ethers:
-        specifier: ^6.0.0
-        version: 6.3.0(ethers@6.11.1)
-    devDependencies:
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
-      '@types/fs-extra':
-        specifier: ^11.0.1
-        version: 11.0.4
-      '@types/node':
-        specifier: ^18.11.17
-        version: 18.19.16
-      '@types/proper-lockfile':
-        specifier: ^4.1.2
-        version: 4.1.4
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.13.1
-        version: 6.13.1(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: 6.13.1
-        version: 6.13.1(eslint@8.56.0)(typescript@5.3.3)
-      c8:
-        specifier: ^8.0.1
-        version: 8.0.1
-      eslint:
-        specifier: ^8.54.0
-        version: 8.56.0
-      eslint-config-prettier:
-        specifier: 9.0.0
-        version: 9.0.0(eslint@8.56.0)
-      eslint-plugin-import:
-        specifier: 2.29.0
-        version: 2.29.0(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)
-      eslint-plugin-no-only-tests:
-        specifier: 3.1.0
-        version: 3.1.0
-      eslint-plugin-prettier:
-        specifier: 5.0.1
-        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.56.0)(prettier@3.1.0)
-      mocha:
-        specifier: ^10.2.0
-        version: 10.3.0
-      prettier:
-        specifier: 3.1.0
-        version: 3.1.0
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-      ts-node:
-        specifier: ^10.6.0
-        version: 10.9.2(@types/node@18.19.16)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.3.3
-
   examples/basic-example:
     dependencies:
       '@matterlabs/hardhat-zksync-deploy':
@@ -1835,9 +1638,6 @@ packages:
   /@adraffy/ens-normalize@1.10.1:
     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==, tarball: https://registry.npmjs.org/@adraffy/ens-normalize/-/ens-normalize-1.10.1.tgz}
 
-  /@adraffy/ens-normalize@1.8.9:
-    resolution: {integrity: sha512-93OmGCV0vO8+JQ3FHG+gZk/MPHzzMPDRiCiFcCQNTCnHaaxsacO3ScTPGlu2wX2dOtgfalbchPcw1cOYYjHCYQ==, tarball: https://registry.npmjs.org/@adraffy/ens-normalize/-/ens-normalize-1.8.9.tgz}
-
   /@babel/code-frame@7.23.5:
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
     engines: {node: '>=6.9.0'}
@@ -2522,18 +2322,12 @@ packages:
     dependencies:
       '@noble/hashes': 1.3.2
 
-  /@noble/hashes@1.1.2:
-    resolution: {integrity: sha512-KYRCASVTv6aeUi1tsF8/vpyR7zpfs3FUzy2Jqm+MU+LmUKhQ0y2FpfwqkCcxSg2ua4GALJd8k2R76WxwZGbQpA==, tarball: https://registry.npmjs.org/@noble/hashes/-/hashes-1.1.2.tgz}
-
   /@noble/hashes@1.2.0:
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==, tarball: https://registry.npmjs.org/@noble/hashes/-/hashes-1.2.0.tgz}
 
   /@noble/hashes@1.3.2:
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==, tarball: https://registry.npmjs.org/@noble/hashes/-/hashes-1.3.2.tgz}
     engines: {node: '>= 16'}
-
-  /@noble/secp256k1@1.6.3:
-    resolution: {integrity: sha512-T04e4iTurVy7I8Sw4+c5OSN9/RkPlo1uKxAomtxQNLq8j1uPAqnsqG1bqvY3Jv7c13gyr6dui0zmh/I3+f/JaQ==, tarball: https://registry.npmjs.org/@noble/secp256k1/-/secp256k1-1.6.3.tgz}
 
   /@noble/secp256k1@1.7.1:
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==, tarball: https://registry.npmjs.org/@noble/secp256k1/-/secp256k1-1.7.1.tgz}
@@ -2896,7 +2690,7 @@ packages:
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.6.0:
-    resolution: {integrity: sha512-5OnVuO4HlkjSCJO165a4i2Pu1zQGzMs//o54LPrwUgxvEO2P3ax1QuaSI0cEHHTveA77guS0PnNugpR2JMsPfA==}
+    resolution: {integrity: sha512-5OnVuO4HlkjSCJO165a4i2Pu1zQGzMs//o54LPrwUgxvEO2P3ax1QuaSI0cEHHTveA77guS0PnNugpR2JMsPfA==, tarball: https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.6.0.tgz}
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.9.5:
@@ -2922,7 +2716,7 @@ packages:
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
-    resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
+    resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==, tarball: https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz}
     engines: {node: '>=14'}
     requiresBuild: true
     optional: true
@@ -3273,7 +3067,7 @@ packages:
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.13.1(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-5bQDGkXaxD46bPvQt08BUz9YSaO4S0fB1LB5JHQuXTfkGPI3+UUeS387C/e9jRie5GqT8u5kFTrMvAjtX4O5kA==}
+    resolution: {integrity: sha512-5bQDGkXaxD46bPvQt08BUz9YSaO4S0fB1LB5JHQuXTfkGPI3+UUeS387C/e9jRie5GqT8u5kFTrMvAjtX4O5kA==, tarball: https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-6.13.1.tgz}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       '@typescript-eslint/parser': ^6.0.0 || ^6.0.0-alpha
@@ -3331,7 +3125,7 @@ packages:
     dev: true
 
   /@typescript-eslint/parser@6.13.1(eslint@8.56.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-fs2XOhWCzRhqMmQf0eicLa/CWSaYss2feXsy7xBD/pLyWke/jCIVc2s1ikEAtSW7ina1HNhv7kONoEfVNEcdDQ==}
+    resolution: {integrity: sha512-fs2XOhWCzRhqMmQf0eicLa/CWSaYss2feXsy7xBD/pLyWke/jCIVc2s1ikEAtSW7ina1HNhv7kONoEfVNEcdDQ==, tarball: https://registry.npmjs.org/@typescript-eslint/parser/-/parser-6.13.1.tgz}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
@@ -3381,7 +3175,7 @@ packages:
     dev: true
 
   /@typescript-eslint/type-utils@6.13.1(eslint@8.56.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-A2qPlgpxx2v//3meMqQyB1qqTg1h1dJvzca7TugM3Yc2USDY+fsRBiojAEo92HO7f5hW5mjAUF6qobOPzlBCBQ==}
+    resolution: {integrity: sha512-A2qPlgpxx2v//3meMqQyB1qqTg1h1dJvzca7TugM3Yc2USDY+fsRBiojAEo92HO7f5hW5mjAUF6qobOPzlBCBQ==, tarball: https://registry.npmjs.org/@typescript-eslint/type-utils/-/type-utils-6.13.1.tgz}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
@@ -3426,7 +3220,7 @@ packages:
     dev: true
 
   /@typescript-eslint/typescript-estree@6.13.1(typescript@4.9.5):
-    resolution: {integrity: sha512-sBLQsvOC0Q7LGcUHO5qpG1HxRgePbT6wwqOiGLpR8uOJvPJbfs0mW3jPA3ujsDvfiVwVlWUDESNXv44KtINkUQ==}
+    resolution: {integrity: sha512-sBLQsvOC0Q7LGcUHO5qpG1HxRgePbT6wwqOiGLpR8uOJvPJbfs0mW3jPA3ujsDvfiVwVlWUDESNXv44KtINkUQ==, tarball: https://registry.npmjs.org/@typescript-eslint/typescript-estree/-/typescript-estree-6.13.1.tgz}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       typescript: '*'
@@ -3468,7 +3262,7 @@ packages:
     dev: true
 
   /@typescript-eslint/utils@6.13.1(eslint@8.56.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-ouPn/zVoan92JgAegesTXDB/oUp6BP1v8WpfYcqh649ejNc9Qv+B4FF2Ff626kO1xg0wWwwG48lAJ4JuesgdOw==}
+    resolution: {integrity: sha512-ouPn/zVoan92JgAegesTXDB/oUp6BP1v8WpfYcqh649ejNc9Qv+B4FF2Ff626kO1xg0wWwwG48lAJ4JuesgdOw==, tarball: https://registry.npmjs.org/@typescript-eslint/utils/-/utils-6.13.1.tgz}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
@@ -3553,9 +3347,6 @@ packages:
   /aes-js@3.0.0:
     resolution: {integrity: sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==}
     dev: false
-
-  /aes-js@4.0.0-beta.3:
-    resolution: {integrity: sha512-/xJX0/VTPcbc5xQE2VUP91y1xN8q/rDfhEzLm+vLc3hYvb5+qHCnpJRuFcrKn63zumK/sCwYYzhG8HP78JYSTA==, tarball: https://registry.npmjs.org/aes-js/-/aes-js-4.0.0-beta.3.tgz}
 
   /aes-js@4.0.0-beta.5:
     resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==, tarball: https://registry.npmjs.org/aes-js/-/aes-js-4.0.0-beta.5.tgz}
@@ -3792,16 +3583,6 @@ packages:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
       follow-redirects: 1.15.5(debug@4.3.4)
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /axios@1.6.7:
-    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==, tarball: https://registry.npmjs.org/axios/-/axios-1.6.7.tgz}
-    dependencies:
-      follow-redirects: 1.15.5(debug@4.3.4)
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -4275,7 +4056,7 @@ packages:
     dev: false
 
   /cpu-features@0.0.9:
-    resolution: {integrity: sha512-AKjgn2rP2yJyfbepsmLfiYcmtNn/2eUvocUyM/09yB0YDiz39HteK/5/T4Onf0pmdYDMgkBoGvRLvEguzyL7wQ==}
+    resolution: {integrity: sha512-AKjgn2rP2yJyfbepsmLfiYcmtNn/2eUvocUyM/09yB0YDiz39HteK/5/T4Onf0pmdYDMgkBoGvRLvEguzyL7wQ==, tarball: https://registry.npmjs.org/cpu-features/-/cpu-features-0.0.9.tgz}
     engines: {node: '>=10.0.0'}
     requiresBuild: true
     dependencies:
@@ -5022,20 +4803,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /ethers@6.0.0:
-    resolution: {integrity: sha512-3zI3VqRS6ERFoRMDIaOPTlR2CFeRYLh21OgoIEL4P5thF2xleWCM6R4ks3qdPp0qYUNzkTV4F+NbczbxxD8ybQ==, tarball: https://registry.npmjs.org/ethers/-/ethers-6.0.0.tgz}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@adraffy/ens-normalize': 1.8.9
-      '@noble/hashes': 1.1.2
-      '@noble/secp256k1': 1.6.3
-      aes-js: 4.0.0-beta.3
-      tslib: 2.4.0
-      ws: 8.5.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   /ethers@6.11.1:
     resolution: {integrity: sha512-mxTAE6wqJQAbp5QAe/+o+rXOID7Nw91OZXvgpjDa1r4fAbq2Nu314oEZSbjoRLacuCzs7kUC3clEvkCQowffGg==, tarball: https://registry.npmjs.org/ethers/-/ethers-6.11.1.tgz}
     engines: {node: '>=14.0.0'}
@@ -5463,7 +5230,7 @@ packages:
     dev: true
 
   /hardhat@2.20.0(ts-node@10.9.2)(typescript@4.9.5):
-    resolution: {integrity: sha512-TtWZ4mKOH5YA+PCDAGAjG7Gub2NA+egAX7RIHq5XnGrEALNXAbyP3S0I9vOE1MWCgZhn+XOFUNfDuHgkBOPoRw==}
+    resolution: {integrity: sha512-TtWZ4mKOH5YA+PCDAGAjG7Gub2NA+egAX7RIHq5XnGrEALNXAbyP3S0I9vOE1MWCgZhn+XOFUNfDuHgkBOPoRw==, tarball: https://registry.npmjs.org/hardhat/-/hardhat-2.20.0.tgz}
     hasBin: true
     peerDependencies:
       ts-node: '*'
@@ -6427,7 +6194,7 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==, tarball: https://registry.npmjs.org/ms/-/ms-2.1.3.tgz}
 
   /nan@2.18.0:
-    resolution: {integrity: sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==}
+    resolution: {integrity: sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==, tarball: https://registry.npmjs.org/nan/-/nan-2.18.0.tgz}
     requiresBuild: true
     dev: false
     optional: true
@@ -7595,7 +7362,7 @@ packages:
     dev: true
 
   /ts-api-utils@1.2.1(typescript@4.9.5):
-    resolution: {integrity: sha512-RIYA36cJn2WiH9Hy77hdF9r7oEwxAtB/TS9/S4Qd90Ap4z5FSiin5zEiTL44OII1Y3IIlEvxwxFUVgrHSZ/UpA==}
+    resolution: {integrity: sha512-RIYA36cJn2WiH9Hy77hdF9r7oEwxAtB/TS9/S4Qd90Ap4z5FSiin5zEiTL44OII1Y3IIlEvxwxFUVgrHSZ/UpA==, tarball: https://registry.npmjs.org/ts-api-utils/-/ts-api-utils-1.2.1.tgz}
     engines: {node: '>=16'}
     peerDependencies:
       typescript: '>=4.2.0'
@@ -7620,7 +7387,7 @@ packages:
     dev: false
 
   /ts-node@10.9.2(@types/node@16.18.81)(typescript@5.3.3):
-    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==, tarball: https://registry.npmjs.org/ts-node/-/ts-node-10.9.2.tgz}
     hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
@@ -7651,7 +7418,7 @@ packages:
     dev: true
 
   /ts-node@10.9.2(@types/node@18.19.16)(typescript@4.9.5):
-    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==, tarball: https://registry.npmjs.org/ts-node/-/ts-node-10.9.2.tgz}
     hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
@@ -8246,14 +8013,6 @@ packages:
   /zksync-crypto@0.6.2:
     resolution: {integrity: sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==}
     dev: false
-
-  /zksync-ethers@6.3.0(ethers@6.0.0):
-    resolution: {integrity: sha512-ApQIJSFevxFNVQTO1MxkmXxmx9N0qZHNvMzjFvu5v40QPFGkpUt09pY/WHy3b5BlsXzybQ3q2YnHaz/c/TgilA==, tarball: https://registry.npmjs.org/zksync-ethers/-/zksync-ethers-6.3.0.tgz}
-    peerDependencies:
-      ethers: ^6.7.1
-    dependencies:
-      ethers: 6.0.0
-    dev: true
 
   /zksync-ethers@6.3.0(ethers@6.11.1):
     resolution: {integrity: sha512-ApQIJSFevxFNVQTO1MxkmXxmx9N0qZHNvMzjFvu5v40QPFGkpUt09pY/WHy3b5BlsXzybQ3q2YnHaz/c/TgilA==, tarball: https://registry.npmjs.org/zksync-ethers/-/zksync-ethers-6.3.0.tgz}
