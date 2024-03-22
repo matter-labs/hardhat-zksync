@@ -4,10 +4,6 @@
   "author": "Matter Labs",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "@npmcli/promise-spawn": "^6.0.2",
@@ -26,7 +22,7 @@
     "lint:fix": "wsrun --exclude-missing --stages lint:fix",
     "prettier:check": "wsrun --exclude-missing --stages prettier:check",
     "test:release-script": "mocha scripts/test/tests.js",
-    "prepare": "yarn husky install"
+    "prepare": "pnpm husky install"
   },
   "type": "module"
 }

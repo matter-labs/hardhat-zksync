@@ -23,18 +23,18 @@ task(TASK_VERIFY_VYPER, 'Verifies contract on Ethereum and zkSync networks')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',
         'Contract constructor arguments. Cannot be used if the --constructor-args option is provided',
-        []
+        [],
     )
     .addOptionalParam(
         'constructorArgs',
         'Path to a Javascript module that exports the constructor arguments',
         undefined,
-        types.inputFile
+        types.inputFile,
     )
     .addOptionalParam(
         'contract',
         'Fully qualified name of the contract to verify. Skips automatic detection of the contract. ' +
-            'Use if the deployed bytecode matches more than one contract in your project'
+            'Use if the deployed bytecode matches more than one contract in your project',
     )
     .setAction(verify);
 
@@ -54,7 +54,7 @@ subtask(TASK_VERIFY_GET_ARTIFACT)
     .addOptionalParam(
         'contract',
         'Fully qualified name of the contract to verify. Skips automatic detection of the contract. ' +
-            'Use if the deployed bytecode matches more than one contract in your project'
+            'Use if the deployed bytecode matches more than one contract in your project',
     )
     .addParam('deployedBytecode', 'Bytecode of the deployed contract')
     .setAction(getArtifact);

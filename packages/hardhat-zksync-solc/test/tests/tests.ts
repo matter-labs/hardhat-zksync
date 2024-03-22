@@ -31,8 +31,14 @@ describe('zksolc plugin', async function () {
             assert.isDefined(this.env.config.zksolc.settings.libraries);
             assert.isDefined(this.env.config.zksolc.settings.missingLibrariesPath);
 
-            assert.include(this.env.config.paths.artifacts, '/fixture-projects/multiple-compilers/artifacts-zk');
-            assert.include(this.env.config.paths.cache, '/fixture-projects/multiple-compilers/cache-zk');
+            assert.include(
+                this.env.config.paths.artifacts.replaceAll(this.pathEscape, '/'),
+                '/fixture-projects/multiple-compilers/artifacts-zk',
+            );
+            assert.include(
+                this.env.config.paths.cache.replaceAll(this.pathEscape, '/'),
+                '/fixture-projects/multiple-compilers/cache-zk',
+            );
 
             const compilers = this.env.config.solidity.compilers;
 
@@ -287,8 +293,14 @@ describe('zksolc plugin', async function () {
             assert.isTrue(fs.existsSync(this.env.config.paths.cache));
             assert.isTrue(fs.existsSync(this.env.config.paths.artifacts));
 
-            assert.include(this.env.config.paths.artifacts, 'fixture-projects/no-zksync/artifacts');
-            assert.include(this.env.config.paths.cache, 'fixture-projects/no-zksync/cache');
+            assert.include(
+                this.env.config.paths.artifacts.replaceAll(this.pathEscape, '/'),
+                'fixture-projects/no-zksync/artifacts',
+            );
+            assert.include(
+                this.env.config.paths.cache.replaceAll(this.pathEscape, '/'),
+                'fixture-projects/no-zksync/cache',
+            );
         });
     });
 

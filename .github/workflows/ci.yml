@@ -8,49 +8,64 @@ jobs:
     strategy:
       matrix:
         solc: [0.8.16, 0.7.6, 0.4.22]
-        os: [ubuntu, macos]
+        node: ["18"]
+        os: [ubuntu, macos, windows]
 
     runs-on: ${{ matrix.os }}-latest
 
     name: zksolc
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
+          pnpm install
 
       - name: Test zksolc compiler plugin
         run: |
           cd packages/hardhat-zksync-solc
-          yarn test
+          pnpm test
         env:
           SOLC_VERSION: ${{ matrix.solc }}
+          PLATFORM_OS: ${{ matrix.os }}
 
   zkvyper:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: zkvyper
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
+          pnpm install
 
       - name: Test zkvyper compiler plugin
         run: |
           cd packages/hardhat-zksync-vyper
-          yarn test
+          pnpm test
+        env:
+          PLATFORM_OS: ${{ matrix.os }}
 
   e2e:
     strategy:
@@ -87,12 +102,17 @@ jobs:
         shell: bash
 
   examples:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: examples
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -102,15 +122,18 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Wait until server is up
         run: |
@@ -119,51 +142,51 @@ jobs:
       - name: Test zksolc example
         run: |
           cd examples/basic-example
-          yarn hardhat compile
-          yarn hardhat deploy-zksync
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
 
       - name: Test deploy example
         run: |
           cd examples/deploy-example
-          yarn hardhat compile
-          yarn hardhat deploy-zksync
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
 
       - name: Test node example
         run: |
          cd examples/node-example
-          yarn hardhat compile
-          yarn hardhat test
+          pnpm hardhat compile
+          pnpm hardhat test
 
       - name: Test noninline libraries example
         run: |
           cd examples/noninline-libraries-example
-          yarn hardhat compile
-          yarn hardhat deploy-zksync:libraries --private-key-or-index 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
-          yarn hardhat compile
-          yarn hardhat deploy-zksync
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync:libraries --private-key-or-index 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
 
       - name: Test zkvyper example
         run: |
           cd examples/vyper-example
-          yarn hardhat compile
-          yarn hardhat deploy-zksync
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
 
       - name: Test upgradable example
         run: |
           cd examples/upgradable-example
-          yarn hardhat compile
-          yarn hardhat run scripts/deploy-box-beacon.ts 
-          yarn hardhat run scripts/deploy-box-proxy.ts 
-          yarn hardhat run scripts/deploy-box-uups.ts 
-          yarn hardhat run scripts/upgrade-box-beacon.ts 
-          yarn hardhat run scripts/upgrade-box-uups.ts 
-          yarn hardhat run scripts/upgrade-box.ts 
+          pnpm hardhat compile
+          pnpm hardhat run scripts/deploy-box-beacon.ts 
+          pnpm hardhat run scripts/deploy-box-proxy.ts 
+          pnpm hardhat run scripts/deploy-box-uups.ts 
+          pnpm hardhat run scripts/upgrade-box-beacon.ts 
+          pnpm hardhat run scripts/upgrade-box-uups.ts 
+          pnpm hardhat run scripts/upgrade-box.ts 
 
       - name: Test zksync-ethers example
         run: |
           cd examples/zksync-ethers-example
-          yarn hardhat compile
-          yarn hardhat deploy-zksync
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
 
       - name: Show logs
         if: always()
@@ -174,9 +197,9 @@ jobs:
     runs-on: ubuntu-latest
     name: chai-matchers
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -186,15 +209,18 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Wait until server is up
         run: |
@@ -203,15 +229,20 @@ jobs:
       - name: Test zksync chai matchers plugin
         run: |
           cd packages/hardhat-zksync-chai-matchers
-          yarn test
+          pnpm test
 
   upgradable:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: upgradable
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -221,15 +252,18 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Wait until server is up
         run: |
@@ -238,57 +272,78 @@ jobs:
       - name: Test zksync upgradable plugin
         run: |
           cd packages/hardhat-zksync-upgradable
-          yarn test
+          pnpm test
 
   verify-vyper:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: verify-vyper
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Test zksync verify vyper plugin
         run: |
           cd packages/hardhat-zksync-verify-vyper
-          yarn test
+          pnpm test
 
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: verify
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Test zksync verify plugin
         run: |
           cd packages/hardhat-zksync-verify
-          yarn test
+          pnpm test
 
   deploy:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: deploy
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -298,15 +353,18 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Wait until server is up
         run: |
@@ -315,7 +373,7 @@ jobs:
       - name: Test deploy package
         run: |
           cd packages/hardhat-zksync-deploy
-          yarn test
+          pnpm test
 
       - name: Show logs
         if: always()
@@ -323,12 +381,17 @@ jobs:
           cat server.log
 
   zksync-ethers:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu]
+
+    runs-on: ${{ matrix.os }}-latest
     name: zksync-ethers
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: matter-labs/local-setup
           path: local-setup
@@ -338,15 +401,18 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Wait until server is up
         run: |
@@ -355,7 +421,7 @@ jobs:
       - name: Test zksync-ethers example
         run: |
           cd packages/hardhat-zksync-ethers
-          yarn test
+          pnpm test
 
       - name: Show logs
         if: always()
@@ -363,22 +429,30 @@ jobs:
           cat server.log
 
   node:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu, macos]
+
+    runs-on: ${{ matrix.os }}-latest
     name: node
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "16"
-          cache: yarn
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Setup environment
         run: |
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Test zksync node plugin
         run: |
           cd packages/hardhat-zksync-node
-          yarn test
+          pnpm test

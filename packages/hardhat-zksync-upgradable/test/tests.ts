@@ -5,7 +5,6 @@ import fsExtra from 'fs-extra';
 import path from 'path';
 
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
-import { describe } from 'node:test';
 import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constants';
 import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../src/proxy-deployment/deploy';
@@ -17,7 +16,7 @@ import { useEnvironment } from './helpers';
 
 import '../src/type-extensions';
 
-describe('Upgradable plugin tests', async function () {
+describe('Upgradable plugin tests', function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
@@ -81,7 +80,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test UUPS proxy deployment and upgrade functionalities', async function () {
+    describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
         useEnvironment('uups-e2e');
         let boxUupsProxy: Contract;
         let boxUupsPublicProxy: Contract;
@@ -254,7 +253,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe.skip('Test upgradable contracts admin functionalities', async function () {
+    describe('Test upgradable contracts admin functionalities', async function () {
         useEnvironment('admin');
 
         const provider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
@@ -402,7 +401,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test storage layout validations', async function () {
+    describe('Test storage layout validations', async function () {
         useEnvironment('storage-layout-validations');
 
         let boxProxy: Contract;
@@ -504,7 +503,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe.skip('Test proxy gas estimation', async function () {
+    describe('Test proxy gas estimation', async function () {
         useEnvironment('deployment-gas-estimation');
         const MINIMUM_GAS_LIMIT = 1000000000000000n; // 0.001 ETH
 
