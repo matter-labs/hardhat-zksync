@@ -43,13 +43,13 @@ importers:
         version: link:../../packages/hardhat-zksync-solc
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)
+        version: 0.6.1(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@4.9.5)
       '@openzeppelin/contracts':
         specifier: ^4.9.2
         version: 4.9.5
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@4.9.5)
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -229,13 +229,13 @@ importers:
         version: link:../../packages/hardhat-zksync-solc
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)
+        version: 0.6.1(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@4.9.5)
       '@openzeppelin/contracts':
         specifier: ^4.9.2
         version: 4.9.5
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@4.9.5)
       chai:
         specifier: ^4.3.7
         version: 4.4.1
@@ -308,13 +308,13 @@ importers:
         version: link:../../packages/hardhat-zksync-solc
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)
+        version: 0.6.1(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@4.9.5)
       '@openzeppelin/contracts':
         specifier: ^4.9.2
         version: 4.9.5
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@4.9.5)
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -380,8 +380,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@4.9.5)
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -1292,8 +1292,8 @@ importers:
         version: 6.3.0(ethers@6.11.1)
     devDependencies:
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.5
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@5.0.2)
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.4
@@ -2297,14 +2297,14 @@ packages:
       '@openzeppelin/contracts-upgradeable': 4.6.0
     dev: true
 
-  /@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5):
+  /@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@4.9.5):
     resolution: {integrity: sha512-+hucLw4DhGmTmQlXOTEtpboYCaOm/X2VJcWmnW4abNcOgQXEHX+mTxQrxEfPjIZT0ZE6z5FTUrOK9+RgUZwBMQ==}
     peerDependencies:
       '@openzeppelin/contracts': 4.6.0
       '@openzeppelin/contracts-upgradeable': 4.6.0
     dependencies:
       '@openzeppelin/contracts': 4.9.5
-      '@openzeppelin/contracts-upgradeable': 4.9.5
+      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@4.9.5)
     dev: false
 
   /@metamask/eth-sig-util@4.0.1:
@@ -2693,11 +2693,28 @@ packages:
     resolution: {integrity: sha512-5OnVuO4HlkjSCJO165a4i2Pu1zQGzMs//o54LPrwUgxvEO2P3ax1QuaSI0cEHHTveA77guS0PnNugpR2JMsPfA==}
     dev: true
 
-  /@openzeppelin/contracts-upgradeable@4.9.5:
-    resolution: {integrity: sha512-f7L1//4sLlflAN7fVzJLoRedrf5Na3Oal5PZfIq55NFcVZ90EpV1q5xOvL4lFvg3MNICSDr2hH0JUBxwlxcoPg==}
+  /@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@4.9.5):
+    resolution: {integrity: sha512-0MmkHSHiW2NRFiT9/r5Lu4eJq5UJ4/tzlOgYXNAIj/ONkQTVnz22pLxDvp4C4uZ9he7ZFvGn3Driptn1/iU7tQ==}
+    peerDependencies:
+      '@openzeppelin/contracts': 5.0.2
+    dependencies:
+      '@openzeppelin/contracts': 4.9.5
+    dev: false
+
+  /@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2):
+    resolution: {integrity: sha512-0MmkHSHiW2NRFiT9/r5Lu4eJq5UJ4/tzlOgYXNAIj/ONkQTVnz22pLxDvp4C4uZ9he7ZFvGn3Driptn1/iU7tQ==}
+    peerDependencies:
+      '@openzeppelin/contracts': 5.0.2
+    dependencies:
+      '@openzeppelin/contracts': 5.0.2
+    dev: true
 
   /@openzeppelin/contracts@4.9.5:
     resolution: {integrity: sha512-ZK+W5mVhRppff9BE6YdR8CC52C8zAvsVAiWhEtQ5+oNxFE6h1WdeWo+FJSF8KKvtxxVYZ7MTP/5KoVpAU3aSWg==}
+
+  /@openzeppelin/contracts@5.0.2:
+    resolution: {integrity: sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==}
+    dev: true
 
   /@openzeppelin/upgrades-core@1.32.4:
     resolution: {integrity: sha512-Ojd7clhknPaQP5uIREPZxaKSTccKGrUDhuNAMQdLSf6LPQmyeL+JFGoLrckZ/Mg5x5NO4WivJ1ApXU3ckf6kxw==}
