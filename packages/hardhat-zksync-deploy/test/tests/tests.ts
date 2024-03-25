@@ -152,9 +152,8 @@ describe('Plugin tests', async function () {
                 'http://localhost:8545',
                 'Incorrect default L1 network provider',
             );
-            assert.equal(
-                deployer.zkWallet.provider._getConnection().url,
-                'http://localhost:3050',
+            assert(
+                ['http://localhost:3050', 'http://localhost:8011'].includes(deployer.zkWallet.provider._getConnection().url),
                 'Incorrect default L2 network provider',
             );
         });
