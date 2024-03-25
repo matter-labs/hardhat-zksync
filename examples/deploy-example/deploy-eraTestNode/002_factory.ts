@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as ethers from 'ethers';
 import * as zk from 'zksync-ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
@@ -12,6 +11,7 @@ import chalk from 'chalk';
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy script for the Factory contract`));
     // Initialize an Ethereum wallet.
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 

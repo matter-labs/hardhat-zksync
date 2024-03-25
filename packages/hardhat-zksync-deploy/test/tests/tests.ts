@@ -6,7 +6,13 @@ import chalk from 'chalk';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../../src/task-names';
 import { Deployer } from '../../src/deployer';
 import { useEnvironment } from '../helpers';
-import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from '../constants';
+import {
+    ETH_NETWORK_RPC_URL,
+    ZKSYNC_NETWORK_RPC_URL,
+    ZKSYNC_NETWORK_NAME,
+    WALLET_PRIVATE_KEY,
+    dokerizedNodeUrl,
+} from '../constants';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', function () {
@@ -207,8 +213,8 @@ describe('Plugin tests', async function () {
             }
         });
 
-        it('Should estimate deploy fee', async function () {
-            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
+        it.only('Should estimate deploy fee', async function () {
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY, new Provider(dokerizedNodeUrl));
             const deployer = new Deployer(this.env, zkWallet);
             await this.env.run('compile');
             const artifact = await deployer.loadArtifact('Greeter');
