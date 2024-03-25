@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
-import { TASK_NODE_GET_SERVER } from '@matterlabs/hardhat-zksync-node/dist/constants';
-import { waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/dist/utils';
-import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/dist/server';
+import { TASK_NODE_GET_SERVER } from '@matterlabs/hardhat-zksync-node/src/constants';
+import { waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/src/utils';
+import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/src/server';
 import { ScriptManager } from './script-manager';
 import { deployLibraries } from './plugin';
 
