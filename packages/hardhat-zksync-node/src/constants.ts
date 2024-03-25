@@ -8,7 +8,7 @@ export const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export const TASK_NODE_ZKSYNC = 'node-zksync';
-export const TASK_NODE_GET_SERVER = 'node-zskync:get-server'
+export const TASK_NODE_GET_SERVER = 'node-zskync:get-server';
 export const TASK_NODE_ZKSYNC_CREATE_SERVER = 'node-zksync:create-server';
 export const TASK_NODE_ZKSYNC_DOWNLOAD_BINARY = 'node-zksync:download-binary';
 export const TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS = 'node-zksync:run-in-separate-process';

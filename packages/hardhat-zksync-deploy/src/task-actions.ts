@@ -1,24 +1,24 @@
-import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
-import { deployLibraries } from './plugin';
+import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
+import { TASK_NODE_GET_SERVER } from '@matterlabs/hardhat-zksync-node/dist/constants';
+import { waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/dist/utils';
+import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/dist/server';
 import { ScriptManager } from './script-manager';
-import { TASK_NODE_GET_SERVER } from '@matterlabs/hardhat-zksync-node/dist/constants'
-import { waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/dist/utils'
-import { JsonRpcServer } from "@matterlabs/hardhat-zksync-node/dist/server"
+import { deployLibraries } from './plugin';
 
 // Common functionality to start and stop eraTestNode
 async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => Promise<void>) {
-    let eraTestNode: JsonRpcServer | undefined = undefined;
+    let eraTestNode: JsonRpcServer | undefined;
     if (hre.network.zksync && hre.network.name === 'hardhat') {
         try {
             const { commandArgs, server, port } = await hre.run(TASK_NODE_GET_SERVER);
             eraTestNode = server;
-            eraTestNode!.listen(commandArgs);
+            const _ = eraTestNode!.listen(commandArgs);
             await waitForNodeToBeReady(port);
         } catch (e) {
             if (eraTestNode) {
-                eraTestNode.stop();
+                const _ = eraTestNode.stop();
             }
-            throw new Error("Could not start Era Test Node: " + e);
+            throw new Error(`Could not start Era Test Node: ${e}`);
         }
     }
 
@@ -26,7 +26,7 @@ async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => 
         await taskLogic();
     } finally {
         if (eraTestNode) {
-            eraTestNode.stop();
+            const _ = eraTestNode.stop();
         }
     }
 }

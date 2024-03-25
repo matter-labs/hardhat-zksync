@@ -212,11 +212,11 @@ export function createProviders(
 } {
     const networkName = network.name;
 
-    if(network.zksync && networkName==='hardhat'){
+    if (network.zksync && networkName === 'hardhat') {
         return {
             ethWeb3Provider: new ethers.JsonRpcProvider(),
-            zkWeb3Provider:new zk.Provider(ERA_TEST_NODE_URL)
-        }
+            zkWeb3Provider: new zk.Provider(ERA_TEST_NODE_URL),
+        };
     }
 
     if (!network.zksync) {
