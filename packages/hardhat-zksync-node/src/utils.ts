@@ -6,9 +6,9 @@ import net from 'net';
 import fse from 'fs-extra';
 import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
-import { Provider } from 'zksync-ethers';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
-import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
+import { createProvider } from 'hardhat/internal/core/providers/construction';
+import { HardhatConfig } from 'hardhat/types';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -398,10 +398,11 @@ function getNetworkConfig(url: string) {
     };
 }
 
-export function configureNetwork(network: any, port: number) {
+export async function configureNetwork(config: HardhatConfig, network: any, port: number) {
     const url = `${BASE_URL}:${port}`;
 
     network.name = ZKSYNC_ERA_TEST_NODE_NETWORK_NAME;
     network.config = getNetworkConfig(url);
-    network.provider = new ZkSyncProviderAdapter(new Provider(url));
+    config.networks[network.name] = network.config;
+    network.provider = await createProvider(config, network.name);
 }

@@ -239,7 +239,7 @@ task(
             bail: boolean;
             grep?: string;
         },
-        { run, network },
+        { run, network, config },
         runSuper,
     ) => {
         if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
@@ -269,7 +269,7 @@ task(
             await server.listen(commandArgs, false);
 
             await waitForNodeToBeReady(currentPort);
-            configureNetwork(network, currentPort);
+            await configureNetwork(config, network, currentPort);
 
             let testFailures = 0;
             try {
@@ -291,5 +291,3 @@ task(
         }
     },
 );
-
-export { ZkSyncProviderAdapter } from './zksync-provider-adapter';
