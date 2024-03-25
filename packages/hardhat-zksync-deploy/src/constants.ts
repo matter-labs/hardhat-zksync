@@ -1,3 +1,4 @@
+import { richWallets } from './rich-wallets';
 import { DeployerAccount } from './types';
 
 export const PLUGIN_NAME = '@matterlabs/hardhat-zksync-deploy';
@@ -11,6 +12,10 @@ export const LOCAL_CHAIN_IDS = [
 export const DEFAULT_DEPLOY_SCRIPTS_PATH = 'deploy';
 
 export const SCRIPT_DEFAULT_PRIORITY = 0;
+
+export const DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY = richWallets[0].privateKey;
+
+export const ERA_TEST_NODE_URL = "http://localhost:8011"
 
 export const defaultAccountDeployerSettings: DeployerAccount = {
     default: 0,

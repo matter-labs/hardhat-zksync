@@ -6,7 +6,7 @@ import { ZkSyncArtifact } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 import { loadCache, saveCache } from './deployment-saver';
-import { ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
+import { ERA_TEST_NODE_URL, ETH_DEFAULT_NETWORK_RPC_URL } from './constants';
 
 const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
@@ -211,6 +211,13 @@ export function createProviders(
     zkWeb3Provider: zk.Provider;
 } {
     const networkName = network.name;
+
+    if(network.zksync && networkName==='hardhat'){
+        return {
+            ethWeb3Provider: new ethers.JsonRpcProvider(),
+            zkWeb3Provider:new zk.Provider(ERA_TEST_NODE_URL)
+        }
+    }
 
     if (!network.zksync) {
         throw new ZkSyncDeployPluginError(

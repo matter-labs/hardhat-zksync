@@ -11,6 +11,7 @@ import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 import {
     MAX_PORT_ATTEMPTS,
     START_PORT,
+    TASK_NODE_GET_SERVER,
     TASK_NODE_ZKSYNC,
     TASK_NODE_ZKSYNC_CREATE_SERVER,
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
@@ -28,6 +29,7 @@ import {
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
+
 
 // Subtask to download the binary
 subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary')
@@ -291,5 +293,31 @@ task(
         }
     },
 );
+
+task(
+    TASK_NODE_GET_SERVER,
+    async (
+        _args,
+       { run },
+    ) => {
+        const platform = getPlatform();
+        if (platform === 'windows' || platform === '') {
+            throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
+        }
+
+        // Download the binary, if necessary
+        const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
+
+        const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
+        const commandArgs = constructCommandArgs({ port: currentPort });
+
+        return {
+            commandArgs,
+            server: new JsonRpcServer(binaryPath),
+            port:currentPort,
+        };
+    }
+);
+
 
 export { ZkSyncProviderAdapter } from './zksync-provider-adapter';

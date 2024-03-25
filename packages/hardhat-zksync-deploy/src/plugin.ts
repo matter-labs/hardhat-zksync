@@ -16,6 +16,7 @@ import {
     removeLibraryInfoFile,
     updateHardhatConfigFile,
 } from './utils';
+import { DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY } from './constants';
 
 export async function deployLibraries(
     hre: HardhatRuntimeEnvironment,
@@ -25,13 +26,18 @@ export async function deployLibraries(
     noAutoPopulateConfig: boolean,
     compileAllContracts: boolean,
 ) {
-    const wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAccount(hre));
+    let wallet;
+
+    if (hre.network.name === 'hardhat' && hre.network.zksync) {
+        wallet = await getWallet(hre, DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY);
+    } else {
+        wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAccount(hre));
+    }
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
     const allDeployedLibraries: ContractInfo[] = [];
 
-    // @ts-ignore
     hre.config.zksolc.settings.contractsToCompile = [];
 
     for (const libraryInfo of libraryInfos) {

@@ -6,6 +6,7 @@ import './type-extensions';
 import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
 import { DeployerExtension } from './deployer-extension';
+import '@matterlabs/hardhat-zksync-node'
 
 export * from './deployer';
 

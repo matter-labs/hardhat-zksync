@@ -784,6 +784,9 @@ importers:
 
   packages/hardhat-zksync-deploy:
     dependencies:
+      '@matterlabs/hardhat-zksync-node':
+        specifier: ^1.0.2
+        version: link:../hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.0.4
         version: link:../hardhat-zksync-solc
@@ -881,6 +884,9 @@ importers:
       '@matterlabs/hardhat-zksync-deploy':
         specifier: ^1.1.2
         version: link:../hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-node':
+        specifier: ^1.0.3
+        version: link:../hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.1.2
         version: link:../hardhat-zksync-solc

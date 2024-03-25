@@ -5,7 +5,6 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
-    // return;
     console.info(chalk.yellow('Running deploy script for the Account Abstraction'));
     // Initialize an Ethereum wallet.
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -18,14 +17,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const aaArtifact = await aaDeployer.loadArtifact('TwoUserMultisig');
 
     const provider = aaDeployer.zkWallet.provider;
-
-    // Deposit some funds to L2 in order to be able to perform L2 transactions.
-    const depositHandle = await contractDeployer.zkWallet.deposit({
-        to: await contractDeployer.zkWallet.getAddress(),
-        token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.001'),
-    });
-    await depositHandle.wait();
 
     const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
 
