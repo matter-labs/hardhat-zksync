@@ -149,7 +149,7 @@ describe('Plugin tests', async function () {
     describe('Deployer without zkSync network provided', async function () {
         useEnvironment('successful-compilation');
 
-        it.only('Should use default L1 and L2 network providers (local-setup)', async function () {
+        it('Should use default L1 and L2 network providers (local-setup)', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
 

@@ -6,7 +6,7 @@ import './type-extensions';
 import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
 import { DeployerExtension } from './deployer-extension';
-import '@matterlabs/hardhat-zksync-node';
+import '@matterlabs/hardhat-zksync-node/src/type-extensions';
 
 export * from './deployer';
 
@@ -26,6 +26,11 @@ extendEnvironment((hre) => {
           ? [hre.config.paths.deployPaths]
           : hre.config.paths.deployPaths;
     hre.deployer = new DeployerExtension(hre);
+    if (hre.network.name === 'hardhat' && hre.network.zksync) {
+        hre.network.config.accounts = [];
+        hre.network.config.chainId = 260;
+        hre.network.config.url = 'http://127.0.0.1:8011';
+    }
 });
 
 task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for zkSync network')

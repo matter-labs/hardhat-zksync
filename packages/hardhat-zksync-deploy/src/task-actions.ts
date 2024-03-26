@@ -1,6 +1,5 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
-import { TASK_NODE_GET_SERVER } from '@matterlabs/hardhat-zksync-node/src/constants';
-import { waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/src/utils';
+import { waitForNodeToBeReady, startServer } from '@matterlabs/hardhat-zksync-node/src/utils';
 import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/src/server';
 import { ScriptManager } from './script-manager';
 import { deployLibraries } from './plugin';
@@ -9,7 +8,7 @@ async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => 
     let eraTestNode: JsonRpcServer | undefined;
     if (hre.network.zksync && hre.network.name === 'hardhat') {
         try {
-            const { commandArgs, server, port } = await hre.run(TASK_NODE_GET_SERVER);
+            const { commandArgs, server, port } = await startServer(hre);
             eraTestNode = server;
             const _ = eraTestNode!.listen(commandArgs);
             await waitForNodeToBeReady(port);

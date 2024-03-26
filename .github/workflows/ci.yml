@@ -154,6 +154,8 @@ jobs:
         run: |
           cd examples/deploy-example
           pnpm hardhat compile
+          pnpm hardhat deploy-zksync:libraries --network hardhat
+          pnpm hardhat compile
           pnpm hardhat deploy-zksync --network zkSyncNetwork
           pnpm hardhat deploy-zksync --network hardhat
 

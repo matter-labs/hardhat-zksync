@@ -26,13 +26,8 @@ export async function deployLibraries(
     noAutoPopulateConfig: boolean,
     compileAllContracts: boolean,
 ) {
-    let wallet;
+    const wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAccount(hre));
 
-    if (hre.network.name === 'hardhat' && hre.network.zksync) {
-        wallet = await getWallet(hre, DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY);
-    } else {
-        wallet = await getWallet(hre, privateKeyOrAccountNumber ?? getNetworkAccount(hre));
-    }
     const deployer = new Deployer(hre, wallet);
 
     const libraryInfos = getLibraryInfos(hre);
@@ -159,6 +154,8 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
         return new Wallet(privateKey);
     }
 
+    const isZksyncHardhatNetwork = hre.network.name === 'hardhat' && hre.network.zksync;
+
     const accounts = hre.network.config.accounts;
 
     const wallets = await getWalletsFromAccount(hre, accounts);
@@ -168,10 +165,16 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     }
 
     if (wallets.length === 0) {
-        throw new ZkSyncDeployPluginError('Accounts are not configured for this network');
+        if (isZksyncHardhatNetwork) {
+            return getWallet(hre, DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY);
+        } else {
+            throw new ZkSyncDeployPluginError('Accounts are not configured for this network');
+        }
     }
 
-    return wallets[accountNumber || 0];
+    const wallet = wallets[accountNumber || 0];
+
+    return wallet;
 }
 
 export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet[]> {
