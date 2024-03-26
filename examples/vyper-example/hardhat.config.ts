@@ -8,10 +8,16 @@ const config: HardhatUserConfig = {
         version: 'latest',
         compilerSource: 'binary',
     },
+    defaultNetwork:'dokerizedNode',
     networks: {
         hardhat: {
             zksync: true,
         },
+        dockerizedNode: {
+            url: "http://localhost:3050",
+            ethNetwork: "http://localhost:8545",
+            zksync: true,
+          },
     },
     // Currently, only Vyper ^0.3.3 is supported.
     vyper: {

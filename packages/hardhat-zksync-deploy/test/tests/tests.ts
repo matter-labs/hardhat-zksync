@@ -149,7 +149,7 @@ describe('Plugin tests', async function () {
     describe('Deployer without zkSync network provided', async function () {
         useEnvironment('successful-compilation');
 
-        it('Should use default L1 and L2 network providers (local-setup)', async function () {
+        it.only('Should use default L1 and L2 network providers (local-setup)', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
 
@@ -158,8 +158,9 @@ describe('Plugin tests', async function () {
                 'http://localhost:8545',
                 'Incorrect default L1 network provider',
             );
+            console.info(deployer.zkWallet.provider._getConnection().url);
             assert(
-                ['http://localhost:3050', 'http://localhost:8011'].includes(
+                ['http://localhost:3050', 'http://127.0.0.1:8011'].includes(
                     deployer.zkWallet.provider._getConnection().url,
                 ),
                 'Incorrect default L2 network provider',

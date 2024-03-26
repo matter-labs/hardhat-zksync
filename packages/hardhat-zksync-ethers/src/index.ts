@@ -54,4 +54,3 @@ extendEnvironment((hre) => {
         };
     });
 });
-
