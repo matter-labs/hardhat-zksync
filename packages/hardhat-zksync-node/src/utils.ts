@@ -8,7 +8,6 @@ import { exec } from 'child_process';
 import type { Dispatcher } from 'undici';
 import { Provider } from 'zksync-ethers';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { ZkSyncProviderAdapter } from './zksync-provider-adapter';
 
 import {
@@ -27,14 +26,13 @@ import {
     NETWORK_GAS_PRICE,
     PLATFORM_MAP,
     START_PORT,
-    TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TEMP_FILE_PREFIX,
     ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
 } from './constants';
 import { ZkSyncNodePluginError } from './errors';
 import { CommandArguments } from './types';
 import { JsonRpcServer } from './server';
-import './index';
+import { RPCServerDownloader } from './downloader';
 
 // Generates command arguments for running the era-test-node binary
 export function constructCommandArgs(args: CommandArguments): string[] {
@@ -412,13 +410,17 @@ export function configureNetwork(network: any, port: number) {
     network.provider = new ZkSyncProviderAdapter(new Provider(url));
 }
 
-export const startServer = async (hre: HardhatRuntimeEnvironment) => {
+export const startServer = async (tag?: string, force: boolean = false) => {
     const platform = getPlatform();
     if (platform === 'windows' || platform === '') {
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
+    const rpcServerBinaryDir = await getRPCServerBinariesDir();
 
-    const binaryPath: string = await hre.run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
+    const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+
+    await downloader.downloadIfNeeded(force);
+    const binaryPath = await downloader.getBinaryPath();
 
     const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
     const commandArgs = constructCommandArgs({ port: currentPort });

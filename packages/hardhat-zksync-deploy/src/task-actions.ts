@@ -8,7 +8,7 @@ async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => 
     let eraTestNode: JsonRpcServer | undefined;
     if (hre.network.zksync && hre.network.name === 'hardhat') {
         try {
-            const { commandArgs, server, port } = await startServer(hre);
+            const { commandArgs, server, port } = await startServer();
             eraTestNode = server;
             const _ = eraTestNode!.listen(commandArgs);
             await waitForNodeToBeReady(port);

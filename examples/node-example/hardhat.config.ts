@@ -14,10 +14,16 @@ const config: HardhatUserConfig = {
             },
         }
     },
+    defaultNetwork:'dockerizedNode',
     networks: {
         hardhat: {
             zksync: true,
         },
+        dockerizedNode: {
+            url: "http://localhost:3050",
+            ethNetwork: "http://localhost:8545",
+            zksync: true,
+          },
     },
     solidity: {
         version: '0.8.17',
