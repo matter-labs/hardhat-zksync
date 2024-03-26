@@ -8,7 +8,7 @@ const config: HardhatUserConfig = {
         version: 'latest',
         compilerSource: 'binary',
     },
-    defaultNetwork:'dokerizedNode',
+    defaultNetwork:'dockerizedNode',
     networks: {
         hardhat: {
             zksync: true,
