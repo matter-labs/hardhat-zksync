@@ -5,7 +5,6 @@ import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/src/server';
 import { ScriptManager } from './script-manager';
 import { deployLibraries } from './plugin';
 
-// Common functionality to start and stop eraTestNode
 async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => Promise<void>) {
     let eraTestNode: JsonRpcServer | undefined;
     if (hre.network.zksync && hre.network.name === 'hardhat') {

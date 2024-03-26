@@ -15,7 +15,7 @@ export const SCRIPT_DEFAULT_PRIORITY = 0;
 
 export const DEFAULT_ERA_TEST_NODE_ACCOUNT_PRIVATE_KEY = richWallets[0].privateKey;
 
-export const ERA_TEST_NODE_URL = 'http://localhost:8011';
+export const ERA_TEST_NODE_URL = 'http://127.0.0.1:8011';
 
 export const defaultAccountDeployerSettings: DeployerAccount = {
     default: 0,
