@@ -265,6 +265,7 @@ describe('Plugin tests', async function () {
         it('Should estimate deploy fee', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY, new Provider(dokerizedNodeUrl));
             const deployer = new Deployer(this.env, zkWallet);
+            await this.env.run('compile');
             const estimateFee = await deployer.estimateDeployFee(await loadArtifact(this.env, 'Greeter'), [
                 'Hi there!',
             ]);
@@ -273,7 +274,6 @@ describe('Plugin tests', async function () {
                 'Hi there!',
             ]);
             expect(estimateGas > 0, 'Gas estimation should be greater than 0');
-            await this.env.run('compile');
             const artifact = await deployer.loadArtifact('Greeter');
             const result = await deployer.estimateDeployFee(artifact, ['Hi there!']);
             expect(typeof result).to.equal('bigint');
