@@ -196,7 +196,6 @@ describe('Plugin tests', async function () {
         });
 
         it('should start the node and stop it sucessfully', async function () {
-            await new Promise((resolve) => setTimeout(resolve, 5000));
             const { port, server, commandArgs } = await startServer();
             const _ = server.listen(commandArgs);
             await waitForNodeToBeReady(port);
