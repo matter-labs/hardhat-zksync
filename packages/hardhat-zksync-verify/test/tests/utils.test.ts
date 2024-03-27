@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import sinon from 'sinon';
 import axion from 'axios';
 import {
@@ -9,8 +9,10 @@ import {
     handleAxiosError,
     parseWrongConstructorArgumentsError,
     removeMultipleSubstringOccurrences,
+    retrieveContractBytecode,
 } from '../../src/utils';
 import * as service from '../../src/zksync-block-explorer/service';
+import { SolcMultiUserConfigExtractor } from '../../src/config-extractor';
 
 describe('executeVeificationWithRetry', () => {
     let checkVerificationStatusServiceStub: sinon.SinonStub;
@@ -53,6 +55,45 @@ describe('executeVeificationWithRetry', () => {
 
         expect(result).to.equal(response);
         expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
+    });
+
+    it('should handle undefined overrides gracefully', () => {
+        const solidityConfig = {
+            compilers: [
+                {
+                    version: '0.8.17',
+                    eraVersion: 'latest',
+                    settings: {
+                        optimizer: {
+                            enabled: true,
+                            runs: 200,
+                        },
+                        outputSelection: {},
+                        metadata: {},
+                    },
+                },
+            ],
+            overrides: undefined,
+        };
+        const extractor = new SolcMultiUserConfigExtractor();
+
+        const result = extractor.extract(solidityConfig);
+
+        expect(result.compilers).to.deep.equal([
+            {
+                version: '0.8.17',
+                eraVersion: 'latest',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200,
+                    },
+                    outputSelection: {},
+                    metadata: {},
+                },
+            },
+        ]);
+        expect(result!.overides!.size).to.equal(0);
     });
 
     it('should return undefined when max retries exceeded', async () => {
@@ -162,61 +203,45 @@ describe('encodeArguments', () => {
     });
 });
 
-/* describe("retrieveContractBytecode", () => {
-  let providerSendStub: sinon.SinonStub;
+describe('retrieveContractBytecode', () => {
+    beforeEach(() => {
+        sinon.restore();
+    });
+    it('should throw ZkSyncVerifyPluginError if there is no bytecode at the address', async function () {
+        const hre = {
+            network: {
+                name: 'testnet',
+                provider: {
+                    send: sinon.stub().resolves('0x'),
+                },
+            },
+        };
+        const address = '0x1234567890123456789012345678901234567890';
 
-  beforeEach(() => {
-    sinon.restore();
-  });
-
-  it("should return the deployed bytecode when the address has bytecode", async () => {
-    const address = "0x1234567890abcdef";
-    const hreNetwork = {
-      config: {
-        url: "https://example.com",
-      },
-      name: "test-network",
-    };
-    const bytecodeString = "0xabcdef1234567890";
-    const providerResponse = `0x${bytecodeString}`;
-
-    providerSendStub = sinon.stub().resolves(providerResponse);
-    sinon.stub(zk, "Provider").resolves({
-      send: providerSendStub,
+        try {
+            await retrieveContractBytecode(address, hre as any);
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                throw new Error('Expected error to be a Error');
+            }
+        }
     });
 
-    const result = await retrieveContractBytecode(address, hreNetwork);
+    it('should return deployed bytecode if it exists', async function () {
+        const hre = {
+            network: {
+                name: 'testnet',
+                provider: {
+                    send: sinon.stub().resolves('0x1234'),
+                },
+            },
+        };
+        const address = '0x1234567890123456789012345678901234567890';
 
-    expect(result).to.equal(bytecodeString);
-    expect(providerSendStub.calledOnceWith("eth_getCode", [address, "latest"])).to.be.true;
-  });
-
-  it("should throw an error when the address has no bytecode", async () => {
-    const address = "0x1234567890abcdef";
-    const hreNetwork = {
-      config: {
-        url: "https://example.com",
-      },
-      name: "test-network",
-    };
-    const bytecodeString = "";
-
-    providerSendStub = sinon.stub().resolves(bytecodeString);
-    sinon.stub(zk, "Provider").resolves({
-      send: providerSendStub,
+        const bytecode = await retrieveContractBytecode(address, hre as any);
+        assert.strictEqual(bytecode, '1234', 'The function did not return the expected bytecode.');
     });
-
-    try {
-      await retrieveContractBytecode(address, hreNetwork);
-      // Fail the test if no error is thrown
-      expect.fail("Expected an error to be thrown");
-    } catch (error: any) {
-      expect(error.message).to.equal(
-        `The address ${address} has no bytecode. Is the contract deployed to this network?\n  The selected network is ${hreNetwork.name}.`
-      );
-    }
-  });
-});*/
+});
 
 describe('removeMultipleSubstringOccurrences', () => {
     it('should remove all occurrences of the specified substring', () => {

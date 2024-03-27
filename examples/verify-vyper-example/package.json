@@ -4,12 +4,12 @@
   "author": "Matter Labs",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn eslint",
-    "lint:fix": "yarn eslint --fix",
-    "fmt": "yarn prettier --write",
+    "lint": "pnpm eslint",
+    "lint:fix": "pnpm eslint --fix",
+    "fmt": "pnpm prettier --write",
     "eslint": "eslint test/**/*.ts",
     "prettier": "prettier test/**/*.ts",
-    "test": "yarn hardhat test",
+    "test": "pnpm hardhat test",
     "build": "tsc --build .",
     "clean": "rimraf dist"
   },
@@ -29,10 +29,10 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
-    "@matterlabs/hardhat-zksync-vyper": "link:../../packages/hardhat-zksync-vyper",
-    "@matterlabs/hardhat-zksync-verify": "link:../../packages/hardhat-zksync-verify",
-    "@matterlabs/hardhat-zksync-verify-vyper": "link:../../packages/hardhat-zksync-verify-vyper",
+    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-vyper": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify-vyper": "workspace:^",
     "chalk": "4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",

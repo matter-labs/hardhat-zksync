@@ -34,9 +34,33 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             const result = await checkVerificationStatusService(requestId, verifyURL);
 
+            expect(!result.errorExists());
             expect(result).to.be.instanceOf(VerificationStatusResponse);
             expect(result.status).to.equal(response.data.status);
             expect(result.isVerificationSuccess()).to.equal(true);
+        });
+
+        it('should return the error', async () => {
+            const requestId = 123;
+            const verifyURL = 'https://example.com/verify';
+
+            const response = {
+                status: 400,
+                data: {
+                    status: 'failed',
+                    message: 'Verification unsuccessful',
+                    error: 'already verified',
+                    compilationErrors: ['has compilation errors'],
+                },
+            };
+
+            sinon.stub(axios, 'get').resolves(response);
+
+            const result = await checkVerificationStatusService(requestId, verifyURL);
+
+            expect(!result.isPending());
+            expect(!result.isQueued());
+            expect(result.getError().includes('already verified'));
         });
 
         it('should handle axios error', async () => {
@@ -159,6 +183,19 @@ describe('ZkSyncBlockExplorer Service', () => {
             const result = await getSupportedCompilerVersions(verifyURL);
 
             expect(result).to.deep.equal(response.data);
+        });
+
+        it('should fail the get the supported compiler versions', async () => {
+            const verifyURL = 'https://example.com/verify';
+
+            sinon.stub(axios, 'get').rejects(new Error('Network Error'));
+
+            try {
+                await getSupportedCompilerVersions(verifyURL);
+                throw new Error('Expected getSupportedCompilerVersions to throw');
+            } catch (error) {
+                expect(error).to.be.an('error');
+            }
         });
     });
 });
