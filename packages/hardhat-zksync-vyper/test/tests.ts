@@ -3,14 +3,67 @@ import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import chalk from 'chalk';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+import fse from 'fs-extra';
+import path from 'path';
+import semver from 'semver';
 import { compile, getWindowsOutput } from '../src/compile/index';
 import * as compiler from '../src/compile/binary';
 import { ZkSyncArtifact, ZkVyperConfig, CompilerOutput } from '../src/types';
+import { getLatestRelease, getZkvyperUrl, pluralize, saltFromUrl, saveDataToFile, sha1 } from '../src/utils';
+import { USER_AGENT, ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY, ZKVYPER_BIN_REPOSITORY_NAME } from '../src/constants';
 import { useEnvironment } from './helpers';
 
 chai.use(sinonChai);
 
 describe('zkvyper plugin', async function () {
+    it('should get release zkVyper url', async function () {
+        const url = getZkvyperUrl(ZKVYPER_BIN_REPOSITORY, '1.3.14');
+        assert(
+            url ===
+                'https://github.com/matter-labs/zkvyper-bin/releases/download/v1.3.14/zkvyper-linux-amd64-musl-v1.3.14',
+            'Url is not correct.',
+        );
+    });
+
+    it('should get zkVyper url', async function () {
+        const url = getZkvyperUrl(ZKVYPER_BIN_REPOSITORY, '1.3.14', false);
+        assert(
+            url === 'https://github.com/matter-labs/zkvyper-bin/raw/main/linux-amd64/zkvyper-linux-amd64-musl-v1.3.14',
+            'Url is not correct.',
+        );
+    });
+
+    it('should create sha1', function () {
+        const word = 'test';
+        const result = sha1(word);
+        assert(result === saltFromUrl(word), 'invalid sha');
+    });
+
+    it('should get latest release', async function () {
+        const latestRelease = await getLatestRelease(ZKVYPER_BIN_OWNER, ZKVYPER_BIN_REPOSITORY_NAME, USER_AGENT);
+        const isGreaterThanOne = semver.gt(latestRelease, '1.0.0');
+        assert.isTrue(isGreaterThanOne, `Expected latest version to be greater than 1.0.0, got ${latestRelease}`);
+    });
+
+    it('should save data to file, check content, and delete the file afterwards', async function () {
+        const targetPath = path.join(process.cwd(), './xad.json');
+
+        console.info(process.cwd());
+        await saveDataToFile({ test: 'test' }, targetPath);
+
+        const fileContent = await fse.readJson(targetPath);
+        assert.deepStrictEqual(fileContent, { test: 'test' }, 'File content does not match expected JSON');
+
+        await fse.remove(targetPath);
+    });
+
+    describe('Tests pluralize', function () {
+        it('returns explicit plural when plural parameter is provided and n is not 1', function () {
+            const result = pluralize(2, 'mouse', 'mice');
+            expect(result === 'mice', 'Result should be mice.');
+        });
+    });
+
     describe('Simple', async function () {
         useEnvironment('simple');
 
@@ -107,6 +160,19 @@ describe('zkvyper plugin', async function () {
         });
     });
 
+    describe('Should not compile because of unsupported fallback option', async function () {
+        useEnvironment('unsupported-fallback-optimize', 'hardhat', true);
+
+        it('Should not compile', async function () {
+            try {
+                const hh = require('hardhat');
+                await hh.run(TASK_COMPILE);
+            } catch (e: any) {
+                expect(e.message).to.include('allback_to_optimizing_for_size option in optimizer is not supported');
+            }
+        });
+    });
+
     describe('Compiling nothing', async function () {
         useEnvironment('nothing-to-compile');
 
@@ -119,6 +185,30 @@ describe('zkvyper plugin', async function () {
                 console.info(e);
             }
             assert(isError === false);
+        });
+
+        it('should throw an error of incorrect compiler source', async function () {
+            try {
+                await compile({ version: 'latest', settings: {} }, [], '', '', undefined);
+            } catch (e: any) {
+                assert(e.message.includes('Incorrect compiler source:'));
+            }
+        });
+
+        it('should throw an error of unspecified vyper executable', async function () {
+            try {
+                await compile({ version: 'latest', compilerSource: 'binary', settings: {} }, [], '', '', null as any);
+            } catch (e: any) {
+                assert(e.message.includes('vyper executable is not specified'));
+            }
+        });
+
+        it('should fail the compilation because undefined is not found', async function () {
+            try {
+                await compile({ version: 'latest', compilerSource: 'binary', settings: {} }, [], '', '', undefined);
+            } catch (e: any) {
+                assert(e.message.includes('Command failed: undefined'));
+            }
         });
     });
 
@@ -229,9 +319,9 @@ describe('getWindowsOutput', () => {
             },
         };
 
-        const path = 'C:\\path\\to\\file.sol';
+        const path_ = 'C:\\path\\to\\file.sol';
 
-        const result = getWindowsOutput(output, path);
+        const result = getWindowsOutput(output, path_);
 
         expect(result).to.be.an('object');
         expect(result).to.have.property('version');
@@ -261,9 +351,9 @@ describe('getWindowsOutput', () => {
             },
         };
 
-        const path = 'path/to/file.sol';
+        const path_ = 'path/to/file.sol';
 
-        const result = getWindowsOutput(output, path);
+        const result = getWindowsOutput(output, path_);
 
         expect(result).to.deep.equal(output);
     });
