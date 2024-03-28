@@ -3,6 +3,7 @@ import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/src/u
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
+import { getWallet } from './utils';
 
 export async function deployBeaconWithOneLine(
     hre: HardhatRuntimeEnvironment,
@@ -25,10 +26,7 @@ export async function deployBeaconWithOneLine(
         taskArgs.constructorArgs,
     );
 
-    const wallet = (await hre.zkUpgrades.getWallet())
-        .connect(hre.zkUpgrades.providerL2)
-        .connectToL1(hre.zkUpgrades.providerL1);
-
+    const wallet = await getWallet(hre);
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
@@ -67,14 +65,10 @@ export async function deployProxyWithOneLine(
         taskArgs.constructorArgs,
     );
 
-    const wallet = (await hre.zkUpgrades.getWallet())
-        .connect(hre.zkUpgrades.providerL2)
-        .connectToL1(hre.zkUpgrades.providerL1);
-
+    const wallet = await getWallet(hre);
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-
     const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments);
     await proxy.waitForDeployment();
 
@@ -93,10 +87,7 @@ export async function upgradeBeaconWithOneLine(
         await hre.run(TASK_COMPILE);
     }
 
-    const wallet = (await hre.zkUpgrades.getWallet())
-        .connect(hre.zkUpgrades.providerL2)
-        .connectToL1(hre.zkUpgrades.providerL1);
-
+    const wallet = await getWallet(hre);
     const deployer = new Deployer(hre, wallet);
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
@@ -118,10 +109,7 @@ export async function upgradeProxyWithOneLine(
         await hre.run(TASK_COMPILE);
     }
 
-    const wallet = (await hre.zkUpgrades.getWallet())
-        .connect(hre.zkUpgrades.providerL2)
-        .connectToL1(hre.zkUpgrades.providerL1);
-
+    const wallet = await getWallet(hre);
     const deployer = new Deployer(hre, wallet);
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);

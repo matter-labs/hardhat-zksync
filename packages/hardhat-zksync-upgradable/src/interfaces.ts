@@ -2,7 +2,6 @@ import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 
 import * as zk from 'zksync-ethers';
 
-import { ethers } from 'ethers';
 import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
 import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
 import { DeployBeaconFunction } from './proxy-deployment/deploy-beacon';
@@ -20,9 +19,6 @@ export type ValidateImplementationFunction = (
 ) => Promise<void>;
 
 export interface HardhatUpgrades {
-    providerL1: ethers.Provider;
-    providerL2: zk.Provider;
-    getWallet: () => Promise<zk.Wallet>;
     deployProxy: DeployFunction;
     upgradeProxy: UpgradeFunction;
     validateImplementation: ValidateImplementationFunction;

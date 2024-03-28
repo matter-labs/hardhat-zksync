@@ -9,8 +9,6 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 
 import { lazyObject } from 'hardhat/plugins';
-import { createProviders } from '@matterlabs/hardhat-zksync-deploy/src/deployer-helper';
-import { getWallet } from '@matterlabs/hardhat-zksync-deploy/src/plugin';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
@@ -27,10 +25,10 @@ import {
     upgradeBeaconZkSyncWithOneLine,
     upgradeProxyZkSyncWithOneLine,
 } from './task-actions';
+import { PROXY_SOURCE_NAMES } from './constants';
 
 extendEnvironment((hre) => {
     hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
-        const { ethWeb3Provider, zkWeb3Provider } = createProviders(hre.config.networks, hre.network);
         const { makeDeployProxy } = require('./proxy-deployment/deploy-proxy');
         const { makeUpgradeProxy } = require('./proxy-upgrade/upgrade-proxy');
         const { makeValidateImplementation } = require('./validations/validate-implementation');
@@ -42,9 +40,6 @@ extendEnvironment((hre) => {
         const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
         const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
         return {
-            providerL1: ethWeb3Provider,
-            providerL2: zkWeb3Provider,
-            getWallet: (privateKeyOrIndex?: string | number) => getWallet(hre, privateKeyOrIndex),
             deployProxy: makeDeployProxy(hre),
             upgradeProxy: makeUpgradeProxy(hre),
             validateImplementation: makeValidateImplementation(hre),
@@ -131,8 +126,7 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSup
 
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
     const sourceNames = await runSuper();
-    return sourceNames;
-    // return [...sourceNames, ...PROXY_SOURCE_NAMES];
+    return [...sourceNames, ...PROXY_SOURCE_NAMES];
 });
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {

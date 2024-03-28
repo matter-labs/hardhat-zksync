@@ -1,4 +1,5 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
+import { Contract } from 'zksync-ethers';
 
 export async function deployWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
@@ -10,7 +11,7 @@ export async function deployWithOneLineAndVerify(
         noCompile?: boolean;
         verify?: boolean;
     },
-): Promise<void> {
+): Promise<Contract> {
     const contract = await runSuper(taskArgs);
     if (taskArgs.verify) {
         const artifact = await hre.deployer.loadArtifact(taskArgs.contractName);
@@ -22,6 +23,8 @@ export async function deployWithOneLineAndVerify(
             noCompile: taskArgs.noCompile,
         });
     }
+
+    return contract;
 }
 
 export async function deployBeaconWithOneLineAndVerify(
@@ -34,13 +37,18 @@ export async function deployBeaconWithOneLineAndVerify(
         noCompile?: boolean;
         verify?: boolean;
     },
-): Promise<void> {
-    const { proxy, _ } = await runSuper(taskArgs);
+): Promise<{
+    proxy: Contract;
+    beacon: Contract;
+}> {
+    const { proxy, beacon } = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
             address: await proxy.getAddress(),
         });
     }
+
+    return { proxy, beacon };
 }
 
 export async function deployProxyWithOneLineAndVerify(
@@ -53,13 +61,15 @@ export async function deployProxyWithOneLineAndVerify(
         noCompile?: boolean;
         verify?: boolean;
     },
-): Promise<void> {
+): Promise<Contract> {
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
             address: await proxy.getAddress(),
         });
     }
+
+    return proxy;
 }
 
 export async function upgradeBeaconWithOneLineAndVerify(
@@ -71,13 +81,15 @@ export async function upgradeBeaconWithOneLineAndVerify(
         noCompile?: boolean;
         verify?: boolean;
     },
-): Promise<void> {
+): Promise<Contract> {
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
             address: await proxy.getAddress(),
         });
     }
+
+    return proxy;
 }
 
 export async function upgradeProxyWithOneLineAndVerify(
@@ -89,11 +101,13 @@ export async function upgradeProxyWithOneLineAndVerify(
         noCompile?: boolean;
         verify?: boolean;
     },
-): Promise<void> {
+): Promise<Contract> {
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
             address: await proxy.getAddress(),
         });
     }
+
+    return proxy;
 }

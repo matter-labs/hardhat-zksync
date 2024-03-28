@@ -110,6 +110,28 @@ If you want to get the estimation for the beacon proxy contract, please use the 
 
 `const totalGasEstimation = await hre.zkUpgrades.estimation.estimateGasBeacon(deployer, contract, []);`
 
+## 🕹 Commands
+
+`yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--no-compile]`
+
+When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments. Optionally, the `no-compile` parameter allows the task to skip the compilation process.
+
+`yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--no-compile]`
+
+When executed, this command will automatically determine whether the deployment is for a Transparent or UUps proxy. 
+If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
+If the UUps proxy is chosen, it will deploy implementation and proxy. Optionally, the no-compile parameter allows the task to skip the compilation process.
+
+`yarn hardhat upgrade-beacon:oneline --contract-name <contract name or fully qualified name> --beacon-address <beacon address> [--no-compile]`
+
+When executed, this command upgrade beacon implementation. Optionally, the `no-compile` parameter allows the task to skip the compilation process.
+
+`yarn hardhat upgrade-proxy:oneline --contract-name <contract name or fully qualified name> --proxy-address <proxy address> [--no-compile]`
+
+When executed, this command upgrade uups or transparent implementation. Optionally, the `no-compile` parameter allows the task to skip the compilation process.
+
+Please consider that while the provided CLI commands enable contract deployment and upgrading, not all arguments may be available (e.g. initializer or kind propery). If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
+
 ## 📝 Documentation
 
 In addition to the [hardhat-zksync-upgradable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:

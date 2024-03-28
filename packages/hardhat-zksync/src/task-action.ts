@@ -12,7 +12,7 @@ export async function deployZkSyncWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
 
 export async function deployBeaconZkSyncWithOneLineAndVerify(
@@ -20,7 +20,7 @@ export async function deployBeaconZkSyncWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
 
 export async function deployProxyZkSyncWithOneLineAndVerify(
@@ -28,7 +28,7 @@ export async function deployProxyZkSyncWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
 
 export async function upgradeBeaconZkSyncWithOneLineAndVerify(
@@ -36,7 +36,7 @@ export async function upgradeBeaconZkSyncWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    await upgradeBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await upgradeBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
 
 export async function upgradeProxyZkSyncWithOneLineAndVerify(
@@ -44,5 +44,5 @@ export async function upgradeProxyZkSyncWithOneLineAndVerify(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    await upgradeProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await upgradeProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
