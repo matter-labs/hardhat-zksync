@@ -13,10 +13,16 @@ const config: HardhatUserConfig = {
             },
         }
     },
+    defaultNetwork:'dockerizedNode',
     networks: {
         hardhat: {
             zksync: true,
         },
+        dockerizedNode: {
+            url: "http://localhost:3050",
+            ethNetwork: "http://localhost:8545",
+            zksync: true,
+          },
     },
     // Docker image only works for solidity ^0.8.0.
     // For earlier versions you need to use binary releases of zksolc.

@@ -790,6 +790,9 @@ importers:
 
   packages/hardhat-zksync-deploy:
     dependencies:
+      '@matterlabs/hardhat-zksync-node':
+        specifier: ^1.0.2
+        version: link:../hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.0.4
         version: link:../hardhat-zksync-solc

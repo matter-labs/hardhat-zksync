@@ -16,10 +16,10 @@ const config: HardhatUserConfig = {
     deployerAccounts: {
         'zkSyncNetwork': 1
     },
-    defaultNetwork: "zkSyncNetwork",
     networks: {
         hardhat: {
             zksync: true,
+            deployPaths:["deploy-eraTestNode"]
         },
         ethNetwork: {
             url: 'http://0.0.0.0:8545',
