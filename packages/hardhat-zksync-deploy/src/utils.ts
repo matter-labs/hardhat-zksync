@@ -8,6 +8,7 @@ import {
     HttpNetworkConfig,
     NetworkConfig,
 } from 'hardhat/types';
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import fs from 'fs';
 import { Wallet } from 'zksync-ethers';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
@@ -93,7 +94,7 @@ export function isValidEthNetworkURL(string) {
 export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
     hre.config.zksolc.settings.contractsToCompile = contracts;
 
-    await hre.run('compile', { force: true });
+    await hre.run(TASK_COMPILE, { force: true });
 }
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
@@ -148,4 +149,31 @@ export async function retrieveContractBytecode(address: string, provider: Ethere
         return undefined;
     }
     return bytecodeString;
+}
+
+export async function getConstructorArguments(
+    constructorArgsParams: any[],
+    constructorArgsModule?: string,
+): Promise<any> {
+    if (typeof constructorArgsModule !== 'string') {
+        return constructorArgsParams;
+    }
+
+    const constructorArgsModulePath = path.resolve(process.cwd(), constructorArgsModule);
+
+    try {
+        const constructorArguments = await extractModule(constructorArgsModulePath);
+
+        if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith('0x')) {
+            throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
+        }
+        return constructorArguments;
+    } catch (error: any) {
+        throw new ZkSyncVerifyPluginError(CONSTRUCTOR_MODULE_IMPORTING_ERROR(error.message), error);
+    }
+}
+
+export async function extractModule(constructorArgsModulePath: string) {
+    const constructorArguments = (await import(constructorArgsModulePath)).default;
+    return constructorArguments;
 }
