@@ -10,7 +10,13 @@ import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
-import { deployWithOneLineAndVerify } from '../src/plugin';
+import {
+    deployBeaconWithOneLineAndVerify,
+    deployProxyWithOneLineAndVerify,
+    deployWithOneLineAndVerify,
+    upgradeBeaconWithOneLineAndVerify,
+    upgradeProxyWithOneLineAndVerify,
+} from '../src/plugin';
 import { useEnvironmentWithLocalSetup } from './helpers';
 
 chai.use(sinonChai);
@@ -108,5 +114,134 @@ describe('zksync toolbox plugin', function () {
             expect(runSuper).to.have.been.calledOnceWith(taskArgs);
             expect(hre.run).to.have.been.callCount(0);
         });
+    });
+
+    describe('beaconWithOneLineAndVerify', () => {
+        const sandbox = sinon.createSandbox();
+        let hre: HardhatRuntimeEnvironment;
+        let runSuper: RunSuperFunction<TaskArguments>;
+        const artifact = {
+            sourceName: 'contracts/Box.sol',
+            contractName: 'Box',
+        };
+
+        this.beforeEach(() => {
+            runSuper = sandbox.stub().resolves({
+                proxy: {
+                    getAddress: async () => '0x1234567890123456789012345678901234567890',
+                    abi: [],
+                },
+                beacon: {
+                    getAddress: async () => '0x1234567890123456789012345678901234567890',
+                    abi: [],
+                },
+            }) as any;
+            hre = {
+                zkUpgrades: {
+                    deployBeacon: sandbox.stub().resolves(artifact),
+                },
+                run: sandbox.stub(),
+            } as any;
+        });
+
+        afterEach(() => {
+            sandbox.restore();
+        });
+
+        const taskArgs = {
+            contractName: 'Box',
+            constructorArgsParams: [],
+            constructorArgs: undefined,
+            noCompile: false,
+            verify: true,
+        };
+
+        it('should deploy the beacon contract and verify it', async () => {
+            await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+
+            expect(runSuper).to.have.been.calledOnceWith(taskArgs);
+            expect(hre.run).to.have.been.calledOnceWith('verify:verify', {
+                address: '0x1234567890123456789012345678901234567890',
+            });
+        });
+
+        it('should deploy the contract without verifying it', async () => {
+            taskArgs.verify = false;
+            await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+
+            expect(runSuper).to.have.been.calledOnceWith(taskArgs);
+            expect(hre.run).to.have.been.callCount(0);
+        });
+
+        it('should upgrade contract without verifying it', async () => {
+            taskArgs.verify = false;
+            taskArgs.contractName = 'BoxV2';
+            const newTaskArgs = {
+                ...taskArgs,
+                beaconAddress: '0x1234567890123456789012345678901234567890',
+            };
+            await upgradeBeaconWithOneLineAndVerify(hre, runSuper, newTaskArgs);
+
+            expect(runSuper).to.have.been.calledOnceWith(newTaskArgs);
+            expect(hre.run).to.have.been.callCount(0);
+        });
+    });
+});
+
+describe('proxyWithOneLineAndVerify', () => {
+    const sandbox = sinon.createSandbox();
+    let hre: HardhatRuntimeEnvironment;
+    let runSuper: RunSuperFunction<TaskArguments>;
+
+    beforeEach(() => {
+        runSuper = sandbox.stub().resolves({
+            getAddress: async () => '0x1234567890123456789012345678901234567890',
+            abi: [],
+        }) as any;
+        hre = {
+            run: sandbox.stub(),
+        } as any;
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+    });
+
+    const taskArgs = {
+        contractName: 'Box',
+        constructorArgsParams: [],
+        constructorArgs: undefined,
+        noCompile: false,
+        verify: true,
+    };
+
+    it('should deploy the proxy contract and verify it', async () => {
+        await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+
+        expect(runSuper).to.have.been.calledOnceWith(taskArgs);
+        expect(hre.run).to.have.been.calledOnceWith('verify:verify', {
+            address: '0x1234567890123456789012345678901234567890',
+        });
+    });
+
+    it('should deploy the proxy without verifying it', async () => {
+        taskArgs.verify = false;
+        await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+
+        expect(runSuper).to.have.been.calledOnceWith(taskArgs);
+        expect(hre.run).to.have.been.callCount(0);
+    });
+
+    it('should upgrade proxy without verifying it', async () => {
+        taskArgs.verify = false;
+        taskArgs.contractName = 'BoxV2';
+        const newTaskArgs = {
+            ...taskArgs,
+            proxyAddress: '0x1234567890123456789012345678901234567890',
+        };
+        await upgradeProxyWithOneLineAndVerify(hre, runSuper, newTaskArgs);
+
+        expect(runSuper).to.have.been.calledOnceWith(newTaskArgs);
+        expect(hre.run).to.have.been.callCount(0);
     });
 });
