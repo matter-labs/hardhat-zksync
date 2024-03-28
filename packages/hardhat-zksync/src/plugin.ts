@@ -23,3 +23,77 @@ export async function deployWithOneLineAndVerify(
         });
     }
 }
+
+export async function deployBeaconWithOneLineAndVerify(
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+    taskArgs: {
+        contractName: string;
+        constructorArgsParams: any[];
+        constructorArgs?: string;
+        noCompile?: boolean;
+        verify?: boolean;
+    },
+): Promise<void> {
+    const { proxy, _ } = await runSuper(taskArgs);
+    if (taskArgs.verify) {
+        await hre.run('verify:verify', {
+            address: await proxy.getAddress(),
+        });
+    }
+}
+
+export async function deployProxyWithOneLineAndVerify(
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+    taskArgs: {
+        contractName: string;
+        constructorArgsParams: any[];
+        constructorArgs?: string;
+        noCompile?: boolean;
+        verify?: boolean;
+    },
+): Promise<void> {
+    const proxy = await runSuper(taskArgs);
+    if (taskArgs.verify) {
+        await hre.run('verify:verify', {
+            address: await proxy.getAddress(),
+        });
+    }
+}
+
+export async function upgradeBeaconWithOneLineAndVerify(
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+    taskArgs: {
+        contractName: string;
+        beaconAddress: string;
+        noCompile?: boolean;
+        verify?: boolean;
+    },
+): Promise<void> {
+    const proxy = await runSuper(taskArgs);
+    if (taskArgs.verify) {
+        await hre.run('verify:verify', {
+            address: await proxy.getAddress(),
+        });
+    }
+}
+
+export async function upgradeProxyWithOneLineAndVerify(
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+    taskArgs: {
+        contractName: string;
+        proxyAddress: string;
+        noCompile?: boolean;
+        verify?: boolean;
+    },
+): Promise<void> {
+    const proxy = await runSuper(taskArgs);
+    if (taskArgs.verify) {
+        await hre.run('verify:verify', {
+            address: await proxy.getAddress(),
+        });
+    }
+}

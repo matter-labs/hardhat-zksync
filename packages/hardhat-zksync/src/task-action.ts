@@ -1,5 +1,11 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
-import { deployWithOneLineAndVerify } from './plugin';
+import {
+    deployBeaconWithOneLineAndVerify,
+    deployProxyWithOneLineAndVerify,
+    deployWithOneLineAndVerify,
+    upgradeBeaconWithOneLineAndVerify,
+    upgradeProxyWithOneLineAndVerify,
+} from './plugin';
 
 export async function deployZkSyncWithOneLineAndVerify(
     taskArgs: TaskArguments,
@@ -7,4 +13,36 @@ export async function deployZkSyncWithOneLineAndVerify(
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
     await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
+}
+
+export async function deployBeaconZkSyncWithOneLineAndVerify(
+    taskArgs: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+) {
+    await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+}
+
+export async function deployProxyZkSyncWithOneLineAndVerify(
+    taskArgs: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+) {
+    await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+}
+
+export async function upgradeBeaconZkSyncWithOneLineAndVerify(
+    taskArgs: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+) {
+    await upgradeBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+}
+
+export async function upgradeProxyZkSyncWithOneLineAndVerify(
+    taskArgs: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+) {
+    await upgradeProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
 }
