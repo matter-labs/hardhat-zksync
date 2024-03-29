@@ -23,7 +23,7 @@ on:
           - hardhat-zksync-deploy
           - hardhat-zksync-upgradable
           - hardhat-zksync-verify
-          - hardhat-zksync-toolbox
+          - hardhat-zksync
           - hardhat-zksync-node
           - hardhat-zksync-chai-matchers
 

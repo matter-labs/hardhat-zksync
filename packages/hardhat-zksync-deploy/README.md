@@ -452,7 +452,8 @@ To run a specific script, add the `--script` argument, e.g. `yarn hardhat deploy
 
 To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat deploy-zksync --tags all`. Run all scripts with tag `all`.
 
-`yarn hardhat deploy-zksync:libraries --private-key-or-index <PRIVATE_KEY_OR_INDEX>` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
 

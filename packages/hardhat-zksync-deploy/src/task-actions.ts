@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
-import { deployLibraries } from './plugin';
+import { Contract } from 'zksync-ethers';
+import { deployLibraries, deployWithOneLine } from './plugin';
 import { ScriptManager } from './script-manager';
 
 export async function zkSyncDeploy(taskArgs: TaskArguments, hre: HardhatRuntimeEnvironment) {
@@ -22,4 +23,11 @@ export async function zkSyncLibraryDeploy(taskArgs: TaskArguments, hre: HardhatR
         taskArgs.noAutoPopulateConfig,
         taskArgs.compileAllContracts,
     );
+}
+
+export async function deployZkSyncWithOneLine(
+    taskArgs: TaskArguments,
+    hre: HardhatRuntimeEnvironment,
+): Promise<Contract> {
+    return await deployWithOneLine(hre, taskArgs);
 }
