@@ -9,6 +9,9 @@ echo "Running node"
 # Kill any existing process on port 8011
 kill_process_on_port 8011
 
+pnpm add @matterlabs/hardhat-zksync-node@1.0.3
+pnpm add ethers@6.0.0
+
 pnpm hardhat node-zksync &
 
 sleep 3
