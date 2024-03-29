@@ -239,6 +239,16 @@ Instead, this name was received: ${contractFQN}`);
     describe('getSolidityStandardJsonInput', async function () {
         useEnvironment('localGreeter');
         it('should return the Solidity standard JSON input', async function () {
+            const hre = {
+                config: {
+                    zksolc: {
+                        settings: {
+                            isSystem: true,
+                        },
+                    },
+                },
+            };
+
             const resolvedFiles: ResolvedFile[] = [
                 {
                     sourceName: 'contracts/Contract.sol',
@@ -254,7 +264,7 @@ Instead, this name was received: ${contractFQN}`);
                 },
             ];
 
-            const solidityStandardJsonInput = getSolidityStandardJsonInput(resolvedFiles, {
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, {
                 language: 'Solidity',
                 sources: {
                     'contracts/Contract.sol': {
@@ -278,6 +288,8 @@ Instead, this name was received: ${contractFQN}`);
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
         });
     });
 

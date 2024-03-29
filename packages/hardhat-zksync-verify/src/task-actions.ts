@@ -208,7 +208,11 @@ export async function verifyContract(
 
     const request = {
         contractAddress: address,
-        sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), contractInformation.compilerInput),
+        sourceCode: getSolidityStandardJsonInput(
+            hre,
+            dependencyGraph.getResolvedFiles(),
+            contractInformation.compilerInput,
+        ),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
         compilerSolcVersion: solcVersion,
