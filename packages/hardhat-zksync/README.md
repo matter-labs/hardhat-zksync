@@ -70,10 +70,10 @@ Optionally, the `--no-compile` parameter allows the task to skip the compilation
 
 `yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initializer method>] [--verify] [--no-compile]`
 
-When executed, this command will automatically determine whether the deployment is for a Transparent or UUps proxy. 
+When executed, this command will automatically determine whether the deployment is for a Transparent or Uups proxy. 
 If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
 If the Uups proxy is chosen, it will deploy implementation and proxy.
-The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to initialize.
+The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
 The `--no-compile` parameter allows the task to skip the compilation process.
 The `--verify` parameter allow the task to verify all deployed contracts.
 
