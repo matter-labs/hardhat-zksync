@@ -53,6 +53,7 @@ export async function deployProxyWithOneLine(
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
+        initializer?: string;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -69,7 +70,17 @@ export async function deployProxyWithOneLine(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments);
+    const proxy = await hre.zkUpgrades.deployProxy(
+        wallet,
+        contract,
+        constructorArguments,
+        taskArgs.initializer
+            ? {
+                  initializer: taskArgs.initializer,
+              }
+            : undefined,
+    );
+
     await proxy.waitForDeployment();
 
     return proxy;
@@ -114,6 +125,7 @@ export async function upgradeProxyWithOneLine(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
     const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2);
+
     await proxyUpgrade.waitForDeployment();
 
     return proxyUpgrade;

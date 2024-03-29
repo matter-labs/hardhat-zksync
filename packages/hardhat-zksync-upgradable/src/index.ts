@@ -94,6 +94,7 @@ task(TASK_DEPLOY_PROXY_ONELINE, 'Deploy proxy for zkSync network')
         undefined,
         types.inputFile,
     )
+    .addOptionalParam('initializer', 'Initializer function name', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployProxyZkSyncWithOneLine);
 
