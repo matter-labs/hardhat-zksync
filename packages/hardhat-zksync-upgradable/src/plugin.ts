@@ -1,5 +1,5 @@
-import { Deployer } from '@matterlabs/hardhat-zksync-deploy/src/deployer';
-import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/src/utils';
+import { Deployer } from '@matterlabs/hardhat-zksync-deploy/dist/deployer';
+import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/dist/utils';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';

@@ -8,13 +8,13 @@ import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-ethers';
 import '@matterlabs/hardhat-zksync-node';
 
-import { TASK_DEPLOY_ZKSYNC_ONELINE } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
+import { TASK_DEPLOY_ZKSYNC_ONELINE } from '@matterlabs/hardhat-zksync-deploy/dist/task-names';
 import {
     TASK_DEPLOY_BEACON_ONELINE,
     TASK_DEPLOY_PROXY_ONELINE,
     TASK_UPGRADE_BEACON_ONELINE,
     TASK_UPGRADE_PROXY_ONELINE,
-} from '@matterlabs/hardhat-zksync-upgradable/src/task-names';
+} from '@matterlabs/hardhat-zksync-upgradable/dist/src/task-names';
 import {
     deployBeaconZkSyncWithOneLineAndVerify,
     deployProxyZkSyncWithOneLineAndVerify,
