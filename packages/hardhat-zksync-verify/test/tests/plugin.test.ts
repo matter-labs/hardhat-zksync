@@ -240,7 +240,18 @@ Instead, this name was received: ${contractFQN}`);
                 },
             ];
 
-            const solidityStandardJsonInput = getSolidityStandardJsonInput(resolvedFiles, {
+            const hre = {
+                config: {
+                    zksolc: {
+                        settings: {
+                            isSystem: true,
+                            forceEvmla: false,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, {
                 language: 'Solidity',
                 sources: {
                     'contracts/Contract.sol': {
@@ -264,6 +275,8 @@ Instead, this name was received: ${contractFQN}`);
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
         });
     });
 
