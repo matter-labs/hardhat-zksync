@@ -634,7 +634,7 @@ describe.only('Test for upgrades from oneline', function () {
 
             const _ = await upgradeBeaconWithOneLine(this.env, {
                 contractName: 'BoxV2',
-                beaconAddress: await beacon.getAddress(),
+                beaconAddress: beacon.address,
             });
         });
     });

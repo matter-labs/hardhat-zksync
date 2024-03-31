@@ -1,7 +1,11 @@
+import * as chai from 'chai';
 import sinon from 'sinon';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { expect } from 'chai';
+import sinonChai from 'sinon-chai';
 import { deployWithOneLine } from '../../src/plugin';
+
+chai.use(sinonChai);
 
 describe('deployWithOneLineAndVerify', () => {
     const sandbox = sinon.createSandbox();

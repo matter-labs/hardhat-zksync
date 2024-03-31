@@ -31,15 +31,15 @@ export async function deployBeaconWithOneLine(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
     const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract);
-    await beacon.waitForDeployment();
+    await beacon.deployed();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
         deployer.zkWallet,
-        await beacon.getAddress(),
+        beacon.address,
         contract,
         constructorArguments,
     );
-    await proxy.waitForDeployment();
+    await proxy.deployed();
 
     return {
         proxy,
@@ -81,7 +81,7 @@ export async function deployProxyWithOneLine(
             : undefined,
     );
 
-    await proxy.waitForDeployment();
+    await proxy.deployed();
 
     return proxy;
 }
@@ -103,7 +103,7 @@ export async function upgradeBeaconWithOneLine(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
     const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2);
-    await beaconUpgrade.waitForDeployment();
+    await beaconUpgrade.deployed();
 
     return beaconUpgrade;
 }
@@ -126,7 +126,7 @@ export async function upgradeProxyWithOneLine(
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
     const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2);
 
-    await proxyUpgrade.waitForDeployment();
+    await proxyUpgrade.deployed();
 
     return proxyUpgrade;
 }
