@@ -23,6 +23,7 @@ import {
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
+    COMPILATION_ERRORS,
 } from './constants';
 
 import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
@@ -227,7 +228,10 @@ export async function verifyContract(
     } catch (error: any) {
         // The first verirication attempt with 'minimal' source code was unnsuccessful.
         // Now try with the full source code from the compilation context.
-        if (error.message !== NO_MATCHING_CONTRACT) {
+        if (
+            error.message !== NO_MATCHING_CONTRACT &&
+            COMPILATION_ERRORS.filter((compilationError) => compilationError.pattern.test(error.message)).length === 0
+        ) {
             throw error;
         }
         console.info(chalk.red(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE));
