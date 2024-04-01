@@ -147,7 +147,7 @@ module.exports = {
     "import/no-extraneous-dependencies": [
       "error",
       {
-        devDependencies: false,
+        devDependencies: true,
       },
     ],
     "import/order": [

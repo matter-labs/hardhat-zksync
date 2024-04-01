@@ -49,7 +49,10 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",
     "typescript": "^5.1.6",
-    "c8": "^8.0.1"
+    "c8": "^8.0.1",
+    "hardhat": "2.14.0",
+    "ethers": "^5.7.2",
+    "zksync-ethers": "^5.0.0"
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-chai-matchers": "^0.3.0",
@@ -64,9 +67,6 @@
     "@openzeppelin/upgrades-core": "^1.27.0",
     "chai": "^4.3.7",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
-    "hardhat": "2.14.0",
-    "ethers": "^5.7.2",
-    "zksync-ethers": "^5.0.0",
     "sinon-chai": "^3.7.0",
     "sinon": "^17.0.1"
   },

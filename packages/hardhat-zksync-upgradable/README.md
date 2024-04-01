@@ -144,6 +144,7 @@ accounts object will be automaticly be populated with rich accounts if used netw
 `yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--no-compile]`
 
 When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments. 
+The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
 Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
 
 `yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initialize method>] [--no-compile]`
