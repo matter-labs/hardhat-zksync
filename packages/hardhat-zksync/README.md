@@ -63,10 +63,12 @@ Using the `verify` parameter verifies the contract after deployment, while `no-c
 
 #### Contract upgrades shortcuts 
 
-`yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--verify] [--no-compile]`
+`yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initializer method>] [--verify] [--no-compile]`
 
 When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments. 
+The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
 Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
+The `--verify` parameter allow the task to verify all deployed contracts.
 
 `yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initializer method>] [--verify] [--no-compile]`
 
