@@ -17,7 +17,7 @@ export async function deployWithOneLineAndVerify(
         const artifact = await hre.deployer.loadArtifact(taskArgs.contractName);
         await hre.run('verify', {
             contract: `${artifact.sourceName}:${artifact.contractName}`,
-            address: contract.address,
+            address: await contract.getAddress(),
             constructorArgsParams: taskArgs.constructorArgsParams,
             constructorArgs: taskArgs.constructorArgs,
             noCompile: taskArgs.noCompile,
@@ -44,7 +44,7 @@ export async function deployBeaconWithOneLineAndVerify(
     const { proxy, beacon } = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
-            address: proxy.address,
+            address: await proxy.getAddress(),
         });
     }
 
@@ -65,7 +65,7 @@ export async function deployProxyWithOneLineAndVerify(
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
-            address: proxy.address,
+            address: await proxy.getAddress(),
         });
     }
 
@@ -85,7 +85,7 @@ export async function upgradeBeaconWithOneLineAndVerify(
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
-            address: proxy.address,
+            address: await proxy.getAddress(),
         });
     }
 
@@ -105,7 +105,7 @@ export async function upgradeProxyWithOneLineAndVerify(
     const proxy = await runSuper(taskArgs);
     if (taskArgs.verify) {
         await hre.run('verify:verify', {
-            address: proxy.address,
+            address: await proxy.getAddress(),
         });
     }
 

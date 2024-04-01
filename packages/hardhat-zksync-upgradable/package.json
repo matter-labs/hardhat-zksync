@@ -43,8 +43,10 @@
     "ethers": "~5.7.2",
     "@ethersproject/abi": "^5.1.2",
     "fs-extra": "^11.1.1",
+    "hardhat": "^2.14.0",
     "proper-lockfile": "^4.1.1",
-    "solidity-ast": "npm:solidity-ast@0.4.45"
+    "solidity-ast": "npm:solidity-ast@0.4.45",
+    "zksync-ethers": "^5.0.0"
   },
   "devDependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
@@ -60,8 +62,6 @@
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
     "mocha": "^10.2.0",
-    "hardhat": "^2.14.0",
-    "zksync-ethers": "^5.0.0",
     "prettier": "3.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.6.0",

@@ -197,6 +197,6 @@ export async function deployWithOneLine(
         taskArgs.constructorArgs,
     );
     const contract: Contract = await hre.deployer.deploy(taskArgs.contractName, constructorArguments);
-    console.log(chalk.green(`Contract ${taskArgs.contractName} deployed at ${contract.address}`));
+    console.log(chalk.green(`Contract ${taskArgs.contractName} deployed at ${await contract.getAddress()}`));
     return contract;
 }

@@ -5,6 +5,7 @@ import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-chai-matchers';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
+import '@matterlabs/hardhat-zksync-ethers';
 import '@matterlabs/hardhat-zksync-node';
 
 import { TASK_DEPLOY_ZKSYNC_ONELINE } from '@matterlabs/hardhat-zksync-deploy/dist/task-names';

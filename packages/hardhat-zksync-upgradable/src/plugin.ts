@@ -11,7 +11,6 @@ export async function deployBeaconWithOneLine(
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
-        initializer?: string;
         noCompile?: boolean;
     },
 ): Promise<{
@@ -39,11 +38,6 @@ export async function deployBeaconWithOneLine(
         beacon.address,
         contract,
         constructorArguments,
-        taskArgs.initializer
-            ? {
-                  initializer: taskArgs.initializer,
-              }
-            : undefined,
     );
     await proxy.deployed();
 

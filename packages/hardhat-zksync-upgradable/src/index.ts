@@ -78,7 +78,6 @@ task(TASK_DEPLOY_BEACON_ONELINE, 'Runs the beaccon deploy for zkSync network')
         undefined,
         types.inputFile,
     )
-    .addOptionalParam('initializer', 'Initializer function name', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployBeaconZkSyncWithOneLine);
 
