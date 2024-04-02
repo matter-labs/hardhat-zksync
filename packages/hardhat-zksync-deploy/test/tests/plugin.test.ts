@@ -23,6 +23,7 @@ describe('deployWithContract', () => {
                     getAddress: async () => '0x1234567890123456789012345678901234567890',
                     abi: [],
                 }),
+                setDeploymentType: sandbox.stub().resolves(),
             },
             run: sandbox.stub(),
         } as any;
@@ -43,6 +44,7 @@ describe('deployWithContract', () => {
         await deployContract(hre, taskArgs);
 
         expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
         expect(hre.run).to.have.been.callCount(1);
     });
 
@@ -51,5 +53,6 @@ describe('deployWithContract', () => {
         await deployContract(hre, taskArgs);
         expect(hre.run).to.have.been.callCount(0);
         expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
     });
 });
