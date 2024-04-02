@@ -36,9 +36,23 @@ Here is an overview of the plugins currently available in this package:
 | hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on zkSync.                                   |
 
-### 🕹 Commands
+## 🕹 Commands
 
 This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation] (https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
+
+For certain tasks present in the plugins encompassed by this plugin, it overrides them with new features and parameters. These tasks streamline common functionalities into a simplified workflow.
+
+Here is a list of tasks along with their additional parameters present in this plugin:
+
+`yarn hardhat deploy-zksync:contract [--verify]`
+`yarn hardhat deploy-zksync:proxy [--verify]` 
+`yarn hardhat upgrade-zksync:proxy [--verify]`
+`yarn hardhat deploy-zksync:beacon  [--verify]`
+`yarn hardhat upgrade-zksync:beacon  [--verify]`
+
+The `--verify` parameter allow the task to verify all deployed contracts.
+
+To check other parameters present in these tasks, please check the documentation pages for [hardhat-zksync-deploy](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-deploy.html) and [hardhat-zksync-upgradable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradable.html).
 
 ## 📝 Documentation
 
