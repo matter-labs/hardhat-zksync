@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import sinon from 'sinon';
 import { Contract } from 'zksync-ethers';
 import { fail } from 'assert';
-import { deployLibraries, deployWithOneLine, getWallet } from '../../src/plugin';
+import { deployLibraries, deployContract, getWallet } from '../../src/plugin';
 import * as utils from '../../src/utils';
 import * as deployer from '../../src/deployer-helper';
 
@@ -262,7 +262,7 @@ describe('getWallet', () => {
     });
 });
 
-describe('deployWithOneLineAndVerify', () => {
+describe('deployWithContract', () => {
     const sandbox = sinon.createSandbox();
     let hre: HardhatRuntimeEnvironment;
     const artifact = {
@@ -278,6 +278,7 @@ describe('deployWithOneLineAndVerify', () => {
                     getAddress: async () => '0x1234567890123456789012345678901234567890',
                     abi: [],
                 }),
+                setDeploymentType: sandbox.stub().resolves(),
             },
             run: sandbox.stub(),
         } as any;
@@ -295,16 +296,18 @@ describe('deployWithOneLineAndVerify', () => {
     };
 
     it('should deploy the contract with compile', async () => {
-        await deployWithOneLine(hre, taskArgs);
+        await deployContract(hre, taskArgs);
 
         expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
         expect(hre.run).to.have.been.callCount(1);
     });
 
     it('should deploy the contract without compile', async () => {
         taskArgs.noCompile = true;
-        await deployWithOneLine(hre, taskArgs);
+        await deployContract(hre, taskArgs);
         expect(hre.run).to.have.been.callCount(0);
         expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
     });
 });

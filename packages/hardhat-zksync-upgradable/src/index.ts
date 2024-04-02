@@ -13,18 +13,8 @@ import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
-import {
-    TASK_DEPLOY_BEACON_ONELINE,
-    TASK_DEPLOY_PROXY_ONELINE,
-    TASK_UPGRADE_BEACON_ONELINE,
-    TASK_UPGRADE_PROXY_ONELINE,
-} from './task-names';
-import {
-    deployBeaconZkSyncWithOneLine,
-    deployProxyZkSyncWithOneLine,
-    upgradeBeaconZkSyncWithOneLine,
-    upgradeProxyZkSyncWithOneLine,
-} from './task-actions';
+import { TASK_DEPLOY_ZKSYNC_BEACON, TASK_DEPLOY_ZKSYNC_PROXY, TASK_UPGRADE_ZKSYNC_BEACON, TASK_UPGRADE_ZKSYNC_PROXY } from './task-names';
+import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import { PROXY_SOURCE_NAMES } from './constants';
 
 extendEnvironment((hre) => {
@@ -65,24 +55,8 @@ extendEnvironment((hre) => {
     });
 });
 
-task(TASK_DEPLOY_BEACON_ONELINE, 'Runs the beaccon deploy for zkSync network')
-    .addParam('contractName', 'A contract name or a full quilify name', '')
-    .addOptionalVariadicPositionalParam(
-        'constructorArgsParams',
-        'Contract constructor arguments. Cannot be used if the --constructor-args option is provided',
-        [],
-    )
-    .addOptionalParam(
-        'constructorArgs',
-        'Path to a Javascript module that exports the constructor arguments',
-        undefined,
-        types.inputFile,
-    )
-    .addFlag('noCompile', 'No compile flag')
-    .setAction(deployBeaconZkSyncWithOneLine);
-
-task(TASK_DEPLOY_PROXY_ONELINE, 'Deploy proxy for zkSync network')
-    .addParam('contractName', 'A contract name or a full quilify name', '')
+task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for zkSync network')
+    .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',
         'Contract constructor arguments. Cannot be used if the --constructor-args option is provided',
@@ -95,20 +69,41 @@ task(TASK_DEPLOY_PROXY_ONELINE, 'Deploy proxy for zkSync network')
         types.inputFile,
     )
     .addOptionalParam('initializer', 'Initializer function name', undefined)
+    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
-    .setAction(deployProxyZkSyncWithOneLine);
+    .setAction(deployZkSyncBeacon);
 
-task(TASK_UPGRADE_BEACON_ONELINE, 'Runs the beacon upgrade for zkSync network')
-    .addParam('contractName', 'A contract name or a full quilify name', '')
+task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for zkSync network')
+    .addParam('contractName', 'A contract name or a FQN', '')
+    .addOptionalVariadicPositionalParam(
+        'constructorArgsParams',
+        'Contract constructor arguments. Cannot be used if the --constructor-args option is provided',
+        [],
+    )
+    .addOptionalParam(
+        'constructorArgs',
+        'Path to a Javascript module that exports the constructor arguments',
+        undefined,
+        types.inputFile,
+    )
+    .addOptionalParam('initializer', 'Initializer function name', undefined)
+    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addFlag('noCompile', 'No compile flag')
+    .setAction(deployZkSyncProxy);
+
+task(TASK_UPGRADE_ZKSYNC_BEACON, 'Runs the beacon upgrade for zkSync network')
+    .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('beaconAddress', 'Beacon address of the deployed contract', '')
+    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
-    .setAction(upgradeBeaconZkSyncWithOneLine);
+    .setAction(upgradeZkSyncBeacon);
 
-task(TASK_UPGRADE_PROXY_ONELINE, 'Runs the proxy upgrade for zkSync network')
-    .addParam('contractName', 'A contract name or a full quilify name', '')
+task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for zkSync network')
+    .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
+    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
-    .setAction(upgradeProxyZkSyncWithOneLine);
+    .setAction(upgradeZkSyncProxy);
 
 subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSuper) => {
     const { solcInputOutputDecoder } = await import('@openzeppelin/upgrades-core');

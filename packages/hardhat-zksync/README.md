@@ -23,73 +23,36 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync`
 
-## 🕹 Shortcuts commands
+## List of plugins
 
-### 📥 Configuration
-To extend the configuration to support commands, we need to add an accounts field to the specific network configuration in the networks section of the hardhat.config.ts file. This accounts field can support an array of private keys or a mnemonic object and represents accounts that will be used as wallet automaticlly.
+Here is an overview of the plugins currently available in this package:
 
-```
-const config: HardhatUserConfig = {
-  networks: {
-    sepolia: {
-      url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
-    },
-    zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
-      ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
-      zksync: true,
-      // ADDITON
-      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'], // The private keys for the accounts used in the deployment or in the upgradation process.
-      accounts: {
-          mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
-      }
-      // Mnemonic used in the deployment or in the upgradation process
-    }
-  },
-};
-```
-- accounts represents a list of the private keys or mnemonic object for the account used in the deployment or in the upgradation process.
+| 🔌 Plugin                     | 📄 Description                                                                                                                    |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| hardhat-zksync-solc           | Simplifies compiling Solidity contracts for the zkSync network, streamlining deployment preparation.                              |
+| hardhat-zksync-deploy         | Facilitates the deployment of contracts on zkSync, utilizing artifacts from hardhat-zksync-solc/vyper.                            |
+| hardhat-zksync-verify         | Automates the process of verifying smart contracts on the zkSync network, enhancing transparency and trust.                       |
+| hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the zkSync network, improving contract lifecycle management.        |
+| hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
+| hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on zkSync.                                   |
 
-accounts object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
+## 🕹 Commands
 
-### 🕹 Commands
+This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation] (https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
 
-#### Contract deployment shortcuts 
+For certain tasks present in the plugins encompassed by this plugin, it overrides them with new features and parameters. These tasks streamline common functionalities into a simplified workflow.
 
-`yarn hardhat deploy-zksync:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--verify] [--no-compile]`
+Here is a list of tasks along with their additional parameters present in this plugin:
 
-When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. 
-Using the `verify` parameter verifies the contract after deployment, while `no-compile` skips the compilation process.
+`yarn hardhat deploy-zksync:contract [--verify]`
+`yarn hardhat deploy-zksync:proxy [--verify]` 
+`yarn hardhat upgrade-zksync:proxy [--verify]`
+`yarn hardhat deploy-zksync:beacon  [--verify]`
+`yarn hardhat upgrade-zksync:beacon  [--verify]`
 
-#### Contract upgrades shortcuts 
+The `--verify` parameter allow the task to verify all deployed and upgraded contracts.
 
-`yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--verify] [--no-compile]`
-
-When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments. 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-
-`yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initializer method>] [--verify] [--no-compile]`
-
-When executed, this command will automatically determine whether the deployment is for a Transparent or Uups proxy. 
-If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
-If the Uups proxy is chosen, it will deploy implementation and proxy.
-The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
-The `--no-compile` parameter allows the task to skip the compilation process.
-The `--verify` parameter allow the task to verify all deployed contracts.
-
-`yarn hardhat upgrade-beacon:oneline --contract-name <contract name or fully qualified name> --beacon-address <beacon address> [--verify] [--no-compile]`
-
-When executed, this command upgrade beacon implementation. 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-The `--verify` parameter allow the task to verify all deployed contracts.
-
-`yarn hardhat upgrade-proxy:oneline --contract-name <contract name or fully qualified name> --proxy-address <proxy address>  [--verify] [--no-compile]`
-
-When executed, this command upgrade uups or transparent implementation. 
-Optionally, the `no-compile` parameter allows the task to skip the compilation process.
-The `--verify` parameter allow the task to verify all deployed contracts.
-
-Please consider that while the provided CLI commands enable contract deployment and upgrading, not all arguments may be available. If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
+To check other parameters present in these tasks, please check the documentation pages for [hardhat-zksync-deploy](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-deploy.html) and [hardhat-zksync-upgradable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradable.html).
 
 ## 📝 Documentation
 

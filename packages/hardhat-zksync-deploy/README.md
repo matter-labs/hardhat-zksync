@@ -469,9 +469,13 @@ To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat
 `yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
-`yarn hardhat deploy-zksync:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--no-compile]`
+`yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN> <constructor arguments> [--deployment-type] [--no-compile]`
 
-When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
+This command provides an easy way to deploy contracts. If the provided command for deploying a single contract is insufficient and you require additional flexibility, such as incorporating additional dependencies or overrides, it would be advisable to utilize a script-based approach.
+When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. 
+Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
+Optional parameter `--deployment-type` that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts with a value `create`.
+The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
 

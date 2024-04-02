@@ -10,13 +10,7 @@ import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
-import {
-    deployBeaconWithOneLineAndVerify,
-    deployProxyWithOneLineAndVerify,
-    deployWithOneLineAndVerify,
-    upgradeBeaconWithOneLineAndVerify,
-    upgradeProxyWithOneLineAndVerify,
-} from '../src/plugin';
+import { deployBeaconAndVerify, deployContractAndVerify, deployProxyAndVerify, upgradeBeaconAndVerify, upgradeProxyAndVerify } from '../src/plugin';
 import { useEnvironmentWithLocalSetup } from './helpers';
 
 chai.use(sinonChai);
@@ -59,7 +53,7 @@ describe('zksync toolbox plugin', function () {
         });
     });
 
-    describe('deployWithOneLineAndVerify', () => {
+    describe('deployContractAndVerify', () => {
         const sandbox = sinon.createSandbox();
         let hre: HardhatRuntimeEnvironment;
         let runSuper: RunSuperFunction<TaskArguments>;
@@ -94,7 +88,7 @@ describe('zksync toolbox plugin', function () {
         };
 
         it('should deploy the contract and verify it', async () => {
-            await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
+            await deployContractAndVerify(hre, runSuper, taskArgs);
 
             expect(runSuper).to.have.been.calledOnceWith(taskArgs);
             expect(hre.deployer.loadArtifact).to.have.been.calledOnceWith(taskArgs.contractName);
@@ -109,14 +103,14 @@ describe('zksync toolbox plugin', function () {
 
         it('should deploy the contract without verifying it', async () => {
             taskArgs.verify = false;
-            await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
+            await deployContractAndVerify(hre, runSuper, taskArgs);
 
             expect(runSuper).to.have.been.calledOnceWith(taskArgs);
             expect(hre.run).to.have.been.callCount(0);
         });
     });
 
-    describe('beaconWithOneLineAndVerify', () => {
+    describe('deployBeaconAndVerify', () => {
         const sandbox = sinon.createSandbox();
         let hre: HardhatRuntimeEnvironment;
         let runSuper: RunSuperFunction<TaskArguments>;
@@ -157,7 +151,7 @@ describe('zksync toolbox plugin', function () {
         };
 
         it('should deploy the beacon contract and verify it', async () => {
-            await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+            await deployBeaconAndVerify(hre, runSuper, taskArgs);
 
             expect(runSuper).to.have.been.calledOnceWith(taskArgs);
             expect(hre.run).to.have.been.calledOnceWith('verify:verify', {
@@ -167,7 +161,7 @@ describe('zksync toolbox plugin', function () {
 
         it('should deploy the contract without verifying it', async () => {
             taskArgs.verify = false;
-            await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+            await deployBeaconAndVerify(hre, runSuper, taskArgs);
 
             expect(runSuper).to.have.been.calledOnceWith(taskArgs);
             expect(hre.run).to.have.been.callCount(0);
@@ -180,7 +174,7 @@ describe('zksync toolbox plugin', function () {
                 ...taskArgs,
                 beaconAddress: '0x1234567890123456789012345678901234567890',
             };
-            await upgradeBeaconWithOneLineAndVerify(hre, runSuper, newTaskArgs);
+            await upgradeBeaconAndVerify(hre, runSuper, newTaskArgs);
 
             expect(runSuper).to.have.been.calledOnceWith(newTaskArgs);
             expect(hre.run).to.have.been.callCount(0);
@@ -188,7 +182,7 @@ describe('zksync toolbox plugin', function () {
     });
 });
 
-describe('proxyWithOneLineAndVerify', () => {
+describe('deployProxyAndVerify', () => {
     const sandbox = sinon.createSandbox();
     let hre: HardhatRuntimeEnvironment;
     let runSuper: RunSuperFunction<TaskArguments>;
@@ -216,7 +210,7 @@ describe('proxyWithOneLineAndVerify', () => {
     };
 
     it('should deploy the proxy contract and verify it', async () => {
-        await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+        await deployProxyAndVerify(hre, runSuper, taskArgs);
 
         expect(runSuper).to.have.been.calledOnceWith(taskArgs);
         expect(hre.run).to.have.been.calledOnceWith('verify:verify', {
@@ -226,7 +220,7 @@ describe('proxyWithOneLineAndVerify', () => {
 
     it('should deploy the proxy without verifying it', async () => {
         taskArgs.verify = false;
-        await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+        await deployProxyAndVerify(hre, runSuper, taskArgs);
 
         expect(runSuper).to.have.been.calledOnceWith(taskArgs);
         expect(hre.run).to.have.been.callCount(0);
@@ -239,7 +233,7 @@ describe('proxyWithOneLineAndVerify', () => {
             ...taskArgs,
             proxyAddress: '0x1234567890123456789012345678901234567890',
         };
-        await upgradeProxyWithOneLineAndVerify(hre, runSuper, newTaskArgs);
+        await upgradeProxyAndVerify(hre, runSuper, newTaskArgs);
 
         expect(runSuper).to.have.been.calledOnceWith(newTaskArgs);
         expect(hre.run).to.have.been.callCount(0);

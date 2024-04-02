@@ -1,48 +1,48 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 import {
-    deployBeaconWithOneLineAndVerify,
-    deployProxyWithOneLineAndVerify,
-    deployWithOneLineAndVerify,
-    upgradeBeaconWithOneLineAndVerify,
-    upgradeProxyWithOneLineAndVerify,
+    deployContractAndVerify,
+    deployBeaconAndVerify,
+    deployProxyAndVerify,
+    upgradeBeaconAndVerify,
+    upgradeProxyAndVerify,
 } from './plugin';
 
-export async function deployZkSyncWithOneLineAndVerify(
+export async function deployZkSyncContractAndVerify(
     taskArgs: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    return await deployWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployContractAndVerify(hre, runSuper, taskArgs);
 }
 
-export async function deployBeaconZkSyncWithOneLineAndVerify(
+export async function deployZkSyncBeaconAndVerify(
     taskArgs: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    return await deployBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployBeaconAndVerify(hre, runSuper, taskArgs);
 }
 
-export async function deployProxyZkSyncWithOneLineAndVerify(
+export async function deployZkSyncProxyAndVerify(
     taskArgs: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    return await deployProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await deployProxyAndVerify(hre, runSuper, taskArgs);
 }
 
-export async function upgradeBeaconZkSyncWithOneLineAndVerify(
+export async function upgradeZkSyncBeaconAndVerify(
     taskArgs: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    return await upgradeBeaconWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await upgradeBeaconAndVerify(hre, runSuper, taskArgs);
 }
 
-export async function upgradeProxyZkSyncWithOneLineAndVerify(
+export async function upgradeZkSyncProxyAndVerify(
     taskArgs: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ) {
-    return await upgradeProxyWithOneLineAndVerify(hre, runSuper, taskArgs);
+    return await upgradeProxyAndVerify(hre, runSuper, taskArgs);
 }

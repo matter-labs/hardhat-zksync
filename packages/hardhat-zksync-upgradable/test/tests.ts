@@ -9,7 +9,7 @@ import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constan
 import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../src/proxy-deployment/deploy';
 import { getManifestAdmin } from '../src/admin';
-import { deployBeaconWithOneLine, deployProxyWithOneLine, upgradeBeaconWithOneLine } from '../src/plugin';
+import { deployBeacon, deployProxy, upgradeBeacon } from '../src/plugin';
 import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
 import richWallets from './rich-wallets.json';
 
@@ -610,12 +610,12 @@ describe('Upgradable plugin tests', function () {
     });
 });
 
-describe.only('Test for upgrades from oneline', function () {
+describe.only('Test for upgrades for shortcuts commands', function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e', 'zkSyncNetwork');
 
-        it('Should deploy proxy contract with one line', async function () {
-            const box = await deployProxyWithOneLine(this.env, {
+        it('Should deploy proxy contract', async function () {
+            const box = await deployProxy(this.env, {
                 contractName: 'Box',
                 constructorArgsParams: [42],
             });
@@ -628,8 +628,8 @@ describe.only('Test for upgrades from oneline', function () {
     describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
         useEnvironment('uups-e2e', 'zkSyncNetwork');
 
-        it('Should deploy proxy contract with one line', async function () {
-            const box = await deployProxyWithOneLine(this.env, {
+        it('Should deploy proxy contract', async function () {
+            const box = await deployProxy(this.env, {
                 contractName: 'BoxUups',
                 constructorArgsParams: [42],
             });
@@ -642,8 +642,8 @@ describe.only('Test for upgrades from oneline', function () {
     describe('Test beacon proxy deployment and upgrade functionalities', async function () {
         useEnvironment('beacon-e2e', 'zkSyncNetwork');
 
-        it('Should deploy proxy contract with one line', async function () {
-            const { proxy, beacon } = await deployBeaconWithOneLine(this.env, {
+        it('Should deploy proxy contract', async function () {
+            const { proxy, beacon } = await deployBeacon(this.env, {
                 contractName: 'Box',
                 constructorArgsParams: [42],
             });
@@ -651,7 +651,7 @@ describe.only('Test for upgrades from oneline', function () {
             const value = await proxy.retrieve();
             assert.equal(value, 42n);
 
-            const _ = await upgradeBeaconWithOneLine(this.env, {
+            const _ = await upgradeBeacon(this.env, {
                 contractName: 'BoxV2',
                 beaconAddress: await beacon.getAddress(),
             });
