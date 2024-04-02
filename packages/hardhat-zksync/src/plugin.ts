@@ -23,7 +23,7 @@ export async function deployContractAndVerify(
             address: contract.address,
             constructorArgsParams: taskArgs.constructorArgsParams,
             constructorArgs: taskArgs.constructorArgs,
-            noCompile: taskArgs.noCompile,
+            noCompile: true,
         });
     }
 
@@ -50,6 +50,7 @@ export async function deployBeaconAndVerify(
     if (taskArgs.verify) {
         await hre.run(TASK_VERIFY, {
             address: proxy.address,
+            noCompile: true,
         });
     }
 
@@ -73,6 +74,7 @@ export async function deployProxyAndVerify(
     if (taskArgs.verify) {
         await hre.run(TASK_VERIFY, {
             address: proxy.address,
+            noCompile: true,
         });
     }
 
@@ -94,6 +96,7 @@ export async function upgradeBeaconAndVerify(
     if (taskArgs.verify) {
         await hre.run(TASK_VERIFY, {
             address: proxy.address,
+            noCompile: true,
         });
     }
 
@@ -115,6 +118,7 @@ export async function upgradeProxyAndVerify(
     if (taskArgs.verify) {
         await hre.run(TASK_VERIFY, {
             address: proxy.address,
+            noCompile: true,
         });
     }
 
