@@ -3,8 +3,8 @@ import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/dist/
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
-import { getWallet } from './utils';
 import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { getWallet } from './utils';
 
 export async function deployBeacon(
     hre: HardhatRuntimeEnvironment,
@@ -33,7 +33,11 @@ export async function deployBeacon(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract, taskArgs.deploymentType ? { deploymentType: taskArgs.deploymentType } : undefined,);
+    const beacon = await hre.zkUpgrades.deployBeacon(
+        wallet,
+        contract,
+        taskArgs.deploymentType ? { deploymentType: taskArgs.deploymentType } : undefined,
+    );
     await beacon.waitForDeployment();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
@@ -42,10 +46,10 @@ export async function deployBeacon(
         contract,
         constructorArguments,
         taskArgs.initializer
-        ? {
-              initializer: taskArgs.initializer,
-          }
-        : undefined
+            ? {
+                  initializer: taskArgs.initializer,
+              }
+            : undefined,
     );
     await proxy.waitForDeployment();
 
@@ -85,12 +89,7 @@ export async function deployProxy(
         initializer: taskArgs.initializer,
     };
 
-    const proxy = await hre.zkUpgrades.deployProxy(
-        wallet,
-        contract,
-        constructorArguments,
-        opts
-    );
+    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, opts);
 
     await proxy.waitForDeployment();
 

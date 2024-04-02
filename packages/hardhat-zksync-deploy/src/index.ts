@@ -53,7 +53,7 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
 
-    task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for zkSync network')
+task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for zkSync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',

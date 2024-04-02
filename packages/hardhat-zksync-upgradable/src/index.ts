@@ -13,7 +13,12 @@ import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
-import { TASK_DEPLOY_ZKSYNC_BEACON, TASK_DEPLOY_ZKSYNC_PROXY, TASK_UPGRADE_ZKSYNC_BEACON, TASK_UPGRADE_ZKSYNC_PROXY } from './task-names';
+import {
+    TASK_DEPLOY_ZKSYNC_BEACON,
+    TASK_DEPLOY_ZKSYNC_PROXY,
+    TASK_UPGRADE_ZKSYNC_BEACON,
+    TASK_UPGRADE_ZKSYNC_PROXY,
+} from './task-names';
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import { PROXY_SOURCE_NAMES } from './constants';
 

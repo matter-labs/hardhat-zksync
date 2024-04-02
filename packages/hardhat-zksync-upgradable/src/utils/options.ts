@@ -7,8 +7,8 @@ import {
     withValidationDefaults,
 } from '@openzeppelin/upgrades-core';
 
-import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 
 export type StandaloneOptions = StandaloneValidationOptions &
     DeployOpts & {

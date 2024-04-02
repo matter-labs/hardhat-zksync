@@ -1,12 +1,12 @@
 import { task } from 'hardhat/config';
 
+import '@matterlabs/hardhat-zksync-node';
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-chai-matchers';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-ethers';
-import '@matterlabs/hardhat-zksync-node';
 
 import { TASK_DEPLOY_ZKSYNC_CONTRACT } from '@matterlabs/hardhat-zksync-deploy/dist/task-names';
 import {
@@ -15,7 +15,13 @@ import {
     TASK_UPGRADE_ZKSYNC_BEACON,
     TASK_UPGRADE_ZKSYNC_PROXY,
 } from '@matterlabs/hardhat-zksync-upgradable/dist/src/task-names';
-import { deployZkSyncBeaconAndVerify, deployZkSyncContractAndVerify, deployZkSyncProxyAndVerify, upgradeZkSyncBeaconAndVerify, upgradeZkSyncProxyAndVerify } from './task-action';
+import {
+    deployZkSyncBeaconAndVerify,
+    deployZkSyncContractAndVerify,
+    deployZkSyncProxyAndVerify,
+    upgradeZkSyncBeaconAndVerify,
+    upgradeZkSyncProxyAndVerify,
+} from './task-action';
 // Export Deployer class.
 export { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 

@@ -10,7 +10,13 @@ import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
-import { deployBeaconAndVerify, deployContractAndVerify, deployProxyAndVerify, upgradeBeaconAndVerify, upgradeProxyAndVerify } from '../src/plugin';
+import {
+    deployBeaconAndVerify,
+    deployContractAndVerify,
+    deployProxyAndVerify,
+    upgradeBeaconAndVerify,
+    upgradeProxyAndVerify,
+} from '../src/plugin';
 import { useEnvironmentWithLocalSetup } from './helpers';
 
 chai.use(sinonChai);

@@ -1,11 +1,6 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
-import {
-    deployBeacon,
-    deployProxy,
-    upgradeBeacon,
-    upgradeProxy,
-} from './plugin';
+import { deployBeacon, deployProxy, upgradeBeacon, upgradeProxy } from './plugin';
 
 export async function deployZkSyncBeacon(
     taskArgs: TaskArguments,
