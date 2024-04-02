@@ -1,6 +1,7 @@
 import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 
 export async function deployContractAndVerify(
     hre: HardhatRuntimeEnvironment,
@@ -9,6 +10,7 @@ export async function deployContractAndVerify(
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
         verify?: boolean;
     },
@@ -35,6 +37,8 @@ export async function deployBeaconAndVerify(
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
+        initializer?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
         verify?: boolean;
     },
@@ -59,6 +63,8 @@ export async function deployProxyAndVerify(
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
+        initializer?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
         verify?: boolean;
     },
@@ -79,6 +85,7 @@ export async function upgradeBeaconAndVerify(
     taskArgs: {
         contractName: string;
         beaconAddress: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
         verify?: boolean;
     },
@@ -99,6 +106,7 @@ export async function upgradeProxyAndVerify(
     taskArgs: {
         contractName: string;
         proxyAddress: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
         verify?: boolean;
     },
