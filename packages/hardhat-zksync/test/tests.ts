@@ -4,12 +4,19 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
-import { TASK_DEPLOY_ZKSYNC } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
 import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/src/constants';
 
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
+import {
+    TASK_DEPLOY_ZKSYNC_BEACON,
+    TASK_DEPLOY_ZKSYNC_PROXY,
+    TASK_UPGRADE_ZKSYNC_BEACON,
+    TASK_UPGRADE_ZKSYNC_PROXY,
+} from '@matterlabs/hardhat-zksync-upgradable/src/task-names';
+import { TASK_DEPLOY_ZKSYNC_CONTRACT, TASK_DEPLOY_ZKSYNC } from '@matterlabs/hardhat-zksync-deploy/src/task-names';
+import { TASK_DEPLOY_ZKSYNC_LIBRARIES } from '@matterlabs/hardhat-zksync-deploy/dist/task-names';
 import {
     deployBeaconAndVerify,
     deployContractAndVerify,
@@ -20,7 +27,6 @@ import {
 import { useEnvironmentWithLocalSetup } from './helpers';
 
 chai.use(sinonChai);
-const RICH_WALLET_PK = '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110';
 
 describe('zksync toolbox plugin', function () {
     describe('with the local setup', function () {
@@ -31,7 +37,13 @@ describe('zksync toolbox plugin', function () {
 
             assert(taskNames.includes(TASK_COMPILE));
             assert(taskNames.includes(TASK_DEPLOY_ZKSYNC));
+            assert(taskNames.includes(TASK_DEPLOY_ZKSYNC_LIBRARIES));
             assert(taskNames.includes(TASK_VERIFY));
+            assert(taskNames.includes(TASK_DEPLOY_ZKSYNC_BEACON));
+            assert(taskNames.includes(TASK_DEPLOY_ZKSYNC_PROXY));
+            assert(taskNames.includes(TASK_UPGRADE_ZKSYNC_BEACON));
+            assert(taskNames.includes(TASK_UPGRADE_ZKSYNC_PROXY));
+            assert(taskNames.includes(TASK_DEPLOY_ZKSYNC_CONTRACT));
         });
 
         it('Should successfully compile a simple contract', async function () {
@@ -45,11 +57,6 @@ describe('zksync toolbox plugin', function () {
 
         it('Should call deploy scripts through HRE', async function () {
             await this.env.run(TASK_DEPLOY_ZKSYNC);
-        });
-
-        it('Should test for properPrivateKey chai matcher', async function () {
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            expect(RICH_WALLET_PK).to.be.properPrivateKey;
         });
 
         it('Reads verifyURL form network config for existing network ', async function () {
