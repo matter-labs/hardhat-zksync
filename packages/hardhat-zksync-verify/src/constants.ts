@@ -111,7 +111,7 @@ export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
 
 export const COMPILATION_ERRORS = [
     {
-        error: ' CompilationError',
+        error: 'CompilationError',
         pattern: /^Backend verification error: Compilation error.*$/s,
     },
     {
