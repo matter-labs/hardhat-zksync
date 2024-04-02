@@ -110,12 +110,14 @@ If you want to get the estimation for the beacon proxy contract, please use the 
 
 `const totalGasEstimation = await hre.zkUpgrades.estimation.estimateGasBeacon(deployer, contract, []);`
 
-## 🕹 Shortcuts commands
+## 🕹 Commands
+
+Please consider that while the provided CLI commands enable contract deployment and upgrading, not all arguments may be available. If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
 
 ### 📥 Configuration
 To extend the configuration to support commands, we need to add an accounts field to the specific network configuration in the networks section of the hardhat.config.ts file. This accounts field can support an array of private keys or a mnemonic object and represents accounts that will be used as wallet automaticlly.
 
-```
+```typescript
 const config: HardhatUserConfig = {
   networks: {
     sepolia: {
@@ -126,11 +128,12 @@ const config: HardhatUserConfig = {
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
-      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'], // The private keys for the accounts used in the deployment or in the upgradation process.
-      accounts: {
-          mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
-      }
+      // The private keys for the accounts used in the deployment or in the upgradation process.
+      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'], 
       // Mnemonic used in the deployment or in the upgradation process
+      // accounts: {
+      //     mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
+      // }
     }
   },
 };
@@ -139,33 +142,60 @@ const config: HardhatUserConfig = {
 
 accounts object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
 
-### 🕹 Commands
+To establish a default index per network, which is by default `0`, you can include a `deployerAccounts` section in your `hardhat.config.ts` file.
 
-`yarn hardhat deploy-beacon:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initialize method>] [--no-compile]`
+```typescript
+const config: HardhatUserConfig = {
+  // ADDITON
+  deployerAccounts: {
+    'zkTestnet': 1, // The default index of the account for the specified network.
+    //default: 0 // The default value for not specified networks. Automatically set by plugin to the index 0.
+  },
+  networks: {
+    sepolia: {
+      url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
+    },
+    zkTestnet: {
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
+      zksync: true,
+      // The private keys for the accounts used in the deployment process.
+      accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'],  
+      // Mnemonic used in the deployment process
+      // accounts: {
+      //     mnemonic: 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle'
+      // }  
+    }
+  },
+};
+```
+- `deployerAccounts` represents an object where the default index of the accounts is provided and automatically used in the upgradable commands described below. If the network name is not specified inside the object, the default index of the account will be `0`. We can change and deafult index for not specified networks if we override `default` name with index that we want.
 
-When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments.
-The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`. 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
+### 🕹 Command list
 
-`yarn hardhat deploy-proxy:oneline --contract-name <contract name or fully qualified name> <constructor arguments> [--initializer <initialize method>] [--no-compile]`
+`yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
 When executed, this command will automatically determine whether the deployment is for a Transparent or Uups proxy. 
 If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
 If the Uups proxy is chosen, it will deploy implementation and proxy.
 The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
-The `--no-compile` parameter allows the task to skip the compilation process.
 
-`yarn hardhat upgrade-beacon:oneline --contract-name <contract name or fully qualified name> --beacon-address <beacon address> [--no-compile]`
+`yarn hardhat upgrade-zksync:proxy --contract-name <contract name or FQN> --proxy-address <proxy address> [--deployment-type <deployment type>] [--no-compile]`
+
+When executed, this command upgrade Uups or Transparent implementation.
+
+`yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
+
+When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments.
+The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`. 
+
+`yarn hardhat upgrade-zksync:beacon --contract-name <contract name or FQN> --beacon-address <beacon address> [--deployment-type <deployment type>] [--no-compile]`
 
 When executed, this command upgrade beacon implementation. 
+
 Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-
-`yarn hardhat upgrade-proxy:oneline --contract-name <contract name or fully qualified name> --proxy-address <proxy address> [--no-compile]`
-
-When executed, this command upgrade Uups or Transparent implementation. 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-
-Please consider that while the provided CLI commands enable contract deployment and upgrading, not all arguments may be available. If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
+Optional parameter `--deployment-type` that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts as implementation with a value `create`.
+The account used for deploy and upgrade will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
 

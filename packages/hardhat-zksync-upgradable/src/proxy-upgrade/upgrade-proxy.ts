@@ -39,6 +39,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
             wallet,
+            opts.deploymentType,
         );
         const { impl: nextImpl } = await deployProxyImpl(hre, newImplementationFactory, opts, proxyAddress);
 

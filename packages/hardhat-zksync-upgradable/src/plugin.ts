@@ -3,15 +3,17 @@ import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/dist/
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 import { getWallet } from './utils';
 
-export async function deployBeaconWithOneLine(
+export async function deployBeacon(
     hre: HardhatRuntimeEnvironment,
     taskArgs: {
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
         initializer?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
     },
 ): Promise<{
@@ -31,7 +33,11 @@ export async function deployBeaconWithOneLine(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract);
+    const beacon = await hre.zkUpgrades.deployBeacon(
+        wallet,
+        contract,
+        taskArgs.deploymentType ? { deploymentType: taskArgs.deploymentType } : undefined,
+    );
     await beacon.deployed();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
@@ -53,13 +59,14 @@ export async function deployBeaconWithOneLine(
     };
 }
 
-export async function deployProxyWithOneLine(
+export async function deployProxy(
     hre: HardhatRuntimeEnvironment,
     taskArgs: {
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
         initializer?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -76,27 +83,25 @@ export async function deployProxyWithOneLine(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const proxy = await hre.zkUpgrades.deployProxy(
-        wallet,
-        contract,
-        constructorArguments,
-        taskArgs.initializer
-            ? {
-                  initializer: taskArgs.initializer,
-              }
-            : undefined,
-    );
+
+    const opts = {
+        deploymentType: taskArgs.deploymentType,
+        initializer: taskArgs.initializer,
+    };
+
+    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, opts);
 
     await proxy.deployed();
 
     return proxy;
 }
 
-export async function upgradeBeaconWithOneLine(
+export async function upgradeBeacon(
     hre: HardhatRuntimeEnvironment,
     taskArgs: {
         contractName: string;
         beaconAddress: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -108,17 +113,23 @@ export async function upgradeBeaconWithOneLine(
     const deployer = new Deployer(hre, wallet);
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
-    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2);
+
+    const opts = {
+        deploymentType: taskArgs.deploymentType,
+    };
+
+    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2, opts);
     await beaconUpgrade.deployed();
 
     return beaconUpgrade;
 }
 
-export async function upgradeProxyWithOneLine(
+export async function upgradeProxy(
     hre: HardhatRuntimeEnvironment,
     taskArgs: {
         contractName: string;
         proxyAddress: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -130,7 +141,12 @@ export async function upgradeProxyWithOneLine(
     const deployer = new Deployer(hre, wallet);
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
-    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2);
+
+    const opts = {
+        deploymentType: taskArgs.deploymentType,
+    };
+
+    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, opts);
 
     await proxyUpgrade.deployed();
 

@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { expect } from 'chai';
 import sinonChai from 'sinon-chai';
-import { deployWithOneLine } from '../../src/plugin';
+import { deployContract } from '../../src/plugin';
 
 chai.use(sinonChai);
 
-describe('deployWithOneLineAndVerify', () => {
+describe('deployWithContract', () => {
     const sandbox = sinon.createSandbox();
     let hre: HardhatRuntimeEnvironment;
     const artifact = {
@@ -40,7 +40,7 @@ describe('deployWithOneLineAndVerify', () => {
     };
 
     it('should deploy the contract with compile', async () => {
-        await deployWithOneLine(hre, taskArgs);
+        await deployContract(hre, taskArgs);
 
         expect(hre.deployer.deploy).to.have.been.callCount(1);
         expect(hre.run).to.have.been.callCount(1);
@@ -48,7 +48,7 @@ describe('deployWithOneLineAndVerify', () => {
 
     it('should deploy the contract without compile', async () => {
         taskArgs.noCompile = true;
-        await deployWithOneLine(hre, taskArgs);
+        await deployContract(hre, taskArgs);
         expect(hre.run).to.have.been.callCount(0);
         expect(hre.deployer.deploy).to.have.been.callCount(1);
     });

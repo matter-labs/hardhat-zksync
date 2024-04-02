@@ -3,6 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
 import { Contract, Wallet } from 'zksync-ethers';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
@@ -179,12 +180,13 @@ export function getNetworkAccount(hre: HardhatRuntimeEnvironment): number {
     return hre.config.deployerAccounts[networkName] ?? hre.config.deployerAccounts.default ?? 0;
 }
 
-export async function deployWithOneLine(
+export async function deployContract(
     hre: HardhatRuntimeEnvironment,
     taskArgs: {
         contractName: string;
         constructorArgsParams: any[];
         constructorArgs?: string;
+        deploymentType?: DeploymentType;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -196,6 +198,8 @@ export async function deployWithOneLine(
         taskArgs.constructorArgsParams,
         taskArgs.constructorArgs,
     );
+
+    hre.deployer.setDeploymentType(taskArgs.deploymentType ?? 'create');
     const contract: Contract = await hre.deployer.deploy(taskArgs.contractName, constructorArguments);
     console.log(chalk.green(`Contract ${taskArgs.contractName} deployed at ${contract.address}`));
     return contract;
