@@ -35,7 +35,18 @@ TEMP_TEST_DIR=$(mktemp -d)
 FIXTURE_PROJECTS_DIR="${TEMP_TEST_DIR}/fixture-projects-run-$(date +%Y-%m-%d-%H-%M-%S)"
 
 mkdir -p "$FIXTURE_PROJECTS_DIR"
-cp -r fixture-projects/* "$FIXTURE_PROJECTS_DIR/"
+rsync -av --exclude=package.json fixture-projects/ "$FIXTURE_PROJECTS_DIR/"
+
+# Move package.json files separately
+for dir in fixture-projects/*; do
+    if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+        # Construct the destination directory path
+        dest_dir="$FIXTURE_PROJECTS_DIR/$(basename "$dir")"
+        # Move package.json to the destination directory
+        mv "$dir/package.json" "$dest_dir/"
+    fi
+done
+
 cp helpers.sh "$TEMP_TEST_DIR/helpers.sh"
 cp tsconfig.json "$TEMP_TEST_DIR/tsconfig.json"
 
@@ -64,25 +75,3 @@ for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
 done
 
 rm -fr "$TEMP_TEST_DIR"
-
-
-# Post-processing step
-exclude_dirs=("")
-
-for dir in "${BASE_FIXTURE_PROJECTS_DIR}"/*; do
-    if [ -d "$dir" ]; then
-        if [ -n "$1" ] && [[ ! " ${exclude_dirs[@]} " =~ " $(basename "$dir") " ]]; then
-            continue
-        fi
-
-        package_json="${dir}/package.json"
-        if [ -f "$package_json" ]; then
-            if [[ ! " ${exclude_dirs[@]} " =~ " $(basename "$dir") " ]]; then
-                rm "$package_json"
-                echo "[e2e] Deleted package.json in $(basename "$dir")"
-            else
-                echo "[e2e] Skipped deleting package.json in $(basename "$dir")"
-            fi
-        fi
-    fi
-done

@@ -440,12 +440,18 @@ importers:
 
   examples/verify-example:
     dependencies:
+      '@matterlabs/hardhat-zksync-deploy':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-ethers':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-ethers
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
+      '@matterlabs/hardhat-zksync-upgradable':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-upgradable
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
