@@ -236,7 +236,7 @@ export async function verifyContract(
         }
         console.info(chalk.red(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE));
 
-        request.sourceCode = contractInformation.compilerInput;
+        request.sourceCode.sources = contractInformation.compilerInput.sources;
 
         const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL);
         const fallbackVerificationId = parseInt(fallbackResponse.message, 10);
