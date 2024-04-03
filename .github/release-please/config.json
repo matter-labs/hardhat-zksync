@@ -17,9 +17,9 @@
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-verify"
         },
-        "packages/hardhat-zksync-toolbox": {
+        "packages/hardhat-zksync": {
             "release-type": "node",
-            "component": "@matterlabs/hardhat-zksync-toolbox"
+            "component": "@matterlabs/hardhat-zksync"
         },
         "packages/hardhat-zksync-node": {
             "release-type": "node",

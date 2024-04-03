@@ -15,3 +15,12 @@ export const SCRIPT_DEFAULT_PRIORITY = 0;
 export const defaultAccountDeployerSettings: DeployerAccount = {
     default: 0,
 };
+
+export const ENCODED_ARAGUMENTS_NOT_FOUND_ERROR = (constructorArgsModulePath: string) =>
+    `The module ${constructorArgsModulePath} doesn't export a list and does not start with "0x"\n` +
+    `Please export a list of constructor arguments or a single string starting with "0x".`;
+
+export const CONSTRUCTOR_MODULE_IMPORTING_ERROR = (
+    errorMessage: string,
+) => `Importing the module for the constructor arguments list failed.
+Reason: ${errorMessage}`;

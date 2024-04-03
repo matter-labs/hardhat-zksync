@@ -1,7 +1,9 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import chalk from 'chalk';
-import { Wallet } from 'zksync-ethers';
+import { Contract, Wallet } from 'zksync-ethers';
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
@@ -9,6 +11,7 @@ import {
     compileContracts,
     fillLibrarySettings,
     generateFullQuailfiedNameString,
+    getConstructorArguments,
     getLibraryInfos,
     getWalletsFromAccount,
     isNumber,
@@ -175,4 +178,29 @@ export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet
 export function getNetworkAccount(hre: HardhatRuntimeEnvironment): number {
     const networkName = hre.network.name;
     return hre.config.deployerAccounts[networkName] ?? hre.config.deployerAccounts.default ?? 0;
+}
+
+export async function deployContract(
+    hre: HardhatRuntimeEnvironment,
+    taskArgs: {
+        contractName: string;
+        constructorArgsParams: any[];
+        constructorArgs?: string;
+        deploymentType?: DeploymentType;
+        noCompile?: boolean;
+    },
+): Promise<Contract> {
+    if (!taskArgs.noCompile) {
+        await hre.run(TASK_COMPILE);
+    }
+
+    const constructorArguments: any[] = await getConstructorArguments(
+        taskArgs.constructorArgsParams,
+        taskArgs.constructorArgs,
+    );
+
+    hre.deployer.setDeploymentType(taskArgs.deploymentType ?? 'create');
+    const contract: Contract = await hre.deployer.deploy(taskArgs.contractName, constructorArguments);
+    console.log(chalk.green(`Contract ${taskArgs.contractName} deployed at ${contract.address}`));
+    return contract;
 }
