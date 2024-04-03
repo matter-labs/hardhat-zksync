@@ -175,14 +175,14 @@ const config: HardhatUserConfig = {
 
 `yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
-When executed, this command will automatically determine whether the deployment is for a Transparent or Uups proxy. 
+When executed, this command will automatically determine whether the deployment is for a Transparent or UUPS proxy. 
 If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
-If the Uups proxy is chosen, it will deploy implementation and proxy.
+If the UUPS proxy is chosen, it will deploy implementation and proxy.
 The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
 
 `yarn hardhat upgrade-zksync:proxy --contract-name <contract name or FQN> --proxy-address <proxy address> [--deployment-type <deployment type>] [--no-compile]`
 
-When executed, this command upgrade Uups or Transparent implementation.
+When executed, this command upgrade UUPS or Transparent implementation.
 
 `yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
@@ -191,11 +191,13 @@ The initializer method name can optionally be specified using `--initializer <in
 
 `yarn hardhat upgrade-zksync:beacon --contract-name <contract name or FQN> --beacon-address <beacon address> [--deployment-type <deployment type>] [--no-compile]`
 
-When executed, this command upgrade beacon implementation. 
+When executed, this command upgrade beacon implementation.
 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-Optional parameter `--deployment-type` that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts as implementation with a value `create`.
-The account used for deploy and upgrade will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
+The optional parameters for the described tasks are:\
+  - `--no-compile` - allows the task to skip the compilation process
+  - `--deployment-type` - allows users to specify which deployer smart contract function will be called. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`.
+
+The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
 

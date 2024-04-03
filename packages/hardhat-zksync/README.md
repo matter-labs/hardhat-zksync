@@ -25,12 +25,12 @@ or
 
 ## List of plugins
 
-Here is an overview of the plugins currently available in this package:
+Here is an overview of the plugins currently available in this package when installed:
 
 | 🔌 Plugin                     | 📄 Description                                                                                                                    |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | hardhat-zksync-solc           | Simplifies compiling Solidity contracts for the zkSync network, streamlining deployment preparation.                              |
-| hardhat-zksync-deploy         | Facilitates the deployment of contracts on zkSync, utilizing artifacts from hardhat-zksync-solc/vyper.                            |
+| hardhat-zksync-deploy         | Facilitates the deployment of contracts on zkSync, utilizing artifacts from hardhat-zksync-solc.                            |
 | hardhat-zksync-verify         | Automates the process of verifying smart contracts on the zkSync network, enhancing transparency and trust.                       |
 | hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the zkSync network, improving contract lifecycle management.        |
 | hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
@@ -38,19 +38,19 @@ Here is an overview of the plugins currently available in this package:
 
 ## 🕹 Commands
 
-This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation] (https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
+This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
 
 For certain tasks present in the plugins encompassed by this plugin, it overrides them with new features and parameters. These tasks streamline common functionalities into a simplified workflow.
 
-Here is a list of tasks along with their additional parameters present in this plugin:
+Here is a list of tasks with additional optional parameter `--verify`:
 
-`yarn hardhat deploy-zksync:contract [--verify]`
-`yarn hardhat deploy-zksync:proxy [--verify]` 
-`yarn hardhat upgrade-zksync:proxy [--verify]`
-`yarn hardhat deploy-zksync:beacon  [--verify]`
-`yarn hardhat upgrade-zksync:beacon  [--verify]`
+- `deploy-zksync:contract`
+- `deploy-zksync:proxy` 
+- `upgrade-zksync:proxy`
+- `deploy-zksync:beacon`
+- `upgrade-zksync:beacon`
 
-The `--verify` parameter allow the task to verify all deployed and upgraded contracts.
+The `--verify` parameter allow the task to immediately verify all deployed and upgraded contracts when task is called.
 
 To check other parameters present in these tasks, please check the documentation pages for [hardhat-zksync-deploy](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-deploy.html) and [hardhat-zksync-upgradable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradable.html).
 
