@@ -224,46 +224,117 @@ Instead, this name was received: ${contractFQN}`);
 
     describe('getSolidityStandardJsonInput', async function () {
         useEnvironment('localGreeter');
-        it('should return the Solidity standard JSON input', async function () {
-            const resolvedFiles: ResolvedFile[] = [
-                {
-                    sourceName: 'contracts/Contract.sol',
-                    absolutePath: 'contracts/Contract.sol',
-                    lastModificationDate: new Date(),
-                    contentHash: '0x1234567890',
-                    getVersionedName: () => 'contracts/Contract.sol',
-                    content: {
-                        rawContent: 'contract Contract {}',
-                        imports: [],
-                        versionPragmas: ['0.8.0'],
-                    },
-                },
-            ];
 
-            const solidityStandardJsonInput = getSolidityStandardJsonInput(resolvedFiles, {
-                language: 'Solidity',
-                sources: {
-                    'contracts/Contract.sol': {
-                        content: 'contract Contract {}',
+        const resolvedFiles: ResolvedFile[] = [
+            {
+                sourceName: 'contracts/Contract.sol',
+                absolutePath: 'contracts/Contract.sol',
+                lastModificationDate: new Date(),
+                contentHash: '0x1234567890',
+                getVersionedName: () => 'contracts/Contract.sol',
+                content: {
+                    rawContent: 'contract Contract {}',
+                    imports: [],
+                    versionPragmas: ['0.8.0'],
+                },
+            },
+        ];
+
+        const input = {
+            language: 'Solidity',
+            sources: {
+                'contracts/Contract.sol': {
+                    content: 'contract Contract {}',
+                },
+            },
+            settings: {
+                optimizer: {
+                    enabled: true,
+                },
+                outputSelection: {
+                    '*': {
+                        '*': ['evm'],
                     },
                 },
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                    },
-                    outputSelection: {
-                        '*': {
-                            '*': ['evm'],
-                        },
+            },
+        };
+
+        it('should return the Solidity standard JSON input', async function () {
+            const hre = {
+                config: {
+                    zksolc: {
+                        settings: {},
                     },
                 },
-            });
+            };
+
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, input);
 
             expect(solidityStandardJsonInput.language).to.equal('Solidity');
             expect(solidityStandardJsonInput.sources['contracts/Contract.sol'].content).to.equal(
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+        });
+
+        it('should return proper zksolc setting params', async function () {
+            const hre = {
+                config: {
+                    zksolc: {
+                        settings: {},
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, input);
+
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+
+            const hre1 = {
+                config: {
+                    zksolc: {
+                        settings: {
+                            isSystem: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput2 = getSolidityStandardJsonInput(hre1 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput2.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput2.settings.forceEvmla).to.equal(false);
+
+            const hre2 = {
+                config: {
+                    zksolc: {
+                        settings: {
+                            forceEvmla: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput3 = getSolidityStandardJsonInput(hre2 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput3.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput3.settings.forceEvmla).to.equal(true);
+
+            const hre3 = {
+                config: {
+                    zksolc: {
+                        settings: {
+                            isSystem: true,
+                            forceEvmla: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput4 = getSolidityStandardJsonInput(hre3 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput4.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput4.settings.forceEvmla).to.equal(true);
         });
     });
 
