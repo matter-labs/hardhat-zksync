@@ -193,7 +193,7 @@ The initializer method name can optionally be specified using `--initializer <in
 
 When executed, this command upgrade beacon implementation.
 
-The optional parameters for the described tasks are:\
+The optional parameters for the described tasks are:
   - `--no-compile` - allows the task to skip the compilation process
   - `--deployment-type` - allows users to specify which deployer smart contract function will be called. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`.
 
