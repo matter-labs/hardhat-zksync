@@ -848,8 +848,28 @@
     proper-lockfile "^4.1.2"
     semver "^7.5.1"
 
-"@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
+"@matterlabs/hardhat-zksync-upgradable@^0.3.1":
   version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-upgradable/-/hardhat-zksync-upgradable-0.3.1.tgz#862b2253d18cfb6554ac1e224473123ad1888923"
+  integrity sha512-2JnBXbOAu708Aythpqh+QtQixiuipW1Z3PAxc2tjMqyLalVI0+L1p6VF9LwMdv28/ob4SbIqEWKYWGgRmNRsHg==
+  dependencies:
+    "@ethersproject/abi" "^5.1.2"
+    "@matterlabs/hardhat-zksync-deploy" "^0.8.0"
+    "@matterlabs/hardhat-zksync-solc" "^1.1.4"
+    "@openzeppelin/upgrades-core" "1.27.0"
+    chalk "4.1.2"
+    compare-versions "^6.0.0"
+    dockerode "^3.3.4"
+    ethereumjs-util "^7.1.5"
+    ethers "~5.7.2"
+    fs-extra "^11.1.1"
+    hardhat "^2.14.0"
+    proper-lockfile "^4.1.1"
+    solidity-ast "npm:solidity-ast@0.4.45"
+    zksync-ethers "^5.0.0"
+
+"@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
+  version "0.4.0"
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@matterlabs/hardhat-zksync-deploy" "^0.9.0"
