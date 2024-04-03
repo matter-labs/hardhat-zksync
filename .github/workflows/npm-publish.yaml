@@ -46,7 +46,7 @@ jobs:
           cache: pnpm
 
       - name: Setup environment
-        run: pnpm && pnpm build
+        run: pnpm install && pnpm build
 
       - name: Publish
         env:
