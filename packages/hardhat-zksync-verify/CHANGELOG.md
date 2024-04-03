@@ -1,5 +1,15 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.4.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.1...@matterlabs/hardhat-zksync-verify-v1.4.2) (2024-04-03)
+
+
+### Bug Fixes
+
+* add missing setting properties to support isSystem and forceEvml… ([#965](https://github.com/matter-labs/hardhat-zksync/issues/965)) ([b32243a](https://github.com/matter-labs/hardhat-zksync/commit/b32243a8bf4bf8fe71b81359a99cf9bd06117e4a))
+* call fallback verification with full source codes when BE throws… ([#968](https://github.com/matter-labs/hardhat-zksync/issues/968)) ([bfe86f2](https://github.com/matter-labs/hardhat-zksync/commit/bfe86f24a22b6dcd0a2286d33fc450adb0bcc2bc))
+* remove zksync-ethers dependency ([#876](https://github.com/matter-labs/hardhat-zksync/issues/876)) ([5964e3f](https://github.com/matter-labs/hardhat-zksync/commit/5964e3f35550bb14ddb50ca019e60d4b24d636d5))
+* update deploy cache logic with script load path support for windows ([#865](https://github.com/matter-labs/hardhat-zksync/issues/865)) ([c30e276](https://github.com/matter-labs/hardhat-zksync/commit/c30e276903e97b12283bb742659e513bdb9dafe6))
+
 ## [1.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.0...@matterlabs/hardhat-zksync-verify-v1.4.1) (2024-02-29)
 
 
