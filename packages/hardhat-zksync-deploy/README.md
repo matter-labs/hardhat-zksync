@@ -457,10 +457,13 @@ The account used for deployment will be the one specified by the `deployerAccoun
 
 `yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--no-compile]`
 
-This command provides an easy way to deploy contracts. If the provided command for deploying a single contract is insufficient and you require additional flexibility, such as incorporating additional dependencies or overrides, it would be advisable to utilize a script-based approach.
-When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments. 
-Optionally, the `--no-compile` parameter allows the task to skip the compilation process.
-Optional parameter `--deployment-type` that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts with a value `create`.
+This command provides an easy and fast way to deploy one contract. If the provided command for deploying a single contract is insufficient and you require additional flexibility, such as incorporating additional dependencies or overrides, it would be advisable to utilize a script-based approach.
+When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments.
+
+Optionally parameters are:
+  - `--no-compile` - allows the task to skip the compilation process
+  - `--deployment-type` - allows users to specify which deployer smart contract function will be called. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`.
+
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
