@@ -23,8 +23,35 @@ import * as metadata from '../../src/solc/metadata';
 import * as service from '../../src/zksync-block-explorer/service';
 import * as plugin from '../../src/plugin';
 import * as bytecode from '../../src/solc/bytecode';
+import { ZkSyncVerifyPluginError } from '../../src/errors';
 
 describe('verifyContract', async function () {
+    beforeEach(() => {
+        sinon.stub(utils, 'retrieveContractBytecode').resolves('0x1234567890');
+        sinon.stub(metadata, 'inferSolcVersion').resolves('0.8.0');
+        sinon.stub(service, 'getSupportedCompilerVersions').resolves(['0.8.0']);
+        sinon.stub(plugin, 'getSolidityStandardJsonInput').resolves({
+            language: 'Solidity',
+            sources: {
+                'contracts/Contract.sol': {
+                    content: 'contract Contract {}',
+                },
+            },
+        });
+    });
+
+    const args = {
+        address: '0x1234567890123456789012345678901234567890',
+        constructorArguments: [],
+        contract: 'contract',
+        libraries: 'libraries',
+        noCompile: false,
+    };
+
+    afterEach(() => {
+        sinon.restore();
+    });
+
     it('should call runSuper if zksync is false', async function () {
         const runSuperStub = sinon.stub().resolves(0);
         const hre = {
@@ -86,17 +113,6 @@ describe('verifyContract', async function () {
     });
 
     it('should call run with the correct arguments if zksync is true and address is valid', async function () {
-        sinon.stub(utils, 'retrieveContractBytecode').resolves('0x1234567890');
-        sinon.stub(metadata, 'inferSolcVersion').resolves('0.8.0');
-        sinon.stub(service, 'getSupportedCompilerVersions').resolves(['0.8.0']);
-        sinon.stub(plugin, 'getSolidityStandardJsonInput').resolves({
-            language: 'Solidity',
-            sources: {
-                'contracts/Contract.sol': {
-                    content: 'contract Contract {}',
-                },
-            },
-        });
         sinon.stub(service, 'verifyContractRequest').resolves({
             status: 200,
             message: '1',
@@ -167,12 +183,96 @@ describe('verifyContract', async function () {
                 }),
         };
 
-        const args = {
-            address: '0x1234567890123456789012345678901234567890',
-            constructorArguments: [],
-            contract: 'contract',
-            libraries: 'libraries',
-            noCompile: false,
+        await verifyContract(args, hre as any, runSuperStub as any);
+        expect(runSuperStub.calledOnce).to.equal(false);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+    });
+
+    it('should call fallback request sent if there is compilation error', async function () {
+        const errorMessage =
+            'Backend verification error: Compilation errorDeclarationError: Undeclared identifier.--> contracts-preprocessed/libraries/EfficientCall.sol:134:32:|134 |             address callAddr = RAW_FAR_CALL_BY_REF_CALL_ADDRESS;|';
+
+        sinon
+            .stub(service, 'verifyContractRequest')
+            .onFirstCall()
+            .resolves({ status: 503, message: '1', isOk: () => false })
+            .onSecondCall()
+            .resolves({
+                status: 200,
+                message: '2',
+                isOk: () => true,
+            });
+
+        const runSuperStub = sinon.stub().resolves(0);
+        const hre = {
+            network: {
+                config: {
+                    url: 'http://localhost:3000',
+                },
+                zksync: true,
+                verifyURL: 'http://localhost:3000/verify',
+            },
+            run: sinon
+                .stub()
+                .onThirdCall()
+                .resolves({
+                    contractName: 'Contract',
+                    sourceName: 'contracts/Contract.sol',
+                    compilerInput: {
+                        language: 'Solidity',
+                        sources: {
+                            'contracts/Contract.sol': {
+                                content: 'contract Contract {}',
+                            },
+                        },
+                        settings: {
+                            optimizer: {
+                                enabled: true,
+                            },
+                            outputSelection: {
+                                '*': {
+                                    '*': ['evm'],
+                                },
+                            },
+                        },
+                    },
+                    contractOutput: {
+                        abi: [],
+                        metadata: {
+                            zk_version: '0.1.0',
+                            solc_metadata: '0x1234567890',
+                            optimizer_settings: '0x1234567890',
+                        },
+                        evm: {
+                            bytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            deployedBytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            methodIdentifiers: {},
+                        },
+                    },
+                    solcVersion: '0.8.0',
+                })
+                .onCall(3)
+                .resolves({
+                    getResolvedFiles: sinon.stub().resolves(),
+                })
+                .onCall(4)
+                .throwsException(new ZkSyncVerifyPluginError(errorMessage))
+                .onCall(5)
+                .resolves(true),
         };
 
         await verifyContract(args, hre as any, runSuperStub as any);
@@ -182,6 +282,193 @@ describe('verifyContract', async function () {
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
         expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
         expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+    });
+
+    it('should call fallback request sent if there is missing source file', async function () {
+        const errorMessage = 'Backend verification error: There is no contracts/Contract.sol source file';
+
+        sinon
+            .stub(service, 'verifyContractRequest')
+            .onFirstCall()
+            .resolves({ status: 503, message: '1', isOk: () => false })
+            .onSecondCall()
+            .resolves({
+                status: 200,
+                message: '2',
+                isOk: () => true,
+            });
+
+        const runSuperStub = sinon.stub().resolves(0);
+        const hre = {
+            network: {
+                config: {
+                    url: 'http://localhost:3000',
+                },
+                zksync: true,
+                verifyURL: 'http://localhost:3000/verify',
+            },
+            run: sinon
+                .stub()
+                .onThirdCall()
+                .resolves({
+                    contractName: 'Contract',
+                    sourceName: 'contracts/Contract.sol',
+                    compilerInput: {
+                        language: 'Solidity',
+                        sources: {
+                            'contracts/Contract.sol': {
+                                content: 'contract Contract {}',
+                            },
+                        },
+                        settings: {
+                            optimizer: {
+                                enabled: true,
+                            },
+                            outputSelection: {
+                                '*': {
+                                    '*': ['evm'],
+                                },
+                            },
+                        },
+                    },
+                    contractOutput: {
+                        abi: [],
+                        metadata: {
+                            zk_version: '0.1.0',
+                            solc_metadata: '0x1234567890',
+                            optimizer_settings: '0x1234567890',
+                        },
+                        evm: {
+                            bytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            deployedBytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            methodIdentifiers: {},
+                        },
+                    },
+                    solcVersion: '0.8.0',
+                })
+                .onCall(3)
+                .resolves({
+                    getResolvedFiles: sinon.stub().resolves(),
+                })
+                .onCall(4)
+                .throwsException(new ZkSyncVerifyPluginError(errorMessage))
+                .onCall(5)
+                .resolves(true),
+        };
+
+        await verifyContract(args, hre as any, runSuperStub as any);
+        expect(runSuperStub.calledOnce).to.equal(false);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+    });
+
+    it('should call fallback request sent if there is missing contract file', async function () {
+        const errorMessage =
+            'Backend verification error: Contract with contracts/Contract.sol name is missing in sources';
+
+        sinon
+            .stub(service, 'verifyContractRequest')
+            .onFirstCall()
+            .resolves({ status: 503, message: '1', isOk: () => false })
+            .onSecondCall()
+            .resolves({
+                status: 200,
+                message: '2',
+                isOk: () => true,
+            });
+
+        const runSuperStub = sinon.stub().resolves(0);
+        const hre = {
+            network: {
+                config: {
+                    url: 'http://localhost:3000',
+                },
+                zksync: true,
+                verifyURL: 'http://localhost:3000/verify',
+            },
+            run: sinon
+                .stub()
+                .onThirdCall()
+                .resolves({
+                    contractName: 'Contract',
+                    sourceName: 'contracts/Contract.sol',
+                    compilerInput: {
+                        language: 'Solidity',
+                        sources: {
+                            'contracts/Contract.sol': {
+                                content: 'contract Contract {}',
+                            },
+                        },
+                        settings: {
+                            optimizer: {
+                                enabled: true,
+                            },
+                            outputSelection: {
+                                '*': {
+                                    '*': ['evm'],
+                                },
+                            },
+                        },
+                    },
+                    contractOutput: {
+                        abi: [],
+                        metadata: {
+                            zk_version: '0.1.0',
+                            solc_metadata: '0x1234567890',
+                            optimizer_settings: '0x1234567890',
+                        },
+                        evm: {
+                            bytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            deployedBytecode: {
+                                linkReferences: {},
+                                object: '0x1234567890',
+                                opcodes: '0x1234567890',
+                                sourceMap: '0x1234567890',
+                            },
+                            methodIdentifiers: {},
+                        },
+                    },
+                    solcVersion: '0.8.0',
+                })
+                .onCall(3)
+                .resolves({
+                    getResolvedFiles: sinon.stub().resolves(),
+                })
+                .onCall(4)
+                .throwsException(new ZkSyncVerifyPluginError(errorMessage))
+                .onCall(5)
+                .resolves(true),
+        };
+
+        await verifyContract(args, hre as any, runSuperStub as any);
+
+        expect(runSuperStub.calledOnce).to.equal(false);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
     });
 });
 describe('getCompilerVersions', async function () {
