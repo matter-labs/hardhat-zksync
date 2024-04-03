@@ -455,14 +455,28 @@ To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat
 `yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
-`yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--no-compile]`
+`yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN>`
 
 This command provides an easy and fast way to deploy one contract. If the provided command for deploying a single contract is insufficient and you require additional flexibility, such as incorporating additional dependencies or overrides, it would be advisable to utilize a script-based approach.
 When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments.
 
-Optionally parameters are:
-  - `--no-compile` - allows the task to skip the compilation process
-  - `--deployment-type` - allows users to specify which deployer smart contract function will be called. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`.
+- To provide a contract name or FQN, required argument in the task, add a `--contract-name <contract name or FQN>` argument, e.g. `hardhat deploy-zksync:contract --contract-name SomeContract`.
+- To provide a constructor arguments, specify them after a `--contract-name` argument, e.g. `hardhat deploy-zksync:contract --contract-name Greeter 'Hello'`.
+- To provide a complex constructor argument list, you can write a separate javascript module to export it and provide module name with `--constructor-args <module name>` argument, e.g.
+`hardhat deploy-zksync:contract --contract-name ComplexContract --constructor-args args.js`. Example of `args.js` :
+```typescript
+module.exports = [
+  "a string argument",
+  "0xabcdef",
+  "42",
+  {
+    property1: "one",
+    property2: 2,
+  },
+];
+```
+- To allows the task to skip the compilation process, add  `--no-compile` argument, e.g. `hardhat deploy-zksync:contract --contract-name Contract --no-compile`.
+- To allows the task to specify which deployer smart contract function will be called, add `--deployment-type` argument. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`, e.g. `hardhat deploy-zksync:contract --contract-name Greeter 'Hello' --deployment-type create2`.
 
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 

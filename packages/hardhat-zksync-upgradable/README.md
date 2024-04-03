@@ -112,7 +112,7 @@ If you want to get the estimation for the beacon proxy contract, please use the 
 
 ## 🕹 Commands
 
-Please consider that while the provided CLI commands enable contract deployment and upgrading, not all arguments may be available. If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
+Please consider that while the provided commands enable contract deployment and upgrading, not all arguments may be available. If these commands lack the required functionality, it may be necessary to utilize scripting for a more comprehensive approach.
 
 ### 📥 Configuration
 To extend the configuration to support commands, we need to add an accounts field to the specific network configuration in the networks section of the hardhat.config.ts file. This accounts field can support an array of private keys or a mnemonic object and represents accounts that will be used as wallet automaticlly.
@@ -173,29 +173,44 @@ const config: HardhatUserConfig = {
 
 ### 🕹 Command list
 
-yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
+`yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
 When executed, this command will automatically determine whether the deployment is for a Transparent or UUPS proxy. 
 If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
 If the UUPS proxy is chosen, it will deploy implementation and proxy.
-The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`.
 
 `yarn hardhat upgrade-zksync:proxy --contract-name <contract name or FQN> --proxy-address <proxy address> [--deployment-type <deployment type>] [--no-compile]`
 
 When executed, this command upgrade UUPS or Transparent implementation.
+To upgrade a implementation we need to specify proxy address, add `--proxy-address <proxy address>` argument, e.g. `yarn hardhat upgrade-zksync:proxy --contract-name BoxV2 --proxy-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
 
-`yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> <constructor arguments> [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
+`yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
 When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments.
-The initializer method name can optionally be specified using `--initializer <initializer method name>`, with the default method name being set to `initialize`. 
 
 `yarn hardhat upgrade-zksync:beacon --contract-name <contract name or FQN> --beacon-address <beacon address> [--deployment-type <deployment type>] [--no-compile]`
 
 When executed, this command upgrade beacon implementation.
+To upgrade a implementation we need to specify beacon address, add `--beacon-address <beacon address>` argument, e.g. `yarn hardhat upgrade-zksync:beacon --contract-name BoxV2 --beacon-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
 
-The optional parameters for the described tasks are:
-  - `--no-compile` - allows the task to skip the compilation process
-  - `--deployment-type` - allows users to specify which deployer smart contract function will be called. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`.
+- To provide a contract name or FQN, required argument in all tasks, add a `--contract-name <contract name or FQN>` argument, e.g. `hardhat deploy-zksync:proxy --contract-name SomeContract`.
+- To provide a constructor arguments at deploy tasks, specify them after a `--contract-name` argument, e.g. `hardhat deploy-zksync:proxy --contract-name Greeter 'Hello'`.
+- To provide a complex constructor argument list at deploy tasks, you can write a separate javascript module to export it and provide module name with `--constructor-args <module name>` argument, e.g.
+`hardhat deploy-zksync:contract --contract-name ComplexContract --constructor-args args.js`. Example of `args.js` :
+```typescript
+module.exports = [
+  "a string argument",
+  "0xabcdef",
+  "42",
+  {
+    property1: "one",
+    property2: 2,
+  },
+];
+```
+- To provide a initializer method name at deploy tasks, add `--initializer <initializer method>`, e.g. `hardhat deploy-zksync:proxy --contract-name Contract --initializer store`. If this parameter is omitted, the default value will be `initialize`.
+- To allows the task to skip the compilation process, add  `--no-compile` argument, e.g. `hardhat deploy-zksync:beacon --contract-name Contract --no-compile`.
+- To allows the task to specify which deployer smart contract function will be called, add `--deployment-type` argument. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`, e.g. `hardhat deploy-zksync:beacon --contract-name Greeter 'Hello' --deployment-type create2`.
 
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 

@@ -23,7 +23,7 @@ or
 
 `yarn add -D @matterlabs/hardhat-zksync`
 
-## List of plugins
+## Usage
 
 Here is an overview of the plugins currently available in this package when installed:
 
@@ -36,13 +36,11 @@ Here is an overview of the plugins currently available in this package when inst
 | hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on zkSync.                                   |
 
-## 🕹 Commands
-
 This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
 
 For certain tasks present in the plugins encompassed by this plugin, it overrides them with new features and parameters. These tasks streamline common functionalities into a simplified workflow.
 
-Here is a list of tasks with additional optional parameter `--verify`:
+Here is a list of overriden tasks where this plugin adds new optional parameter `--verify`:
 
 - `deploy-zksync:contract`
 - `deploy-zksync:proxy` 
