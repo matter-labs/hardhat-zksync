@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [0.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v0.5.1...@matterlabs/hardhat-zksync-verify-v0.6.0) (2024-04-03)
+
+
+### Features
+
+* bump hardhat-zksync-deploy and hardhat-zksync-solc dependencies in packages ([#878](https://github.com/matter-labs/hardhat-zksync/issues/878)) ([972ec4f](https://github.com/matter-labs/hardhat-zksync/commit/972ec4f44fca7619182ae3400cf209e50a45905a))
+
+
+### Bug Fixes
+
+* add missing setting properties to support isSystem and forceEvml… ([#966](https://github.com/matter-labs/hardhat-zksync/issues/966)) ([87504e8](https://github.com/matter-labs/hardhat-zksync/commit/87504e86299a07e778d33440b870d00362003ff5))
+* call fallback verification with full soruce codes when BE throws… ([#969](https://github.com/matter-labs/hardhat-zksync/issues/969)) ([0993451](https://github.com/matter-labs/hardhat-zksync/commit/0993451c3edd6aa856ea845bc6fba015aa6c6db5))
+
 ## [0.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v0.5.0...@matterlabs/hardhat-zksync-verify-v0.5.1) (2024-02-29)
 
 
