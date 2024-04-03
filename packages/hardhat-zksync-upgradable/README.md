@@ -182,7 +182,7 @@ If the UUPS proxy is chosen, it will deploy implementation and proxy.
 `yarn hardhat upgrade-zksync:proxy --contract-name <contract name or FQN> --proxy-address <proxy address> [--deployment-type <deployment type>] [--no-compile]`
 
 When executed, this command upgrade UUPS or Transparent implementation.
-To upgrade a implementation specify proxy address, add `--proxy-address <proxy address>` argument, e.g. `yarn hardhat upgrade-zksync:proxy --contract-name BoxV2 --proxy-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
+To upgrade a implementation we need to specify proxy address, add `--proxy-address <proxy address>` argument, e.g. `yarn hardhat upgrade-zksync:proxy --contract-name BoxV2 --proxy-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
 
 `yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--deployment-type <deployment type>] [--initializer <initialize method>] [--no-compile]`
 
@@ -191,7 +191,7 @@ When executed, this command deploys the provided implementation, beacon and prox
 `yarn hardhat upgrade-zksync:beacon --contract-name <contract name or FQN> --beacon-address <beacon address> [--deployment-type <deployment type>] [--no-compile]`
 
 When executed, this command upgrade beacon implementation.
-To upgrade a implementation specify beacon address, add `--beacon-address <beacon address>` argument, e.g. `yarn hardhat upgrade-zksync:beacon --contract-name BoxV2 --beacon-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
+To upgrade a implementation we need to specify beacon address, add `--beacon-address <beacon address>` argument, e.g. `yarn hardhat upgrade-zksync:beacon --contract-name BoxV2 --beacon-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
 
 - To provide a contract name or FQN, required argument in all tasks, add a `--contract-name <contract name or FQN>` argument, e.g. `hardhat deploy-zksync:proxy --contract-name SomeContract`.
 - To provide a constructor arguments at deploy tasks, specify them after a `--contract-name` argument, e.g. `hardhat deploy-zksync:proxy --contract-name Greeter 'Hello'`.
