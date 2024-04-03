@@ -30,6 +30,7 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
             newImplementationArtifact.abi,
             newImplementationArtifact.bytecode,
             wallet,
+            opts.deploymentType,
         );
 
         opts.provider = wallet.provider;
