@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import sinon from 'sinon';
 import { Contract } from 'zksync-ethers';
 import { fail } from 'assert';
-import { deployLibraries, getWallet } from '../../src/plugin';
+import { deployLibraries, deployContract, getWallet } from '../../src/plugin';
 import * as utils from '../../src/utils';
 import * as deployer from '../../src/deployer-helper';
 
@@ -259,5 +259,55 @@ describe('getWallet', () => {
         } catch (error: any) {
             expect(error.message).to.equal('Accounts are not configured for this network');
         }
+    });
+});
+
+describe('deployWithContract', () => {
+    const sandbox = sinon.createSandbox();
+    let hre: HardhatRuntimeEnvironment;
+    const artifact = {
+        sourceName: 'contracts/MyContract.sol',
+        contractName: 'MyContract',
+    };
+
+    beforeEach(() => {
+        hre = {
+            deployer: {
+                loadArtifact: sandbox.stub().resolves(artifact),
+                deploy: sandbox.stub().resolves({
+                    getAddress: async () => '0x1234567890123456789012345678901234567890',
+                    abi: [],
+                }),
+                setDeploymentType: sandbox.stub().resolves(),
+            },
+            run: sandbox.stub(),
+        } as any;
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+    });
+
+    const taskArgs = {
+        contractName: 'MyContract',
+        constructorArgsParams: [],
+        constructorArgs: undefined,
+        noCompile: false,
+    };
+
+    it('should deploy the contract with compile', async () => {
+        await deployContract(hre, taskArgs);
+
+        expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
+        expect(hre.run).to.have.been.callCount(1);
+    });
+
+    it('should deploy the contract without compile', async () => {
+        taskArgs.noCompile = true;
+        await deployContract(hre, taskArgs);
+        expect(hre.run).to.have.been.callCount(0);
+        expect(hre.deployer.deploy).to.have.been.callCount(1);
+        expect(hre.deployer.setDeploymentType).to.have.been.callCount(1);
     });
 });

@@ -7,6 +7,7 @@ import {
     withValidationDefaults,
 } from '@openzeppelin/upgrades-core';
 
+import { DeploymentType } from 'zksync-ethers/build/src/types';
 import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 
 export type StandaloneOptions = StandaloneValidationOptions &
@@ -15,6 +16,7 @@ export type StandaloneOptions = StandaloneValidationOptions &
         useDeployedImplementation?: boolean;
         provider?: any;
         factoryDeps?: string[];
+        deploymentType?: DeploymentType;
     };
 
 export type UpgradeOptions = ValidationOptions & StandaloneOptions;
@@ -27,6 +29,7 @@ export function withDefaults(opts: UpgradeOptions = {}): Required<UpgradeOptions
         pollingInterval: opts.pollingInterval ?? 5e3,
         useDeployedImplementation: opts.useDeployedImplementation ?? true,
         factoryDeps: opts.factoryDeps ?? [],
+        deploymentType: opts.deploymentType ?? 'create',
         ...withValidationDefaults(opts),
     };
 }

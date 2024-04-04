@@ -28,7 +28,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         opts: DeployBeaconOptions = {},
         quiet: boolean = false,
     ): Promise<zk.Contract> {
-        const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+        const beaconImplFactory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet, opts.deploymentType);
 
         opts.provider = wallet.provider;
         opts.factoryDeps = await extractFactoryDeps(hre, artifact);

@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.3.1...@matterlabs/hardhat-zksync-upgradable-v1.4.0) (2024-04-04)
+
+
+### Features
+
+* bump hardhat-zksync-deploy dependency version ([#990](https://github.com/matter-labs/hardhat-zksync/issues/990)) ([76362bf](https://github.com/matter-labs/hardhat-zksync/commit/76362bf435a2af5294a9106370f9c9faaaccdd17))
+* introducing a new tasks to compile,deploy and upgrade contracts ([#989](https://github.com/matter-labs/hardhat-zksync/issues/989)) ([44efdbb](https://github.com/matter-labs/hardhat-zksync/commit/44efdbb5aff55af1a8f7ab0cf514c2a88a042db4))
+
+
+### Bug Fixes
+
+* set valid fromBlock filter to check creation tx hash from the logs ([#975](https://github.com/matter-labs/hardhat-zksync/issues/975)) ([d381d11](https://github.com/matter-labs/hardhat-zksync/commit/d381d1182ded014339c247d21bc586a1cb9623de))
+
 ## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.3.0...@matterlabs/hardhat-zksync-upgradable-v1.3.1) (2024-03-06)
 
 

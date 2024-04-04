@@ -90,7 +90,7 @@ It's main methods are:
    * Sends a deploy transaction to the zkSync network.
    * For now it uses defaults values for the transaction parameters:
    *
-   * @param artifact The previously loaded artifact object.
+   * @param contractNameOrArtifact The previously loaded artifact object, or contract name that will be resolved to artifact in the background.
    * @param constructorArguments The list of arguments to be passed to the contract constructor.
    * @param overrides Optional object with additional deploy transaction parameters.
    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
@@ -98,7 +98,7 @@ It's main methods are:
    *
    * @returns A contract object.
 ```
- - `public async deploy(artifact: ZkSyncArtifact, constructorArguments: any[], overrides?: OverridesAdditionalFactoryDeps?: ethers.BytesLike[],): Promise<zk.Contract>`
+ - `public async deploy(contractNameOrArtifact: ZkSyncArtifact | string, constructorArguments: any[], overrides?: OverridesAdditionalFactoryDeps?: ethers.BytesLike[],): Promise<zk.Contract>`
 
 ```
    * Extracts factory dependencies from the artifact.
@@ -108,6 +108,19 @@ It's main methods are:
    * @returns Factory dependencies in the format expected by SDK.
 ```
  - `async extractFactoryDeps(artifact: ZkSyncArtifact): Promise<string[]>`
+
+ In the method description, it's evident that `contractNameOrArtifact` can accept two types of objects. One type represents a loaded artifact, while the other type is a string representing a contract name, which the deploy method will internally convert to the corresponding artifact.
+
+ ```
+const wallet = new zk.Wallet("PRIVATE_KEY");
+const deployer = new Deployer(hre, zkWallet);
+............
+// Provided previously loaded artifact
+const artifact = await deployer.loadArtifact("ContractName");
+const contract = await deployer.deploy(artifact);
+// Provided contract name
+const contract = await deployer.deploy("ContractName");
+ ```
 
  ## Environment extensions
 
@@ -242,8 +255,7 @@ const contract = await hre.deployer.deploy(artifact, []);
 
 ## Caching mechanism
 
-The `hardhat-zksync-deploy` plugin supports a caching mechanism for contracts deployed on the same network, and by default, this feature is enabled for every deployment with specific network unless specified otherwise.
-For each deployment within your project, a new `deployments` folder is created. Inside this folder, you can find subfolders for each network specified in the `hardhat.config.ts` file. Each network folder contains JSON files named after deployed contracts where caching purposes information are stored, and additionally, a `.chainId` file contains the chainId specific to that network.
+The `hardhat-zksync-deploy` plugin supports a caching mechanism for contracts deployed on the same network, and by default, this feature is enabled for every deployment with specific network unless specified otherwise. For each deployment within your project, a new `deployments-zk` folder is created. Inside this folder, you can find subfolders for each network specified in the `hardhat.config.ts` file. Each network folder contains JSON files named after deployed contracts where caching purposes information are stored, and additionally, a `.chainId` file contains the chainId specific to that network.
 
 To explicitly use a cache mechanism or force deploy for a specific network in your `hardhat.config.ts` file, you would indeed need to set the `forceDeploy` flag for that network in the networks section.
 
@@ -268,6 +280,7 @@ const config: HardhatUserConfig = {
 If the `forceDeploy` flag is set to `true` for a specific network in your `hardhat.config.ts` file, it indicates that the deployment process will force deploy contracts to that network, bypassing any cache mechanism.
 
 Conversely, if the `forceDeploy` flag is set to `false` or not specified for a network, `hardhat-zksync-deploy` will use caching mechanism during deployment. This means it will check whether the contracts have changed since the last deployment, and if not, it will reuse the already deployed contracts instead of redeploying them.
+If a `forceDeploy` isn't explicitly defined, it automatically defaults to `true`.
 
 ## Scripts configuration
 
@@ -453,7 +466,33 @@ To run a specific script, add the `--script` argument, e.g. `yarn hardhat deploy
 
 To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat deploy-zksync --tags all`. Run all scripts with tag `all`.
 
-`yarn hardhat deploy-zksync:libraries --private-key-or-index <PRIVATE_KEY_OR_INDEX>` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
+
+`yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN>`
+
+This command provides an easy and fast way to deploy one contract. If the provided command for deploying a single contract is insufficient and you require additional flexibility, such as incorporating additional dependencies or overrides, it would be advisable to utilize a script-based approach.
+When executed, this command deploys the provided contract on the specified network, using the provided contract constructor arguments.
+
+- To provide a contract name or FQN, required argument in the task, add a `--contract-name <contract name or FQN>` argument, e.g. `hardhat deploy-zksync:contract --contract-name SomeContract`.
+- To provide a constructor arguments, specify them after a `--contract-name` argument, e.g. `hardhat deploy-zksync:contract --contract-name Greeter 'Hello'`.
+- To provide a complex constructor argument list, you can write a separate javascript module to export it and provide module name with `--constructor-args <module name>` argument, e.g.
+`hardhat deploy-zksync:contract --contract-name ComplexContract --constructor-args args.js`. Example of `args.js` :
+```typescript
+module.exports = [
+  "a string argument",
+  "0xabcdef",
+  "42",
+  {
+    property1: "one",
+    property2: 2,
+  },
+];
+```
+- To allows the task to skip the compilation process, add  `--no-compile` argument, e.g. `hardhat deploy-zksync:contract --contract-name Contract --no-compile`.
+- To allows the task to specify which deployer smart contract function will be called, add `--deployment-type` argument. Permissible values for this parameter include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value assumed will be `create`, e.g. `hardhat deploy-zksync:contract --contract-name Greeter 'Hello' --deployment-type create2`.
+
+The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 ## 📝 Documentation
 
