@@ -1,9 +1,9 @@
 import { HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
-import { deployContract, deployLibraries } from './plugin';
-import { ScriptManager } from './script-manager';
 import { waitForNodeToBeReady, startServer } from '@matterlabs/hardhat-zksync-node/src/utils';
 import { JsonRpcServer } from '@matterlabs/hardhat-zksync-node/src/server';
+import { deployContract, deployLibraries } from './plugin';
+import { ScriptManager } from './script-manager';
 
 async function withEraTestNode(hre: HardhatRuntimeEnvironment, taskLogic: () => Promise<void>) {
     let eraTestNode: JsonRpcServer | undefined;
