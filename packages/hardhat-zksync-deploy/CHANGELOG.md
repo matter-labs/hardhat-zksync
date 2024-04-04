@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.2.1...@matterlabs/hardhat-zksync-deploy-v1.3.0) (2024-04-04)
+
+
+### Features
+
+* introducing a new deploy-zksync:contract task to compile and deploy one contract ([#987](https://github.com/matter-labs/hardhat-zksync/issues/987)) ([7f983e2](https://github.com/matter-labs/hardhat-zksync/commit/7f983e2dbc28b072901403e0f375ef798716129e))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.2.0...@matterlabs/hardhat-zksync-deploy-v1.2.1) (2024-03-04)
 
 
