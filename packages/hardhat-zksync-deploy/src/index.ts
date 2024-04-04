@@ -1,9 +1,9 @@
-import { extendConfig, extendEnvironment, task } from 'hardhat/config';
+import { extendConfig, extendEnvironment, task, types } from 'hardhat/config';
 import chalk from 'chalk';
 import { string } from 'hardhat/internal/core/params/argumentTypes';
-import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from './task-names';
+import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES, TASK_DEPLOY_ZKSYNC_CONTRACT } from './task-names';
 import './type-extensions';
-import { zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
+import { deployZkSyncContract, zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
 import { DeployerExtension } from './deployer-extension';
 
@@ -52,6 +52,23 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addFlag('noAutoPopulateConfig', 'Flag to disable auto population of config file')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
+
+task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for zkSync network')
+    .addParam('contractName', 'A contract name or a FQN', '')
+    .addOptionalVariadicPositionalParam(
+        'constructorArgsParams',
+        'Contract constructor arguments. Cannot be used if the --constructor-args option is provided',
+        [],
+    )
+    .addOptionalParam(
+        'constructorArgs',
+        'Path to a Javascript module that exports the constructor arguments',
+        undefined,
+        types.inputFile,
+    )
+    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addFlag('noCompile', 'Flag to disable auto compilation')
+    .setAction(deployZkSyncContract);
 
 try {
     require.resolve('zksync2-js');
