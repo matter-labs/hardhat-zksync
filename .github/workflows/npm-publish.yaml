@@ -52,4 +52,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          npm publish @matterlabs/${{inputs.package}} --tag ${{ inputs.tag }} --workspace=packages/${{inputs.package}} --access=public
+          pnpm publish packages/${{inputs.package}} --tag ${{ inputs.tag }} --access=public
