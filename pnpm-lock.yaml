@@ -367,18 +367,9 @@ importers:
 
   examples/upgradable-example:
     dependencies:
-      '@matterlabs/hardhat-zksync-deploy':
+      '@matterlabs/hardhat-zksync':
         specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-deploy
-      '@matterlabs/hardhat-zksync-solc':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-solc
-      '@matterlabs/hardhat-zksync-upgradable':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-upgradable
-      '@matterlabs/hardhat-zksync-verify':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-verify
+        version: link:../../packages/hardhat-zksync
       '@openzeppelin/contracts-upgradeable':
         specifier: ^4.9.2
         version: 4.9.5
@@ -690,6 +681,112 @@ importers:
       typescript:
         specifier: ^4.6.2
         version: 4.9.5
+
+  packages/hardhat-zksync:
+    dependencies:
+      '@matterlabs/hardhat-zksync-deploy':
+        specifier: ^1.3.0
+        version: link:../hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-ethers':
+        specifier: ^1.0.0
+        version: link:../hardhat-zksync-ethers
+      '@matterlabs/hardhat-zksync-node':
+        specifier: ^1.0.3
+        version: link:../hardhat-zksync-node
+      '@matterlabs/hardhat-zksync-solc':
+        specifier: ^1.1.4
+        version: link:../hardhat-zksync-solc
+      '@matterlabs/hardhat-zksync-upgradable':
+        specifier: ^1.4.0
+        version: link:../hardhat-zksync-upgradable
+      '@matterlabs/hardhat-zksync-verify':
+        specifier: ^1.4.2
+        version: link:../hardhat-zksync-verify
+      '@matterlabs/zksync-contracts':
+        specifier: ^0.6.1
+        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.6.0)
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.4
+        version: 3.0.5(ethers@6.11.1)(hardhat@2.20.0)
+      '@nomicfoundation/hardhat-verify':
+        specifier: ^2.0.0
+        version: 2.0.4(hardhat@2.20.0)
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^4.9.2
+        version: 4.9.5
+      '@openzeppelin/upgrades-core':
+        specifier: ^1.31.3
+        version: 1.32.4
+      chai:
+        specifier: ^4.3.7
+        version: 4.4.1
+      ethers:
+        specifier: ^6.7.1
+        version: 6.11.1
+      hardhat:
+        specifier: ^2.19.4
+        version: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
+      sinon:
+        specifier: ^17.0.1
+        version: 17.0.1
+      sinon-chai:
+        specifier: ^3.7.0
+        version: 3.7.0(chai@4.4.1)(sinon@17.0.1)
+      zksync-ethers:
+        specifier: ^6.0.0
+        version: 6.3.0(ethers@6.11.1)
+    devDependencies:
+      '@types/chai':
+        specifier: ^4.2.0
+        version: 4.3.11
+      '@types/mocha':
+        specifier: ^9.1.0
+        version: 9.1.1
+      '@types/node':
+        specifier: ^18.11.17
+        version: 18.19.16
+      '@types/semver':
+        specifier: ^7.3.9
+        version: 7.5.7
+      '@typescript-eslint/eslint-plugin':
+        specifier: 6.13.1
+        version: 6.13.1(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)(typescript@5.3.3)
+      '@typescript-eslint/parser':
+        specifier: 6.13.1
+        version: 6.13.1(eslint@8.56.0)(typescript@5.3.3)
+      c8:
+        specifier: ^8.0.1
+        version: 8.0.1
+      eslint:
+        specifier: ^8.54.0
+        version: 8.56.0
+      eslint-config-prettier:
+        specifier: 9.0.0
+        version: 9.0.0(eslint@8.56.0)
+      eslint-plugin-import:
+        specifier: 2.29.0
+        version: 2.29.0(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)
+      eslint-plugin-no-only-tests:
+        specifier: 3.1.0
+        version: 3.1.0
+      eslint-plugin-prettier:
+        specifier: 5.0.1
+        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.56.0)(prettier@3.1.0)
+      mocha:
+        specifier: ^10.1.0
+        version: 10.3.0
+      prettier:
+        specifier: 3.1.0
+        version: 3.1.0
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      ts-node:
+        specifier: ^10.6.0
+        version: 10.9.2(@types/node@18.19.16)(typescript@5.3.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.3.3
 
   packages/hardhat-zksync-chai-matchers:
     dependencies:
@@ -1160,91 +1257,6 @@ importers:
       mocha:
         specifier: ^9.2.1
         version: 9.2.2
-      prettier:
-        specifier: 3.1.0
-        version: 3.1.0
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-      ts-node:
-        specifier: ^10.6.0
-        version: 10.9.2(@types/node@18.19.16)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.3.3
-
-  packages/hardhat-zksync-toolbox:
-    dependencies:
-      '@nomicfoundation/hardhat-chai-matchers':
-        specifier: ^2.0.2
-        version: 2.0.5(@nomicfoundation/hardhat-ethers@3.0.5)(chai@4.4.1)(ethers@6.11.1)(hardhat@2.20.0)
-      chai:
-        specifier: ^4.3.7
-        version: 4.4.1
-      hardhat:
-        specifier: ^2.19.4
-        version: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
-      zksync-ethers:
-        specifier: ^6.0.0
-        version: 6.3.0(ethers@6.11.1)
-    devDependencies:
-      '@matterlabs/hardhat-zksync-chai-matchers':
-        specifier: ^1.2.2
-        version: link:../hardhat-zksync-chai-matchers
-      '@matterlabs/hardhat-zksync-deploy':
-        specifier: ^1.1.2
-        version: link:../hardhat-zksync-deploy
-      '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.2
-        version: link:../hardhat-zksync-solc
-      '@matterlabs/hardhat-zksync-verify':
-        specifier: ^1.3.0
-        version: link:../hardhat-zksync-verify
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.4
-        version: 3.0.5(ethers@6.11.1)(hardhat@2.20.0)
-      '@types/chai':
-        specifier: ^4.2.0
-        version: 4.3.11
-      '@types/mocha':
-        specifier: ^9.1.0
-        version: 9.1.1
-      '@types/node':
-        specifier: ^18.11.17
-        version: 18.19.16
-      '@types/semver':
-        specifier: ^7.3.9
-        version: 7.5.7
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.13.1
-        version: 6.13.1(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: 6.13.1
-        version: 6.13.1(eslint@8.56.0)(typescript@5.3.3)
-      c8:
-        specifier: ^8.0.1
-        version: 8.0.1
-      eslint:
-        specifier: ^8.54.0
-        version: 8.56.0
-      eslint-config-prettier:
-        specifier: 9.0.0
-        version: 9.0.0(eslint@8.56.0)
-      eslint-plugin-import:
-        specifier: 2.29.0
-        version: 2.29.0(@typescript-eslint/parser@6.13.1)(eslint@8.56.0)
-      eslint-plugin-no-only-tests:
-        specifier: 3.1.0
-        version: 3.1.0
-      eslint-plugin-prettier:
-        specifier: 5.0.1
-        version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.56.0)(prettier@3.1.0)
-      ethers:
-        specifier: ^6.7.1
-        version: 6.11.1
-      mocha:
-        specifier: ^10.1.0
-        version: 10.3.0
       prettier:
         specifier: 3.1.0
         version: 3.1.0
@@ -2303,6 +2315,16 @@ packages:
       '@openzeppelin/contracts-upgradeable': 4.6.0
     dev: true
 
+  /@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.6.0):
+    resolution: {integrity: sha512-+hucLw4DhGmTmQlXOTEtpboYCaOm/X2VJcWmnW4abNcOgQXEHX+mTxQrxEfPjIZT0ZE6z5FTUrOK9+RgUZwBMQ==}
+    peerDependencies:
+      '@openzeppelin/contracts': 4.6.0
+      '@openzeppelin/contracts-upgradeable': 4.6.0
+    dependencies:
+      '@openzeppelin/contracts': 4.6.0
+      '@openzeppelin/contracts-upgradeable': 4.9.5
+    dev: false
+
   /@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5):
     resolution: {integrity: sha512-+hucLw4DhGmTmQlXOTEtpboYCaOm/X2VJcWmnW4abNcOgQXEHX+mTxQrxEfPjIZT0ZE6z5FTUrOK9+RgUZwBMQ==}
     peerDependencies:
@@ -2535,6 +2557,7 @@ packages:
       ethers: 6.11.1
       hardhat: 2.20.0(ts-node@10.9.2)(typescript@5.3.3)
       ordinal: 1.0.3
+    dev: true
 
   /@nomicfoundation/hardhat-ethers@3.0.5(ethers@6.11.1)(hardhat@2.20.0):
     resolution: {integrity: sha512-RNFe8OtbZK6Ila9kIlHp0+S80/0Bu/3p41HUpaRIoHLm6X3WekTd83vob3rE54Duufu1edCiBDxspBzi2rxHHw==}
@@ -2701,6 +2724,10 @@ packages:
 
   /@openzeppelin/contracts-upgradeable@4.9.5:
     resolution: {integrity: sha512-f7L1//4sLlflAN7fVzJLoRedrf5Na3Oal5PZfIq55NFcVZ90EpV1q5xOvL4lFvg3MNICSDr2hH0JUBxwlxcoPg==, tarball: https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.5.tgz}
+
+  /@openzeppelin/contracts@4.6.0:
+    resolution: {integrity: sha512-8vi4d50NNya/bQqCmaVzvHNmwHvS0OBKb7HNtuNwEE3scXWrP31fKQoGxNMT+KbzmrNZzatE3QK5p2gFONI/hg==}
+    dev: false
 
   /@openzeppelin/contracts@4.9.5:
     resolution: {integrity: sha512-ZK+W5mVhRppff9BE6YdR8CC52C8zAvsVAiWhEtQ5+oNxFE6h1WdeWo+FJSF8KKvtxxVYZ7MTP/5KoVpAU3aSWg==, tarball: https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.5.tgz}
@@ -2871,9 +2898,11 @@ packages:
     resolution: {integrity: sha512-ThlRVIJhr69FLlh6IctTXFkmhtP3NpMZ2QGq69StYLyKZFp/HOp1VdKZj7RvfNWYYcJ1xlbLGLLWj1UvP5u/Gw==}
     dependencies:
       '@types/chai': 4.3.11
+    dev: true
 
   /@types/chai@4.3.11:
     resolution: {integrity: sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==, tarball: https://registry.npmjs.org/@types/chai/-/chai-4.3.11.tgz}
+    dev: true
 
   /@types/debug@4.1.12:
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==, tarball: https://registry.npmjs.org/@types/debug/-/debug-4.1.12.tgz}
@@ -6784,7 +6813,7 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
   /rimraf@2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==, tarball: https://registry.npmjs.org/rimraf/-/rimraf-2.7.1.tgz}
+    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
     hasBin: true
     dependencies:
       glob: 7.2.3
