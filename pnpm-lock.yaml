@@ -367,9 +367,18 @@ importers:
 
   examples/upgradable-example:
     dependencies:
-      '@matterlabs/hardhat-zksync':
+      '@matterlabs/hardhat-zksync-deploy':
         specifier: workspace:^
-        version: link:../../packages/hardhat-zksync
+        version: link:../../packages/hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-solc':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-solc
+      '@matterlabs/hardhat-zksync-upgradable':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-upgradable
+      '@matterlabs/hardhat-zksync-verify':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-verify
       '@openzeppelin/contracts-upgradeable':
         specifier: ^4.9.2
         version: 4.9.5
