@@ -694,10 +694,10 @@ importers:
   packages/hardhat-zksync-chai-matchers:
     dependencies:
       '@matterlabs/hardhat-zksync-deploy':
-        specifier: ^1.2.0
+        specifier: ^1.3.0
         version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.3
+        specifier: ^1.1.4
         version: link:../hardhat-zksync-solc
       chai:
         specifier: ^4.3.7
@@ -885,10 +885,10 @@ importers:
   packages/hardhat-zksync-ethers:
     dependencies:
       '@matterlabs/hardhat-zksync-deploy':
-        specifier: ^1.1.2
+        specifier: ^1.3.0
         version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.2
+        specifier: ^1.1.4
         version: link:../hardhat-zksync-solc
       chai:
         specifier: ^4.2.0
@@ -1261,7 +1261,7 @@ importers:
   packages/hardhat-zksync-upgradable:
     dependencies:
       '@matterlabs/hardhat-zksync-deploy':
-        specifier: ^1.2.0
+        specifier: ^1.3.0
         version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.1.4
@@ -2569,7 +2569,7 @@ packages:
     dev: false
 
   /@nomicfoundation/solidity-analyzer-darwin-arm64@0.1.1:
-    resolution: {integrity: sha512-KcTodaQw8ivDZyF+D76FokN/HdpgGpfjc/gFCImdLUyqB6eSWVaZPazMbeAjmfhx3R0zm/NYVzxwAokFKgrc0w==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-darwin-arm64/-/solidity-analyzer-darwin-arm64-0.1.1.tgz}
+    resolution: {integrity: sha512-KcTodaQw8ivDZyF+D76FokN/HdpgGpfjc/gFCImdLUyqB6eSWVaZPazMbeAjmfhx3R0zm/NYVzxwAokFKgrc0w==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -2577,7 +2577,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-darwin-x64@0.1.1:
-    resolution: {integrity: sha512-XhQG4BaJE6cIbjAVtzGOGbK3sn1BO9W29uhk9J8y8fZF1DYz0Doj8QDMfpMu+A6TjPDs61lbsmeYodIDnfveSA==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-darwin-x64/-/solidity-analyzer-darwin-x64-0.1.1.tgz}
+    resolution: {integrity: sha512-XhQG4BaJE6cIbjAVtzGOGbK3sn1BO9W29uhk9J8y8fZF1DYz0Doj8QDMfpMu+A6TjPDs61lbsmeYodIDnfveSA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -2585,7 +2585,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-freebsd-x64@0.1.1:
-    resolution: {integrity: sha512-GHF1VKRdHW3G8CndkwdaeLkVBi5A9u2jwtlS7SLhBc8b5U/GcoL39Q+1CSO3hYqePNP+eV5YI7Zgm0ea6kMHoA==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-freebsd-x64/-/solidity-analyzer-freebsd-x64-0.1.1.tgz}
+    resolution: {integrity: sha512-GHF1VKRdHW3G8CndkwdaeLkVBi5A9u2jwtlS7SLhBc8b5U/GcoL39Q+1CSO3hYqePNP+eV5YI7Zgm0ea6kMHoA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
@@ -2593,7 +2593,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-linux-arm64-gnu@0.1.1:
-    resolution: {integrity: sha512-g4Cv2fO37ZsUENQ2vwPnZc2zRenHyAxHcyBjKcjaSmmkKrFr64yvzeNO8S3GBFCo90rfochLs99wFVGT/0owpg==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-linux-arm64-gnu/-/solidity-analyzer-linux-arm64-gnu-0.1.1.tgz}
+    resolution: {integrity: sha512-g4Cv2fO37ZsUENQ2vwPnZc2zRenHyAxHcyBjKcjaSmmkKrFr64yvzeNO8S3GBFCo90rfochLs99wFVGT/0owpg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -2601,7 +2601,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-linux-arm64-musl@0.1.1:
-    resolution: {integrity: sha512-WJ3CE5Oek25OGE3WwzK7oaopY8xMw9Lhb0mlYuJl/maZVo+WtP36XoQTb7bW/i8aAdHW5Z+BqrHMux23pvxG3w==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-linux-arm64-musl/-/solidity-analyzer-linux-arm64-musl-0.1.1.tgz}
+    resolution: {integrity: sha512-WJ3CE5Oek25OGE3WwzK7oaopY8xMw9Lhb0mlYuJl/maZVo+WtP36XoQTb7bW/i8aAdHW5Z+BqrHMux23pvxG3w==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -2609,7 +2609,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-linux-x64-gnu@0.1.1:
-    resolution: {integrity: sha512-5WN7leSr5fkUBBjE4f3wKENUy9HQStu7HmWqbtknfXkkil+eNWiBV275IOlpXku7v3uLsXTOKpnnGHJYI2qsdA==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-linux-x64-gnu/-/solidity-analyzer-linux-x64-gnu-0.1.1.tgz}
+    resolution: {integrity: sha512-5WN7leSr5fkUBBjE4f3wKENUy9HQStu7HmWqbtknfXkkil+eNWiBV275IOlpXku7v3uLsXTOKpnnGHJYI2qsdA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -2617,7 +2617,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-linux-x64-musl@0.1.1:
-    resolution: {integrity: sha512-KdYMkJOq0SYPQMmErv/63CwGwMm5XHenEna9X9aB8mQmhDBrYrlAOSsIPgFCUSL0hjxE3xHP65/EPXR/InD2+w==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-linux-x64-musl/-/solidity-analyzer-linux-x64-musl-0.1.1.tgz}
+    resolution: {integrity: sha512-KdYMkJOq0SYPQMmErv/63CwGwMm5XHenEna9X9aB8mQmhDBrYrlAOSsIPgFCUSL0hjxE3xHP65/EPXR/InD2+w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -2625,7 +2625,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-win32-arm64-msvc@0.1.1:
-    resolution: {integrity: sha512-VFZASBfl4qiBYwW5xeY20exWhmv6ww9sWu/krWSesv3q5hA0o1JuzmPHR4LPN6SUZj5vcqci0O6JOL8BPw+APg==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-win32-arm64-msvc/-/solidity-analyzer-win32-arm64-msvc-0.1.1.tgz}
+    resolution: {integrity: sha512-VFZASBfl4qiBYwW5xeY20exWhmv6ww9sWu/krWSesv3q5hA0o1JuzmPHR4LPN6SUZj5vcqci0O6JOL8BPw+APg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -2633,7 +2633,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-win32-ia32-msvc@0.1.1:
-    resolution: {integrity: sha512-JnFkYuyCSA70j6Si6cS1A9Gh1aHTEb8kOTBApp/c7NRTFGNMH8eaInKlyuuiIbvYFhlXW4LicqyYuWNNq9hkpQ==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-win32-ia32-msvc/-/solidity-analyzer-win32-ia32-msvc-0.1.1.tgz}
+    resolution: {integrity: sha512-JnFkYuyCSA70j6Si6cS1A9Gh1aHTEb8kOTBApp/c7NRTFGNMH8eaInKlyuuiIbvYFhlXW4LicqyYuWNNq9hkpQ==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
@@ -2641,7 +2641,7 @@ packages:
     optional: true
 
   /@nomicfoundation/solidity-analyzer-win32-x64-msvc@0.1.1:
-    resolution: {integrity: sha512-HrVJr6+WjIXGnw3Q9u6KQcbZCtk0caVWhCdFADySvRyUxJ8PnzlaP+MhwNE8oyT8OZ6ejHBRrrgjSqDCFXGirw==, tarball: https://registry.npmjs.org/@nomicfoundation/solidity-analyzer-win32-x64-msvc/-/solidity-analyzer-win32-x64-msvc-0.1.1.tgz}
+    resolution: {integrity: sha512-HrVJr6+WjIXGnw3Q9u6KQcbZCtk0caVWhCdFADySvRyUxJ8PnzlaP+MhwNE8oyT8OZ6ejHBRrrgjSqDCFXGirw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -2696,7 +2696,7 @@ packages:
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.6.0:
-    resolution: {integrity: sha512-5OnVuO4HlkjSCJO165a4i2Pu1zQGzMs//o54LPrwUgxvEO2P3ax1QuaSI0cEHHTveA77guS0PnNugpR2JMsPfA==, tarball: https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.6.0.tgz}
+    resolution: {integrity: sha512-5OnVuO4HlkjSCJO165a4i2Pu1zQGzMs//o54LPrwUgxvEO2P3ax1QuaSI0cEHHTveA77guS0PnNugpR2JMsPfA==}
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.9.5:
@@ -2722,7 +2722,7 @@ packages:
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
-    resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==, tarball: https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz}
+    resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
     requiresBuild: true
     optional: true
@@ -4062,7 +4062,7 @@ packages:
     dev: false
 
   /cpu-features@0.0.9:
-    resolution: {integrity: sha512-AKjgn2rP2yJyfbepsmLfiYcmtNn/2eUvocUyM/09yB0YDiz39HteK/5/T4Onf0pmdYDMgkBoGvRLvEguzyL7wQ==, tarball: https://registry.npmjs.org/cpu-features/-/cpu-features-0.0.9.tgz}
+    resolution: {integrity: sha512-AKjgn2rP2yJyfbepsmLfiYcmtNn/2eUvocUyM/09yB0YDiz39HteK/5/T4Onf0pmdYDMgkBoGvRLvEguzyL7wQ==}
     engines: {node: '>=10.0.0'}
     requiresBuild: true
     dependencies:
@@ -5058,7 +5058,7 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==, tarball: https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz}
 
   /fsevents@2.3.3:
-    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==, tarball: https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz}
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -6200,7 +6200,7 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==, tarball: https://registry.npmjs.org/ms/-/ms-2.1.3.tgz}
 
   /nan@2.18.0:
-    resolution: {integrity: sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==, tarball: https://registry.npmjs.org/nan/-/nan-2.18.0.tgz}
+    resolution: {integrity: sha512-W7tfG7vMOGtD30sHoZSSc/JVYiyDPEyQVso/Zz+/uQd0B0L46gtC+pHha5FFMRpil6fm/AoEcRWyOVi4+E/f8w==}
     requiresBuild: true
     dev: false
     optional: true
