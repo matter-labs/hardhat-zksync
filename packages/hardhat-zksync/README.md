@@ -1,4 +1,4 @@
-# hardhat-zksync-toolbox 🚀
+# hardhat-zksync 🚀
 
 zkSync Era [Hardhat](https://hardhat.org/) plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins.
 
