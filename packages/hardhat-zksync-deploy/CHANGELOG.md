@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [0.9.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v0.8.0...@matterlabs/hardhat-zksync-deploy-v0.9.0) (2024-04-03)
+
+
+### Features
+
+* replacing the toolbox plugin with hardhat-zksync and introducin… ([#970](https://github.com/matter-labs/hardhat-zksync/issues/970)) ([286c50d](https://github.com/matter-labs/hardhat-zksync/commit/286c50dc3ea36ff1ca277c07c8cb66200e625fc2))
+
 ## [0.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy@0.7.0...@matterlabs/hardhat-zksync-deploy-v0.8.0) (2024-03-06)
 
 

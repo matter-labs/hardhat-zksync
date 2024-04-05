@@ -1,27 +1,8 @@
-# @matterlabs/hardhat-zksync-toolbox
+# @matterlabs/hardhat-zksync
 
-## [0.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.0.1...@matterlabs/hardhat-zksync-v0.1.0) (2024-04-03)
+## [0.0.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.0.1...@matterlabs/hardhat-zksync-v0.0.1) (2024-04-03)
 
 
 ### Features
 
 * replacing the toolbox plugin with hardhat-zksync and introducin… ([#970](https://github.com/matter-labs/hardhat-zksync/issues/970)) ([286c50d](https://github.com/matter-labs/hardhat-zksync/commit/286c50dc3ea36ff1ca277c07c8cb66200e625fc2))
-
-## [0.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-toolbox-v0.4.0...@matterlabs/hardhat-zksync-toolbox-v0.4.1) (2024-02-23)
-
-
-### Bug Fixes
-
-* bump dependency versions ([#816](https://github.com/matter-labs/hardhat-zksync/issues/816)) ([b40ef88](https://github.com/matter-labs/hardhat-zksync/commit/b40ef885876881a383b1fdd04c71fe21cbb8e080))
-
-## 0.3.0
-
-### Minor Changes
-
-- a1f0333: Bump toolbox dependencies
-
-## 0.2.0
-
-### Minor Changes
-
-- 766f2cb: Bump toolbox dependencies

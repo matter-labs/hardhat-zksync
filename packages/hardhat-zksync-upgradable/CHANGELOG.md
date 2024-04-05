@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.3.1...@matterlabs/hardhat-zksync-upgradable-v0.4.0) (2024-04-03)
+
+
+### Features
+
+* bump hardhat-zksync-deploy version in the hardhat-zksync-upgradable ([f24a96c](https://github.com/matter-labs/hardhat-zksync/commit/f24a96cd154a59803b8e467918719821572ca529))
+* replacing the toolbox plugin with hardhat-zksync and introducin… ([#970](https://github.com/matter-labs/hardhat-zksync/issues/970)) ([286c50d](https://github.com/matter-labs/hardhat-zksync/commit/286c50dc3ea36ff1ca277c07c8cb66200e625fc2))
+
+
+### Bug Fixes
+
+* set valid fromBlock filter to check creation tx hash from the logs ([#971](https://github.com/matter-labs/hardhat-zksync/issues/971)) ([0126c3e](https://github.com/matter-labs/hardhat-zksync/commit/0126c3ee94ef6503a50bffb0db6a8e1c3ef791fe))
+
 ## [0.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.3.0...@matterlabs/hardhat-zksync-upgradable-v0.3.1) (2024-03-14)
 
 
