@@ -22,4 +22,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          npm deprecate @matterlabs/hardhat-zksync-toolbox "This package has been deprecated in favor of @matterlabs/hardhat-zksync."
+          npm deprecate @matterlabs/hardhat-zksync-toolbox ""
