@@ -52,6 +52,46 @@ jobs:
   #        cd packages/hardhat-zksync-vyper
   #        yarn test
 
+  e2e:
+    strategy:
+      matrix:
+        os: [ubuntu]
+        node: ["18"]
+    name: Run E2E tests on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - uses: actions/checkout@v3
+        with:
+          repository: matter-labs/local-setup
+          path: local-setup
+
+      - name: Run server
+        run: |
+          cd local-setup
+          ./start.sh &>../server.log &
+
+      - name: Wait until server is up
+        run: |
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+      
+      - name: Run fixture-projects script
+        run: |
+            cd e2e
+            chmod +x run-fixture-projects.sh
+            ./run-fixture-projects.sh
+        shell: bash
+
+
   examples:
     runs-on: ubuntu-latest
     name: examples
