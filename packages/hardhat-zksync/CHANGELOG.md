@@ -1,6 +1,6 @@
 # @matterlabs/hardhat-zksync
 
-## [0.0.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.0.1...@matterlabs/hardhat-zksync-v0.0.1) (2024-04-03)
+## [0.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.0.1...@matterlabs/hardhat-zksync-v0.1.0) (2024-04-08)
 
 
 ### Features
