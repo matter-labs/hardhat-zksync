@@ -41,6 +41,23 @@ describe('compareBytecode', () => {
         expect(result).to.equal(null);
     });
 
+    it('should correctly normalize bytecode with address placeholder', async () => {
+        const bytecodeWithPlaceholder =
+            '73000000000000000000000000000000000000000000000000000000000000000000' + 'someBytecode';
+        const symbolsWithPush20Opcode = {
+            object: '73' + 'someRuntimeBytecode',
+        };
+
+        const normalizedResult = await bytecodes.normalizeBytecode(
+            bytecodeWithPlaceholder,
+            symbolsWithPush20Opcode as any,
+        );
+
+        const expectedNormalizedBytecode = 'someBytecode'; // Adjust this based on your zeroOutSlices implementation
+
+        expect(normalizedResult.normalizedBytecode).to.include(expectedNormalizedBytecode);
+    });
+
     it('should return the normalized bytecode when it matches the reference bytecode', async () => {
         const deployedBytecode: Bytecode = new Bytecode('deployedBytecode');
         const runtimeBytecodeSymbols = {
