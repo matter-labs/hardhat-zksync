@@ -112,7 +112,9 @@ contract TwoUserMultisig is IAccount, IERC1271 {
         external
         payable
     {
-        _validateTransaction(bytes32(0), _transaction);
+        bytes4 magic = _validateTransaction(bytes32(0), _transaction);
+        require(magic == ACCOUNT_VALIDATION_SUCCESS_MAGIC, "NOT VALIDATED");
+        
         _executeTransaction(_transaction);
     }
 
