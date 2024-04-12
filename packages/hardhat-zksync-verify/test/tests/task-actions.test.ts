@@ -534,7 +534,6 @@ describe('verify', async function () {
             },
             run: sinon.stub().resolves({}),
         };
-
         await verify(
             {
                 address: '0x1234567890',
@@ -557,7 +556,7 @@ describe('verify', async function () {
         const hre = {
             network: {
                 zksync: true,
-                verifyURL: 'http://localhost:3000/verify',
+                verifyURL: undefined,
             },
             run: sinon.stub().resolves({}),
         };
@@ -620,6 +619,29 @@ describe('verify', async function () {
 describe('getConstructorArguments', async function () {
     afterEach(() => {
         sinon.restore();
+    });
+
+    it('should throw an error if constructorArguments are neither an array nor start with 0x', async function () {
+        const args = {
+            constructorArgsModule: 'path/to/module',
+        };
+        const hre = {
+            network: {
+                zksync: true,
+            },
+        };
+        const runSuperStub = sinon.stub().resolves();
+        const extractModuleStub = sinon.stub(utils, 'extractModule').resolves('invalidConstructorArguments');
+
+        try {
+            await getConstructorArguments(args, hre as any, runSuperStub as any);
+            fail('Expected a ZkSyncVerifyPluginError to be thrown');
+        } catch (error: any) {
+            console.info(error.message);
+            expect(error.message).to.include('Importing the module for the constructor arguments list failed');
+        } finally {
+            extractModuleStub.restore();
+        }
     });
 
     it('should call runSuper if zksync is false', async function () {

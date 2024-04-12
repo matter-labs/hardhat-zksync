@@ -394,6 +394,12 @@ Instead, this name was received: ${contractFQN}`);
                 name: 'localGreeter',
             });
         });
+
+        it('should return the empty object', async function () {
+            const libraries = await getLibraries({} as any);
+
+            expect(libraries).to.deep.equal({});
+        });
     });
 
     describe('checkVerificationStatus', async function () {
