@@ -3,10 +3,21 @@ import * as path from 'path';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
 import chalk from 'chalk';
+import { startServer, waitForNodeToBeReady } from '@matterlabs/hardhat-zksync-node/src/utils';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../../src/task-names';
 import { Deployer } from '../../src/deployer';
 import { useEnvironment } from '../helpers';
-import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from '../constants';
+import {
+    ETH_NETWORK_RPC_URL,
+    ZKSYNC_NETWORK_RPC_URL,
+    ZKSYNC_NETWORK_NAME,
+    WALLET_PRIVATE_KEY,
+    dokerizedNodeUrl,
+} from '../constants';
+import { getLibraryInfos, getWalletsFromAccount } from '../../src/utils';
+import { loadArtifact } from '../../src/deployer-helper';
+import { richWallets } from '../../src/rich-wallets';
+import { getWallet, getWallets } from '../../src/plugin';
 
 describe('Plugin tests', async function () {
     describe('successful-compilation artifact', function () {
@@ -152,11 +163,55 @@ describe('Plugin tests', async function () {
                 'http://localhost:8545',
                 'Incorrect default L1 network provider',
             );
-            assert.equal(
-                deployer.zkWallet.provider._getConnection().url,
-                'http://localhost:3050',
+            assert(
+                ['http://localhost:3050', 'http://127.0.0.1:8011'].includes(
+                    deployer.zkWallet.provider._getConnection().url,
+                ),
                 'Incorrect default L2 network provider',
             );
+        });
+    });
+
+    describe('Deployment on Era Test Node', async function () {
+        useEnvironment('era-node');
+
+        it('Should check for Era Test Node ChainId', async function () {
+            expect(this.env.network.config.chainId === 260, 'Chain ID should have been 260');
+        });
+
+        it('should fail to get library info', async function () {
+            try {
+                getLibraryInfos(this.env);
+            } catch (e: any) {
+                expect(e.message.includes('ZkSyncDeployPluginError: Missing libraries file not found'));
+            }
+        });
+
+        it('should return empty wallets array', async function () {
+            const oldChainId = this.env.network.config.chainId;
+            this.env.network.config.chainId = 123;
+            const emptyWalletsArray = await getWalletsFromAccount(this.env, 'remote');
+            expect(emptyWalletsArray.length === 0, 'Should have returned empty wallets array');
+            this.env.network.config.chainId = oldChainId;
+        });
+
+        it('should start the node and stop it sucessfully', async function () {
+            const { port, server, commandArgs } = await startServer();
+            const _ = server.listen(commandArgs);
+            await waitForNodeToBeReady(port);
+            await server.stop();
+            assert(port >= 8011, 'Port should have been > 8011');
+            assert(commandArgs.includes('run'), 'Commadn args should have included "run".');
+        });
+
+        it('Should return rich wallet', async function () {
+            const wallet = await getWallet(this.env);
+            assert(wallet.address === '0x36615Cf349d7F6344891B1e7CA7C72883F5dc049', 'Wrong rich wallet returned');
+        });
+
+        it('Should return wallets', async function () {
+            const wallets = await getWallets(this.env);
+            assert(wallets.length === 0, 'Wallet length is not 0, network should be Era Test Node.');
         });
     });
 
@@ -207,12 +262,25 @@ describe('Plugin tests', async function () {
         });
 
         it('Should estimate deploy fee', async function () {
-            const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
+            const zkWallet = new Wallet(WALLET_PRIVATE_KEY, new Provider(dokerizedNodeUrl));
             const deployer = new Deployer(this.env, zkWallet);
             await this.env.run('compile');
+            const estimateFee = await deployer.estimateDeployFee(await loadArtifact(this.env, 'Greeter'), [
+                'Hi there!',
+            ]);
+            expect(estimateFee > 0, 'Fee estimation should be greater than 0');
+            const estimateGas = await deployer.estimateDeployGas(await loadArtifact(this.env, 'Greeter'), [
+                'Hi there!',
+            ]);
+            expect(estimateGas > 0, 'Gas estimation should be greater than 0');
             const artifact = await deployer.loadArtifact('Greeter');
             const result = await deployer.estimateDeployFee(artifact, ['Hi there!']);
             expect(typeof result).to.equal('bigint');
+        });
+
+        it('Should create deployer from ethWallet', async function () {
+            const deployer = Deployer.fromEthWallet(this.env, new ethers.Wallet(richWallets[0].privateKey));
+            expect(deployer !== undefined, 'Deployer should have been created.');
         });
     });
 
@@ -253,6 +321,16 @@ describe('Plugin tests', async function () {
 
         it('should deploy with integrated wallet', async function () {
             await this.env.run('compile');
+            this.env.deployer.setDeploymentType('create');
+            const deployFee = await this.env.deployer.estimateDeployFee(await loadArtifact(this.env, 'Greeter'), [
+                'Hi there!',
+            ]);
+            expect(deployFee > 0, 'Deploy fee should be greater than 0!');
+            this.env.deployer.setWallet(undefined as any); // Set undefined account so it gets created.
+            const deployGas = await this.env.deployer.estimateDeployGas(await loadArtifact(this.env, 'Greeter'), [
+                'Hi there!',
+            ]);
+            expect(deployGas > 0, 'Deploy gas should be greater than 0!');
             const contract = await this.env.deployer.deploy('Greeter', ['Hi there!']);
             const wallet = contract.runner as Wallet;
             expect(wallet.address).to.be.equal('0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
