@@ -45,7 +45,7 @@
     "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-vyper": "^3.0.5",
+    "@nomiclabs/hardhat-vyper": "^3.0.6",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",
@@ -70,7 +70,7 @@
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@nomiclabs/hardhat-vyper": "^3.0.5",
+    "@nomiclabs/hardhat-vyper": "^3.0.6",
     "hardhat": "^2.19.4"
   },
   "prettier": {
