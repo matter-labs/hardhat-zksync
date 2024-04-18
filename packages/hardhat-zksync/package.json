@@ -42,7 +42,7 @@
     "@matterlabs/hardhat-zksync-ethers": "^1.0.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.6",
     "@openzeppelin/upgrades-core": "^1.31.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@openzeppelin/contracts": "^4.9.2",
