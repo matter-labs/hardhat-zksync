@@ -33,7 +33,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.22.3",
     "ethers": "^6.7.1",
     "zksync-ethers": "^6.0.0"
   },

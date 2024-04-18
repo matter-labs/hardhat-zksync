@@ -37,7 +37,7 @@
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "axios": "^1.6.2",
     "chai": "^4.3.6",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.22.3",
     "chalk": "4.1.2",
     "@ethersproject/abi": "^5.1.2",
     "@ethersproject/address": "5.7.0",
