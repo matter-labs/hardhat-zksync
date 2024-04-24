@@ -272,7 +272,7 @@ describe('Utils', () => {
 
 describe('getZksolcUrl', () => {
     const platformStub = sinon.stub(process, 'platform');
-    
+
     it('should return the release URL when isRelease is true', () => {
         platformStub.value('linux'); // Mock the process.platform property
         const archStub = sinon.stub(process, 'arch');
@@ -296,7 +296,7 @@ describe('getZksolcUrl', () => {
     it('should return the raw URL when isRelease is false', () => {
         platformStub.value('linux'); // Mock the process.platform property
         const archStub = sinon.stub(process, 'arch');
-        archStub.value('x64'); 
+        archStub.value('x64');
         const repo = 'example/repo';
         const version = '1.0.0';
         let expectedUrl = 'example/repo/raw/main/linux-amd64/zksolc-linux-amd64-musl-v1.0.0';

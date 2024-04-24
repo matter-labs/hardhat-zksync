@@ -89,6 +89,8 @@ jobs:
         with:
           repository: matter-labs/local-setup
           path: local-setup
+          ref: f16f1843b5740ca8456432123badafa137daaa02
+
 
       - name: Run server
         run: |
