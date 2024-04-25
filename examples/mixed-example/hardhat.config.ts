@@ -22,8 +22,14 @@ const config: HardhatUserConfig = {
       }
     }
   },
+  defaultNetwork:'dockerizedNode',
   networks: {
     hardhat: {
+      zksync: true,
+    },
+    dockerizedNode: {
+      url: "http://0.0.0.0:3050",
+      ethNetwork: "http://0.0.0.0:8545",
       zksync: true,
     },
   },

@@ -320,7 +320,7 @@ describe('Plugin tests', async function () {
                 assert.equal(await wallet.getAddress(), '0xbd29A1B981925B94eEc5c4F1125AF02a2Ec4d1cA');
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
-                
+
                 assert.strictEqual('0x5f5e100', gasPrice);
             });
         });
