@@ -14,11 +14,11 @@ pnpm add ethers@6.0.0
 
 pnpm hardhat node-zksync &
 
-sleep 3
+sleep 5
 
 LOG_FILE="./era_test_node.log"
 
-if grep -q "Node is ready at 0.0.0.0:8011" "$LOG_FILE"; then
+if grep -q "Node is ready at 127.0.0.1:8011" "$LOG_FILE"; then
     echo "zkSync node started successfully."
 else
     echo "Failed to start zkSync node. Exiting with code 1."
