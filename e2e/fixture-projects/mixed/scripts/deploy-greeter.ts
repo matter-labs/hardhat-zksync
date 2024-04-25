@@ -6,7 +6,7 @@ async function main() {
     console.info(`Running deploy script for the Greeter contract`);
 
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const provider = new zk.Provider("http://localhost:8011",undefined,{cacheTimeout:-1})
+    const provider = new zk.Provider("http://0.0.0.0:8011",undefined,{cacheTimeout:-1})
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic,provider);
 
     const deployer = new Deployer(hre, zkWallet);
