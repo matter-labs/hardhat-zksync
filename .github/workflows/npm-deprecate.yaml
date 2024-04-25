@@ -10,9 +10,9 @@ jobs:
         with:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
+          cache: 'pnpm'
       - name: Setup environment
-        run: yarn && yarn build
+        run: pnpm i && pnpm build
       - name: Depricate package version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
