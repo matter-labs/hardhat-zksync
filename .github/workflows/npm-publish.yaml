@@ -26,7 +26,6 @@ on:
           - hardhat-zksync-verify
           - hardhat-zksync
           - hardhat-zksync-node
-          - hardhat-zksync-chai-matchers
           - hardhat-zksync-ethers
           - hardhat-zksync-verify-vyper
 

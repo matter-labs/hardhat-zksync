@@ -1,0 +1,21 @@
+name: Depricate packages/versions to npm
+on:
+  push:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+      - name: Setup environment
+        run: yarn && yarn build
+      - name: Depricate package version
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        run: |
+          npm deprecate @matterlabs/hardhat-zksync-toolbox "This plugin has been deprecated in favor of @matterlabs/hardhat-zksync plugin."
+          npm deprecate @matterlabs/hardhat-zksync-chai-matchers "This plugin has been deprecated in favor of @nomicfoundation/hardhat-chai-matchers"
