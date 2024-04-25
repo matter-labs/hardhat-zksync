@@ -149,7 +149,7 @@ describe('Plugin tests', async function () {
 
             assert.equal(
                 (deployer.ethWallet.provider as ethers.JsonRpcProvider)._getConnection().url,
-                'http://localhost:8545',
+                'http://0.0.0.0:8545',
                 'Incorrect default L1 network provider',
             );
             assert.equal(

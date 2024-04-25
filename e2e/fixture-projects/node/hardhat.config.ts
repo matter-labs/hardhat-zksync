@@ -13,8 +13,14 @@ const config: HardhatUserConfig = {
             },
         }
     },
+    defaultNetwork:'inMemoryNode',
     networks: {
         hardhat: {
+            zksync: true,
+        },
+        inMemoryNode: {
+            url: "http://0.0.0.0:8011",
+            ethNetwork: "",
             zksync: true,
         },
     },

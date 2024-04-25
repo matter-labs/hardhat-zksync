@@ -4,7 +4,7 @@ import * as hre from 'hardhat';
 
 async function main() {
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const provider = new Provider("http://localhost:8011",undefined,{cacheTimeout:-1})
+    const provider = new Provider("http://0.0.0.0:8011",undefined,{cacheTimeout:-1})
     const zkWallet = Wallet.fromMnemonic(testMnemonic,provider);
 
     const deployer = new Deployer(hre, zkWallet);
