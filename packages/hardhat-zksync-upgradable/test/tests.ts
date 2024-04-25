@@ -199,7 +199,7 @@ describe('Upgradable plugin tests', function () {
             );
         });
     });
-    describe.skip('Test beacon proxy deployment and upgrade functionalities', async function () {
+    describe('Test beacon proxy deployment and upgrade functionalities', async function () {
         useEnvironment('beacon-e2e');
 
         let beaconImplementation: Contract;
@@ -610,7 +610,7 @@ describe('Upgradable plugin tests', function () {
     });
 });
 
-describe.only('Test for upgrades for shortcuts commands', function () {
+describe('Test for upgrades for shortcuts commands', function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e', 'zkSyncNetwork');
 

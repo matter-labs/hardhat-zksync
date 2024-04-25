@@ -24,7 +24,7 @@ describe('deployer-helper', () => {
     describe('createProviders', () => {
         const networks = {
             localhost: {
-                url: 'http://localhost:8545',
+                url: 'http://0.0.0.0:8545',
             },
             rinkeby: {
                 url: 'https://rinkeby.infura.io/v3/your-infura-project-id',
