@@ -4,5 +4,4 @@
     "packages/hardhat-zksync-verify": "0.6.0",
     "packages/hardhat-zksync": "0.1.0",
     "packages/hardhat-zksync-node": "0.1.0",
-    "packages/hardhat-zksync-chai-matchers": "0.3.0"
 }

@@ -21,12 +21,12 @@ const config: HardhatUserConfig = {
         },
         sepolia: {
             zksync: false,
-            url: 'http://localhost:8545',
+            url: 'http://0.0.0.0:8545',
         },
         zkSyncNetwork: {
             zksync: true,
             ethNetwork: 'sepolia',
-            url: 'http://localhost:3050',
+            url: 'http://0.0.0.0:3050',
         },
     },
     solidity: {
