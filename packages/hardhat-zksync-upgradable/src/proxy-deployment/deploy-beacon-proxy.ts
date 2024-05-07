@@ -94,12 +94,18 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             beaconProxyContract.abi,
             beaconProxyContract.bytecode,
             wallet,
+            opts.deploymentType,
         );
 
         const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
             kind: opts.kind,
-            ...(await deploy(beaconProxyFactory, beaconAddress, data)),
+            ...(await deploy(beaconProxyFactory, beaconAddress, data, {
+                customData: {
+                    salt: opts.salt,
+                },
+            })),
         };
+
         if (!quiet) {
             console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
         }
