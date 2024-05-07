@@ -99,7 +99,7 @@ const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, bo
 
 ```
 
-In the options section, include the `deploymentType` and `salt` arguments to configure deployment type and salt.
+In the options section, include the `deploymentType` and `salt` to configure deployment type and salt.
 
 ```
 await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
