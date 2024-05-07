@@ -13,7 +13,10 @@ export async function deployBeacon(
         constructorArgsParams: any[];
         constructorArgs?: string;
         initializer?: string;
-        deploymentType?: DeploymentType;
+        deploymentTypeImpl?: DeploymentType;
+        deploymentTypeProxy?: DeploymentType;
+        saltImpl?: string;
+        saltProxy?: string;
         noCompile?: boolean;
     },
 ): Promise<{
@@ -33,11 +36,10 @@ export async function deployBeacon(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(
-        wallet,
-        contract,
-        taskArgs.deploymentType ? { deploymentType: taskArgs.deploymentType } : undefined,
-    );
+    const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract, {
+        deploymentType: taskArgs.deploymentTypeImpl,
+        salt: taskArgs.saltImpl,
+    });
     await beacon.deployed();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
@@ -45,11 +47,11 @@ export async function deployBeacon(
         beacon.address,
         contract,
         constructorArguments,
-        taskArgs.initializer
-            ? {
-                  initializer: taskArgs.initializer,
-              }
-            : undefined,
+        {
+            deploymentType: taskArgs.deploymentTypeProxy,
+            salt: taskArgs.saltProxy,
+            initializer: taskArgs.initializer,
+        },
     );
     await proxy.deployed();
 
@@ -66,7 +68,10 @@ export async function deployProxy(
         constructorArgsParams: any[];
         constructorArgs?: string;
         initializer?: string;
-        deploymentType?: DeploymentType;
+        deploymentTypeImpl?: DeploymentType;
+        deploymentTypeProxy?: DeploymentType;
+        saltImpl?: string;
+        saltProxy?: string;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -84,12 +89,13 @@ export async function deployProxy(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
 
-    const opts = {
-        deploymentType: taskArgs.deploymentType,
+    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, {
+        deploymentTypeImpl: taskArgs.deploymentTypeImpl,
+        saltImpl: taskArgs.saltImpl,
+        deploymentTypeProxy: taskArgs.deploymentTypeProxy,
+        saltProxy: taskArgs.saltProxy,
         initializer: taskArgs.initializer,
-    };
-
-    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, opts);
+    });
 
     await proxy.deployed();
 
@@ -102,6 +108,7 @@ export async function upgradeBeacon(
         contractName: string;
         beaconAddress: string;
         deploymentType?: DeploymentType;
+        salt?: string;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -114,11 +121,11 @@ export async function upgradeBeacon(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const opts = {
+    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
-    };
+        salt: taskArgs.salt,
+    });
 
-    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2, opts);
     await beaconUpgrade.deployed();
 
     return beaconUpgrade;
@@ -130,6 +137,7 @@ export async function upgradeProxy(
         contractName: string;
         proxyAddress: string;
         deploymentType?: DeploymentType;
+        salt?: string;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -142,11 +150,10 @@ export async function upgradeProxy(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const opts = {
+    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
-    };
-
-    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, opts);
+        salt: taskArgs.salt,
+    });
 
     await proxyUpgrade.deployed();
 

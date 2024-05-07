@@ -63,11 +63,11 @@ export async function deployProxyImpl(
     return await deployImpl(hre, deployData, contractFactory, opts);
 }
 
-async function deployImpl(
+async function deployImpl<TRequiredSeperateForProxy extends boolean | undefined>(
     hre: HardhatRuntimeEnvironment,
     deployData: DeployData,
     factory: zk.ContractFactory,
-    opts: UpgradeOptions,
+    opts: UpgradeOptions<TRequiredSeperateForProxy>,
 ): Promise<any> {
     const layout = deployData.layout;
 
@@ -84,7 +84,15 @@ async function deployImpl(
                         factory,
                         ...[
                             ...deployData.fullOpts.constructorArgs,
-                            { customData: { factoryDeps: deployData.fullOpts.factoryDeps } },
+                            {
+                                customData: {
+                                    factoryDeps: deployData.fullOpts.factoryDeps,
+                                    salt:
+                                        'salt' in opts
+                                            ? (opts as UpgradeOptions<false>).salt
+                                            : (opts as UpgradeOptions).saltImpl,
+                                },
+                            },
                         ],
                     );
 
