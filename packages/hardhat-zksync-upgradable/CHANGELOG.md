@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.4.0...@matterlabs/hardhat-zksync-upgradable-v0.4.1) (2024-05-07)
+
+
+### Bug Fixes
+
+* extend deploy and upgrade of proxy with deployment type and salt for ethers-v5 ([#1042](https://github.com/matter-labs/hardhat-zksync/issues/1042)) ([b758926](https://github.com/matter-labs/hardhat-zksync/commit/b758926507e8ade096603ed0db2cb99eaefcc0dd))
+
 ## [0.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.3.1...@matterlabs/hardhat-zksync-upgradable-v0.4.0) (2024-04-03)
 
 
