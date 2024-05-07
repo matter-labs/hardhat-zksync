@@ -44,7 +44,7 @@ await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFuncti
 
 The deployProxy method deploys your implementation contract on zkSync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
 
-In the options section, include the following arguments to configure the deployment of the proxy and implementation with different deployment types and salts:
+Additionaly, in the options section optionaly include the folowing arguments to configure the deployment of the proxy and implementation with different deployment types and salts:
  - `deploymentTypeImpl`
  - `saltImpl`
  - `deploymentTypeProxy`
@@ -62,6 +62,7 @@ await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFuncti
 ```
 
 Permissible values for the deployment type include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`.
+If the salt parameters are ommited, the default value will be `0x0000000000000000000000000000000000000000000000000000000000000000`
 
 - **Deploying UUPS proxies**
 
@@ -96,7 +97,7 @@ Use the `deployBeaconProxy` method which receives the zkSync Era wallet, beacon 
 const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42]);
 ```
 
-In the options section, include the `deploymentType` and `salt` arguments to configure deployment type and salt.
+Additionaly, in the options section optionaly include the `deploymentType` and `salt` arguments to configure deployment type and salt.
 
 ```
 const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
@@ -113,6 +114,7 @@ await box.deployed();
 ```
 
 Permissible values for the deployment type include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`.
+If the salt parameters are ommited, the default value will be `0x0000000000000000000000000000000000000000000000000000000000000000`
 
 - **Upgrading proxies**
 
@@ -125,7 +127,7 @@ const myContractV2 = await deployer.loadArtifact('contractV2');
 await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, <PROXY_ADDRESS>, myContractV2);
 ```
 
-In the options section, include the `deploymentType` and `salt` to configure deployment type and salt.
+Optionaly in the other options section include `deploymentType` and `salt` to configure deployment type and salt for deploy of the new implementation.
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
@@ -148,7 +150,7 @@ const myContractV2 = await deployer.loadArtifact('contractV2');
 await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, <BEACON_PROXY_ADDRESS>, myContractV2);
 ```
 
-In the options section, include the `deploymentType` and `salt` to configure deployment type and salt.
+Optionaly in the other options section include `deploymentType` and `salt` to configure deployment type and salt for deploy of the new implementation.
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
@@ -295,6 +297,7 @@ module.exports = [
 - When utilizing the `upgrade-zksync:beacon` or `upgrade-zksync:proxy` tasks, specify the deployment type and salt using the `--deployment-type` and `--salt` arguments respectively.
 
 Permissible values for the deployment type include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`.
+If the salt parameters are ommited, the default value will be `0x0000000000000000000000000000000000000000000000000000000000000000`
 
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
