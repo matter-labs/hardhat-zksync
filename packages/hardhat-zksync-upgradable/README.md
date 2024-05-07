@@ -99,9 +99,7 @@ const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, bo
 
 ```
 
-In the options section, include the following arguments to configure deployment type and salt:
- - `deploymentType`
- - `salt`
+In the options section, include the `deploymentType` and `salt` arguments to configure deployment type and salt.
 
 ```
 await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
@@ -129,9 +127,7 @@ const myContractV2 = await deployer.loadArtifact('contractV2');
 await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, <PROXY_ADDRESS>, myContractV2);
 ```
 
-In the options section, include the following arguments to configure deployment type and salt:
- - `deploymentType`
- - `salt`
+In the options section, include the `deploymentType` and `salt` to configure deployment type and salt.
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
@@ -154,9 +150,7 @@ const myContractV2 = await deployer.loadArtifact('contractV2');
 await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, <BEACON_PROXY_ADDRESS>, myContractV2);
 ```
 
-In the options section, include the following arguments to configure deployment type and salt:
- - `deploymentType`
- - `salt`
+In the options section, include the `deploymentType` and `salt` to configure deployment type and salt.
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
