@@ -74,7 +74,10 @@ task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for zkSync network')
         types.inputFile,
     )
     .addOptionalParam('initializer', 'Initializer function name', undefined)
-    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addOptionalParam('deploymentTypeImpl', 'Type of deployment for implementation', undefined)
+    .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
+    .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
+    .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncBeacon);
 
@@ -92,7 +95,10 @@ task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for zkSync network')
         types.inputFile,
     )
     .addOptionalParam('initializer', 'Initializer function name', undefined)
-    .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addOptionalParam('deploymentTypeImpl', 'Type of deployment for implementation', undefined)
+    .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
+    .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
+    .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncProxy);
 
@@ -100,6 +106,7 @@ task(TASK_UPGRADE_ZKSYNC_BEACON, 'Runs the beacon upgrade for zkSync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('beaconAddress', 'Beacon address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addOptionalParam('salt', 'Salt for deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncBeacon);
 
@@ -107,6 +114,7 @@ task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for zkSync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addOptionalParam('salt', 'Salt for deployment', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncProxy);
 
