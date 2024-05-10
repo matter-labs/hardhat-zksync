@@ -53,7 +53,7 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.5",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
-    "semver": "^6.3.1",
+    "semver": "^7.6.2",
     "@types/chai": "^4.2.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.11.17",
