@@ -15,6 +15,8 @@ import {
     DEFAULT_TIMEOUT_MILISECONDS,
     COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR,
     ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
+    COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN,
+    ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -76,6 +78,15 @@ export function updateCompilerConf(
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
 
+    if (zksolc.version === 'latest' || semver.gte(zksolc.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
+        if (!zksolc.settings.forceEvmla) {
+            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
+        }
+
+        compiler.settings.forceEvmla = zksolc.settings.forceEvmla;
+        compiler.settings.isSystem = zksolc.settings.isSystem;
+    }
+
     // Remove metadata settings from solidity settings.
     delete compiler.settings.metadata;
     // Override the solc metadata settings with zksolc metadata settings.
@@ -93,7 +104,11 @@ export function updateCompilerConf(
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, userConfigCompilers, solcConfigData.file);
 
-    if (compiler.eraVersion && semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)) {
+    if (
+        zksolc.version !== 'latest' &&
+        compiler.eraVersion &&
+        semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)
+    ) {
         throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
     }
 }

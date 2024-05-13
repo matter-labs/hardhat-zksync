@@ -66,8 +66,9 @@ describe('Utils', () => {
                 },
             };
             const zksolc: ZkSolcConfig = {
-                version: '1.3.17',
+                version: 'latest',
                 settings: {
+                    forceEvmla: true,
                     optimizer: {
                         enabled: false,
                         runs: 150,
@@ -79,6 +80,88 @@ describe('Utils', () => {
             updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
+        });
+
+        it('should update compiler configuration with zksolc settings and with forceEvmla', () => {
+            const outputSelection: CompilerOutputSelection = {
+                'file1.sol': {
+                    Contract1: ['abi', 'evm.bytecode'],
+                },
+                'file2.sol': {
+                    Contract2: ['abi', 'evm.bytecode', 'metadata'],
+                },
+            };
+
+            const compiler: SolcConfig = {
+                version: '0.8.17',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200,
+                    },
+                    outputSelection,
+                    metadata: {},
+                },
+            };
+            const zksolc: ZkSolcConfig = {
+                version: 'latest',
+                settings: {
+                    forceEvmla: true,
+                    isSystem: true,
+                    optimizer: {
+                        enabled: false,
+                        runs: 150,
+                    },
+                    metadata: {},
+                },
+            };
+
+            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
+
+            expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
+            expect(compiler.settings.forceEvmla).to.equal(zksolc.settings.forceEvmla);
+            expect(compiler.settings.isSystem).to.deep.equal(zksolc.settings.isSystem);
+        });
+
+        it('should not update compiler configuration with zksolc settings and with forceEvmla for zksolc < 1.5.0', () => {
+            const outputSelection: CompilerOutputSelection = {
+                'file1.sol': {
+                    Contract1: ['abi', 'evm.bytecode'],
+                },
+                'file2.sol': {
+                    Contract2: ['abi', 'evm.bytecode', 'metadata'],
+                },
+            };
+
+            const compiler: SolcConfig = {
+                version: '0.8.17',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200,
+                    },
+                    outputSelection,
+                    metadata: {},
+                },
+            };
+            const zksolc: ZkSolcConfig = {
+                version: '1.4.1',
+                settings: {
+                    forceEvmla: true,
+                    isSystem: true,
+                    optimizer: {
+                        enabled: false,
+                        runs: 150,
+                    },
+                    metadata: {},
+                },
+            };
+
+            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
+
+            expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
+            expect(compiler.settings.forceEvmla).to.equal(undefined);
+            expect(compiler.settings.isSystem).to.deep.equal(undefined);
         });
 
         it('should update compiler configuration with zksolc and with zkvm solc', () => {
