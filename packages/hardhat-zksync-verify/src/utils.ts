@@ -44,12 +44,12 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     return deployArgumentsEncoded;
 }
 
-export function nextAttempt(currentAttempt: number, baseDelay: number, baseNumberOfAttempts: number): number {
+export function nextAttemptDelay(currentAttempt: number, baseDelay: number, baseNumberOfAttempts: number): number {
     if (currentAttempt < baseNumberOfAttempts) {
         return baseDelay;
     }
 
-    return baseDelay * 2 ** currentAttempt;
+    return baseDelay * 2 ** (currentAttempt - baseNumberOfAttempts);
 }
 
 export async function executeVeificationWithRetry(
@@ -72,7 +72,7 @@ export async function executeVeificationWithRetry(
             return;
         }
 
-        const delayInMs = nextAttempt(retries, baseDelayInMs, baseRetries);
+        const delayInMs = nextAttemptDelay(retries, baseDelayInMs, baseRetries);
         await delay(delayInMs);
     }
 }
