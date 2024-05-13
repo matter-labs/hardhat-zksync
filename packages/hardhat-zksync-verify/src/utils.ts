@@ -44,11 +44,20 @@ export async function encodeArguments(abi: any, constructorArgs: any[]) {
     return deployArgumentsEncoded;
 }
 
+export function nextAttempt(currentAttempt: number, baseDelay: number, baseNumberOfAttempts: number): number {
+    if (currentAttempt < baseNumberOfAttempts) {
+        return baseDelay;
+    }
+
+    return baseDelay * 2 ** currentAttempt;
+}
+
 export async function executeVeificationWithRetry(
     requestId: number,
     verifyURL: string,
-    maxRetries = 5,
-    delayInMs = 1500,
+    maxRetries = 10,
+    baseRetries = 5,
+    baseDelayInMs = 2000,
 ): Promise<VerificationStatusResponse | undefined> {
     let retries = 0;
 
@@ -62,6 +71,8 @@ export async function executeVeificationWithRetry(
             console.info(chalk.cyan(PENDING_CONTRACT_INFORMATION_MESSAGE(requestId)));
             return;
         }
+
+        const delayInMs = nextAttempt(retries, baseDelayInMs, baseRetries);
         await delay(delayInMs);
     }
 }
