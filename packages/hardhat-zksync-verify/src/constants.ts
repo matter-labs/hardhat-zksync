@@ -122,4 +122,8 @@ export const COMPILATION_ERRORS = [
         error: 'MissingContract',
         pattern: /^Backend verification error: Contract with .* name is missing in sources$/,
     },
+    {
+        error: 'DeployedBytecodeMismatch',
+        pattern: /^Backend verification error: Deployed bytecode is not equal to generated one from given source$/,
+    },
 ];
