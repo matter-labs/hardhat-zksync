@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [0.6.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v0.6.0...@matterlabs/hardhat-zksync-verify-v0.6.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* get valid minimal context for verification BE request ([#1063](https://github.com/matter-labs/hardhat-zksync/issues/1063)) ([0cf6e79](https://github.com/matter-labs/hardhat-zksync/commit/0cf6e798f337dc9e506bdaa6de11c5d6cce3748b))
+
 ## [0.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v0.5.1...@matterlabs/hardhat-zksync-verify-v0.6.0) (2024-04-03)
 
 
