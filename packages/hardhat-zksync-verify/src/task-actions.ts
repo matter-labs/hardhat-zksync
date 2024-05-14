@@ -1,9 +1,8 @@
-import { DependencyGraph, HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
 import path from 'path';
-import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -33,7 +32,13 @@ import { ZkSyncVerifyPluginError } from './errors';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, getLibraries, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
+import {
+    checkContractName,
+    getLibraries,
+    getMinimalResolvedFiles,
+    getSolidityStandardJsonInput,
+    inferContractArtifacts,
+} from './plugin';
 import {
     SolcMultiUserConfigExtractor,
     SolcSoloUserConfigExtractor,
@@ -203,15 +208,11 @@ export async function verifyContract(
 
     contractInformation.contractName = `${contractInformation.sourceName}:${contractInformation.contractName}`;
 
-    const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-        sourceNames: [contractInformation.sourceName],
-    });
-
     const request = {
         contractAddress: address,
         sourceCode: getSolidityStandardJsonInput(
             hre,
-            dependencyGraph.getResolvedFiles(),
+            await getMinimalResolvedFiles(hre, contractInformation.sourceName),
             contractInformation.compilerInput,
         ),
         codeFormat: JSON_INPUT_CODE_FORMAT,
