@@ -55,7 +55,7 @@ export function nextAttemptDelay(currentAttempt: number, baseDelay: number, base
 export async function executeVeificationWithRetry(
     requestId: number,
     verifyURL: string,
-    maxRetries = 10,
+    maxRetries = 11,
     baseRetries = 5,
     baseDelayInMs = 2000,
 ): Promise<VerificationStatusResponse | undefined> {
