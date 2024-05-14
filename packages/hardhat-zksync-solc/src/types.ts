@@ -33,8 +33,10 @@ export interface ZkSolcConfig {
         };
         // Whether to support compilation of zkSync-specific simulations
         isSystem?: boolean;
-        // Force evmla
-        forceEvmla?: boolean;
+        // Evmla intermediate representation
+        viaEVMAssembly?: boolean;
+        // Yul intermediate representation
+        viaYul?: boolean;
         // specific contracts to be compiled
         contractsToCompile?: string[];
     };

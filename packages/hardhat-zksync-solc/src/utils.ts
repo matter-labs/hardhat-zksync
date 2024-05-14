@@ -17,6 +17,7 @@ import {
     ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
     COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN,
     ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN,
+    COMPILER_ZKSOLC_NEED_EVM_CODEGEN,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -70,21 +71,39 @@ export function updateCompilerConf(
 ) {
     const compiler = solcConfigData.compiler;
     const [major, minor] = getVersionComponents(compiler.version);
-    if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
-        console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
+
+    if (needsMandatoryCodegen(zksolc.version)) {
+        if (!zksolc.settings.viaEVMAssembly && !zksolc.settings.viaYul) {
+            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
+        }
+
+        if (zksolc.settings.viaEVMAssembly && zksolc.settings.viaYul) {
+            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
+        }
     }
+
+    if (zksolc.settings.viaYul && major === 0 && minor < 8) {
+        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
+    }
+
+    if (major === 0 && minor < 8) {
+        if (needsMandatoryCodegen(zksolc.version) && !zksolc.settings.viaEVMAssembly) {
+            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
+        }
+
+        if (needsMandatoryCodegen(zksolc.version) && zksolc.settings.viaEVMAssembly) {
+            console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
+        }
+    }
+
     const settings = compiler.settings || {};
 
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
-
-    if (zksolc.version === 'latest' || semver.gte(zksolc.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
-        if (!zksolc.settings.forceEvmla) {
-            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
-        }
-
-        compiler.settings.forceEvmla = zksolc.settings.forceEvmla;
-        compiler.settings.isSystem = zksolc.settings.isSystem;
+    if (needsMandatoryCodegen(zksolc.version)) {
+        compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly;
+        compiler.settings.viaYul = zksolc.settings.viaYul;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem;
     }
 
     // Remove metadata settings from solidity settings.
@@ -111,6 +130,10 @@ export function updateCompilerConf(
     ) {
         throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
     }
+}
+
+function needsMandatoryCodegen(zksolcVersion: string): boolean {
+    return semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN);
 }
 
 export function zeroxlify(hex: string): string {

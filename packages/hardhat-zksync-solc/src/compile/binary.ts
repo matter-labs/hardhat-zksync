@@ -9,14 +9,19 @@ export async function compileWithBinary(
     solcPath: string,
     detectMissingLibrariesMode: boolean = false,
 ): Promise<any> {
-    const { compilerPath, isSystem, forceEvmla } = config.settings;
+    const { compilerPath } = config.settings;
 
-    let processCommand = `${compilerPath} --standard-json --solc ${solcPath} ${
-        detectMissingLibrariesMode ? '--detect-missing-libraries' : ''
-    }`;
+    let processCommand = `${compilerPath} --standard-json --solc ${solcPath}`;
 
     if (semver.lt(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
-        processCommand += `${isSystem ? ' --system-mode' : ''}  ${forceEvmla ? ' --force-evmla' : ''}`;
+        const { isSystem, viaEVMAssembly, viaYul } = config.settings;
+        processCommand += `${detectMissingLibrariesMode ? ' --detect-missing-libraries' : ''} ${
+            isSystem ? '--system-mode' : ''
+        }  ${viaEVMAssembly ? '--force-evmla' : ''} ${viaYul ? '--via-ir' : ''}`;
+    }
+
+    if (detectMissingLibrariesMode && semver.gte(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
+        input.settings.detectMissingLibraries = detectMissingLibrariesMode;
     }
 
     const output: string = await new Promise((resolve, reject) => {

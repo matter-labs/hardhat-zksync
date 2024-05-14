@@ -16,7 +16,6 @@ export const defaultZkSolcConfig: ZkSolcConfig = {
     version: 'latest',
     compilerSource: 'binary',
     settings: {
-        forceEvmla: true,
         optimizer: {
             enabled: true,
             mode: '3',
@@ -62,7 +61,8 @@ export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string)
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}.`;
 
-export const COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN = `For zksolc versions greater than or equal to ${ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN}, ensure that the forceEvmla flag is set to true.`;
+export const COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN = `For zksolc versions greater than or equal to ${ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN}, ensure that the eather viaYul or viaEVMAssembly flag is set to true inside zksolc settings.`;
+export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `For zksolc versions greater than or equal to ${ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN}, EVM assembly codegen is only supported with the zksolc solidity compiler versions < 0.8. Please disable viaYul flag and set viaEVMAssembly to true in the settings section."`;
 
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
