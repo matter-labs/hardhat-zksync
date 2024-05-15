@@ -20,6 +20,7 @@ export interface ZkSolcConfig {
         // Remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
         metadata?: {
             bytecodeHash?: 'none';
+            useLiteralContent?: boolean;
         };
         // addresses of external libraries
         libraries?: {

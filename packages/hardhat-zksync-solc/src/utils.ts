@@ -70,41 +70,31 @@ export function updateCompilerConf(
     userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
 ) {
     const compiler = solcConfigData.compiler;
-    const [major, minor] = getVersionComponents(compiler.version);
 
-    if (needsMandatoryCodegen(zksolc.version)) {
-        if (!zksolc.settings.viaEVMAssembly && !zksolc.settings.viaYul) {
-            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
-        }
-
-        if (zksolc.settings.viaEVMAssembly && zksolc.settings.viaYul) {
-            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
-        }
-    }
-
-    if (zksolc.settings.viaYul && major === 0 && minor < 8) {
-        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
-    }
-
-    if (major === 0 && minor < 8) {
-        if (needsMandatoryCodegen(zksolc.version) && !zksolc.settings.viaEVMAssembly) {
-            throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
-        }
-
-        if (needsMandatoryCodegen(zksolc.version) && zksolc.settings.viaEVMAssembly) {
-            console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
-        }
+    if (
+        (needsMandatoryCodegen(zksolc.version) && !zksolc.settings.viaEVMAssembly && !zksolc.settings.viaYul) ||
+        (zksolc.settings.viaEVMAssembly && zksolc.settings.viaYul)
+    ) {
+        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
     }
 
     const settings = compiler.settings || {};
 
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
+
     if (needsMandatoryCodegen(zksolc.version)) {
         compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly ?? false;
         compiler.settings.viaYul = zksolc.settings.viaYul ?? false;
         compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem ?? false;
         compiler.settings.detectMissingLibraries = false;
+    }
+
+    const [major, minor] = getVersionComponents(compiler.version);
+    if (zksolc.settings.viaYul && major === 0 && minor < 8) {
+        console.warn(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
+        compiler.settings.viaEVMAssembly = true;
+        compiler.settings.viaYul = false;
     }
 
     // Remove metadata settings from solidity settings.
