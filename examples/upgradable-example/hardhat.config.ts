@@ -10,6 +10,7 @@ const config: HardhatUserConfig = {
         version: 'latest',
         compilerSource: 'binary',
         settings: {
+            viaYul: true,
             optimizer: {
                 enabled: true,
             },

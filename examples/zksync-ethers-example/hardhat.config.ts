@@ -8,6 +8,7 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
+            viaYul: true,
             isSystem: true,
             optimizer: {
                 enabled: true,
