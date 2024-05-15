@@ -20,7 +20,7 @@ export async function compileWithBinary(
         }  ${viaEVMAssembly ? '--force-evmla' : ''}`;
     }
 
-    if (detectMissingLibrariesMode && semver.gte(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
+    if (semver.gte(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
         input.settings.detectMissingLibraries = detectMissingLibrariesMode;
     }
 

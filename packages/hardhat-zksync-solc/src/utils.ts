@@ -104,7 +104,7 @@ export function updateCompilerConf(
         compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly ?? false;
         compiler.settings.viaYul = zksolc.settings.viaYul ?? false;
         compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem ?? false;
-        compiler.settings.detectMissingLibraries = true;
+        compiler.settings.detectMissingLibraries = false;
     }
 
     // Remove metadata settings from solidity settings.
