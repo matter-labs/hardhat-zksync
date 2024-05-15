@@ -35,6 +35,8 @@ jobs:
           pnpm test
         env:
           SOLC_VERSION: ${{ matrix.solc }}
+          VIA_YUL : ${{ matrix.solc == '0.8.16' }}
+          VIA_EVM_ASSEMBLY : ${{ matrix.solc != '0.8.16' }}
           PLATFORM_OS: ${{ matrix.os }}
 
   zkvyper:
