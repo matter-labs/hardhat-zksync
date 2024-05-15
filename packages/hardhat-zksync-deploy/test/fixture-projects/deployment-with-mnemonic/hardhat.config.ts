@@ -6,7 +6,9 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        settings: {},
+        settings: {
+            viaYul: true,
+        },
     },
     defaultNetwork: 'zkSyncNetwork',
     networks: {

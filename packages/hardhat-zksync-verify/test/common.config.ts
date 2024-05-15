@@ -7,6 +7,9 @@ const config: HardhatUserConfig = {
     zksolc: {
         version: '1.2.0',
         compilerSource: 'binary',
+        settings: {
+            viaYul: true,
+        },
     },
     networks: {
         hardhat: {

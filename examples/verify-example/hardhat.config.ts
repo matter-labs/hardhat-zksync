@@ -1,6 +1,7 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-ethers';
+import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-verify/dist/src/type-extensions'
 import '@matterlabs/hardhat-zksync-ethers/dist/type-extensions'
@@ -26,7 +27,7 @@ const config: HardhatUserConfig = {
             ethNetwork: 'ethNetwork',
             zksync: true,
             verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
-            accounts: ["PRIVATE_KEY"]
+            accounts: ["0x9d81dd1aaccd4bd613a641e42728ccfa49aaf5c0eda8ce5faeb159c493894329"]
         },
         customNetwork: {    
             zksync: true,
@@ -36,7 +37,7 @@ const config: HardhatUserConfig = {
             url: `https://sepolia.era.zksync.dev`,
             ethNetwork: 'ethNetwork',
             zksync:true,
-            accounts: ["PRIVATE_KEY"]
+            accounts: ["0x9d81dd1aaccd4bd613a641e42728ccfa49aaf5c0eda8ce5faeb159c493894329"]
         },
         ethNetwork:{
             url:'YOUR_URL_FOR_SEPOLIA'

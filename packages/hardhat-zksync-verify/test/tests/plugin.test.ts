@@ -325,7 +325,7 @@ Instead, this name was received: ${contractFQN}`);
                 config: {
                     zksolc: {
                         settings: {
-                            forceEvmla: true,
+                            viaEVMAssembly: true,
                         },
                     },
                 },
@@ -340,7 +340,7 @@ Instead, this name was received: ${contractFQN}`);
                     zksolc: {
                         settings: {
                             isSystem: true,
-                            forceEvmla: true,
+                            viaEVMAssembly: true,
                         },
                     },
                 },
