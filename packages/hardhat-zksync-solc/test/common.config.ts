@@ -1,3 +1,4 @@
+import * as semver from 'semver';
 import '../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -5,8 +6,8 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
-            viaYul: parseBoolean(process.env.VIA_YUL) || true,
-            viaEVMAssembly: parseBoolean(process.env.VIA_EVM_ASSEMBLY) || false,
+            viaYul: semver.gte(process.env.SOLC_VERSION || '0.8.17', '0.8.0'),
+            viaEVMAssembly: semver.lt(process.env.SOLC_VERSION || '0.8.17', '0.8.0'),
         },
     },
     networks: {
@@ -18,12 +19,5 @@ const config: HardhatUserConfig = {
         version: process.env.SOLC_VERSION || '0.8.17',
     },
 };
-
-function parseBoolean(value: string | undefined): boolean {
-    if (value === undefined) {
-        return false;
-    }
-    return value === 'true';
-}
 
 export default config;
