@@ -44,6 +44,12 @@ zksolc: {
     }
 },
 ```
+
+Usage of zksolc compiler version greater or equal to 1.5.0
+
+- It's necessary to set the viaYul or viaEVMAssembly flag to true at zksolc settings to specify the compiler codegen manually.
+- When viaEVMAssembly is used, compiler expect only zkSync Era Solidity Compiler.
+
 | 🔧 Properties               | 📄 Description                                                                                                       |
 |-----------------------------|----------------------------------------------------------------------------------------------------------------------|
 | version                     | zksolc compiler version.                                                                                             |
