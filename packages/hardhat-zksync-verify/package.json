@@ -43,6 +43,7 @@
     "@ethersproject/address": "5.7.0",
     "cbor": "^8.1.0",
     "debug": "^4.1.1",
+    "semver": "^7.5.1",
     "@openzeppelin/contracts": "^4.9.2",
     "sinon-chai": "^3.7.0",
     "sinon": "^17.0.1"

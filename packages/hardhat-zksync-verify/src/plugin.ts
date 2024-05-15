@@ -3,12 +3,12 @@ import { Artifacts, CompilerInput, HardhatRuntimeEnvironment, ResolvedFile } fro
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
 import chalk from 'chalk';
+import semver from 'semver';
+import { ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 import { executeVeificationWithRetry } from './utils';
-import semver from 'semver';
-import { ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -76,22 +76,25 @@ export function getSolidityStandardJsonInput(
     resolvedFiles: ResolvedFile[],
     input: CompilerInput,
 ): any {
-    let standardInput = {
+    const standardInput = {
         language: input.language,
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }]),
         ),
-        settings: {}
+        settings: {},
     };
 
-    standardInput.settings = hre.config.zksolc.version !== 'latest' 
-    || semver.lt(hre.config.zksolc.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN) ? {
-        ...standardInput.settings,
-        isSystem: hre.config.zksolc.settings.isSystem ?? false,
-        forceEvmla: hre.config.zksolc.settings.viaEVMAssembly ?? false,
-    } : {
-        ...standardInput.settings,
-    }
+    standardInput.settings =
+        hre.config.zksolc.version !== 'latest' ||
+        semver.lt(hre.config.zksolc.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)
+            ? {
+                  ...standardInput.settings,
+                  isSystem: hre.config.zksolc.settings.isSystem ?? false,
+                  forceEvmla: hre.config.zksolc.settings.viaEVMAssembly ?? false,
+              }
+            : {
+                  ...standardInput.settings,
+              };
 
     return standardInput;
 }
