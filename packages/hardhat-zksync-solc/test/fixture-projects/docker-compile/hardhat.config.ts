@@ -5,6 +5,7 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'docker',
         settings: {
+            viaEVMAssembly: true,
             experimental: {
                 dockerImage: 'matterlabs/zksolc',
                 tag: 'latest',

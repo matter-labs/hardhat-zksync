@@ -101,9 +101,10 @@ export function updateCompilerConf(
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
     if (needsMandatoryCodegen(zksolc.version)) {
-        compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly;
-        compiler.settings.viaYul = zksolc.settings.viaYul;
-        compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem;
+        compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly ?? false;
+        compiler.settings.viaYul = zksolc.settings.viaYul ?? false;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem ?? false;
+        compiler.settings.detectMissingLibraries = true;
     }
 
     // Remove metadata settings from solidity settings.
@@ -133,7 +134,7 @@ export function updateCompilerConf(
 }
 
 function needsMandatoryCodegen(zksolcVersion: string): boolean {
-    return semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN);
+    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN);
 }
 
 export function zeroxlify(hex: string): string {

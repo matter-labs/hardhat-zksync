@@ -14,10 +14,10 @@ export async function compileWithBinary(
     let processCommand = `${compilerPath} --standard-json --solc ${solcPath}`;
 
     if (semver.lt(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
-        const { isSystem, viaEVMAssembly, viaYul } = config.settings;
+        const { isSystem, viaEVMAssembly } = config.settings;
         processCommand += `${detectMissingLibrariesMode ? ' --detect-missing-libraries' : ''} ${
             isSystem ? '--system-mode' : ''
-        }  ${viaEVMAssembly ? '--force-evmla' : ''} ${viaYul ? '--via-ir' : ''}`;
+        }  ${viaEVMAssembly ? '--force-evmla' : ''}`;
     }
 
     if (detectMissingLibrariesMode && semver.gte(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
