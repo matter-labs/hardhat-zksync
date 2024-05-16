@@ -1,7 +1,6 @@
 import { exec } from 'child_process';
-import semver from 'semver';
 import { ZkSolcConfig } from '../types';
-import { ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN } from '../constants';
+import { needsMandatoryCodegen } from '../utils';
 
 export async function compileWithBinary(
     input: any,
@@ -9,18 +8,20 @@ export async function compileWithBinary(
     solcPath: string,
     detectMissingLibrariesMode: boolean = false,
 ): Promise<any> {
-    const { compilerPath } = config.settings;
+    const { compilerPath, debugOutputDir } = config.settings;
 
-    let processCommand = `${compilerPath} --standard-json --solc ${solcPath}`;
+    let processCommand = `${compilerPath} --standard-json --solc ${solcPath} ${
+        debugOutputDir ? `--debug-output-dir ${debugOutputDir}` : ''
+    }`;
 
-    if (semver.lt(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
-        const { isSystem, viaEVMAssembly } = config.settings;
+    if (!needsMandatoryCodegen(config.version)) {
+        const { enableEraVMExtensions, viaEVMAssembly } = config.settings;
         processCommand += `${detectMissingLibrariesMode ? ' --detect-missing-libraries' : ''} ${
-            isSystem ? '--system-mode' : ''
+            enableEraVMExtensions ? '--system-mode' : ''
         }  ${viaEVMAssembly ? '--force-evmla' : ''}`;
     }
 
-    if (semver.gte(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN)) {
+    if (needsMandatoryCodegen(config.version)) {
         input.settings.detectMissingLibraries = detectMissingLibrariesMode;
     }
 

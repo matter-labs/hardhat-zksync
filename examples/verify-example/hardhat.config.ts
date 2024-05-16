@@ -14,7 +14,7 @@ const config: HardhatUserConfig = {
         version: 'latest',
         settings: {
             viaYul: true,
-            isSystem: true,
+            enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,
             },

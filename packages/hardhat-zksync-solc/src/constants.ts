@@ -42,6 +42,8 @@ export const ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN = '1.5.0';
 
 export const ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER = '1.3.22';
 
+export const ZKVM_SOLC_DEFAULT_COMPILER_VERSION = '1.0.0';
+
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file.';
@@ -64,6 +66,8 @@ export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) c
 export const COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN = `For zksolc versions greater than or equal to ${ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN}, ensure that the eather viaYul or viaEVMAssembly flag is set to true inside zksolc settings.`;
 export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag viaEVMAssembly will automatically be set to true by default, overriding viaYul for this compiler.`;
 
+export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (version: string) =>
+    `EVM assembly codegen is only supported with the zkSync edition of solc (zkSync Era Solidity Compiler). Defaulting to version ${ZKVM_SOLC_DEFAULT_COMPILER_VERSION} for solidity version ${version}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =

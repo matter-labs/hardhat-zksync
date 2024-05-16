@@ -29,7 +29,7 @@ zksolc: {
       compilerPath: "zksolc",  // optional. Ignored for compilerSource "docker". Can be used if compiler is located in a specific folder
       libraries:{}, // optional. References to non-inlinable libraries
       missingLibrariesPath: "./.zksolc-libraries-cache/missingLibraryDependencies.json" // optional. This path serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. A `hardhat-zksync-deploy` plugin uses this cache later to compile and deploy the libraries, especially when the `deploy-zksync:libraries` task is executed
-      isSystem: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries
+      enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries
       viaYul: false, // optional. Compile with YUL codegen
       viaEVMAssembly: false, // Compile with EVM legacy assembly codegen
       optimizer: {
@@ -57,7 +57,7 @@ Usage of zksolc compiler version greater or equal to 1.5.0
 | compilerPath                | (optional) field with the path to the zksolc binary. By default, the binary in $PATH is used                         |
 | libraries                   | If your contract uses non-inlinable libraries as dependencies, they have to be defined here.                         |
 | missingLibrariesPath        | (optional) serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. |
-| isSystem                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries          |
+| enableEraVMExtensions                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries          |
 | viaEVMAssembly                  | Compile with EVM legacy assembly codegen.                         |
 | viaYul                  | Compile with Yul IR codegen.                 |
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |

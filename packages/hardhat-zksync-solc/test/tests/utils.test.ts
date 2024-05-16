@@ -108,7 +108,7 @@ describe('Utils', () => {
                 version: 'latest',
                 settings: {
                     viaEVMAssembly: true,
-                    isSystem: true,
+                    enableEraVMExtensions: true,
                     optimizer: {
                         enabled: false,
                         runs: 150,
@@ -121,7 +121,7 @@ describe('Utils', () => {
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
             expect(compiler.settings.viaEVMAssembly).to.equal(zksolc.settings.viaEVMAssembly);
-            expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.isSystem);
+            expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.enableEraVMExtensions);
         });
 
         it('should not update compiler configuration with zksolc settings and with forceEvmla for zksolc < 1.5.0', () => {
@@ -149,7 +149,7 @@ describe('Utils', () => {
                 version: '1.4.1',
                 settings: {
                     viaEVMAssembly: true,
-                    isSystem: true,
+                    enableEraVMExtensions: true,
                     optimizer: {
                         enabled: false,
                         runs: 150,

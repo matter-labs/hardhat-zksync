@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { SolcConfig, SolcUserConfig } from 'hardhat/types';
 import { CompilerSolcUserConfigUpdater } from '../../src/config-update';
+import { ZkSolcConfig } from '../../src/types';
 
 describe('CompilerSolcUserConfigUpdater', () => {
     describe('suituble', () => {
@@ -57,8 +58,9 @@ describe('CompilerSolcUserConfigUpdater', () => {
             };
             const userConfigCompilers = [{ version: '0.8.17', eraVersion: '0.0.1' }, { version: '0.7.0' }];
             const file = undefined;
+            const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
 
-            updater.update(compiler, userConfigCompilers, file);
+            updater.update(compiler, zksolc, userConfigCompilers, file);
 
             expect(compiler.eraVersion).to.equal('0.0.1');
         });
@@ -68,9 +70,9 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const compiler: SolcConfig = { version: '0.8.17', settings: {} };
             const userConfigCompilers = [{ version: '0.8.17', eraVersion: '0.0.1' }, { version: '0.8.17' }];
             const file = undefined;
-
+            const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
             try {
-                updater.update(compiler, userConfigCompilers, file);
+                updater.update(compiler, zksolc, userConfigCompilers, file);
                 expect.fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.equal(
@@ -84,10 +86,23 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const compiler: SolcConfig = { version: '0.8.17', settings: {} };
             const userConfigCompilers = [{ version: '0.7.0' }, { version: '0.6.0' }];
             const file = undefined;
+            const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
 
-            updater.update(compiler, userConfigCompilers, file);
+            updater.update(compiler, zksolc, userConfigCompilers, file);
 
             expect(compiler.eraVersion).to.be.equal(undefined);
+        });
+
+        it('should update the compiler eraVersion if zksolc version is < 1.5.0 and evmla codegen is in the use', () => {
+            const updater = new CompilerSolcUserConfigUpdater();
+            const compiler: SolcConfig = { version: '0.8.17', settings: { viaEVMAssembly: true } };
+            const userConfigCompilers = [{ version: '0.8.17' }, { version: '0.6.0' }];
+            const file = undefined;
+            const zksolc: ZkSolcConfig = { version: 'latest', settings: { viaYul: true } };
+
+            updater.update(compiler, zksolc, userConfigCompilers, file);
+
+            expect(compiler.eraVersion).to.be.equal('1.0.0');
         });
     });
 });

@@ -8,7 +8,7 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
-            isSystem: true,
+            enableEraVMExtensions: true,
             viaYul: true,
             optimizer: {
                 enabled: true,

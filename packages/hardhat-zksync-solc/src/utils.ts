@@ -86,7 +86,7 @@ export function updateCompilerConf(
     if (needsMandatoryCodegen(zksolc.version)) {
         compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly ?? false;
         compiler.settings.viaYul = zksolc.settings.viaYul ?? false;
-        compiler.settings.enableEraVMExtensions = zksolc.settings.isSystem ?? false;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions ?? false;
         compiler.settings.detectMissingLibraries = false;
     }
 
@@ -112,7 +112,7 @@ export function updateCompilerConf(
 
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
-        ?.update(compiler, userConfigCompilers, solcConfigData.file);
+        ?.update(compiler, zksolc, userConfigCompilers, solcConfigData.file);
 
     if (
         zksolc.version !== 'latest' &&
@@ -123,7 +123,7 @@ export function updateCompilerConf(
     }
 }
 
-function needsMandatoryCodegen(zksolcVersion: string): boolean {
+export function needsMandatoryCodegen(zksolcVersion: string): boolean {
     return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN);
 }
 
