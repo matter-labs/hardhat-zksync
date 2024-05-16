@@ -332,7 +332,7 @@ Instead, this name was received: ${contractFQN}`);
             };
 
             const solidityStandardJsonInput3 = getSolidityStandardJsonInput(hre2 as any, resolvedFiles, input);
-            expect(solidityStandardJsonInput3.settings.enableEraVMExtensions).to.equal(false);
+            expect(solidityStandardJsonInput3.settings.isSystem).to.equal(false);
             expect(solidityStandardJsonInput3.settings.forceEvmla).to.equal(true);
 
             const hre3 = {
