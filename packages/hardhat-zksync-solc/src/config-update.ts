@@ -1,4 +1,5 @@
 import { SolcConfig, SolcUserConfig } from 'hardhat/types';
+import chalk from 'chalk';
 import {
     COMPILERS_CONFLICT_ZKVM_SOLC,
     ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION,
@@ -43,7 +44,7 @@ export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpda
             !_compiler.eraVersion &&
             needsMandatoryCodegen(_zksolc.version)
         ) {
-            console.warn(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version));
+            console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
             _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
         }
     }
@@ -81,7 +82,7 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
             !_compiler.eraVersion &&
             needsMandatoryCodegen(_zksolc.version)
         ) {
-            console.warn(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version));
+            console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
             _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
         }
     }

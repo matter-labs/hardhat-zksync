@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
+import chalk from 'chalk';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import {
@@ -92,7 +93,7 @@ export function updateCompilerConf(
 
     const [major, minor] = getVersionComponents(compiler.version);
     if (zksolc.settings.viaYul && major === 0 && minor < 8) {
-        console.warn(COMPILER_ZKSOLC_NEED_EVM_CODEGEN);
+        console.warn(chalk.blue(COMPILER_ZKSOLC_NEED_EVM_CODEGEN));
         compiler.settings.viaEVMAssembly = true;
         compiler.settings.viaYul = false;
     }

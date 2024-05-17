@@ -29,9 +29,9 @@ zksolc: {
       compilerPath: "zksolc",  // optional. Ignored for compilerSource "docker". Can be used if compiler is located in a specific folder
       libraries:{}, // optional. References to non-inlinable libraries
       missingLibrariesPath: "./.zksolc-libraries-cache/missingLibraryDependencies.json" // optional. This path serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. A `hardhat-zksync-deploy` plugin uses this cache later to compile and deploy the libraries, especially when the `deploy-zksync:libraries` task is executed
-      enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries
+      enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
       viaYul: false, // optional. Compile with YUL codegen
-      viaEVMAssembly: false, // Compile with EVM legacy assembly codegen
+      viaEVMAssembly: false, // Compile with EVM legacy assembly codegen. If the zksolc version is below 1.5.0, this argument will act as a 'forceEvmla' flag in the older versions of the plugin, attempting to fallback to EVM legacy assembly if there is a bug with Yul
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
@@ -47,8 +47,8 @@ zksolc: {
 
 Usage of zksolc compiler version greater or equal to 1.5.0
 
-- It's necessary to set the viaYul or viaEVMAssembly flag to true at zksolc settings to specify the compiler codegen manually.
-- When viaEVMAssembly is used, compiler expect only zkSync Era Solidity Compiler.
+- It is mandatory to specify the compiler codegen manually. This can be done by setting either the viaYul or viaEVMAssembly flag to true in the zksolc settings. Only one of these flags can be set to true at a time, ensuring that the code generation process is clearly defined.
+- When viaEVMAssembly is used, there are several codegen inconsistencies that can lead to miscompilation. To prevent these issues, users are forced to use the zkSync edition of the solc compiler (zkSync Era Solidity Compiler) instead of the standard solc compiler.
 
 | 🔧 Properties               | 📄 Description                                                                                                       |
 |-----------------------------|----------------------------------------------------------------------------------------------------------------------|
@@ -57,8 +57,8 @@ Usage of zksolc compiler version greater or equal to 1.5.0
 | compilerPath                | (optional) field with the path to the zksolc binary. By default, the binary in $PATH is used                         |
 | libraries                   | If your contract uses non-inlinable libraries as dependencies, they have to be defined here.                         |
 | missingLibrariesPath        | (optional) serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. |
-| enableEraVMExtensions                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries          |
-| viaEVMAssembly                  | Compile with EVM legacy assembly codegen.                         |
+| enableEraVMExtensions                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag          |
+| viaEVMAssembly                  | Compile with EVM legacy assembly codegen. If the zksolc version is below 1.5.0, this argument will act as a 'forceEvmla' flag in the older versions of the plugin, attempting to fallback to EVM legacy assembly if there is a bug with Yul.                        |
 | viaYul                  | Compile with Yul IR codegen.                 |
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |
 | metadata                    | Metadata settings. If the option is omitted, the metadata hash appends by default: bytecodeHash. Can only be none.   |
