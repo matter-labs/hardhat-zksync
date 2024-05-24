@@ -17,7 +17,12 @@ export type StandaloneOptions<TRequiredSeperateForProxy extends boolean | undefi
             useDeployedImplementation?: boolean;
             provider?: any;
             factoryDeps?: string[];
-        } & DeploymentTypesOptions<TRequiredSeperateForProxy>;
+        } & DeploymentTypesOptions<TRequiredSeperateForProxy> &
+        InitialOwnerType;
+
+export interface InitialOwnerType {
+    initialOwner?: string;
+}
 
 export type DeploymentTypesOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
     TRequiredSeperateForProxy extends true | undefined
@@ -56,7 +61,6 @@ interface Initializer {
 export type DeployBeaconProxyOptions = ProxyKindOption & Initializer & DeploymentTypesOptions<false>;
 export type DeployBeaconOptions = StandaloneOptions<false>;
 export type DeployImplementationOptions = StandaloneOptions;
-export type DeployProxyAdminOptions = DeployOpts;
 export type DeployProxyOptions = StandaloneOptions & Initializer;
 export type UpgradeBeaconOptions = UpgradeOptions<false>;
 export type UpgradeProxyOptions = UpgradeOptions<false> & {

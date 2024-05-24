@@ -2,14 +2,13 @@ import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 
 import * as zk from 'zksync-ethers';
 
-import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
 import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
 import { DeployBeaconFunction } from './proxy-deployment/deploy-beacon';
 import { DeployBeaconProxyFunction } from './proxy-deployment/deploy-beacon-proxy';
 import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
 import { DeployFunction } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
-import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
+import { ChangeAdminFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
 import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
 
@@ -25,9 +24,7 @@ export interface HardhatUpgrades {
     deployBeacon: DeployBeaconFunction;
     deployBeaconProxy: DeployBeaconProxyFunction;
     upgradeBeacon: UpgradeBeaconFunction;
-    deployProxyAdmin: DeployAdminFunction;
     admin: {
-        getInstance: GetInstanceFunction;
         changeProxyAdmin: ChangeAdminFunction;
         transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
     };
