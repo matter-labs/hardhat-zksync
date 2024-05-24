@@ -1387,9 +1387,6 @@ importers:
       '@nomicfoundation/hardhat-verify':
         specifier: ^2.0.0
         version: 2.0.4(hardhat@2.20.0)
-      '@openzeppelin/contracts':
-        specifier: ^5.0.2
-        version: 5.0.2
       axios:
         specifier: ^1.6.2
         version: 1.6.7(debug@4.3.4)
