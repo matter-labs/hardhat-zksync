@@ -27,8 +27,8 @@ export type EstimateGasFunction = (
     quiet?: boolean,
 ) => Promise<bigint>;
 
-async function deployProxyAdminLocally(adminFactory: zk.ContractFactory, initialOwner: string) {
-    const mockContract = await deploy(adminFactory, initialOwner);
+async function deployProxyAdminLocally(adminFactory: zk.ContractFactory, ...args: any[]) {
+    const mockContract = await deploy(adminFactory, ...args);
     return mockContract.address;
 }
 

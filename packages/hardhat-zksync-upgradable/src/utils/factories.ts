@@ -4,6 +4,7 @@ import path from 'path';
 
 import { Contract, ContractFactory, Wallet } from 'zksync-ethers';
 import assert from 'assert';
+import { DeploymentType } from 'zksync-ethers/src/types';
 import {
     BEACON_PROXY_JSON,
     ERC1967_PROXY_JSON,
@@ -20,10 +21,11 @@ export async function getProxyArtifact(hre: HardhatRuntimeEnvironment): Promise<
 
 export async function getProxyFactory(
     hre: HardhatRuntimeEnvironment,
-    wallet?: Wallet,
+    wallet: Wallet,
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<any[], Contract>> {
     const proxyContract = await getProxyArtifact(hre);
-    return new ContractFactory<any[], Contract>(proxyContract.abi, proxyContract.bytecode, wallet);
+    return new ContractFactory<any[], Contract>(proxyContract.abi, proxyContract.bytecode, wallet, deploymentType);
 }
 
 export async function getTransparentUpgradeableProxyArtifact(hre: HardhatRuntimeEnvironment): Promise<ZkSyncArtifact> {
@@ -36,13 +38,15 @@ export async function getTransparentUpgradeableProxyArtifact(hre: HardhatRuntime
 
 export async function getTransparentUpgradeableProxyFactory(
     hre: HardhatRuntimeEnvironment,
-    wallet?: Wallet,
+    wallet: Wallet,
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<any[], Contract>> {
     const transparentUpgradeableProxy = await getTransparentUpgradeableProxyArtifact(hre);
     return new ContractFactory<any[], Contract>(
         transparentUpgradeableProxy.abi,
         transparentUpgradeableProxy.bytecode,
         wallet,
+        deploymentType,
     );
 }
 
@@ -56,10 +60,16 @@ export async function getBeaconProxyArtifact(hre: HardhatRuntimeEnvironment): Pr
 
 export async function getBeaconProxyFactory(
     hre: HardhatRuntimeEnvironment,
-    wallet?: Wallet,
+    wallet: Wallet,
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<any[], Contract>> {
     const beaconProxyArtifact = await getBeaconProxyArtifact(hre);
-    return new ContractFactory<any[], Contract>(beaconProxyArtifact.abi, beaconProxyArtifact.bytecode, wallet);
+    return new ContractFactory<any[], Contract>(
+        beaconProxyArtifact.abi,
+        beaconProxyArtifact.bytecode,
+        wallet,
+        deploymentType,
+    );
 }
 
 export async function getUpgradableBeaconArtifact(hre: HardhatRuntimeEnvironment): Promise<ZkSyncArtifact> {
@@ -72,13 +82,15 @@ export async function getUpgradableBeaconArtifact(hre: HardhatRuntimeEnvironment
 
 export async function getUpgradeableBeaconFactory(
     hre: HardhatRuntimeEnvironment,
-    wallet?: Wallet,
+    wallet: Wallet,
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<any[], Contract>> {
     const upgradeableBeaconContract = await getUpgradableBeaconArtifact(hre);
     return new ContractFactory<any[], Contract>(
         upgradeableBeaconContract.abi,
         upgradeableBeaconContract.bytecode,
         wallet,
+        deploymentType,
     );
 }
 
@@ -93,7 +105,13 @@ export async function getProxyAdminArtifact(hre: HardhatRuntimeEnvironment): Pro
 export async function getProxyAdminFactory(
     hre: HardhatRuntimeEnvironment,
     wallet: Wallet,
+    deploymentType?: DeploymentType,
 ): Promise<ContractFactory<any[], Contract>> {
     const proxyAdminContract = await getProxyAdminArtifact(hre);
-    return new ContractFactory<any[], Contract>(proxyAdminContract.abi, proxyAdminContract.bytecode, wallet);
+    return new ContractFactory<any[], Contract>(
+        proxyAdminContract.abi,
+        proxyAdminContract.bytecode,
+        wallet,
+        deploymentType,
+    );
 }

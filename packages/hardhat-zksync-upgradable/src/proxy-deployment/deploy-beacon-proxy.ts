@@ -82,7 +82,7 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
             }
         }
 
-        const beaconProxyFactory = await getBeaconProxyFactory(hre, wallet);
+        const beaconProxyFactory = await getBeaconProxyFactory(hre, wallet, opts.deploymentType);
 
         const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
             kind: opts.kind,

@@ -9,7 +9,11 @@ import { extractFactoryDeps, getInitializerData } from '../utils/utils-general';
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
-import { getProxyFactory, getTransparentUpgradeableProxyFactory } from '../utils/factories';
+import {
+    getProxyFactory,
+    getTransparentUpgradeableProxyArtifact,
+    getTransparentUpgradeableProxyFactory,
+} from '../utils/factories';
 import { deployProxyImpl } from './deploy-impl';
 import { DeployTransaction, deploy } from './deploy';
 
@@ -52,12 +56,6 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
         const data = getInitializerData(factory.interface, args, opts.initializer);
 
-        const customDataProxy = {
-            customData: {
-                salt: opts.saltProxy,
-            },
-        };
-
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
                 if (!quiet) {
@@ -77,8 +75,13 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             case 'uups': {
-                const proxyFactory = await getProxyFactory(hre, wallet);
-                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data, customDataProxy)) };
+                const customDataProxyUups = {
+                    customData: {
+                        salt: opts.saltProxy,
+                    },
+                };
+                const proxyFactory = await getProxyFactory(hre, wallet, opts.deploymentTypeProxy);
+                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data, customDataProxyUups)) };
 
                 if (!quiet) {
                     console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
@@ -87,10 +90,19 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             case 'transparent': {
+                const TUPFactory = await getTransparentUpgradeableProxyFactory(hre, wallet, opts.deploymentTypeProxy);
+                const TUPArtifact = await getTransparentUpgradeableProxyArtifact(hre);
+
                 const initialOwner = opts.initialOwner ?? wallet.address;
 
-                const TUPFactory = await getTransparentUpgradeableProxyFactory(hre, wallet);
-                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, initialOwner, data, customDataProxy)) };
+                const customDataProxyTup = {
+                    customData: {
+                        salt: opts.saltProxy,
+                        factoryDeps: await extractFactoryDeps(hre, TUPArtifact),
+                    },
+                };
+
+                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, initialOwner, data, customDataProxyTup)) };
 
                 if (!quiet) {
                     console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
