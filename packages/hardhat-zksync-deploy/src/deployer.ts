@@ -19,15 +19,11 @@ import { AbstractDeployer } from './abstract-deployer';
 export class Deployer implements AbstractDeployer {
     public ethWallet: ethers.Wallet;
     public zkWallet: zk.Wallet;
-    public deploymentType?: zk.types.DeploymentType;
 
     constructor(
         private _hre: HardhatRuntimeEnvironment,
         zkWallet: zk.Wallet,
-        deploymentType?: zk.types.DeploymentType,
     ) {
-        this.deploymentType = deploymentType;
-
         // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider }: Providers = createProviders(_hre.config.networks, _hre.network);
 
@@ -36,20 +32,20 @@ export class Deployer implements AbstractDeployer {
         this.ethWallet = this.zkWallet.ethWallet();
     }
 
-    public static fromEthWallet(
-        hre: HardhatRuntimeEnvironment,
-        ethWallet: ethers.Wallet,
-        deploymentType?: zk.types.DeploymentType,
-    ) {
-        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey), deploymentType);
+    public static fromEthWallet(hre: HardhatRuntimeEnvironment, ethWallet: ethers.Wallet) {
+        return new Deployer(hre, new zk.Wallet(ethWallet.privateKey));
     }
 
     public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
         return await estimateDeployFee(this._hre, artifact, constructorArguments, this.zkWallet);
     }
 
-    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
-        return await estimateDeployGas(this._hre, artifact, constructorArguments, this.zkWallet, this.deploymentType);
+    public async estimateDeployGas(
+        artifact: ZkSyncArtifact,
+        constructorArguments: any[],
+        deploymentType?: zk.types.DeploymentType,
+    ): Promise<bigint> {
+        return await estimateDeployGas(this._hre, artifact, constructorArguments, this.zkWallet, deploymentType);
     }
 
     public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact> {
@@ -59,6 +55,7 @@ export class Deployer implements AbstractDeployer {
     public async deploy(
         contractNameOrArtifact: ZkSyncArtifact | string,
         constructorArguments: any[] = [],
+        deploymentType?: zk.types.DeploymentType,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
@@ -67,7 +64,7 @@ export class Deployer implements AbstractDeployer {
             contractNameOrArtifact,
             constructorArguments,
             this.zkWallet,
-            this.deploymentType,
+            deploymentType,
             overrides,
             additionalFactoryDeps,
         );

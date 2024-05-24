@@ -189,6 +189,7 @@ export async function deployContract(
         constructorArgsParams: any[];
         constructorArgs?: string;
         deploymentType?: DeploymentType;
+        salt?: string;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -201,8 +202,16 @@ export async function deployContract(
         taskArgs.constructorArgs,
     );
 
-    hre.deployer.setDeploymentType(taskArgs.deploymentType ?? 'create');
-    const contract: Contract = await hre.deployer.deploy(taskArgs.contractName, constructorArguments);
+    const contract: Contract = await hre.deployer.deploy(
+        taskArgs.contractName,
+        constructorArguments,
+        taskArgs.deploymentType,
+        {
+            customData: {
+                salt: taskArgs.salt,
+            },
+        },
+    );
     console.log(chalk.green(`Contract ${taskArgs.contractName} deployed at ${await contract.getAddress()}`));
     return contract;
 }

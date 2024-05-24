@@ -20,14 +20,7 @@ export class DeployerExtension implements AbstractDeployer {
     private zkWeb3Provider?: zk.Provider;
     private wallet?: zk.Wallet;
 
-    constructor(
-        private _hre: HardhatRuntimeEnvironment,
-        private _deploymentType?: zk.types.DeploymentType,
-    ) {}
-
-    public setDeploymentType(deploymentType: zk.types.DeploymentType) {
-        this._deploymentType = deploymentType;
-    }
+    constructor(private _hre: HardhatRuntimeEnvironment) {}
 
     public async loadArtifact(contractNameOrFullyQualifiedName: string): Promise<ZkSyncArtifact> {
         return await loadArtifact(this._hre, contractNameOrFullyQualifiedName);
@@ -36,6 +29,7 @@ export class DeployerExtension implements AbstractDeployer {
     public async deploy(
         contractNameOrArtifact: ZkSyncArtifact | string,
         constructorArguments: any[] = [],
+        deploymentType?: zk.types.DeploymentType,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
@@ -48,7 +42,7 @@ export class DeployerExtension implements AbstractDeployer {
             contractNameOrArtifact,
             constructorArguments,
             this.wallet,
-            this._deploymentType,
+            deploymentType,
             overrides,
             additionalFactoryDeps,
         );
@@ -62,12 +56,16 @@ export class DeployerExtension implements AbstractDeployer {
         return await estimateDeployFee(this._hre, artifact, constructorArguments, this.wallet);
     }
 
-    public async estimateDeployGas(artifact: ZkSyncArtifact, constructorArguments: any[]): Promise<bigint> {
+    public async estimateDeployGas(
+        artifact: ZkSyncArtifact,
+        constructorArguments: any[],
+        deploymentType?: zk.types.DeploymentType,
+    ): Promise<bigint> {
         if (!this.wallet) {
             this.wallet = await this.getWallet();
         }
 
-        return await estimateDeployGas(this._hre, artifact, constructorArguments, this.wallet, this._deploymentType);
+        return await estimateDeployGas(this._hre, artifact, constructorArguments, this.wallet, deploymentType);
     }
 
     public setWallet(wallet: zk.Wallet): void {
