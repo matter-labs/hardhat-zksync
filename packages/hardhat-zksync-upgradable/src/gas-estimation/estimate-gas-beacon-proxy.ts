@@ -1,14 +1,12 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
-import assert from 'assert';
-import path from 'path';
 import { BigNumber } from 'ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { convertGasPriceToEth } from '../utils/utils-general';
-import { BEACON_PROXY_JSON } from '../constants';
 
+import { getBeaconProxyArtifact } from '../utils/factories';
 import { getMockedBeaconData } from './estimate-gas-beacon';
 
 export type EstimateBeaconGasFunction = (
@@ -27,11 +25,7 @@ export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): Esti
     ) {
         const { mockedBeaconAddress, data } = await getMockedBeaconData(deployer, hre, args, opts);
 
-        const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
-            artifactPath.includes(path.sep + BEACON_PROXY_JSON),
-        );
-        assert(beaconProxyPath, 'Beacon proxy artifact not found');
-        const beaconProxyContract = await import(beaconProxyPath);
+        const beaconProxyContract = await getBeaconProxyArtifact(hre);
 
         try {
             const beaconProxyGasCost = await deployer.estimateDeployFee(beaconProxyContract, [

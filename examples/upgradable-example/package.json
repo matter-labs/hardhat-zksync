@@ -33,7 +33,7 @@
     "@matterlabs/hardhat-zksync-deploy": "link:../../packages/hardhat-zksync-deploy",
     "@matterlabs/hardhat-zksync-solc": "^1.1.4",
     "@matterlabs/hardhat-zksync-upgradable": "link:../../packages/hardhat-zksync-upgradable",
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "zksync": "^0.13.1",
     "zksync-ethers":"^5.0.0",
     "chalk": "4.1.2",

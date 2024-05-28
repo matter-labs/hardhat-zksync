@@ -2,18 +2,21 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
-import assert from 'assert';
-import path from 'path';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general';
-import { UPGRADABLE_BEACON_JSON, defaultImplAddresses } from '../constants';
+import { defaultImplAddresses } from '../constants';
 
-import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-proxy-admin';
 import { getChainId } from '../core/provider';
 import { deploy } from '../proxy-deployment/deploy';
+import {
+    getProxyAdminArtifact,
+    getProxyAdminFactory,
+    getUpgradableBeaconArtifact,
+    getUpgradeableBeaconFactory,
+} from '../utils/factories';
 
 export type EstimateGasFunction = (
     deployer: Deployer,
@@ -23,24 +26,20 @@ export type EstimateGasFunction = (
     quiet?: boolean,
 ) => Promise<ethers.BigNumber>;
 
-async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
-    const mockContract = await deploy(adminFactory);
+async function deployProxyAdminLocally(adminFactory: zk.ContractFactory, ...args: any[]) {
+    const mockContract = await deploy(adminFactory, ...args);
     return mockContract.address;
 }
 
-async function deployBeaconLocally(impl: string, hre: HardhatRuntimeEnvironment, wallet: zk.Wallet) {
-    const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-        x.includes(path.sep + UPGRADABLE_BEACON_JSON),
-    );
-    assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
-    const upgradeableBeaconContract = await import(upgradableBeaconPath);
+async function deployBeaconLocally(
+    impl: string,
+    initialOwner: string,
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+) {
+    const upgradeableBeaconFactory = await getUpgradeableBeaconFactory(hre, wallet);
 
-    const upgradeableBeaconFactory = new zk.ContractFactory(
-        upgradeableBeaconContract.abi,
-        upgradeableBeaconContract.bytecode,
-        wallet,
-    );
-    return await deploy(upgradeableBeaconFactory, impl);
+    return await deploy(upgradeableBeaconFactory, impl, initialOwner);
 }
 
 export async function getMockedBeaconData(
@@ -59,14 +58,17 @@ export async function getMockedBeaconData(
     let mockImplAddress: string;
     let data: string;
 
+    const initialOwner = opts.initialOwner ?? deployer.zkWallet.address;
+
     if (chainId === 270) {
-        const adminFactory = await getAdminFactory(hre, deployer.zkWallet);
-        mockImplAddress = await deployProxyAdminLocally(adminFactory);
-        mockedBeaconAddress = (await deployBeaconLocally(mockImplAddress, hre, deployer.zkWallet)).address;
+        const adminFactory = await getProxyAdminFactory(hre, deployer.zkWallet);
+        mockImplAddress = await deployProxyAdminLocally(adminFactory, initialOwner);
+        mockedBeaconAddress = (await deployBeaconLocally(mockImplAddress, initialOwner, hre, deployer.zkWallet))
+            .address;
         data = getInitializerData(adminFactory.interface, args, opts.initializer);
     } else {
         mockedBeaconAddress = defaultImplAddresses[chainId].beacon;
-        const mockArtifact = await getAdminArtifact(hre);
+        const mockArtifact = await getProxyAdminArtifact(hre);
         data = getInitializerData(ethers.Contract.getInterface(mockArtifact.abi), args, opts.initializer);
     }
 
@@ -96,14 +98,13 @@ export function makeEstimateGasBeacon(hre: HardhatRuntimeEnvironment): EstimateG
             );
         }
 
-        const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-            x.includes(path.sep + UPGRADABLE_BEACON_JSON),
-        );
-        assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
-        const upgradeableBeaconContract = await import(upgradableBeaconPath);
+        const upgradeableBeaconContract = await getUpgradableBeaconArtifact(hre);
 
         try {
-            beaconGasCost = await deployer.estimateDeployFee(upgradeableBeaconContract, [mockedBeaconAddress]);
+            beaconGasCost = await deployer.estimateDeployFee(upgradeableBeaconContract, [
+                mockedBeaconAddress,
+                opts.initialOwner ?? deployer.zkWallet.address,
+            ]);
             if (!quiet) {
                 console.info(
                     chalk.cyan(

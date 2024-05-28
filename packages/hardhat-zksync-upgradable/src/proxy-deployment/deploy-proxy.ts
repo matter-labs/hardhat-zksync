@@ -1,17 +1,21 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
-import path from 'path';
+
 import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
-import assert from 'assert';
 import { extractFactoryDeps, getInitializerData } from '../utils/utils-general';
-import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
+
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import {
+    getProxyFactory,
+    getTransparentUpgradeableProxyArtifact,
+    getTransparentUpgradeableProxyFactory,
+} from '../utils/factories';
 import { deployProxyImpl } from './deploy-impl';
 import { DeployTransaction, deploy } from './deploy';
 
@@ -50,12 +54,6 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
         const contractInterface = factory.interface;
         const data = getInitializerData(contractInterface, args, opts.initializer);
 
-        const customDataProxy = {
-            customData: {
-                salt: opts.saltProxy,
-            },
-        };
-
         if (kind === 'uups') {
             if (await manifest.getAdmin()) {
                 if (!quiet) {
@@ -75,18 +73,13 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             case 'uups': {
-                const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                    x.includes(path.sep + ERC1967_PROXY_JSON),
-                );
-                assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
-                const proxyContract = await import(ERC1967ProxyPath);
-                const proxyFactory = new zk.ContractFactory(
-                    proxyContract.abi,
-                    proxyContract.bytecode,
-                    wallet,
-                    opts.deploymentTypeProxy,
-                );
-                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data, customDataProxy)) };
+                const customDataProxyUups = {
+                    customData: {
+                        salt: opts.saltProxy,
+                    },
+                };
+                const proxyFactory = await getProxyFactory(hre, wallet, opts.deploymentTypeProxy);
+                proxyDeployment = { kind, ...(await deploy(proxyFactory, impl, data, customDataProxyUups)) };
                 if (!quiet) {
                     console.info(chalk.green(`UUPS proxy was deployed to ${proxyDeployment.address}`));
                 }
@@ -94,22 +87,18 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
             }
 
             case 'transparent': {
-                const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
-                if (!quiet) {
-                    console.info(chalk.green(`Admin was deployed to ${adminAddress}`));
-                }
+                const TUPFactory = await getTransparentUpgradeableProxyFactory(hre, wallet, opts.deploymentTypeProxy);
+                const TUPArtifact = await getTransparentUpgradeableProxyArtifact(hre);
 
-                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
-                assert(TUPPath, 'TUP artifact not found');
-                const TUPContract = await import(TUPPath);
+                const initialOwner = opts.initialOwner ?? wallet.address;
 
-                const TUPFactory = new zk.ContractFactory(
-                    TUPContract.abi,
-                    TUPContract.bytecode,
-                    wallet,
-                    opts.deploymentTypeProxy,
-                );
-                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, adminAddress, data, customDataProxy)) };
+                const customDataProxyTup = {
+                    customData: {
+                        salt: opts.saltProxy,
+                        factoryDeps: await extractFactoryDeps(hre, TUPArtifact),
+                    },
+                };
+                proxyDeployment = { kind, ...(await deploy(TUPFactory, impl, initialOwner, data, customDataProxyTup)) };
                 if (!quiet) {
                     console.info(chalk.green(`Transparent proxy was deployed to ${proxyDeployment.address}`));
                 }

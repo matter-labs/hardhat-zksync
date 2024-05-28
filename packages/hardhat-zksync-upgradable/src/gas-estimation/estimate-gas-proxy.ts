@@ -2,8 +2,6 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
-import assert from 'assert';
-import path from 'path';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 
@@ -11,10 +9,15 @@ import { ZkSyncUpgradablePluginError } from '../errors';
 import { DeployProxyOptions } from '../utils/options';
 import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general';
 import { getChainId } from '../core/provider';
-import { ERC1967_PROXY_JSON, TUP_JSON, defaultImplAddresses } from '../constants';
+import { defaultImplAddresses } from '../constants';
 
-import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../proxy-deployment/deploy';
+import {
+    getProxyAdminArtifact,
+    getProxyAdminFactory,
+    getProxyArtifact,
+    getTransparentUpgradeableProxyArtifact,
+} from '../utils/factories';
 
 export type EstimateProxyGasFunction = (
     deployer: Deployer,
@@ -28,8 +31,8 @@ interface GasCosts {
     proxyGasCost: ethers.BigNumber;
 }
 
-async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
-    const mockContract = await deploy(adminFactory);
+async function deployProxyAdminLocally(adminFactory: zk.ContractFactory, ...args: any[]) {
+    const mockContract = await deploy(adminFactory, ...args);
     return mockContract.address;
 }
 
@@ -45,7 +48,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         let totalGasCost;
         let mockImplAddress: string;
 
-        const mockArtifact = await getAdminArtifact(hre);
+        const mockArtifact = await getProxyAdminArtifact(hre);
         const kind = opts.kind;
 
         const chainId = await getChainId(deployer.zkWallet.provider);
@@ -53,9 +56,11 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         if (!chainId) {
             throw new ZkSyncUpgradablePluginError(`Chain id ${chainId} is not supported!`);
         }
+
+        const initialOwner = opts.initialOwner ?? deployer.zkWallet.address;
         if (chainId === 270) {
-            const adminFactory = await getAdminFactory(hre, deployer.zkWallet);
-            mockImplAddress = await deployProxyAdminLocally(adminFactory);
+            const adminFactory = await getProxyAdminFactory(hre, deployer.zkWallet);
+            mockImplAddress = await deployProxyAdminLocally(adminFactory, initialOwner);
             data = getInitializerData(adminFactory.interface, args, opts.initializer);
         } else {
             mockImplAddress = defaultImplAddresses[chainId].contractAddress;
@@ -118,11 +123,7 @@ async function estimateGasUUPS(
     data: string,
     quiet: boolean = false,
 ): Promise<ethers.BigNumber> {
-    const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-        x.includes(path.sep + ERC1967_PROXY_JSON),
-    );
-    assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
-    const proxyContract = await import(ERC1967ProxyPath);
+    const proxyContract = await getProxyArtifact(hre);
 
     try {
         const uupsGasCost = await deployer.estimateDeployFee(proxyContract, [mockImplAddress, data]);
@@ -146,10 +147,11 @@ async function estimateGasTransparent(
     deployer: Deployer,
     mockImplAddress: string,
     data: string,
+    initialOwner?: string,
     quiet: boolean = false,
 ): Promise<GasCosts> {
-    const adminArtifact = await getAdminArtifact(hre);
-    const adminGasCost = await deployer.estimateDeployFee(adminArtifact, []);
+    const adminArtifact = await getProxyAdminArtifact(hre);
+    const adminGasCost = await deployer.estimateDeployFee(adminArtifact, [initialOwner ?? deployer.zkWallet.address]);
     let proxyGasCost;
     if (!quiet) {
         console.info(
@@ -161,12 +163,14 @@ async function estimateGasTransparent(
         );
     }
 
-    const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
-    assert(TUPPath, 'TUP artifact not found');
-    const TUPContract = await import(TUPPath);
+    const TUPContract = await getTransparentUpgradeableProxyArtifact(hre);
 
     try {
-        proxyGasCost = await deployer.estimateDeployFee(TUPContract, [mockImplAddress, mockImplAddress, data]);
+        proxyGasCost = await deployer.estimateDeployFee(TUPContract, [
+            mockImplAddress,
+            initialOwner ?? deployer.zkWallet.address,
+            data,
+        ]);
         if (!quiet) {
             console.info(
                 chalk.cyan(
