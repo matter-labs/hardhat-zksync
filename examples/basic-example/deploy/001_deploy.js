@@ -15,12 +15,12 @@ module.exports = async function (hre) {
     const deployer = new Deployer(hre, zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositHandle = await deployer.zkWallet.deposit({
-        to: deployer.zkWallet.address,
-        token: zk.utils.ETH_ADDRESS,
-        amount: ethers.utils.parseEther('0.001'),
-    });
-    await depositHandle.wait();
+    // const depositHandle = await deployer.zkWallet.deposit({
+    //     to: deployer.zkWallet.address,
+    //     token: zk.utils.ETH_ADDRESS,
+    //     amount: ethers.utils.parseEther('0.001'),
+    // });
+    // await depositHandle.wait();
 
     // Load the artifact we want to deploy.
     const artifact = await deployer.loadArtifact('Greeter');
@@ -28,7 +28,11 @@ module.exports = async function (hre) {
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // `greeting` is an argument for contract constructor.
     const greeting = 'Hi there!';
-    const greeterContract = await deployer.deploy(artifact, [greeting]);
+    const greeterContract = await deployer.deploy(artifact, [greeting], 'create2', {
+        customData: {
+            salt: '0x7935910912126667836566922594852029127629416664760357073852948630',
+        }
+    });
 
     // Show the contract info.
     const contractAddress = greeterContract.address;
