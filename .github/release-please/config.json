@@ -24,10 +24,6 @@
         "packages/hardhat-zksync-node": {
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-node"
-        },
-        "packages/hardhat-zksync-chai-matchers": {
-            "release-type": "node",
-            "component": "@matterlabs/hardhat-zksync-chai-matchers"
         }
     }
 }

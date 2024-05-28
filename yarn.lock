@@ -778,8 +778,23 @@
     ordinal "1.0.3"
     zksync-ethers "^5.0.0"
 
-"@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
+"@matterlabs/hardhat-zksync-deploy@^0.9.0":
   version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@matterlabs/hardhat-zksync-deploy/-/hardhat-zksync-deploy-0.9.0.tgz#026815303df792af50d722e4a59b5aa26baa5ed7"
+  integrity sha512-F9qPa7+Etq9/zAWEhsJ+oHCJy+B+yXxt8Tv1wgJsw5yc/race7VIdrdWW6xUS5YNpwhsiuM2cxYBcrE+FSU/TA==
+  dependencies:
+    "@matterlabs/hardhat-zksync-solc" "^1.0.5"
+    chai "^4.3.6"
+    chalk "4.1.2"
+    fs-extra "^11.2.0"
+    glob "^10.3.10"
+    lodash "^4.17.21"
+    sinon "^17.0.1"
+    sinon-chai "^3.7.0"
+    ts-morph "^21.0.1"
+
+"@matterlabs/hardhat-zksync-deploy@link:packages/hardhat-zksync-deploy":
+  version "0.10.0"
   dependencies:
     "@matterlabs/hardhat-zksync-solc" "^1.0.5"
     chai "^4.3.6"
@@ -834,7 +849,7 @@
     undici "^5.14.0"
 
 "@matterlabs/hardhat-zksync-upgradable@link:packages/hardhat-zksync-upgradable":
-  version "0.4.0"
+  version "0.4.1"
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@matterlabs/hardhat-zksync-deploy" "^0.9.0"
@@ -852,7 +867,7 @@
     zksync-ethers "^5.0.0"
 
 "@matterlabs/hardhat-zksync-verify@link:packages/hardhat-zksync-verify":
-  version "0.6.0"
+  version "0.6.1"
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@ethersproject/address" "5.7.0"
