@@ -4,6 +4,13 @@
 
 * add support for regex and forbid unsupported chaining ([#803](https://github.com/matter-labs/hardhat-zksync/issues/803)) ([307c653](https://github.com/matter-labs/hardhat-zksync/commit/307c653256f4828021d7d1d95a2d92222d274b3d))
 
+## [0.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v0.3.0...@matterlabs/hardhat-zksync-chai-matchers-v0.4.0) (2024-05-28)
+
+
+### Features
+
+* use deployment type in the deploy function ([#1089](https://github.com/matter-labs/hardhat-zksync/issues/1089)) ([e335357](https://github.com/matter-labs/hardhat-zksync/commit/e3353571a6e2501b78f081387030adb6c171aca9))
+
 ## [0.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v0.2.1...@matterlabs/hardhat-zksync-chai-matchers-v0.3.0) (2024-03-06)
 
 
