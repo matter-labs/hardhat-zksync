@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.3.0...@matterlabs/hardhat-zksync-deploy-v1.4.0) (2024-05-28)
+
+
+### Features
+
+* use deployment type in the deploy function ([#1090](https://github.com/matter-labs/hardhat-zksync/issues/1090)) ([05b2262](https://github.com/matter-labs/hardhat-zksync/commit/05b2262ff148369297c2098a95775d265b3efd41))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.2.1...@matterlabs/hardhat-zksync-deploy-v1.3.0) (2024-04-04)
 
 
