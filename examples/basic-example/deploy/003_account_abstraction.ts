@@ -12,22 +12,21 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 
     // Create deployer objects and load desired artifacts.
-    const contractDeployer = new Deployer(hre, zkWallet, 'create');
-    const aaDeployer = new Deployer(hre, zkWallet, 'createAccount');
-    const greeterArtifact = await contractDeployer.loadArtifact('Greeter');
-    const aaArtifact = await aaDeployer.loadArtifact('TwoUserMultisig');
+    const deployer = new Deployer(hre, zkWallet);
+    const greeterArtifact = await deployer.loadArtifact('Greeter');
+    const aaArtifact = await deployer.loadArtifact('TwoUserMultisig');
 
-    const provider = aaDeployer.zkWallet.provider;
+    const provider = deployer.zkWallet.provider;
 
     // Deposit some funds to L2 in order to be able to perform L2 transactions.
-    const depositHandle = await contractDeployer.zkWallet.deposit({
-        to: await contractDeployer.zkWallet.getAddress(),
-        token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.001'),
-    });
-    await depositHandle.wait();
+    // const depositHandle = await deployer.zkWallet.deposit({
+    //     to: await deployer.zkWallet.getAddress(),
+    //     token: zk.utils.ETH_ADDRESS,
+    //     amount: ethers.parseEther('0.001'),
+    // });
+    // await depositHandle.wait();
 
-    const greeterContract = await contractDeployer.deploy(greeterArtifact, ['Hi there!']);
+    const greeterContract = await deployer.deploy(greeterArtifact, ['Hi there!']);
 
     console.info(chalk.green(`Greeter was deployed to ${await greeterContract.getAddress()}`));
 
@@ -35,14 +34,14 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const owner1 = zk.Wallet.createRandom();
     const owner2 = zk.Wallet.createRandom();
 
-    const aa = await aaDeployer.deploy(aaArtifact, [owner1.address, owner2.address], undefined, []);
+    const aa = await hre.deployer.deploy(aaArtifact, [owner1.address, owner2.address], 'createAccount', undefined, []);
 
     const multisigAddress = await aa.getAddress();
 
     console.info(chalk.green(`Multisig was deployed to ${multisigAddress}`));
 
     await (
-        await contractDeployer.zkWallet.sendTransaction({
+        await deployer.zkWallet.sendTransaction({
             to: multisigAddress,
             // You can increase the amount of ETH sent to the multisig
             value: ethers.parseEther('0.003'),
