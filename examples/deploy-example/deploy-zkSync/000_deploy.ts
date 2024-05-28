@@ -1,6 +1,4 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as ethers from 'ethers';
-import * as zk from 'zksync-ethers';
 import chalk from 'chalk';
 
 const deployScript = async function (hre: HardhatRuntimeEnvironment) {
@@ -10,12 +8,12 @@ const deployScript = async function (hre: HardhatRuntimeEnvironment) {
     hre.deployer.setWallet(zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositHandle = await zkWallet.deposit({
-        to: zkWallet.address,
-        token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.01'),
-    });
-    await depositHandle.wait();
+    // const depositHandle = await zkWallet.deposit({
+    //     to: zkWallet.address,
+    //     token: zk.utils.ETH_ADDRESS,
+    //     amount: ethers.parseEther('0.01'),
+    // });
+    // await depositHandle.wait();
 
     // Load the artifact we want to deploy.
     const artifact = await hre.deployer.loadArtifact('Foo');

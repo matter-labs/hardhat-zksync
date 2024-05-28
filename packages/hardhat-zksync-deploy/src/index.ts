@@ -67,6 +67,7 @@ task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for zkSync network')
         types.inputFile,
     )
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
+    .addOptionalParam('salt', 'Type of deployment', undefined)
     .addFlag('noCompile', 'Flag to disable auto compilation')
     .setAction(deployZkSyncContract);
 
