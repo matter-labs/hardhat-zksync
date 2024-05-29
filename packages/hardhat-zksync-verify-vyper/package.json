@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-vyper": "^1.0.0",
-    "axios": "^1.6.2",
+    "axios": "^1.7.2",
     "chai": "^4.3.6",
     "chalk": "4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
