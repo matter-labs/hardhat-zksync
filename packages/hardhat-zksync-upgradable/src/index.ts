@@ -12,7 +12,7 @@ import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
-import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
+import { makeChangeProxyAdmin, makeTransferProxyAdminOwnership } from './admin';
 import {
     TASK_DEPLOY_ZKSYNC_BEACON,
     TASK_DEPLOY_ZKSYNC_PROXY,
@@ -30,7 +30,6 @@ extendEnvironment((hre) => {
         const { makeDeployBeacon } = require('./proxy-deployment/deploy-beacon');
         const { makeDeployBeaconProxy } = require('./proxy-deployment/deploy-beacon-proxy');
         const { makeUpgradeBeacon } = require('./proxy-upgrade/upgrade-beacon');
-        const { makeDeployProxyAdmin } = require('./proxy-deployment/deploy-proxy-admin');
         const { makeEstimateGasProxy } = require('./gas-estimation/estimate-gas-proxy');
         const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
         const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
@@ -41,11 +40,9 @@ extendEnvironment((hre) => {
             deployBeacon: makeDeployBeacon(hre),
             deployBeaconProxy: makeDeployBeaconProxy(hre),
             upgradeBeacon: makeUpgradeBeacon(hre),
-            deployProxyAdmin: makeDeployProxyAdmin(hre),
             admin: {
-                getInstance: makeGetInstanceFunction(hre),
-                changeProxyAdmin: makeChangeProxyAdmin(hre),
-                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+                changeProxyAdmin: makeChangeProxyAdmin(),
+                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(),
             },
             estimation: {
                 estimateGasProxy: makeEstimateGasProxy(hre),
@@ -78,6 +75,7 @@ task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for zkSync network')
     .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
     .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
     .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
+    .addOptionalParam('initialOwner', 'Initial owner of the proxy', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncBeacon);
 
@@ -99,6 +97,11 @@ task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for zkSync network')
     .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
     .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
     .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
+    .addOptionalParam('initialOwner', 'Initial owner of the proxy', undefined)
+    .addFlag(
+        'unsafeStateVariableAssignment',
+        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy deployment.',
+    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncProxy);
 
@@ -115,6 +118,10 @@ task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for zkSync network')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addOptionalParam('salt', 'Salt for deployment', undefined)
+    .addFlag(
+        'unsafeStateVariableAssignment',
+        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy upgrade.',
+    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncProxy);
 

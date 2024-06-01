@@ -17,6 +17,7 @@ export async function deployBeacon(
         deploymentTypeProxy?: DeploymentType;
         saltImpl?: string;
         saltProxy?: string;
+        initialOwner?: string;
         noCompile?: boolean;
     },
 ): Promise<{
@@ -39,6 +40,7 @@ export async function deployBeacon(
     const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract, {
         deploymentType: taskArgs.deploymentTypeImpl,
         salt: taskArgs.saltImpl,
+        initialOwner: taskArgs.initialOwner,
     });
     await beacon.waitForDeployment();
 
@@ -72,6 +74,8 @@ export async function deployProxy(
         deploymentTypeProxy?: DeploymentType;
         saltImpl?: string;
         saltProxy?: string;
+        initialOwner?: string;
+        unsafeStateVariableAssignment?: boolean;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -95,6 +99,8 @@ export async function deployProxy(
         deploymentTypeProxy: taskArgs.deploymentTypeProxy,
         saltProxy: taskArgs.saltProxy,
         initializer: taskArgs.initializer,
+        initialOwner: taskArgs.initialOwner,
+        unsafeAllow: taskArgs.unsafeStateVariableAssignment ? ['state-variable-assignment'] : undefined,
     });
 
     await proxy.waitForDeployment();
@@ -138,6 +144,7 @@ export async function upgradeProxy(
         proxyAddress: string;
         deploymentType?: DeploymentType;
         salt?: string;
+        unsafeStateVariableAssignment?: boolean;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -153,6 +160,7 @@ export async function upgradeProxy(
     const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
+        unsafeAllow: taskArgs.unsafeStateVariableAssignment ? ['state-variable-assignment'] : undefined,
     });
 
     await proxyUpgrade.waitForDeployment();

@@ -11,7 +11,7 @@ contract BoxUupsPublic is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
     function initialize(uint256 initValue) public initializer {
         value = initValue;
-        __Ownable_init();
+        __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
     }
 

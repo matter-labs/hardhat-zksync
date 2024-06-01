@@ -1,19 +1,23 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import { TransactionResponse } from 'zksync-ethers/src/types';
-import path from 'path';
-import { getAdminAddress, getCode, isEmptySlot } from '@openzeppelin/upgrades-core';
+
+import { getAdminAddress, getCode, getUpgradeInterfaceVersion, isEmptySlot } from '@openzeppelin/upgrades-core';
 
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import chalk from 'chalk';
-import assert from 'assert';
+
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
 import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
-import { Manifest } from '../core/manifest';
-import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
+import {
+    attachITransparentUpgradeableProxyV4,
+    attachITransparentUpgradeableProxyV5,
+    attachProxyAdminV4,
+    attachProxyAdminV5,
+} from '../utils/attach-abi';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
@@ -66,42 +70,41 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const adminBytecode = await getCode(provider, adminAddress);
 
         if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + ITUP_JSON));
-            assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
-            const transparentUpgradeableProxyContract = await import(TUPPath);
+            const upgradeInterfaceVersion = await getUpgradeInterfaceVersion(provider, proxyAddress);
+            if (upgradeInterfaceVersion === '5.0.0') {
+                const proxyV5 = await attachITransparentUpgradeableProxyV5(proxyAddress, wallet);
 
-            const transparentUpgradeableProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
-                transparentUpgradeableProxyContract.abi,
-                transparentUpgradeableProxyContract.bytecode,
-                wallet,
-            );
-            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
-
-            return (nextImpl, call) => (call ? proxy.upgradeToAndCall(nextImpl, call) : proxy.upgradeTo(nextImpl));
-        } else {
-            const manifest = await Manifest.forNetwork(provider);
-
-            const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                x.includes(path.sep + PROXY_ADMIN_JSON),
-            );
-            assert(proxyAdminPath, 'Proxy admin artifact not found');
-            const proxyAdminContract = await import(proxyAdminPath);
-
-            const proxyAdminFactory = new zk.ContractFactory<any[], zk.Contract>(
-                proxyAdminContract.abi,
-                proxyAdminContract.bytecode,
-                wallet,
-            );
-
-            const admin = proxyAdminFactory.attach(adminAddress);
-            const manifestAdmin = await manifest.getAdmin();
-
-            if ((await admin.getAddress()) !== manifestAdmin?.address) {
-                throw new Error('Proxy admin is not the one registered in the network manifest');
+                return (nextImpl, call) => proxyV5.upgradeToAndCall(nextImpl, call ?? '0x');
             }
 
+            if (upgradeInterfaceVersion !== undefined) {
+                // Log as debug if the interface version is an unknown string.
+                // Do not throw an error because this could be caused by a fallback function.
+                console.debug(
+                    `Unknown UPGRADE_INTERFACE_VERSION ${upgradeInterfaceVersion} for proxy at ${proxyAddress}. Expected 5.0.0`,
+                );
+            }
+            const proxyV4 = await attachITransparentUpgradeableProxyV4(proxyAddress, wallet);
+            return (nextImpl, call) => (call ? proxyV4.upgradeToAndCall(nextImpl, call) : proxyV4.upgradeTo(nextImpl));
+        } else {
+            const upgradeInterfaceVersion = await getUpgradeInterfaceVersion(provider, adminAddress);
+
+            if (upgradeInterfaceVersion === '5.0.0') {
+                const adminV5 = await attachProxyAdminV5(adminAddress, wallet);
+
+                return (nextImpl, call) => adminV5.upgradeAndCall(proxyAddress, nextImpl, call ?? '0x');
+            }
+
+            if (upgradeInterfaceVersion !== undefined) {
+                // Log as debug if the interface version is an unknown string.
+                // Do not throw an error because this could be caused by a fallback function.
+                console.debug(
+                    `Unknown UPGRADE_INTERFACE_VERSION ${upgradeInterfaceVersion} for proxy at ${proxyAddress}. Expected 5.0.0`,
+                );
+            }
+            const adminV4 = await attachProxyAdminV4(adminAddress, wallet);
             return (nextImpl, call) =>
-                call ? admin.upgradeAndCall(proxyAddress, nextImpl, call) : admin.upgrade(proxyAddress, nextImpl);
+                call ? adminV4.upgradeAndCall(proxyAddress, nextImpl, call) : adminV4.upgrade(proxyAddress, nextImpl);
         }
     }
 }

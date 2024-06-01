@@ -6,12 +6,10 @@ import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 
 contract BoxUups is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 private value;
-    uint256 private secondValue;
-    uint256 private thirdValue;
 
     function initialize(uint256 initValue) public initializer {
         value = initValue;
-        __Ownable_init();
+        __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
     }
 

@@ -15,7 +15,7 @@
     "clean": "rimraf dist"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts": "^5.0.2",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
@@ -38,7 +38,7 @@
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "chalk": "4.1.2",
     "ethers": "^6.7.1",
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "zksync": "^0.13.1"
   },
   "prettier": {
