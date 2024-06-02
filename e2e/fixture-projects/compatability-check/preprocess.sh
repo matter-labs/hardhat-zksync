@@ -38,11 +38,11 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
         "typescript": "^5.1.6"
     },
     "dependencies": {
-        "@matterlabs/hardhat-zksync-deploy": "0.8.0",
-        "@matterlabs/hardhat-zksync-solc": "1.1.4",
-        "@matterlabs/hardhat-zksync-node": "0.1.0",
-        "@matterlabs/hardhat-zksync-upgradable": "0.3.1",
-        "hardhat": "^2.19.4",
+        "@matterlabs/hardhat-zksync-deploy": "^0.9.0",
+        "@matterlabs/hardhat-zksync-solc": "^1.1.4",
+        "@matterlabs/hardhat-zksync-node": "^0.1.0",
+        "@matterlabs/hardhat-zksync-upgradable": "^0.4.0",
+        "hardhat": "^2.14.0",
         "ethers": "^5.7.2",
         "zksync-ethers": "^5.0.0",
         "@matterlabs/zksync-contracts": "^0.6.1",

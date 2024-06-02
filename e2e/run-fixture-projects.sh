@@ -62,7 +62,7 @@ for dir in "${FIXTURE_PROJECTS_DIR}"/*; do
       cd "$dir"
 
       echo "[e2e] Installing modules in $dir"
-      pnpm i
+      pnpm i || { echo "pnpm install failed, initializing pnpm"; pnpm init ; }
 
       chmod +x ./test.sh
       ./test.sh
