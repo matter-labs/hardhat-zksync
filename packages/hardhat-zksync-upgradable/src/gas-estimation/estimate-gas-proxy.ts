@@ -96,6 +96,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
                     deployer,
                     mockImplAddress,
                     data,
+                    initialOwner,
                     quiet,
                 );
                 totalGasCost = implGasCost.add(adminGasCost).add(proxyGasCost);

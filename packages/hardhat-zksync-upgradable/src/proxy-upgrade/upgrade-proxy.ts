@@ -16,6 +16,7 @@ import {
     attachProxyAdminV4,
     attachProxyAdminV5,
 } from '../utils/attach-abi';
+import { getUpgradeInterfaceVersion } from '../utils/upgrade-interface-version';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
