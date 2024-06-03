@@ -32,7 +32,7 @@
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "chalk": "4.1.2",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.22.5",
     "ethers": "^6.7.1",
     "zksync-ethers": "^6.0.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
