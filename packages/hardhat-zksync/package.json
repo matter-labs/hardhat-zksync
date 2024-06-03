@@ -46,15 +46,15 @@
     "@openzeppelin/upgrades-core": "^1.31.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@openzeppelin/contracts": "^4.9.2",
-    "zksync-ethers": "^6.0.0",
-    "ethers": "^6.7.1",
+    "ethers": "^6.12.2",
+    "zksync-ethers": "^6.7.1",
     "chai": "^4.3.7",
     "sinon-chai": "^3.7.0",
-    "sinon": "^17.0.1"
+    "sinon": "^18.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
-    "@types/mocha": "^9.1.0",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",
     "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "6.13.1",
@@ -64,11 +64,11 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "mocha": "^10.1.0",
-    "prettier": "3.1.0",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.6.0",
-    "typescript": "^5.1.6",
+    "mocha": "^10.4.0",
+    "prettier": "3.3.0",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {

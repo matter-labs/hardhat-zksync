@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as fse from 'fs-extra';
 import path from 'path';
 import lodash from 'lodash';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import { ZkSyncArtifact } from './types';
 import { retrieveContractBytecode } from './utils';
 

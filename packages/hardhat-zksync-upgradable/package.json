@@ -40,8 +40,8 @@
     "hardhat": "^2.19.4",
     "fs-extra": "^7.0.1",
     "ethereumjs-util": "^7.1.5",
-    "zksync-ethers": "^6.0.0",
-    "ethers": "^6.7.1",
+    "ethers": "^6.12.2",
+    "zksync-ethers": "^6.7.1",
     "solidity-ast": "^0.4.51",
     "proper-lockfile": "^4.1.1",
     "compare-versions": "^6.0.0"
@@ -58,11 +58,11 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-prettier": "5.0.1",
-    "mocha": "^10.2.0",
-    "prettier": "3.1.0",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.6.0",
-    "typescript": "^5.1.6",
+    "mocha": "^10.4.0",
+    "prettier": "3.3.0",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {

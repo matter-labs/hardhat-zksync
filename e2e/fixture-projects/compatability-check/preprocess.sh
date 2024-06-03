@@ -32,10 +32,10 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
         "eslint-plugin-import": "2.29.0",
         "eslint-plugin-no-only-tests": "3.1.0",
         "eslint-plugin-prettier": "5.0.1",
-        "prettier": "3.1.0",
-        "rimraf": "^3.0.2",
-        "ts-node": "^10.6.0",
-        "typescript": "^5.1.6"
+        "prettier": "3.3.0",
+        "rimraf": "^5.0.7",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.0"
     },
     "dependencies": {
         "@matterlabs/hardhat-zksync-deploy": "0.8.0",
