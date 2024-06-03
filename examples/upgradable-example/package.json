@@ -37,7 +37,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "zksync": "^0.13.1"
   },

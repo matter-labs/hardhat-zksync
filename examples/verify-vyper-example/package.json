@@ -32,7 +32,7 @@
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "@matterlabs/hardhat-zksync-verify-vyper": "workspace:^",
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",
     "hardhat": "^2.22.5"

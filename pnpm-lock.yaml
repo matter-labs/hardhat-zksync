@@ -51,7 +51,7 @@ importers:
         specifier: ^4.9.2
         version: 4.9.6
       chalk:
-        specifier: 4.1.2
+        specifier: ^4.1.2
         version: 4.1.2
       ethers:
         specifier: ^6.12.2
@@ -237,11 +237,11 @@ importers:
         specifier: ^4.9.2
         version: 4.9.6
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: 5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -316,7 +316,7 @@ importers:
         specifier: ^4.9.2
         version: 4.9.6
       chalk:
-        specifier: 4.1.2
+        specifier: ^4.1.2
         version: 4.1.2
       ethers:
         specifier: ^6.12.2
@@ -383,8 +383,8 @@ importers:
         specifier: ^4.9.2
         version: 4.9.6
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -456,8 +456,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -523,8 +523,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.6(hardhat@2.22.5)
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       ethers:
         specifier: ^6.7.1
         version: 6.12.2
@@ -581,7 +581,7 @@ importers:
         specifier: ^3.0.5
         version: 3.0.6(hardhat@2.22.5)
       chalk:
-        specifier: 4.1.2
+        specifier: ^4.1.2
         version: 4.1.2
       ethers:
         specifier: ^6.12.2
@@ -639,8 +639,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -727,8 +727,8 @@ importers:
         specifier: ^1.31.3
         version: 1.33.1
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -740,7 +740,7 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       zksync-ethers:
         specifier: ^6.7.1
         version: 6.7.1(ethers@6.12.2)
@@ -806,11 +806,11 @@ importers:
         specifier: ^1.1.4
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chai-as-promised:
         specifier: ^7.1.2
-        version: 7.1.2(chai@5.1.1)
+        version: 7.1.2(chai@4.4.1)
       ethers:
         specifier: ^6.12.2
         version: 6.12.2
@@ -832,7 +832,7 @@ importers:
         version: 0.6.1(@openzeppelin/contracts-upgradeable@4.6.0)(@openzeppelin/contracts@4.9.6)
       '@nomicfoundation/hardhat-chai-matchers':
         specifier: ^2.0.7
-        version: 2.0.7(@nomicfoundation/hardhat-ethers@3.0.6)(chai@5.1.1)(ethers@6.12.2)(hardhat@2.22.5)
+        version: 2.0.7(@nomicfoundation/hardhat-ethers@3.0.6)(chai@4.4.1)(ethers@6.12.2)(hardhat@2.22.5)
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.6
         version: 3.0.6(ethers@6.12.2)(hardhat@2.22.5)
@@ -900,11 +900,11 @@ importers:
         specifier: ^1.0.4
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -919,7 +919,7 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       ts-morph:
         specifier: ^22.0.0
         version: 22.0.0
@@ -994,11 +994,11 @@ importers:
         specifier: ^1.1.4
         version: link:../hardhat-zksync-solc
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: 5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       hardhat:
         specifier: ^2.22.5
         version: 2.22.5(ts-node@10.9.2)(typescript@5.4.5)
@@ -1082,11 +1082,11 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2(debug@4.3.5)
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -1098,7 +1098,7 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
         specifier: ^6.18.2
         version: 6.18.2
@@ -1173,11 +1173,11 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: 5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       debug:
         specifier: ^4.3.5
         version: 4.3.5
@@ -1198,10 +1198,10 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
-        specifier: ^5.14.0
-        version: 5.28.4
+        specifier: ^6.18.2
+        version: 6.18.2
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1288,8 +1288,8 @@ importers:
         specifier: ^1.31.3
         version: 1.33.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -1388,11 +1388,11 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       debug:
         specifier: ^4.3.5
         version: 4.3.5
@@ -1404,7 +1404,7 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1479,11 +1479,11 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2(debug@4.3.5)
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1558,11 +1558,11 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       chai:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^4.3.4
+        version: 4.4.1
       chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^4.1.2
+        version: 4.1.2
       dockerode:
         specifier: ^4.0.2
         version: 4.0.2
@@ -1577,7 +1577,7 @@ importers:
         version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@5.1.1)(sinon@18.0.0)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
         specifier: ^6.18.2
         version: 6.18.2
@@ -2459,7 +2459,7 @@ packages:
       '@nomicfoundation/ethereumjs-rlp': 5.0.4
       ethereum-cryptography: 0.1.3
 
-  /@nomicfoundation/hardhat-chai-matchers@2.0.7(@nomicfoundation/hardhat-ethers@3.0.6)(chai@5.1.1)(ethers@6.12.2)(hardhat@2.22.5):
+  /@nomicfoundation/hardhat-chai-matchers@2.0.7(@nomicfoundation/hardhat-ethers@3.0.6)(chai@4.4.1)(ethers@6.12.2)(hardhat@2.22.5):
     resolution: {integrity: sha512-RQfsiTwdf0SP+DtuNYvm4921X6VirCQq0Xyh+mnuGlTwEFSPZ/o27oQC+l+3Y/l48DDU7+ZcYBR+Fp+Rp94LfQ==, tarball: https://registry.npmjs.org/@nomicfoundation/hardhat-chai-matchers/-/hardhat-chai-matchers-2.0.7.tgz}
     peerDependencies:
       '@nomicfoundation/hardhat-ethers': ^3.0.0
@@ -2469,8 +2469,8 @@ packages:
     dependencies:
       '@nomicfoundation/hardhat-ethers': 3.0.6(ethers@6.12.2)(hardhat@2.22.5)
       '@types/chai-as-promised': 7.1.8
-      chai: 5.1.1
-      chai-as-promised: 7.1.2(chai@5.1.1)
+      chai: 4.4.1
+      chai-as-promised: 7.1.2(chai@4.4.1)
       deep-eql: 4.1.3
       ethers: 6.12.2
       hardhat: 2.22.5(ts-node@10.9.2)(typescript@5.4.5)
@@ -3492,9 +3492,8 @@ packages:
       safer-buffer: 2.1.2
     dev: false
 
-  /assertion-error@2.0.1:
-    resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==, tarball: https://registry.npmjs.org/assertion-error/-/assertion-error-2.0.1.tgz}
-    engines: {node: '>=12'}
+  /assertion-error@1.1.0:
+    resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==, tarball: https://registry.npmjs.org/assertion-error/-/assertion-error-1.1.0.tgz}
 
   /astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==, tarball: https://registry.npmjs.org/astral-regex/-/astral-regex-2.0.0.tgz}
@@ -3789,23 +3788,25 @@ packages:
       nofilter: 3.1.0
     dev: false
 
-  /chai-as-promised@7.1.2(chai@5.1.1):
+  /chai-as-promised@7.1.2(chai@4.4.1):
     resolution: {integrity: sha512-aBDHZxRzYnUYuIAIPBH2s511DjlKPzXNlXSGFC8CwmroWQLfrW0LtE1nK3MAwwNhJPa9raEjNCmRoFpG0Hurdw==, tarball: https://registry.npmjs.org/chai-as-promised/-/chai-as-promised-7.1.2.tgz}
     peerDependencies:
       chai: '>= 2.1.2 < 6'
     dependencies:
-      chai: 5.1.1
+      chai: 4.4.1
       check-error: 1.0.3
 
-  /chai@5.1.1:
-    resolution: {integrity: sha512-pT1ZgP8rPNqUgieVaEY+ryQr6Q4HXNg8Ei9UnLUrjN4IA7dvQC5JB+/kxVcPNDHyBcc/26CXPkbNzq3qwrOEKA==, tarball: https://registry.npmjs.org/chai/-/chai-5.1.1.tgz}
-    engines: {node: '>=12'}
+  /chai@4.4.1:
+    resolution: {integrity: sha512-13sOfMv2+DWduEU+/xbun3LScLoqN17nBeTLUsmDfKdoiC1fr0n9PU4guu4AhRcOVFk/sW8LyZWHuhWtQZiF+g==, tarball: https://registry.npmjs.org/chai/-/chai-4.4.1.tgz}
+    engines: {node: '>=4'}
     dependencies:
-      assertion-error: 2.0.1
-      check-error: 2.1.1
-      deep-eql: 5.0.2
-      loupe: 3.1.1
-      pathval: 2.0.0
+      assertion-error: 1.1.0
+      check-error: 1.0.3
+      deep-eql: 4.1.3
+      get-func-name: 2.0.2
+      loupe: 2.3.7
+      pathval: 1.1.1
+      type-detect: 4.0.8
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==, tarball: https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz}
@@ -3835,10 +3836,6 @@ packages:
     resolution: {integrity: sha512-iKEoDYaRmd1mxM90a2OEfWhjsjPpYPuQ+lMYsoxB126+t8fw7ySEO48nmDg5COTjxDI65/Y2OWpeEHk3ZOe8zg==, tarball: https://registry.npmjs.org/check-error/-/check-error-1.0.3.tgz}
     dependencies:
       get-func-name: 2.0.2
-
-  /check-error@2.1.1:
-    resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==, tarball: https://registry.npmjs.org/check-error/-/check-error-2.1.1.tgz}
-    engines: {node: '>= 16'}
 
   /chnl@1.2.0:
     resolution: {integrity: sha512-g5gJb59edwCliFbX2j7G6sBfY4sX9YLy211yctONI2GRaiX0f2zIbKWmBm+sPqFNEpM7Ljzm7IJX/xrjiEbPrw==, tarball: https://registry.npmjs.org/chnl/-/chnl-1.2.0.tgz}
@@ -4182,11 +4179,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       type-detect: 4.0.8
-    dev: true
-
-  /deep-eql@5.0.2:
-    resolution: {integrity: sha512-h5k/5U50IJJFpzfL6nO9jaaumfjO/f2NjK/oYB2Djzm4p9L+3T9qWpZqZ2hAbLPuuYq9wrU08WQyBTL5GbPk5Q==, tarball: https://registry.npmjs.org/deep-eql/-/deep-eql-5.0.2.tgz}
-    engines: {node: '>=6'}
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==, tarball: https://registry.npmjs.org/deep-is/-/deep-is-0.1.4.tgz}
@@ -6012,8 +6004,8 @@ packages:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  /loupe@3.1.1:
-    resolution: {integrity: sha512-edNu/8D5MKVfGVFRhFf8aAxiTM6Wumfz5XsaatSxlD3w4R1d/WEKUTydCdPGbl9K7QG/Ca3GnDV2sIKIpXRQcw==, tarball: https://registry.npmjs.org/loupe/-/loupe-3.1.1.tgz}
+  /loupe@2.3.7:
+    resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==, tarball: https://registry.npmjs.org/loupe/-/loupe-2.3.7.tgz}
     dependencies:
       get-func-name: 2.0.2
 
@@ -6515,9 +6507,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /pathval@2.0.0:
-    resolution: {integrity: sha512-vE7JKRyES09KiunauX7nd2Q9/L7lhok4smP9RZTDeD4MVs72Dp2qNFVz39Nz5a0FVEW0BJR6C0DYrq6unoziZA==, tarball: https://registry.npmjs.org/pathval/-/pathval-2.0.0.tgz}
-    engines: {node: '>= 14.16'}
+  /pathval@1.1.1:
+    resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==, tarball: https://registry.npmjs.org/pathval/-/pathval-1.1.1.tgz}
 
   /pbkdf2@3.1.2:
     resolution: {integrity: sha512-iuh7L6jA7JEGu2WxDwtQP1ddOpaJNC4KlDEFfdQajSGgGPNi4OyDc2R7QnbY2bR9QjBVGwgvTdNJZoE7RaxUMA==, tarball: https://registry.npmjs.org/pbkdf2/-/pbkdf2-3.1.2.tgz}
@@ -6981,13 +6972,13 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==, tarball: https://registry.npmjs.org/signal-exit/-/signal-exit-4.1.0.tgz}
     engines: {node: '>=14'}
 
-  /sinon-chai@3.7.0(chai@5.1.1)(sinon@18.0.0):
+  /sinon-chai@3.7.0(chai@4.4.1)(sinon@18.0.0):
     resolution: {integrity: sha512-mf5NURdUaSdnatJx3uhoBOrY9dtL19fiOtAdT1Azxg3+lNJFiuN0uzaU3xX1LeAfL17kHQhTAJgpsfhbMJMY2g==, tarball: https://registry.npmjs.org/sinon-chai/-/sinon-chai-3.7.0.tgz}
     peerDependencies:
       chai: ^4.0.0
       sinon: '>=4.0.0'
     dependencies:
-      chai: 5.1.1
+      chai: 4.4.1
       sinon: 18.0.0
     dev: false
 
