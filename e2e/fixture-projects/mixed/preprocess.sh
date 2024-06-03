@@ -45,7 +45,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
       "@matterlabs/hardhat-zksync-vyper": "1.0.8",
       "@nomiclabs/hardhat-vyper": "^3.0.5",
       "chalk": "4.1.2",
-      "hardhat": "^2.19.4",
+      "hardhat": "^2.22.5",
       "ethers": "^6.12.2",
       "zksync-ethers": "^6.7.1",
       "@matterlabs/zksync-contracts": "^0.6.1",

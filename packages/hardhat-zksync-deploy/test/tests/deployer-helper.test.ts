@@ -6,7 +6,7 @@ import '../../src/type-extensions';
 import { ContractFactory, Provider, Wallet } from 'zksync-ethers';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import * as saver from '../../src/deployment-saver';
 import { ZkSyncArtifact } from '../../src/types';
 import {
