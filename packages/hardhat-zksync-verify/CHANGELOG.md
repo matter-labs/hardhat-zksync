@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.4.4](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.3...@matterlabs/hardhat-zksync-verify-v1.4.4) (2024-06-03)
+
+
+### Bug Fixes
+
+* removed openzeppelin dependency, fixed dev dependencies, and updated the contributing markdown to be clearer ([#1081](https://github.com/matter-labs/hardhat-zksync/issues/1081)) ([944bcac](https://github.com/matter-labs/hardhat-zksync/commit/944bcac1987d76f6fc135b2ddee7fb7091f5cf7f))
+
 ## [1.4.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.2...@matterlabs/hardhat-zksync-verify-v1.4.3) (2024-05-14)
 
 
