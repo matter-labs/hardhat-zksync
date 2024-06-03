@@ -84,7 +84,7 @@ describe('deployer-helper', () => {
             };
 
             expect(() => createProviders(networks as any, unsupportedNetwork as any)).to.throw(
-                `unsupported default network (operation="getDefaultProvider", code=UNSUPPORTED_OPERATION, version=6.11.1)`,
+                `unsupported default network (operation="getDefaultProvider", code=UNSUPPORTED_OPERATION, version=6.12.2)`,
             );
         });
 
