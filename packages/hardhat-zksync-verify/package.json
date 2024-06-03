@@ -36,7 +36,7 @@
     "@ethersproject/abi": "^5.1.2",
     "@ethersproject/address": "5.7.0",
     "@matterlabs/hardhat-zksync-solc": "^1.1.4",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.8",
     "axios": "^1.6.2",
     "cbor": "^8.1.0",
     "chai": "^4.3.6",
@@ -47,7 +47,7 @@
     "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.8",
     "@types/chai": "^4.2.0",
     "@types/debug": "^4.1.12",
     "@types/mocha": "^9.1.0",
@@ -68,7 +68,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@nomicfoundation/hardhat-verify": "^2.0.0"
+    "@nomicfoundation/hardhat-verify": "^2.0.8"
   },
   "prettier": {
     "tabWidth": 4,
