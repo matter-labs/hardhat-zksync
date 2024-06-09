@@ -23,7 +23,7 @@ describe('verify plugin', async function () {
     describe('Unknown verifyURL in config', async function () {
         useEnvironment('customNetwork');
 
-        it('Checks impoting deafault verifyURL when it does not exist in the config ', async function () {
+        it('Checks importing deafault verifyURL when it does not exist in the config ', async function () {
             assert.equal(this.env.network.verifyURL, testnetVerifyURL);
         });
     });
@@ -79,7 +79,7 @@ describe('verify plugin', async function () {
             }
         });
 
-        it('Test verification with the wrong contructor arguments', async function () {
+        it('Test verification with the wrong constructor arguments', async function () {
             // 'Hi there' instead of 'Hi there!'
             const constructorArgs = ['Hi there'];
             const INCORRECT_CONSTRUCTOR_ARGUMENTS_ERROR = 'Constructor arguments are not correct';
@@ -95,7 +95,7 @@ describe('verify plugin', async function () {
             }
         });
 
-        it('Test verification with the wrong number of contructor arguments', async function () {
+        it('Test verification with the wrong number of constructor arguments', async function () {
             try {
                 // Run the verification again on the previously verified contract
                 await this.env.run('verify:verify', {
@@ -107,7 +107,7 @@ describe('verify plugin', async function () {
             }
         });
 
-        it('Test verification with the wrong nubmer of contructor arguments', async function () {});
+        it('Test verification with the wrong number of constructor arguments', async function () {});
     });
 
     describe('Test verification of a more complex smart contract', async function () {
@@ -141,7 +141,7 @@ describe('verify plugin', async function () {
             assert.equal(success, true);
         });
 
-        it('Test verification with complex contructor arguments', async function () {
+        it('Test verification with complex constructor arguments', async function () {
             const constructorArgs = ['ContractName', 'ContractSymbol', MOCK_ADDRESS, [MOCK_ADDRESS, MOCK_ADDRESS]];
 
             await this.env.run('verify', {

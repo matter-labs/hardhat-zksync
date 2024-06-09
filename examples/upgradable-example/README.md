@@ -1,6 +1,6 @@
 # zkSync Era upgradable example
 
-This project demonstrates how to compile and deploy upgadable smart contracts in zkSync Era using the Hardhat plugins.
+This project demonstrates how to compile and deploy upgradable smart contracts in zkSync Era using the Hardhat plugins.
 
 ## Prerequisites
 
@@ -61,7 +61,7 @@ yarn hardhat compile
 To run a specific end-to-end script in the `scripts` folder, use the following command
 
 ```
-yarn hardhat run ./scipts/<SCRIPT_NAME>
+yarn hardhat run ./scripts/<SCRIPT_NAME>
 ```
 
 - Example: `yarn hardhat run ./scripts/deploy-box-proxy.ts`
