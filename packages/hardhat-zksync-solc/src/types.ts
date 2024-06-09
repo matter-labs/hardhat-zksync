@@ -35,9 +35,7 @@ export interface ZkSolcConfig {
         // Whether to support compilation of zkSync-specific simulations
         enableEraVMExtensions?: boolean;
         // Evmla intermediate representation
-        viaEVMAssembly?: boolean;
-        // Yul intermediate representation
-        viaYul?: boolean;
+        forceEVMLA?: boolean;
         // Specific contracts to be compiled
         contractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.

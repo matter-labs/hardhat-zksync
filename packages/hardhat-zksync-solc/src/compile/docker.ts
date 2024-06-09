@@ -125,7 +125,7 @@ export async function compileWithDocker(
     if (zksolcConfig.settings.enableEraVMExtensions) {
         command.push('--system-mode');
     }
-    if (zksolcConfig.settings.viaEVMAssembly) {
+    if (zksolcConfig.settings.forceEVMLA) {
         command.push('--force-evmla');
     }
 

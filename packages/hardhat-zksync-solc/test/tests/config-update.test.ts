@@ -95,10 +95,10 @@ describe('CompilerSolcUserConfigUpdater', () => {
 
         it('should update the compiler eraVersion if zksolc version is < 1.5.0 and evmla codegen is in the use', () => {
             const updater = new CompilerSolcUserConfigUpdater();
-            const compiler: SolcConfig = { version: '0.8.17', settings: { viaEVMAssembly: true } };
+            const compiler: SolcConfig = { version: '0.8.17', settings: { forceEVMLA: true } };
             const userConfigCompilers = [{ version: '0.8.17' }, { version: '0.6.0' }];
             const file = undefined;
-            const zksolc: ZkSolcConfig = { version: 'latest', settings: { viaYul: true } };
+            const zksolc: ZkSolcConfig = { version: 'latest', settings: {} };
 
             updater.update(compiler, zksolc, userConfigCompilers, file);
 

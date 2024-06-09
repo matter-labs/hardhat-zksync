@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { ZkSolcConfig } from '../types';
-import { needsMandatoryCodegen } from '../utils';
+import { isBreakableCompilerVersion } from '../utils';
 
 export async function compileWithBinary(
     input: any,
@@ -14,14 +14,14 @@ export async function compileWithBinary(
         debugOutputDir ? `--debug-output-dir ${debugOutputDir}` : ''
     }`;
 
-    if (!needsMandatoryCodegen(config.version)) {
-        const { enableEraVMExtensions, viaEVMAssembly } = config.settings;
+    if (!isBreakableCompilerVersion(config.version)) {
+        const { enableEraVMExtensions, forceEVMLA } = config.settings;
         processCommand += `${detectMissingLibrariesMode ? ' --detect-missing-libraries' : ''} ${
             enableEraVMExtensions ? '--system-mode' : ''
-        }  ${viaEVMAssembly ? '--force-evmla' : ''}`;
+        }  ${forceEVMLA ? '--force-evmla' : ''}`;
     }
 
-    if (needsMandatoryCodegen(config.version)) {
+    if (isBreakableCompilerVersion(config.version)) {
         input.settings.detectMissingLibraries = detectMissingLibrariesMode;
     }
 

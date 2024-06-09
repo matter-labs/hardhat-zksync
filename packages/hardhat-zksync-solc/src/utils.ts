@@ -16,9 +16,8 @@ import {
     DEFAULT_TIMEOUT_MILISECONDS,
     COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR,
     ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
-    COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN,
-    ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN,
     COMPILER_ZKSOLC_NEED_EVM_CODEGEN,
+    ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -72,30 +71,21 @@ export function updateCompilerConf(
 ) {
     const compiler = solcConfigData.compiler;
 
-    if (
-        (needsMandatoryCodegen(zksolc.version) && !zksolc.settings.viaEVMAssembly && !zksolc.settings.viaYul) ||
-        (zksolc.settings.viaEVMAssembly && zksolc.settings.viaYul)
-    ) {
-        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN);
-    }
-
     const settings = compiler.settings || {};
 
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
 
-    if (needsMandatoryCodegen(zksolc.version)) {
-        compiler.settings.viaEVMAssembly = zksolc.settings.viaEVMAssembly ?? false;
-        compiler.settings.viaYul = zksolc.settings.viaYul ?? false;
+    if (isBreakableCompilerVersion(zksolc.version)) {
+        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA ?? false;
         compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions ?? false;
         compiler.settings.detectMissingLibraries = false;
     }
 
     const [major, minor] = getVersionComponents(compiler.version);
-    if (zksolc.settings.viaYul && major === 0 && minor < 8) {
+    if (major === 0 && minor < 8) {
         console.warn(chalk.blue(COMPILER_ZKSOLC_NEED_EVM_CODEGEN));
-        compiler.settings.viaEVMAssembly = true;
-        compiler.settings.viaYul = false;
+        compiler.settings.forceEVMLA = true;
     }
 
     // Remove metadata settings from solidity settings.
@@ -124,8 +114,8 @@ export function updateCompilerConf(
     }
 }
 
-export function needsMandatoryCodegen(zksolcVersion: string): boolean {
-    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN);
+export function isBreakableCompilerVersion(zksolcVersion: string): boolean {
+    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
 }
 
 export function zeroxlify(hex: string): string {

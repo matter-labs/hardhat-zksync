@@ -68,7 +68,6 @@ describe('Utils', () => {
             const zksolc: ZkSolcConfig = {
                 version: 'latest',
                 settings: {
-                    viaEVMAssembly: true,
                     optimizer: {
                         enabled: false,
                         runs: 150,
@@ -80,7 +79,6 @@ describe('Utils', () => {
             updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
-            expect(compiler.settings.viaEVMAssembly).to.deep.equal(zksolc.settings.viaEVMAssembly);
         });
 
         it('should update compiler configuration with zksolc settings and with forceEvmla', () => {
@@ -107,7 +105,6 @@ describe('Utils', () => {
             const zksolc: ZkSolcConfig = {
                 version: 'latest',
                 settings: {
-                    viaEVMAssembly: true,
                     enableEraVMExtensions: true,
                     optimizer: {
                         enabled: false,
@@ -120,7 +117,6 @@ describe('Utils', () => {
             updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
-            expect(compiler.settings.viaEVMAssembly).to.equal(zksolc.settings.viaEVMAssembly);
             expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.enableEraVMExtensions);
         });
 
@@ -148,7 +144,6 @@ describe('Utils', () => {
             const zksolc: ZkSolcConfig = {
                 version: '1.4.1',
                 settings: {
-                    viaEVMAssembly: true,
                     enableEraVMExtensions: true,
                     optimizer: {
                         enabled: false,

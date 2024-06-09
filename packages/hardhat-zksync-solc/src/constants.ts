@@ -38,7 +38,7 @@ export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 export const ZKVM_SOLC_BIN_REPOSITORY_NAME = 'era-solidity';
 export const ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION = '1.0.0';
 
-export const ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN = '1.5.0';
+export const ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE = '1.5.0';
 
 export const ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER = '1.3.22';
 
@@ -63,11 +63,10 @@ export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string)
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}.`;
 
-export const COMPILER_ZKSOLC_VERSION_EXPLICIT_CODEGEN = `For zksolc versions greater than or equal to ${ZKSOLC_COMPILER_MIN_VERSION_WITH_MANDATORY_CODEGEN}, ensure that the eather viaYul or viaEVMAssembly flag is set to true inside zksolc settings.`;
 export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag viaEVMAssembly will automatically be set to true by default, overriding viaYul for this compiler.`;
 
 export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (version: string) =>
-    `EVM assembly codegen is only supported with the zkSync edition of solc (zkSync Era Solidity Compiler). Defaulting to version ${ZKVM_SOLC_DEFAULT_COMPILER_VERSION} for solidity version ${version}.`;
+    `Using zkSync edition of solc (zkSync Era Solidity Compiler) with version ${ZKVM_SOLC_DEFAULT_COMPILER_VERSION} for solidity version ${version}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =

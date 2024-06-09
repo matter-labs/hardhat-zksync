@@ -7,7 +7,6 @@ import {
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import { ZkSolcConfig } from './types';
-import { needsMandatoryCodegen } from './utils';
 
 export interface SolcConfigData {
     compiler: SolcConfig;
@@ -39,11 +38,7 @@ export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpda
 
         if (compilerInfo?.eraVersion) {
             _compiler.eraVersion = compilerInfo.eraVersion;
-        } else if (
-            _compiler.settings.viaEVMAssembly &&
-            !_compiler.eraVersion &&
-            needsMandatoryCodegen(_zksolc.version)
-        ) {
+        } else if (_compiler.settings.forceEVMLA && !_compiler.eraVersion) {
             console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
             _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
         }
@@ -77,11 +72,7 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
 
         if (compilerInfo?.eraVersion) {
             _compiler.eraVersion = compilerInfo.eraVersion;
-        } else if (
-            _compiler.settings.viaEVMAssembly &&
-            !_compiler.eraVersion &&
-            needsMandatoryCodegen(_zksolc.version)
-        ) {
+        } else {
             console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
             _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
         }

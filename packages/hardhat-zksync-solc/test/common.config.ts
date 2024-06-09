@@ -6,8 +6,7 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
-            viaYul: semver.gte(process.env.SOLC_VERSION || '0.8.17', '0.8.0'),
-            viaEVMAssembly: semver.lt(process.env.SOLC_VERSION || '0.8.17', '0.8.0'),
+            forceEVMLA: semver.lt(process.env.SOLC_VERSION || '0.8.17', '0.8.0'),
         },
     },
     networks: {

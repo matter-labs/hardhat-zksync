@@ -4,9 +4,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
-        settings: {
-            viaYul: true,
-        },
+        settings: {},
     },
     networks: {
         hardhat: {
