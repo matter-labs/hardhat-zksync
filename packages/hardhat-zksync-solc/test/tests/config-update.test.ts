@@ -60,7 +60,7 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const file = undefined;
             const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
 
-            updater.update(compiler, zksolc, userConfigCompilers, file);
+            updater.update(compiler, '1.0.0', zksolc, userConfigCompilers, file);
 
             expect(compiler.eraVersion).to.equal('0.0.1');
         });
@@ -72,7 +72,7 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const file = undefined;
             const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
             try {
-                updater.update(compiler, zksolc, userConfigCompilers, file);
+                updater.update(compiler, '1.0.0', zksolc, userConfigCompilers, file);
                 expect.fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.equal(
@@ -88,9 +88,9 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const file = undefined;
             const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
 
-            updater.update(compiler, zksolc, userConfigCompilers, file);
+            updater.update(compiler, '1.0.0', zksolc, userConfigCompilers, file);
 
-            expect(compiler.eraVersion).to.be.equal(undefined);
+            expect(compiler.eraVersion).to.be.equal('1.0.0');
         });
 
         it('should update the compiler eraVersion if zksolc version is < 1.5.0 and evmla codegen is in the use', () => {
@@ -100,7 +100,7 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const file = undefined;
             const zksolc: ZkSolcConfig = { version: 'latest', settings: {} };
 
-            updater.update(compiler, zksolc, userConfigCompilers, file);
+            updater.update(compiler, '1.0.0', zksolc, userConfigCompilers, file);
 
             expect(compiler.eraVersion).to.be.equal('1.0.0');
         });

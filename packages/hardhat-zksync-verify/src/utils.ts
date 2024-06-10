@@ -1,10 +1,11 @@
 import axios from 'axios';
 import chalk from 'chalk';
+import semver from 'semver';
 import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
 import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
-import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE } from './constants';
 import {
     CompilerSolcUserConfigNormalizer,
     OverrideCompilerSolcUserConfigNormalizer,
@@ -117,6 +118,8 @@ export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: s
 
 export function normalizeCompilerVersions(
     solcConfigData: SolcConfigData,
+    zkSolcConfig: any,
+    latestEraVersion: string,
     userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
 ): string | undefined {
     const noramlizers: SolcUserConfigNormalizer[] = [
@@ -127,5 +130,9 @@ export function normalizeCompilerVersions(
     const compiler = solcConfigData.compiler;
     return noramlizers
         .find((normalize) => normalize.suituble(userConfigCompilers, solcConfigData.file))
-        ?.normalize(compiler, userConfigCompilers, solcConfigData.file);
+        ?.normalize(compiler, zkSolcConfig, latestEraVersion, userConfigCompilers, solcConfigData.file);
+}
+
+export function isBreakableCompilerVersion(zksolcVersion: string): boolean {
+    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
 }

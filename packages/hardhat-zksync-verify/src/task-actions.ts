@@ -40,6 +40,7 @@ import {
     SolcStringUserConfigExtractor,
     SolcUserConfigExtractor,
 } from './config-extractor';
+import { getLatestRelease } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 
 export async function verify(
     args: {
@@ -97,19 +98,23 @@ export async function getCompilerVersions(
     }
 
     const userSolidityConfig = hre.userConfig.solidity;
+    const zkSolcConfig = hre.config.zksolc;
 
     const extractedConfigs = extractors
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
+    const latestRelease = await getLatestRelease('matter-labs', 'era-solidity', '', '');
+    const latestEraVersion = latestRelease.split('-')[1];
+
     const compilerVersions = hre.config.solidity.compilers.map(
-        (c) => normalizeCompilerVersions({ compiler: c }, extractedConfigs?.compilers ?? []) ?? c.version,
+        (c) => normalizeCompilerVersions({ compiler: c }, zkSolcConfig, latestEraVersion, extractedConfigs?.compilers ?? []) ?? c.version,
     );
 
     if (hre.config.solidity.overrides !== undefined) {
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
             compilerVersions.push(
-                normalizeCompilerVersions({ compiler, file }, extractedConfigs?.overides ?? new Map()) ??
+                normalizeCompilerVersions({ compiler, file }, zkSolcConfig, latestEraVersion, extractedConfigs?.overides ?? new Map()) ??
                     compiler.version,
             );
         }

@@ -76,7 +76,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
         });
@@ -114,7 +114,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
             expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.enableEraVMExtensions);
@@ -153,7 +153,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
             expect(compiler.settings.viaEVMAssembly).to.equal(undefined);
@@ -194,7 +194,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
+            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
         });
@@ -233,7 +233,7 @@ describe('Utils', () => {
             };
 
             try {
-                updateCompilerConf({ compiler }, zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
+                updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
             } catch (e: any) {
                 expect(e.message).to.equal(
                     'zkVm (eraVersion) compiler is supported only with usage of zksolc version >= 1.3.22.',

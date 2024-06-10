@@ -8,7 +8,6 @@ const config: HardhatUserConfig = {
         version: '1.2.0',
         compilerSource: 'binary',
         settings: {
-            viaYul: true,
         },
     },
     networks: {

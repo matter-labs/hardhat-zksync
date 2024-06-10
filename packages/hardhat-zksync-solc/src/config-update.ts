@@ -1,12 +1,10 @@
 import { SolcConfig, SolcUserConfig } from 'hardhat/types';
-import chalk from 'chalk';
 import {
     COMPILERS_CONFLICT_ZKVM_SOLC,
-    ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION,
-    ZKVM_SOLC_DEFAULT_COMPILER_VERSION,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import { ZkSolcConfig } from './types';
+import { isBreakableCompilerVersion } from './utils';
 
 export interface SolcConfigData {
     compiler: SolcConfig;
@@ -17,6 +15,7 @@ export interface SolcUserConfigUpdater {
     suituble(_solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>, _file?: string): boolean;
     update(
         _compiler: SolcConfig,
+        _latestEraVersion: string,
         _zksolc: ZkSolcConfig,
         _solcUserConfig: SolcUserConfig[] | Map<string, SolcUserConfig>,
         _file?: string,
@@ -30,6 +29,7 @@ export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpda
 
     public update(
         _compiler: SolcConfig,
+        _latestEraVersion: string,
         _zksolc: ZkSolcConfig,
         _userConfigCompilers: Map<string, SolcUserConfig>,
         _file: string,
@@ -38,9 +38,11 @@ export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpda
 
         if (compilerInfo?.eraVersion) {
             _compiler.eraVersion = compilerInfo.eraVersion;
-        } else if (_compiler.settings.forceEVMLA && !_compiler.eraVersion) {
-            console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
-            _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
+            return;
+        }
+
+        if(isBreakableCompilerVersion(_zksolc.version)) {
+            _compiler.eraVersion = _latestEraVersion;
         }
     }
 }
@@ -52,6 +54,7 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
 
     public update(
         _compiler: SolcConfig,
+        _latestEraVersion: string,
         _zksolc: ZkSolcConfig,
         _userConfigCompilers: SolcUserConfig[],
         _file?: string,
@@ -72,9 +75,11 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
 
         if (compilerInfo?.eraVersion) {
             _compiler.eraVersion = compilerInfo.eraVersion;
-        } else {
-            console.warn(chalk.blue(ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION(_compiler.version)));
-            _compiler.eraVersion = ZKVM_SOLC_DEFAULT_COMPILER_VERSION;
+            return;
+        }
+
+        if(isBreakableCompilerVersion(_zksolc.version)) {
+            _compiler.eraVersion = _latestEraVersion;
         }
     }
 }

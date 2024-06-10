@@ -9,6 +9,7 @@ export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
 // User agent of MacOSX Chrome 120.0.0.0
 export const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+export const TASK_UPDATE_SOLIDITY_COMPILERS = 'compile:update-solidity-compilers';
 
 export const ZKSOLC_COMPILER_PATH_VERSION = 'local_or_remote';
 
@@ -65,8 +66,8 @@ export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) c
 
 export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag viaEVMAssembly will automatically be set to true by default, overriding viaYul for this compiler.`;
 
-export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (version: string) =>
-    `Using zkSync edition of solc (zkSync Era Solidity Compiler) with version ${ZKVM_SOLC_DEFAULT_COMPILER_VERSION} for solidity version ${version}.`;
+export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (eraVersion: string, solcVersion: string) =>
+    `Using zkSync edition of solc (zkSync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =

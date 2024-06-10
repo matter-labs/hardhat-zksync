@@ -15,6 +15,8 @@ export const TASK_VERIFY_GET_MINIMUM_BUILD = 'verify:get-minimum-build';
 export const TASK_VERIFY_VERIFY_MINIMUM_BUILD = 'zk:verify:verify-minimum-build';
 export const TASK_VERIFY_GET_CONTRACT_INFORMATION = 'verify:get-contract-information';
 
+export const ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE = '1.5.0';
+
 export const CONST_ARGS_ARRAY_ERROR = `
 Wrong constructor arguments format:
 

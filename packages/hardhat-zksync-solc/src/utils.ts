@@ -66,6 +66,7 @@ const solcUpdaters: SolcUserConfigUpdater[] = [
 
 export function updateCompilerConf(
     solcConfigData: SolcConfigData,
+    latestEraVersion: string,
     zksolc: ZkSolcConfig,
     userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
 ) {
@@ -103,14 +104,14 @@ export function updateCompilerConf(
 
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
-        ?.update(compiler, zksolc, userConfigCompilers, solcConfigData.file);
+        ?.update(compiler, latestEraVersion, zksolc, userConfigCompilers, solcConfigData.file);
 
     if (
         zksolc.version !== 'latest' &&
         compiler.eraVersion &&
         semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)
     ) {
-        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
+        compiler.eraVersion = undefined;
     }
 }
 
