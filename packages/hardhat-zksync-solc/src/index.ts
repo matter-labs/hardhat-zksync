@@ -13,17 +13,24 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END,
     TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
     TASK_COMPILE,
-    TASK_COMPILE_GET_COMPILATION_TASKS,
 } from 'hardhat/builtin-tasks/task-names';
-import os from "os";
-import { extendEnvironment, extendConfig, subtask, task, types } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import fs from 'fs';
 import chalk from 'chalk';
-import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, HardhatRuntimeEnvironment, RunSuperFunction, SolcBuild, TaskArguments } from 'hardhat/types';
+import {
+    ArtifactsEmittedPerFile,
+    CompilationJob,
+    CompilerInput,
+    CompilerOutput,
+    HardhatRuntimeEnvironment,
+    RunSuperFunction,
+    SolcBuild,
+    TaskArguments,
+} from 'hardhat/types';
 import debug from 'debug';
 import { compile } from './compile';
 import {
@@ -107,17 +114,17 @@ extendEnvironment((hre) => {
     }
 });
 
-task(TASK_COMPILE)
-  .setAction(async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
-    if(hre.network.zksync) {
-        await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
-    }
+task(TASK_COMPILE).setAction(
+    async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
+        if (hre.network.zksync) {
+            await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
+        }
 
-    await runSuper(compilationArgs);
+        await runSuper(compilationArgs);
+    },
+);
 
-  });
-
-  subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEnvironment) => {
+subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEnvironment) => {
     if (!hre.network.zksync) {
         return;
     }
@@ -128,13 +135,20 @@ task(TASK_COMPILE)
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
-    const latestEraVersion = (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
+    const latestEraVersion = (
+        await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')
+    ).split('-')[1];
     // Update compilers config.
     hre.config.solidity.compilers.forEach(async (compiler) =>
         updateCompilerConf({ compiler }, latestEraVersion, hre.config.zksolc, extractedConfigs?.compilers ?? []),
     );
     for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-        updateCompilerConf({ compiler, file }, latestEraVersion, hre.config.zksolc, extractedConfigs?.overides ?? new Map());
+        updateCompilerConf(
+            { compiler, file },
+            latestEraVersion,
+            hre.config.zksolc,
+            extractedConfigs?.overides ?? new Map(),
+        );
     }
 });
 

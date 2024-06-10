@@ -1,7 +1,5 @@
 import { SolcConfig, SolcUserConfig } from 'hardhat/types';
-import {
-    COMPILERS_CONFLICT_ZKVM_SOLC,
-} from './constants';
+import { COMPILERS_CONFLICT_ZKVM_SOLC } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import { ZkSolcConfig } from './types';
 import { isBreakableCompilerVersion } from './utils';
@@ -41,7 +39,7 @@ export class OverrideCompilerSolcUserConfigUpdater implements SolcUserConfigUpda
             return;
         }
 
-        if(isBreakableCompilerVersion(_zksolc.version)) {
+        if (isBreakableCompilerVersion(_zksolc.version)) {
             _compiler.eraVersion = _latestEraVersion;
         }
     }
@@ -78,7 +76,7 @@ export class CompilerSolcUserConfigUpdater implements SolcUserConfigUpdater {
             return;
         }
 
-        if(isBreakableCompilerVersion(_zksolc.version)) {
+        if (isBreakableCompilerVersion(_zksolc.version)) {
             _compiler.eraVersion = _latestEraVersion;
         }
     }

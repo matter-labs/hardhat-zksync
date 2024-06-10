@@ -24,19 +24,24 @@ export class OverrideCompilerSolcUserConfigNormalizer implements SolcUserConfigN
         return _solcUserConfig instanceof Map && _file !== undefined;
     }
 
-    public normalize(_compiler: SolcConfig, _zkSolcConfig: any, _latestEraVersion: string,_userConfigCompilers: Map<string, SolcUserConfig>, _file: string): string {
+    public normalize(
+        _compiler: SolcConfig,
+        _zkSolcConfig: any,
+        _latestEraVersion: string,
+        _userConfigCompilers: Map<string, SolcUserConfig>,
+        _file: string,
+    ): string {
         const compilerInfo = _userConfigCompilers.get(_file);
 
-        if(isBreakableCompilerVersion(_zkSolcConfig.version)) {
+        if (isBreakableCompilerVersion(_zkSolcConfig.version)) {
             return compilerInfo?.eraVersion
                 ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
                 : getZkVmNormalizedVersion(_compiler.version, _latestEraVersion);
-            }
+        }
 
-            return compilerInfo?.eraVersion
+        return compilerInfo?.eraVersion
             ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
             : _compiler.version;
-
     }
 }
 
@@ -45,7 +50,13 @@ export class CompilerSolcUserConfigNormalizer implements SolcUserConfigNormalize
         return solcUserConfig instanceof Array && _file === undefined;
     }
 
-    public normalize(_compiler: SolcConfig, _zkSolcConfig: any, _latestEraVersion: string, _userConfigCompilers: SolcUserConfig[], _file?: string): string {
+    public normalize(
+        _compiler: SolcConfig,
+        _zkSolcConfig: any,
+        _latestEraVersion: string,
+        _userConfigCompilers: SolcUserConfig[],
+        _file?: string,
+    ): string {
         const compilerInfos = _userConfigCompilers.filter(
             (userCompilerInfo) => userCompilerInfo.version === _compiler.version,
         );
@@ -60,14 +71,14 @@ export class CompilerSolcUserConfigNormalizer implements SolcUserConfigNormalize
 
         const compilerInfo = compilerInfos[0];
 
-        if(isBreakableCompilerVersion(_zkSolcConfig.version)) {
-        return compilerInfo?.eraVersion
-            ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
-            : getZkVmNormalizedVersion(_compiler.version, _latestEraVersion);
+        if (isBreakableCompilerVersion(_zkSolcConfig.version)) {
+            return compilerInfo?.eraVersion
+                ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
+                : getZkVmNormalizedVersion(_compiler.version, _latestEraVersion);
         }
 
         return compilerInfo?.eraVersion
-        ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
-        : _compiler.version;
+            ? getZkVmNormalizedVersion(_compiler.version, compilerInfo.eraVersion)
+            : _compiler.version;
     }
 }
