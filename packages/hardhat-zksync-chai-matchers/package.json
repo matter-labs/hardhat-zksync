@@ -46,7 +46,7 @@
     "ethers-v5": "npm:ethers@5",
     "hardhat": "^2.19.4",
     "ordinal": "1.0.3",
-    "chai-as-promised": "^7.1.1",
+    "chai-as-promised": "^8.0.0",
     "@matterlabs/hardhat-zksync-deploy": "^1.3.0",
     "@matterlabs/hardhat-zksync-solc": "^1.1.4"
   },
