@@ -44,7 +44,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
         "@matterlabs/hardhat-zksync-upgradable": "0.3.1",
         "hardhat": "^2.22.5",
         "ethers": "^5.7.2",
-        "zksync-ethers": "^5.0.0",
+        "zksync-ethers": "^5.8.0",
         "@matterlabs/zksync-contracts": "^0.6.1",
         "@openzeppelin/contracts": "^4.9.2",
         "@openzeppelin/contracts-upgradeable": "^4.9.2"
