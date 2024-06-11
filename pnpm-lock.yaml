@@ -1399,6 +1399,9 @@ importers:
       hardhat:
         specifier: ^2.22.5
         version: 2.22.5(ts-node@10.9.2)(typescript@5.4.5)
+      semver:
+        specifier: ^7.6.2
+        version: 7.6.2
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
