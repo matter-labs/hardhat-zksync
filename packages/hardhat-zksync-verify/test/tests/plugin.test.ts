@@ -277,6 +277,7 @@ Instead, this name was received: ${contractFQN}`);
             const hre = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {},
                     },
                 },
@@ -288,15 +289,17 @@ Instead, this name was received: ${contractFQN}`);
             expect(solidityStandardJsonInput.sources['contracts/Contract.sol'].content).to.equal(
                 'contract Contract {}',
             );
+            console.log(solidityStandardJsonInput.settings);
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
-            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
-            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+            expect(solidityStandardJsonInput.settings.enableEraVMExtensions).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEVMLA).to.equal(false);
         });
 
         it('should return proper zksolc setting params', async function () {
             const hre = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {},
                     },
                 },
@@ -304,12 +307,13 @@ Instead, this name was received: ${contractFQN}`);
 
             const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, input);
 
-            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
-            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+            expect(solidityStandardJsonInput.settings.enableEraVMExtensions).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEVMLA).to.equal(false);
 
             const hre1 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
                             enableEraVMExtensions: true,
                         },
@@ -318,37 +322,39 @@ Instead, this name was received: ${contractFQN}`);
             };
 
             const solidityStandardJsonInput2 = getSolidityStandardJsonInput(hre1 as any, resolvedFiles, input);
-            expect(solidityStandardJsonInput2.settings.isSystem).to.equal(true);
-            expect(solidityStandardJsonInput2.settings.forceEvmla).to.equal(false);
+            expect(solidityStandardJsonInput2.settings.enableEraVMExtensions).to.equal(true);
+            expect(solidityStandardJsonInput2.settings.forceEVMLA).to.equal(false);
 
             const hre2 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
-                            viaEVMAssembly: true,
+                            forceEVMLA: true,
                         },
                     },
                 },
             };
 
             const solidityStandardJsonInput3 = getSolidityStandardJsonInput(hre2 as any, resolvedFiles, input);
-            expect(solidityStandardJsonInput3.settings.isSystem).to.equal(false);
-            expect(solidityStandardJsonInput3.settings.forceEvmla).to.equal(true);
+            expect(solidityStandardJsonInput3.settings.enableEraVMExtensions).to.equal(false);
+            expect(solidityStandardJsonInput3.settings.forceEVMLA).to.equal(true);
 
             const hre3 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
                             enableEraVMExtensions: true,
-                            viaEVMAssembly: true,
+                            forceEVMLA: true,
                         },
                     },
                 },
             };
 
             const solidityStandardJsonInput4 = getSolidityStandardJsonInput(hre3 as any, resolvedFiles, input);
-            expect(solidityStandardJsonInput4.settings.isSystem).to.equal(true);
-            expect(solidityStandardJsonInput4.settings.forceEvmla).to.equal(true);
+            expect(solidityStandardJsonInput4.settings.enableEraVMExtensions).to.equal(true);
+            expect(solidityStandardJsonInput4.settings.forceEVMLA).to.equal(true);
         });
     });
 

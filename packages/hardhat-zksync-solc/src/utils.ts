@@ -18,6 +18,9 @@ import {
     ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE,
     ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
     COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN,
+    ZKSOLC_BIN_OWNER,
+    ZKVM_SOLC_BIN_REPOSITORY_NAME,
+    USER_AGENT,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -67,11 +70,15 @@ export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSol
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
 
+    zksolc.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions || zksolc.settings.isSystem || false;
+    zksolc.settings.forceEVMLA = zksolc.settings.forceEVMLA || zksolc.settings.forceEvmla || false;
+    delete zksolc.settings.isSystem;
+    delete zksolc.settings.forceEvmla;
+
     if (isBreakableCompilerVersion(zksolc.version)) {
-        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA ?? false;
-        compiler.settings.enableEraVMExtensions =
-            zksolc.settings.enableEraVMExtensions ?? zksolc.settings.isSystem ?? false;
         compiler.settings.detectMissingLibraries = false;
+        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
     }
 
     const [major, minor] = getVersionComponents(compiler.version);
@@ -371,4 +378,8 @@ export async function saveDataToFile(data: any, targetPath: string) {
 
 export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
     return `zkVM-${solcVersion}-${zkVmSolcVersion}`;
+}
+
+export async function getLatestEraVersion(): Promise<string> {
+    return (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
 }

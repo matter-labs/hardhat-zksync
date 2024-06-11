@@ -41,8 +41,8 @@ import {
     generateSolcJSExecutableCode,
     updateCompilerConf,
     getZkVmNormalizedVersion,
-    getLatestRelease,
     updateCompilerWithEraVersion,
+    getLatestEraVersion,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -55,9 +55,6 @@ import {
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
     ZKSOLC_COMPILER_PATH_VERSION,
     TASK_UPDATE_SOLIDITY_COMPILERS,
-    ZKSOLC_BIN_OWNER,
-    ZKVM_SOLC_BIN_REPOSITORY_NAME,
-    USER_AGENT,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -142,9 +139,7 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
-    const latestEraVersion = (
-        await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')
-    ).split('-')[1];
+    const latestEraVersion = await getLatestEraVersion();
 
     hre.config.solidity.compilers.forEach(async (compiler) =>
         updateCompilerWithEraVersion(

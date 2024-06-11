@@ -1,7 +1,8 @@
 import { SolcConfig, SolcUserConfig } from 'hardhat/types';
+import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { COMPILERS_CONFLICT_ZKVM_SOLC } from './constants';
 import { ZkSyncVerifyPluginError } from './errors';
-import { getZkVmNormalizedVersion, isBreakableCompilerVersion } from './utils';
+import { getZkVmNormalizedVersion } from './utils';
 
 export interface SolcConfigData {
     compiler: SolcConfig;

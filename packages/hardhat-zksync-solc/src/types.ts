@@ -36,6 +36,8 @@ export interface ZkSolcConfig {
         isSystem?: boolean;
         // Whether to support compilation of zkSync-specific simulations
         enableEraVMExtensions?: boolean;
+        // Evmla intermediate representation. Transition to forceEVMLA by default.
+        forceEvmla?: boolean;
         // Evmla intermediate representation
         forceEVMLA?: boolean;
         // Specific contracts to be compiled

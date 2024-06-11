@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hard
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
 import path from 'path';
-import { getLatestRelease } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
+import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -109,8 +109,7 @@ export async function getCompilerVersions(
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
-    const latestRelease = await getLatestRelease('matter-labs', 'era-solidity', '', '');
-    const latestEraVersion = latestRelease.split('-')[1];
+    const latestEraVersion = await getLatestEraVersion();
 
     const compilerVersions = hre.config.solidity.compilers.map(
         (c) =>

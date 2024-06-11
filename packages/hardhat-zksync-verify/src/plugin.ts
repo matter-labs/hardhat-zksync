@@ -1,13 +1,12 @@
 import {
     TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS,
     TASK_FLATTEN_GET_FLATTENED_SOURCE,
 } from 'hardhat/builtin-tasks/task-names';
 import { Artifacts, CompilerInput, DependencyGraph, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
 import chalk from 'chalk';
+import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
@@ -78,14 +77,8 @@ export async function getMinimalResolvedFiles(
     hre: HardhatRuntimeEnvironment,
     sourceName: string,
 ): Promise<ResolvedFile[]> {
-    hre.config.zksolc.settings.contractsToCompile = [sourceName];
-    const sourcePaths = await hre.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS, { sourcePath: hre.config.paths.sources });
-    const sourceNames = await hre.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, {
-        rootPath: hre.config.paths.root,
-        sourcePaths,
-    });
     const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-        sourceNames,
+        sourceNames: [sourceName],
     });
 
     return dependencyGraph.getResolvedFiles();
@@ -96,17 +89,24 @@ export function getSolidityStandardJsonInput(
     resolvedFiles: ResolvedFile[],
     input: CompilerInput,
 ): any {
-    return {
+    const standardInput = {
         language: input.language,
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }]),
         ),
-        settings: {
-            ...input.settings,
-            isSystem: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
-            forceEvmla: hre.config.zksolc.settings.forceEVMLA ?? false,
-        },
+        settings: {},
     };
+    standardInput.settings = !isBreakableCompilerVersion(hre.config.zksolc.version)
+        ? {
+              ...input.settings,
+              enableEraVMExtensions: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
+              forceEVMLA: hre.config.zksolc.settings.forceEVMLA ?? false,
+          }
+        : {
+              ...input.settings,
+          };
+
+    return standardInput;
 }
 
 export async function getLibraries(librariesModule: string) {
