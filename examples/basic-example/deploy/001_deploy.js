@@ -15,12 +15,12 @@ module.exports = async function (hre) {
     const deployer = new Deployer(hre, zkWallet);
 
     // Deposit some funds to L2 in order to be able to perform deposits.
-    const depositHandle = await deployer.zkWallet.deposit({
-        to: deployer.zkWallet.address,
-        token: zk.utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.001'),
-    });
-    await depositHandle.wait();
+    // const depositHandle = await deployer.zkWallet.deposit({
+    //     to: deployer.zkWallet.address,
+    //     token: zk.utils.ETH_ADDRESS,
+    //     amount: ethers.parseEther('0.001'),
+    // });
+    // await depositHandle.wait();
 
     // Load the artifact we want to deploy.
     const artifact = await deployer.loadArtifact('Greeter');

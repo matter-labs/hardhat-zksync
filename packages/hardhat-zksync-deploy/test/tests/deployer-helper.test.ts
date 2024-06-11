@@ -6,7 +6,7 @@ import '../../src/type-extensions';
 import { ContractFactory, Provider, Wallet } from 'zksync-ethers';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import * as saver from '../../src/deployment-saver';
 import { ZkSyncArtifact } from '../../src/types';
 import {
@@ -84,7 +84,7 @@ describe('deployer-helper', () => {
             };
 
             expect(() => createProviders(networks as any, unsupportedNetwork as any)).to.throw(
-                `unsupported default network (operation="getDefaultProvider", code=UNSUPPORTED_OPERATION, version=6.11.1)`,
+                `unsupported default network (operation="getDefaultProvider", code=UNSUPPORTED_OPERATION, version=6.12.2)`,
             );
         });
 

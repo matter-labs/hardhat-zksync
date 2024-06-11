@@ -32,19 +32,19 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
         "eslint-plugin-import": "2.29.0",
         "eslint-plugin-no-only-tests": "3.1.0",
         "eslint-plugin-prettier": "5.0.1",
-        "prettier": "3.1.0",
-        "rimraf": "^3.0.2",
-        "ts-node": "^10.6.0",
-        "typescript": "^5.1.6"
+        "prettier": "3.3.0",
+        "rimraf": "^5.0.7",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.0"
     },
     "dependencies": {
         "@matterlabs/hardhat-zksync-deploy": "0.8.0",
         "@matterlabs/hardhat-zksync-solc": "1.1.4",
         "@matterlabs/hardhat-zksync-node": "0.1.0",
         "@matterlabs/hardhat-zksync-upgradable": "0.3.1",
-        "hardhat": "^2.19.4",
+        "hardhat": "^2.22.5",
         "ethers": "^5.7.2",
-        "zksync-ethers": "^5.0.0",
+        "zksync-ethers": "^5.8.0",
         "@matterlabs/zksync-contracts": "^0.6.1",
         "@openzeppelin/contracts": "^4.9.2",
         "@openzeppelin/contracts-upgradeable": "^4.9.2"

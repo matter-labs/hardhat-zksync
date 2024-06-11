@@ -7,13 +7,13 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy`));
     const wallet = await hre.zksyncEthers.getWallet(4);
 
-    console.info(chalk.yellow(`Depositing to wallet: ${await wallet.getAddress()}`));
-    const depositHandle = await wallet.deposit({
-        to: wallet.address,
-        token: utils.ETH_ADDRESS,
-        amount: ethers.parseEther('0.001'),
-    });
-    await depositHandle.wait();
+    // console.info(chalk.yellow(`Depositing to wallet: ${await wallet.getAddress()}`));
+    // const depositHandle = await wallet.deposit({
+    //     to: wallet.address,
+    //     token: utils.ETH_ADDRESS,
+    //     amount: ethers.parseEther('0.001'),
+    // });
+    // await depositHandle.wait();
 
     const artifact = await hre.zksyncEthers.loadArtifact('Greeter');
     const greets = await hre.zksyncEthers.deployContract(artifact, ['Hello, world with loadArtifact!'], wallet);
