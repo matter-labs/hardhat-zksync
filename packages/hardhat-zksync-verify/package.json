@@ -36,7 +36,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/address": "5.7.0",
     "@matterlabs/hardhat-zksync-solc": "^1.1.4",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.8",
     "axios": "^1.7.2",
     "semver": "^7.6.2",
     "cbor": "^9.0.2",

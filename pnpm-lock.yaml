@@ -1379,7 +1379,7 @@ importers:
         specifier: ^1.1.4
         version: link:../hardhat-zksync-solc
       '@nomicfoundation/hardhat-verify':
-        specifier: ^2.0.0
+        specifier: ^2.0.8
         version: 2.0.8(hardhat@2.22.5)
       axios:
         specifier: ^1.7.2
