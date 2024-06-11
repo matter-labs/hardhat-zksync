@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig } from 'hardhat/types';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 import { ZkSyncArtifact } from './types';

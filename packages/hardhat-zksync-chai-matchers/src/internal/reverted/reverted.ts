@@ -27,7 +27,7 @@ export function supportReverted(Assertion: Chai.AssertionStatic, chaiUtils: Chai
                 const receipt = await getTransactionReceipt(hash);
 
                 assert(
-                    receipt.status === 0,
+                    receipt === null || receipt.status === 0,
                     'Expected transaction to be reverted',
                     'Expected transaction NOT to be reverted',
                 );

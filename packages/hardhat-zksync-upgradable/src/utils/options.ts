@@ -7,7 +7,7 @@ import {
     withValidationDefaults,
 } from '@openzeppelin/upgrades-core';
 
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 
 export type StandaloneOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =

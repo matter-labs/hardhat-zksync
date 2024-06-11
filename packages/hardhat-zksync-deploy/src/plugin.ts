@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
 import { Contract, Wallet } from 'zksync-ethers';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 import { ZkSyncDeployPluginError } from './errors';
 import { Deployer } from './deployer';
 import { ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';

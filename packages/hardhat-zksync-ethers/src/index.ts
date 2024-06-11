@@ -5,7 +5,7 @@ import { lazyObject } from 'hardhat/plugins';
 import './type-extensions';
 
 import { ethers } from 'ethers';
-import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
+import { Address, DeploymentType } from 'zksync-ethers/build/types';
 import {
     extractFactoryDeps,
     getContractAt,
