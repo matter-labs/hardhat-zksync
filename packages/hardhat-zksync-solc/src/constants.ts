@@ -62,7 +62,7 @@ export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolc
     `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) =>
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
-export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}.`;
+export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to native solc compiler.`;
 
 export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag viaEVMAssembly will automatically be set to true by default, overriding viaYul for this compiler.`;
 

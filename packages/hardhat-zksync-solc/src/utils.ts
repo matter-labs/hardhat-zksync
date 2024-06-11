@@ -14,9 +14,10 @@ import {
     ZKSOLC_COMPILERS_SELECTOR_MAP,
     SOLCJS_EXECUTABLE_CODE,
     DEFAULT_TIMEOUT_MILISECONDS,
-    ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
     COMPILER_ZKSOLC_NEED_EVM_CODEGEN,
     ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE,
+    ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
+    COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -58,17 +59,7 @@ export function filterSupportedOutputSelections(
     return filteredOutputSelection;
 }
 
-const solcUpdaters: SolcUserConfigUpdater[] = [
-    new OverrideCompilerSolcUserConfigUpdater(),
-    new CompilerSolcUserConfigUpdater(),
-];
-
-export function updateCompilerConf(
-    solcConfigData: SolcConfigData,
-    latestEraVersion: string,
-    zksolc: ZkSolcConfig,
-    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
-) {
+export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSolcConfig) {
     const compiler = solcConfigData.compiler;
 
     const settings = compiler.settings || {};
@@ -78,7 +69,8 @@ export function updateCompilerConf(
 
     if (isBreakableCompilerVersion(zksolc.version)) {
         compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA ?? false;
-        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions ?? false;
+        compiler.settings.enableEraVMExtensions =
+            zksolc.settings.enableEraVMExtensions ?? zksolc.settings.isSystem ?? false;
         compiler.settings.detectMissingLibraries = false;
     }
 
@@ -100,7 +92,20 @@ export function updateCompilerConf(
         compiler.settings.outputSelection,
         zksolc.version,
     );
+}
 
+const solcUpdaters: SolcUserConfigUpdater[] = [
+    new OverrideCompilerSolcUserConfigUpdater(),
+    new CompilerSolcUserConfigUpdater(),
+];
+
+export function updateCompilerWithEraVersion(
+    solcConfigData: SolcConfigData,
+    zksolc: ZkSolcConfig,
+    latestEraVersion: string,
+    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
+) {
+    const compiler = solcConfigData.compiler;
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, latestEraVersion, zksolc, userConfigCompilers, solcConfigData.file);
@@ -110,6 +115,7 @@ export function updateCompilerConf(
         compiler.eraVersion &&
         semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)
     ) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN));
         compiler.eraVersion = undefined;
     }
 }

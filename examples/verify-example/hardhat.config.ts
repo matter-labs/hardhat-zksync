@@ -13,7 +13,6 @@ const config: HardhatUserConfig = {
         compilerSource: 'binary',
         version: 'latest',
         settings: {
-            viaYul: true,
             enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,

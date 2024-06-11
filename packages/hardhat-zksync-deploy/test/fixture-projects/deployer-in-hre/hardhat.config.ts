@@ -6,9 +6,7 @@ import '@matterlabs/hardhat-zksync-solc';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        settings: {
-            viaYul: true,
-        },
+        settings: {},
     },
     solidity: {
         version: '0.8.17',

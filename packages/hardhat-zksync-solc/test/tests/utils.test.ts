@@ -15,6 +15,7 @@ import {
     getZksolcUrl,
     pluralize,
     sha1,
+    updateCompilerWithEraVersion,
 } from '../../src/utils';
 
 describe('Utils', () => {
@@ -76,7 +77,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, zksolc);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
         });
@@ -114,7 +115,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, zksolc);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
             expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.enableEraVMExtensions);
@@ -153,11 +154,10 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17' }]);
+            updateCompilerConf({ compiler }, zksolc);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
             expect(compiler.settings.viaEVMAssembly).to.equal(undefined);
-            expect(compiler.settings.viaYul).to.equal(undefined);
             expect(compiler.settings.enableEraVMExtensions).to.deep.equal(undefined);
         });
 
@@ -194,7 +194,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
+            updateCompilerConf({ compiler }, zksolc);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
         });
@@ -233,7 +233,9 @@ describe('Utils', () => {
             };
 
             try {
-                updateCompilerConf({ compiler }, '1.0.0', zksolc, [{ version: '0.8.17', eraVersion: 'latest' }]);
+                updateCompilerWithEraVersion({ compiler }, zksolc, '1.0.0', [
+                    { version: '0.8.17', eraVersion: 'latest' },
+                ]);
             } catch (e: any) {
                 expect(e.message).to.equal(
                     'zkVm (eraVersion) compiler is supported only with usage of zksolc version >= 1.3.22.',

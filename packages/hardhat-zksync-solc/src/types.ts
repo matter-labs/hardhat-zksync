@@ -32,6 +32,8 @@ export interface ZkSolcConfig {
             dockerImage?: string;
             tag?: string;
         };
+        // Old way to support compilation of zkSync-specific simulations. Transition to enableEraVMExtensions by default.
+        isSystem?: boolean;
         // Whether to support compilation of zkSync-specific simulations
         enableEraVMExtensions?: boolean;
         // Evmla intermediate representation
