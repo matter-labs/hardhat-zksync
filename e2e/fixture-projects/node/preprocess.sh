@@ -44,7 +44,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "^1.4.1",
+    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
     "axios": "^1.7.2",
     "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
