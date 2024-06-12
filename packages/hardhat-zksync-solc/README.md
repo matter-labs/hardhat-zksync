@@ -30,7 +30,7 @@ zksolc: {
       libraries:{}, // optional. References to non-inlinable libraries
       missingLibrariesPath: "./.zksolc-libraries-cache/missingLibraryDependencies.json" // optional. This path serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. A `hardhat-zksync-deploy` plugin uses this cache later to compile and deploy the libraries, especially when the `deploy-zksync:libraries` task is executed
       enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
-      forceEVMLA: false, // Compile with EVM legacy assembly codegen. If the zksolc version is below 1.5.0, this argument will act as a 'forceEvmla' flag in the older versions of the plugin, attempting to fallback to EVM legacy assembly if there is a bug with Yul
+      forceEVMLA: false, // Compile with EVM legacy assembly codegen. In the older versions of the plugin known as a 'forceEvmla' flag
       optimizer: {
         enabled: true, // optional. True by default
         mode: '3' // optional. 3 by default, z to optimize bytecode size
@@ -43,6 +43,11 @@ zksolc: {
     }
 },
 ```
+
+The `isSystema` and `forceEvmla` arguments are deprecated in favor of `enableEraVMExtensions` and `forceEVMLA`. If the deprecated arguments are used, a warning will be displayed and they will be automatically switched to the new naming with the provided values.
+
+Starting from zksolc version 1.5.0, the zkSync Era Solidity compiler will be used by default with the latest version if not specified in hardhat.config.ts
+
 
 | 🔧 Properties               | 📄 Description                                                                                                       |
 |-----------------------------|----------------------------------------------------------------------------------------------------------------------|

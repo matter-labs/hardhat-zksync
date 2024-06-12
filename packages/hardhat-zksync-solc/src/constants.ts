@@ -62,9 +62,12 @@ export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolc
     `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) =>
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
-export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to native solc compiler.`;
+export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to the native solc compiler.`;
 
-export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag viaEVMAssembly will automatically be set to true by default, overriding viaYul for this compiler.`;
+export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag forceEVMLA will automatically be set to true by default.`;
+
+export const COMPILER_ZKSOLC_IS_SYSTEM_USE = `isSystem flag is deprecated. Please use enableEraVMExtensions instead. Automatically switched to the new naming with the provided value.`;
+export const COMPILER_ZKSOLC_FORCE_EVMLA_USE = `forceEvmla flag is deprecated. Please use forceEVMLA instead. Automatically switched to the new naming with the provided value.`;
 
 export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (eraVersion: string, solcVersion: string) =>
     `Using zkSync edition of solc (zkSync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
@@ -73,7 +76,7 @@ export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
 export const MISSING_LIBRARIES_NOTICE =
     'zksolc compiler detected missing libraries! For more details, visit: https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html.';
 export const COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS =
-    'To compile and deploy libraries, please run: `yarn hardhat deploy-zksync:libraries`';
+    'To compile and deploy libraries, please run: `hardhat deploy-zksync:libraries`';
 export const MISSING_LIBRARY_LINK =
     'For more details on how to use deploy-zksync:libraries task from hardhat-zksync-deploy plugin, visit: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html.';
 

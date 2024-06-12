@@ -21,6 +21,8 @@ import {
     ZKSOLC_BIN_OWNER,
     ZKVM_SOLC_BIN_REPOSITORY_NAME,
     USER_AGENT,
+    COMPILER_ZKSOLC_IS_SYSTEM_USE,
+    COMPILER_ZKSOLC_FORCE_EVMLA_USE,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -72,8 +74,16 @@ export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSol
 
     zksolc.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions || zksolc.settings.isSystem || false;
     zksolc.settings.forceEVMLA = zksolc.settings.forceEVMLA || zksolc.settings.forceEvmla || false;
-    delete zksolc.settings.isSystem;
-    delete zksolc.settings.forceEvmla;
+
+    if (zksolc.settings.isSystem !== undefined) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_IS_SYSTEM_USE));
+        delete zksolc.settings.isSystem;
+    }
+
+    if (zksolc.settings.forceEvmla !== undefined) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_FORCE_EVMLA_USE));
+        delete zksolc.settings.forceEvmla;
+    }
 
     if (isBreakableCompilerVersion(zksolc.version)) {
         compiler.settings.detectMissingLibraries = false;
