@@ -76,7 +76,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
-    "@matterlabs/hardhat-zksync-node": "^workspace:^",
+    "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^"
   },
   "prettier": {
