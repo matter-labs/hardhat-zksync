@@ -24,5 +24,6 @@
     "test:release-script": "mocha scripts/test/tests.js",
     "prepare": "pnpm husky install"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@9.2.0"
 }
