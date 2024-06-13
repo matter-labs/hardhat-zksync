@@ -12,6 +12,7 @@ import {
 } from '../constants';
 import { MaybeSolcOutput } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { Manifest } from '../core/manifest';
 
 export type ContractAddressOrInstance = string | { getAddress(): Promise<string> };
 
@@ -183,4 +184,16 @@ export async function extractFactoryDepsRecursive(
     }
 
     return factoryDeps;
+}
+
+export async function existProxyInManifest(provider: zk.Provider, proxyAddress: string) : Promise<boolean>{
+    const manifest = await Manifest.forNetwork(provider);
+    let existInManifest = false;
+    try {
+       await manifest.getProxyFromAddress(proxyAddress);
+         existInManifest = true;
+    } catch (e) {
+    }
+
+    return existInManifest;
 }

@@ -6,11 +6,12 @@ import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
 import { ethers } from 'ethers';
 import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
-import { getContractCreationTxHash } from '../utils/utils-general';
+import { existProxyInManifest, getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { fullVerifyTransparentOrUUPS } from './verify-transparent-uups';
 import { fullVerifyBeacon, fullVerifyBeaconProxy } from './verify-beacon';
+import { Manifest } from '../core/manifest';
 
 /**
  * Overrides verify's plugin `verify:verify` subtask to fully verify a proxy or beacon.
@@ -27,12 +28,13 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
     const networkConfig: any = hre.network.config;
     const provider = new zk.Provider(networkConfig.url);
     const proxyAddress = args.address;
+    const existInManifest = await existProxyInManifest(provider, proxyAddress);
 
-    if (await isTransparentOrUUPSProxy(provider, proxyAddress)) {
+    if (await isTransparentOrUUPSProxy(provider, proxyAddress) && existInManifest) {
         await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
-    } else if (await isBeaconProxy(provider, proxyAddress)) {
+    } else if (await isBeaconProxy(provider, proxyAddress) && existInManifest) {
         await fullVerifyBeaconProxy(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
-    } else if (await isBeacon(provider, proxyAddress)) {
+    } else if (await isBeacon(provider, proxyAddress) && existInManifest) {
         await fullVerifyBeacon(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else {
         return hardhatZkSyncVerify(proxyAddress);
@@ -123,3 +125,5 @@ async function attemptVerifyWithCreationEvent(
 
     await runSuper({ address, constructorArguments: constructorArgs, libraries: {}, noCompile });
 }
+
+
