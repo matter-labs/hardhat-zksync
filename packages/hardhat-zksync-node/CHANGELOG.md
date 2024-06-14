@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.0.3...@matterlabs/hardhat-zksync-node-v1.1.0) (2024-06-14)
+
+
+### Features
+
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+
 ## [1.0.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node@1.0.2...@matterlabs/hardhat-zksync-node-v1.0.3) (2024-03-21)
 
 
