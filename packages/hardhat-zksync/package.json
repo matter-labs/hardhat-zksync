@@ -34,12 +34,12 @@
   ],
   "dependencies": {
     "hardhat": "^2.22.5",
-    "@matterlabs/hardhat-zksync-deploy": "^1.3.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
-    "@matterlabs/hardhat-zksync-verify": "^1.4.2",
-    "@matterlabs/hardhat-zksync-upgradable": "^1.4.0",
-    "@matterlabs/hardhat-zksync-node": "^1.0.3",
-    "@matterlabs/hardhat-zksync-ethers": "^1.0.0",
+    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^",
+    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
+    "@matterlabs/hardhat-zksync-node": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
@@ -72,12 +72,12 @@
     "c8": "^9.1.0"
   },
   "peerDependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "^1.3.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
-    "@matterlabs/hardhat-zksync-verify": "^1.4.2",
-    "@matterlabs/hardhat-zksync-upgradable": "^1.4.0",
-    "@matterlabs/hardhat-zksync-node": "^1.0.3",
-    "@matterlabs/hardhat-zksync-ethers": "^1.0.0"
+    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^",
+    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
+    "@matterlabs/hardhat-zksync-node": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^"
   },
   "prettier": {
     "tabWidth": 4,

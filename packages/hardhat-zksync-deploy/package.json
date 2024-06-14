@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-solc": "^1.0.4",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "chalk": "^4.1.2",
     "ts-morph": "^22.0.0",
     "chai": "^4.3.4",
