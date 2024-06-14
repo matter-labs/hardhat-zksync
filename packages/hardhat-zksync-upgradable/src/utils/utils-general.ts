@@ -186,14 +186,13 @@ export async function extractFactoryDepsRecursive(
     return factoryDeps;
 }
 
-export async function existProxyInManifest(provider: zk.Provider, proxyAddress: string) : Promise<boolean>{
+export async function existProxyInManifest(provider: zk.Provider, proxyAddress: string): Promise<boolean> {
     const manifest = await Manifest.forNetwork(provider);
     let existInManifest = false;
     try {
-       await manifest.getProxyFromAddress(proxyAddress);
-         existInManifest = true;
-    } catch (e) {
-    }
+        await manifest.getProxyFromAddress(proxyAddress);
+        existInManifest = true;
+    } catch (e) {}
 
     return existInManifest;
 }
