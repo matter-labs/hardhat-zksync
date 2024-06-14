@@ -11,8 +11,7 @@
     "get-monorepo-packages": "^1.2.0",
     "husky": "^8.0.3",
     "prettier": "^3.3.0",
-    "typescript": "^5.3.0",
-    "wsrun": "^5.2.2"
+    "typescript": "^5.3.0"
   },
   "scripts": {
     "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync",
