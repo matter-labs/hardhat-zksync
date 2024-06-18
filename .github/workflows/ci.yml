@@ -152,8 +152,7 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
       - uses: pnpm/action-setup@v3
-        with:
-          version: 8
+
       - uses: actions/setup-node@v3
         with:
           node-version: "18"
