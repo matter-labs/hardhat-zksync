@@ -1,7 +1,7 @@
 import { TASK_VERIFY } from '@matterlabs/hardhat-zksync-verify/dist/src/constants';
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 import { Contract } from 'zksync-ethers';
-import { DeploymentType } from 'zksync-ethers/build/src/types';
+import { DeploymentType } from 'zksync-ethers/build/types';
 
 export async function deployContractAndVerify(
     hre: HardhatRuntimeEnvironment,

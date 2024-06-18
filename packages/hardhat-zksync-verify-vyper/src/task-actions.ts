@@ -35,7 +35,7 @@ export async function verify(
         contract: string;
         constructorArgsParams: any[];
     },
-    hre: HardhatRuntimeEnvironment
+    hre: HardhatRuntimeEnvironment,
 ) {
     if (args.address === undefined) {
         throw new ZkSyncVerifyPluginError(NO_VERIFIABLE_ADDRESS_ERROR);
@@ -60,7 +60,7 @@ export async function verify(
 
 export async function verifyContract(
     { address, contract: contractFQN, constructorArguments }: TaskArguments,
-    hre: HardhatRuntimeEnvironment
+    hre: HardhatRuntimeEnvironment,
 ): Promise<number> {
     await hre.run(TASK_COMPILE_VYPER, { quiet: true });
 
@@ -96,7 +96,7 @@ export async function verifyContract(
 
     const resolvedFiles: ResolvedFile[] = await getResolvedFiles(hre);
     const contractsSourceCodesMap = Object.fromEntries(
-        resolvedFiles.map((file) => [file.sourceName, file.content.rawContent])
+        resolvedFiles.map((file) => [file.sourceName, file.content.rawContent]),
     );
 
     const request = {
@@ -142,7 +142,7 @@ export async function getConstructorArguments(args: any): Promise<any> {
 
 export async function getArtifact(
     { contractFQN, deployedBytecode }: TaskArguments,
-    { artifacts }: HardhatRuntimeEnvironment
+    { artifacts }: HardhatRuntimeEnvironment,
 ): Promise<Artifact> {
     if (contractFQN !== undefined) {
         const _ = checkContractName(artifacts, contractFQN);

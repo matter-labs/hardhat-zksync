@@ -6,7 +6,7 @@ import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {
         throw new Error(
-            `Axios error (code: ${error.code}) during the contract verification request\n Reason: ${error.response?.data}`
+            `Axios error (code: ${error.code}) during the contract verification request\n Reason: ${error.response?.data}`,
         );
     } else {
         throw new ZkSyncVerifyPluginError(`Failed to send contract verification request\n Reason: ${error}`);
@@ -38,7 +38,7 @@ export async function retrieveContractBytecode(address: string, hreNetwork: any)
     if (bytecodeString.length === 0) {
         throw new ZkSyncVerifyPluginError(
             `The address ${address} has no bytecode. Is the contract deployed to this network?
-  The selected network is ${hreNetwork.name}.`
+  The selected network is ${hreNetwork.name}.`,
         );
     }
     return bytecodeString;
