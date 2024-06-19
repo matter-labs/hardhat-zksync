@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.4.0...@matterlabs/hardhat-zksync-deploy-v1.5.0) (2024-06-19)
+
+
+### Features
+
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+* switch to the default codegen with zksolc ([#1062](https://github.com/matter-labs/hardhat-zksync/issues/1062)) ([5ec997a](https://github.com/matter-labs/hardhat-zksync/commit/5ec997aaa83ba18d978f10b96f489513f6c4dd9f))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.3.0...@matterlabs/hardhat-zksync-deploy-v1.4.0) (2024-05-28)
 
 
