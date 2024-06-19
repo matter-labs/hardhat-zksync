@@ -99,8 +99,8 @@ export function getSolidityStandardJsonInput(
     standardInput.settings = !isBreakableCompilerVersion(hre.config.zksolc.version)
         ? {
               ...input.settings,
-              enableEraVMExtensions: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
-              forceEVMLA: hre.config.zksolc.settings.forceEVMLA ?? false,
+              isSystem: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
+              forceEvmla: hre.config.zksolc.settings.forceEVMLA ?? false,
           }
         : {
               ...input.settings,
