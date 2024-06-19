@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import { ZkSolcConfig } from '../types';
+import { isBreakableCompilerVersion } from '../utils';
 
 export async function compileWithBinary(
     input: any,
@@ -7,11 +8,22 @@ export async function compileWithBinary(
     solcPath: string,
     detectMissingLibrariesMode: boolean = false,
 ): Promise<any> {
-    const { compilerPath, isSystem, forceEvmla } = config.settings;
+    const { compilerPath, debugOutputDir } = config.settings;
 
-    const processCommand = `${compilerPath} --standard-json ${isSystem ? '--system-mode' : ''} ${
-        forceEvmla ? '--force-evmla' : ''
-    } --solc ${solcPath} ${detectMissingLibrariesMode ? '--detect-missing-libraries' : ''}`;
+    let processCommand = `${compilerPath} --standard-json --solc ${solcPath} ${
+        debugOutputDir ? `--debug-output-dir ${debugOutputDir}` : ''
+    }`;
+
+    if (!isBreakableCompilerVersion(config.version)) {
+        const { enableEraVMExtensions, forceEVMLA } = config.settings;
+        processCommand += `${detectMissingLibrariesMode ? ' --detect-missing-libraries' : ''} ${
+            enableEraVMExtensions ? '--system-mode' : ''
+        }  ${forceEVMLA ? '--force-evmla' : ''}`;
+    }
+
+    if (isBreakableCompilerVersion(config.version)) {
+        input.settings.detectMissingLibraries = detectMissingLibrariesMode;
+    }
 
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(

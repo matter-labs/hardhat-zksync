@@ -10,6 +10,9 @@ jobs:
         solc: [0.8.16, 0.7.6, 0.4.22]
         node: ["18"]
         os: [ubuntu, macos, windows]
+        exclude:
+          - solc: 0.4.22
+            os: windows
 
     runs-on: ${{ matrix.os }}-latest
 

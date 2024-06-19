@@ -2,12 +2,7 @@ import { assert, expect } from 'chai';
 import sinon from 'sinon';
 import { fail } from 'assert';
 
-import {
-    TASK_COMPILE,
-    TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS,
-} from 'hardhat/builtin-tasks/task-names';
+import { TASK_COMPILE, TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
 import {
     getCompilerVersions,
     getConstructorArguments,
@@ -194,10 +189,6 @@ describe('verifyContract', async function () {
                     solcVersion: '0.8.0',
                 })
                 .onCall(3)
-                .resolves(['contracts/'])
-                .onCall(4)
-                .resolves(['contracts/Contract.sol'])
-                .onCall(5)
                 .resolves({
                     getResolvedFiles: sinon.stub().resolves(),
                 }),
@@ -208,10 +199,8 @@ describe('verifyContract', async function () {
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
-        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS);
-        expect(hre.run.getCall(4).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES);
-        expect(hre.run.getCall(5).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
-        expect(hre.run.getCall(6).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
     });
 
     it('should call fallback request sent if there is compilation error', async function () {
@@ -299,16 +288,12 @@ describe('verifyContract', async function () {
                     solcVersion: '0.8.0',
                 })
                 .onCall(3)
-                .resolves(['contracts/'])
-                .onCall(4)
-                .resolves(['contracts/Contract.sol'])
-                .onCall(5)
                 .resolves({
                     getResolvedFiles: sinon.stub().resolves(),
                 })
-                .onCall(6)
+                .onCall(4)
                 .throwsException(new ZkSyncVerifyPluginError(errorMessage))
-                .onCall(7)
+                .onCall(5)
                 .resolves(true),
         };
 
@@ -317,11 +302,9 @@ describe('verifyContract', async function () {
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
-        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS);
-        expect(hre.run.getCall(4).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES);
-        expect(hre.run.getCall(5).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
-        expect(hre.run.getCall(6).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
-        expect(hre.run.getCall(7).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
     });
 
     it('should call fallback request sent if there is missing source file', async function () {
@@ -408,16 +391,12 @@ describe('verifyContract', async function () {
                     solcVersion: '0.8.0',
                 })
                 .onCall(3)
-                .resolves(['contracts/'])
-                .onCall(4)
-                .resolves(['contracts/Contract.sol'])
-                .onCall(5)
                 .resolves({
                     getResolvedFiles: sinon.stub().resolves(),
                 })
-                .onCall(6)
+                .onCall(4)
                 .throwsException(new ZkSyncVerifyPluginError(errorMessage))
-                .onCall(7)
+                .onCall(5)
                 .resolves(true),
         };
 
@@ -426,11 +405,9 @@ describe('verifyContract', async function () {
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
-        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS);
-        expect(hre.run.getCall(4).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES);
-        expect(hre.run.getCall(5).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
-        expect(hre.run.getCall(6).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
-        expect(hre.run.getCall(7).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
     });
 
     it('should call fallback request sent if there is missing contract file', async function () {
@@ -518,16 +495,12 @@ describe('verifyContract', async function () {
                     solcVersion: '0.8.0',
                 })
                 .onCall(3)
-                .resolves(['contracts/'])
-                .onCall(4)
-                .resolves(['contracts/Contract.sol'])
-                .onCall(5)
                 .resolves({
                     getResolvedFiles: sinon.stub().resolves(),
                 })
-                .onCall(6)
+                .onCall(4)
                 .throwsException(new ZkSyncVerifyPluginError(errorMessage))
-                .onCall(7)
+                .onCall(5)
                 .resolves(true),
         };
 
@@ -536,11 +509,9 @@ describe('verifyContract', async function () {
         expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
-        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS);
-        expect(hre.run.getCall(4).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES);
-        expect(hre.run.getCall(5).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
-        expect(hre.run.getCall(6).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
-        expect(hre.run.getCall(7).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
+        expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
+        expect(hre.run.getCall(5).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
     });
 });
 describe('getCompilerVersions', async function () {
@@ -570,6 +541,9 @@ describe('getCompilerVersions', async function () {
                 zksync: true,
             },
             config: {
+                zksolc: {
+                    version: 'latest',
+                },
                 solidity: {
                     compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],
                     overrides: {
@@ -589,7 +563,7 @@ describe('getCompilerVersions', async function () {
         };
 
         const result = await getCompilerVersions({}, hre as any, runSuperStub as any);
-        expect(result).to.deep.equal(['0.8.0', '0.7.0', '0.6.0']);
+        expect(result).to.deep.equal(['zkVM-0.8.0-1.0.1', 'zkVM-0.7.0-1.0.1', 'zkVM-0.6.0-1.0.1']);
         expect(runSuperStub.called).to.equal(false);
     });
 });
@@ -602,6 +576,11 @@ describe('verify', async function () {
     it('should call runSuper if zksync is false', async function () {
         const runSuperStub = sinon.stub().resolves(0);
         const hre = {
+            config: {
+                zksolc: {
+                    version: 'latest',
+                },
+            },
             network: {
                 zksync: false,
                 verifyURL: 'http://localhost:3000/verify',

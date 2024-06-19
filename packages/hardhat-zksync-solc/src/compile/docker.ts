@@ -122,10 +122,10 @@ export async function compileWithDocker(
     zksolcConfig: ZkSolcConfig,
 ) {
     const command = ['zksolc', '--standard-json'];
-    if (zksolcConfig.settings.isSystem) {
+    if (zksolcConfig.settings.enableEraVMExtensions) {
         command.push('--system-mode');
     }
-    if (zksolcConfig.settings.forceEvmla) {
+    if (zksolcConfig.settings.forceEVMLA) {
         command.push('--force-evmla');
     }
 

@@ -3,6 +3,7 @@ import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hard
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
 import path from 'path';
+import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -102,20 +103,33 @@ export async function getCompilerVersions(
     }
 
     const userSolidityConfig = hre.userConfig.solidity;
+    const zkSolcConfig = hre.config.zksolc;
 
     const extractedConfigs = extractors
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
+    const latestEraVersion = await getLatestEraVersion();
+
     const compilerVersions = hre.config.solidity.compilers.map(
-        (c) => normalizeCompilerVersions({ compiler: c }, extractedConfigs?.compilers ?? []) ?? c.version,
+        (c) =>
+            normalizeCompilerVersions(
+                { compiler: c },
+                zkSolcConfig,
+                latestEraVersion,
+                extractedConfigs?.compilers ?? [],
+            ) ?? c.version,
     );
 
     if (hre.config.solidity.overrides !== undefined) {
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
             compilerVersions.push(
-                normalizeCompilerVersions({ compiler, file }, extractedConfigs?.overides ?? new Map()) ??
-                    compiler.version,
+                normalizeCompilerVersions(
+                    { compiler, file },
+                    zkSolcConfig,
+                    latestEraVersion,
+                    extractedConfigs?.overides ?? new Map(),
+                ) ?? compiler.version,
             );
         }
     }

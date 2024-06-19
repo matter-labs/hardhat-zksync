@@ -1,6 +1,7 @@
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-ethers';
+import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-verify/dist/src/type-extensions'
 import '@matterlabs/hardhat-zksync-ethers/dist/type-extensions'
@@ -12,7 +13,7 @@ const config: HardhatUserConfig = {
         compilerSource: 'binary',
         version: 'latest',
         settings: {
-            isSystem: true,
+            enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,
             },
