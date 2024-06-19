@@ -73,9 +73,8 @@ export function inferConstructorArgs(txInput: string, creationCode: string) {
  *   the address is not a contract.
  */
 export async function getContractCreationTxHash(provider: zk.Provider, address: string, topic: string): Promise<any> {
-    const fromBlock = (await provider.getBlockNumber()) - 100;
     const params = {
-        fromBlock,
+        fromBlock: 'earliest',
         toBlock: 'latest',
         address,
         topics: [`0x${keccak256(Buffer.from(topic)).toString('hex')}`],
