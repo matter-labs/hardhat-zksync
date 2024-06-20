@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.0",
     "@matterlabs/hardhat-zksync-vyper": "^1.0.8",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "~5.7.2",

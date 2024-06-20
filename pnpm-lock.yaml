@@ -36,8 +36,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
         version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)
@@ -103,8 +103,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -161,8 +161,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/hardhat-zksync-vyper':
         specifier: ^1.0.8
         version: 1.0.8(@nomiclabs/hardhat-vyper@3.0.6(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
@@ -228,8 +228,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
         version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)
@@ -307,8 +307,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
         version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)
@@ -374,8 +374,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/hardhat-zksync-upgradable':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-upgradable
@@ -441,8 +441,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
@@ -569,8 +569,8 @@ importers:
         specifier: workspace:^
         version: link:../hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@matterlabs/hardhat-zksync-upgradable':
         specifier: workspace:^
         version: link:../hardhat-zksync-upgradable
@@ -675,8 +675,8 @@ importers:
         specifier: workspace:^
         version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -757,8 +757,8 @@ importers:
   packages/hardhat-zksync-deploy:
     dependencies:
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.0.5
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -851,8 +851,8 @@ importers:
   packages/hardhat-zksync-node:
     dependencies:
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       axios:
         specifier: ^1.7.2
         version: 1.7.2(debug@4.3.5)
@@ -954,8 +954,8 @@ importers:
         specifier: workspace:^
         version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/upgrades-core':
         specifier: ~1.29.0
         version: 1.29.0
@@ -1051,8 +1051,8 @@ importers:
         specifier: 5.7.0
         version: 5.7.0
       '@matterlabs/hardhat-zksync-solc':
-        specifier: ^1.1.4
-        version: 1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        specifier: ^1.2.0
+        version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-verify':
         specifier: ^2.0.8
         version: 2.0.8(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
@@ -1480,10 +1480,10 @@ packages:
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==, tarball: https://registry.npmjs.org/@manypkg/get-packages/-/get-packages-1.1.3.tgz}
 
-  '@matterlabs/hardhat-zksync-solc@1.1.4':
-    resolution: {integrity: sha512-4/usbogh9neewR2/v8Dn2OzqVblZMUuT/iH2MyPZgPRZYQlL4SlZtMvokU9UQjZT6iSoaKCbbdWESHDHSzfUjA==, tarball: https://registry.npmjs.org/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.1.4.tgz}
+  '@matterlabs/hardhat-zksync-solc@1.2.0':
+    resolution: {integrity: sha512-zM3LY6jeCVfFe2MZfiK/6k8GUcxk9BcCBiNs1Ywh4PZ4OaabYOP3HuFFmVo89BFisIRROnQ+IyT9fayKKVbFCg==, tarball: https://registry.npmjs.org/@matterlabs/hardhat-zksync-solc/-/hardhat-zksync-solc-1.2.0.tgz}
     peerDependencies:
-      hardhat: ^2.19.4
+      hardhat: ^2.22.5
 
   '@matterlabs/hardhat-zksync-vyper@1.0.8':
     resolution: {integrity: sha512-XR7rbfDuBG5/LZWYfhQTP9gD+U24hSJHDuZ9U55wgIfiQTOxPoztFwEbQNiC39vjT5MjP/Nv8/IDrlEBkaVCgw==, tarball: https://registry.npmjs.org/@matterlabs/hardhat-zksync-vyper/-/hardhat-zksync-vyper-1.0.8.tgz}
@@ -5029,7 +5029,7 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
-  '@matterlabs/hardhat-zksync-solc@1.1.4(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
+  '@matterlabs/hardhat-zksync-solc@1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
     dependencies:
       '@nomiclabs/hardhat-docker': 2.0.2
       chai: 4.4.1
@@ -5040,9 +5040,9 @@ snapshots:
       hardhat: 2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       proper-lockfile: 4.1.2
       semver: 7.6.2
-      sinon: 17.0.2
-      sinon-chai: 3.7.0(chai@4.4.1)(sinon@17.0.2)
-      undici: 5.28.4
+      sinon: 18.0.0
+      sinon-chai: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+      undici: 6.19.2
     transitivePeerDependencies:
       - encoding
       - supports-color
