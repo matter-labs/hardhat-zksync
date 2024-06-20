@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork: 'zkSyncNetwork',
+    defaultNetwork: 'zkSyncNetwork2',
     networks: {
         hardhat: {
             zksync: true,
@@ -28,11 +28,6 @@ const config: HardhatUserConfig = {
         },
         ethNetwork: {
             url: 'http://0.0.0.0:8545',
-        },
-        zkSyncNetwork: {
-            url: 'http://0.0.0.0:3050',
-            ethNetwork: 'ethNetwork',
-            zksync: true,
         },
         zkSyncNetwork2: {
             url: 'http://0.0.0.0:3050',
