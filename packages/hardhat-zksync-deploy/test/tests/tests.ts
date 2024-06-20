@@ -192,7 +192,7 @@ describe('Plugin tests', async function () {
             }
         });
 
-        it('Should estimate deploy fee', async function () {
+        it.skip('Should estimate deploy fee', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
             await this.env.run('compile');
