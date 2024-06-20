@@ -230,8 +230,6 @@ jobs:
           cd local-setup
           ./start.sh &>../server.log &
 
-      - uses: actions/checkout@v3
-
       - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v3
