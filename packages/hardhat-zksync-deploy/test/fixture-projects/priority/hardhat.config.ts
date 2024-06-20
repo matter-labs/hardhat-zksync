@@ -17,6 +17,7 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:3050',
             ethNetwork: 'ethNetwork',
             zksync: true,
+            deployPaths: 'deploy-scripts',
         },
         hardhat: {
             zksync: true,
