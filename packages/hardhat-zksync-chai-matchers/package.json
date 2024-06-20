@@ -42,7 +42,7 @@
   "dependencies": {
     "@ethersproject/abi": "^5.1.2",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.2",
     "ordinal": "^1.0.3",

@@ -263,6 +263,7 @@ Instead, this name was received: ${contractFQN}`);
             const hre = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {},
                     },
                 },
@@ -283,6 +284,7 @@ Instead, this name was received: ${contractFQN}`);
             const hre = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {},
                     },
                 },
@@ -296,8 +298,9 @@ Instead, this name was received: ${contractFQN}`);
             const hre1 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
-                            isSystem: true,
+                            enableEraVMExtensions: true,
                         },
                     },
                 },
@@ -310,8 +313,9 @@ Instead, this name was received: ${contractFQN}`);
             const hre2 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
-                            forceEvmla: true,
+                            forceEVMLA: true,
                         },
                     },
                 },
@@ -324,9 +328,10 @@ Instead, this name was received: ${contractFQN}`);
             const hre3 = {
                 config: {
                     zksolc: {
+                        version: '1.4.0',
                         settings: {
-                            isSystem: true,
-                            forceEvmla: true,
+                            enableEraVMExtensions: true,
+                            forceEVMLA: true,
                         },
                     },
                 },
