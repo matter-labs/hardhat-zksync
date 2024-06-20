@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v0.1.0...@matterlabs/hardhat-zksync-node-v0.2.0) (2024-06-20)
+
+
+### Features
+
+* switch to the default codegen with zksync solc ([#1176](https://github.com/matter-labs/hardhat-zksync/issues/1176)) ([aaa7c75](https://github.com/matter-labs/hardhat-zksync/commit/aaa7c75a1c8094d52d880f8c14d3e6bdca28b07f))
+
 ## [0.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v0.0.2...@matterlabs/hardhat-zksync-node-v0.1.0) (2024-03-06)
 
 
