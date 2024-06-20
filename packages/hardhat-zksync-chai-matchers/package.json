@@ -42,7 +42,7 @@
   "dependencies": {
     "chai": "^4.3.4",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.8.0",
+    "zksync-ethers": "^6.9.0",
     "ethers-v5": "npm:ethers@5",
     "hardhat": "^2.22.5",
     "ordinal": "^1.0.3",
