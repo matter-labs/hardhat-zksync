@@ -1,8 +1,12 @@
-import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names';
-import { Artifacts, CompilerInput, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
+import {
+    TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
+    TASK_FLATTEN_GET_FLATTENED_SOURCE,
+} from 'hardhat/builtin-tasks/task-names';
+import { Artifacts, CompilerInput, DependencyGraph, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
 import chalk from 'chalk';
+import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
@@ -69,14 +73,40 @@ Instead, this name was received: ${contractFQN}`,
     }
 }
 
-export function getSolidityStandardJsonInput(resolvedFiles: ResolvedFile[], input: CompilerInput): any {
-    return {
+export async function getMinimalResolvedFiles(
+    hre: HardhatRuntimeEnvironment,
+    sourceName: string,
+): Promise<ResolvedFile[]> {
+    const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+        sourceNames: [sourceName],
+    });
+
+    return dependencyGraph.getResolvedFiles();
+}
+
+export function getSolidityStandardJsonInput(
+    hre: HardhatRuntimeEnvironment,
+    resolvedFiles: ResolvedFile[],
+    input: CompilerInput,
+): any {
+    const standardInput = {
         language: input.language,
         sources: Object.fromEntries(
             resolvedFiles.map((file) => [file.sourceName, { content: file.content.rawContent }]),
         ),
-        settings: input.settings,
+        settings: {},
     };
+    standardInput.settings = !isBreakableCompilerVersion(hre.config.zksolc.version)
+        ? {
+              ...input.settings,
+              isSystem: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
+              forceEvmla: hre.config.zksolc.settings.forceEVMLA ?? false,
+          }
+        : {
+              ...input.settings,
+          };
+
+    return standardInput;
 }
 
 export async function getLibraries(librariesModule: string) {
@@ -108,6 +138,7 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     if (isValidVerification?.errorExists()) {
         throw new ZkSyncVerifyPluginError(`Backend verification error: ${isValidVerification.getError()}`);
     }
+
     console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
     return true;
 }

@@ -5,11 +5,11 @@ import fsExtra from 'fs-extra';
 import path from 'path';
 
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
-import { describe } from 'node:test';
 import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constants';
 import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
 import { deploy } from '../src/proxy-deployment/deploy';
 import { getManifestAdmin } from '../src/admin';
+import { deployBeacon, deployProxy, upgradeBeacon } from '../src/plugin';
 import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
 import richWallets from './rich-wallets.json';
 
@@ -17,7 +17,7 @@ import { useEnvironment } from './helpers';
 
 import '../src/type-extensions';
 
-describe('Upgradable plugin tests', async function () {
+describe('Upgradable plugin tests', function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e');
 
@@ -81,7 +81,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test UUPS proxy deployment and upgrade functionalities', async function () {
+    describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
         useEnvironment('uups-e2e');
         let boxUupsProxy: Contract;
         let boxUupsPublicProxy: Contract;
@@ -199,7 +199,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test beacon proxy deployment and upgrade functionalities', async function () {
+    describe('Test beacon proxy deployment and upgrade functionalities', async function () {
         useEnvironment('beacon-e2e');
 
         let beaconImplementation: Contract;
@@ -254,7 +254,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe.skip('Test upgradable contracts admin functionalities', async function () {
+    describe('Test upgradable contracts admin functionalities', async function () {
         useEnvironment('admin');
 
         const provider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
@@ -402,7 +402,7 @@ describe('Upgradable plugin tests', async function () {
             );
         });
     });
-    describe.skip('Test storage layout validations', async function () {
+    describe('Test storage layout validations', async function () {
         useEnvironment('storage-layout-validations');
 
         let boxProxy: Contract;
@@ -504,7 +504,7 @@ describe('Upgradable plugin tests', async function () {
             assert.equal(value, 'V2: 42');
         });
     });
-    describe.skip('Test proxy gas estimation', async function () {
+    describe('Test proxy gas estimation', async function () {
         useEnvironment('deployment-gas-estimation');
         const MINIMUM_GAS_LIMIT = 1000000000000000n; // 0.001 ETH
 
@@ -606,6 +606,55 @@ describe('Upgradable plugin tests', async function () {
             const newBalance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
 
             if (gasEstimation > MINIMUM_GAS_LIMIT) assert(gasEstimation > balance - newBalance);
+        });
+    });
+});
+
+describe('Test for upgrades for shortcuts commands', function () {
+    describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
+        useEnvironment('tup-e2e', 'zkSyncNetwork');
+
+        it('Should deploy proxy contract', async function () {
+            const box = await deployProxy(this.env, {
+                contractName: 'Box',
+                constructorArgsParams: [42],
+            });
+
+            const value = await box.retrieve();
+            assert.equal(value, 42n);
+        });
+    });
+
+    describe('Test UUPS proxy deployment and upgrade functionalities', async function () {
+        useEnvironment('uups-e2e', 'zkSyncNetwork');
+
+        it('Should deploy proxy contract', async function () {
+            const box = await deployProxy(this.env, {
+                contractName: 'BoxUups',
+                constructorArgsParams: [42],
+            });
+
+            const value = await box.retrieve();
+            assert.equal(value, 42);
+        });
+    });
+
+    describe('Test beacon proxy deployment and upgrade functionalities', async function () {
+        useEnvironment('beacon-e2e', 'zkSyncNetwork');
+
+        it('Should deploy proxy contract', async function () {
+            const { proxy, beacon } = await deployBeacon(this.env, {
+                contractName: 'Box',
+                constructorArgsParams: [42],
+            });
+
+            const value = await proxy.retrieve();
+            assert.equal(value, 42n);
+
+            const _ = await upgradeBeacon(this.env, {
+                contractName: 'BoxV2',
+                beaconAddress: await beacon.getAddress(),
+            });
         });
     });
 });

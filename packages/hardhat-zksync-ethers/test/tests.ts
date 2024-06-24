@@ -29,7 +29,7 @@ describe('Plugin tests', async function () {
             it('the provider should handle requests', async function () {
                 const gasPrice = await this.env.zksyncEthers.providerL2.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
             it('should get the gas price', async function () {
                 const feeData = await this.env.zksyncEthers.providerL2.getFeeData();
@@ -231,7 +231,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
             it('get valid second wallet', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet(1);
@@ -242,7 +242,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
             it('get invalid third wallet', async function () {
                 try {
@@ -260,7 +260,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
         });
 
@@ -275,7 +275,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
             it('get invalid second wallet with mnemonic', async function () {
                 try {
@@ -293,7 +293,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
         });
         describe('wallets with empty accounts', async function () {
@@ -321,7 +321,7 @@ describe('Plugin tests', async function () {
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
-                assert.strictEqual('0xee6b280', gasPrice);
+                assert.strictEqual('0x5f5e100', gasPrice);
             });
         });
     });

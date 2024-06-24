@@ -4,7 +4,7 @@ import * as ethers from 'ethers';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
-import { Address, DeploymentType } from 'zksync-ethers/build/src/types';
+import { Address, DeploymentType } from 'zksync-ethers/build/types';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { ZkSyncEthersPluginError } from './errors';
 import { richWallets } from './rich-wallets';

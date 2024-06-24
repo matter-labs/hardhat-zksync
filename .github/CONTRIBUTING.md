@@ -22,6 +22,14 @@ git clone https://github.com/<your-github-username>/hardhat-zksync.git
 git checkout -b feature/description-of-your-feature
 ```
 
+## Add dependencies
+
+This repo works with the [pnpm](https://pnpm.io/) package manager. To install the dependencies, run the following command:
+
+```bash
+pnpm install
+```
+
 ## Making Changes
 
 - **Write your code.** Ensure your code is thoroughly tested and functions as expected. Clear, well-commented code is always appreciated.
@@ -29,9 +37,9 @@ git checkout -b feature/description-of-your-feature
 - **Compile and test.** Before submitting a pull request, ensure your code compiles, passes lint checks, and all tests are successful. You should also write unit tests for your contributions. Use the following command for these checks:
 
 ```bash
-yarn lint
-yarn test
-yarn build
+pnpm lint
+pnpm test
+pnpm build
 ```
 
 - **Commit your changes.** Adhere to the [Conventional Commits](https://www.conventionalcommits.org/) standard when writing commit messages.
@@ -53,8 +61,8 @@ git push origin feature/description-of-your-feature
 We follow basic coding style guidelines. Before committing, ensure your code is formatted and lint checks pass:
 
 ```bash
-yarn lint
-yarn lint:fix
+pnpm lint
+pnpm lint:fix
 ```
 
 This ensures consistent code style throughout the project and helps identify potential issues early.
@@ -70,5 +78,3 @@ Once your PR is approved and merged, your contribution will be integrated into t
 Remember, the best contributions come from enjoying the process, being respectful, and continuously learning. Thanks for being a part of our community!
 
 ---
-
-*Last updated: November 29, 2023*

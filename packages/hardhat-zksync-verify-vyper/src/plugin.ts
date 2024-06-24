@@ -51,7 +51,7 @@ export async function checkContractName(artifacts: Artifacts, contractFQN: strin
         if (!isFullyQualifiedName(contractFQN)) {
             throw new ZkSyncVerifyPluginError(
                 `A valid fully qualified name was expected. Fully qualified names look like this: "contracts/AContract.sol:TheContract"
-Instead, this name was received: ${contractFQN}`
+Instead, this name was received: ${contractFQN}`,
             );
         }
 
@@ -86,7 +86,7 @@ export async function getDeployArgumentEncoded(constructorArguments: any, artifa
 export async function getCacheResolvedFileInformation(
     contractFQN: string,
     sourceName: string,
-    hre: HardhatRuntimeEnvironment
+    hre: HardhatRuntimeEnvironment,
 ): Promise<CacheResolveFileInfo> {
     const vyperFilesCachePath = getVyperFilesCachePath(hre.config.paths);
 
@@ -101,7 +101,7 @@ export async function getCacheResolvedFileInformation(
     const parser = new Parser(vyperFilesCache);
 
     const resolver = new Resolver(hre.config.paths.root, parser, (absolutePath: string) =>
-        hre.run(TASK_COMPILE_VYPER_READ_FILE, { absolutePath })
+        hre.run(TASK_COMPILE_VYPER_READ_FILE, { absolutePath }),
     );
 
     const resolvedFile = await resolver.resolveSourceName(sourceName);
@@ -120,7 +120,7 @@ export async function executeVeificationWithRetry(
     requestId: number,
     verifyURL: string,
     maxRetries = 5,
-    delayInMs = 1500
+    delayInMs = 1500,
 ): Promise<VerificationStatusResponse | undefined> {
     let retries = 0;
 

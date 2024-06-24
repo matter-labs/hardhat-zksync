@@ -7,8 +7,18 @@ const config: HardhatUserConfig = {
     zksolc: {
         version: 'latest',
         compilerSource: 'binary',
+        settings: {},
     },
     networks: {
+        ethNetwork: {
+            url: 'http://0.0.0.0:8545',
+        },
+        zkSyncNetwork: {
+            url: 'http://0.0.0.0:3050',
+            ethNetwork: 'ethNetwork',
+            zksync: true,
+            forceDeploy: true,
+        },
         hardhat: {
             zksync: true,
         },

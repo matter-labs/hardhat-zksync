@@ -1,9 +1,9 @@
-import { DependencyGraph, HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
 import path from 'path';
-import { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
+import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -23,6 +23,7 @@ import {
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
+    COMPILATION_ERRORS,
 } from './constants';
 
 import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
@@ -32,7 +33,13 @@ import { ZkSyncVerifyPluginError } from './errors';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
 import { ContractInformation } from './solc/types';
-import { checkContractName, getLibraries, getSolidityStandardJsonInput, inferContractArtifacts } from './plugin';
+import {
+    checkContractName,
+    getLibraries,
+    getMinimalResolvedFiles,
+    getSolidityStandardJsonInput,
+    inferContractArtifacts,
+} from './plugin';
 import {
     SolcMultiUserConfigExtractor,
     SolcSoloUserConfigExtractor,
@@ -96,20 +103,33 @@ export async function getCompilerVersions(
     }
 
     const userSolidityConfig = hre.userConfig.solidity;
+    const zkSolcConfig = hre.config.zksolc;
 
     const extractedConfigs = extractors
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
+    const latestEraVersion = await getLatestEraVersion();
+
     const compilerVersions = hre.config.solidity.compilers.map(
-        (c) => normalizeCompilerVersions({ compiler: c }, extractedConfigs?.compilers ?? []) ?? c.version,
+        (c) =>
+            normalizeCompilerVersions(
+                { compiler: c },
+                zkSolcConfig,
+                latestEraVersion,
+                extractedConfigs?.compilers ?? [],
+            ) ?? c.version,
     );
 
     if (hre.config.solidity.overrides !== undefined) {
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
             compilerVersions.push(
-                normalizeCompilerVersions({ compiler, file }, extractedConfigs?.overides ?? new Map()) ??
-                    compiler.version,
+                normalizeCompilerVersions(
+                    { compiler, file },
+                    zkSolcConfig,
+                    latestEraVersion,
+                    extractedConfigs?.overides ?? new Map(),
+                ) ?? compiler.version,
             );
         }
     }
@@ -202,13 +222,13 @@ export async function verifyContract(
 
     contractInformation.contractName = `${contractInformation.sourceName}:${contractInformation.contractName}`;
 
-    const dependencyGraph: DependencyGraph = await hre.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-        sourceNames: [contractInformation.sourceName],
-    });
-
     const request = {
         contractAddress: address,
-        sourceCode: getSolidityStandardJsonInput(dependencyGraph.getResolvedFiles(), contractInformation.compilerInput),
+        sourceCode: getSolidityStandardJsonInput(
+            hre,
+            await getMinimalResolvedFiles(hre, contractInformation.sourceName),
+            contractInformation.compilerInput,
+        ),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
         compilerSolcVersion: solcVersion,
@@ -227,12 +247,15 @@ export async function verifyContract(
     } catch (error: any) {
         // The first verirication attempt with 'minimal' source code was unnsuccessful.
         // Now try with the full source code from the compilation context.
-        if (error.message !== NO_MATCHING_CONTRACT) {
+        if (
+            error.message !== NO_MATCHING_CONTRACT &&
+            COMPILATION_ERRORS.filter((compilationError) => compilationError.pattern.test(error.message)).length === 0
+        ) {
             throw error;
         }
         console.info(chalk.red(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE));
 
-        request.sourceCode = contractInformation.compilerInput;
+        request.sourceCode.sources = contractInformation.compilerInput.sources;
 
         const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL);
         const fallbackVerificationId = parseInt(fallbackResponse.message, 10);

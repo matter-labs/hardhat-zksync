@@ -153,7 +153,7 @@ export async function getLatestRelease(
     // Check if the response is a redirect
     if (response.statusCode >= 300 && response.statusCode < 400) {
         // Get the URL from the 'location' header
-        if (response.headers.location) {
+        if (response.headers.location && typeof response.headers.location === 'string') {
             // Check if the redirect URL matches the expected pattern
             if (response.headers.location.startsWith(redirectUrlPattern)) {
                 // Extract the tag from the redirect URL

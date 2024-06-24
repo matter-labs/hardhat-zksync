@@ -16,8 +16,8 @@ const config: HardhatUserConfig = {
         },
         zkSyncNetwork: {
             allowUnlimitedContractSize: true,
-            url: 'http://localhost:3050',
-            ethNetwork: 'http://localhost:8545',
+            url: 'http://0.0.0.0:3050',
+            ethNetwork: 'http://0.0.0.0:8545',
             zksync: true,
         },
         zkSyncTestnet: {

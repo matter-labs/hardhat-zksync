@@ -12,15 +12,25 @@ import {
     TASK_COMPILE_SOLIDITY_COMPILE_SOLC,
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END,
     TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
+    TASK_COMPILE,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import fs from 'fs';
 import chalk from 'chalk';
-import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, SolcBuild } from 'hardhat/types';
+import {
+    ArtifactsEmittedPerFile,
+    CompilationJob,
+    CompilerInput,
+    CompilerOutput,
+    HardhatRuntimeEnvironment,
+    RunSuperFunction,
+    SolcBuild,
+    TaskArguments,
+} from 'hardhat/types';
 import debug from 'debug';
 import { compile } from './compile';
 import {
@@ -31,6 +41,8 @@ import {
     generateSolcJSExecutableCode,
     updateCompilerConf,
     getZkVmNormalizedVersion,
+    updateCompilerWithEraVersion,
+    getLatestEraVersion,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -42,6 +54,7 @@ import {
     MISSING_LIBRARY_LINK,
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
     ZKSOLC_COMPILER_PATH_VERSION,
+    TASK_UPDATE_SOLIDITY_COMPILERS,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -97,19 +110,53 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
-        const userSolidityConfig = hre.userConfig.solidity;
+        hre.config.solidity.compilers.forEach(async (compiler) => updateCompilerConf({ compiler }, hre.config.zksolc));
 
-        const extractedConfigs = extractors
-            .find((extractor) => extractor.suitable(userSolidityConfig))
-            ?.extract(userSolidityConfig);
-
-        // Update compilers config.
-        hre.config.solidity.compilers.forEach((compiler) =>
-            updateCompilerConf({ compiler }, hre.config.zksolc, extractedConfigs?.compilers ?? []),
-        );
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-            updateCompilerConf({ compiler, file }, hre.config.zksolc, extractedConfigs?.overides ?? new Map());
+            updateCompilerConf({ compiler, file }, hre.config.zksolc);
         }
+    }
+});
+
+task(TASK_COMPILE).setAction(
+    async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
+        if (hre.network.zksync) {
+            await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
+        }
+
+        await runSuper(compilationArgs);
+    },
+);
+
+subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEnvironment) => {
+    if (!hre.network.zksync) {
+        return;
+    }
+
+    const userSolidityConfig = hre.userConfig.solidity;
+
+    const extractedConfigs = extractors
+        .find((extractor) => extractor.suitable(userSolidityConfig))
+        ?.extract(userSolidityConfig);
+
+    const latestEraVersion = await getLatestEraVersion();
+
+    hre.config.solidity.compilers.forEach(async (compiler) =>
+        updateCompilerWithEraVersion(
+            { compiler },
+            hre.config.zksolc,
+            latestEraVersion,
+            extractedConfigs?.compilers ?? [],
+        ),
+    );
+
+    for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+        updateCompilerWithEraVersion(
+            { compiler, file },
+            hre.config.zksolc,
+            latestEraVersion,
+            extractedConfigs?.overides ?? new Map(),
+        );
     }
 });
 

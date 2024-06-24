@@ -7,7 +7,9 @@ const config: HardhatUserConfig = {
     paths: {
         deployPaths: './deploy-scripts',
     },
-    zksolc: {},
+    zksolc: {
+        settings: {},
+    },
     defaultNetwork: 'zkSyncNetwork',
     networks: {
         ethNetwork: {

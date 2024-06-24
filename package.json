@@ -4,29 +4,26 @@
   "author": "Matter Labs",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "@npmcli/promise-spawn": "^6.0.2",
     "commander": "^10.0.0",
     "get-monorepo-packages": "^1.2.0",
     "husky": "^8.0.3",
-    "prettier": "^3.1.0",
-    "typescript": "^5.1.6",
+    "prettier": "^3.3.0",
+    "typescript": "^5.3.0",
     "wsrun": "^5.2.2"
   },
   "scripts": {
-    "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync-toolbox",
-    "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync-toolbox",
+    "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync",
+    "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync-ethers packages/hardhat-zksync",
     "clean": "wsrun --exclude-missing clean",
     "lint": "wsrun --exclude-missing --stages lint",
     "lint:fix": "wsrun --exclude-missing --stages lint:fix",
     "prettier:check": "wsrun --exclude-missing --stages prettier:check",
     "test:release-script": "mocha scripts/test/tests.js",
-    "prepare": "yarn husky install"
+    "prepare": "pnpm husky install"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@9.3.0"
 }

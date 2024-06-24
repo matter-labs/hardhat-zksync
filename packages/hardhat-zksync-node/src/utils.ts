@@ -119,11 +119,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         }
 
         if (args.forkBlockNumber) {
-            commandArgs.push(`fork --fork-at ${args.forkBlockNumber} ${args.fork}`);
+            commandArgs.push('fork', args.fork, '--fork-at', args.forkBlockNumber.toString());
         } else if (args.replayTx) {
-            commandArgs.push(`replay_tx ${args.fork} ${args.replayTx}`);
+            commandArgs.push('replay_tx', args.fork, '--tx', args.replayTx);
         } else {
-            commandArgs.push(`fork ${args.fork}`);
+            commandArgs.push('fork', args.fork);
         }
     } else {
         commandArgs.push('run');
@@ -169,7 +169,7 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
     // Check if the response is a redirect
     if (response.statusCode >= 300 && response.statusCode < 400) {
         // Get the URL from the 'location' header
-        if (response.headers.location) {
+        if (response.headers.location && typeof response.headers.location === 'string') {
             // Check if the redirect URL matches the expected pattern
             if (response.headers.location.startsWith(redirectUrlPattern)) {
                 // Extract the tag from the redirect URL

@@ -14,7 +14,7 @@ import {
 import { Bytecode } from '../../src/solc/bytecode';
 import * as bytecodes from '../../src/solc/bytecode';
 import { useEnvironment } from '../helpers';
-import { NO_MATCHING_CONTRACT } from '../../src/constants';
+import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from '../../src/constants';
 import { ContractInformation } from '../../src/solc/types';
 import { VerificationStatusResponse } from '../../src/zksync-block-explorer/verification-status-response';
 
@@ -94,6 +94,9 @@ describe('Plugin', () => {
                     solcVersion: '0.8.0',
                 }),
             );
+
+            expect(!bytecode.hasMetadata());
+            expect(bytecode.getInferredSolcVersion() !== undefined);
 
             try {
                 await inferContractArtifacts(artifacts, [], bytecode);
@@ -181,6 +184,17 @@ describe('Plugin', () => {
     });
 
     describe('checkContractName', async function () {
+        it('should throw ZkSyncVerifyPluginError when contractFQN is undefined', async function () {
+            const contractFQN = undefined as any;
+
+            try {
+                await checkContractName(artifacts, contractFQN);
+                fail('Expected an error to be thrown');
+            } catch (error: any) {
+                expect(error.message).to.equal(CONTRACT_NAME_NOT_FOUND);
+            }
+        });
+
         it('should throw ZkSyncVerifyPluginError when contractFQN is not a valid fully qualified name', async function () {
             artifacts.artifactExists = sinon.stub().resolves(false);
             artifacts.getAllFullyQualifiedNames = sinon.stub().resolves(['contracts/Contract.sol:Contract']);
@@ -224,52 +238,144 @@ Instead, this name was received: ${contractFQN}`);
 
     describe('getSolidityStandardJsonInput', async function () {
         useEnvironment('localGreeter');
-        it('should return the Solidity standard JSON input', async function () {
-            const resolvedFiles: ResolvedFile[] = [
-                {
-                    sourceName: 'contracts/Contract.sol',
-                    absolutePath: 'contracts/Contract.sol',
-                    lastModificationDate: new Date(),
-                    contentHash: '0x1234567890',
-                    getVersionedName: () => 'contracts/Contract.sol',
-                    content: {
-                        rawContent: 'contract Contract {}',
-                        imports: [],
-                        versionPragmas: ['0.8.0'],
-                    },
-                },
-            ];
 
-            const solidityStandardJsonInput = getSolidityStandardJsonInput(resolvedFiles, {
-                language: 'Solidity',
-                sources: {
-                    'contracts/Contract.sol': {
-                        content: 'contract Contract {}',
+        const resolvedFiles: ResolvedFile[] = [
+            {
+                sourceName: 'contracts/Contract.sol',
+                absolutePath: 'contracts/Contract.sol',
+                lastModificationDate: new Date(),
+                contentHash: '0x1234567890',
+                getVersionedName: () => 'contracts/Contract.sol',
+                content: {
+                    rawContent: 'contract Contract {}',
+                    imports: [],
+                    versionPragmas: ['0.8.0'],
+                },
+            },
+        ];
+
+        const input = {
+            language: 'Solidity',
+            sources: {
+                'contracts/Contract.sol': {
+                    content: 'contract Contract {}',
+                },
+            },
+            settings: {
+                optimizer: {
+                    enabled: true,
+                },
+                outputSelection: {
+                    '*': {
+                        '*': ['evm'],
                     },
                 },
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                    },
-                    outputSelection: {
-                        '*': {
-                            '*': ['evm'],
-                        },
+            },
+        };
+
+        it('should return the Solidity standard JSON input', async function () {
+            const hre = {
+                config: {
+                    zksolc: {
+                        version: '1.4.0',
+                        settings: {},
                     },
                 },
-            });
+            };
+
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, input);
 
             expect(solidityStandardJsonInput.language).to.equal('Solidity');
             expect(solidityStandardJsonInput.sources['contracts/Contract.sol'].content).to.equal(
                 'contract Contract {}',
             );
             expect(solidityStandardJsonInput.settings.optimizer.enabled).to.equal(true);
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+        });
+
+        it('should return proper zksolc setting params', async function () {
+            const hre = {
+                config: {
+                    zksolc: {
+                        version: '1.4.0',
+                        settings: {},
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput = getSolidityStandardJsonInput(hre as any, resolvedFiles, input);
+
+            expect(solidityStandardJsonInput.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput.settings.forceEvmla).to.equal(false);
+
+            const hre1 = {
+                config: {
+                    zksolc: {
+                        version: '1.4.0',
+                        settings: {
+                            enableEraVMExtensions: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput2 = getSolidityStandardJsonInput(hre1 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput2.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput2.settings.forceEvmla).to.equal(false);
+
+            const hre2 = {
+                config: {
+                    zksolc: {
+                        version: '1.4.0',
+                        settings: {
+                            forceEVMLA: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput3 = getSolidityStandardJsonInput(hre2 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput3.settings.isSystem).to.equal(false);
+            expect(solidityStandardJsonInput3.settings.forceEvmla).to.equal(true);
+
+            const hre3 = {
+                config: {
+                    zksolc: {
+                        version: '1.4.0',
+                        settings: {
+                            enableEraVMExtensions: true,
+                            forceEVMLA: true,
+                        },
+                    },
+                },
+            };
+
+            const solidityStandardJsonInput4 = getSolidityStandardJsonInput(hre3 as any, resolvedFiles, input);
+            expect(solidityStandardJsonInput4.settings.isSystem).to.equal(true);
+            expect(solidityStandardJsonInput4.settings.forceEvmla).to.equal(true);
         });
     });
 
     describe('getLibraries', async function () {
         it('should throw ZkSyncVerifyPluginError when importing the libraries module fails', async function () {
             const librariesModule = '../args.js';
+
+            try {
+                await getLibraries(librariesModule);
+                fail('Expected an error to be thrown');
+            } catch (error: any) {
+                expect(error.message).to.includes(
+                    `Importing the module for the libraries dictionary failed. Reason: Cannot find module '${path.resolve(
+                        process.cwd(),
+                        librariesModule,
+                    )}'`,
+                );
+            }
+        });
+
+        it('should throw ZkSyncVerifyPluginError when importing the libraries module fails', async function () {
+            const librariesModule = '../wrongArgs.js';
 
             try {
                 await getLibraries(librariesModule);
@@ -292,6 +398,12 @@ Instead, this name was received: ${contractFQN}`);
             expect(libraries).to.deep.equal({
                 name: 'localGreeter',
             });
+        });
+
+        it('should return the empty object', async function () {
+            const libraries = await getLibraries({} as any);
+
+            expect(libraries).to.deep.equal({});
         });
     });
 
@@ -330,6 +442,19 @@ Instead, this name was received: ${contractFQN}`);
                 '\u001b[32mContract successfully verified on zkSync block explorer!\u001b[39m',
             );
             expect(result).to.equal(true);
+        });
+    });
+
+    describe('normalizeBytecode', () => {
+        it('should not modify bytecode when it does not start with the expected placeholder', async () => {
+            const mockBytecode = 'abcdef1234567890';
+            const symbols = {
+                object: '73',
+            };
+
+            const result = await bytecodes.normalizeBytecode(mockBytecode, symbols as any);
+
+            expect(result.normalizedBytecode).to.equal(mockBytecode);
         });
     });
 });

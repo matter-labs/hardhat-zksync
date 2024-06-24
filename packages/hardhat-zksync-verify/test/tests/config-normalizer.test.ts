@@ -46,6 +46,10 @@ describe('CompilerSolcUserConfigNormalizer', () => {
                 version: '0.8.17',
                 settings: {},
             };
+            const zkSolcConfig = {
+                version: '1.3.21',
+                settings: {},
+            };
             const userConfigCompilers: SolcUserConfig[] = [
                 {
                     version: '0.8.17',
@@ -54,7 +58,7 @@ describe('CompilerSolcUserConfigNormalizer', () => {
             ];
             const file = undefined;
 
-            const result = normalizer.normalize(compiler, userConfigCompilers, file);
+            const result = normalizer.normalize(compiler, zkSolcConfig, '1.0.0', userConfigCompilers, file);
 
             expect(result).to.equal('zkVM-0.8.17-0.1.0');
         });
@@ -65,10 +69,14 @@ describe('CompilerSolcUserConfigNormalizer', () => {
                 version: '0.8.17',
                 settings: {},
             };
+            const zkSolcConfig = {
+                version: '1.3.21',
+                settings: {},
+            };
             const userConfigCompilers: SolcUserConfig[] = [];
             const file = undefined;
 
-            const result = normalizer.normalize(compiler, userConfigCompilers, file);
+            const result = normalizer.normalize(compiler, zkSolcConfig, '1.0.0', userConfigCompilers, file);
 
             expect(result).to.equal('0.8.17');
         });
@@ -77,6 +85,10 @@ describe('CompilerSolcUserConfigNormalizer', () => {
             const normalizer = new CompilerSolcUserConfigNormalizer();
             const compiler: SolcConfig = {
                 version: '0.8.17',
+                settings: {},
+            };
+            const zkSolcConfig = {
+                version: '1.3.21',
                 settings: {},
             };
             const userConfigCompilers: SolcUserConfig[] = [
@@ -91,7 +103,7 @@ describe('CompilerSolcUserConfigNormalizer', () => {
             const file = undefined;
 
             try {
-                normalizer.normalize(compiler, userConfigCompilers, file);
+                normalizer.normalize(compiler, zkSolcConfig, '1.0.0', userConfigCompilers, file);
                 fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.equal(
@@ -142,12 +154,16 @@ describe('OverrideCompilerSolcUserConfigNormalizer', () => {
                 version: '0.8.17',
                 settings: {},
             };
+            const zkSolcConfig = {
+                version: '1.3.21',
+                settings: {},
+            };
             const userConfigCompilers: Map<string, SolcUserConfig> = new Map([
                 ['path/to/file.sol', { version: '0.8.17', eraVersion: '0.1.0' }],
             ]);
             const file = 'path/to/file.sol';
 
-            const result = normalizer.normalize(compiler, userConfigCompilers, file);
+            const result = normalizer.normalize(compiler, zkSolcConfig, '1.0.0', userConfigCompilers, file);
 
             expect(result).to.equal('zkVM-0.8.17-0.1.0');
         });
@@ -158,12 +174,16 @@ describe('OverrideCompilerSolcUserConfigNormalizer', () => {
                 version: '0.8.17',
                 settings: {},
             };
+            const zkSolcConfig = {
+                version: '1.5.0',
+                settings: {},
+            };
             const userConfigCompilers: Map<string, SolcUserConfig> = new Map();
             const file = 'path/to/file.sol';
 
-            const result = normalizer.normalize(compiler, userConfigCompilers, file);
+            const result = normalizer.normalize(compiler, zkSolcConfig, '1.0.0', userConfigCompilers, file);
 
-            expect(result).to.equal('0.8.17');
+            expect(result).to.equal('zkVM-0.8.17-1.0.0');
         });
     });
 });

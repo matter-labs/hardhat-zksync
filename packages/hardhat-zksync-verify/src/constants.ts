@@ -108,3 +108,22 @@ This means that unrelated contracts may be displayed on the zksync block explore
 
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Solidity compiler versions in your Hardhat config file are in conflict for version ${version}. Please specify version of compiler only with zkVm support(eraVersion) or without it`;
+
+export const COMPILATION_ERRORS = [
+    {
+        error: 'CompilationError',
+        pattern: /^Backend verification error: Compilation error.*$/s,
+    },
+    {
+        error: 'MissingSource',
+        pattern: /^Backend verification error: There is no .* source file$/,
+    },
+    {
+        error: 'MissingContract',
+        pattern: /^Backend verification error: Contract with .* name is missing in sources$/,
+    },
+    {
+        error: 'DeployedBytecodeMismatch',
+        pattern: /^Backend verification error: Deployed bytecode is not equal to generated one from given source$/,
+    },
+];

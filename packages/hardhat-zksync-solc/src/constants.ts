@@ -9,6 +9,7 @@ export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
 // User agent of MacOSX Chrome 120.0.0.0
 export const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+export const TASK_UPDATE_SOLIDITY_COMPILERS = 'compile:update-solidity-compilers';
 
 export const ZKSOLC_COMPILER_PATH_VERSION = 'local_or_remote';
 
@@ -38,7 +39,11 @@ export const ZKSOLC_BIN_REPOSITORY_NAME = 'zksolc-bin';
 export const ZKVM_SOLC_BIN_REPOSITORY_NAME = 'era-solidity';
 export const ZKVM_SOLC_COMPILER_VERSION_MIN_VERSION = '1.0.0';
 
+export const ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE = '1.5.0';
+
 export const ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER = '1.3.22';
+
+export const ZKVM_SOLC_DEFAULT_COMPILER_VERSION = '1.0.0';
 
 export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -57,14 +62,21 @@ export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolc
     `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) =>
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
-export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}.`;
+export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to the native solc compiler.`;
 
+export const COMPILER_ZKSOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag forceEVMLA will automatically be set to true by default.`;
+
+export const COMPILER_ZKSOLC_IS_SYSTEM_USE = `isSystem flag is deprecated. Please use enableEraVMExtensions instead. Automatically switched to the new naming with the provided value.`;
+export const COMPILER_ZKSOLC_FORCE_EVMLA_USE = `forceEvmla flag is deprecated. Please use forceEVMLA instead. Automatically switched to the new naming with the provided value.`;
+
+export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (eraVersion: string, solcVersion: string) =>
+    `Using zkSync edition of solc (zkSync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =
     'zksolc compiler detected missing libraries! For more details, visit: https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html.';
 export const COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS =
-    'To compile and deploy libraries, please run: `yarn hardhat deploy-zksync:libraries`';
+    'To compile and deploy libraries, please run: `hardhat deploy-zksync:libraries`';
 export const MISSING_LIBRARY_LINK =
     'For more details on how to use deploy-zksync:libraries task from hardhat-zksync-deploy plugin, visit: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html.';
 

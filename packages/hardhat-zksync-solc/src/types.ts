@@ -20,6 +20,7 @@ export interface ZkSolcConfig {
         // Remove metadata hash from bytecode. If the option is ommited, the metadata hash will be appended by default.
         metadata?: {
             bytecodeHash?: 'none';
+            useLiteralContent?: boolean;
         };
         // addresses of external libraries
         libraries?: {
@@ -31,12 +32,18 @@ export interface ZkSolcConfig {
             dockerImage?: string;
             tag?: string;
         };
-        // Whether to support compilation of zkSync-specific simulations
+        // Old way to support compilation of zkSync-specific simulations. Transition to enableEraVMExtensions by default.
         isSystem?: boolean;
-        // Force evmla
+        // Whether to support compilation of zkSync-specific simulations
+        enableEraVMExtensions?: boolean;
+        // Evmla intermediate representation. Transition to forceEVMLA by default.
         forceEvmla?: boolean;
-        // specific contracts to be compiled
+        // Evmla intermediate representation
+        forceEVMLA?: boolean;
+        // Specific contracts to be compiled
         contractsToCompile?: string[];
+        // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
+        debugOutputDir?: string;
     };
 }
 

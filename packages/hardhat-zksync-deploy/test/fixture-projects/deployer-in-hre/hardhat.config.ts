@@ -5,7 +5,9 @@ import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, ZKSYNC_NETWORK_RPC_URL } from
 import '@matterlabs/hardhat-zksync-solc';
 
 const config: HardhatUserConfig = {
-    zksolc: {},
+    zksolc: {
+        settings: {},
+    },
     solidity: {
         version: '0.8.17',
     },

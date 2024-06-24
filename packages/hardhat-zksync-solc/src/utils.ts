@@ -7,14 +7,22 @@ import fs from 'fs';
 import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
+import chalk from 'chalk';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import {
     ZKSOLC_COMPILERS_SELECTOR_MAP,
     SOLCJS_EXECUTABLE_CODE,
     DEFAULT_TIMEOUT_MILISECONDS,
-    COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR,
+    COMPILER_ZKSOLC_NEED_EVM_CODEGEN,
+    ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE,
     ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER,
+    COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN,
+    ZKSOLC_BIN_OWNER,
+    ZKVM_SOLC_BIN_REPOSITORY_NAME,
+    USER_AGENT,
+    COMPILER_ZKSOLC_IS_SYSTEM_USE,
+    COMPILER_ZKSOLC_FORCE_EVMLA_USE,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -56,25 +64,38 @@ export function filterSupportedOutputSelections(
     return filteredOutputSelection;
 }
 
-const solcUpdaters: SolcUserConfigUpdater[] = [
-    new OverrideCompilerSolcUserConfigUpdater(),
-    new CompilerSolcUserConfigUpdater(),
-];
-
-export function updateCompilerConf(
-    solcConfigData: SolcConfigData,
-    zksolc: ZkSolcConfig,
-    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
-) {
+export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSolcConfig) {
     const compiler = solcConfigData.compiler;
-    const [major, minor] = getVersionComponents(compiler.version);
-    if (major === 0 && minor < 8 && zksolc.settings.forceEvmla) {
-        console.warn('zksolc solidity compiler versions < 0.8 work with forceEvmla enabled by default');
-    }
+
     const settings = compiler.settings || {};
 
     // Override the default solc optimizer settings with zksolc optimizer settings.
     compiler.settings = { ...settings, optimizer: { ...zksolc.settings.optimizer } };
+
+    zksolc.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions || zksolc.settings.isSystem || false;
+    zksolc.settings.forceEVMLA = zksolc.settings.forceEVMLA || zksolc.settings.forceEvmla || false;
+
+    if (zksolc.settings.isSystem !== undefined) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_IS_SYSTEM_USE));
+        delete zksolc.settings.isSystem;
+    }
+
+    if (zksolc.settings.forceEvmla !== undefined) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_FORCE_EVMLA_USE));
+        delete zksolc.settings.forceEvmla;
+    }
+
+    if (isBreakableCompilerVersion(zksolc.version)) {
+        compiler.settings.detectMissingLibraries = false;
+        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
+    }
+
+    const [major, minor] = getVersionComponents(compiler.version);
+    if (major === 0 && minor < 8) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_NEED_EVM_CODEGEN));
+        compiler.settings.forceEVMLA = true;
+    }
 
     // Remove metadata settings from solidity settings.
     delete compiler.settings.metadata;
@@ -88,14 +109,36 @@ export function updateCompilerConf(
         compiler.settings.outputSelection,
         zksolc.version,
     );
+}
 
+const solcUpdaters: SolcUserConfigUpdater[] = [
+    new OverrideCompilerSolcUserConfigUpdater(),
+    new CompilerSolcUserConfigUpdater(),
+];
+
+export function updateCompilerWithEraVersion(
+    solcConfigData: SolcConfigData,
+    zksolc: ZkSolcConfig,
+    latestEraVersion: string,
+    userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
+) {
+    const compiler = solcConfigData.compiler;
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
-        ?.update(compiler, userConfigCompilers, solcConfigData.file);
+        ?.update(compiler, latestEraVersion, zksolc, userConfigCompilers, solcConfigData.file);
 
-    if (compiler.eraVersion && semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)) {
-        throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_ERROR);
+    if (
+        zksolc.version !== 'latest' &&
+        compiler.eraVersion &&
+        semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)
+    ) {
+        console.warn(chalk.blue(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN));
+        compiler.eraVersion = undefined;
     }
+}
+
+export function isBreakableCompilerVersion(zksolcVersion: string): boolean {
+    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
 }
 
 export function zeroxlify(hex: string): string {
@@ -320,7 +363,7 @@ export async function getLatestRelease(
     // Check if the response is a redirect
     if (response.statusCode >= 300 && response.statusCode < 400) {
         // Get the URL from the 'location' header
-        if (response.headers.location) {
+        if (response.headers.location && typeof response.headers.location === 'string') {
             // Check if the redirect URL matches the expected pattern
             if (response.headers.location.startsWith(redirectUrlPattern)) {
                 // Extract the tag from the redirect URL
@@ -345,4 +388,8 @@ export async function saveDataToFile(data: any, targetPath: string) {
 
 export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: string): string {
     return `zkVM-${solcVersion}-${zkVmSolcVersion}`;
+}
+
+export async function getLatestEraVersion(): Promise<string> {
+    return (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
 }

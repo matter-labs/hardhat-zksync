@@ -1,5 +1,27 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.4.0...@matterlabs/hardhat-zksync-deploy-v1.5.0) (2024-06-19)
+
+
+### Features
+
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+* switch to the default codegen with zksolc ([#1062](https://github.com/matter-labs/hardhat-zksync/issues/1062)) ([5ec997a](https://github.com/matter-labs/hardhat-zksync/commit/5ec997aaa83ba18d978f10b96f489513f6c4dd9f))
+
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.3.0...@matterlabs/hardhat-zksync-deploy-v1.4.0) (2024-05-28)
+
+
+### Features
+
+* use deployment type in the deploy function ([#1090](https://github.com/matter-labs/hardhat-zksync/issues/1090)) ([05b2262](https://github.com/matter-labs/hardhat-zksync/commit/05b2262ff148369297c2098a95775d265b3efd41))
+
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.2.1...@matterlabs/hardhat-zksync-deploy-v1.3.0) (2024-04-04)
+
+
+### Features
+
+* introducing a new deploy-zksync:contract task to compile and deploy one contract ([#987](https://github.com/matter-labs/hardhat-zksync/issues/987)) ([7f983e2](https://github.com/matter-labs/hardhat-zksync/commit/7f983e2dbc28b072901403e0f375ef798716129e))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.2.0...@matterlabs/hardhat-zksync-deploy-v1.2.1) (2024-03-04)
 
 
