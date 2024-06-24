@@ -6,5 +6,4 @@ This folder has the following examples:
 - [mixed example](./mixed-example).
 - [node example](./node-example).
 - [upgradable example](./upgradable-example).
-- [verify example](./verify-example).
 - [vyper example](./vyper-example).
