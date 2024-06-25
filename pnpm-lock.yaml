@@ -1396,9 +1396,6 @@ importers:
       debug:
         specifier: ^4.3.5
         version: 4.3.5
-      hardhat:
-        specifier: ^2.22.5
-        version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       semver:
         specifier: ^7.6.2
         version: 7.6.2
@@ -1448,6 +1445,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.0.1
         version: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.3.0)
+      hardhat:
+        specifier: ^2.22.5
+        version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       mocha:
         specifier: ^10.4.0
         version: 10.4.0
