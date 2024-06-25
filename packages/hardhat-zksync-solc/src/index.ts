@@ -257,7 +257,7 @@ subtask(
             linkReferences: {},
             deployedLinkReferences: {},
 
-            // zkSync-specific field
+            // ZKsync-specific field
             factoryDeps,
         };
     },

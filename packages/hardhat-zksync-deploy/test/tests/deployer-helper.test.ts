@@ -87,11 +87,11 @@ describe('deployer-helper', () => {
             );
         });
 
-        it('should throw an error for missing zkSync flag', () => {
+        it('should throw an error for missing ZKsync flag', () => {
             const networkWithoutZkSyncFlag = { ...network, zksync: false };
 
             expect(() => createProviders(networks as any, networkWithoutZkSyncFlag as any)).to.throw(
-                "Only deploying to zkSync network is supported.\nNetwork 'rinkeby' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.",
+                "Only deploying to ZKsync network is supported.\nNetwork 'rinkeby' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.",
             );
         });
 
@@ -99,7 +99,7 @@ describe('deployer-helper', () => {
             const networkWithoutUrl = { ...network, config: {} };
 
             expect(() => createProviders(networks as any, networkWithoutUrl as any)).to.throw(
-                "Only deploying to zkSync network is supported.\nNetwork 'rinkeby' in 'hardhat.config' needs to have 'url' specified.",
+                "Only deploying to ZKsync network is supported.\nNetwork 'rinkeby' in 'hardhat.config' needs to have 'url' specified.",
             );
         });
     });

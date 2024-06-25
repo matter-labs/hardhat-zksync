@@ -1,6 +1,6 @@
 # hardhat-zksync 🚀
 
-zkSync Era [Hardhat](https://hardhat.org/) plugin provides a convenient method for bundling and accessing a range of zkSync-related Hardhat plugins.
+ZKsync Era [Hardhat](https://hardhat.org/) plugin provides a convenient method for bundling and accessing a range of ZKsync-related Hardhat plugins.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -29,12 +29,12 @@ Here is an overview of the plugins currently available in this package when inst
 
 | 🔌 Plugin                     | 📄 Description                                                                                                                    |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| hardhat-zksync-solc           | Simplifies compiling Solidity contracts for the zkSync network, streamlining deployment preparation.                              |
-| hardhat-zksync-deploy         | Facilitates the deployment of contracts on zkSync, utilizing artifacts from hardhat-zksync-solc.                            |
-| hardhat-zksync-verify         | Automates the process of verifying smart contracts on the zkSync network, enhancing transparency and trust.                       |
-| hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the zkSync network, improving contract lifecycle management.        |
-| hardhat-zksync-node           | Convenient plugin to run the zkSync era-test-node locally.                                                                        |
-| hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on zkSync.                                   |
+| hardhat-zksync-solc           | Simplifies compiling Solidity contracts for the ZKsync network, streamlining deployment preparation.                              |
+| hardhat-zksync-deploy         | Facilitates the deployment of contracts on ZKsync, utilizing artifacts from hardhat-zksync-solc.                            |
+| hardhat-zksync-verify         | Automates the process of verifying smart contracts on the ZKsync network, enhancing transparency and trust.                       |
+| hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the ZKsync network, improving contract lifecycle management.        |
+| hardhat-zksync-node           | Convenient plugin to run the ZKsync era-test-node locally.                                                                        |
+| hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on ZKsync.                                   |
 
 
 This plugin enables access to all commands available for each specific plugin, making them readily accessible with just the usage of this plugin. To view the available commands and their descriptions, please refer to the [documentation](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) for each individual plugin.
@@ -55,22 +55,22 @@ To check other parameters present in these tasks, please check the documentation
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync](http://docs.zksync.io/build/tooling/hardhat/hardhat-zksync.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync](http://docs.zksync.io/build/tooling/hardhat/hardhat-zksync.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

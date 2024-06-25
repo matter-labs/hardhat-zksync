@@ -231,7 +231,7 @@ export async function loadArtifact(
 ): Promise<ZkSyncArtifact> {
     const artifact = await hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
 
-    // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
+    // Verify that this artifact was compiled by the ZKsync compiler, and not `solc` or `vyper`.
     if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
         throw new ZkSyncEthersPluginError(
             `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`,

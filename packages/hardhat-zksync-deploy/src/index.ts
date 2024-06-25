@@ -27,12 +27,12 @@ extendEnvironment((hre) => {
     hre.deployer = new DeployerExtension(hre);
 });
 
-task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for zkSync network')
+task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for ZKsync network')
     .addParam('script', 'A certain deploy script to be launched', '')
     .addOptionalParam('tags', 'specify which deploy script to execute via tags, separated by commas', undefined, string)
     .setAction(zkSyncDeploy);
 
-task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
+task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for ZKsync network')
     .addOptionalParam(
         'privateKeyOrIndex',
         'Private key or index of the account that will deploy the libraries',
@@ -53,7 +53,7 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for zkSync network')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
 
-task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for zkSync network')
+task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for ZKsync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',

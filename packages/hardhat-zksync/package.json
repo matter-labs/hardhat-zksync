@@ -1,7 +1,7 @@
 {
   "name": "@matterlabs/hardhat-zksync",
   "version": "1.1.0",
-  "description": "zkSync bundle of Hardhat plugins",
+  "description": "ZKsync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync",
   "author": "Matter Labs",
@@ -13,7 +13,7 @@
     "smart-contracts",
     "hardhat",
     "hardhat-plugin",
-    "zkSync"
+    "ZKsync"
   ],
   "scripts": {
     "lint": "pnpm eslint",

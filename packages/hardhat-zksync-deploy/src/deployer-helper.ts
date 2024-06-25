@@ -37,7 +37,7 @@ export async function loadArtifact(
 ): Promise<ZkSyncArtifact> {
     const artifact = await hre.artifacts.readArtifact(contractNameOrFullyQualifiedName);
 
-    // Verify that this artifact was compiled by the zkSync compiler, and not `solc` or `vyper`.
+    // Verify that this artifact was compiled by the ZKsync compiler, and not `solc` or `vyper`.
     if (artifact._format !== ZKSOLC_ARTIFACT_FORMAT_VERSION && artifact._format !== ZKVYPER_ARTIFACT_FORMAT_VERSION) {
         throw new ZkSyncDeployPluginError(
             `Artifact ${contractNameOrFullyQualifiedName} was not compiled by zksolc or zkvyper`,
@@ -47,9 +47,9 @@ export async function loadArtifact(
 }
 
 /**
- * Sends a deploy transaction to the zkSync network.
+ * Sends a deploy transaction to the ZKsync network.
  * For now, it will use defaults for the transaction parameters:
- * - fee amount is requested automatically from the zkSync server.
+ * - fee amount is requested automatically from the ZKsync server.
  *
  * @param artifact The previously loaded artifact object.
  * @param constructorArguments List of arguments to be passed to the contract constructor.
@@ -214,7 +214,7 @@ export function createProviders(
 
     if (!network.zksync) {
         throw new ZkSyncDeployPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`,
         );
     }
 
@@ -229,13 +229,13 @@ export function createProviders(
 
     if (!isHttpNetworkConfig(networkConfig)) {
         throw new ZkSyncDeployPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`,
         );
     }
 
     if (networkConfig.ethNetwork === undefined) {
         throw new ZkSyncDeployPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`,
         );
     }
 

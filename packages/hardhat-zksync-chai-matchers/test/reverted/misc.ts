@@ -43,7 +43,7 @@ describe('Miscellaneous tests', function () {
         }
     });
 
-    it('returns true for a zkSync wallet', async () => {
+    it('returns true for a ZKsync wallet', async () => {
         const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
         const zkWallet = zk.Wallet.fromMnemonic(testMnemonic);
 

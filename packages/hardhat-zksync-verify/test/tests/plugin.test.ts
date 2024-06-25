@@ -439,7 +439,7 @@ Instead, this name was received: ${contractFQN}`);
 
             sinon.assert.calledWith(
                 consoleInfoSpy,
-                '\u001b[32mContract successfully verified on zkSync block explorer!\u001b[39m',
+                '\u001b[32mContract successfully verified on ZKsync block explorer!\u001b[39m',
             );
             expect(result).to.equal(true);
         });

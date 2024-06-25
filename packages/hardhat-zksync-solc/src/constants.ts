@@ -56,10 +56,10 @@ export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string)
 export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) =>
     `The zksolc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: string) =>
-    `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and solc v${solcVersion}`;
+    `Compiling contracts for ZKsync Era with zksolc v${zksolcVersion} and solc v${solcVersion}`;
 
 export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolcVersion: string) =>
-    `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
+    `Compiling contracts for ZKsync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) =>
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to the native solc compiler.`;
@@ -70,7 +70,7 @@ export const COMPILER_ZKSOLC_IS_SYSTEM_USE = `isSystem flag is deprecated. Pleas
 export const COMPILER_ZKSOLC_FORCE_EVMLA_USE = `forceEvmla flag is deprecated. Please use forceEVMLA instead. Automatically switched to the new naming with the provided value.`;
 
 export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (eraVersion: string, solcVersion: string) =>
-    `Using zkSync edition of solc (zkSync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
+    `Using ZKsync edition of solc (ZKsync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =

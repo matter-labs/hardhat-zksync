@@ -1,7 +1,7 @@
 {
   "name": "@matterlabs/hardhat-zksync-deploy",
   "version": "1.5.0",
-  "description": "Hardhat plugin to deploy smart contracts into the zkSync network",
+  "description": "Hardhat plugin to deploy smart contracts into the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-deploy",
   "author": "Matter Labs",
@@ -13,7 +13,7 @@
     "smart-contracts",
     "hardhat",
     "hardhat-plugin",
-    "zkSync"
+    "ZKsync"
   ],
   "scripts": {
     "lint": "pnpm eslint",

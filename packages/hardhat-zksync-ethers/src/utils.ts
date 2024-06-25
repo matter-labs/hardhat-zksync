@@ -109,7 +109,7 @@ export function createProviders(
 
     if (!network.zksync) {
         throw new ZkSyncEthersPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'zksync' flag set to 'true'.`,
         );
     }
 
@@ -124,13 +124,13 @@ export function createProviders(
 
     if (!isHttpNetworkConfig(networkConfig)) {
         throw new ZkSyncEthersPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'url' specified.`,
         );
     }
 
     if (networkConfig.ethNetwork === undefined) {
         throw new ZkSyncEthersPluginError(
-            `Only deploying to zkSync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`,
+            `Only deploying to ZKsync network is supported.\nNetwork '${networkName}' in 'hardhat.config' needs to have 'ethNetwork' (layer 1) specified.`,
         );
     }
 

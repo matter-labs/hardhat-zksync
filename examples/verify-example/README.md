@@ -1,6 +1,6 @@
-# zkSync Era verify environment example
+# ZKsync Era verify environment example
 
-This project demonstrates how to compile and verify your contracts in zkSync Era using the Hardhat plugins.
+This project demonstrates how to compile and verify your contracts in ZKsync Era using the Hardhat plugins.
 
 ## Prerequisites
 
@@ -10,9 +10,9 @@ This project demonstrates how to compile and verify your contracts in zkSync Era
 ## Configuration
 
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
-You should only change the zkSync network configuration.
+You should only change the ZKsync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
+`hardhat.config.ts` example with ZKsync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
 import "@matterlabs/hardhat-zksync-deploy";
 import { HardhatUserConfig } from 'hardhat/types';
@@ -32,6 +32,7 @@ const config: HardhatUserConfig = {
             ethNetwork: 'unknown',
         }
     },
+}
 
 export default config;
 ```

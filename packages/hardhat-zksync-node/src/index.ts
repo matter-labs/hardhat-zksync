@@ -57,7 +57,7 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
     );
 
 // Subtask to create the server
-subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for zkSync node')
+subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for ZKsync node')
     .addParam('binaryPath', 'Path to the binary file', undefined, types.string)
     .setAction(
         async (
@@ -76,7 +76,7 @@ subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for zkSync no
     );
 
 // Main task of the plugin. It starts the server and listens for requests.
-task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for zkSync node')
+task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('port', 'Port to listen on - default: 8011', undefined, types.int)
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(

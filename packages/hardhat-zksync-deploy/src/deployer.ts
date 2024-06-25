@@ -14,7 +14,7 @@ import {
 import { AbstractDeployer } from './abstract-deployer';
 
 /**
- * An entity capable of deploying contracts to the zkSync network.
+ * An entity capable of deploying contracts to the ZKsync network.
  */
 export class Deployer implements AbstractDeployer {
     public ethWallet: ethers.Wallet;
@@ -24,7 +24,7 @@ export class Deployer implements AbstractDeployer {
         private _hre: HardhatRuntimeEnvironment,
         zkWallet: zk.Wallet,
     ) {
-        // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the zkSync RPC (layer 2).
+        // Initalize two providers: one for the Ethereum RPC (layer 1), and one for the ZKsync RPC (layer 2).
         const { ethWeb3Provider, zkWeb3Provider }: Providers = createProviders(_hre.config.networks, _hre.network);
 
         const l2Provider = zkWallet.provider === null ? zkWeb3Provider : zkWallet.provider;

@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 // Used for signature validation
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-// Access zkSync system contracts, in this case for nonce validation vs NONCE_HOLDER_SYSTEM_CONTRACT
+// Access ZKsync system contracts, in this case for nonce validation vs NONCE_HOLDER_SYSTEM_CONTRACT
 import "@matterlabs/zksync-contracts/l2/system-contracts/Constants.sol";
 // to call non-view method of system contracts
 import "@matterlabs/zksync-contracts/l2/system-contracts/libraries/SystemContractsCaller.sol";
