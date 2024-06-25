@@ -1,6 +1,6 @@
 # hardhat-zksync-vyper 🚀
 
-[Hardhat](https://hardhat.org/) plugin that adds zkSync-specific capabilities to vyper.
+[Hardhat](https://hardhat.org/) plugin that adds ZKsync-specific capabilities to vyper.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -18,7 +18,7 @@ or
 
 **Scaffold a new project**
 
-Use the zkSync Era cli to set up a project.
+Use the ZKsync Era cli to set up a project.
 
 `npx zksync-cli@latest create project greeter-vyper-example --template hardhat_vyper`
 `cd greeter-vyper-example`
@@ -45,6 +45,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
+}
   ...
 ```
 
@@ -62,7 +63,7 @@ Learn more about [compiling libraries](https://era.zksync.io/docs/tools/hardhat/
 
 **Create a simple vyper contract**
 
-The zkSync Era cli generates a contracts folder which includes a Greeter.sol contract.
+The ZKsync Era cli generates a contracts folder which includes a Greeter.sol contract.
 
 - Delete Greeter.sol from the contracts/ directory.
 - Add the equivalent Greeter.vy Vyper contract:
@@ -109,22 +110,22 @@ Greeter was deployed to 0x7CDF8A4334fafE21B8dCCe70487d6CBC00183c0d
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

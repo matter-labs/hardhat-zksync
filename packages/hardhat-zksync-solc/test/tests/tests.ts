@@ -288,7 +288,7 @@ describe('zksolc plugin', async function () {
 
             assert.equal(artifact.contractName, 'Greeter');
 
-            // Check that zkSync-specific artifact information was added.
+            // Check that ZKsync-specific artifact information was added.
             assert.isUndefined(artifact.factoryDeps);
             assert.isTrue(fs.existsSync(this.env.config.paths.cache));
             assert.isTrue(fs.existsSync(this.env.config.paths.artifacts));
@@ -315,7 +315,7 @@ describe('zksolc plugin', async function () {
 
                 assert.equal(artifact.contractName, 'Greeter');
 
-                // Check that zkSync-specific artifact information was added.
+                // Check that ZKsync-specific artifact information was added.
                 assert.deepEqual(artifact.factoryDeps, {}, 'Contract unexpectedly has dependencies');
             });
         });
@@ -362,7 +362,7 @@ describe('zksolc plugin', async function () {
                 assert.equal(factoryArtifact.contractName, 'Factory');
                 assert.equal(depArtifact.contractName, 'Dep');
 
-                // Check that zkSync-specific artifact information was added.
+                // Check that ZKsync-specific artifact information was added.
 
                 // Factory contract should have one dependency.
                 // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
@@ -393,7 +393,7 @@ describe('zksolc plugin', async function () {
                     'contracts/deps/more_deps/Bar.sol:BarDep',
                 ) as ZkSyncArtifact;
 
-                // Check that zkSync-specific artifact information was added.
+                // Check that ZKsync-specific artifact information was added.
 
                 // Factory contract should have one dependency.
                 // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.

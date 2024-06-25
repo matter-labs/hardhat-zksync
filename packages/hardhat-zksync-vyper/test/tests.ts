@@ -21,7 +21,7 @@ describe('zkvyper plugin', async function () {
 
             assert.equal(artifact.contractName, 'Greeter');
 
-            // Check that zkSync-specific artifact information was added.
+            // Check that ZKsync-specific artifact information was added.
             assert.deepEqual(artifact.factoryDeps, {}, 'Contract unexpectedly has dependencies');
         });
     });
@@ -36,7 +36,7 @@ describe('zkvyper plugin', async function () {
 
             assert.equal(artifact.contractName, 'Greeter');
 
-            // Check that zkSync-specific artifact information was added.
+            // Check that ZKsync-specific artifact information was added.
             assert.deepEqual(artifact.factoryDeps, {}, 'Contract unexpectedly has dependencies');
         });
     });
@@ -136,7 +136,7 @@ describe('zkvyper plugin', async function () {
             assert.equal(factoryArtifact.contractName, 'CreateForwarder');
             assert.equal(depArtifact.contractName, 'DeployMe');
 
-            // Check that zkSync-specific artifact information was added.
+            // Check that ZKsync-specific artifact information was added.
 
             // Factory contract should have one dependency.
             // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
@@ -175,7 +175,7 @@ describe('zkvyper plugin', async function () {
             assert.equal(factoryArtifact.contractName, 'CreateForwarder');
             assert.equal(depArtifact.contractName, 'DeployMe');
 
-            // Check that zkSync-specific artifact information was added.
+            // Check that ZKsync-specific artifact information was added.
 
             // Factory contract should have one dependency.
             // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.

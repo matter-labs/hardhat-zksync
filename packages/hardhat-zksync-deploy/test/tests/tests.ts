@@ -56,7 +56,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('noninline-libraries artifact', async function () {
-        useEnvironment('noninline-libraries-v1', 'zkSyncNetwork');
+        useEnvironment('noninline-libraries-v1', 'ZKsyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -79,7 +79,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('noninline-libraries artifact with private key in config', async function () {
-        useEnvironment('noninline-libraries-v2', 'zkSyncNetwork');
+        useEnvironment('noninline-libraries-v2', 'ZKsyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -100,7 +100,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('should deploy libraries using mnemonic', async function () {
-        useEnvironment('deployment-with-mnemonic', 'zkSyncNetwork');
+        useEnvironment('deployment-with-mnemonic', 'ZKsyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -120,10 +120,10 @@ describe('Plugin tests', async function () {
         });
     });
 
-    describe('Deployer with zkSync network provided', async function () {
+    describe('Deployer with ZKsync network provided', async function () {
         useEnvironment('successful-compilation', ZKSYNC_NETWORK_NAME);
 
-        it('Should connect to correct L1 and L2 networks based on zkSync network', async function () {
+        it('Should connect to correct L1 and L2 networks based on ZKsync network', async function () {
             const zkWallet = new Wallet(WALLET_PRIVATE_KEY);
             const deployer = new Deployer(this.env, zkWallet);
 
@@ -140,7 +140,7 @@ describe('Plugin tests', async function () {
         });
     });
 
-    describe('Deployer without zkSync network provided', async function () {
+    describe('Deployer without ZKsync network provided', async function () {
         useEnvironment('successful-compilation');
 
         it('Should use default L1 and L2 network providers (local-setup)', async function () {
@@ -249,7 +249,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('Test with integritated deployer in hre', async function () {
-        useEnvironment('deployer-in-hre', 'zkSyncNetwork2');
+        useEnvironment('deployer-in-hre', 'ZKsyncNetwork2');
 
         it('should deploy with integrated wallet', async function () {
             await this.env.run('compile');
@@ -390,7 +390,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('Deply scripts with priority for all deploy folders', async function () {
-        useEnvironment('priority', 'zkSyncNetwork');
+        useEnvironment('priority', 'ZKsyncNetwork');
         it('Should run scripts is order with priority', async function () {
             const baseDir = this.env.config.paths.root;
 

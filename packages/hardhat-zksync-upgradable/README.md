@@ -1,6 +1,6 @@
 # hardhat-zksync-upgradable
 
-zkSync Era's [Hardhat](https://hardhat.org/) plugin to deploy and upgrade smart contracts easily.
+ZKsync Era's [Hardhat](https://hardhat.org/) plugin to deploy and upgrade smart contracts easily.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -31,7 +31,7 @@ Upgradability methods are all part of the zkUpgrades property in the HardhatRunt
 
 - **Deploying proxies**
 
-To deploy a simple upgradable contract on zkSync Era local setup, first create a test wallet and add it to the new Deployer.
+To deploy a simple upgradable contract on ZKsync Era local setup, first create a test wallet and add it to the new Deployer.
 After that, load the your contract artifact and call the deployProxy method from the zkUpgrades hre property.
 
 
@@ -42,7 +42,7 @@ const contract = await deployer.loadArtifact("YourContractName");
 await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], { initializer: "initialize" });
 ```
 
-The deployProxy method deploys your implementation contract on zkSync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
+The deployProxy method deploys your implementation contract on ZKsync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
 
 Additionaly, in the options section optionaly include the folowing arguments to configure the deployment of the proxy and implementation with different deployment types and salts:
 
@@ -75,7 +75,7 @@ When you run the script, the plugin detects that the proxy type is UUPS, it exec
 
 Beacon proxies enable a more advanced upgrade pattern, where multiple implementation contracts can be deployed and "hot-swapped" on the fly with no disruption to the contract's operation.
 
-Start by creating a Deployer for the zkSync Era network and load the Box artifact:
+Start by creating a Deployer for the ZKsync Era network and load the Box artifact:
 
 ```
 // mnemonic for local node rich wallet
@@ -94,7 +94,7 @@ Deploy the beacon contract using `deployBeacon` method from the `zkUpgrades`:
 await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract);
 ```
 
-Use the `deployBeaconProxy` method which receives the zkSync Era wallet, beacon contract, and the implementation (Box) contract with its arguments.
+Use the `deployBeaconProxy` method which receives the ZKsync Era wallet, beacon contract, and the implementation (Box) contract with its arguments.
 
 ```
 const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42]);
@@ -207,7 +207,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
@@ -223,7 +223,7 @@ const config: HardhatUserConfig = {
 ```
 - accounts represents a list of the private keys or mnemonic object for the account used in the deployment or in the upgradation process.
 
-accounts object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
+accounts object will be automaticly be populated with rich accounts if used network is ZKsync Era Test Node or zksync-cli Local Node
 
 To establish a default index per network, which is by default `0`, you can include a `deployerAccounts` section in your `hardhat.config.ts` file.
 
@@ -239,7 +239,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // The private keys for the accounts used in the deployment process.
@@ -306,22 +306,22 @@ The account used for deployment will be the one specified by the `deployerAccoun
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-upgradable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-upgradable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building!

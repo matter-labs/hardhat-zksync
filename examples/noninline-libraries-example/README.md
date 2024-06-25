@@ -1,6 +1,6 @@
-# zkSync Era non-inline libraries environment example
+# ZKsync Era non-inline libraries environment example
 
-This project demonstrates how to compile and deploy your contracts in zkSync Era when there are missing libraries.
+This project demonstrates how to compile and deploy your contracts in ZKsync Era when there are missing libraries.
 
 ## Prerequisites
 
@@ -10,9 +10,9 @@ This project demonstrates how to compile and deploy your contracts in zkSync Era
 ## Configuration
 
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
-You should only change the zkSync network configuration.
+You should only change the ZKsync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
+`hardhat.config.ts` example with ZKsync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
 import "@matterlabs/hardhat-zksync-deploy";
 import { HardhatUserConfig } from 'hardhat/types';
@@ -23,7 +23,7 @@ const config: HardhatUserConfig = {
             url: 'https://sepolia.infura.io/v3/<API_KEY>' // you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`)
         },
         zkTestnet: {
-            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the zkSync network RPC
+            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the ZKsync network RPC
             ethNetwork: 'sepolia',
             zksync: true
         },
@@ -60,7 +60,7 @@ yarn hardhat deploy-zksync
 - `yarn hardhat compile`: compiles all the contracts in the `contracts` folder. Since all the missing libraries are deployed, the output of the command will be artifacts and cache files.
 - `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
     - To run a specific script, add the `--script` argument, e.g. `--script 001_deploy.ts`.
-    - To run on a specific zkSync network, use standard hardhat `--network` argument, e.g. `--network zkTestnet`
+    - To run on a specific ZKsync network, use standard hardhat `--network` argument, e.g. `--network zkTestnet`
     (with `zkTestnet` network specified in the `hardhat.config` networks section, with the `zksync` flag set to `true` and `ethNetwork` specified).
 
-If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:8011> (zkSync RPC URL) will be used.
+If you don't specify ZKsync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:8011> (ZKsync RPC URL) will be used.

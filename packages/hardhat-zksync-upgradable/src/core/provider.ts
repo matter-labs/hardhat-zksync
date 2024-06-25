@@ -6,9 +6,9 @@ export async function getChainId(provider: zk.Provider): Promise<number> {
 }
 
 export const networkNames: { [chainId in number]?: string } = Object.freeze({
-    324: 'zkSync-era',
-    280: 'zkSync-testnet-goerli',
-    270: 'zkSync-local-setup',
-    300: 'zkSync-testnet-sepolia',
-    260: 'zkSync-era-test-node',
+    324: 'ZKsync-era',
+    280: 'ZKsync-testnet-goerli',
+    270: 'ZKsync-local-setup',
+    300: 'ZKsync-testnet-sepolia',
+    260: 'ZKsync-era-test-node',
 });
