@@ -1,7 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
-import { Wallet, utils } from 'zksync-ethers';
-import { ethers } from 'ethers';
+import { Wallet } from 'zksync-ethers';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy`));

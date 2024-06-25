@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as ethers from 'ethers';
 import * as zk from 'zksync-ethers';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 import chalk from 'chalk';
