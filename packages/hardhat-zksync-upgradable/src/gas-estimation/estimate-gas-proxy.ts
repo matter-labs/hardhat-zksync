@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
-import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
 import assert from 'assert';
@@ -11,10 +10,9 @@ import { ZkSyncUpgradablePluginError } from '../errors';
 import { DeployProxyOptions } from '../utils/options';
 import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general';
 import { getChainId } from '../core/provider';
-import { ERC1967_PROXY_JSON, TUP_JSON, defaultImplAddresses } from '../constants';
+import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 
-import { getAdminArtifact, getAdminFactory } from '../proxy-deployment/deploy-proxy-admin';
-import { deploy } from '../proxy-deployment/deploy';
+import { getAdminArtifact } from '../proxy-deployment/deploy-proxy-admin';
 
 export type EstimateProxyGasFunction = (
     deployer: Deployer,
@@ -28,11 +26,6 @@ interface GasCosts {
     proxyGasCost: ethers.BigNumber;
 }
 
-async function deployProxyAdminLocally(adminFactory: zk.ContractFactory) {
-    const mockContract = await deploy(adminFactory);
-    return mockContract.address;
-}
-
 export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimateProxyGasFunction {
     return async function estimateGasProxy(
         deployer: Deployer,
@@ -41,9 +34,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         opts: DeployProxyOptions = {},
         quiet: boolean = false,
     ) {
-        let data;
         let totalGasCost;
-        let mockImplAddress: string;
 
         const mockArtifact = await getAdminArtifact(hre);
         const kind = opts.kind;
@@ -53,14 +44,9 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         if (!chainId) {
             throw new ZkSyncUpgradablePluginError(`Chain id ${chainId} is not supported!`);
         }
-        if (chainId === 270) {
-            const adminFactory = await getAdminFactory(hre, deployer.zkWallet);
-            mockImplAddress = await deployProxyAdminLocally(adminFactory);
-            data = getInitializerData(adminFactory.interface, args, opts.initializer);
-        } else {
-            mockImplAddress = defaultImplAddresses[chainId].contractAddress;
-            data = getInitializerData(ethers.Contract.getInterface(mockArtifact.abi), args, opts.initializer);
-        }
+
+        const mockImplAddress = await getProxyAdminContractAddress();
+        const data = getInitializerData(ethers.Contract.getInterface(mockArtifact.abi), args, opts.initializer);
 
         const implGasCost = await deployer.estimateDeployFee(artifact, []);
 
@@ -109,6 +95,11 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         }
         return totalGasCost;
     };
+}
+
+async function getProxyAdminContractAddress() {
+    // return deployer contract address since it is used only for estimating gas as admin contract
+    return '0x0000000000000000000000000000000000008006';
 }
 
 async function estimateGasUUPS(
