@@ -73,7 +73,7 @@ describe('verify upgradable smart contracts', async function () {
         const _ = await hre.run(TASK_VERIFY, { address: await box.getAddress() });
     });
 
-    it('Deploy, upgrade and verify box becaon', async function () {
+    it('Deploy, upgrade and verify box beacon', async function () {
         const zkWallet = await hre.zksyncEthers.getWallet(0);
         const deployer = new Deployer(hre, zkWallet);
 

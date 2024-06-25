@@ -22,7 +22,7 @@ describe('verify plugin', async function () {
     describe('Unknown verifyURL in config', async function () {
         useEnvironment('customNetwork');
 
-        it('Checks impoting default verifyURL when it does not exist in the config ', async function () {
+        it('Checks importing default verifyURL when it does not exist in the config ', async function () {
             assert.equal(this.env.network.verifyURL, testnetVerifyURL);
         });
     });
