@@ -1,10 +1,10 @@
 import ITransparentUpgradeableProxyV4 from '@openzeppelin/upgrades-core/artifacts/@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol/ITransparentUpgradeableProxy.json';
-
 import ProxyAdminV4 from '@openzeppelin/upgrades-core/artifacts/@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json';
 
 import { Contract, ContractFactory, Wallet } from 'zksync-ethers';
-import ProxyAdminV5 from '../core/artifacts/@openzeppelin/contracts-v5/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json';
-import ITransparentUpgradeableProxyV5 from '../core/artifacts/@openzeppelin/contracts-v5/proxy/transparent/TransparentUpgradeableProxy.sol/ITransparentUpgradeableProxy.json';
+
+const ProxyAdminV5 = require('../core/artifacts/@openzeppelin/contracts-v5/proxy/transparent/ProxyAdmin.sol/ProxyAdmin.json');
+const ITransparentUpgradeableProxyV5 = require('../core/artifacts/@openzeppelin/contracts-v5/proxy/transparent/TransparentUpgradeableProxy.sol/ITransparentUpgradeableProxy.json');
 
 export async function attachITransparentUpgradeableProxyV5(address: string, wallet: Wallet): Promise<Contract> {
     const contractFactory = new ContractFactory(
