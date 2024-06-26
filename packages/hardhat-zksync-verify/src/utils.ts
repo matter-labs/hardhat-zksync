@@ -129,6 +129,8 @@ export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: s
 
 export function normalizeCompilerVersions(
     solcConfigData: SolcConfigData,
+    zkSolcConfig: any,
+    latestEraVersion: string,
     userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
 ): string | undefined {
     const noramlizers: SolcUserConfigNormalizer[] = [
@@ -139,5 +141,5 @@ export function normalizeCompilerVersions(
     const compiler = solcConfigData.compiler;
     return noramlizers
         .find((normalize) => normalize.suituble(userConfigCompilers, solcConfigData.file))
-        ?.normalize(compiler, userConfigCompilers, solcConfigData.file);
+        ?.normalize(compiler, zkSolcConfig, latestEraVersion, userConfigCompilers, solcConfigData.file);
 }

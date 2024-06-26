@@ -10,7 +10,7 @@ var deployScript = async function (hre) {
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // `greeting` is an argument for contract constructor.
     const greeting = 'Hi there!';
-    const greeterContract = await hre.deployer.deploy(artifact, [greeting], true);
+    const greeterContract = await hre.deployer.deploy(artifact, [greeting]);
 
     // Show the contract info.
     const contractAddress = greeterContract.address;

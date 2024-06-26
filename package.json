@@ -4,10 +4,6 @@
   "author": "Matter Labs",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "@npmcli/promise-spawn": "^6.0.2",
@@ -15,19 +11,17 @@
     "get-monorepo-packages": "^1.2.0",
     "husky": "^8.0.3",
     "prettier": "^3.1.0",
-    "typescript": "^5.1.6",
-    "wsrun": "^5.2.2"
+    "typescript": "^5.3.0"
   },
   "scripts": {
-    "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
-    "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-chai-matchers packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
-    "clean": "wsrun --exclude-missing clean",
-    "lint": "wsrun --exclude-missing --stages lint",
-    "lint:fix": "wsrun --exclude-missing --stages lint:fix",
-    "prettier:check": "wsrun --exclude-missing --stages prettier:check",
-    "test:release-script": "mocha scripts/test/tests.js",
-    "prepare": "yarn husky install"
+    "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
+    "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-verify packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
+    "clean": "pnpm run --recursive clean",
+    "lint": "pnpm run --recursive lint",
+    "lint:fix": "pnpm run --recursive lint:fix",
+    "prettier:check": "pnpm run --recursive prettier:check",
+    "prepare": "pnpm husky install"
   },
-  "dependencies": {},
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@9.3.0"
 }

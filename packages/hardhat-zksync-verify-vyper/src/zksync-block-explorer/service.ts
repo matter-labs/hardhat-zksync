@@ -21,7 +21,7 @@ export class ZkSyncVyperBlockExplorerVerifyResponse {
 
 export async function verifyContractRequest(
     req: ZkSyncVyperBlockExplorerVerifyRequest,
-    verifyURL: string
+    verifyURL: string,
 ): Promise<ZkSyncVyperBlockExplorerVerifyResponse> {
     let data;
     try {
@@ -46,7 +46,7 @@ export enum COMPILER_TYPE {
 
 export async function getSupportedCompilerVersions(
     verifyURL: string | undefined,
-    compilerType: COMPILER_TYPE
+    compilerType: COMPILER_TYPE,
 ): Promise<string[]> {
     try {
         const compilerTypePath = compilerType === COMPILER_TYPE.VYPER ? '/vyper_versions' : '/zkvyper_versions';
@@ -59,7 +59,7 @@ export async function getSupportedCompilerVersions(
 
 export async function checkVerificationStatusService(
     requestId: number,
-    verifyURL: string
+    verifyURL: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
 

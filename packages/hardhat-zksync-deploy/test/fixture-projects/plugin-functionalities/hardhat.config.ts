@@ -7,12 +7,13 @@ const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
-            isSystem: true,
+            enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,
             },
         },
     },
+    defaultNetwork: 'zkSyncNetwork2',
     networks: {
         hardhat: {
             zksync: true,
