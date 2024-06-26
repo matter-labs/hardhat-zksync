@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
     // Docker image only works for solidity ^0.8.0.
     // For earlier versions you need to use binary releases of zksolc.
     solidity: {
-        version: '0.8.17',
+        version: '0.8.20',
     },
 };
 

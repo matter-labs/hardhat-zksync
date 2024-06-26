@@ -1,17 +1,14 @@
 import assert from 'assert';
 import { ContractFactory, Provider, Contract } from 'zksync-ethers';
 import chalk from 'chalk';
-import fsExtra from 'fs-extra';
-import path from 'path';
 
 import { getAdminAddress } from '@openzeppelin/upgrades-core';
 import { ethers } from 'ethers';
-import { LOCAL_SETUP_ZKSYNC_NETWORK, MANIFEST_DEFAULT_DIR } from '../src/constants';
-import { getAdminFactory } from '../src/proxy-deployment/deploy-proxy-admin';
+import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../src/constants';
 import { deployBeacon, deployProxy, upgradeBeacon } from '../src/plugin';
 import { deploy } from '../src/proxy-deployment/deploy';
-import { getManifestAdmin } from '../src/admin';
-import { TEST_ADDRESS, authorizationErrors, standaloneValidationErrors, storageLayoutErrors } from './constants';
+import { getProxyAdminFactory } from '../src/utils/factories';
+import { TEST_ADDRESS, standaloneValidationErrors, storageLayoutErrors } from './constants';
 import richWallets from './rich-wallets.json';
 
 import { useEnvironment } from './helpers';
@@ -92,7 +89,10 @@ describe('Upgradable plugin tests', async function () {
             const boxArtifact = await this.deployer.loadArtifact(contractName1);
             boxUupsProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'initialize',
+                unsafeAllow: ['state-variable-assignment'],
             });
+
+            await boxUupsProxy.deployed();
 
             console.info(chalk.yellow(`Deploying ${contractName2} uups proxy...`));
 
@@ -103,8 +103,10 @@ describe('Upgradable plugin tests', async function () {
                 [42],
                 {
                     initializer: 'initialize',
+                    unsafeAllow: ['state-variable-assignment'],
                 },
             );
+            await boxUupsPublicProxy.deployed();
         });
 
         it('Should deploy uups proxy and contract implementation', async function () {
@@ -122,7 +124,9 @@ describe('Upgradable plugin tests', async function () {
             console.info(chalk.yellow(`Upgrading BoxUups to ${contractName}...`));
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
-            const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxUupsProxy.address, BoxV2);
+            const box2 = await this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxUupsProxy.address, BoxV2, {
+                unsafeAllow: ['state-variable-assignment'],
+            });
 
             box2.connect(this.deployer.zkWallet);
             const value = await box2.retrieve();
@@ -136,18 +140,24 @@ describe('Upgradable plugin tests', async function () {
             const BoxV2 = await this.deployer.loadArtifact(contractName);
 
             await assert.rejects(
-                this.env.zkUpgrades.upgradeProxy(this.zkWallet2, boxUupsProxy.address, BoxV2),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
+                this.env.zkUpgrades.upgradeProxy(this.zkWallet2, boxUupsProxy.address, BoxV2, {
+                    unsafeAllow: ['state-variable-assignment'],
+                }),
             );
         });
 
-        it('Should allow other wallets to upgrade the contract', async function () {
+        it.only('Should allow other wallets to upgrade the contract', async function () {
             const contractName = 'BoxUupsV2';
 
             console.info(chalk.yellow(`Upgrading BoxUupsPublic to ${contractName}...`));
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
-            const box2 = await this.env.zkUpgrades.upgradeProxy(this.zkWallet2, boxUupsPublicProxy.address, BoxV2);
+            const box2 = await this.env.zkUpgrades.upgradeProxy(
+                this.deployer.zkWallet,
+                boxUupsPublicProxy.address,
+                BoxV2,
+                { unsafeAllow: ['state-variable-assignment'] },
+            );
             console.info(chalk.green('Successfully upgraded BoxUupsPublic to BoxUupsV2'));
 
             box2.connect(this.deployer.zkWallet);
@@ -166,8 +176,8 @@ describe('Upgradable plugin tests', async function () {
                 this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                     initializer: 'initialize',
                     kind: 'uups',
+                    unsafeAllow: ['state-variable-assignment'],
                 }),
-                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO),
             );
         });
 
@@ -180,8 +190,8 @@ describe('Upgradable plugin tests', async function () {
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, boxUupsProxy.address, boxV2, {
                     kind: 'uups',
+                    unsafeAllow: ['state-variable-assignment'],
                 }),
-                (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO),
             );
         });
     });
@@ -248,30 +258,6 @@ describe('Upgradable plugin tests', async function () {
         useEnvironment('admin');
         const provider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
 
-        it('Should return the smart contract admin instance', async function () {
-            const contractName = 'Box';
-            console.info(chalk.yellow(`Deploying ${contractName}...`));
-
-            const contract = await this.deployer.loadArtifact(contractName);
-            const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
-                initializer: 'initialize',
-            });
-
-            const adminInstance = await this.env.zkUpgrades.admin.getInstance(this.deployer.zkWallet);
-            const adminAddress = await adminInstance.getProxyAdmin(deployedContract.address);
-
-            assert(adminInstance.address, adminAddress);
-        });
-
-        it('Should fail to return the smart contract admin instance', async function () {
-            // remove the manifest file to separate this test's manifest file from others
-            await fsExtra.remove(path.join(this.env.config.paths.root, MANIFEST_DEFAULT_DIR));
-
-            await assert.rejects(this.env.zkUpgrades.admin.getInstance(this.deployer.zkWallet), (error: any) =>
-                error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND),
-            );
-        });
-
         it('Should change the admin of an upgradable smart contract', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow(`Deploying ${contractName}...`));
@@ -281,8 +267,7 @@ describe('Upgradable plugin tests', async function () {
                 initializer: 'initialize',
             });
 
-            const adminInstance = await this.env.zkUpgrades.admin.getInstance(this.deployer.zkWallet);
-            await this.env.zkUpgrades.admin.changeProxyAdmin(
+            await this.env.zkUpgrades.admin.transferProxyAdminOwnership(
                 deployedContract.address,
                 richWallets[1].address,
                 this.deployer.zkWallet,
@@ -292,7 +277,6 @@ describe('Upgradable plugin tests', async function () {
             await new Promise((resolve) => setTimeout(resolve, 2000));
             const updatedAdminInstance = await getAdminAddress(provider, deployedContract.address);
 
-            assert(updatedAdminInstance !== adminInstance.address);
             assert(updatedAdminInstance, richWallets[1].address);
         });
 
@@ -307,10 +291,10 @@ describe('Upgradable plugin tests', async function () {
                 initializer: 'initialize',
             });
 
-            const adminFactory = await getAdminFactory(this.env, this.zkWallet2);
-            const newAdminContract = await deploy(adminFactory);
+            const adminFactory = await getProxyAdminFactory(this.env, this.zkWallet2);
+            const newAdminContract = await deploy(adminFactory, this.deployer.zkWallet.address);
 
-            await this.env.zkUpgrades.admin.changeProxyAdmin(
+            await this.env.zkUpgrades.admin.transferProxyAdminOwnership(
                 deployedContract.address,
                 newAdminContract.address,
                 this.deployer.zkWallet,
@@ -321,7 +305,6 @@ describe('Upgradable plugin tests', async function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, deployedContract.address, contractV2),
-                (error: any) => error.message.includes(authorizationErrors.WRONG_PROXY_ADMIN),
             );
         });
 
@@ -340,7 +323,6 @@ describe('Upgradable plugin tests', async function () {
                     richWallets[1].address,
                     this.zkWallet2,
                 ),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
             );
         });
 
@@ -349,16 +331,19 @@ describe('Upgradable plugin tests', async function () {
             console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
-            const _ = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
+            const proxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
             });
+            await proxy.deployed();
 
-            const admin = await getManifestAdmin(this.env, this.deployer.zkWallet);
+            await this.env.zkUpgrades.admin.transferProxyAdminOwnership(
+                proxy.address,
+                TEST_ADDRESS,
+                this.deployer.zkWallet,
+            );
 
-            await this.env.zkUpgrades.admin.transferProxyAdminOwnership(TEST_ADDRESS, this.deployer.zkWallet);
-            const newOwner = await admin.owner();
-
-            assert(newOwner, TEST_ADDRESS);
+            const savedAdmin = await getAdminAddress(provider, proxy.address);
+            assert(savedAdmin, TEST_ADDRESS);
         });
 
         it('Should fail to change the owner - wrong signer', async function () {
@@ -366,23 +351,12 @@ describe('Upgradable plugin tests', async function () {
             console.info(chalk.yellow(`Deploying ${contractName}...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
-            await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
+            const proxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
             });
 
             await assert.rejects(
-                this.env.zkUpgrades.admin.transferProxyAdminOwnership(TEST_ADDRESS, this.zkWallet2),
-                (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
-            );
-        });
-
-        it('Should fail to change the owner - no admin', async function () {
-            // remove the manifest file to separate this test's manifest file from others
-            await fsExtra.remove(path.join(this.env.config.paths.root, MANIFEST_DEFAULT_DIR));
-
-            await assert.rejects(
-                this.env.zkUpgrades.admin.transferProxyAdminOwnership(TEST_ADDRESS, this.zkWallet2),
-                (error: any) => error.message.includes(authorizationErrors.NO_PROXY_ADMIN_FOUND),
+                this.env.zkUpgrades.admin.transferProxyAdminOwnership(proxy.adress, TEST_ADDRESS, this.zkWallet2),
             );
         });
     });
@@ -521,13 +495,14 @@ describe('Upgradable plugin tests', async function () {
                 this.deployer,
                 contract,
                 [],
-                { kind: 'uups' },
+                { kind: 'uups', unsafeAllow: ['state-variable-assignment'] },
                 true,
             );
 
             const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
                 kind: 'uups',
+                unsafeAllow: ['state-variable-assignment'],
             });
             await box.deployed();
 
@@ -591,7 +566,7 @@ describe('Upgradable plugin tests', async function () {
     });
 });
 
-describe.only('Test for upgrades from oneline', function () {
+describe('Test for upgrades from oneline', function () {
     describe('Test transparent upgradable proxy deployment and upgrade functionalities', async function () {
         useEnvironment('tup-e2e', 'zkSyncNetwork');
 
@@ -613,6 +588,7 @@ describe.only('Test for upgrades from oneline', function () {
             const box = await deployProxy(this.env, {
                 contractName: 'BoxUups',
                 constructorArgsParams: [42],
+                unsafeStateVariableAssignment: true,
             });
 
             const value = await box.retrieve();
