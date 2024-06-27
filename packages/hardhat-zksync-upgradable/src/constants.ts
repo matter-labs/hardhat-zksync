@@ -46,14 +46,3 @@ export const verifiableContracts = {
     transparentUpgradeableProxy: { event: 'AdminChanged(address,address)' },
     proxyAdmin: { event: 'OwnershipTransferred(address,address)' },
 };
-
-export const defaultImplAddresses: { [chainId in number]: { contractAddress: string; beacon: string } } = {
-    324: {
-        contractAddress: '0x71CF3E1430aA920903CeF2154202902dDbBE2c98',
-        beacon: '0x3DbAe90affFFAC8d20285f2f53e3f2e10368c11C',
-    },
-    280: {
-        contractAddress: '0xCFFF2D44a3d3361f86Aa9EA5c563B95FAcA7be8c',
-        beacon: '0x713499530cCAc7a09FecFf05C3a1d4413E4CCd12',
-    },
-};
