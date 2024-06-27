@@ -1,5 +1,14 @@
 # @matterlabs/hardhat-zksync-chai-matchers
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v1.3.0...@matterlabs/hardhat-zksync-chai-matchers-v1.4.0) (2024-06-27)
+
+
+### Features
+
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+* bump hardhat-zksync-deploy dependency version ([#990](https://github.com/matter-labs/hardhat-zksync/issues/990)) ([76362bf](https://github.com/matter-labs/hardhat-zksync/commit/76362bf435a2af5294a9106370f9c9faaaccdd17))
+* use deployment type in the deploy function ([#1090](https://github.com/matter-labs/hardhat-zksync/issues/1090)) ([05b2262](https://github.com/matter-labs/hardhat-zksync/commit/05b2262ff148369297c2098a95775d265b3efd41))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-chai-matchers-v1.2.2...@matterlabs/hardhat-zksync-chai-matchers-v1.3.0) (2024-02-26)
 
 
