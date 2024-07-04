@@ -22,11 +22,17 @@ export class ZkSyncBlockExplorerResponse {
 export async function checkVerificationStatusService(
     requestId: number,
     verifyURL: string,
+    apiKey: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
 
     try {
-        const data = await axios.get(`${verifyURL}/${requestId}`);
+        const params: any = {};
+        if (apiKey !== '') {
+            params.apiKey = apiKey;
+        }
+
+        const data = await axios.get(`${verifyURL}/${requestId}`, { params });
         verificationStatusResponse = new VerificationStatusResponse(data);
 
         return verificationStatusResponse;
@@ -38,10 +44,16 @@ export async function checkVerificationStatusService(
 export async function verifyContractRequest(
     req: ZkSyncBlockExplorerVerifyRequest,
     verifyURL: string,
+    apiKey: string,
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
-        data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' } });
+        const params: any = {};
+        if (apiKey !== '') {
+            params.apiKey = apiKey;
+        }
+
+        data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' }, params });
 
         const zkSyncBlockExplorerResponse = new ZkSyncBlockExplorerResponse(data);
 
@@ -55,9 +67,17 @@ export async function verifyContractRequest(
     }
 }
 
-export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
+export async function getSupportedCompilerVersions(
+    verifyURL: string | undefined,
+    apiKey: string | undefined,
+): Promise<string[]> {
     try {
-        const response = await axios.get(`${verifyURL}/solc_versions`);
+        const params: any = {};
+        if (apiKey !== undefined && apiKey !== '') {
+            params.apiKey = apiKey;
+        }
+
+        const response = await axios.get(`${verifyURL}/solc_versions`, { params });
         return response.data;
     } catch (error) {
         handleAxiosError(error);

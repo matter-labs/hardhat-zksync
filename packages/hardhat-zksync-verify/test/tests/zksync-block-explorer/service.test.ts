@@ -1,10 +1,10 @@
+import axios from 'axios';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import axios from 'axios';
 import {
     checkVerificationStatusService,
-    verifyContractRequest,
     getSupportedCompilerVersions,
+    verifyContractRequest,
     ZkSyncBlockExplorerResponse,
 } from '../../../src/zksync-block-explorer/service';
 import { VerificationStatusResponse } from '../../../src/zksync-block-explorer/verification-status-response';
@@ -19,6 +19,7 @@ describe('ZkSyncBlockExplorer Service', () => {
         it('should return the verification status response', async () => {
             const requestId = 123;
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const response = {
                 status: 200,
@@ -32,7 +33,7 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             sinon.stub(axios, 'get').resolves(response);
 
-            const result = await checkVerificationStatusService(requestId, verifyURL);
+            const result = await checkVerificationStatusService(requestId, verifyURL, apiKey);
 
             expect(!result.errorExists());
             expect(result).to.be.instanceOf(VerificationStatusResponse);
@@ -43,6 +44,7 @@ describe('ZkSyncBlockExplorer Service', () => {
         it('should return the error', async () => {
             const requestId = 123;
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const response = {
                 status: 400,
@@ -56,7 +58,7 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             sinon.stub(axios, 'get').resolves(response);
 
-            const result = await checkVerificationStatusService(requestId, verifyURL);
+            const result = await checkVerificationStatusService(requestId, verifyURL, apiKey);
 
             expect(!result.isPending());
             expect(!result.isQueued());
@@ -66,13 +68,14 @@ describe('ZkSyncBlockExplorer Service', () => {
         it('should handle axios error', async () => {
             const requestId = 123;
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const error = new Error('Network error');
 
             sinon.stub(axios, 'get').rejects(error);
 
             try {
-                await checkVerificationStatusService(requestId, verifyURL);
+                await checkVerificationStatusService(requestId, verifyURL, apiKey);
             } catch (err: any) {
                 expect(err.message).to.equal(err.message);
             }
@@ -96,6 +99,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                 sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
             };
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const response = {
                 status: 200,
@@ -104,7 +108,7 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             sinon.stub(axios, 'post').resolves(response);
 
-            const result = await verifyContractRequest(req, verifyURL);
+            const result = await verifyContractRequest(req, verifyURL, apiKey);
 
             expect(result).to.be.instanceOf(ZkSyncBlockExplorerResponse);
             expect(result.status).to.equal(response.status);
@@ -123,6 +127,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                 sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
             };
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const response = {
                 status: 400,
@@ -132,7 +137,7 @@ describe('ZkSyncBlockExplorer Service', () => {
             sinon.stub(axios, 'post').resolves(response);
 
             try {
-                await verifyContractRequest(req, verifyURL);
+                await verifyContractRequest(req, verifyURL, apiKey);
                 expect.fail('Expected ZkSyncVerifyPluginError to be thrown');
             } catch (error: any) {
                 expect(error.message).to.includes(
@@ -153,13 +158,14 @@ describe('ZkSyncBlockExplorer Service', () => {
                 sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
             };
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const error = new Error('Network error');
 
             sinon.stub(axios, 'post').rejects(error);
 
             try {
-                await verifyContractRequest(req, verifyURL);
+                await verifyContractRequest(req, verifyURL, apiKey);
             } catch (err: any) {
                 expect(err.message).to.equal(err.message);
             }
@@ -173,6 +179,7 @@ describe('ZkSyncBlockExplorer Service', () => {
 
         it('should return the list of supported compiler versions', async () => {
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             const response = {
                 data: ['0.7.0', '0.8.0', '0.8.1'],
@@ -180,18 +187,19 @@ describe('ZkSyncBlockExplorer Service', () => {
 
             sinon.stub(axios, 'get').resolves(response);
 
-            const result = await getSupportedCompilerVersions(verifyURL);
+            const result = await getSupportedCompilerVersions(verifyURL, apiKey);
 
             expect(result).to.deep.equal(response.data);
         });
 
         it('should fail the get the supported compiler versions', async () => {
             const verifyURL = 'https://example.com/verify';
+            const apiKey = 'apiKey';
 
             sinon.stub(axios, 'get').rejects(new Error('Network Error'));
 
             try {
-                await getSupportedCompilerVersions(verifyURL);
+                await getSupportedCompilerVersions(verifyURL, apiKey);
                 throw new Error('Expected getSupportedCompilerVersions to throw');
             } catch (error) {
                 expect(error).to.be.an('error');

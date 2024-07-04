@@ -19,6 +19,7 @@ import { checkVerificationStatus } from './plugin';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
+    hre.network.apiKey = hre.network.config.apiKey ?? '';
 });
 
 task(TASK_VERIFY, 'Verifies contract on Ethereum and zkSync networks')

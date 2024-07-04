@@ -213,7 +213,7 @@ export async function verifyContract(
         )}`;
     }
 
-    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
+    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, hre.network.apiKey);
     const compilerVersion: string = contractInformation.solcVersion;
     if (!compilerPossibleVersions.includes(compilerVersion)) {
         throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
@@ -237,7 +237,7 @@ export async function verifyContract(
         optimizationUsed,
     };
 
-    const response = await verifyContractRequest(request, hre.network.verifyURL);
+    const response = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apiKey);
     const verificationId = parseInt(response.message, 10);
 
     console.info(chalk.cyan(`Your verification ID is: ${verificationId}`));
@@ -257,7 +257,7 @@ export async function verifyContract(
 
         request.sourceCode.sources = contractInformation.compilerInput.sources;
 
-        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL);
+        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apiKey);
         const fallbackVerificationId = parseInt(fallbackResponse.message, 10);
 
         console.info(chalk.cyan(`Your verification ID is: ${fallbackVerificationId}`));

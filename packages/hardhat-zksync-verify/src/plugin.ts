@@ -133,7 +133,11 @@ export async function getLibraries(librariesModule: string) {
 }
 
 export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    const isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
+    const isValidVerification = await executeVeificationWithRetry(
+        args.verificationId,
+        hre.network.verifyURL,
+        hre.network.apiKey,
+    );
 
     if (isValidVerification?.errorExists()) {
         throw new ZkSyncVerifyPluginError(`Backend verification error: ${isValidVerification.getError()}`);
