@@ -12,7 +12,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
 {
   "name": "@matterlabs/hardhat-zksync-upgradable",
   "version": "1.4.1",
-  "description": "Hardhat plugin to deploy and update upgradable smart contracts for the zkSync network",
+  "description": "Hardhat plugin to deploy and update upgradable smart contracts for the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
   "author": "Matter Labs",
@@ -24,7 +24,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "smart-contracts",
     "hardhat",
     "hardhat-plugin",
-    "zkSync"
+    "ZKsync"
   ],
   "scripts": {
     "lint": "pnpm eslint",

@@ -1,6 +1,6 @@
 # hardhat-zksync-solc 🚀
 
-zkSync Era [Hardhat](https://hardhat.org/) plugin to compile smart contracts for the zkSync network.
+ZKsync Era [Hardhat](https://hardhat.org/) plugin to compile smart contracts for the ZKsync network.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -29,7 +29,7 @@ zksolc: {
       compilerPath: "zksolc",  // optional. Ignored for compilerSource "docker". Can be used if compiler is located in a specific folder
       libraries:{}, // optional. References to non-inlinable libraries
       missingLibrariesPath: "./.zksolc-libraries-cache/missingLibraryDependencies.json" // optional. This path serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. A `hardhat-zksync-deploy` plugin uses this cache later to compile and deploy the libraries, especially when the `deploy-zksync:libraries` task is executed
-      enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for zkSync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
+      enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for ZKsync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
       forceEVMLA: false, // Compile with EVM legacy assembly codegen. In the older versions of the plugin known as a 'forceEvmla' flag
       optimizer: {
         enabled: true, // optional. True by default
@@ -46,7 +46,7 @@ zksolc: {
 
 The `isSystema` and `forceEvmla` arguments are deprecated in favor of `enableEraVMExtensions` and `forceEVMLA`. If the deprecated arguments are used, a warning will be displayed and they will be automatically switched to the new naming with the provided values.
 
-Starting from zksolc version 1.5.0, the zkSync Era Solidity compiler will be used by default with the latest version if not specified in hardhat.config.ts
+Starting from zksolc version 1.5.0, the ZKsync Era Solidity compiler will be used by default with the latest version if not specified in hardhat.config.ts
 
 
 | 🔧 Properties               | 📄 Description                                                                                                       |
@@ -56,7 +56,7 @@ Starting from zksolc version 1.5.0, the zkSync Era Solidity compiler will be use
 | compilerPath                | (optional) field with the path to the zksolc binary. By default, the binary in $PATH is used                         |
 | libraries                   | If your contract uses non-inlinable libraries as dependencies, they have to be defined here.                         |
 | missingLibrariesPath        | (optional) serves as a cache that stores all the libraries that are missing or have dependencies on other libraries. |
-| enableEraVMExtensions                    | Required if contracts use enables Yul instructions available only for zkSync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag          |
+| enableEraVMExtensions                    | Required if contracts use enables Yul instructions available only for ZKsync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag          |
 | forceEVMLA                  | Compile with EVM legacy assembly codegen. If the zksolc version is below 1.5.0, this argument will act as a 'forceEvmla' flag in the older versions of the plugin, attempting to fallback to EVM legacy assembly if there is a bug with Yul.                        |
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |
 | metadata                    | Metadata settings. If the option is omitted, the metadata hash appends by default: bytecodeHash. Can only be none.   |
@@ -70,7 +70,7 @@ Setting the forceEVMLA field to true can have the following negative impacts:
 - No support for internal function pointers.
 - Possible contract size and performance impact.
 
-### zkSync Era Solidity compiler
+### ZKsync Era Solidity compiler
 
 Due to [the identified limitations](https://docs.zksync.io/zk-stack/components/compiler/toolchain/solidity.html#limitations) of the [upstream Solidity compiler](https://github.com/ethereum/solidity), our team has developed [a new edition](https://github.com/matter-labs/era-solidity) of the compiler, which effectively addresses and resolves these constraints.
 
@@ -95,22 +95,22 @@ Compiles all the smart contracts in the contracts directory and creates the arti
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-solc](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-solc](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

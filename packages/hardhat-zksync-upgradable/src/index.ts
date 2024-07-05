@@ -60,7 +60,7 @@ extendEnvironment((hre) => {
     });
 });
 
-task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for zkSync network')
+task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for ZKsync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',
@@ -81,7 +81,7 @@ task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for zkSync network')
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncBeacon);
 
-task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for zkSync network')
+task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for ZKsync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',
@@ -102,7 +102,7 @@ task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for zkSync network')
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncProxy);
 
-task(TASK_UPGRADE_ZKSYNC_BEACON, 'Runs the beacon upgrade for zkSync network')
+task(TASK_UPGRADE_ZKSYNC_BEACON, 'Runs the beacon upgrade for ZKsync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('beaconAddress', 'Beacon address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
@@ -110,7 +110,7 @@ task(TASK_UPGRADE_ZKSYNC_BEACON, 'Runs the beacon upgrade for zkSync network')
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncBeacon);
 
-task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for zkSync network')
+task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for ZKsync network')
     .addParam('contractName', 'A contract name or a FQN', '')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)

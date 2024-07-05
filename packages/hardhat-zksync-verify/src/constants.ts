@@ -86,7 +86,7 @@ export const CONTRACT_NAME_NOT_FOUND = `You did not provide any contract name. P
 Qualified names look like this: contracts/AContract.sol:TheContract`;
 
 export const COMPILER_VERSION_NOT_SUPPORTED =
-    'Solidity compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
+    'Solidity compiler you used to compile the contract is not currently supported by ZKsync block explorer!\nPlease use one of the supporting versions';
 
 export const WRONG_CONSTRUCTOR_ARGUMENTS = 'types/values length mismatch';
 
