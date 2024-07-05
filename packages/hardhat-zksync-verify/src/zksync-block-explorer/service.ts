@@ -26,15 +26,11 @@ export async function checkVerificationStatusService(
     let verificationStatusResponse;
 
     try {
-        const params: any = {};
-       
-        const url = new URL(verifyURL || "");
+        const url = new URL(verifyURL || '');
         const searchParams = new URLSearchParams(url.search);
-       
-        if (searchParams.has('apikey'))  {
-            params.apikey = searchParams.get('apikey');
-            verifyURL = verifyURL?.split('?')[0] || verifyURL;
-        }
+        const params = Object.fromEntries(searchParams);
+
+        verifyURL = verifyURL?.split('?')[0] || verifyURL;
 
         const data = await axios.get(`${verifyURL}/${requestId}`, { params });
         verificationStatusResponse = new VerificationStatusResponse(data);
@@ -51,15 +47,11 @@ export async function verifyContractRequest(
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
-        const params: any = {};
-       
-        const url = new URL(verifyURL || "");
+        const url = new URL(verifyURL || '');
         const searchParams = new URLSearchParams(url.search);
-       
-        if (searchParams.has('apikey'))  {
-            params.apikey = searchParams.get('apikey');
-            verifyURL = verifyURL?.split('?')[0] || verifyURL;
-        }
+        const params = Object.fromEntries(searchParams);
+
+        verifyURL = verifyURL?.split('?')[0] || verifyURL;
 
         data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' }, params });
 
@@ -77,15 +69,11 @@ export async function verifyContractRequest(
 
 export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
     try {
-        const params: any = {};
-       
-        const url = new URL(verifyURL || "");
+        const url = new URL(verifyURL || '');
         const searchParams = new URLSearchParams(url.search);
-       
-        if (searchParams.has('apikey'))  {
-            params.apikey = searchParams.get('apikey');
-            verifyURL = verifyURL?.split('?')[0] || verifyURL;
-        }
+        const params = Object.fromEntries(searchParams);
+
+        verifyURL = verifyURL?.split('?')[0] || verifyURL;
 
         const response = await axios.get(`${verifyURL}/solc_versions`, { params });
         return response.data;
