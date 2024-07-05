@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import axios from 'axios';
 import {
     checkVerificationStatusService,
-    getSupportedCompilerVersions,
     verifyContractRequest,
+    getSupportedCompilerVersions,
     ZkSyncBlockExplorerResponse,
 } from '../../../src/zksync-block-explorer/service';
 import { VerificationStatusResponse } from '../../../src/zksync-block-explorer/verification-status-response';

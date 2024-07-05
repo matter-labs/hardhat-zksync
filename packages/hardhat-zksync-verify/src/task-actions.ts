@@ -1,43 +1,38 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
-import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
-import chalk from 'chalk';
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
+import chalk from 'chalk';
 import path from 'path';
+import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
-    BUILD_INFO_NOT_FOUND_ERROR,
-    COMPILATION_ERRORS,
-    COMPILER_VERSION_NOT_SUPPORTED,
-    CONST_ARGS_ARRAY_ERROR,
-    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
-    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
-    JSON_INPUT_CODE_FORMAT,
-    NO_MATCHING_CONTRACT,
-    NO_VERIFIABLE_ADDRESS_ERROR,
-    TASK_CHECK_VERIFICATION_STATUS,
     TASK_COMPILE,
-    TASK_VERIFY_GET_COMPILER_VERSIONS,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
-    TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_VERIFY_VERIFY,
     TESTNET_VERIFY_URL,
+    NO_VERIFIABLE_ADDRESS_ERROR,
+    CONST_ARGS_ARRAY_ERROR,
+    TASK_VERIFY_GET_COMPILER_VERSIONS,
+    TASK_VERIFY_GET_CONTRACT_INFORMATION,
+    NO_MATCHING_CONTRACT,
+    COMPILER_VERSION_NOT_SUPPORTED,
+    TASK_CHECK_VERIFICATION_STATUS,
+    JSON_INPUT_CODE_FORMAT,
     UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
+    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
+    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
+    BUILD_INFO_NOT_FOUND_ERROR,
+    COMPILATION_ERRORS,
 } from './constants';
 
-import { ZkSyncVerifyPluginError } from './errors';
-import { Libraries } from './types';
 import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
+import { Libraries } from './types';
+import { ZkSyncVerifyPluginError } from './errors';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
-import {
-    SolcMultiUserConfigExtractor,
-    SolcSoloUserConfigExtractor,
-    SolcStringUserConfigExtractor,
-    SolcUserConfigExtractor,
-} from './config-extractor';
+import { ContractInformation } from './solc/types';
 import {
     checkContractName,
     getLibraries,
@@ -45,7 +40,12 @@ import {
     getSolidityStandardJsonInput,
     inferContractArtifacts,
 } from './plugin';
-import { ContractInformation } from './solc/types';
+import {
+    SolcMultiUserConfigExtractor,
+    SolcSoloUserConfigExtractor,
+    SolcStringUserConfigExtractor,
+    SolcUserConfigExtractor,
+} from './config-extractor';
 
 export async function verify(
     args: {

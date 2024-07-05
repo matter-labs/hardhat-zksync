@@ -1,16 +1,16 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
+import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
+import { checkVerificationStatusService } from './zksync-block-explorer/service';
+import { ZkSyncVerifyPluginError } from './errors';
+import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 import {
     CompilerSolcUserConfigNormalizer,
     OverrideCompilerSolcUserConfigNormalizer,
     SolcConfigData,
     SolcUserConfigNormalizer,
 } from './config-normalizer';
-import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
-import { ZkSyncVerifyPluginError } from './errors';
-import { checkVerificationStatusService } from './zksync-block-explorer/service';
-import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
 
 export function handleAxiosError(error: any): never {
     if (axios.isAxiosError(error)) {

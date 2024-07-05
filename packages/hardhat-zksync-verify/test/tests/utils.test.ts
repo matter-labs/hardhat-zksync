@@ -1,7 +1,6 @@
-import axion from 'axios';
 import { assert, expect } from 'chai';
 import sinon from 'sinon';
-import { SolcMultiUserConfigExtractor } from '../../src/config-extractor';
+import axion from 'axios';
 import {
     delay,
     encodeArguments,
@@ -13,6 +12,7 @@ import {
     retrieveContractBytecode,
 } from '../../src/utils';
 import * as service from '../../src/zksync-block-explorer/service';
+import { SolcMultiUserConfigExtractor } from '../../src/config-extractor';
 
 describe('executeVeificationWithRetry', () => {
     let checkVerificationStatusServiceStub: sinon.SinonStub;

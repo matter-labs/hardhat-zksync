@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { ZkSyncVerifyPluginError } from '../errors';
 import { handleAxiosError } from '../utils';
+import { ZkSyncVerifyPluginError } from '../errors';
 import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncBlockExplorerVerifyRequest } from './verify-contract-request';
 

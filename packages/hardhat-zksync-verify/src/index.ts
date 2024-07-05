@@ -5,17 +5,17 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import './type-extensions';
 
 import {
-    TASK_CHECK_VERIFICATION_STATUS,
     TASK_VERIFY,
     TASK_VERIFY_GET_COMPILER_VERSIONS,
-    TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
-    TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_VERIFY_VERIFY,
     TESTNET_VERIFY_URL,
+    TASK_VERIFY_GET_CONTRACT_INFORMATION,
+    TASK_CHECK_VERIFICATION_STATUS,
+    TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
 } from './constants';
 
+import { getCompilerVersions, verify, verifyContract, getContractInfo, getConstructorArguments } from './task-actions';
 import { checkVerificationStatus } from './plugin';
-import { getCompilerVersions, getConstructorArguments, getContractInfo, verify, verifyContract } from './task-actions';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
