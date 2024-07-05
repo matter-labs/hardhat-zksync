@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.0...@matterlabs/hardhat-zksync-node-v1.1.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* remove zksync-ethers dependency  ([#920](https://github.com/matter-labs/hardhat-zksync/issues/920)) ([d4a1ac8](https://github.com/matter-labs/hardhat-zksync/commit/d4a1ac80727d9de38460373cd07245ba2b747eea))
+
 ## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.0.3...@matterlabs/hardhat-zksync-node-v1.1.0) (2024-06-19)
 
 
