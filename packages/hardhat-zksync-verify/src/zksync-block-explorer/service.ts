@@ -75,9 +75,7 @@ export async function verifyContractRequest(
     }
 }
 
-export async function getSupportedCompilerVersions(
-    verifyURL: string | undefined,
-): Promise<string[]> {
+export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
     try {
         const params: any = {};
        
