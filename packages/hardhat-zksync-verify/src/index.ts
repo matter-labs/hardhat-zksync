@@ -19,7 +19,6 @@ import { getCompilerVersions, getConstructorArguments, getContractInfo, verify, 
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
-    hre.network.apikey = hre.network.config.apikey ?? '';
 });
 
 task(TASK_VERIFY, 'Verifies contract on Ethereum and zkSync networks')

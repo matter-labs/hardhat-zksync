@@ -55,7 +55,6 @@ export function nextAttemptDelay(currentAttempt: number, baseDelay: number, base
 export async function executeVeificationWithRetry(
     requestId: number,
     verifyURL: string,
-    apikey: string,
     maxRetries = 11,
     baseRetries = 5,
     baseDelayInMs = 2000,
@@ -63,7 +62,7 @@ export async function executeVeificationWithRetry(
     let retries = 0;
 
     while (true) {
-        const response = await checkVerificationStatusService(requestId, verifyURL, apikey);
+        const response = await checkVerificationStatusService(requestId, verifyURL);
         if (response.isVerificationSuccess() || response.isVerificationFailure()) {
             return response;
         }

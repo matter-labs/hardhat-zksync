@@ -136,7 +136,6 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     const isValidVerification = await executeVeificationWithRetry(
         args.verificationId,
         hre.network.verifyURL,
-        hre.network.apikey,
     );
 
     if (isValidVerification?.errorExists()) {

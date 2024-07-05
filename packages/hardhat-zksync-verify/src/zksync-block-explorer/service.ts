@@ -22,14 +22,18 @@ export class ZkSyncBlockExplorerResponse {
 export async function checkVerificationStatusService(
     requestId: number,
     verifyURL: string,
-    apikey: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
 
     try {
         const params: any = {};
-        if (apikey !== '') {
-            params.apikey = apikey;
+       
+        const url = new URL(verifyURL || "");
+        const searchParams = new URLSearchParams(url.search);
+       
+        if (searchParams.has('apikey'))  {
+            params.apikey = searchParams.get('apikey');
+            verifyURL = verifyURL?.split('?')[0] || verifyURL;
         }
 
         const data = await axios.get(`${verifyURL}/${requestId}`, { params });
@@ -44,13 +48,17 @@ export async function checkVerificationStatusService(
 export async function verifyContractRequest(
     req: ZkSyncBlockExplorerVerifyRequest,
     verifyURL: string,
-    apikey: string,
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
         const params: any = {};
-        if (apikey !== '') {
-            params.apikey = apikey;
+       
+        const url = new URL(verifyURL || "");
+        const searchParams = new URLSearchParams(url.search);
+       
+        if (searchParams.has('apikey'))  {
+            params.apikey = searchParams.get('apikey');
+            verifyURL = verifyURL?.split('?')[0] || verifyURL;
         }
 
         data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' }, params });
@@ -69,12 +77,16 @@ export async function verifyContractRequest(
 
 export async function getSupportedCompilerVersions(
     verifyURL: string | undefined,
-    apikey: string | undefined,
 ): Promise<string[]> {
     try {
         const params: any = {};
-        if (apikey !== undefined && apikey !== '') {
-            params.apikey = apikey;
+       
+        const url = new URL(verifyURL || "");
+        const searchParams = new URLSearchParams(url.search);
+       
+        if (searchParams.has('apikey'))  {
+            params.apikey = searchParams.get('apikey');
+            verifyURL = verifyURL?.split('?')[0] || verifyURL;
         }
 
         const response = await axios.get(`${verifyURL}/solc_versions`, { params });
