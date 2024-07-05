@@ -1,3 +1,5 @@
+import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
+import chalk from 'chalk';
 import {
     TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
     TASK_FLATTEN_GET_FLATTENED_SOURCE,
@@ -5,11 +7,9 @@ import {
 import { Artifacts, CompilerInput, DependencyGraph, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
-import chalk from 'chalk';
-import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
-import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
-import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
+import { CONTRACT_NAME_NOT_FOUND, LIBRARIES_EXPORT_ERROR, NO_MATCHING_CONTRACT } from './constants';
 import { ZkSyncVerifyPluginError } from './errors';
+import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { executeVeificationWithRetry } from './utils';
 
 export async function inferContractArtifacts(
@@ -136,7 +136,7 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
     const isValidVerification = await executeVeificationWithRetry(
         args.verificationId,
         hre.network.verifyURL,
-        hre.network.apiKey,
+        hre.network.apikey,
     );
 
     if (isValidVerification?.errorExists()) {

@@ -1,38 +1,43 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
-import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import chalk from 'chalk';
-import path from 'path';
 import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
+import chalk from 'chalk';
+import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
+import path from 'path';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
-    TASK_COMPILE,
-    TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
-    TASK_VERIFY_VERIFY,
-    TESTNET_VERIFY_URL,
-    NO_VERIFIABLE_ADDRESS_ERROR,
-    CONST_ARGS_ARRAY_ERROR,
-    TASK_VERIFY_GET_COMPILER_VERSIONS,
-    TASK_VERIFY_GET_CONTRACT_INFORMATION,
-    NO_MATCHING_CONTRACT,
-    COMPILER_VERSION_NOT_SUPPORTED,
-    TASK_CHECK_VERIFICATION_STATUS,
-    JSON_INPUT_CODE_FORMAT,
-    UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
-    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
-    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
     COMPILATION_ERRORS,
+    COMPILER_VERSION_NOT_SUPPORTED,
+    CONST_ARGS_ARRAY_ERROR,
+    CONSTRUCTOR_MODULE_IMPORTING_ERROR,
+    ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
+    JSON_INPUT_CODE_FORMAT,
+    NO_MATCHING_CONTRACT,
+    NO_VERIFIABLE_ADDRESS_ERROR,
+    TASK_CHECK_VERIFICATION_STATUS,
+    TASK_COMPILE,
+    TASK_VERIFY_GET_COMPILER_VERSIONS,
+    TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
+    TASK_VERIFY_GET_CONTRACT_INFORMATION,
+    TASK_VERIFY_VERIFY,
+    TESTNET_VERIFY_URL,
+    UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
 } from './constants';
 
-import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
-import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
+import { Libraries } from './types';
+import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
 
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 
-import { ContractInformation } from './solc/types';
+import {
+    SolcMultiUserConfigExtractor,
+    SolcSoloUserConfigExtractor,
+    SolcStringUserConfigExtractor,
+    SolcUserConfigExtractor,
+} from './config-extractor';
 import {
     checkContractName,
     getLibraries,
@@ -40,12 +45,7 @@ import {
     getSolidityStandardJsonInput,
     inferContractArtifacts,
 } from './plugin';
-import {
-    SolcMultiUserConfigExtractor,
-    SolcSoloUserConfigExtractor,
-    SolcStringUserConfigExtractor,
-    SolcUserConfigExtractor,
-} from './config-extractor';
+import { ContractInformation } from './solc/types';
 
 export async function verify(
     args: {
@@ -213,7 +213,7 @@ export async function verifyContract(
         )}`;
     }
 
-    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, hre.network.apiKey);
+    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, hre.network.apikey);
     const compilerVersion: string = contractInformation.solcVersion;
     if (!compilerPossibleVersions.includes(compilerVersion)) {
         throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
@@ -237,7 +237,7 @@ export async function verifyContract(
         optimizationUsed,
     };
 
-    const response = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apiKey);
+    const response = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apikey);
     const verificationId = parseInt(response.message, 10);
 
     console.info(chalk.cyan(`Your verification ID is: ${verificationId}`));
@@ -257,7 +257,7 @@ export async function verifyContract(
 
         request.sourceCode.sources = contractInformation.compilerInput.sources;
 
-        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apiKey);
+        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL, hre.network.apikey);
         const fallbackVerificationId = parseInt(fallbackResponse.message, 10);
 
         console.info(chalk.cyan(`Your verification ID is: ${fallbackVerificationId}`));

@@ -24,7 +24,7 @@ describe('executeVeificationWithRetry', () => {
     it('should return the verification status response when verification is successful', async () => {
         const requestId = 123;
         const verifyURL = 'https://example.com/verify';
-        const apiKey = 'apiKey';
+        const apikey = 'apikey';
         const response = {
             isVerificationSuccess: sinon.stub().returns(true),
             isVerificationFailure: sinon.stub().returns(false),
@@ -34,7 +34,7 @@ describe('executeVeificationWithRetry', () => {
             .stub(service, 'checkVerificationStatusService')
             .resolves(response as any);
 
-        const result = await executeVeificationWithRetry(requestId, verifyURL, apiKey);
+        const result = await executeVeificationWithRetry(requestId, verifyURL, apikey);
 
         expect(result).to.equal(response);
         expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
@@ -43,7 +43,7 @@ describe('executeVeificationWithRetry', () => {
     it('should return the verification status response when verification is failed', async () => {
         const requestId = 123;
         const verifyURL = 'https://example.com/verify';
-        const apiKey = 'apiKey';
+        const apikey = 'apikey';
         const response = {
             isVerificationSuccess: sinon.stub().returns(false),
             isVerificationFailure: sinon.stub().returns(true),
@@ -53,7 +53,7 @@ describe('executeVeificationWithRetry', () => {
             .stub(service, 'checkVerificationStatusService')
             .resolves(response as any);
 
-        const result = await executeVeificationWithRetry(requestId, verifyURL, apiKey);
+        const result = await executeVeificationWithRetry(requestId, verifyURL, apikey);
 
         expect(result).to.equal(response);
         expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
@@ -101,7 +101,7 @@ describe('executeVeificationWithRetry', () => {
     it('should return undefined when max retries exceeded', async () => {
         const requestId = 123;
         const verifyURL = 'https://example.com/verify';
-        const apiKey = 'apiKey';
+        const apikey = 'apikey';
         const maxRetries = 2;
         const delayInMs = 100;
 
@@ -114,7 +114,7 @@ describe('executeVeificationWithRetry', () => {
             .stub(service, 'checkVerificationStatusService')
             .resolves(response as any);
 
-        const result = await executeVeificationWithRetry(requestId, verifyURL, apiKey, maxRetries, delayInMs);
+        const result = await executeVeificationWithRetry(requestId, verifyURL, apikey, maxRetries, delayInMs);
 
         expect(result).to.equal(undefined);
         expect(checkVerificationStatusServiceStub.callCount).to.equal(maxRetries + 1);

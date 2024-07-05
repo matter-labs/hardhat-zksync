@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { handleAxiosError } from '../utils';
 import { ZkSyncVerifyPluginError } from '../errors';
+import { handleAxiosError } from '../utils';
 import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncBlockExplorerVerifyRequest } from './verify-contract-request';
 
@@ -22,14 +22,14 @@ export class ZkSyncBlockExplorerResponse {
 export async function checkVerificationStatusService(
     requestId: number,
     verifyURL: string,
-    apiKey: string,
+    apikey: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
 
     try {
         const params: any = {};
-        if (apiKey !== '') {
-            params.apiKey = apiKey;
+        if (apikey !== '') {
+            params.apikey = apikey;
         }
 
         const data = await axios.get(`${verifyURL}/${requestId}`, { params });
@@ -44,13 +44,13 @@ export async function checkVerificationStatusService(
 export async function verifyContractRequest(
     req: ZkSyncBlockExplorerVerifyRequest,
     verifyURL: string,
-    apiKey: string,
+    apikey: string,
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
     try {
         const params: any = {};
-        if (apiKey !== '') {
-            params.apiKey = apiKey;
+        if (apikey !== '') {
+            params.apikey = apikey;
         }
 
         data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' }, params });
@@ -69,12 +69,12 @@ export async function verifyContractRequest(
 
 export async function getSupportedCompilerVersions(
     verifyURL: string | undefined,
-    apiKey: string | undefined,
+    apikey: string | undefined,
 ): Promise<string[]> {
     try {
         const params: any = {};
-        if (apiKey !== undefined && apiKey !== '') {
-            params.apiKey = apiKey;
+        if (apikey !== undefined && apikey !== '') {
+            params.apikey = apikey;
         }
 
         const response = await axios.get(`${verifyURL}/solc_versions`, { params });
