@@ -135,7 +135,7 @@ export function updateBreakableCompilerConfig(
 }
 
 export function isBreakableCompilerVersion(zksolcVersion: string): boolean {
-    return semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
+    return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
 }
 
 export function zeroxlify(hex: string): string {

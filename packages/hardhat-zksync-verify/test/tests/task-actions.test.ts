@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { fail } from 'assert';
 
 import { TASK_COMPILE, TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } from 'hardhat/builtin-tasks/task-names';
+import { ZKSOLC_COMPILER_PATH_VERSION } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 import {
     getCompilerVersions,
     getConstructorArguments,
@@ -18,6 +19,7 @@ import {
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
     TASK_VERIFY_GET_CONTRACT_INFORMATION,
     TASK_VERIFY_VERIFY,
+    USING_COMPILER_PATH_ERROR,
 } from '../../src/constants';
 import * as utils from '../../src/utils';
 import * as metadata from '../../src/solc/metadata';
@@ -565,6 +567,44 @@ describe('getCompilerVersions', async function () {
         const result = await getCompilerVersions({}, hre as any, runSuperStub as any);
         expect(result).to.deep.equal(['zkVM-0.8.0-1.0.1', 'zkVM-0.7.0-1.0.1', 'zkVM-0.6.0-1.0.1']);
         expect(runSuperStub.called).to.equal(false);
+    });
+
+    it('should fail if compiler is using remote or origin source', async function () {
+        const runSuperStub = sinon.stub().resolves([]);
+        const hre = {
+            network: {
+                zksync: true,
+            },
+            config: {
+                zksolc: {
+                    version: ZKSOLC_COMPILER_PATH_VERSION,
+                    settings: {
+                        compilerPath: 'remote/path',
+                    },
+                },
+                solidity: {
+                    compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],
+                    overrides: {
+                        'contracts/Contract.sol': { version: '0.6.0' },
+                    },
+                },
+            },
+            userConfig: {
+                solidity: {
+                    compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],
+                    overrides: {
+                        'contracts/Contract.sol': { version: '0.6.0' },
+                    },
+                },
+            },
+            run: sinon.stub(),
+        };
+
+        try {
+            await getCompilerVersions({}, hre as any, runSuperStub as any);
+        } catch (error: any) {
+            expect(error.message).to.equal(USING_COMPILER_PATH_ERROR);
+        }
     });
 });
 

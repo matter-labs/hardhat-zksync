@@ -4,6 +4,7 @@ import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import chalk from 'chalk';
 import path from 'path';
 import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
+import { ZKSOLC_COMPILER_PATH_VERSION } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
 import {
@@ -24,6 +25,7 @@ import {
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
     COMPILATION_ERRORS,
+    USING_COMPILER_PATH_ERROR,
 } from './constants';
 
 import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
@@ -104,6 +106,10 @@ export async function getCompilerVersions(
 
     const userSolidityConfig = hre.userConfig.solidity;
     const zkSolcConfig = hre.config.zksolc;
+
+    if (zkSolcConfig.version === ZKSOLC_COMPILER_PATH_VERSION) {
+        throw new ZkSyncVerifyPluginError(USING_COMPILER_PATH_ERROR);
+    }
 
     const extractedConfigs = extractors
         .find((extractor) => extractor.suitable(userSolidityConfig))
