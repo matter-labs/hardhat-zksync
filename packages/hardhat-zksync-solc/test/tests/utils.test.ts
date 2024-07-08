@@ -6,7 +6,7 @@ import { MockAgent, setGlobalDispatcher } from 'undici';
 import { CompilerOutputSelection, ZkSolcConfig } from '../../src/types';
 import {
     filterSupportedOutputSelections,
-    updateCompilerConf,
+    updateDefaultCompilerConfig,
     getVersionComponents,
     writeLibrariesToFile,
     download,
@@ -15,7 +15,7 @@ import {
     getZksolcUrl,
     pluralize,
     sha1,
-    updateCompilerWithEraVersion,
+    updateBreakableCompilerConfig,
 } from '../../src/utils';
 
 describe('Utils', () => {
@@ -45,7 +45,7 @@ describe('Utils', () => {
     });
 
     describe('updateCompilerConf', () => {
-        it('should update compiler configuration with zksolc settings', () => {
+        it('should update compiler configuration with default zksolc settings', () => {
             const outputSelection: CompilerOutputSelection = {
                 'file1.sol': {
                     Contract1: ['abi', 'evm.bytecode'],
@@ -77,7 +77,7 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc);
+            updateDefaultCompilerConfig({ compiler }, zksolc);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
         });
@@ -104,7 +104,7 @@ describe('Utils', () => {
                 },
             };
             const zksolc: ZkSolcConfig = {
-                version: 'latest',
+                version: '1.5.0',
                 settings: {
                     enableEraVMExtensions: true,
                     optimizer: {
@@ -115,10 +115,13 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc);
+            updateDefaultCompilerConfig({ compiler }, zksolc);
+            updateBreakableCompilerConfig({ compiler }, zksolc, '1.0.1', [{ version: '0.8.17' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
-            expect(compiler.settings.enableEraVMExtensions).to.deep.equal(zksolc.settings.enableEraVMExtensions);
+            expect(compiler.eraVersion).to.equal('1.0.1');
+            expect(compiler.settings.viaEVMAssembly).to.equal(undefined);
+            expect(compiler.settings.enableEraVMExtensions).to.deep.equal(true);
         });
 
         it('should not update compiler configuration with zksolc settings and with forceEvmla for zksolc < 1.5.0', () => {
@@ -154,11 +157,13 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc);
+            updateDefaultCompilerConfig({ compiler }, zksolc);
+            updateBreakableCompilerConfig({ compiler }, zksolc, '1.0.0', [{ version: '0.8.17', eraVersion: '1.0.0' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
-            expect(compiler.settings.viaEVMAssembly).to.equal(undefined);
+            expect(compiler.settings.forceEVMLA).to.equal(undefined);
             expect(compiler.settings.enableEraVMExtensions).to.deep.equal(undefined);
+            expect(compiler.eraVersion).to.equal('1.0.0');
         });
 
         it('should update compiler configuration with zksolc and with zkvm solc', () => {
@@ -184,8 +189,10 @@ describe('Utils', () => {
                 },
             };
             const zksolc: ZkSolcConfig = {
-                version: '1.3.22',
+                version: '1.5.1',
                 settings: {
+                    enableEraVMExtensions: true,
+                    forceEVMLA: true,
                     optimizer: {
                         enabled: false,
                         runs: 150,
@@ -194,9 +201,13 @@ describe('Utils', () => {
                 },
             };
 
-            updateCompilerConf({ compiler }, zksolc);
+            updateDefaultCompilerConfig({ compiler }, zksolc);
+            updateBreakableCompilerConfig({ compiler }, zksolc, '1.0.1', [{ version: '0.8.17', eraVersion: '1.0.0' }]);
 
             expect(compiler.settings.optimizer).to.deep.equal(zksolc.settings.optimizer);
+            expect(compiler.settings.forceEVMLA).to.equal(true);
+            expect(compiler.settings.enableEraVMExtensions).to.equal(true);
+            expect(compiler.eraVersion).to.equal('1.0.0');
         });
 
         it('should not update compiler configuration with zksolc and with zkvm solc', () => {
@@ -233,7 +244,7 @@ describe('Utils', () => {
             };
 
             try {
-                updateCompilerWithEraVersion({ compiler }, zksolc, '1.0.0', [
+                updateBreakableCompilerConfig({ compiler }, zksolc, '1.0.0', [
                     { version: '0.8.17', eraVersion: 'latest' },
                 ]);
             } catch (e: any) {

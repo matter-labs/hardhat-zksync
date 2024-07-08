@@ -18,6 +18,7 @@ import { CompilerDownloader } from 'hardhat/internal/solidity/compiler/downloade
 import { ZksolcCompilerDownloader } from '../../src/compile/downloader';
 import { useEnvironment } from '../helpers';
 import { ZkSyncArtifact } from '../../src/types';
+import { TASK_DOWNLOAD_ZKSOLC } from '../../src/constants';
 
 chai.use(sinonChai);
 
@@ -98,8 +99,76 @@ describe('zksolc plugin', async function () {
     describe('Compilation jobs', async function () {
         useEnvironment('multiple-contracts');
 
-        const compilerVersion = process.env.SOLC_VERSION || '0.8.17';
+        it('Should download compiler and update jobs', async function () {
+            const rootPath = this.env.config.paths.root;
+            const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
 
+            const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
+
+            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+                rootPath,
+                sourceNames,
+                solidityFilesCachePath,
+            });
+
+            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                dependencyGraph,
+                solidityFilesCachePath,
+            });
+
+            assert.equal(2, jobs.length);
+            assert.equal(0, errors.length);
+
+            jobs.forEach((job: any) => {
+                const solidityConfig = job.solidityConfig;
+                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.zksolc.version, 'latest');
+                assert.equal(solidityConfig.zksolc.settings.compilerPath, '');
+                // assert.equal(solidityConfig.zksolc.settings.libraries, {});
+            });
+        });
+
+        it('Should not download compiler and update jobs with libraries', async function () {
+            const rootPath = this.env.config.paths.root;
+            const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
+
+            this.env.config.zksolc.settings.libraries = {
+                'contracts/Greeter.sol': {
+                    'contracts/Greeter.sol': '0x1234567890123456789012345678901234567890',
+                },
+            };
+
+            const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
+
+            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
+                rootPath,
+                sourceNames,
+                solidityFilesCachePath,
+            });
+
+            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                dependencyGraph,
+                solidityFilesCachePath,
+            });
+
+            assert.equal(2, jobs.length);
+            assert.equal(0, errors.length);
+
+            jobs.forEach((job: any) => {
+                const solidityConfig = job.solidityConfig;
+                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.zksolc.version, 'latest');
+                assert.equal(solidityConfig.zksolc.settings.compilerPath, '');
+                assert.equal(
+                    solidityConfig.zksolc.settings.libraries['contracts/Greeter.sol']['contracts/Greeter.sol'],
+                    '0x1234567890123456789012345678901234567890',
+                );
+            });
+        });
+    });
+
+    describe('Download zksolc compiler', async function () {
+        useEnvironment('multiple-contracts');
         const sandbox = sinon.createSandbox();
 
         let isZksolcDownloadedStub: sinon.SinonStub;
@@ -129,89 +198,20 @@ describe('zksolc plugin', async function () {
             (ZksolcCompilerDownloader as any)._instance = undefined;
         });
 
-        it('Should download compiler and update jobs', async function () {
+        it('Should download compiler for the latest', async function () {
             isZksolcDownloadedStub = sandbox
                 .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
                 .returns(isCompilerDownloaded(false));
 
-            const rootPath = this.env.config.paths.root;
-            const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
-
-            const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
-
-            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-                rootPath,
-                sourceNames,
-                solidityFilesCachePath,
-            });
-
-            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
-                dependencyGraph,
-                solidityFilesCachePath,
-            });
+            await this.env.run(TASK_DOWNLOAD_ZKSOLC);
 
             sandbox.assert.calledOnce(isZksolcDownloadedStub);
             sandbox.assert.calledOnce(getZksolcCompilerPathStub);
             sandbox.assert.calledOnce(getZksolcCompilerVersionStub);
             sandbox.assert.calledOnceWithExactly(downloadCompilerStub);
 
-            assert.equal(2, jobs.length);
-            assert.equal(0, errors.length);
-
-            jobs.forEach((job: any) => {
-                const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, compilerVersion);
-                assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
-                assert.equal(solidityConfig.zksolc.settings.compilerPath, 'zksolc/zksolc-version-0');
-                // assert.equal(solidityConfig.zksolc.settings.libraries, {});
-            });
-        });
-
-        it('Should not download compiler and update jobs with libraries', async function () {
-            isZksolcDownloadedStub = sandbox
-                .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
-                .returns(isCompilerDownloaded(true));
-
-            const rootPath = this.env.config.paths.root;
-            const sourceNames: string[] = ['contracts/Greeter.sol', 'contracts/Greeter2.sol'];
-
-            this.env.config.zksolc.settings.libraries = {
-                'contracts/Greeter.sol': {
-                    'contracts/Greeter.sol': '0x1234567890123456789012345678901234567890',
-                },
-            };
-
-            const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
-
-            const dependencyGraph: DependencyGraph = await this.env.run(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH, {
-                rootPath,
-                sourceNames,
-                solidityFilesCachePath,
-            });
-
-            const { jobs, errors } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
-                dependencyGraph,
-                solidityFilesCachePath,
-            });
-
-            sandbox.assert.calledOnce(isZksolcDownloadedStub);
-            sandbox.assert.calledOnce(getZksolcCompilerPathStub);
-            sandbox.assert.calledOnce(getZksolcCompilerVersionStub);
-            sandbox.assert.notCalled(downloadCompilerStub);
-
-            assert.equal(2, jobs.length);
-            assert.equal(0, errors.length);
-
-            jobs.forEach((job: any) => {
-                const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, compilerVersion);
-                assert.equal(solidityConfig.zksolc.version, 'zksolc-version-0');
-                assert.equal(solidityConfig.zksolc.settings.compilerPath, 'zksolc/zksolc-version-0');
-                assert.equal(
-                    solidityConfig.zksolc.settings.libraries['contracts/Greeter.sol']['contracts/Greeter.sol'],
-                    '0x1234567890123456789012345678901234567890',
-                );
-            });
+            this.env.config.zksolc.version = 'zksolc-version-0';
+            this.env.config.zksolc.settings.compilerPath = 'zksolc/zksolc-version-0';
         });
     });
 
