@@ -10,10 +10,14 @@ import {
 } from 'hardhat/types';
 import { Provider, Wallet } from 'zksync-ethers';
 import { ethers } from 'ethers';
-import { FactoryOptions, ZkSyncArtifact } from './types';
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
+import fs from 'fs';
+import chalk from 'chalk';
 import { ETH_DEFAULT_NETWORK_RPC_URL, LOCAL_CHAIN_IDS, SUPPORTED_L1_TESTNETS } from './constants';
 import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
+import { FactoryOptions, ZkSyncArtifact, ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
+import { MorphBuilderInitialDefaultAssignment, MorphTsBuilder } from './morph-ts-builder';
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
     return 'mnemonic' in object;
@@ -179,4 +183,72 @@ export function isValidEthNetworkURL(string: string) {
     } catch (_) {
         return false;
     }
+}
+
+export function updateHardhatConfigFile(
+    hre: HardhatRuntimeEnvironment,
+    externalConfigObjectPath?: string,
+    exportedConfigObject?: string,
+) {
+    try {
+        new MorphTsBuilder(externalConfigObjectPath ?? hre.config.paths.configFile)
+            .intialStep([
+                { initialModule: 'module.exports' },
+                {} as MorphBuilderInitialDefaultAssignment,
+                { initialVariableType: 'HardhatUserConfig' },
+                { initialVariable: exportedConfigObject },
+            ])
+            .nextStep({ propertyName: 'zksolc' })
+            .nextStep({ propertyName: 'settings' })
+            .replaceStep({ propertyName: 'libraries', replaceObject: hre.config.zksolc.settings.libraries })
+            .save();
+    } catch (error) {
+        throw new ZkSyncEthersPluginError(
+            'Failed to update hardhat config file, please use addresses from console output',
+        );
+    }
+}
+
+export function generateFullQuailfiedNameString(contractFQN: ContractFullQualifiedName | MissingLibrary): string {
+    return `${contractFQN.contractPath}:${contractFQN.contractName}`;
+}
+
+export async function fillLibrarySettings(hre: HardhatRuntimeEnvironment, libraries: ContractInfo[]) {
+    libraries.forEach((library) => {
+        const contractPath = library.contractFQN.contractPath;
+        const contractName = library.contractFQN.contractName;
+
+        if (!hre.config.zksolc.settings.libraries) {
+            hre.config.zksolc.settings.libraries = {};
+        }
+
+        hre.config.zksolc.settings.libraries[contractPath] = {
+            [contractName]: library.address,
+        };
+    });
+}
+
+export function getLibraryInfos(hre: HardhatRuntimeEnvironment): MissingLibrary[] {
+    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
+
+    if (!fs.existsSync(libraryPathFile)) {
+        console.log(chalk.yellow('Missing libraries file not found, skipping libraries deployment.'));
+        return [];
+    }
+
+    return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));
+}
+
+export function removeLibraryInfoFile(hre: HardhatRuntimeEnvironment) {
+    const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
+
+    if (fs.existsSync(libraryPathFile)) {
+        fs.rmSync(libraryPathFile);
+    }
+}
+
+export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts: string[]) {
+    hre.config.zksolc.settings.contractsToCompile = contracts;
+
+    await hre.run(TASK_COMPILE, { force: true });
 }

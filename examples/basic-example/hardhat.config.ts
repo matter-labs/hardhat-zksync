@@ -5,8 +5,8 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        compilerSource: 'binary',
         settings: {
+            compilerPath: '/home/kiriyaga/.cache/hardhat-nodejs/compilers-v2/zksolc/zksolc-v1.6.1',
             enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,

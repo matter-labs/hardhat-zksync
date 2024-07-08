@@ -29,6 +29,7 @@
       "typescript": "^5.3.0"
     },
     "dependencies": {
+      "@matterlabs/hardhat-zksync-ethers": "workspace:^",
       "@matterlabs/hardhat-zksync-deploy": "workspace:^",
       "@matterlabs/hardhat-zksync-solc": "workspace:^",
       "chalk": "^4.1.2",

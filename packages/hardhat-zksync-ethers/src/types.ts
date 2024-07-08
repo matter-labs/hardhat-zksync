@@ -21,6 +21,22 @@ export interface FactoryOptions {
     wallet?: Wallet;
 }
 
+export interface MissingLibrary {
+    contractName: string;
+    contractPath: string;
+    missingLibraries: string[];
+}
+
+export interface ContractInfo {
+    contractFQN: ContractFullQualifiedName;
+    address: string;
+}
+
+export interface ContractFullQualifiedName {
+    contractName: string;
+    contractPath: string;
+}
+
 export declare function getContractFactory<A extends any[] = any[], I = Contract>(
     name: string,
     wallet?: Wallet,
@@ -52,6 +68,13 @@ export interface HardhatZksyncEthersHelpers {
     getImpersonatedSigner: (address: string) => Promise<Signer>;
     extractFactoryDeps: (artifact: ZkSyncArtifact) => Promise<string[]>;
     loadArtifact: (name: string) => Promise<ZkSyncArtifact>;
+    deployLibraries: (
+        wallet?: Wallet,
+        externalConfigObjectPath?: string,
+        exportedConfigObject?: string,
+        noAutoPopulateConfig?: boolean,
+        compileAllContracts?: boolean,
+    ) => Promise<void>;
     deployContract: (
         artifact: ZkSyncArtifact,
         constructorArguments: any[],

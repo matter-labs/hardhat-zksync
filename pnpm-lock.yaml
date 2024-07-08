@@ -303,6 +303,9 @@ importers:
       '@matterlabs/hardhat-zksync-deploy':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-ethers':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-ethers
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
@@ -987,9 +990,6 @@ importers:
 
   packages/hardhat-zksync-ethers:
     dependencies:
-      '@matterlabs/hardhat-zksync-deploy':
-        specifier: workspace:^
-        version: link:../hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../hardhat-zksync-solc

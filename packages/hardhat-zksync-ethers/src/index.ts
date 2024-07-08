@@ -17,6 +17,7 @@ import {
     getWallets,
     loadArtifact,
     deployContract,
+    deployLibraries,
 } from './helpers';
 import { FactoryOptions, ZkSyncArtifact } from './types';
 import { createProviders } from './utils';
@@ -44,6 +45,21 @@ extendEnvironment((hre) => {
                 getContractAtFromArtifact(hre, artifact, address, wallet),
             extractFactoryDeps: (artifact: ZkSyncArtifact) => extractFactoryDeps(hre, artifact),
             loadArtifact: (name: string) => loadArtifact(hre, name),
+            deployLibraries: (
+                wallet?: Wallet,
+                externalConfigObjectPath?: string,
+                exportedConfigObject?: string,
+                noAutoPopulateConfig?: boolean,
+                compileAllContracts?: boolean,
+            ) =>
+                deployLibraries(
+                    hre,
+                    wallet,
+                    externalConfigObjectPath,
+                    exportedConfigObject,
+                    noAutoPopulateConfig,
+                    compileAllContracts,
+                ),
             deployContract: (
                 artifact: ZkSyncArtifact,
                 constructorArguments: any[],
