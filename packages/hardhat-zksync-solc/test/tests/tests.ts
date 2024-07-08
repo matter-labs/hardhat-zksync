@@ -121,7 +121,7 @@ describe('zksolc plugin', async function () {
 
             jobs.forEach((job: any) => {
                 const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.version, process.env.SOLC_VERSION || '0.8.17');
                 assert.equal(solidityConfig.zksolc.version, 'latest');
                 assert.equal(solidityConfig.zksolc.settings.compilerPath, '');
                 // assert.equal(solidityConfig.zksolc.settings.libraries, {});
@@ -156,7 +156,7 @@ describe('zksolc plugin', async function () {
 
             jobs.forEach((job: any) => {
                 const solidityConfig = job.solidityConfig;
-                assert.equal(solidityConfig.version, '0.8.17');
+                assert.equal(solidityConfig.version, process.env.SOLC_VERSION || '0.8.17');
                 assert.equal(solidityConfig.zksolc.version, 'latest');
                 assert.equal(solidityConfig.zksolc.settings.compilerPath, '');
                 assert.equal(

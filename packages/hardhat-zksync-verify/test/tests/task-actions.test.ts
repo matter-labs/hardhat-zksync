@@ -196,8 +196,8 @@ describe('verifyContract', async function () {
 
         await verifyContract(args, hre as any, runSuperStub as any);
         expect(runSuperStub.calledOnce).to.equal(false);
-        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
-        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
         expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
         expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
@@ -299,8 +299,8 @@ describe('verifyContract', async function () {
 
         await verifyContract(args, hre as any, runSuperStub as any);
         expect(runSuperStub.calledOnce).to.equal(false);
-        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
-        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
         expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
         expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
@@ -402,8 +402,8 @@ describe('verifyContract', async function () {
 
         await verifyContract(args, hre as any, runSuperStub as any);
         expect(runSuperStub.calledOnce).to.equal(false);
-        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
-        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
         expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
         expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
@@ -506,8 +506,8 @@ describe('verifyContract', async function () {
 
         await verifyContract(args, hre as any, runSuperStub as any);
         expect(runSuperStub.calledOnce).to.equal(false);
-        expect(hre.run.firstCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
-        expect(hre.run.secondCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.firstCall.args[0]).to.equal(TASK_COMPILE);
+        expect(hre.run.secondCall.args[0]).to.equal(TASK_VERIFY_GET_COMPILER_VERSIONS);
         expect(hre.run.thirdCall.args[0]).to.equal(TASK_VERIFY_GET_CONTRACT_INFORMATION);
         expect(hre.run.getCall(3).args[0]).to.equal(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH);
         expect(hre.run.getCall(4).args[0]).to.equal(TASK_CHECK_VERIFICATION_STATUS);
@@ -542,7 +542,7 @@ describe('getCompilerVersions', async function () {
             },
             config: {
                 zksolc: {
-                    version: 'latest',
+                    version: '1.5.0',
                 },
                 solidity: {
                     compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],

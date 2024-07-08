@@ -150,7 +150,7 @@ jobs:
 
       - name: Test zksolc example with remote origin
         env:
-          ZKSOLC_PATH: https://github.com/matter-labs/zksolc-bin/releases/download/v1.5.1/zksolc-linux-arm64-musl-v1.5.1
+          ZKSOLC_PATH: https://github.com/matter-labs/zksolc-bin/releases/download/v1.5.1/zksolc-linux-amd64-musl-v1.5.1
         run: |
           cd examples/download-with-compiler-origin
           pnpm hardhat compile

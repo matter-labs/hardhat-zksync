@@ -182,11 +182,11 @@ export async function verifyContract(
     const deployedBytecodeHex = await retrieveContractBytecode(address, hre);
     const deployedBytecode = new Bytecode(deployedBytecodeHex);
 
-    const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
-
     if (!noCompile) {
         await hre.run(TASK_COMPILE, { quiet: true });
     }
+
+    const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
 
     const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
         contractFQN,
