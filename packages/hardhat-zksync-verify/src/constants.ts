@@ -15,6 +15,9 @@ export const TASK_VERIFY_GET_MINIMUM_BUILD = 'verify:get-minimum-build';
 export const TASK_VERIFY_VERIFY_MINIMUM_BUILD = 'zk:verify:verify-minimum-build';
 export const TASK_VERIFY_GET_CONTRACT_INFORMATION = 'verify:get-contract-information';
 
+export const USING_COMPILER_PATH_ERROR =
+    'Using a compilerPath in the setting without compile is not supported. Please run verify without --no-compile flag or specify a official compiler version.';
+
 export const CONST_ARGS_ARRAY_ERROR = `
 Wrong constructor arguments format:
 

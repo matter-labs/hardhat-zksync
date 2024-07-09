@@ -39,9 +39,9 @@ import {
     pluralize,
     saltFromUrl,
     generateSolcJSExecutableCode,
-    updateCompilerConf,
+    updateDefaultCompilerConfig,
     getZkVmNormalizedVersion,
-    updateCompilerWithEraVersion,
+    updateBreakableCompilerConfig,
     getLatestEraVersion,
 } from './utils';
 import {
@@ -55,6 +55,7 @@ import {
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
     ZKSOLC_COMPILER_PATH_VERSION,
     TASK_UPDATE_SOLIDITY_COMPILERS,
+    TASK_DOWNLOAD_ZKSOLC,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -110,10 +111,12 @@ extendEnvironment((hre) => {
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
 
-        hre.config.solidity.compilers.forEach(async (compiler) => updateCompilerConf({ compiler }, hre.config.zksolc));
+        hre.config.solidity.compilers.forEach(async (compiler) =>
+            updateDefaultCompilerConfig({ compiler }, hre.config.zksolc),
+        );
 
         for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-            updateCompilerConf({ compiler, file }, hre.config.zksolc);
+            updateDefaultCompilerConfig({ compiler, file }, hre.config.zksolc);
         }
     }
 });
@@ -121,12 +124,37 @@ extendEnvironment((hre) => {
 task(TASK_COMPILE).setAction(
     async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
         if (hre.network.zksync) {
+            await hre.run(TASK_DOWNLOAD_ZKSOLC);
             await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
         }
 
         await runSuper(compilationArgs);
     },
 );
+
+subtask(TASK_DOWNLOAD_ZKSOLC, async (_args: any, hre: HardhatRuntimeEnvironment) => {
+    if (!hre.network.zksync) {
+        return;
+    }
+
+    const compilersCache = await getCompilersDir();
+
+    await zkSolcCompilerDownloaderMutex.use(async () => {
+        const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+            hre.config.zksolc.version,
+            hre.config.zksolc.settings.compilerPath ?? '',
+            compilersCache,
+        );
+
+        const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
+        if (!isZksolcDownloaded) {
+            await zksolcDownloader.downloadCompiler();
+        }
+
+        hre.config.zksolc.settings.compilerPath = zksolcDownloader.getCompilerPath();
+        hre.config.zksolc.version = zksolcDownloader.getVersion();
+    });
+});
 
 subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEnvironment) => {
     if (!hre.network.zksync) {
@@ -142,7 +170,7 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
     const latestEraVersion = await getLatestEraVersion();
 
     hre.config.solidity.compilers.forEach(async (compiler) =>
-        updateCompilerWithEraVersion(
+        updateBreakableCompilerConfig(
             { compiler },
             hre.config.zksolc,
             latestEraVersion,
@@ -151,7 +179,7 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
     );
 
     for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
-        updateCompilerWithEraVersion(
+        updateBreakableCompilerConfig(
             { compiler, file },
             hre.config.zksolc,
             latestEraVersion,
@@ -185,24 +213,6 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
     if (hre.network.zksync !== true || hre.config.zksolc.compilerSource !== 'binary') {
         return { jobs, errors };
     }
-
-    const compilersCache = await getCompilersDir();
-
-    await zkSolcCompilerDownloaderMutex.use(async () => {
-        const zksolcDownloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-            hre.config.zksolc.version,
-            hre.config.zksolc.settings.compilerPath ?? '',
-            compilersCache,
-        );
-
-        const isZksolcDownloaded = await zksolcDownloader.isCompilerDownloaded();
-        if (!isZksolcDownloaded) {
-            await zksolcDownloader.downloadCompiler();
-        }
-
-        hre.config.zksolc.settings.compilerPath = zksolcDownloader.getCompilerPath();
-        hre.config.zksolc.version = zksolcDownloader.getVersion();
-    });
 
     jobs.forEach((job: any) => {
         job.solidityConfig.zksolc = hre.config.zksolc;

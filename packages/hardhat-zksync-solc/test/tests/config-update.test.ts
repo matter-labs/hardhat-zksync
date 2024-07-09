@@ -98,7 +98,7 @@ describe('CompilerSolcUserConfigUpdater', () => {
             const compiler: SolcConfig = { version: '0.8.17', settings: { forceEVMLA: true } };
             const userConfigCompilers = [{ version: '0.8.17' }, { version: '0.6.0' }];
             const file = undefined;
-            const zksolc: ZkSolcConfig = { version: 'latest', settings: {} };
+            const zksolc: ZkSolcConfig = { version: '1.5.0', settings: {} };
 
             updater.update(compiler, '1.0.0', zksolc, userConfigCompilers, file);
 
