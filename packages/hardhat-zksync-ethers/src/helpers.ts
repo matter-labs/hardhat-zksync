@@ -192,8 +192,8 @@ export async function getContractAtFromArtifact(
 
 export async function deployContract(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[],
+    artifactOrContractName: ZkSyncArtifact | string,
+    constructorArguments?: any[],
     wallet?: Wallet,
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
@@ -202,16 +202,23 @@ export async function deployContract(
         wallet = await getWallet(hre);
     }
 
-    const factory = await getContractFactoryFromArtifact(hre, artifact, wallet);
+    let loadedArtifact: ZkSyncArtifact;
+    if (typeof artifactOrContractName === 'string') {
+        loadedArtifact = await hre.zksyncEthers.loadArtifact(artifactOrContractName);
+    } else {
+        loadedArtifact = artifactOrContractName;
+    }
 
-    const baseDeps = await extractFactoryDeps(hre, artifact);
+    const factory = await getContractFactoryFromArtifact(hre, loadedArtifact, wallet);
+
+    const baseDeps = await extractFactoryDeps(hre, loadedArtifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
     const factoryDeps = [...baseDeps, ...additionalDeps];
 
     const { customData, ..._overrides } = overrides ?? {};
 
     // Encode and send the deploy transaction providing factory dependencies.
-    const contract = await factory.deploy(...constructorArguments, {
+    const contract = await factory.deploy(...(constructorArguments ?? []), {
         ..._overrides,
         customData: {
             ...customData,
