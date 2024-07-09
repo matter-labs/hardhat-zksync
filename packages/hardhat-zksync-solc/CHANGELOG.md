@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.0...@matterlabs/hardhat-zksync-solc-v1.2.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* compiler path issue with compiler breakable changes ([#1212](https://github.com/matter-labs/hardhat-zksync/issues/1212)) ([c4231d9](https://github.com/matter-labs/hardhat-zksync/commit/c4231d922421887af60e6ebcec755ce6856292e6))
+
 ## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.1.4...@matterlabs/hardhat-zksync-solc-v1.2.0) (2024-06-19)
 
 
