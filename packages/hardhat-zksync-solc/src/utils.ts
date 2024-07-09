@@ -128,7 +128,11 @@ export function updateBreakableCompilerConfig(
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, latestEraVersion, zksolc, userConfigCompilers, solcConfigData.file);
 
-    if (compiler.eraVersion && semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)) {
+    if (
+        zksolc.version !== 'latest' &&
+        compiler.eraVersion &&
+        semver.lt(zksolc.version, ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER)
+    ) {
         console.warn(chalk.blue(COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN));
         compiler.eraVersion = undefined;
     }
