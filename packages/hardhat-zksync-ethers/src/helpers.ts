@@ -193,7 +193,7 @@ export async function getContractAtFromArtifact(
 export async function deployContract(
     hre: HardhatRuntimeEnvironment,
     artifactOrContractName: ZkSyncArtifact | string,
-    constructorArguments?: any[],
+    constructorArguments: any[] = [],
     wallet?: Wallet,
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
@@ -218,7 +218,7 @@ export async function deployContract(
     const { customData, ..._overrides } = overrides ?? {};
 
     // Encode and send the deploy transaction providing factory dependencies.
-    const contract = await factory.deploy(...(constructorArguments ?? []), {
+    const contract = await factory.deploy(...constructorArguments, {
         ..._overrides,
         customData: {
             ...customData,
