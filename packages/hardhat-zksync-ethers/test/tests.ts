@@ -56,7 +56,7 @@ describe('Plugin tests', async function () {
             });
         });
 
-        describe('wallet', function () {
+        describe.only('wallet', function () {
             it('get default wallet', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet();
 

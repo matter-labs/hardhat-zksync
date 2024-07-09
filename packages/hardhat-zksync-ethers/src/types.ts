@@ -53,8 +53,8 @@ export interface HardhatZksyncEthersHelpers {
     extractFactoryDeps: (artifact: ZkSyncArtifact) => Promise<string[]>;
     loadArtifact: (name: string) => Promise<ZkSyncArtifact>;
     deployContract: (
-        artifact: ZkSyncArtifact,
-        constructorArguments: any[],
+        artifactOrContractName: ZkSyncArtifact | string,
+        constructorArguments?: any[],
         wallet?: Wallet,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
