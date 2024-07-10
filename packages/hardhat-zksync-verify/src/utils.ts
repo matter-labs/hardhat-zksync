@@ -142,3 +142,14 @@ export function normalizeCompilerVersions(
         .find((normalize) => normalize.suituble(userConfigCompilers, solcConfigData.file))
         ?.normalize(compiler, zkSolcConfig, latestEraVersion, userConfigCompilers, solcConfigData.file);
 }
+
+export function extractQueryParams(url: string): [string, { [k: string]: string }] {
+    const parsedURL = new URL(url);
+
+    const searchParams = new URLSearchParams(parsedURL.search);
+    const params = Object.fromEntries(searchParams);
+
+    const newURL = url?.split('?')[0] || url;
+
+    return [newURL, params];
+}

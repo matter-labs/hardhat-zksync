@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { handleAxiosError } from '../utils';
+import { extractQueryParams, handleAxiosError } from '../utils';
 import { ZkSyncVerifyPluginError } from '../errors';
 import { VerificationStatusResponse } from './verification-status-response';
 import { ZkSyncBlockExplorerVerifyRequest } from './verify-contract-request';
@@ -24,13 +24,10 @@ export async function checkVerificationStatusService(
     verifyURL: string,
 ): Promise<VerificationStatusResponse> {
     let verificationStatusResponse;
+    let params;
 
     try {
-        const url = new URL(verifyURL || '');
-        const searchParams = new URLSearchParams(url.search);
-        const params = Object.fromEntries(searchParams);
-
-        verifyURL = verifyURL?.split('?')[0] || verifyURL;
+        [verifyURL, params] = extractQueryParams(verifyURL);
 
         const data = await axios.get(`${verifyURL}/${requestId}`, { params });
         verificationStatusResponse = new VerificationStatusResponse(data);
@@ -46,12 +43,9 @@ export async function verifyContractRequest(
     verifyURL: string,
 ): Promise<ZkSyncBlockExplorerResponse> {
     let data;
+    let params;
     try {
-        const url = new URL(verifyURL || '');
-        const searchParams = new URLSearchParams(url.search);
-        const params = Object.fromEntries(searchParams);
-
-        verifyURL = verifyURL?.split('?')[0] || verifyURL;
+        [verifyURL, params] = extractQueryParams(verifyURL);
 
         data = await axios.post(verifyURL, req, { headers: { 'Content-Type': 'application/json' }, params });
 
@@ -68,12 +62,11 @@ export async function verifyContractRequest(
 }
 
 export async function getSupportedCompilerVersions(verifyURL: string | undefined): Promise<string[]> {
+    let params;
     try {
-        const url = new URL(verifyURL || '');
-        const searchParams = new URLSearchParams(url.search);
-        const params = Object.fromEntries(searchParams);
-
-        verifyURL = verifyURL?.split('?')[0] || verifyURL;
+        if (verifyURL !== undefined) {
+            [verifyURL, params] = extractQueryParams(verifyURL);
+        }
 
         const response = await axios.get(`${verifyURL}/solc_versions`, { params });
         return response.data;
