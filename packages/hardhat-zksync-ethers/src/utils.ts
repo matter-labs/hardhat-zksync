@@ -12,7 +12,6 @@ import { Provider, Wallet } from 'zksync-ethers';
 import { ethers } from 'ethers';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import fs from 'fs';
-import chalk from 'chalk';
 import { ETH_DEFAULT_NETWORK_RPC_URL, LOCAL_CHAIN_IDS, SUPPORTED_L1_TESTNETS } from './constants';
 import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
@@ -232,8 +231,7 @@ export function getLibraryInfos(hre: HardhatRuntimeEnvironment): MissingLibrary[
     const libraryPathFile = hre.config.zksolc.settings.missingLibrariesPath!;
 
     if (!fs.existsSync(libraryPathFile)) {
-        console.log(chalk.yellow('Missing libraries file not found, skipping libraries deployment.'));
-        return [];
+        throw new ZkSyncEthersPluginError('Missing libraries file does not exist');
     }
 
     return JSON.parse(fs.readFileSync(libraryPathFile, 'utf8'));

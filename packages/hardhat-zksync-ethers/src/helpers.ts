@@ -267,7 +267,10 @@ export async function deployLibraries(
     noAutoPopulateConfig?: boolean,
     compileAllContracts: boolean = true,
 ) {
-    const isDeployLibrariesNeeded = await checkIsDeployLibrariesNeeded(hre);
+    const isDeployLibrariesNeeded = await checkIsDeployLibrariesNeeded(hre, {
+        externalConfigObjectPath,
+        exportedConfigObject,
+    });
 
     if (!isDeployLibrariesNeeded) {
         return;
@@ -276,10 +279,6 @@ export async function deployLibraries(
     const libraryInfos = getLibraryInfos(hre);
 
     const allDeployedLibraries: ContractInfo[] = [];
-
-    if (libraryInfos.length === 0) {
-        return;
-    }
 
     if (!wallet) {
         wallet = await getWallet(hre);
@@ -424,7 +423,7 @@ async function extractFactoryDepsRecursive(
 }
 
 export interface DeployLibraryChecker {
-    check: (hre: HardhatRuntimeEnvironment) => Promise<boolean>;
+    check: (hre: HardhatRuntimeEnvironment, opts: any) => Promise<boolean>;
 }
 
 export class MissingLibraryFileChecker implements DeployLibraryChecker {
@@ -434,21 +433,47 @@ export class MissingLibraryFileChecker implements DeployLibraryChecker {
 }
 
 export class LibrariesExistOnNetworkChecker implements DeployLibraryChecker {
-    public async check(hre: HardhatRuntimeEnvironment): Promise<boolean> {
+    public async check(hre: HardhatRuntimeEnvironment, opts: any): Promise<boolean> {
         if (!hre.config.zksolc?.settings?.libraries) {
             return false;
         }
 
-        return Object.entries(hre.config.zksolc.settings.libraries!).some(([_, libraries]) => {
-            return Object.values(libraries).some(
-                async (library) => (await hre.zksyncEthers.providerL2.getCode(library)) === '0x',
-            );
-        });
+        return await librariesHaveCode(hre, opts);
     }
 }
 
-async function checkIsDeployLibrariesNeeded(hre: HardhatRuntimeEnvironment) {
-    const checkers: DeployLibraryChecker[] = [new LibrariesExistOnNetworkChecker(), new MissingLibraryFileChecker()];
+const librariesHaveCode = async (hre: HardhatRuntimeEnvironment, opts: any) => {
+    const checks = [];
 
-    return checkers.some(async (checker) => await checker.check(hre));
+    for (const [_, libraries] of Object.entries(hre.config.zksolc.settings.libraries!)) {
+        for (const library of Object.values(libraries)) {
+            checks.push(
+                hre.zksyncEthers.providerL2.getCode(library).then((code) => {
+                    return code === '0x';
+                }),
+            );
+        }
+    }
+
+    const results = await Promise.all(checks);
+    const notExistOnNetwork = results.some((result) => result);
+
+    if (notExistOnNetwork) {
+        hre.config.zksolc.settings.libraries = {};
+        updateHardhatConfigFile(hre, opts.externalConfigObjectPath, opts.exportedConfigObject);
+        await hre.run('compile');
+    }
+
+    return notExistOnNetwork;
+};
+
+async function checkIsDeployLibrariesNeeded(hre: HardhatRuntimeEnvironment, opts?: any) {
+    const checkers: DeployLibraryChecker[] = [new LibrariesExistOnNetworkChecker(), new MissingLibraryFileChecker()];
+    const checks: any[] = [];
+
+    checkers.forEach((checker) => {
+        checks.push(checker.check(hre, opts));
+    });
+    const results = await Promise.all(checks);
+    return results.some((result) => result);
 }
