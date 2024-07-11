@@ -956,6 +956,9 @@ importers:
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.2.0
         version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+      '@openzeppelin/contracts':
+        specifier: ^4.9.2
+        version: 4.9.6
       '@openzeppelin/upgrades-core':
         specifier: ~1.29.0
         version: 1.29.0
