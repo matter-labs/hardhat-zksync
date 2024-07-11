@@ -149,7 +149,7 @@ export function extractQueryParams(url: string): [string, { [k: string]: string 
     const searchParams = new URLSearchParams(parsedURL.search);
     const params = Object.fromEntries(searchParams);
 
-    const newURL = url?.split('?')[0] || url;
+    const newURL = parsedURL.origin + parsedURL.pathname
 
     return [newURL, params];
 }
