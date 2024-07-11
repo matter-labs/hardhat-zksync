@@ -11,7 +11,7 @@ import {
     handleAxiosError,
     parseWrongConstructorArgumentsError,
     removeMultipleSubstringOccurrences,
-    retrieveContractBytecode
+    retrieveContractBytecode,
 } from '../../src/utils';
 import * as service from '../../src/zksync-block-explorer/service';
 
@@ -314,7 +314,7 @@ describe('extractQueryParams', () => {
     it('should return the new url string and query params object', () => {
         const verifyURL = 'https://example.com/verify?param1=value1&param2=value2';
         const expectedURL = 'https://example.com/verify';
-        const expectedParams = {param1: 'value1', param2: 'value2'};
+        const expectedParams = { param1: 'value1', param2: 'value2' };
 
         const [newURL, params] = extractQueryParams(verifyURL);
 
