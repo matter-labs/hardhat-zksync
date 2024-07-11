@@ -8,25 +8,26 @@ async function main() {
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = Wallet.fromMnemonic(testMnemonic);
     const deployer = new Deployer(hre, zkWallet);
-    // deploy proxy
-    const contractName = 'Box';
 
-    const contract = await deployer.loadArtifact(contractName);
-    const box = await hre.zkUpgrades.deployProxy(contract, [42], { initializer: 'store' },deployer.zkWallet);
+    // deploy proxy
+    const contractName = 'BoxUups';
+
+    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName);
+    const box = await hre.zkUpgrades.deployProxy(boxFactory, [42], { initializer: 'initialize' },deployer.zkWallet);
 
     await box.waitForDeployment();
 
     // upgrade proxy implementation
 
-    const BoxV2 = await deployer.loadArtifact('BoxV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(await box.getAddress(), BoxV2,deployer.zkWallet);
-    console.info(chalk.green('Successfully upgraded Box to BoxV2'));
+    const BoxUupsV2Factory = await hre.zksyncEthers.getContractFactory("BoxUupsV2");
+    const upgradedBox = await hre.zkUpgrades.upgradeProxy(await box.getAddress(), BoxUupsV2Factory,deployer.zkWallet);
+    console.info(chalk.green('Successfully upgraded BoxUups to BoxUupsV2'));
 
     upgradedBox.connect(zkWallet);
     // wait some time before the next call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const value = await upgradedBox.retrieve();
-    console.info(chalk.cyan('Box value is', value));
+    console.info(chalk.cyan('BoxUups value is', value));
 }
 
 main().catch((error) => {

@@ -10,51 +10,62 @@ import chalk from 'chalk';
 import assert from 'assert';
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
+import { extractFactoryDeps, getContractAddress, getWallet } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
 
 export type UpgradeFunction = (
-    wallet: zk.Wallet,
     proxy: ContractAddressOrInstance,
-    artifact: ZkSyncArtifact,
+    artifact: ZkSyncArtifact | zk.ContractFactory,
+    wallet?: zk.Wallet,
     opts?: UpgradeProxyOptions,
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
     return async function upgradeProxy(
-        wallet,
         proxy,
-        newImplementationArtifact,
+        newImplementationArtifact: ZkSyncArtifact | zk.ContractFactory,
+        wallet,
         opts: UpgradeProxyOptions = {},
         quiet: boolean = false,
     ): Promise<zk.Contract> {
         const proxyAddress = await getContractAddress(proxy);
-        opts.provider = wallet.provider;
-        opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
 
-        const newImplementationFactory = new zk.ContractFactory<any[], zk.Contract>(
-            newImplementationArtifact.abi,
-            newImplementationArtifact.bytecode,
-            wallet,
-            opts.deploymentType,
-        );
-        const { impl: nextImpl } = await deployProxyImpl(hre, newImplementationFactory, opts, proxyAddress);
+        let factory: zk.ContractFactory;
+
+        if (newImplementationArtifact instanceof zk.ContractFactory) {
+            factory = newImplementationArtifact;
+        } else {
+            factory = new zk.ContractFactory(
+                newImplementationArtifact.abi,
+                newImplementationArtifact.bytecode,
+                wallet,
+                opts.deploymentType,
+            );
+            opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+        }
+
+        wallet = getWallet(factory.runner, wallet);
+
+        if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
+
+        opts.provider = wallet.provider;
+        const { impl: nextImpl } = await deployProxyImpl(hre, factory, opts, proxyAddress);
 
         const upgradeTo = await getUpgrader(proxyAddress, wallet);
-        const call = encodeCall(newImplementationFactory, opts.call);
+        const call = encodeCall(factory, opts.call);
         const upgradeTx = await upgradeTo(nextImpl, call);
 
         if (!quiet) {
             console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
         }
 
-        const inst = newImplementationFactory.attach(proxyAddress);
+        const inst = factory.attach(proxyAddress);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = upgradeTx;
-        return inst;
+        return inst as zk.Contract;
     };
 
     type Upgrader = (nextImpl: string, call?: string) => Promise<TransactionResponse>;

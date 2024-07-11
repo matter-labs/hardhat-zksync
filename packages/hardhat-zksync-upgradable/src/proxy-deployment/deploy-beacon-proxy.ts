@@ -13,40 +13,40 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import chalk from 'chalk';
 import assert from 'assert';
 import path from 'path';
-import { ContractAddressOrInstance, getContractAddress, getInitializerData } from '../utils/utils-general';
+import { ContractAddressOrInstance, getContractAddress, getInitializerData, getWallet } from '../utils/utils-general';
 import { DeployBeaconProxyOptions } from '../utils/options';
 import { BEACON_PROXY_JSON } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
 import { Manifest } from '../core/manifest';
 import { deploy, DeployTransaction } from './deploy';
 
-export interface DeployBeaconProxyFunction {
-    (
-        wallet: zk.Wallet,
-        beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        args?: unknown[],
-        opts?: DeployBeaconProxyOptions,
-        quiet?: boolean,
-    ): Promise<zk.Contract>;
-    (
-        wallet: zk.Wallet,
-        beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        opts?: DeployBeaconProxyOptions,
-    ): Promise<zk.Contract>;
-}
+// TODO: Pazi ovde imao je tip
+export type DeployBeaconProxyFunction = (
+    beacon: ContractAddressOrInstance,
+    artifactOrFactory: ZkSyncArtifact | zk.ContractFactory,
+    args?: unknown[],
+    opts?: DeployBeaconProxyOptions,
+    wallet?: zk.Wallet,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
 
 export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction {
     return async function deployBeaconProxy(
-        wallet: zk.Wallet,
         beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        args: unknown[] | DeployBeaconProxyOptions = [],
+        artifactOrFactory: ZkSyncArtifact | zk.ContractFactory,
+        args: unknown[] = [],
         opts: DeployBeaconProxyOptions = {},
+        wallet: zk.Wallet | undefined,
         quiet: boolean = false,
     ) {
-        const attachTo = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
+        let attachTo: zk.ContractFactory<any[], zk.Contract>;
+
+        if ('abi' in artifactOrFactory && 'bytecode' in artifactOrFactory) {
+            attachTo = new zk.ContractFactory(artifactOrFactory.abi, artifactOrFactory.bytecode, wallet);
+        } else {
+            attachTo = artifactOrFactory as zk.ContractFactory<any[], zk.Contract>;
+            wallet = getWallet(artifactOrFactory.runner, wallet);
+        }
 
         if (!(attachTo instanceof zk.ContractFactory)) {
             throw new ZkSyncUpgradablePluginError(
@@ -54,6 +54,9 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
                     `Include the contract factory for the beacon's current implementation in the attachTo parameter`,
             );
         }
+
+        if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
+
         if (!Array.isArray(args)) {
             opts = args;
             args = [];
@@ -115,6 +118,6 @@ export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBea
         const inst = attachTo.attach(proxyDeployment.address);
         // @ts-ignore Won't be readonly because inst was created through attach.
         inst.deployTransaction = proxyDeployment.deployTransaction;
-        return inst;
+        return inst.runner ? inst : (inst.connect(wallet) as zk.Contract);
     };
 }

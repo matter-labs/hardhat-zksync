@@ -5,36 +5,45 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import chalk from 'chalk';
 import assert from 'assert';
-import { ContractAddressOrInstance, extractFactoryDeps, getContractAddress } from '../utils/utils-general';
+import { ContractAddressOrInstance, extractFactoryDeps, getContractAddress, getWallet } from '../utils/utils-general';
 import { UpgradeBeaconOptions } from '../utils/options';
 import { deployBeaconImpl } from '../proxy-deployment/deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 
 export type UpgradeBeaconFunction = (
-    wallet: zk.Wallet,
     beacon: ContractAddressOrInstance,
-    artifact: ZkSyncArtifact,
+    artifact: ZkSyncArtifact | zk.ContractFactory,
+    wallet?: zk.Wallet,
     opts?: UpgradeBeaconOptions,
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
 export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconFunction {
     return async function upgradeBeacon(
-        wallet,
         beaconImplementation,
-        newImplementationArtifact,
+        newImplementationArtifact: ZkSyncArtifact | zk.ContractFactory,
+        wallet,
         opts: UpgradeBeaconOptions = {},
         quiet: boolean = false,
     ) {
-        const factory = new zk.ContractFactory(
-            newImplementationArtifact.abi,
-            newImplementationArtifact.bytecode,
-            wallet,
-            opts.deploymentType,
-        );
+        let factory: zk.ContractFactory;
+
+        if (newImplementationArtifact instanceof zk.ContractFactory) {
+            factory = newImplementationArtifact;
+        } else {
+            factory = new zk.ContractFactory(
+                newImplementationArtifact.abi,
+                newImplementationArtifact.bytecode,
+                wallet,
+                opts.deploymentType,
+            );
+            opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+        }
+        wallet = getWallet(factory.runner, wallet);
+
+        if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
 
         opts.provider = wallet.provider;
-        opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
 
         const beaconImplementationAddress = await getContractAddress(beaconImplementation);
         const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);

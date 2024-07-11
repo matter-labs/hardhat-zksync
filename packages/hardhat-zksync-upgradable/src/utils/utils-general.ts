@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereumjs-util';
-import { Interface, ethers } from 'ethers';
+import { ContractRunner, Interface, ethers } from 'ethers';
 import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
 import { HardhatRuntimeEnvironment, SolcConfig } from 'hardhat/types';
@@ -183,4 +183,12 @@ export async function extractFactoryDepsRecursive(
     }
 
     return factoryDeps;
+}
+
+export function getWallet(runner?: null | ContractRunner, wallet?: zk.Wallet | undefined): zk.Wallet | undefined {
+    if (runner && 'getAddress' in runner) {
+        return runner as zk.Wallet;
+    } else {
+        return wallet;
+    }
 }

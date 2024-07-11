@@ -1,0 +1,52 @@
+{
+  "name": "hardhat-zksync-integrations-example",
+  "version": "0.1.0",
+  "author": "Matter Labs",
+  "license": "MIT",
+  "scripts": {
+    "lint": "pnpm eslint",
+    "prettier:check": "pnpm prettier --check",
+    "lint:fix": "pnpm eslint --fix",
+    "fmt": "pnpm prettier --write",
+    "eslint": "eslint scripts/*.ts",
+    "prettier": "prettier scripts/*.ts",
+    "test": "mocha test/tests.ts --exit",
+    "build": "tsc --build .",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.9.2",
+    "@types/node": "^18.11.17",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-no-only-tests": "^3.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.3.0",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "ethers": "^6.12.2",
+    "zksync-ethers": "^6.8.0",
+    "hardhat": "^2.22.5",
+    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "chalk": "^4.1.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "zksync": "^0.13.1"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "printWidth": 120,
+    "parser": "typescript",
+    "singleQuote": true,
+    "bracketSpacing": true
+  }
+}

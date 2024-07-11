@@ -36,14 +36,17 @@ export async function deployBeacon(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract, {
-        deploymentType: taskArgs.deploymentTypeImpl,
-        salt: taskArgs.saltImpl,
-    });
+    const beacon = await hre.zkUpgrades.deployBeacon(
+        contract,
+        {
+            deploymentType: taskArgs.deploymentTypeImpl,
+            salt: taskArgs.saltImpl,
+        },
+        wallet,
+    );
     await beacon.waitForDeployment();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
-        deployer.zkWallet,
         await beacon.getAddress(),
         contract,
         constructorArguments,
@@ -52,6 +55,7 @@ export async function deployBeacon(
             salt: taskArgs.saltProxy,
             initializer: taskArgs.initializer,
         },
+        deployer.zkWallet,
     );
     await proxy.waitForDeployment();
 
@@ -89,13 +93,18 @@ export async function deployProxy(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
 
-    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, {
-        deploymentTypeImpl: taskArgs.deploymentTypeImpl,
-        saltImpl: taskArgs.saltImpl,
-        deploymentTypeProxy: taskArgs.deploymentTypeProxy,
-        saltProxy: taskArgs.saltProxy,
-        initializer: taskArgs.initializer,
-    });
+    const proxy = await hre.zkUpgrades.deployProxy(
+        contract,
+        constructorArguments,
+        {
+            deploymentTypeImpl: taskArgs.deploymentTypeImpl,
+            saltImpl: taskArgs.saltImpl,
+            deploymentTypeProxy: taskArgs.deploymentTypeProxy,
+            saltProxy: taskArgs.saltProxy,
+            initializer: taskArgs.initializer,
+        },
+        wallet,
+    );
 
     await proxy.waitForDeployment();
 
@@ -121,7 +130,7 @@ export async function upgradeBeacon(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2, {
+    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(taskArgs.beaconAddress, contractV2, wallet, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
     });
@@ -150,7 +159,7 @@ export async function upgradeProxy(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, {
+    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(taskArgs.proxyAddress, contractV2, wallet, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
     });
