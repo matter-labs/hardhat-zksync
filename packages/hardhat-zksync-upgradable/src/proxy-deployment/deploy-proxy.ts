@@ -30,6 +30,17 @@ export type DeployFunctionArtifact = (
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
+export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionFactory | DeployFunctionArtifact {
+    return async function (...args: Parameters<DeployFunctionFactory | DeployFunctionArtifact>): Promise<zk.Contract> {
+        const target = args[0];
+        if (target instanceof zk.ContractFactory) {
+            return deployProxyFactory(hre, ...(args as Parameters<DeployFunctionFactory>));
+        } else {
+            return deployProxyArtifact(hre, ...(args as Parameters<DeployFunctionArtifact>));
+        }
+    };
+}
+
 export function deployProxyFactory(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
@@ -66,33 +77,6 @@ export async function deployProxyArtifact(
     opts.provider = wallet.provider;
     opts.factoryDeps = await extractFactoryDeps(hre, artifact as ZkSyncArtifact);
     return deployProxy(hre, factory, wallet, args, opts, quiet);
-}
-
-export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionFactory;
-export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionArtifact;
-export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionFactory | DeployFunctionArtifact {
-    return async function (
-        target: zk.ContractFactory | ZkSyncArtifact,
-        walletOrArgs?: zk.Wallet | unknown[],
-        maybeArgsOrOpts?: unknown[] | DeployProxyOptions,
-        maybeOptsOrQuiet?: DeployProxyOptions | boolean,
-        maybeQuiet?: boolean,
-    ): Promise<zk.Contract> {
-        if (target instanceof zk.ContractFactory) {
-            const factory = target;
-            const args = (walletOrArgs as unknown[]) ?? [];
-            const opts = maybeArgsOrOpts as DeployProxyOptions;
-            const quiet = maybeOptsOrQuiet as boolean;
-            return deployProxyFactory(hre, factory, args, opts, quiet);
-        } else {
-            const artifact = target;
-            const wallet = walletOrArgs as zk.Wallet;
-            const args = (maybeArgsOrOpts as unknown[]) ?? [];
-            const opts = maybeOptsOrQuiet as DeployProxyOptions;
-            const quiet = maybeQuiet;
-            return deployProxyArtifact(hre, artifact, wallet, args, opts, quiet);
-        }
-    };
 }
 
 async function deployProxy(
