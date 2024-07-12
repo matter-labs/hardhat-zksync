@@ -93,18 +93,13 @@ export async function deployProxy(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
 
-    const proxy = await hre.zkUpgrades.deployProxy(
-        contract,
-        constructorArguments,
-        {
-            deploymentTypeImpl: taskArgs.deploymentTypeImpl,
-            saltImpl: taskArgs.saltImpl,
-            deploymentTypeProxy: taskArgs.deploymentTypeProxy,
-            saltProxy: taskArgs.saltProxy,
-            initializer: taskArgs.initializer,
-        },
-        wallet,
-    );
+    const proxy = await hre.zkUpgrades.deployProxy(contract, wallet, constructorArguments, {
+        deploymentTypeImpl: taskArgs.deploymentTypeImpl,
+        saltImpl: taskArgs.saltImpl,
+        deploymentTypeProxy: taskArgs.deploymentTypeProxy,
+        saltProxy: taskArgs.saltProxy,
+        initializer: taskArgs.initializer,
+    });
 
     await proxy.waitForDeployment();
 

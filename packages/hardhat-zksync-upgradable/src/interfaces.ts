@@ -7,7 +7,7 @@ import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
 import { DeployBeaconFunction } from './proxy-deployment/deploy-beacon';
 import { DeployBeaconProxyFunction } from './proxy-deployment/deploy-beacon-proxy';
 import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
-import { DeployFunction } from './proxy-deployment/deploy-proxy';
+import { DeployFunctionArtifact, DeployFunctionFactory } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
 import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
@@ -19,7 +19,7 @@ export type ValidateImplementationFunction = (
 ) => Promise<void>;
 
 export interface HardhatUpgrades {
-    deployProxy: DeployFunction;
+    deployProxy: DeployFunctionArtifact & DeployFunctionFactory;
     upgradeProxy: UpgradeFunction;
     validateImplementation: ValidateImplementationFunction;
     deployBeacon: DeployBeaconFunction;
