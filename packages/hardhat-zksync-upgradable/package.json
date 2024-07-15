@@ -44,7 +44,7 @@
     "zksync-ethers": "^6.8.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
-    "compare-versions": "^6.1.0"
+    "compare-versions": "^6.1.1"
   },
   "devDependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
