@@ -5,6 +5,7 @@ import {
     delay,
     encodeArguments,
     executeVeificationWithRetry,
+    extractQueryParams,
     getZkVmNormalizedVersion,
     handleAxiosError,
     parseWrongConstructorArgumentsError,
@@ -306,5 +307,29 @@ describe('getZkVmNormalizedVersion', () => {
         const version = getZkVmNormalizedVersion(solcVersion, zkVmSolcVersion);
 
         expect(version).to.equal(expectedVersion);
+    });
+});
+
+describe('extractQueryParams', () => {
+    it('should return the new url string and query params object', () => {
+        const verifyURL = 'https://example.com/verify?param1=value1&param2=value2';
+        const expectedURL = 'https://example.com/verify';
+        const expectedParams = { param1: 'value1', param2: 'value2' };
+
+        const [newURL, params] = extractQueryParams(verifyURL);
+
+        expect(newURL).to.equal(expectedURL);
+        assert.deepEqual(params, expectedParams);
+    });
+
+    it('should return the new url string and empty query params object', () => {
+        const verifyURL = 'https://example.com/verify';
+        const expectedURL = 'https://example.com/verify';
+        const expectedParams = {};
+
+        const [newURL, params] = extractQueryParams(verifyURL);
+
+        expect(newURL).to.equal(expectedURL);
+        assert.deepEqual(params, expectedParams);
     });
 });
