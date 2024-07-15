@@ -1,4 +1,4 @@
-import '@matterlabs/hardhat-zksync-solc';
+import '../../packages/hardhat-zksync-solc/dist/src';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
@@ -15,7 +15,6 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork:'zkSyncNetwork',
     networks: {
         hardhat: {
             zksync: true,

@@ -13,19 +13,19 @@ async function main() {
     // deploy beacon proxy
 
     const contractName = 'Box';
-    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(boxFactory,deployer.zkWallet);
+    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName,deployer.zkWallet);
+    const beacon = await hre.zkUpgrades.deployBeacon(boxFactory);
     await beacon.waitForDeployment();
 
     const beaconAddress = await beacon.getAddress();
 
-    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beaconAddress, boxFactory, [42],{},deployer.zkWallet);
+    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beaconAddress, boxFactory, [42],{});
     await boxBeaconProxy.waitForDeployment();
 
     // upgrade beacon
 
     const boxV2Factory = await hre.zksyncEthers.getContractFactory("BoxV2");
-    await hre.zkUpgrades.upgradeBeacon(beaconAddress, boxV2Factory,deployer.zkWallet);
+    await hre.zkUpgrades.upgradeBeacon(beaconAddress, boxV2Factory);
     console.info(chalk.green('Successfully upgraded beacon Box to BoxV2 on address: ', beaconAddress));
 
     const boxV2Artifact = await hre.zksyncEthers.loadArtifact("BoxV2");

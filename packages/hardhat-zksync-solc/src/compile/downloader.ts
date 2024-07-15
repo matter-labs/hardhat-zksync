@@ -26,7 +26,7 @@ import {
     USER_AGENT,
     ZKSOLC_COMPILER_PATH_VERSION,
 } from '../constants';
-import { ZkSyncSolcPluginError } from './../errors';
+import { ZkSyncSolcPluginError } from '../errors';
 
 export interface CompilerVersionInfo {
     latest: string;

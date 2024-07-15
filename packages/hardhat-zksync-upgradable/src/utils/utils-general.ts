@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereumjs-util';
-import { ContractRunner, Interface, ethers } from 'ethers';
+import { Interface, ethers } from 'ethers';
 import chalk from 'chalk';
 import * as zk from 'zksync-ethers';
 import { HardhatRuntimeEnvironment, SolcConfig } from 'hardhat/types';
@@ -185,10 +185,16 @@ export async function extractFactoryDepsRecursive(
     return factoryDeps;
 }
 
-export function getWallet(runner?: null | ContractRunner, wallet?: zk.Wallet | undefined): zk.Wallet | undefined {
-    if (runner && 'getAddress' in runner) {
-        return runner as zk.Wallet;
-    } else {
-        return wallet;
+export async function getArtifactFromBytecode(
+    hre: HardhatRuntimeEnvironment,
+    bytecode: string,
+): Promise<ZkSyncArtifact> {
+    const names = await hre.artifacts.getAllFullyQualifiedNames();
+    for (const name of names) {
+        const artifact = await hre.artifacts.readArtifact(name);
+        if (artifact.bytecode === bytecode) {
+            return artifact as ZkSyncArtifact;
+        }
     }
+    throw new ZkSyncUpgradablePluginError('Artifact for provided bytecode is not found.');
 }

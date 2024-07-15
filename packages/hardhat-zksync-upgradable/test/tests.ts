@@ -257,14 +257,13 @@ describe('Upgradable plugin tests', function () {
             console.info(chalk.yellow(`Deploying ${contractName} beacon proxy...`));
 
             const contract = await this.deployer.loadArtifact(contractName);
-            beaconImplementation = await this.env.zkUpgrades.deployBeacon(contract, {}, this.deployer.zkWallet);
+            beaconImplementation = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
             beaconProxy = await this.env.zkUpgrades.deployBeaconProxy(
-                // @ts-ignore
                 beaconImplementation,
                 contract,
+                this.deployer.zkWallet,
                 [42],
                 {},
-                this.deployer.zkWallet,
             );
             await beaconProxy.waitForDeployment();
         });
@@ -611,7 +610,7 @@ describe('Upgradable plugin tests', function () {
 
             const gasEstimation = await this.env.zkUpgrades.estimation.estimateGasBeacon(this.deployer, contract, []);
 
-            const box = await this.env.zkUpgrades.deployBeacon(contract, {}, this.deployer.zkWallet);
+            const box = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
             await box.waitForDeployment();
 
             const newBalance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -641,13 +640,13 @@ describe('Upgradable plugin tests', function () {
             );
             const gasEstimation = gasEstimationBeacon + gasEstimationProxy;
 
-            const boxBeacon = await this.env.zkUpgrades.deployBeacon(contract, {}, this.deployer.zkWallet);
+            const boxBeacon = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
             const boxProxy = await this.env.zkUpgrades.deployBeaconProxy(
                 await boxBeacon.getAddress(),
                 contract,
+                this.deployer.zkWallet,
                 [42],
                 {},
-                this.deployer.zkWallet,
             );
             await boxProxy.waitForDeployment();
 

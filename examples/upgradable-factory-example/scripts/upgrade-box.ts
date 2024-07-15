@@ -11,8 +11,8 @@ async function main() {
     // deploy proxy
     const contractName = 'Box';
 
-    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName);
-    const box = await hre.zkUpgrades.deployProxy(boxFactory, [42], { initializer: 'store' },deployer.zkWallet);
+    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName,deployer.zkWallet);
+    const box = await hre.zkUpgrades.deployProxy(boxFactory, [42], { initializer: 'store' });
 
     await box.waitForDeployment();
 

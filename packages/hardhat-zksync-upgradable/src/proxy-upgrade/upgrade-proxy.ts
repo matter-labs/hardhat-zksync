@@ -10,7 +10,7 @@ import chalk from 'chalk';
 import assert from 'assert';
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { extractFactoryDeps, getContractAddress, getWallet } from '../utils/utils-general';
+import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
@@ -46,8 +46,6 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             );
             opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
         }
-
-        wallet = getWallet(factory.runner, wallet);
 
         if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
 

@@ -7,11 +7,11 @@ import { BeaconProxyUnsupportedError } from '@openzeppelin/upgrades-core';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import assert from 'assert';
-import { extractFactoryDeps, getInitializerData } from '../utils/utils-general';
+import { extractFactoryDeps, getArtifactFromBytecode, getInitializerData } from '../utils/utils-general';
 import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 import { Manifest, ProxyDeployment } from '../core/manifest';
-import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { DeployProxyOptions } from '../utils/options';
 import { deployProxyImpl } from './deploy-impl';
 import { DeployTransaction, deploy } from './deploy';
 
@@ -34,14 +34,14 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionF
     return async function (...args: Parameters<DeployFunctionFactory | DeployFunctionArtifact>): Promise<zk.Contract> {
         const target = args[0];
         if (target instanceof zk.ContractFactory) {
-            return deployProxyFactory(hre, ...(args as Parameters<DeployFunctionFactory>));
+            return await deployProxyFactory(hre, ...(args as Parameters<DeployFunctionFactory>));
         } else {
             return deployProxyArtifact(hre, ...(args as Parameters<DeployFunctionArtifact>));
         }
     };
 }
 
-export function deployProxyFactory(
+export async function deployProxyFactory(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
     args?: unknown[],
@@ -54,8 +54,13 @@ export function deployProxyFactory(
     }
 
     const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
+    if (!wallet) {
+        throw new ZkSyncUpgradablePluginError('Wallet is required for deployment');
+    }
     opts = opts || {};
     opts.provider = wallet?.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
+
     return deployProxy(hre, factory, wallet, args, opts, quiet);
 }
 
@@ -68,11 +73,6 @@ export async function deployProxyArtifact(
     quiet?: boolean,
 ): Promise<zk.Contract> {
     const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
-    if (!Array.isArray(args)) {
-        opts = args;
-        args = [];
-    }
-
     opts = opts || {};
     opts.provider = wallet.provider;
     opts.factoryDeps = await extractFactoryDeps(hre, artifact as ZkSyncArtifact);
@@ -82,7 +82,7 @@ export async function deployProxyArtifact(
 async function deployProxy(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
-    wallet: zk.Wallet | undefined,
+    wallet: zk.Wallet,
     args: unknown[] | DeployProxyOptions = [],
     opts: DeployProxyOptions = {},
     quiet: boolean = false,
@@ -92,9 +92,6 @@ async function deployProxy(
         args = [];
     }
 
-    if (!wallet) {
-        throw new ZkSyncUpgradablePluginError('Wallet is required for deployment');
-    }
     const manifest = await Manifest.forNetwork(wallet.provider);
 
     const { impl, kind } = await deployProxyImpl(hre, factory, opts);

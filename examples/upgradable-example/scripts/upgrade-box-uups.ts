@@ -13,14 +13,14 @@ async function main() {
     const contractName = 'BoxUups';
 
     const contract = await deployer.loadArtifact(contractName);
-    const box = await hre.zkUpgrades.deployProxy(contract, [42], { initializer: 'initialize' },deployer.zkWallet);
+    const box = await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet, [42], { initializer: 'initialize' });
 
     await box.waitForDeployment();
 
     // upgrade proxy implementation
 
     const BoxUupsV2 = await deployer.loadArtifact('BoxUupsV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(await box.getAddress(), BoxUupsV2,deployer.zkWallet);
+    const upgradedBox = await hre.zkUpgrades.upgradeProxy(await box.getAddress(), BoxUupsV2, deployer.zkWallet);
     console.info(chalk.green('Successfully upgraded BoxUups to BoxUupsV2'));
 
     upgradedBox.connect(zkWallet);

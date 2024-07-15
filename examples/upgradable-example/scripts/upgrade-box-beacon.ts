@@ -14,25 +14,25 @@ async function main() {
 
     const contractName = 'Box';
     const contract = await deployer.loadArtifact(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(contract,{},deployer.zkWallet);
+    const beacon = await hre.zkUpgrades.deployBeacon(contract, zkWallet, [], {});
     await beacon.waitForDeployment();
 
     const beaconAddress = await beacon.getAddress();
 
-    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beaconAddress, contract, [42], {}, deployer.zkWallet);
+    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beaconAddress, contract, deployer.zkWallet, [42], {});
     await boxBeaconProxy.waitForDeployment();
 
     // upgrade beacon
 
     const boxV2Implementation = await deployer.loadArtifact('BoxV2');
-    await hre.zkUpgrades.upgradeBeacon(beaconAddress, boxV2Implementation,deployer.zkWallet);
+    await hre.zkUpgrades.upgradeBeacon(beaconAddress, boxV2Implementation, deployer.zkWallet);
     console.info(chalk.green('Successfully upgraded beacon Box to BoxV2 on address: ', beaconAddress));
 
     const attachTo = new zk.ContractFactory<any[], Contract>(
         boxV2Implementation.abi,
         boxV2Implementation.bytecode,
         deployer.zkWallet,
-        'create'
+        'create',
     );
     const upgradedBox = attachTo.attach(await boxBeaconProxy.getAddress());
 

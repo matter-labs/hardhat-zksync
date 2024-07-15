@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import * as hre from 'hardhat';
 
 async function main() {
-    const contractName = 'Box';
+    const contractName = 'BoxUups';
     console.info(chalk.yellow(`Deploying ${contractName}...`));
 
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
@@ -13,11 +13,9 @@ async function main() {
 
     const deployer = new Deployer(hre, zkWallet);
 
-    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(boxFactory,{},deployer.zkWallet);
-    await beacon.waitForDeployment();
+    const boxFactory = await hre.zksyncEthers.getContractFactory('BoxUups',deployer.zkWallet);
+    const box = await hre.zkUpgrades.deployProxy(boxFactory, [42], { initializer: 'initialize' });
 
-    const box = await hre.zkUpgrades.deployBeaconProxy(await beacon.getAddress(), boxFactory, [42], {}, deployer.zkWallet);
     await box.waitForDeployment();
 
     box.connect(zkWallet);
