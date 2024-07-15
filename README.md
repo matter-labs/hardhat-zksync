@@ -18,7 +18,6 @@ Here is an overview of the plugins currently available:
 | hardhat-zksync-verify         | Automates the process of verifying smart contracts on the ZKsync network, enhancing transparency and trust.                       |
 | hardhat-zksync-verify-vyper   | Specialized for automating the verification of Vyper contracts on the ZKsync network.                                             |
 | hardhat-zksync-vyper          | Streamlines the compilation of Vyper contracts for deployment on the ZKsync network.                                              |
-| hardhat-zksync-chai-matchers  | Extends chai with additional matchers, aiding in testing ZKsync-specific features more effectively.                               |
 | hardhat-zksync        | Offers a suite of ZKsync-related Hardhat plugins in one package, enhancing accessibility and efficiency.                          |
 | hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the ZKsync network, improving contract lifecycle management.        |
 | hardhat-zksync-node           | Convenient plugin to run the ZKsync era-test-node locally.                                                                        |
@@ -31,7 +30,6 @@ You can find more detailed explanations on how to use hardhat ZKsync plugins on 
 [hardhat-zksync-verify](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html)\
 [hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html)\
 [hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html)\
-[hardhat-zksync-chai-matchers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-chai-matchers.html)\
 [hardhat-zksync](https://era.zksync.io/docs/tools/hardhat/plugins.html)\
 [hardhat-zksync-upgradeable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html)\
 [hardhat-zksync-node](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-node.html)\

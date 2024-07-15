@@ -13,6 +13,8 @@ Ensure you are using the correct version of the plugin with ethers:
 - For plugin version **≥1.0.0**:
   - Compatible with ethers **v6** (⭐ Recommended)
 
+From version **1.1.1**, the plugin is not dependent on a specific ethers version and can be used for both ethers **v5** and **v6** projects.
+
 ## 📥 Installation
 
 To install **hardhat-zksync-node** plugin, run:
