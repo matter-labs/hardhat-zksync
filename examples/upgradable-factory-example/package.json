@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-zksync-integrations-example",
+  "name": "hardhat-zksync-upgradable-factory-example",
   "version": "0.1.0",
   "author": "Matter Labs",
   "license": "MIT",
