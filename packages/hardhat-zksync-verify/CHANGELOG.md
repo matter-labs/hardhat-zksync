@@ -1,6 +1,5 @@
 # @matterlabs/hardhat-zksync-verify
 
-
 ## [1.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.5.0...@matterlabs/hardhat-zksync-verify-v1.6.0) (2024-07-15)
 
 
