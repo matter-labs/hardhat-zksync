@@ -1224,9 +1224,6 @@ importers:
       typescript:
         specifier: ^5.3.0
         version: 5.4.5
-      zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
 
   packages/hardhat-zksync-solc:
     dependencies:
