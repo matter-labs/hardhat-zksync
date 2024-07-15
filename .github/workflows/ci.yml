@@ -195,7 +195,7 @@ jobs:
       
       - name: Test upgradable example
         run: |
-          cd examples/upgradable-factory  -example
+          cd examples/upgradable-factory-example
           pnpm hardhat compile
           pnpm hardhat run scripts/deploy-box-beacon.ts 
           pnpm hardhat run scripts/deploy-box-proxy.ts 
