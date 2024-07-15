@@ -1,5 +1,28 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.6.0...@matterlabs/hardhat-zksync-verify-v1.7.0) (2024-07-15)
+
+
+### Features
+
+* allow passing through the query params on verifyURL ([#1207](https://github.com/matter-labs/hardhat-zksync/issues/1207)) ([9869329](https://github.com/matter-labs/hardhat-zksync/commit/9869329770bf1e458f54f3e7ced4fcab8eab84b5))
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+* bump hardhat-zksync-deploy and hardhat-zksync-solc dependencies… ([#840](https://github.com/matter-labs/hardhat-zksync/issues/840)) ([b570877](https://github.com/matter-labs/hardhat-zksync/commit/b570877c78c74f3c88c7e62498e5f477d4ada616))
+* switch to the default codegen with zksolc ([#1062](https://github.com/matter-labs/hardhat-zksync/issues/1062)) ([5ec997a](https://github.com/matter-labs/hardhat-zksync/commit/5ec997aaa83ba18d978f10b96f489513f6c4dd9f))
+
+
+### Bug Fixes
+
+* add missing setting properties to support isSystem and forceEvml… ([#965](https://github.com/matter-labs/hardhat-zksync/issues/965)) ([b32243a](https://github.com/matter-labs/hardhat-zksync/commit/b32243a8bf4bf8fe71b81359a99cf9bd06117e4a))
+* call fallback verification with full source codes when BE throws… ([#968](https://github.com/matter-labs/hardhat-zksync/issues/968)) ([bfe86f2](https://github.com/matter-labs/hardhat-zksync/commit/bfe86f24a22b6dcd0a2286d33fc450adb0bcc2bc))
+* compiler path issue with compiler breakable changes ([#1212](https://github.com/matter-labs/hardhat-zksync/issues/1212)) ([c4231d9](https://github.com/matter-labs/hardhat-zksync/commit/c4231d922421887af60e6ebcec755ce6856292e6))
+* get valid minimal context for verification BE request ([#1061](https://github.com/matter-labs/hardhat-zksync/issues/1061)) ([6d197e8](https://github.com/matter-labs/hardhat-zksync/commit/6d197e81df8cba117969e716c75f9cc72c54b0b0))
+* move hardhat dependency to dev dependencies ([#1188](https://github.com/matter-labs/hardhat-zksync/issues/1188)) ([98ed333](https://github.com/matter-labs/hardhat-zksync/commit/98ed3337c841fdbfed5d356388429ff7a28c1adb))
+* remove zksync-ethers dependency ([#876](https://github.com/matter-labs/hardhat-zksync/issues/876)) ([5964e3f](https://github.com/matter-labs/hardhat-zksync/commit/5964e3f35550bb14ddb50ca019e60d4b24d636d5))
+* removed openzeppelin dependency, fixed dev dependencies, and updated the contributing markdown to be clearer ([#1081](https://github.com/matter-labs/hardhat-zksync/issues/1081)) ([944bcac](https://github.com/matter-labs/hardhat-zksync/commit/944bcac1987d76f6fc135b2ddee7fb7091f5cf7f))
+* send to verify service compiler input settings ([#854](https://github.com/matter-labs/hardhat-zksync/issues/854)) ([1452e2e](https://github.com/matter-labs/hardhat-zksync/commit/1452e2e8db22d399a9142c07ea38ca7ce5fea697))
+* update deploy cache logic with script load path support for windows ([#865](https://github.com/matter-labs/hardhat-zksync/issues/865)) ([c30e276](https://github.com/matter-labs/hardhat-zksync/commit/c30e276903e97b12283bb742659e513bdb9dafe6))
+
 ## [1.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.5.0...@matterlabs/hardhat-zksync-verify-v1.6.0) (2024-07-15)
 
 
