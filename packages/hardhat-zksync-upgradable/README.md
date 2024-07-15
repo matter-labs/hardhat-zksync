@@ -39,7 +39,7 @@ After that, load the your contract artifact and call the deployProxy method from
 const zkWallet = new Wallet("PRIVATE_KEY");
 const deployer = new Deployer(hre, zkWallet);
 const contract = await deployer.loadArtifact("YourContractName");
-await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], { initializer: "initialize" });
+await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet, [initializerFunctionArguments], { initializer: "initialize" });
 ```
 
 The deployProxy method deploys your implementation contract on ZKsync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
@@ -97,19 +97,19 @@ await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract);
 Use the `deployBeaconProxy` method which receives the ZKsync Era wallet, beacon contract, and the implementation (Box) contract with its arguments.
 
 ```
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42]);
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, boxContract, deployer.zkWallet, [42]);
 
 ```
 
 Additionaly, in the options section optionaly include the `deploymentType` and `salt` arguments to configure deployment type and salt.
 
 ```
-await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
+await hre.zkUpgrades.deployBeacon(boxContract, deployer.zkWallet, {
   deploymentType: 'create2',
   salt: '0x5273795673417857416686492163276941983664248508133571812215241323'
 });
 
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42], {
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, boxContract, deployer.zkWallet, [42], {
   deploymentType: 'create2',
   salt: '0x6273795673417857416686492163276941983664248508133571812215241323'
 });
@@ -134,7 +134,7 @@ Optionaly in the other options section include `deploymentType` and `salt` to co
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
-await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, <PROXY_ADDRESS>, myContractV2, {
+await hre.zkUpgrades.upgradeProxy(<PROXY_ADDRESS>, myContractV2, deployer.zkWallet, {
   deploymentType: 'create2',
   salt: '0x6273795673417857416686492163276941983664248508133571812215241323'
 });
@@ -150,14 +150,14 @@ Beacon proxy implementation can be upgraded using a similarly structured method 
 
 ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
-await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, <BEACON_PROXY_ADDRESS>, myContractV2);
+await hre.zkUpgrades.upgradeBeacon(<BEACON_PROXY_ADDRESS>,deployer.zkWallet, myContractV2);
 ```
 
 Optionaly in the other options section include `deploymentType` and `salt` to configure deployment type and salt for deploy of the new implementation.
 
  ```
 const myContractV2 = await deployer.loadArtifact('contractV2');
-await hre.zkUpgrades.upgradeBeacon(deployer.zkWallet, <BEACON_PROXY_ADDRESS>, myContractV2 {
+await hre.zkUpgrades.upgradeBeacon(<BEACON_PROXY_ADDRESS>, myContractV2, deployer.zkWallet, {
   deploymentType: 'create2',
   salt: '0x6273795673417857416686492163276941983664248508133571812215241323'
 });

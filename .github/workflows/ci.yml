@@ -193,7 +193,7 @@ jobs:
           pnpm hardhat run scripts/upgrade-box-uups.ts 
           pnpm hardhat run scripts/upgrade-box.ts
       
-      - name: Test upgradable example
+      - name: Test upgradable factory example
         run: |
           cd examples/upgradable-factory-example
           pnpm hardhat compile

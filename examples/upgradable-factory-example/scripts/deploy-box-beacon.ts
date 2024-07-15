@@ -13,11 +13,11 @@ async function main() {
 
     const deployer = new Deployer(hre, zkWallet);
 
-    const boxFactory = await hre.zksyncEthers.getContractFactory(contractName,deployer.zkWallet);
-    const beacon = await hre.zkUpgrades.deployBeacon(boxFactory);
+    const boxArtifact = await hre.deployer.loadArtifact("Box");
+    const beacon = await hre.zkUpgrades.deployBeacon(boxArtifact,deployer.zkWallet);
     await beacon.waitForDeployment();
 
-    const box = await hre.zkUpgrades.deployBeaconProxy(await beacon.getAddress(), boxFactory, [42], {});
+    const box = await hre.zkUpgrades.deployBeaconProxy(await beacon.getAddress(), boxArtifact,deployer.zkWallet, [42], {});
     await box.waitForDeployment();
 
     box.connect(zkWallet);
