@@ -1,18 +1,5 @@
 # @matterlabs/hardhat-zksync-verify
 
-## [1.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.5.0...@matterlabs/hardhat-zksync-verify-v1.6.0) (2024-07-15)
-
-
-### Features
-
-* allow passing through the query params on verifyURL ([#1207](https://github.com/matter-labs/hardhat-zksync/issues/1207)) ([9869329](https://github.com/matter-labs/hardhat-zksync/commit/9869329770bf1e458f54f3e7ced4fcab8eab84b5))
-
-
-### Bug Fixes
-
-* compiler path issue with compiler breakable changes ([#1212](https://github.com/matter-labs/hardhat-zksync/issues/1212)) ([c4231d9](https://github.com/matter-labs/hardhat-zksync/commit/c4231d922421887af60e6ebcec755ce6856292e6))
-* move hardhat dependency to dev dependencies ([#1188](https://github.com/matter-labs/hardhat-zksync/issues/1188)) ([98ed333](https://github.com/matter-labs/hardhat-zksync/commit/98ed3337c841fdbfed5d356388429ff7a28c1adb))
-
 ## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.4.3...@matterlabs/hardhat-zksync-verify-v1.5.0) (2024-06-19)
 
 
