@@ -51,12 +51,13 @@ updates:
       - dependency-name: chalk
 
   - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-toolbox"
+    directory: "/packages/hardhat-zksync"
     schedule:
       interval: "daily"
     allow:
       - dependency-type: "production"
     ignore:
+      - dependency-name: chalk
 
   - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-upgradable"
