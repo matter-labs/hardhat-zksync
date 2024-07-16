@@ -394,3 +394,13 @@ export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: s
 export async function getLatestEraVersion(): Promise<string> {
     return (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
 }
+
+export function missingLibrariesLogs(parameter: string, pluginName: string, messages: string[]) {
+    if ((global as any)[parameter]) {
+        console.log(chalk.blueBright(`------------- ${pluginName} -------------`));
+        messages.forEach((message) => {
+            console.log(chalk.blueBright(message));
+        });
+        console.log(chalk.blueBright('-------------------------------------------------------------'));
+    }
+}

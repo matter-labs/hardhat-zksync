@@ -12,7 +12,13 @@ import { Provider, Wallet } from 'zksync-ethers';
 import { ethers } from 'ethers';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import fs from 'fs';
-import { ETH_DEFAULT_NETWORK_RPC_URL, LOCAL_CHAIN_IDS, SUPPORTED_L1_TESTNETS } from './constants';
+import chalk from 'chalk';
+import {
+    ETH_DEFAULT_NETWORK_RPC_URL,
+    LIBRARIES_NOT_EXIST_ON_NETWORK_ERROR,
+    LOCAL_CHAIN_IDS,
+    SUPPORTED_L1_TESTNETS,
+} from './constants';
 import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
 import { FactoryOptions, ZkSyncArtifact, ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
@@ -249,4 +255,62 @@ export async function compileContracts(hre: HardhatRuntimeEnvironment, contracts
     hre.config.zksolc.settings.contractsToCompile = contracts;
 
     await hre.run(TASK_COMPILE, { force: true });
+}
+
+export interface DeployLibraryChecker {
+    check: (hre: HardhatRuntimeEnvironment, opts: any) => Promise<boolean>;
+}
+
+export class MissingLibraryFileChecker implements DeployLibraryChecker {
+    public async check(hre: HardhatRuntimeEnvironment): Promise<boolean> {
+        return fs.existsSync(hre.config.zksolc.settings.missingLibrariesPath!);
+    }
+}
+
+export class LibrariesExistOnNetworkChecker implements DeployLibraryChecker {
+    public async check(hre: HardhatRuntimeEnvironment, opts: any): Promise<boolean> {
+        if (!hre.config.zksolc?.settings?.libraries) {
+            return false;
+        }
+
+        return await librariesHaveCode(hre, opts);
+    }
+}
+
+const librariesHaveCode = async (hre: HardhatRuntimeEnvironment, opts: any) => {
+    const checks = [];
+
+    for (const [_, libraries] of Object.entries(hre.config.zksolc.settings.libraries!)) {
+        for (const library of Object.values(libraries)) {
+            checks.push(
+                hre.zksyncEthers.providerL2.getCode(library).then((code) => {
+                    return code === '0x';
+                }),
+            );
+        }
+    }
+
+    const results = await Promise.all(checks);
+    const notExistOnNetwork = results.some((result) => result);
+
+    if (notExistOnNetwork) {
+        hre.config.zksolc.settings.libraries = {};
+        updateHardhatConfigFile(hre, opts.externalConfigObjectPath, opts.exportedConfigObject);
+        fs.rmSync(hre.config.paths.artifacts, { recursive: true });
+        fs.rmSync(hre.config.paths.cache, { recursive: true });
+        throw new ZkSyncEthersPluginError(chalk.yellow(LIBRARIES_NOT_EXIST_ON_NETWORK_ERROR));
+    }
+
+    return notExistOnNetwork;
+};
+
+export async function checkIsDeployLibrariesNeeded(hre: HardhatRuntimeEnvironment, opts?: any) {
+    const checkers: DeployLibraryChecker[] = [new LibrariesExistOnNetworkChecker(), new MissingLibraryFileChecker()];
+    const checks: any[] = [];
+
+    checkers.forEach((checker) => {
+        checks.push(checker.check(hre, opts));
+    });
+    const results = await Promise.all(checks);
+    return results.some((result) => result);
 }

@@ -5,7 +5,6 @@ import * as ethers from 'ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
-import fs from 'fs';
 import chalk from 'chalk';
 import { ZkSyncEthersPluginError } from './errors';
 import { richWallets } from './rich-wallets';
@@ -22,6 +21,7 @@ import {
     getLibraryInfos,
     removeLibraryInfoFile,
     updateHardhatConfigFile,
+    checkIsDeployLibrariesNeeded,
 } from './utils';
 import { FactoryOptions, ZkSyncArtifact, ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
 
@@ -420,60 +420,4 @@ async function extractFactoryDepsRecursive(
     }
 
     return factoryDeps;
-}
-
-export interface DeployLibraryChecker {
-    check: (hre: HardhatRuntimeEnvironment, opts: any) => Promise<boolean>;
-}
-
-export class MissingLibraryFileChecker implements DeployLibraryChecker {
-    public async check(hre: HardhatRuntimeEnvironment): Promise<boolean> {
-        return fs.existsSync(hre.config.zksolc.settings.missingLibrariesPath!);
-    }
-}
-
-export class LibrariesExistOnNetworkChecker implements DeployLibraryChecker {
-    public async check(hre: HardhatRuntimeEnvironment, opts: any): Promise<boolean> {
-        if (!hre.config.zksolc?.settings?.libraries) {
-            return false;
-        }
-
-        return await librariesHaveCode(hre, opts);
-    }
-}
-
-const librariesHaveCode = async (hre: HardhatRuntimeEnvironment, opts: any) => {
-    const checks = [];
-
-    for (const [_, libraries] of Object.entries(hre.config.zksolc.settings.libraries!)) {
-        for (const library of Object.values(libraries)) {
-            checks.push(
-                hre.zksyncEthers.providerL2.getCode(library).then((code) => {
-                    return code === '0x';
-                }),
-            );
-        }
-    }
-
-    const results = await Promise.all(checks);
-    const notExistOnNetwork = results.some((result) => result);
-
-    if (notExistOnNetwork) {
-        hre.config.zksolc.settings.libraries = {};
-        updateHardhatConfigFile(hre, opts.externalConfigObjectPath, opts.exportedConfigObject);
-        await hre.run('compile');
-    }
-
-    return notExistOnNetwork;
-};
-
-async function checkIsDeployLibrariesNeeded(hre: HardhatRuntimeEnvironment, opts?: any) {
-    const checkers: DeployLibraryChecker[] = [new LibrariesExistOnNetworkChecker(), new MissingLibraryFileChecker()];
-    const checks: any[] = [];
-
-    checkers.forEach((checker) => {
-        checks.push(checker.check(hre, opts));
-    });
-    const results = await Promise.all(checks);
-    return results.some((result) => result);
 }

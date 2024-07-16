@@ -43,6 +43,7 @@ import {
     getZkVmNormalizedVersion,
     updateBreakableCompilerConfig,
     getLatestEraVersion,
+    missingLibrariesLogs,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -50,12 +51,14 @@ import {
     ZK_ARTIFACT_FORMAT_VERSION,
     COMPILING_INFO_MESSAGE,
     MISSING_LIBRARIES_NOTICE,
-    COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS,
-    MISSING_LIBRARY_LINK,
     COMPILING_INFO_MESSAGE_ZKVM_SOLC,
     ZKSOLC_COMPILER_PATH_VERSION,
     TASK_UPDATE_SOLIDITY_COMPILERS,
     TASK_DOWNLOAD_ZKSOLC,
+    COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS_DEPLOY,
+    MISSING_LIBRARY_LINK_DEPLOY,
+    COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS_ETHERS,
+    MISSING_LIBRARY_LINK_ETHERS,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -120,6 +123,19 @@ extendEnvironment((hre) => {
         }
     }
 });
+
+const missingLibrariesInstructions = [
+    () =>
+        missingLibrariesLogs('deployer', '@matterlabs/hardhat-zksync-deploy', [
+            COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS_DEPLOY,
+            MISSING_LIBRARY_LINK_DEPLOY,
+        ]),
+    () =>
+        missingLibrariesLogs('zksyncEthers', '@matterlabs/hardhat-zksync-ethers', [
+            COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS_ETHERS,
+            MISSING_LIBRARY_LINK_ETHERS,
+        ]),
+];
 
 task(TASK_COMPILE).setAction(
     async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
@@ -434,9 +450,8 @@ subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
     async ({ compilationJobs }: { compilationJobs: CompilationJob[] }, hre, _runSuper) => {
         if (hre.config.zksolc.settings.areLibrariesMissing) {
-            console.info(chalk.yellow(MISSING_LIBRARIES_NOTICE));
-            console.info(chalk.red(COMPILE_AND_DEPLOY_LIBRARIES_INSTRUCTIONS));
-            console.info(chalk.yellow(MISSING_LIBRARY_LINK));
+            console.info(chalk.blueBright(MISSING_LIBRARIES_NOTICE));
+            missingLibrariesInstructions.forEach((instruction) => instruction());
         } else {
             let count = 0;
             for (const job of compilationJobs) {
