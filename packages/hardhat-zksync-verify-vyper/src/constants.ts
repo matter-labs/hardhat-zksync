@@ -78,7 +78,7 @@ export const CONTRACT_NAME_NOT_FOUND = `You did not provide any contract name. P
 Qualified names look like this: contracts/Example.vy:Example`;
 
 export const COMPILER_VERSION_NOT_SUPPORTED =
-    'Vyper compiler you used to compile the contract is not currently supported by zkSync block explorer!\nPlease use one of the supporting versions';
+    'Vyper compiler you used to compile the contract is not currently supported by ZKsync block explorer!\nPlease use one of the supporting versions';
 
 export const ZK_COMPILER_VERSION_NOT_SUPPORTED =
     'ZkVyper compiler you used to compile the contract is not currently supported.\n Please use one of the supporting versions';

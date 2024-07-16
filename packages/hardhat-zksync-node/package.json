@@ -1,7 +1,7 @@
 {
   "name": "@matterlabs/hardhat-zksync-node",
-  "version": "1.1.0",
-  "description": "Hardhat plugin to run zkSync era-test-node locally",
+  "version": "1.1.1",
+  "description": "Hardhat plugin to run ZKsync era-test-node locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
   "author": "Matter Labs",
@@ -13,7 +13,7 @@
     "smart-contracts",
     "hardhat",
     "hardhat-plugin",
-    "zkSync"
+    "ZKsync"
   ],
   "scripts": {
     "lint": "pnpm eslint",
@@ -63,12 +63,10 @@
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0",
-    "zksync-ethers": "^6.8.0",
     "c8": "^9.1.0"
   },
   "peerDependencies": {
-    "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.8.0"
+    "hardhat": "^2.22.5"
   },
   "prettier": {
     "tabWidth": 4,

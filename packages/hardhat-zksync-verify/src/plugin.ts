@@ -139,6 +139,6 @@ export async function checkVerificationStatus(args: { verificationId: number }, 
         throw new ZkSyncVerifyPluginError(`Backend verification error: ${isValidVerification.getError()}`);
     }
 
-    console.info(chalk.green(`Contract successfully verified on zkSync block explorer!`));
+    console.info(chalk.green(`Contract successfully verified on ZKsync block explorer!`));
     return true;
 }

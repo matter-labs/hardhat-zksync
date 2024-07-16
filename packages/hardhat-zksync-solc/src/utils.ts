@@ -64,7 +64,7 @@ export function filterSupportedOutputSelections(
     return filteredOutputSelection;
 }
 
-export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSolcConfig) {
+export function updateDefaultCompilerConfig(solcConfigData: SolcConfigData, zksolc: ZkSolcConfig) {
     const compiler = solcConfigData.compiler;
 
     const settings = compiler.settings || {};
@@ -83,12 +83,6 @@ export function updateCompilerConf(solcConfigData: SolcConfigData, zksolc: ZkSol
     if (zksolc.settings.forceEvmla !== undefined) {
         console.warn(chalk.blue(COMPILER_ZKSOLC_FORCE_EVMLA_USE));
         delete zksolc.settings.forceEvmla;
-    }
-
-    if (isBreakableCompilerVersion(zksolc.version)) {
-        compiler.settings.detectMissingLibraries = false;
-        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
-        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
     }
 
     const [major, minor] = getVersionComponents(compiler.version);
@@ -116,13 +110,20 @@ const solcUpdaters: SolcUserConfigUpdater[] = [
     new CompilerSolcUserConfigUpdater(),
 ];
 
-export function updateCompilerWithEraVersion(
+export function updateBreakableCompilerConfig(
     solcConfigData: SolcConfigData,
     zksolc: ZkSolcConfig,
     latestEraVersion: string,
     userConfigCompilers: SolcUserConfig[] | Map<string, SolcUserConfig>,
 ) {
     const compiler = solcConfigData.compiler;
+
+    if (isBreakableCompilerVersion(zksolc.version)) {
+        compiler.settings.detectMissingLibraries = false;
+        compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
+        compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
+    }
+
     solcUpdaters
         .find((updater) => updater.suituble(userConfigCompilers, solcConfigData.file))
         ?.update(compiler, latestEraVersion, zksolc, userConfigCompilers, solcConfigData.file);

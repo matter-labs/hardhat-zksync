@@ -1,10 +1,10 @@
 ## hardhat-zksync-deploy 🚀
 
-zkSync Era capabilities for contract deployment are enhanced with this [Hardhat](https://hardhat.org/) plugin, specifically designed to add zkSync-specific features to the network.
+ZKsync Era capabilities for contract deployment are enhanced with this [Hardhat](https://hardhat.org/) plugin, specifically designed to add ZKsync-specific features to the network.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
-This plugin provides utilities for deploying smart contracts on zkSync Era with artifacts built by the [@matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) or [@matterlabs/hardhat-zksync-vyper](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-vyper) plugins.
+This plugin provides utilities for deploying smart contracts on ZKsync Era with artifacts built by the [@matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) or [@matterlabs/hardhat-zksync-vyper](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-vyper) plugins.
 
 ## ⚠️ Version Compatibility Warning
 
@@ -24,8 +24,8 @@ To use features like the deployer extension inside Hardhat Runtime Environment (
 
 ## 📣 Prerequisite
 
-- You are already familiar with deploying smart contracts on zkSync Era. If not, please refer to the first section of the [quickstart tutorail](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html).
-- You have a wallet with sufficient Sepolia or Goerli **ETH** on L1 to pay for bridging funds to zkSync as well as deploying smart contracts. Use the third party faucets to get some test tokens in your account.
+- You are already familiar with deploying smart contracts on ZKsync Era. If not, please refer to the first section of the [quickstart tutorail](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html).
+- You have a wallet with sufficient Sepolia or Goerli **ETH** on L1 to pay for bridging funds to ZKsync as well as deploying smart contracts. Use the third party faucets to get some test tokens in your account.
 - You know how to get your [private key from your MetaMask wallet](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
 
 ## 📥 Installation
@@ -86,7 +86,7 @@ It's main methods are:
  - `public async estimateDeployFee(artifact: ZkSyncArtifact, constructorArguments: any[], deploymentType?: zk.types.DeploymentType): Promise<bigint>`
 
 ```
-   * Sends a deploy transaction to the zkSync network.
+   * Sends a deploy transaction to the ZKsync network.
    * For now it uses defaults values for the transaction parameters:
    *
    * @param contractNameOrArtifact The previously loaded artifact object, or contract name that will be resolved to artifact in the background.
@@ -94,7 +94,7 @@ It's main methods are:
    * @param deploymentType Optional deployment type that relates to the ContractDeployer system contract function to be called. Defaults to deploying regular smart contracts.
    * @param overrides Optional object with additional deploy transaction parameters.
    * @param additionalFactoryDeps Additional contract bytecodes to be added to the factory dependencies list.
-   * The fee amount is requested automatically from the zkSync Era server.
+   * The fee amount is requested automatically from the ZKsync Era server.
    *
    * @returns A contract object.
 ```
@@ -139,7 +139,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
@@ -155,7 +155,7 @@ const config: HardhatUserConfig = {
 
 - `accounts` represents a list of the private keys or mnemonic object for the account used in the deployment process.
 
-`accounts` object will be automaticly be populated with rich accounts if used network is zkSync Era Test Node or zksync-cli Local Node
+`accounts` object will be automaticly be populated with rich accounts if used network is ZKsync Era Test Node or zksync-cli Local Node
 
 To establish a default index per network, which is by default `0`, you can include a `deployerAccounts` section in your `hardhat.config.ts` file. This enables the plugin to utilize the designated default indexes when accessing `deploy` method in deployment scripts, thereby granting greater control over the selection of the deployment account for each network.
 
@@ -171,7 +171,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'],  // The private keys for the accounts used in the deployment process.
@@ -257,7 +257,7 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // ADDITON
@@ -292,15 +292,15 @@ To enable the plugin's usage of global custom deploy scripts, specify the direct
 const config: HardhatUserConfig = {
   // ADDITON
   paths: {
-    deployPaths: "deploy-zkSync",  //single deployment directory
-    deployPaths: ["deploy", "deploy-zkSync"], //multiple deployment directories
+    deployPaths: "deploy-ZKsync",  //single deployment directory
+    deployPaths: ["deploy", "deploy-ZKsync"], //multiple deployment directories
   }
   networks: {
     sepolia: {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
     }
@@ -326,8 +326,8 @@ networks: {
       url: "https://sepolia.era.zksync.dev",
       ethNetwork: "sepolia",
       // ADDITION
-      deployPaths: 'deploy-zkSync', //single deployment directory
-      deployPaths: ['deploy', 'deploy-zkSync'], //multiple deployment directories
+      deployPaths: 'deploy-ZKsync', //single deployment directory
+      deployPaths: ['deploy', 'deploy-ZKsync'], //multiple deployment directories
       zksync: true
     }
   }
@@ -457,7 +457,7 @@ To run a specific script, add the `--script` argument, e.g. `yarn hardhat deploy
 
 To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat deploy-zksync --tags all`. Run all scripts with tag `all`.
 
-`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how zkSync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how ZKsync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 `yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN>`
@@ -487,22 +487,22 @@ The account used for deployment will be the one specified by the `deployerAccoun
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

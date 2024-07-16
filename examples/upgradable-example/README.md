@@ -1,6 +1,6 @@
-# zkSync Era upgradable example
+# ZKsync Era upgradable example
 
-This project demonstrates how to compile and deploy upgradable smart contracts in zkSync Era using the Hardhat plugins.
+This project demonstrates how to compile and deploy upgradable smart contracts in ZKsync Era using the Hardhat plugins.
 
 ## Prerequisites
 
@@ -10,9 +10,9 @@ This project demonstrates how to compile and deploy upgradable smart contracts i
 ## Configuration
 
 Plugin configuration is located in [`hardhat.config.ts`](./hardhat.config.ts).
-You should only change the zkSync network configuration.
+You should only change the ZKsync network configuration.
 
-`hardhat.config.ts` example with zkSync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
+`hardhat.config.ts` example with ZKsync network configured with the name `zkTestnet` and `sepolia` used as the underlying layer 1 network:
 ```ts
 import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
@@ -26,7 +26,7 @@ const config: HardhatUserConfig = {
             url: 'https://sepolia.infura.io/v3/<API_KEY>' // you can use either the URL of the Ethereum Web3 RPC, or the identifier of the network (e.g. `mainnet` or `rinkeby`)
         },
         zkTestnet: {
-            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the zkSync network RPC
+            url: 'https://sepolia.era.zksync.dev', // you should use the URL of the ZKsync network RPC
             ethNetwork: 'sepolia',
             zksync: true
         },
@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
 export default config;
 ```
 
-If you don't specify zkSync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (zkSync RPC URL) will be used.
+If you don't specify ZKsync network (`--network`), `local-setup` with <http://localhost:8545> (Ethereum RPC URL) and <http://localhost:3050> (ZKsync RPC URL) will be used.
 
 ## Usage
 

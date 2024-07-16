@@ -1,6 +1,6 @@
 # hardhat-zksync-node 🚀
 
-zkSync Era [Hardhat](https://hardhat.org/) plugin to run the zkSync era-test-node locally.
+ZKsync Era [Hardhat](https://hardhat.org/) plugin to run the ZKsync era-test-node locally.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -12,6 +12,8 @@ Ensure you are using the correct version of the plugin with ethers:
 
 - For plugin version **≥1.0.0**:
   - Compatible with ethers **v6** (⭐ Recommended)
+
+From version **1.1.1**, the plugin is not dependent on a specific ethers version and can be used for both ethers **v5** and **v6** projects.
 
 ## 📥 Installation
 
@@ -27,7 +29,7 @@ or
 
 `yarn hardhat node-zksync`
 
-This command runs a local zkSync In-memory node by initiating a JSON-RPC server. It uses the provided or default configurations to set up and run the zkSync node, allowing for blockchain operations in a local environment. The command also handles tasks such as downloading the necessary JSON-RPC server binary if it's not already present.
+This command runs a local ZKsync In-memory node by initiating a JSON-RPC server. It uses the provided or default configurations to set up and run the ZKsync node, allowing for blockchain operations in a local environment. The command also handles tasks such as downloading the necessary JSON-RPC server binary if it's not already present.
 
 | 🔧 Command                          | 📄 Description                                                                                                       |
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------|
@@ -51,22 +53,22 @@ This command runs a local zkSync In-memory node by initiating a JSON-RPC server.
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-node](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-node.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-node](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-node.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

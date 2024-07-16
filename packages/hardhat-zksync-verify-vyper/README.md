@@ -1,6 +1,6 @@
 # hardhat-zksync-verify-vyper 🚀
 
-[Hardhat](https://hardhat.org/) plugin that adds zkSync-specific capabilities to verify vyper smart contracts.
+[Hardhat](https://hardhat.org/) plugin that adds ZKsync-specific capabilities to verify vyper smart contracts.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
@@ -20,7 +20,7 @@ Import the plugin in the hardhat.config.ts file:
 
 `import "@matterlabs/hardhat-zksync-verify-vyper";`
 
-Add the verifyURL property to the zkSync Era network in the hardhat.config.ts file as shown below:
+Add the verifyURL property to the ZKsync Era network in the hardhat.config.ts file as shown below:
 
 ```
 networks: {
@@ -28,7 +28,7 @@ networks: {
       url: "https://sepolia.infura.io/v3/<API_KEY>" // The Ethereum Web3 RPC URL (optional).
     },
     zkTestnet: {
-      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of zkSync Era network.
+      url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
       // Verification endpoint for Sepolia
@@ -40,12 +40,12 @@ networks: {
 
 | 🔧 properties              | 📄 Description                                                                                                                       |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| zkTestnet                  | Arbitrary zkSync Era network name. You can select this as the default network using the defaultNetwork property.                     |
-| url                        | Field is required for all zkSync Era and Ethereum networks used by this plugin. For zkSync network, set it to true                   |
+| zkTestnet                  | Arbitrary ZKsync Era network name. You can select this as the default network using the defaultNetwork property.                     |
+| url                        | Field is required for all ZKsync Era and Ethereum networks used by this plugin. For ZKsync network, set it to true                   |
 | ethNetwork                 | Field with the URL of the Ethereum node.                                                                                             |
-| ethers                     | Provider for the network if the configuration is not provided. This field is required for all zkSync networks used by this plugin.   |
-| zksync                     | Flag that indicates a zkSync Era network configuration. This field is set to true for all zkSync Era networks.                       |
-| verifyURL                  | Field that points to the verification endpoint for the specific zkSync network. This parameter is optional.                          |
+| ethers                     | Provider for the network if the configuration is not provided. This field is required for all ZKsync networks used by this plugin.   |
+| zksync                     | Flag that indicates a ZKsync Era network configuration. This field is set to true for all ZKsync Era networks.                       |
+| verifyURL                  | Field that points to the verification endpoint for the specific ZKsync network. This parameter is optional.                          |
 
 Default values for verifyURL are:
 
@@ -97,22 +97,22 @@ const verificationId = await hre.run("verify:verify:vyper", {
 ```
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html), zkSync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on zkSync Era.\
-[Hardhat zkSync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat zkSync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on zkSync Era.
+[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
+[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Feel free to open any issue or send a pull request.
 
-Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to zkSync hardhat tooling base repository.  
+Go to [CONTRIBUTING.md](https://github.com/matter-labs/hardhat-zksync/blob/main/.github/CONTRIBUTING.md) to learn about steps and best practices for contributing to ZKsync hardhat tooling base repository.  
 
 
 ## 🙌 Feedback, help and news
 
-[zkSync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
-[Follow zkSync Era on Twitter](https://twitter.com/zksync)
+[ZKsync Era Discord server](https://join.zksync.dev/): for questions and feedback.\
+[Follow ZKsync Era on Twitter](https://twitter.com/zksync)
 
 ## Happy building! 👷‍♀️👷‍♂️

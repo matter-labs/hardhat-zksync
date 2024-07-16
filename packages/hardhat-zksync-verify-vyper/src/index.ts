@@ -18,7 +18,7 @@ extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;
 });
 
-task(TASK_VERIFY_VYPER, 'Verifies contract on Ethereum and zkSync networks')
+task(TASK_VERIFY_VYPER, 'Verifies contract on Ethereum and ZKsync networks')
     .addOptionalPositionalParam('address', 'Address of the contract to verify')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',

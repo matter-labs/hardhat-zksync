@@ -10,6 +10,7 @@ export const DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION = '1.3.14';
 export const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 export const TASK_UPDATE_SOLIDITY_COMPILERS = 'compile:update-solidity-compilers';
+export const TASK_DOWNLOAD_ZKSOLC = 'compile:zksolc:download';
 
 export const ZKSOLC_COMPILER_PATH_VERSION = 'local_or_remote';
 
@@ -56,10 +57,10 @@ export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string)
 export const COMPILER_BINARY_CORRUPTION_ERROR = (compilerPath: string) =>
     `The zksolc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: string) =>
-    `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and solc v${solcVersion}`;
+    `Compiling contracts for ZKsync Era with zksolc v${zksolcVersion} and solc v${solcVersion}`;
 
 export const COMPILING_INFO_MESSAGE_ZKVM_SOLC = (zksolcVersion: string, zkvmSolcVersion: string) =>
-    `Compiling contracts for zkSync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
+    `Compiling contracts for ZKsync Era with zksolc v${zksolcVersion} and zkvm-solc v${zkvmSolcVersion}`;
 export const COMPILER_BINARY_CORRUPTION_ERROR_ZKVM_SOLC = (compilerPath: string) =>
     `The zkvm-solc binary at path ${compilerPath} is corrupted. Please delete it and try again.`;
 export const COMPILER_ZKSOLC_VERSION_WITH_ZKVM_SOLC_WARN = `zkVm (eraVersion) compiler is supported only with usage of zksolc version >= ${ZKSOLC_COMPILER_VERSION_MIN_VERSION_WITH_ZKVM_COMPILER}. Switching by default to the native solc compiler.`;
@@ -70,7 +71,7 @@ export const COMPILER_ZKSOLC_IS_SYSTEM_USE = `isSystem flag is deprecated. Pleas
 export const COMPILER_ZKSOLC_FORCE_EVMLA_USE = `forceEvmla flag is deprecated. Please use forceEVMLA instead. Automatically switched to the new naming with the provided value.`;
 
 export const ZKVM_SOLC_COMPILER_NEEDS_ERA_VERSION = (eraVersion: string, solcVersion: string) =>
-    `Using zkSync edition of solc (zkSync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
+    `Using ZKsync edition of solc (ZKsync Era Solidity Compiler) as default with version ${eraVersion} for solidity version ${solcVersion}.`;
 export const COMPILERS_CONFLICT_ZKVM_SOLC = (version: string) =>
     `Your Hardhat configuration has conflicting Solidity compiler versions for version ${version}. Specify either a compiler version with zkVm support (eraVersion) or one without it.`;
 export const MISSING_LIBRARIES_NOTICE =
