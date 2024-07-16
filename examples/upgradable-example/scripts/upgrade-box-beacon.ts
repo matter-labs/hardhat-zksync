@@ -14,10 +14,10 @@ async function main() {
 
     const contractName = 'Box';
     const contract = await deployer.loadArtifact(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, contract);
+    const beacon = await hre.zkUpgrades.deployBeacon(contract, deployer.zkWallet);
     await beacon.deployed();
 
-    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, contract, [42]);
+    const boxBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beacon, contract, deployer.zkWallet, [42]);
     await boxBeaconProxy.deployed();
 
     // upgrade beacon
@@ -30,7 +30,7 @@ async function main() {
         boxV2Implementation.abi,
         boxV2Implementation.bytecode,
         deployer.zkWallet,
-        deployer.deploymentType,
+        'create',
     );
     const upgradedBox = attachTo.attach(boxBeaconProxy.address);
 

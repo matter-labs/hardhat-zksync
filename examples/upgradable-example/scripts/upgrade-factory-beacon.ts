@@ -12,10 +12,10 @@ async function main() {
 
     const contractName = 'Factory';
     const contract = await deployer.loadArtifact(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, contract);
+    const beacon = await hre.zkUpgrades.deployBeacon(contract, deployer.zkWallet);
     await beacon.deployed();
 
-    const factoryBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, contract, []);
+    const factoryBeaconProxy = await hre.zkUpgrades.deployBeaconProxy(beacon, contract, deployer.zkWallet, []);
     await factoryBeaconProxy.deployed();
 
     // upgrade beacon
@@ -28,7 +28,7 @@ async function main() {
         factoryV2Implementation.abi,
         factoryV2Implementation.bytecode,
         deployer.zkWallet,
-        deployer.deploymentType,
+        'create',
     );
     const upgradedFactory = attachTo.attach(factoryBeaconProxy.address);
     upgradedFactory.connect(zkWallet);
