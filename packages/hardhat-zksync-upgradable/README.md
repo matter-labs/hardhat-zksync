@@ -39,7 +39,7 @@ After that, load the your contract artifact and call the deployProxy method from
 const zkWallet = new Wallet("PRIVATE_KEY");
 const deployer = new Deployer(hre, zkWallet);
 const contract = await deployer.loadArtifact("YourContractName");
-await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], { initializer: "initialize" });
+await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet [initializerFunctionArguments], { initializer: "initialize" });
 ```
 
 The deployProxy method deploys your implementation contract on zkSync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
@@ -51,7 +51,7 @@ Additionaly, in the options section optionaly include the folowing arguments to 
  - `saltProxy`
 
 ```
-await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], 
+await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet, [initializerFunctionArguments], 
   { initializer: "initialize",
     saltImpl: "0x4273795673417857416686492163276941983664248508133571812215241323",
     deploymentTypeImpl: "create2",
@@ -88,25 +88,25 @@ const boxContract = await deployer.loadArtifact(contractName);
 Deploy the beacon contract using `deployBeacon` method from the `zkUpgrades`:
 
 ```
-await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract);
+await hre.zkUpgrades.deployBeacon(boxContract,deployer.zkWallet);
 ```
 
 Use the `deployBeaconProxy` method which receives the zkSync Era wallet, beacon contract, and the implementation (Box) contract with its arguments.
 
 ```
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42]);
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, boxContract, deployer.zkWallet, [42]);
 ```
 
 Additionaly, in the options section optionaly include the `deploymentType` and `salt` arguments to configure deployment type and salt.
 
 ```
-const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
+const beacon = await hre.zkUpgrades.deployBeacon(boxContract,deployer.zkWallet, {
   deploymentType: 'create2',
   salt: '0x5273795673417857416686492163276941983664248508133571812215241323'
 });
 await beacon.deployed();
 
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42], {
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, deployer.zkWallet, boxContract, [42], {
   deploymentType: 'create2',
   salt: '0x6273795673417857416686492163276941983664248508133571812215241323'
 });
