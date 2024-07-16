@@ -122,7 +122,8 @@ export async function upgradeBeacon(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(taskArgs.beaconAddress, contractV2, wallet, {
+    // hre.zkUpgrades.upgradeBeacon()
+    const beaconUpgrade = await hre.zkUpgrades.upgradeBeacon(wallet, taskArgs.beaconAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
     });
@@ -151,7 +152,7 @@ export async function upgradeProxy(
 
     const contractV2 = await deployer.loadArtifact(taskArgs.contractName);
 
-    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(taskArgs.proxyAddress, contractV2, wallet, {
+    const proxyUpgrade = await hre.zkUpgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
     });

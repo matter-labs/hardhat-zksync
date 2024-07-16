@@ -5,67 +5,108 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import chalk from 'chalk';
 import assert from 'assert';
-import { ContractAddressOrInstance, extractFactoryDeps, getContractAddress } from '../utils/utils-general';
+import {
+    ContractAddressOrInstance,
+    extractFactoryDeps,
+    getArtifactFromBytecode,
+    getContractAddress,
+} from '../utils/utils-general';
 import { UpgradeBeaconOptions } from '../utils/options';
 import { deployBeaconImpl } from '../proxy-deployment/deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
 
-export type UpgradeBeaconFunction = (
+export type UpgradeBeaconFactory = (
     beacon: ContractAddressOrInstance,
-    artifact: ZkSyncArtifact | zk.ContractFactory,
-    wallet?: zk.Wallet,
+    factory: zk.ContractFactory,
     opts?: UpgradeBeaconOptions,
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
-export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconFunction {
-    return async function upgradeBeacon(
-        beaconImplementation,
-        newImplementationArtifact: ZkSyncArtifact | zk.ContractFactory,
+export type UpgradeBeaconArtifact = (
+    wallet: zk.Wallet,
+    beacon: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    opts?: UpgradeBeaconOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
+
+export async function upgradeBeaconFactory(
+    hre: HardhatRuntimeEnvironment,
+    beacon: ContractAddressOrInstance,
+    factory: zk.ContractFactory,
+    opts?: UpgradeBeaconOptions,
+    quiet?: boolean,
+): Promise<zk.Contract> {
+    const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
+    if (!wallet) {
+        throw new ZkSyncUpgradablePluginError('Wallet is required for upgrade.');
+    }
+
+    opts = opts || {};
+    opts.provider = wallet.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
+
+    return upgradeBeacon(hre, wallet, beacon, factory, opts, quiet);
+}
+
+export async function upgradeBeaconArtifact(
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+    beacon: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    opts?: UpgradeBeaconOptions,
+    quiet?: boolean,
+): Promise<zk.Contract> {
+    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    opts = opts || {};
+    opts.provider = wallet.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, artifact as ZkSyncArtifact);
+
+    return upgradeBeacon(hre, wallet, beacon, factory, opts, quiet);
+}
+
+async function upgradeBeacon(
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+    beaconImplementation: ContractAddressOrInstance,
+    newImplementationFactory: zk.ContractFactory,
+    opts: UpgradeBeaconOptions = {},
+    quiet: boolean = false,
+) {
+    const beaconImplementationAddress = await getContractAddress(beaconImplementation);
+    const { impl: nextImpl } = await deployBeaconImpl(hre, newImplementationFactory, opts, beaconImplementationAddress);
+    if (!quiet) {
+        console.info(chalk.green('New beacon impl deployed at', nextImpl));
+    }
+
+    const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+        x.includes(path.sep + UPGRADABLE_BEACON_JSON),
+    );
+    assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
+    const upgradeableBeaconContract = await import(upgradableBeaconPath);
+
+    const upgradeableBeaconFactory = new zk.ContractFactory<any[], zk.Contract>(
+        upgradeableBeaconContract.abi,
+        upgradeableBeaconContract.bytecode,
         wallet,
-        opts: UpgradeBeaconOptions = {},
-        quiet: boolean = false,
-    ) {
-        let factory: zk.ContractFactory;
+    );
 
-        if (newImplementationArtifact instanceof zk.ContractFactory) {
-            factory = newImplementationArtifact;
+    const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress);
+    const upgradeTx = await beaconContract.upgradeTo(nextImpl);
+
+    // @ts-ignore Won't be readonly because beaconContract was created through attach.
+    beaconContract.deployTransaction = upgradeTx;
+    return beaconContract;
+}
+
+export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconArtifact | UpgradeBeaconFactory {
+    return async function (...args: Parameters<UpgradeBeaconArtifact | UpgradeBeaconFactory>): Promise<zk.Contract> {
+        const target = args[0];
+        if (target instanceof zk.ContractFactory) {
+            return await upgradeBeaconFactory(hre, ...(args as Parameters<UpgradeBeaconFactory>));
         } else {
-            factory = new zk.ContractFactory(
-                newImplementationArtifact.abi,
-                newImplementationArtifact.bytecode,
-                wallet,
-                opts.deploymentType,
-            );
-            opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+            return upgradeBeaconArtifact(hre, ...(args as Parameters<UpgradeBeaconArtifact>));
         }
-        if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
-
-        opts.provider = wallet.provider;
-
-        const beaconImplementationAddress = await getContractAddress(beaconImplementation);
-        const { impl: nextImpl } = await deployBeaconImpl(hre, factory, opts, beaconImplementationAddress);
-        if (!quiet) {
-            console.info(chalk.green('New beacon impl deployed at', nextImpl));
-        }
-
-        const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-            x.includes(path.sep + UPGRADABLE_BEACON_JSON),
-        );
-        assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
-        const upgradeableBeaconContract = await import(upgradableBeaconPath);
-
-        const upgradeableBeaconFactory = new zk.ContractFactory<any[], zk.Contract>(
-            upgradeableBeaconContract.abi,
-            upgradeableBeaconContract.bytecode,
-            wallet,
-        );
-
-        const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress);
-        const upgradeTx = await beaconContract.upgradeTo(nextImpl);
-
-        // @ts-ignore Won't be readonly because beaconContract was created through attach.
-        beaconContract.deployTransaction = upgradeTx;
-        return beaconContract;
     };
 }

@@ -83,9 +83,9 @@ describe('Upgradable plugin tests', function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(
+                this.deployer.zkWallet,
                 await boxProxy.getAddress(),
                 BoxV2,
-                this.deployer.zkWallet,
             );
             await box2.waitForDeployment();
             // give it some time to upgrade
@@ -189,9 +189,9 @@ describe('Upgradable plugin tests', function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(
+                this.deployer.zkWallet,
                 await boxUupsProxy.getAddress(),
                 BoxV2,
-                this.deployer.zkWallet,
             );
             await new Promise((resolve) => setTimeout(resolve, 1500));
             box2.connect(this.deployer.zkWallet);
@@ -205,7 +205,7 @@ describe('Upgradable plugin tests', function () {
             const BoxV2 = await this.deployer.loadArtifact(contractName);
 
             await assert.rejects(
-                this.env.zkUpgrades.upgradeProxy(await boxUupsProxy.getAddress(), BoxV2, this.zkWallet2),
+                this.env.zkUpgrades.upgradeProxy(this.zkWallet2, await boxUupsProxy.getAddress(), BoxV2),
                 (error: any) => error.message.includes(authorizationErrors.CALLER_NOT_OWNER),
             );
         });
@@ -217,9 +217,9 @@ describe('Upgradable plugin tests', function () {
 
             const BoxV2 = await this.deployer.loadArtifact(contractName);
             const box2 = await this.env.zkUpgrades.upgradeProxy(
+                this.zkWallet2,
                 await boxUupsPublicProxy.getAddress(),
                 BoxV2,
-                this.zkWallet2,
             );
             await box2.waitForDeployment();
             console.info(chalk.green('Successfully upgraded BoxUupsPublic to BoxUupsV2'));
@@ -252,7 +252,7 @@ describe('Upgradable plugin tests', function () {
             const boxV2 = await this.deployer.loadArtifact(contractName);
 
             await assert.rejects(
-                this.env.zkUpgrades.upgradeProxy(await boxUupsProxy.getAddress(), boxV2, this.deployer.zkWallet, {
+                this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, await boxUupsProxy.getAddress(), boxV2, {
                     kind: 'uups',
                 }),
                 (error: any) =>
@@ -297,9 +297,9 @@ describe('Upgradable plugin tests', function () {
             const boxV2Implementation = await this.deployer.loadArtifact(implContractName);
 
             await this.env.zkUpgrades.upgradeBeacon(
+                this.deployer.zkWallet,
                 await beaconImplementation.getAddress(),
                 boxV2Implementation,
-                this.deployer.zkWallet,
             );
 
             const attachTo = new ContractFactory<any[], Contract>(
@@ -396,9 +396,9 @@ describe('Upgradable plugin tests', function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(
+                    this.deployer.zkWallet,
                     await deployedContract.getAddress(),
                     contractV2,
-                    this.deployer.zkWallet,
                 ),
                 (error: any) => error.message.includes(authorizationErrors.WRONG_PROXY_ADMIN),
             );
@@ -504,9 +504,9 @@ describe('Upgradable plugin tests', function () {
 
             const boxV2Artifact = await this.deployer.loadArtifact(contractName);
             const boxV2 = await this.env.zkUpgrades.upgradeProxy(
+                this.deployer.zkWallet,
                 await boxProxy.getAddress(),
                 boxV2Artifact,
-                this.deployer.zkWallet,
             );
             await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -522,7 +522,7 @@ describe('Upgradable plugin tests', function () {
             const boxV2 = await this.deployer.loadArtifact(contractName);
 
             await assert.rejects(
-                this.env.zkUpgrades.upgradeProxy(await boxProxy.getAddress(), boxV2, this.deployer.zkWallet),
+                this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, await boxProxy.getAddress(), boxV2),
                 (error: any) =>
                     error.message.includes(storageLayoutErrors.INCOMPATIBLE_STORAGE_LAYOUT) &&
                     error.message.includes(storageLayoutErrors.INSERTED_VARIABLE) &&
@@ -540,9 +540,9 @@ describe('Upgradable plugin tests', function () {
 
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(
+                    this.deployer.zkWallet,
                     await boxWithStorageGap.getAddress(),
                     boxV2Artifact,
-                    this.deployer.zkWallet,
                 ),
                 (error: any) =>
                     error.message.includes(storageLayoutErrors.INCOMPATIBLE_STORAGE_LAYOUT) &&
@@ -556,9 +556,9 @@ describe('Upgradable plugin tests', function () {
 
             const boxV2Artifact = await this.deployer.loadArtifact(contractName);
             const boxV2 = await this.env.zkUpgrades.upgradeProxy(
+                this.deployer.zkWallet,
                 await boxWithStorageGap.getAddress(),
                 boxV2Artifact,
-                this.deployer.zkWallet,
             );
             await new Promise((resolve) => setTimeout(resolve, 1500));
 

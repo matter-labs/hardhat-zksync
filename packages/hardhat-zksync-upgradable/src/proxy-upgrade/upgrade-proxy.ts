@@ -10,108 +10,142 @@ import chalk from 'chalk';
 import assert from 'assert';
 import { ContractAddressOrInstance } from '../interfaces';
 import { UpgradeProxyOptions } from '../utils/options';
-import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
+import { extractFactoryDeps, getArtifactFromBytecode, getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
+import { ZkSyncUpgradablePluginError } from '../errors';
 
-export type UpgradeFunction = (
+export type UpgradeProxyFactory = (
     proxy: ContractAddressOrInstance,
-    artifact: ZkSyncArtifact | zk.ContractFactory,
-    wallet?: zk.Wallet,
+    factory: zk.ContractFactory,
     opts?: UpgradeProxyOptions,
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
-export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
-    return async function upgradeProxy(
-        proxy,
-        newImplementationArtifact: ZkSyncArtifact | zk.ContractFactory,
-        wallet,
-        opts: UpgradeProxyOptions = {},
-        quiet: boolean = false,
-    ): Promise<zk.Contract> {
-        const proxyAddress = await getContractAddress(proxy);
+export type UpgradeProxyArtifact = (
+    wallet: zk.Wallet,
+    proxy: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    opts?: UpgradeProxyOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
 
-        let factory: zk.ContractFactory;
+type Upgrader = (nextImpl: string, call?: string) => Promise<TransactionResponse>;
 
-        if (newImplementationArtifact instanceof zk.ContractFactory) {
-            factory = newImplementationArtifact;
+export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeProxyFactory | UpgradeProxyArtifact {
+    return async function (...args: Parameters<UpgradeProxyFactory | UpgradeProxyArtifact>): Promise<zk.Contract> {
+        const target = args[0];
+        if (target instanceof zk.ContractFactory) {
+            return await upgradeProxyFactory(hre, ...(args as Parameters<UpgradeProxyFactory>));
         } else {
-            factory = new zk.ContractFactory(
-                newImplementationArtifact.abi,
-                newImplementationArtifact.bytecode,
-                wallet,
-                opts.deploymentType,
-            );
-            opts.factoryDeps = await extractFactoryDeps(hre, newImplementationArtifact);
+            return upgradeProxyArtifact(hre, ...(args as Parameters<UpgradeProxyArtifact>));
         }
-
-        if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
-
-        opts.provider = wallet.provider;
-        const { impl: nextImpl } = await deployProxyImpl(hre, factory, opts, proxyAddress);
-
-        const upgradeTo = await getUpgrader(proxyAddress, wallet);
-        const call = encodeCall(factory, opts.call);
-        const upgradeTx = await upgradeTo(nextImpl, call);
-
-        if (!quiet) {
-            console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
-        }
-
-        const inst = factory.attach(proxyAddress);
-        // @ts-ignore Won't be readonly because inst was created through attach.
-        inst.deployTransaction = upgradeTx;
-        return inst as zk.Contract;
     };
+}
 
-    type Upgrader = (nextImpl: string, call?: string) => Promise<TransactionResponse>;
+export async function upgradeProxyFactory(
+    hre: HardhatRuntimeEnvironment,
+    proxy: ContractAddressOrInstance,
+    factory: zk.ContractFactory,
+    opts?: UpgradeProxyOptions,
+    quiet?: boolean,
+): Promise<zk.Contract> {
+    const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
+    if (!wallet) {
+        throw new ZkSyncUpgradablePluginError('Wallet is required for upgrade.');
+    }
 
-    async function getUpgrader(proxyAddress: string, wallet: zk.Wallet): Promise<Upgrader> {
-        const provider = wallet.provider as zk.Provider;
+    opts = opts || {};
+    opts.provider = wallet.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
+    return upgradeProxy(hre, wallet, proxy, factory, opts, quiet);
+}
 
-        const adminAddress = await getAdminAddress(provider, proxyAddress);
-        const adminBytecode = await getCode(provider, adminAddress);
+export async function upgradeProxyArtifact(
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+    proxy: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    opts?: UpgradeProxyOptions,
+    quiet?: boolean,
+): Promise<zk.Contract> {
+    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    opts = opts || {};
+    opts.provider = wallet.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, artifact as ZkSyncArtifact);
+    return upgradeProxy(hre, wallet, proxy, factory, opts, quiet);
+}
 
-        if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + ITUP_JSON));
-            assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
-            const transparentUpgradeableProxyContract = await import(TUPPath);
+async function upgradeProxy(
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+    proxy: ContractAddressOrInstance,
+    factory: zk.ContractFactory,
+    opts: UpgradeProxyOptions = {},
+    quiet: boolean = false,
+) {
+    const proxyAddress = await getContractAddress(proxy);
 
-            const transparentUpgradeableProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
-                transparentUpgradeableProxyContract.abi,
-                transparentUpgradeableProxyContract.bytecode,
-                wallet,
-            );
-            const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
+    const { impl: nextImpl } = await deployProxyImpl(hre, factory, opts, proxyAddress);
 
-            return (nextImpl, call) => (call ? proxy.upgradeToAndCall(nextImpl, call) : proxy.upgradeTo(nextImpl));
-        } else {
-            const manifest = await Manifest.forNetwork(provider);
+    const upgradeTo = await getUpgrader(hre, proxyAddress, wallet);
+    const call = encodeCall(factory, opts.call);
+    const upgradeTx = await upgradeTo(nextImpl, call);
 
-            const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                x.includes(path.sep + PROXY_ADMIN_JSON),
-            );
-            assert(proxyAdminPath, 'Proxy admin artifact not found');
-            const proxyAdminContract = await import(proxyAdminPath);
+    if (!quiet) {
+        console.info(chalk.green(`Contract successfully upgraded to ${nextImpl} with tx ${upgradeTx.hash}`));
+    }
 
-            const proxyAdminFactory = new zk.ContractFactory<any[], zk.Contract>(
-                proxyAdminContract.abi,
-                proxyAdminContract.bytecode,
-                wallet,
-            );
+    const inst = factory.attach(proxyAddress);
+    // @ts-ignore Won't be readonly because inst was created through attach.
+    inst.deployTransaction = upgradeTx;
+    return inst as zk.Contract;
+}
 
-            const admin = proxyAdminFactory.attach(adminAddress);
-            const manifestAdmin = await manifest.getAdmin();
+async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string, wallet: zk.Wallet): Promise<Upgrader> {
+    const provider = wallet.provider as zk.Provider;
 
-            if ((await admin.getAddress()) !== manifestAdmin?.address) {
-                throw new Error('Proxy admin is not the one registered in the network manifest');
-            }
+    const adminAddress = await getAdminAddress(provider, proxyAddress);
+    const adminBytecode = await getCode(provider, adminAddress);
 
-            return (nextImpl, call) =>
-                call ? admin.upgradeAndCall(proxyAddress, nextImpl, call) : admin.upgrade(proxyAddress, nextImpl);
+    if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
+        const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + ITUP_JSON));
+        assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
+        const transparentUpgradeableProxyContract = await import(TUPPath);
+
+        const transparentUpgradeableProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
+            transparentUpgradeableProxyContract.abi,
+            transparentUpgradeableProxyContract.bytecode,
+            wallet,
+        );
+        const proxy = transparentUpgradeableProxyFactory.attach(proxyAddress);
+
+        return (nextImpl, call) => (call ? proxy.upgradeToAndCall(nextImpl, call) : proxy.upgradeTo(nextImpl));
+    } else {
+        const manifest = await Manifest.forNetwork(provider);
+
+        const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+            x.includes(path.sep + PROXY_ADMIN_JSON),
+        );
+        assert(proxyAdminPath, 'Proxy admin artifact not found');
+        const proxyAdminContract = await import(proxyAdminPath);
+
+        const proxyAdminFactory = new zk.ContractFactory<any[], zk.Contract>(
+            proxyAdminContract.abi,
+            proxyAdminContract.bytecode,
+            wallet,
+        );
+
+        const admin = proxyAdminFactory.attach(adminAddress);
+        const manifestAdmin = await manifest.getAdmin();
+
+        if ((await admin.getAddress()) !== manifestAdmin?.address) {
+            throw new Error('Proxy admin is not the one registered in the network manifest');
         }
+
+        return (nextImpl, call) =>
+            call ? admin.upgradeAndCall(proxyAddress, nextImpl, call) : admin.upgrade(proxyAddress, nextImpl);
     }
 }
 
