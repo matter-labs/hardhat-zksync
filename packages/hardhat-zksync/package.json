@@ -55,9 +55,9 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "^1.2.0",
-    "@matterlabs/hardhat-zksync-verify": "^1.5.0",
+    "@matterlabs/hardhat-zksync-verify": "^1.6.0",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
-    "@matterlabs/hardhat-zksync-node": "^1.1.0",
+    "@matterlabs/hardhat-zksync-node": "^1.1.1",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@openzeppelin/contracts": "^4.9.2",
