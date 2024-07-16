@@ -18,8 +18,8 @@ async function main() {
 
     // upgrade proxy implementation
 
-    const boxV2Factory = await hre.zksyncEthers.getContractFactory('BoxV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet,await box.getAddress(), boxV2Factory);
+    const boxV2Factory = await hre.zksyncEthers.getContractFactory('BoxV2',deployer.zkWallet);
+    const upgradedBox = await hre.zkUpgrades.upgradeProxy(await box.getAddress(), boxV2Factory);
     console.info(chalk.green('Successfully upgraded Box to BoxV2'));
 
     upgradedBox.connect(zkWallet);
