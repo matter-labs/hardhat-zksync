@@ -44,9 +44,9 @@ export async function deployBeacon(
     await beacon.waitForDeployment();
 
     const proxy = await hre.zkUpgrades.deployBeaconProxy(
+        deployer.zkWallet,
         await beacon.getAddress(),
         contract,
-        deployer.zkWallet,
         constructorArguments,
         {
             deploymentType: taskArgs.deploymentTypeProxy,
@@ -90,7 +90,7 @@ export async function deployProxy(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
 
-    const proxy = await hre.zkUpgrades.deployProxy(contract, wallet, constructorArguments, {
+    const proxy = await hre.zkUpgrades.deployProxy(wallet, contract, constructorArguments, {
         deploymentTypeImpl: taskArgs.deploymentTypeImpl,
         saltImpl: taskArgs.saltImpl,
         deploymentTypeProxy: taskArgs.deploymentTypeProxy,

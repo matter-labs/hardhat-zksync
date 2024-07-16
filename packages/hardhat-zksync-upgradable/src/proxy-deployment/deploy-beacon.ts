@@ -23,8 +23,8 @@ export type DeployBeaconFactory = (
 ) => Promise<zk.Contract>;
 
 export type DeployBeaconArtifact = (
-    artifact: ZkSyncArtifact,
     wallet: zk.Wallet,
+    artifact: ZkSyncArtifact,
     args?: unknown[],
     opts?: DeployBeaconOptions,
     quiet?: boolean,
@@ -67,8 +67,8 @@ export async function deployBeaconFactory(
 
 export async function deployBeaconArtifact(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
     wallet: zk.Wallet,
+    artifact: ZkSyncArtifact,
     args?: unknown[],
     opts?: DeployBeaconOptions,
     quiet?: boolean,
