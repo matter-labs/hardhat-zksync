@@ -36,7 +36,7 @@ updates:
       # zksync-web3 package relies on older versions of ethers package
       - dependency-name: ethers
 
-    - package-ecosystem: "npm"
+  - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync"
     schedule:
       interval: "daily"
