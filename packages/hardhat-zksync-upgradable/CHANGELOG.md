@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.0...@matterlabs/hardhat-zksync-upgradable-v0.5.1) (2024-06-27)
+
+
+### Bug Fixes
+
+* estimateGas support for custom chains ([#1194](https://github.com/matter-labs/hardhat-zksync/issues/1194)) ([ceb9c4f](https://github.com/matter-labs/hardhat-zksync/commit/ceb9c4f1dc0fbb33b42acfa480f7012d86501c40))
+
 ## [0.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.4.1...@matterlabs/hardhat-zksync-upgradable-v0.5.0) (2024-06-20)
 
 
