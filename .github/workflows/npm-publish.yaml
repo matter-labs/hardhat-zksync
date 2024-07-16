@@ -22,9 +22,7 @@ on:
         options: 
           - hardhat-zksync-deploy
           - hardhat-zksync-upgradable
-          - hardhat-zksync-verify
           - hardhat-zksync
-          - hardhat-zksync-node
 
 jobs:
   publish:
