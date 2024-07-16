@@ -28,9 +28,9 @@ export type DeployBeaconProxyFactory = (
 ) => Promise<zk.Contract>;
 
 export type DeployBeaconProxyArtifact = (
+    wallet: zk.Wallet,
     beacon: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
-    wallet: zk.Wallet,
     args?: unknown[],
     opts?: DeployBeaconProxyOptions,
     quiet?: boolean,
@@ -53,9 +53,9 @@ export function makeDeployBeaconProxy(
 
 export function deployBeaconProxyArtifact(
     hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
     beacon: ContractAddressOrInstance,
     artifact: ZkSyncArtifact,
-    wallet: zk.Wallet,
     args: unknown[] = [],
     opts: DeployBeaconProxyOptions = {},
     quiet: boolean = false,

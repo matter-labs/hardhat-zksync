@@ -14,10 +14,10 @@ async function main() {
     const deployer = new Deployer(hre, zkWallet);
 
     const factoryContract = await deployer.loadArtifact(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(factoryContract, deployer.zkWallet);
+    const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, factoryContract);
     await beacon.deployed();
 
-    const factory = await hre.zkUpgrades.deployBeaconProxy(beacon, factoryContract, deployer.zkWallet, []);
+    const factory = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon.address, factoryContract, []);
     await factory.deployed();
 
     factory.connect(zkWallet);

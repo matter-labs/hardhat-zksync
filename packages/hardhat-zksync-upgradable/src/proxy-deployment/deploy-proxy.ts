@@ -23,8 +23,8 @@ export type DeployFunctionFactory = (
 ) => Promise<zk.Contract>;
 
 export type DeployFunctionArtifact = (
-    artifact: ZkSyncArtifact,
     wallet: zk.Wallet,
+    artifact: ZkSyncArtifact,
     args?: unknown[],
     opts?: DeployProxyOptions,
     quiet?: boolean,
@@ -64,8 +64,8 @@ export function deployProxyFactory(
 
 export async function deployProxyArtifact(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
     wallet: zk.Wallet,
+    artifact: ZkSyncArtifact,
     args?: unknown[],
     opts?: DeployProxyOptions,
     quiet?: boolean,

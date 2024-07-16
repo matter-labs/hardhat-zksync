@@ -47,7 +47,7 @@ describe('Test transparent upgradable proxy deployment and upgrade functionaliti
         console.info(chalk.yellow(`Deploying ${contractName} transparent proxy...`));
 
         const boxArtifact = await this.deployer.loadArtifact(contractName);
-        boxProxy = await this.env.zkUpgrades.deployProxy(boxArtifact, this.deployer.zkWallet, [42], {
+        boxProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
             initializer: 'store',
         });
     });
@@ -82,7 +82,7 @@ describe('Test transparent upgradable proxy deployment and upgrade functionaliti
         const contract = await this.deployer.loadArtifact(contractName);
 
         await assert.rejects(
-            this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+            this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
             }),
             (error: any) => {
@@ -109,14 +109,14 @@ describe('Test UUPS proxy deployment and upgrade functionalities', async functio
         console.info(chalk.yellow(`Deploying ${contractName1} uups proxy...`));
 
         const boxArtifact = await this.deployer.loadArtifact(contractName1);
-        boxUupsProxy = await this.env.zkUpgrades.deployProxy(boxArtifact, this.deployer.zkWallet, [42], {
+        boxUupsProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
             initializer: 'initialize',
         });
 
         console.info(chalk.yellow(`Deploying ${contractName2} uups proxy...`));
 
         const boxPublicArtifact = await this.deployer.loadArtifact(contractName2);
-        boxUupsPublicProxy = await this.env.zkUpgrades.deployProxy(boxPublicArtifact, this.deployer.zkWallet, [42], {
+        boxUupsPublicProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxPublicArtifact, [42], {
             initializer: 'initialize',
         });
     });
@@ -177,7 +177,7 @@ describe('Test UUPS proxy deployment and upgrade functionalities', async functio
         const contract = await this.deployer.loadArtifact(contractName);
 
         await assert.rejects(
-            this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+            this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
                 kind: 'uups',
             }),
@@ -212,12 +212,12 @@ describe('Test beacon proxy deployment and upgrade functionalities', async funct
         console.info(chalk.yellow(`Deploying ${contractName} beacon proxy...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        beaconImplementation = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
+        beaconImplementation = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
 
         beaconProxy = await this.env.zkUpgrades.deployBeaconProxy(
+            this.deployer.zkWallet,
             beaconImplementation,
             contract,
-            this.deployer.zkWallet,
             [42],
         );
     });
@@ -267,7 +267,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
         console.info(chalk.yellow(`Deploying ${contractName}...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        const deployedContract = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -291,7 +291,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
         console.info(chalk.yellow(`Deploying ${contractName}...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        const deployedContract = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -317,7 +317,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
 
         const contract = await this.deployer.loadArtifact(contractName);
         const contractV2 = await this.deployer.loadArtifact(contractV2Name);
-        const deployedContract = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -344,7 +344,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
         console.info(chalk.yellow(`Deploying ${contractName}...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        const deployedContract = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const deployedContract = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -363,7 +363,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
         console.info(chalk.yellow(`Deploying ${contractName}...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        const _ = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const _ = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -380,7 +380,7 @@ describe('Test upgradable contracts admin functionalities', async function () {
         console.info(chalk.yellow(`Deploying ${contractName}...`));
 
         const contract = await this.deployer.loadArtifact(contractName);
-        await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
 
@@ -414,7 +414,7 @@ describe('Test storage layout validations', async function () {
         console.info(chalk.yellow(`Deploying ${contractName1}...`));
 
         const boxArtifact = await this.deployer.loadArtifact(contractName1);
-        boxProxy = await this.env.zkUpgrades.deployProxy(boxArtifact, this.deployer.zkWallet, [42], {
+        boxProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
             initializer: 'store',
         });
 
@@ -422,8 +422,8 @@ describe('Test storage layout validations', async function () {
 
         const boxWithStorageGapArtifact = await this.deployer.loadArtifact(contractName2);
         boxWithStorageGap = await this.env.zkUpgrades.deployProxy(
-            boxWithStorageGapArtifact,
             this.deployer.zkWallet,
+            boxWithStorageGapArtifact,
             [42],
             {
                 initializer: 'store',
@@ -510,7 +510,7 @@ describe('Test proxy gas estimation', async function () {
             kind: 'transparent',
         });
 
-        const box = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
         });
         await box.deployed();
@@ -535,7 +535,7 @@ describe('Test proxy gas estimation', async function () {
             true,
         );
 
-        const box = await this.env.zkUpgrades.deployProxy(contract, this.deployer.zkWallet, [42], {
+        const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
             initializer: 'initialize',
             kind: 'uups',
         });
@@ -555,7 +555,7 @@ describe('Test proxy gas estimation', async function () {
 
         const gasEstimation = await this.env.zkUpgrades.estimation.estimateGasBeacon(this.deployer, contract, []);
 
-        const box = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
+        const box = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
         await box.deployed();
 
         const newBalance = await this.deployer.zkWallet.provider.getBalance(this.deployer.zkWallet.address);
@@ -585,11 +585,11 @@ describe('Test proxy gas estimation', async function () {
         );
         const gasEstimation = gasEstimationBeacon.add(gasEstimationProxy);
 
-        const boxBeacon = await this.env.zkUpgrades.deployBeacon(contract, this.deployer.zkWallet);
+        const boxBeacon = await this.env.zkUpgrades.deployBeacon(this.deployer.zkWallet, contract);
         const boxProxy = await this.env.zkUpgrades.deployBeaconProxy(
+            this.deployer.zkWallet,
             boxBeacon.address,
             contract,
-            this.deployer.zkWallet,
             [42],
         );
         await boxProxy.deployed();

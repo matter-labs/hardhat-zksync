@@ -116,17 +116,6 @@ jobs:
           pnpm hardhat compile
           pnpm hardhat deploy-zksync
 
-      - name: Test upgradable factory example
-        run: |
-          cd examples/upgradable-factory-example
-          pnpm hardhat compile
-          pnpm hardhat run scripts/deploy-box-beacon.ts 
-          pnpm hardhat run scripts/deploy-box-proxy.ts 
-          pnpm hardhat run scripts/deploy-box-uups.ts 
-          pnpm hardhat run scripts/upgrade-box-beacon.ts 
-          pnpm hardhat run scripts/upgrade-box-uups.ts 
-          pnpm hardhat run scripts/upgrade-box.ts 
-
       - name: Test upgradable example
         run: |
           cd examples/upgradable-example

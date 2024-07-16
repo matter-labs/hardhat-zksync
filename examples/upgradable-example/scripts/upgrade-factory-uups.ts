@@ -13,7 +13,7 @@ async function main() {
     const contractName = 'FactoryUups';
 
     const contract = await deployer.loadArtifact(contractName);
-    const factory = await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet, [], { initializer: 'initialize' });
+    const factory = await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [], { initializer: 'initialize' });
 
     await factory.deployed();
 
