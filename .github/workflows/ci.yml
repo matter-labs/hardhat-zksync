@@ -4,54 +4,6 @@ on:
   push:
 
 jobs:
-  #zksolc:
-  #  strategy:
-  #    matrix:
-  #      solc: [0.8.16, 0.7.6, 0.4.22]
-  #      os: [ubuntu, macos]
-
-  #  runs-on: ${{ matrix.os }}-latest
-
-    #name: zksolc
-    #steps:
-    #  - uses: actions/checkout@v2
-
-    #  - uses: actions/setup-node@v2
-    #    with:
-    #      node-version: "16"
-    #      cache: pnpm
-
-    #  - name: Setup environment
-    #    run: |
-    #      pnpm install
-
-    #  - name: Test zksolc compiler plugin
-    #    run: |
-    #      cd packages/hardhat-zksync-solc
-    #      pnpm test
-    #    env:
-    #      SOLC_VERSION: ${{ matrix.solc }}
-
-  #zkvyper:
-  #  runs-on: ubuntu-latest
-  #  name: zkvyper
-  #  steps:
-  #    - uses: actions/checkout@v2
-
-  #    - uses: actions/setup-node@v2
-  #      with:
-  #        node-version: "16"
-  #        cache: pnpm
-
-  #    - name: Setup environment
-  #      run: |
-  #        pnpm install
-
-  #    - name: Test zkvyper compiler plugin
-  #      run: |
-  #        cd packages/hardhat-zksync-vyper
-  #        pnpm test
-
   examples:
     runs-on: ubuntu-latest
     name: examples
@@ -93,26 +45,6 @@ jobs:
       - name: Test deploy example
         run: |
           cd examples/deploy-example
-          pnpm hardhat compile
-          pnpm hardhat deploy-zksync
-
-      - name: Test node example
-        run: |
-          cd examples/node-example
-          pnpm hardhat compile
-          pnpm hardhat test
-
-      - name: Test noninline libraries example
-        run: |
-         cd examples/noninline-libraries-example
-          pnpm hardhat compile
-          pnpm hardhat deploy-zksync:libraries --private-key-or-index 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
-          pnpm hardhat compile
-          pnpm hardhat deploy-zksync
-
-      - name: Test zkvyper example
-        run: |
-          cd examples/vyper-example
           pnpm hardhat compile
           pnpm hardhat deploy-zksync
 
@@ -171,50 +103,6 @@ jobs:
           cd packages/hardhat-zksync-upgradable
           pnpm test
 
-  verify-vyper:
-    runs-on: ubuntu-latest
-    name: verify-vyper
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: pnpm
-
-      - name: Setup environment
-        run: |
-          pnpm install
-          pnpm build
-      - name: Test zksync verify vyper plugin
-        run: |
-          cd packages/hardhat-zksync-verify-vyper
-          pnpm test
-
-  verify:
-    runs-on: ubuntu-latest
-    name: verify
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: pnpm
-
-      - name: Setup environment
-        run: |
-          pnpm install
-          pnpm build
-      - name: Test zksync verify plugin
-        run: |
-          cd packages/hardhat-zksync-verify
-          pnpm test
-
   deploy:
     runs-on: ubuntu-latest
     name: deploy
@@ -256,24 +144,3 @@ jobs:
         if: always()
         run: |
           cat server.log
-
-  node:
-    runs-on: ubuntu-latest
-    name: node
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: pnpm
-      - name: Setup environment
-        run: |
-          pnpm install
-          pnpm build
-      - name: Test zksync node plugin
-        run: |
-          cd packages/hardhat-zksync-node
-          pnpm test

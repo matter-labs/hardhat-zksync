@@ -25,58 +25,6 @@ updates:
       - dependency-name: ethers
 
   - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-solc"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "production"
-    ignore:
-      # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - dependency-name: chalk
-
-  - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-vyper"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "production"
-    ignore:
-      # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - dependency-name: chalk
-
-  - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-chai-matchers"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "production"
-    ignore:
-      # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - dependency-name: chalk
-      # zksync-web3 package relies on older versions of ethers package
-      - dependency-name: ethers
-
-  - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-verify"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "production"
-    ignore:
-      # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
-      - dependency-name: chalk
-
-  - package-ecosystem: "npm"
-    directory: "/packages/hardhat-zksync-toolbox"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "production"
-    ignore:
-      # zksync-web3 package relies on older versions of ethers package
-      - dependency-name: ethers
-
-  - package-ecosystem: "npm"
     directory: "/packages/hardhat-zksync-upgradable"
     schedule:
       interval: "daily"
@@ -85,3 +33,17 @@ updates:
     ignore:
       # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
       - dependency-name: chalk
+      # zksync-web3 package relies on older versions of ethers package
+      - dependency-name: ethers
+
+  - package-ecosystem: "npm"
+    directory: "/packages/hardhat-zksync"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "production"
+    ignore:
+      # Chalk 5 is ESM. To use Chalk with TypeScript or a build tool, it is recommended to stay on Chalk 4 for now. [Read more.](https://github.com/chalk/chalk/releases/tag/v5.0.0)
+      - dependency-name: chalk
+      # zksync-web3 package relies on older versions of ethers package
+      - dependency-name: ethers
