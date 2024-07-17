@@ -280,7 +280,6 @@ describe('Upgradable plugin tests', function () {
                 beaconImplementation,
                 contract,
                 [42],
-                {},
             );
             await beaconProxy.waitForDeployment();
         });
@@ -663,7 +662,6 @@ describe('Upgradable plugin tests', function () {
                 await boxBeacon.getAddress(),
                 contract,
                 [42],
-                {},
             );
             await boxProxy.waitForDeployment();
 
