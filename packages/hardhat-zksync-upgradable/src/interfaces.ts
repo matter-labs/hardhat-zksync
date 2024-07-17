@@ -3,8 +3,6 @@ import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 import * as zk from 'zksync-ethers';
 
 import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
-import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
-import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
 import { ValidateImplementationOptions } from './utils/options';
 import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
@@ -12,6 +10,8 @@ import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
 import { DeployFunctionArtifact, DeployFunctionFactory } from './proxy-deployment/deploy-proxy';
 import { DeployBeaconArtifact, DeployBeaconFactory } from './proxy-deployment/deploy-beacon';
 import { DeployBeaconProxyArtifact, DeployBeaconProxyFactory } from './proxy-deployment/deploy-beacon-proxy';
+import { UpgradeProxyArtifact, UpgradeProxyFactory } from './proxy-upgrade/upgrade-proxy';
+import { UpgradeBeaconArtifact, UpgradeBeaconFactory } from './proxy-upgrade/upgrade-beacon';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
@@ -20,11 +20,11 @@ export type ValidateImplementationFunction = (
 
 export interface HardhatUpgrades {
     deployProxy: DeployFunctionFactory & DeployFunctionArtifact;
-    upgradeProxy: UpgradeFunction;
+    upgradeProxy: UpgradeProxyArtifact & UpgradeProxyFactory;
     validateImplementation: ValidateImplementationFunction;
     deployBeacon: DeployBeaconFactory & DeployBeaconArtifact;
     deployBeaconProxy: DeployBeaconProxyFactory & DeployBeaconProxyArtifact;
-    upgradeBeacon: UpgradeBeaconFunction;
+    upgradeBeacon: UpgradeBeaconArtifact & UpgradeBeaconFactory;
     deployProxyAdmin: DeployAdminFunction;
     admin: {
         getInstance: GetInstanceFunction;
