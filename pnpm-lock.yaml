@@ -431,6 +431,9 @@ importers:
       '@matterlabs/hardhat-zksync-deploy':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-ethers':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-ethers
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc

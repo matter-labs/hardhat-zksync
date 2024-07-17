@@ -3,15 +3,15 @@ import { SolcInput, SolcOutput } from '@openzeppelin/upgrades-core';
 import * as zk from 'zksync-ethers';
 
 import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
-import { UpgradeFunction } from './proxy-upgrade/upgrade-proxy';
-import { DeployBeaconFunction } from './proxy-deployment/deploy-beacon';
-import { DeployBeaconProxyFunction } from './proxy-deployment/deploy-beacon-proxy';
-import { UpgradeBeaconFunction } from './proxy-upgrade/upgrade-beacon';
-import { DeployFunction } from './proxy-deployment/deploy-proxy';
 import { ValidateImplementationOptions } from './utils/options';
 import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
 import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
+import { DeployBeaconProxyArtifact, DeployBeaconProxyFactory } from './proxy-deployment/deploy-beacon-proxy';
+import { DeployBeaconArtifact, DeployBeaconFactory } from './proxy-deployment/deploy-beacon';
+import { DeployFunctionArtifact, DeployFunctionFactory } from './proxy-deployment/deploy-proxy';
+import { UpgradeBeaconArtifact, UpgradeBeaconFactory } from './proxy-upgrade/upgrade-beacon';
+import { UpgradeProxyArtifact, UpgradeProxyFactory } from './proxy-upgrade/upgrade-proxy';
 
 export type ValidateImplementationFunction = (
     ImplFactory: zk.ContractFactory,
@@ -19,12 +19,12 @@ export type ValidateImplementationFunction = (
 ) => Promise<void>;
 
 export interface HardhatUpgrades {
-    deployProxy: DeployFunction;
-    upgradeProxy: UpgradeFunction;
+    deployProxy: DeployFunctionArtifact & DeployFunctionFactory;
+    upgradeProxy: UpgradeProxyFactory & UpgradeProxyArtifact;
     validateImplementation: ValidateImplementationFunction;
-    deployBeacon: DeployBeaconFunction;
-    deployBeaconProxy: DeployBeaconProxyFunction;
-    upgradeBeacon: UpgradeBeaconFunction;
+    deployBeacon: DeployBeaconArtifact & DeployBeaconFactory;
+    deployBeaconProxy: DeployBeaconProxyFactory & DeployBeaconProxyArtifact;
+    upgradeBeacon: UpgradeBeaconFactory & UpgradeBeaconArtifact;
     deployProxyAdmin: DeployAdminFunction;
     admin: {
         getInstance: GetInstanceFunction;
