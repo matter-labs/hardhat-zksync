@@ -181,3 +181,17 @@ export async function extractFactoryDepsRecursive(
 
     return factoryDeps;
 }
+
+export async function getArtifactFromBytecode(
+    hre: HardhatRuntimeEnvironment,
+    bytecode: string,
+): Promise<ZkSyncArtifact> {
+    const names = await hre.artifacts.getAllFullyQualifiedNames();
+    for (const name of names) {
+        const artifact = await hre.artifacts.readArtifact(name);
+        if (artifact.bytecode === bytecode) {
+            return artifact as ZkSyncArtifact;
+        }
+    }
+    throw new ZkSyncUpgradablePluginError('Artifact for provided bytecode is not found.');
+}

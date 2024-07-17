@@ -88,25 +88,25 @@ const boxContract = await deployer.loadArtifact(contractName);
 Deploy the beacon contract using `deployBeacon` method from the `zkUpgrades`:
 
 ```
-await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract);
+await hre.zkUpgrades.deployBeacon(boxContract,deployer.zkWallet);
 ```
 
 Use the `deployBeaconProxy` method which receives the zkSync Era wallet, beacon contract, and the implementation (Box) contract with its arguments.
 
 ```
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42]);
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, boxContract, deployer.zkWallet, [42]);
 ```
 
 Additionaly, in the options section optionaly include the `deploymentType` and `salt` arguments to configure deployment type and salt.
 
 ```
-const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
+const beacon = await hre.zkUpgrades.deployBeacon(boxContract,deployer.zkWallet, {
   deploymentType: 'create2',
   salt: '0x5273795673417857416686492163276941983664248508133571812215241323'
 });
 await beacon.deployed();
 
-const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42], {
+const box = await hre.zkUpgrades.deployBeaconProxy(beacon, deployer.zkWallet, boxContract, [42], {
   deploymentType: 'create2',
   salt: '0x6273795673417857416686492163276941983664248508133571812215241323'
 });

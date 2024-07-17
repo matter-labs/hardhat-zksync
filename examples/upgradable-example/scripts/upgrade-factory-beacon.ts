@@ -28,7 +28,7 @@ async function main() {
         factoryV2Implementation.abi,
         factoryV2Implementation.bytecode,
         deployer.zkWallet,
-        deployer.deploymentType,
+        'create',
     );
     const upgradedFactory = attachTo.attach(factoryBeaconProxy.address);
     upgradedFactory.connect(zkWallet);
