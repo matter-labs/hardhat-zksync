@@ -21,9 +21,22 @@ import {
     getLibraryInfos,
     removeLibraryInfoFile,
     updateHardhatConfigFile,
-    checkIsDeployLibrariesNeeded,
+    updateWithCachedLibraries,
 } from './utils';
-import { FactoryOptions, ZkSyncArtifact, ContractFullQualifiedName, ContractInfo, MissingLibrary } from './types';
+import {
+    FactoryOptions,
+    ZkSyncArtifact,
+    ContractFullQualifiedName,
+    ContractInfo,
+    MissingLibrary,
+    Overrides,
+} from './types';
+import { loadLibraries, saveLibraries } from './libraries-saver';
+import {
+    ALL_MISSING_LIBRARIES_CHECKERS,
+    DeployLibrariesValidators,
+    MissingLibrariesValidator,
+} from './missing-libraries-validator';
 
 export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrIndex?: string | number): Promise<Wallet> {
     const privateKey = isString(privateKeyOrIndex) ? (privateKeyOrIndex as string) : undefined;
@@ -204,16 +217,34 @@ export async function getContractAtFromArtifact(
     return contract;
 }
 
-export async function deployContract(
+export async function deployContract<TOverridesExternal extends boolean>(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
+    artifact: ZkSyncArtifact | string,
     constructorArguments: any[],
     wallet?: Wallet,
-    overrides?: ethers.Overrides,
+    overrides?: Overrides<TOverridesExternal>,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<Contract> {
     if (!wallet) {
         wallet = await getWallet(hre);
+    }
+
+    if (
+        (!overrides || !('avoideLibrariesDeployment' in overrides)) &&
+        !(overrides as Overrides<false>)?.deployMissingLibraries.avoideLibrariesDeployment
+    ) {
+        await deployLibraries(
+            hre,
+            wallet,
+            overrides?.deployMissingLibraries.externalConfigObjectPath,
+            overrides?.deployMissingLibraries.exportedConfigObject,
+            overrides?.deployMissingLibraries.noAutoPopulateConfig,
+            overrides?.deployMissingLibraries.compileAllContracts,
+        );
+    }
+
+    if (typeof artifact === 'string') {
+        artifact = await loadArtifact(hre, artifact);
     }
 
     const factory = await getContractFactoryFromArtifact(hre, artifact, wallet);
@@ -267,15 +298,55 @@ export async function deployLibraries(
     noAutoPopulateConfig?: boolean,
     compileAllContracts: boolean = true,
 ) {
-    const isDeployLibrariesNeeded = await checkIsDeployLibrariesNeeded(hre, {
+    const opts = {
         externalConfigObjectPath,
         exportedConfigObject,
-    });
+        noAutoPopulateConfig,
+        compileAllContracts,
+    };
 
-    if (!isDeployLibrariesNeeded) {
+    const validator = await MissingLibrariesValidator.create(hre, [...ALL_MISSING_LIBRARIES_CHECKERS.values()], opts);
+
+    if (!validator.areLibrariesMissing()) {
         return;
     }
 
+    const existingLibraries = await loadLibraries(hre);
+
+    if (existingLibraries) {
+        hre.config.zksolc.settings.libraries = existingLibraries;
+        const validatorCachedLibraries = await MissingLibrariesValidator.create(
+            hre,
+            [ALL_MISSING_LIBRARIES_CHECKERS.get(DeployLibrariesValidators.MISSING_LIBRARIES_ON_NETWORK_CHECKER)],
+            opts,
+        );
+
+        if (!validatorCachedLibraries.areLibrariesMissing()) {
+            await updateWithCachedLibraries(hre, opts);
+            return;
+        }
+    }
+
+    await validator.postActions();
+    hre.config.zksolc.settings.libraries = {};
+    await deployLibrariesInner(
+        hre,
+        wallet,
+        externalConfigObjectPath,
+        exportedConfigObject,
+        noAutoPopulateConfig,
+        compileAllContracts,
+    );
+}
+
+export async function deployLibrariesInner(
+    hre: HardhatRuntimeEnvironment,
+    wallet?: Wallet,
+    externalConfigObjectPath?: string,
+    exportedConfigObject?: string,
+    noAutoPopulateConfig?: boolean,
+    compileAllContracts: boolean = true,
+) {
     const libraryInfos = getLibraryInfos(hre);
 
     const allDeployedLibraries: ContractInfo[] = [];
@@ -293,6 +364,8 @@ export async function deployLibraries(
     }
 
     console.info(chalk.green('All libraries deployed successfully!'));
+
+    await saveLibraries(hre);
 
     if (!noAutoPopulateConfig) {
         updateHardhatConfigFile(hre, externalConfigObjectPath, exportedConfigObject);
@@ -374,7 +447,9 @@ async function deployOneLibrary(
     const artifact = await loadArtifact(hre, generateFullQuailfiedNameString(contractFQN));
 
     console.info(chalk.yellow(`Deploying ${generateFullQuailfiedNameString(contractFQN)} .....`));
-    const contract = await deployContract(hre, artifact, [], wallet);
+    const contract = await deployContract<false>(hre, artifact, [], wallet, {
+        deployMissingLibraries: { avoideLibrariesDeployment: true },
+    });
     console.info(
         chalk.green(`Deployed ${generateFullQuailfiedNameString(contractFQN)} at ${await contract.getAddress()}`),
     );

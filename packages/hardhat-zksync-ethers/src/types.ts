@@ -76,10 +76,29 @@ export interface HardhatZksyncEthersHelpers {
         compileAllContracts?: boolean,
     ) => Promise<void>;
     deployContract: (
-        artifact: ZkSyncArtifact,
+        artifact: ZkSyncArtifact | string,
         constructorArguments: any[],
         wallet?: Wallet,
-        overrides?: ethers.Overrides,
+        overrides?: Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ) => Promise<Contract>;
+}
+
+export type DeployMissingLibrariesParams<TExternalOverrides extends boolean = true> = TExternalOverrides extends true
+    ? {
+          externalConfigObjectPath?: string;
+          exportedConfigObject?: string;
+          noAutoPopulateConfig?: boolean;
+          compileAllContracts?: boolean;
+      }
+    : {
+          externalConfigObjectPath?: string;
+          exportedConfigObject?: string;
+          noAutoPopulateConfig?: boolean;
+          compileAllContracts?: boolean;
+          avoideLibrariesDeployment?: boolean;
+      };
+
+export interface Overrides<TExternalOverrides extends boolean = true> extends ethers.Overrides {
+    deployMissingLibraries: DeployMissingLibrariesParams<TExternalOverrides>;
 }

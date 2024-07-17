@@ -19,7 +19,7 @@ import {
     deployContract,
     deployLibraries,
 } from './helpers';
-import { FactoryOptions, ZkSyncArtifact } from './types';
+import { FactoryOptions, Overrides, ZkSyncArtifact } from './types';
 import { createProviders } from './utils';
 
 extendEnvironment((hre) => {
@@ -61,10 +61,10 @@ extendEnvironment((hre) => {
                     compileAllContracts,
                 ),
             deployContract: (
-                artifact: ZkSyncArtifact,
+                artifact: ZkSyncArtifact | string,
                 constructorArguments: any[],
                 wallet?: Wallet,
-                overrides?: ethers.Overrides,
+                overrides?: Overrides,
                 additionalFactoryDeps?: ethers.BytesLike[],
             ) => deployContract(hre, artifact, constructorArguments, wallet, overrides, additionalFactoryDeps),
         };

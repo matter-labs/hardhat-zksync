@@ -26,6 +26,7 @@ artifacts-zk/
 cache-zk/
 deployments-zk/
 deployments/
+libraries-zk/
 
 # Code coverage artifacts
 coverage

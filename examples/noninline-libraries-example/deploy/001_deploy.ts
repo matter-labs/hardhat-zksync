@@ -5,7 +5,6 @@ import chalk from 'chalk';
 
 // An example of a deploy script which will deploy and call a simple contract.
 export default async function (hre: HardhatRuntimeEnvironment) {
-    await hre.zksyncEthers.deployLibraries();
     console.info(chalk.yellow(`Running deploy script for the Test contract`));
 
     // Create zkWallet object
