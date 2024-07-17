@@ -39,7 +39,7 @@ After that, load the your contract artifact and call the deployProxy method from
 const zkWallet = new Wallet("PRIVATE_KEY");
 const deployer = new Deployer(hre, zkWallet);
 const contract = await deployer.loadArtifact("YourContractName");
-await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet [initializerFunctionArguments], { initializer: "initialize" });
+await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], { initializer: "initialize" });
 ```
 
 The deployProxy method deploys your implementation contract on zkSync Era, deploys the proxy admin contract, and finally, deploys the transparent proxy.
@@ -51,7 +51,7 @@ Additionaly, in the options section optionaly include the folowing arguments to 
  - `saltProxy`
 
 ```
-await hre.zkUpgrades.deployProxy(contract, deployer.zkWallet, [initializerFunctionArguments], 
+await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], 
   { initializer: "initialize",
     saltImpl: "0x4273795673417857416686492163276941983664248508133571812215241323",
     deploymentTypeImpl: "create2",
