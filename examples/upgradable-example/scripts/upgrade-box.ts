@@ -18,7 +18,7 @@ async function main() {
 
     // upgrade proxy implementation
     const BoxV2 = await deployer.loadArtifact('BoxV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet,await box.getAddress(), BoxV2);
+    const upgradedBox = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, await box.getAddress(), BoxV2);
     console.info(chalk.green('Successfully upgraded Box to BoxV2'));
 
     upgradedBox.connect(zkWallet);
