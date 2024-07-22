@@ -972,6 +972,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      sinon:
+        specifier: ^18.0.0
+        version: 18.0.0
       ts-morph:
         specifier: ^22.0.0
         version: 22.0.0
@@ -1033,9 +1036,6 @@ importers:
       rlp:
         specifier: 3.0.0
         version: 3.0.0
-      sinon:
-        specifier: ^18.0.0
-        version: 18.0.0
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@18.19.33)(typescript@5.4.5)
