@@ -6,6 +6,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
 import chalk from 'chalk';
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { ZkSyncEthersPluginError } from './errors';
 import { richWallets } from './rich-wallets';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
@@ -298,6 +299,10 @@ export async function deployLibraries(
     noAutoPopulateConfig?: boolean,
     compileAllContracts: boolean = true,
 ) {
+    if (!wallet) {
+        wallet = await getWallet(hre);
+    }
+
     const opts = {
         externalConfigObjectPath,
         exportedConfigObject,
@@ -315,6 +320,7 @@ export async function deployLibraries(
 
     if (existingLibraries) {
         hre.config.zksolc.settings.libraries = existingLibraries;
+        await hre.run(TASK_COMPILE, { quiet: true, force: true });
         const validatorCachedLibraries = await MissingLibrariesValidator.create(
             hre,
             [ALL_MISSING_LIBRARIES_CHECKERS.get(DeployLibrariesValidators.MISSING_LIBRARIES_ON_NETWORK_CHECKER)],
@@ -341,7 +347,7 @@ export async function deployLibraries(
 
 export async function deployLibrariesInner(
     hre: HardhatRuntimeEnvironment,
-    wallet?: Wallet,
+    wallet: Wallet,
     externalConfigObjectPath?: string,
     exportedConfigObject?: string,
     noAutoPopulateConfig?: boolean,
@@ -350,10 +356,6 @@ export async function deployLibrariesInner(
     const libraryInfos = getLibraryInfos(hre);
 
     const allDeployedLibraries: ContractInfo[] = [];
-
-    if (!wallet) {
-        wallet = await getWallet(hre);
-    }
 
     // @ts-ignore
     hre.config.zksolc.settings.contractsToCompile = [];

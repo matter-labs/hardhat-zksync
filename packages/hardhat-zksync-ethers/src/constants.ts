@@ -14,3 +14,5 @@ export const SUPPORTED_L1_TESTNETS = ['mainnet', 'rinkeby', 'ropsten', 'kovan', 
 
 export const LIBRARIES_NOT_EXIST_ON_NETWORK_ERROR =
     'Some libraries are not deployed on the network and have been removed from the Hardhat configuration. Please run the compile, then try again with the deployment process.';
+
+export const META_DATA_NUMBER_OF_BYTES = 64;

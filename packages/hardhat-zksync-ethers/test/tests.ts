@@ -1,6 +1,14 @@
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { Contract, Wallet } from 'zksync-ethers';
+import { fail } from 'assert';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import sinon from 'sinon';
+import * as utils from '../src/utils';
+import * as zksyncEthers from '../src/helpers';
+import * as validators from '../src/missing-libraries-validator';
+import * as librariesSaver from '../src/libraries-saver';
 import { richWallets } from '../src/rich-wallets';
+import { deployLibraries } from '../src/helpers';
 import { useEnvironment } from './helpers';
 
 describe('Plugin tests', async function () {
@@ -21,6 +29,7 @@ describe('Plugin tests', async function () {
                     'extractFactoryDeps',
                     'loadArtifact',
                     'deployContract',
+                    'deployLibraries',
                 ]);
             });
         });
@@ -323,6 +332,167 @@ describe('Plugin tests', async function () {
 
                 assert.strictEqual('0x5f5e100', gasPrice);
             });
+        });
+    });
+
+    describe.only('deployLibraries', () => {
+        let hre: HardhatRuntimeEnvironment;
+        let consoleInfoSpy: sinon.SinonSpy;
+        const sandbox: sinon.SinonSandbox = sinon.createSandbox();
+        const wallet = new Wallet('0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110');
+
+        beforeEach(() => {
+            sandbox
+                .stub(zksyncEthers, 'loadArtifact')
+                .onFirstCall()
+                .resolves({
+                    contractName: 'ChildChildLib',
+                    sourceName: 'contracts/ChildChildLib.sol',
+                    abi: {},
+                    bytecode: '0x1234567890',
+                } as any)
+                .onSecondCall()
+                .resolves({
+                    contractName: 'ChildLib',
+                    sourceName: 'contracts/ChildLib.sol',
+                    abi: {},
+                    bytecode: '0x1234567890',
+                } as any)
+                .onThirdCall()
+                .resolves({
+                    contractName: 'MathLib',
+                    sourceName: 'contracts/MathLib.sol',
+                    abi: {},
+                    bytecode: '0x1234567890',
+                } as any);
+
+            sandbox.stub(validators.MissingLibrariesValidator.prototype, 'areLibrariesMissing').resolves(true);
+
+            sandbox
+                .stub(zksyncEthers, 'deployContract')
+                .onFirstCall()
+                .resolves(new Contract('0x11111111111', [], {} as any))
+                .onSecondCall()
+                .resolves(new Contract('0x222222222222', [], {} as any))
+                .onThirdCall()
+                .resolves(new Contract('0x333333333333', [], {} as any));
+
+            sandbox.stub(utils, 'getLibraryInfos').returns([
+                {
+                    contractName: 'ChildChildLib',
+                    contractPath: 'contracts/ChildChildLib.sol',
+                    missingLibraries: [],
+                },
+                {
+                    contractName: 'ChildLib',
+                    contractPath: 'contracts/ChildLib.sol',
+                    missingLibraries: ['contracts/ChildChildLib.sol:ChildChildLib'],
+                },
+                {
+                    contractName: 'MathLib',
+                    contractPath: 'contracts/MathLib.sol',
+                    missingLibraries: ['contracts/ChildLib.sol:ChildLib'],
+                },
+            ]);
+
+            consoleInfoSpy = sandbox.spy(console, 'info');
+
+            hre = {
+                run: sandbox.stub(),
+                network: {
+                    provider: {
+                        send: sandbox.stub(),
+                    },
+                    name: 'zkSyncNetwork',
+                    zksync: true,
+                    url: 'https://test.zksync.dev:3000',
+                    ethNetwork: 'ethNetwork',
+                    config: {
+                        url: 'https://test.zksync.dev:3000',
+                        zksync: true,
+                        ethNetwork: 'https://test.zksync.dev:3000',
+                    },
+                },
+                config: {
+                    zksolc: {
+                        settings: {
+                            contractsToCompile: [],
+                        },
+                    },
+                    networks: {
+                        zkSyncNetwork: {
+                            url: 'https://test.zksync.dev:3000',
+                            zksync: true,
+                        },
+                        ethNetwork: {
+                            url: 'https://test.zksync.dev:8545',
+                        },
+                    },
+                },
+            } as any;
+        });
+
+        afterEach(() => {
+            sandbox.restore();
+        });
+
+        it('should deploy all libraries successfully', async () => {
+            sandbox.stub(librariesSaver, 'loadLibraries').resolves(undefined);
+            sandbox.stub(librariesSaver, 'saveLibraries').resolves();
+            await deployLibraries(hre, wallet, '/path/', 'config', true, false);
+
+            expect(consoleInfoSpy.callCount).to.equal(8);
+            expect(consoleInfoSpy.getCall(0).args[0]).to.includes(
+                'Deploying contracts/ChildChildLib.sol:ChildChildLib .....',
+            );
+            expect(consoleInfoSpy.getCall(1).args[0]).to.includes(
+                'Deployed contracts/ChildChildLib.sol:ChildChildLib at 0x11111111111',
+            );
+            expect(consoleInfoSpy.getCall(2).args[0]).to.includes('Deploying contracts/ChildLib.sol:ChildLib .....');
+            expect(consoleInfoSpy.getCall(3).args[0]).to.includes(
+                'Deployed contracts/ChildLib.sol:ChildLib at 0x222222222222',
+            );
+            expect(consoleInfoSpy.getCall(4).args[0]).to.includes('Deploying contracts/MathLib.sol:MathLib .....');
+            expect(consoleInfoSpy.getCall(5).args[0]).to.includes(
+                'Deployed contracts/MathLib.sol:MathLib at 0x333333333333',
+            );
+            expect(consoleInfoSpy.getCall(6).args[0]).to.includes('All libraries deployed successfully!');
+        });
+
+        it('should deploy all libraries successfully and update hardhat.config', async () => {
+            sandbox.stub(utils, 'updateHardhatConfigFile').resolves();
+
+            await deployLibraries(hre, wallet, '/path/', 'config', false, false);
+
+            expect(consoleInfoSpy.callCount).to.equal(8);
+        });
+
+        it('should deploy all libraries successfully and compile all contracts', async () => {
+            sandbox.stub(librariesSaver, 'loadLibraries').resolves(undefined);
+            sandbox.stub(librariesSaver, 'saveLibraries').resolves();
+            sandbox.stub(utils, 'compileContracts').resolves();
+
+            await deployLibraries(hre, wallet, '/path/', 'config', true, true);
+
+            expect(consoleInfoSpy.callCount).to.equal(8);
+            expect(consoleInfoSpy.getCall(7).args[0]).to.includes('Compiling all contracts');
+        });
+
+        it('shouldnt update hardhat.config file', async () => {
+            sandbox.stub(librariesSaver, 'loadLibraries').resolves(undefined);
+            sandbox.stub(librariesSaver, 'saveLibraries').resolves();
+            sandbox
+                .stub(utils, 'updateHardhatConfigFile')
+                .throws(new Error('Failed to update hardhat config file, please use addresses from console output'));
+
+            try {
+                await deployLibraries(hre, wallet, '/path/', 'config', false, false);
+                fail('should have thrown an error');
+            } catch (error: any) {
+                expect(error.message).to.equal(
+                    'Failed to update hardhat config file, please use addresses from console output',
+                );
+            }
         });
     });
 });
