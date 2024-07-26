@@ -1,14 +1,17 @@
-const checkForEtherscan = () => {
-    try {
-        if (require.resolve('@nomiclabs/hardhat-etherscan')) {
+import Module from 'module';
+const originalRequire = Module.prototype.require; // Save a reference to the original 'require' method
+
+const checkForEtherscan = (): void => {
+    // Override the 'require' method
+    (Module.prototype.require as any) = function (this: any, id: string) {
+        if (id === '@nomiclabs/hardhat-etherscan') {
             throw new Error(
-                '@nomiclabs/hardhat-etherscan is depricated and it is incompatible with current version of @matterlabs/hardhat-zksync-verify',
+                '@nomiclabs/hardhat-etherscan is deprecated and it is incompatible with the current version of @matterlabs/hardhat-zksync-verify',
             );
         }
-    } catch (e) {
-        console.error(e);
-        process.exit(1);
-    }
+        // Call the original 'require' method to load the module as usual
+        return originalRequire.apply(this, arguments as any);
+    };
 };
 checkForEtherscan();
 
