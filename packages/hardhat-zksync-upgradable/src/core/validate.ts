@@ -253,18 +253,6 @@ function* getStateVariableErrors(
 ): Generator<ValidationErrorWithName> {
     for (const varDecl of contractDef.nodes) {
         if (isNodeType('VariableDeclaration', varDecl)) {
-            if (!varDecl.constant && !isNullish(varDecl.value)) {
-                if (
-                    !skipCheck('state-variable-assignment', contractDef) &&
-                    !skipCheck('state-variable-assignment', varDecl)
-                ) {
-                    yield {
-                        kind: 'state-variable-assignment',
-                        name: varDecl.name,
-                        src: decodeSrc(varDecl),
-                    };
-                }
-            }
             if (varDecl.mutability === 'immutable') {
                 if (
                     !skipCheck('state-variable-immutable', contractDef) &&
@@ -272,6 +260,17 @@ function* getStateVariableErrors(
                 ) {
                     yield {
                         kind: 'state-variable-immutable',
+                        name: varDecl.name,
+                        src: decodeSrc(varDecl),
+                    };
+                }
+            } else if (!varDecl.constant && !isNullish(varDecl.value)) {
+                if (
+                    !skipCheck('state-variable-assignment', contractDef) &&
+                    !skipCheck('state-variable-assignment', varDecl)
+                ) {
+                    yield {
+                        kind: 'state-variable-assignment',
                         name: varDecl.name,
                         src: decodeSrc(varDecl),
                     };
