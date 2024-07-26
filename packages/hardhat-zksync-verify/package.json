@@ -44,7 +44,7 @@
     "chalk": "^4.1.2",
     "debug": "^4.3.5",
     "sinon": "^18.0.0",
-    "sinon-chai": "^3.7.0"
+    "sinon-chai": "^4.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.8",
