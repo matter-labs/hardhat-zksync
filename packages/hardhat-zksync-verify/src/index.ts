@@ -1,5 +1,18 @@
-import '@nomicfoundation/hardhat-verify';
+const checkForEtherscan = () => {
+    try {
+        if (require.resolve('@nomiclabs/hardhat-etherscan')) {
+            throw new Error(
+                '@nomiclabs/hardhat-etherscan is depricated and it is incompatible with current version of @matterlabs/hardhat-zksync-verify',
+            );
+        }
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
+    }
+};
+checkForEtherscan();
 
+import '@nomicfoundation/hardhat-verify';
 import { extendEnvironment, subtask, task, types } from 'hardhat/config';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import './type-extensions';
