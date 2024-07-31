@@ -29,6 +29,6 @@ declare module 'hardhat/types/runtime' {
     }
 
     interface HardhatRuntimeEnvironment {
-        zksyncEthers: typeof zk & HardhatZksyncEthersHelpers;
+        ethers: typeof zk & HardhatZksyncEthersHelpers;
     }
 }

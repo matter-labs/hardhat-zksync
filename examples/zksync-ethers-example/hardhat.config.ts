@@ -14,10 +14,9 @@ const config: HardhatUserConfig = {
             },
         }
     },
-    defaultNetwork: 'zkSyncLocal',
     networks: {
         zkSyncLocal: {
-            zksync: true,
+            zksync: false,
             url: "http://0.0.0.0:3050",
             ethNetwork: 'http://0.0.0.0:8545',
         },

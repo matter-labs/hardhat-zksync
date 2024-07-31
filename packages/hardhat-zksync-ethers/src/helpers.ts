@@ -16,7 +16,7 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     const accountNumber = isNumber(privateKeyOrIndex) ? (privateKeyOrIndex as number) : undefined;
 
     if (privateKey) {
-        return new Wallet(privateKey, hre.zksyncEthers.providerL2).connectToL1(hre.zksyncEthers.providerL1);
+        return new Wallet(privateKey, hre.ethers.providerL2).connectToL1(hre.ethers.providerL1);
     }
 
     const accounts = hre.network.config.accounts;
@@ -49,11 +49,11 @@ function _getSigners(hre: HardhatRuntimeEnvironment): Signer[] {
 }
 
 function getSigner(hre: HardhatRuntimeEnvironment, address: string): Signer {
-    return Signer.from(new Signer(hre.zksyncEthers.providerL2, address), hre.network.config.chainId!);
+    return Signer.from(new Signer(hre.ethers.providerL2, address), hre.network.config.chainId!);
 }
 
 export async function getImpersonatedSigner(hre: HardhatRuntimeEnvironment, address: string): Promise<Signer> {
-    await hre.zksyncEthers.providerL2.send('hardhat_impersonateAccount', [address]);
+    await hre.ethers.providerL2.send('hardhat_impersonateAccount', [address]);
     return getSigner(hre, address);
 }
 
@@ -160,7 +160,7 @@ export async function getContractAt(
 
     // If there's no signer, we want to put the provider for the selected network here.
     // This allows read only operations on the contract interface.
-    const walletOrProvider: Wallet | Provider = wallet !== undefined ? wallet : hre.zksyncEthers.providerL2;
+    const walletOrProvider: Wallet | Provider = wallet !== undefined ? wallet : hre.ethers.providerL2;
 
     return new Contract(address, nameOrAbi, walletOrProvider);
 }
@@ -184,7 +184,7 @@ export async function getContractAtFromArtifact(
     let contract = new Contract(address, artifact.abi, wallet);
 
     if (contract.runner === null) {
-        contract = contract.connect(hre.zksyncEthers.providerL2) as Contract;
+        contract = contract.connect(hre.ethers.providerL2) as Contract;
     }
 
     return contract;

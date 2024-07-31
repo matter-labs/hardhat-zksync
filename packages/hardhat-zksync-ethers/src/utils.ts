@@ -36,10 +36,10 @@ export async function getWalletsFromAccount(
     accounts: HardhatNetworkAccountsConfig | HttpNetworkAccountsConfig,
 ): Promise<Wallet[]> {
     if (!accounts || accounts === 'remote') {
-        const chainId = await hre.zksyncEthers.providerL2.send('eth_chainId', []);
+        const chainId = await hre.ethers.providerL2.send('eth_chainId', []);
         if (LOCAL_CHAIN_IDS.includes(chainId)) {
             return richWallets.map((wallet) =>
-                new Wallet(wallet.privateKey, hre.zksyncEthers.providerL2).connectToL1(hre.zksyncEthers.providerL1),
+                new Wallet(wallet.privateKey, hre.ethers.providerL2).connectToL1(hre.ethers.providerL1),
             );
         }
         return [];
@@ -49,7 +49,7 @@ export async function getWalletsFromAccount(
         const accountPrivateKeys = accounts as string[];
 
         const wallets = accountPrivateKeys.map((accountPrivateKey) =>
-            new Wallet(accountPrivateKey, hre.zksyncEthers.providerL2).connectToL1(hre.zksyncEthers.providerL1),
+            new Wallet(accountPrivateKey, hre.ethers.providerL2).connectToL1(hre.ethers.providerL1),
         );
         return wallets;
     }
@@ -58,8 +58,8 @@ export async function getWalletsFromAccount(
         const account = accounts as HardhatNetworkHDAccountsConfig;
 
         const wallet = Wallet.fromMnemonic(account.mnemonic)
-            .connect(hre.zksyncEthers.providerL2)
-            .connectToL1(hre.zksyncEthers.providerL1);
+            .connect(hre.ethers.providerL2)
+            .connectToL1(hre.ethers.providerL1);
         return [wallet];
     }
 

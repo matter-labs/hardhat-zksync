@@ -41,7 +41,7 @@ This plugin extends hardhat runtime environment, use it like this:
 
 Retrieve your contract factory:
 
-`const myContractFactory = await hre.zksyncEthers.getContractFactory("MyContract");`
+`const myContractFactory = await hre.ethers.getContractFactory("MyContract");`
 
 Deploy your contract: 
 
