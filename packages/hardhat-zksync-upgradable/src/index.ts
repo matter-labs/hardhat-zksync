@@ -12,8 +12,6 @@ import { lazyObject } from 'hardhat/plugins';
 import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
-import { PROXY_SOURCE_NAMES } from './constants';
-import { makeChangeProxyAdmin, makeGetInstanceFunction, makeTransferProxyAdminOwnership } from './admin';
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import {
     TASK_DEPLOY_ZKSYNC_BEACON,
@@ -21,6 +19,7 @@ import {
     TASK_UPGRADE_ZKSYNC_BEACON,
     TASK_UPGRADE_ZKSYNC_PROXY,
 } from './task-names';
+import { checkOpenzeppelinVersions, getUpgradableContracts } from './utils';
 
 extendEnvironment((hre) => {
     hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
@@ -34,23 +33,24 @@ extendEnvironment((hre) => {
         const { makeEstimateGasProxy } = require('./gas-estimation/estimate-gas-proxy');
         const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
         const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
+        const { makeGetInstanceFunction, makeChangeProxyAdmin, makeTransferProxyAdminOwnership } = require('./admin');
         return {
-            deployProxy: makeDeployProxy(hre),
-            upgradeProxy: makeUpgradeProxy(hre),
-            validateImplementation: makeValidateImplementation(hre),
-            deployBeacon: makeDeployBeacon(hre),
-            deployBeaconProxy: makeDeployBeaconProxy(hre),
-            upgradeBeacon: makeUpgradeBeacon(hre),
-            deployProxyAdmin: makeDeployProxyAdmin(hre),
+            deployProxy: checkOpenzeppelinVersions(makeDeployProxy(hre)),
+            upgradeProxy: checkOpenzeppelinVersions(makeUpgradeProxy(hre)),
+            validateImplementation: checkOpenzeppelinVersions(makeValidateImplementation(hre)),
+            deployBeacon: checkOpenzeppelinVersions(makeDeployBeacon(hre)),
+            deployBeaconProxy: checkOpenzeppelinVersions(makeDeployBeaconProxy(hre)),
+            upgradeBeacon: checkOpenzeppelinVersions(makeUpgradeBeacon(hre)),
+            deployProxyAdmin: checkOpenzeppelinVersions(makeDeployProxyAdmin(hre)),
             admin: {
-                getInstance: makeGetInstanceFunction(hre),
-                changeProxyAdmin: makeChangeProxyAdmin(hre),
-                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(hre),
+                getInstance: checkOpenzeppelinVersions(makeGetInstanceFunction(hre)),
+                changeProxyAdmin: checkOpenzeppelinVersions(makeChangeProxyAdmin(hre)),
+                transferProxyAdminOwnership: checkOpenzeppelinVersions(makeTransferProxyAdminOwnership(hre)),
             },
             estimation: {
-                estimateGasProxy: makeEstimateGasProxy(hre),
-                estimateGasBeacon: makeEstimateGasBeacon(hre),
-                estimateGasBeaconProxy: makeEstimateGasBeaconProxy(hre),
+                estimateGasProxy: checkOpenzeppelinVersions(makeEstimateGasProxy(hre)),
+                estimateGasBeacon: checkOpenzeppelinVersions(makeEstimateGasBeacon(hre)),
+                estimateGasBeaconProxy: checkOpenzeppelinVersions(makeEstimateGasBeaconProxy(hre)),
             },
         };
     });
@@ -136,7 +136,17 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSup
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
     const sourceNames = await runSuper();
 
-    return [...sourceNames, ...PROXY_SOURCE_NAMES];
+    const upgradableContracts = getUpgradableContracts();
+    return [
+        ...sourceNames,
+        ...[
+            upgradableContracts.ProxyAdmin,
+            upgradableContracts.TransparentUpgradeableProxy,
+            upgradableContracts.BeaconProxy,
+            upgradableContracts.UpgradeableBeacon,
+            upgradableContracts.ERC1967Proxy,
+        ],
+    ];
 });
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {

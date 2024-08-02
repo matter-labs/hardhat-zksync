@@ -36,6 +36,7 @@
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "^1.2.0",
     "@openzeppelin/upgrades-core": "~1.29.0",
+    "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",
     "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
     "dockerode": "^3.3.4",
@@ -46,10 +47,10 @@
     "zksync-ethers": "^5.8.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
+    "semver": "^7.6.2",
     "compare-versions": "^6.1.0"
   },
   "devDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
@@ -69,7 +70,6 @@
     "c8": "^9.0.1"
   },
   "peerDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.9.2"
   },
   "prettier": {
     "tabWidth": 4,

@@ -436,6 +436,9 @@ importers:
       '@matterlabs/hardhat-zksync-solc':
         specifier: ^1.2.0
         version: 1.2.0(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+      '@openzeppelin/contracts-hardhat-zksync-upgradable':
+        specifier: npm:@openzeppelin/contracts@^4.9.2
+        version: '@openzeppelin/contracts@4.9.6'
       '@openzeppelin/upgrades-core':
         specifier: ~1.29.0
         version: 1.29.0
@@ -463,6 +466,9 @@ importers:
       proper-lockfile:
         specifier: ^4.1.2
         version: 4.1.2
+      semver:
+        specifier: ^7.6.2
+        version: 7.6.2
       solidity-ast:
         specifier: ^0.4.56
         version: 0.4.56
@@ -470,9 +476,6 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.6
       '@types/debug':
         specifier: ^4.1.12
         version: 4.1.12
