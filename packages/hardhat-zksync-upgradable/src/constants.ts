@@ -13,7 +13,7 @@ export const MANIFEST_DEFAULT_DIR = '.upgradable';
 export const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 
-export const UPGRADEABLE_CONTRACTS_FROM_ALLIAS = {
+export const UPGRADEABLE_CONTRACTS_FROM_ALIAS = {
     TransparentUpgradeableProxy:
         '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/transparent/TransparentUpgradeableProxy.sol',
     ITransparentUpgradeableProxy:

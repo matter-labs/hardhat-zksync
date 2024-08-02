@@ -6,7 +6,7 @@ import semver from 'semver';
 import chalk from 'chalk';
 import {
     OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR,
-    UPGRADEABLE_CONTRACTS_FROM_ALLIAS,
+    UPGRADEABLE_CONTRACTS_FROM_ALIAS,
     UPGRADEABLE_CONTRACTS_FROM_CONTRACTS,
 } from './constants';
 
@@ -50,5 +50,5 @@ export function getUpgradableContracts() {
         return UPGRADEABLE_CONTRACTS_FROM_CONTRACTS;
     }
 
-    return UPGRADEABLE_CONTRACTS_FROM_ALLIAS;
+    return UPGRADEABLE_CONTRACTS_FROM_ALIAS;
 }
