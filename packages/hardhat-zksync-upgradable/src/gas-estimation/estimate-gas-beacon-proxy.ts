@@ -8,6 +8,7 @@ import { ZkSyncUpgradablePluginError } from '../errors';
 import { convertGasPriceToEth } from '../utils/utils-general';
 import { BEACON_PROXY_JSON } from '../constants';
 
+import { getUpgradableContracts } from '../utils';
 import { getMockedBeaconData } from './estimate-gas-beacon';
 
 export type EstimateBeaconGasFunction = (
@@ -27,7 +28,7 @@ export function makeEstimateGasBeaconProxy(hre: HardhatRuntimeEnvironment): Esti
         const { mockedBeaconAddress, data } = await getMockedBeaconData(deployer, hre, args, opts);
 
         const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
-            artifactPath.includes(path.sep + BEACON_PROXY_JSON),
+            artifactPath.includes(path.sep + getUpgradableContracts().BeaconProxy + path.sep + BEACON_PROXY_JSON),
         );
         assert(beaconProxyPath, 'Beacon proxy artifact not found');
         const beaconProxyContract = await import(beaconProxyPath);

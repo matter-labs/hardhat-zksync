@@ -8,10 +8,11 @@ import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import assert from 'assert';
 import { extractFactoryDeps, getInitializerData } from '../utils/utils-general';
-import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
+import { TUP_JSON, ERC1967_PROXY_JSON } from '../constants';
 import { Manifest, ProxyDeployment } from '../core/manifest';
 import { DeployProxyOptions } from '../utils/options';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { getUpgradableContracts } from '../utils';
 import { deployProxyImpl } from './deploy-impl';
 import { DeployTransaction, deploy } from './deploy';
 
@@ -80,7 +81,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
 
             case 'uups': {
                 const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                    x.includes(path.sep + ERC1967_PROXY_JSON),
+                    x.includes(path.sep + getUpgradableContracts().ERC1967Proxy + path.sep + ERC1967_PROXY_JSON),
                 );
                 assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
                 const proxyContract = await import(ERC1967ProxyPath);
@@ -104,7 +105,9 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
                     console.info(chalk.green(`Admin was deployed to ${adminAddress}`));
                 }
 
-                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
+                const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+                    x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + TUP_JSON),
+                );
                 assert(TUPPath, 'TUP artifact not found');
                 const TUPContract = await import(TUPPath);
 

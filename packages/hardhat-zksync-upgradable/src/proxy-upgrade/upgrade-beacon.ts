@@ -9,6 +9,7 @@ import { ContractAddressOrInstance, extractFactoryDeps, getContractAddress } fro
 import { UpgradeBeaconOptions } from '../utils/options';
 import { deployBeaconImpl } from '../proxy-deployment/deploy-impl';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
+import { getUpgradableContracts } from '../utils';
 
 export type UpgradeBeaconFunction = (
     wallet: zk.Wallet,
@@ -43,7 +44,7 @@ export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeacon
         }
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-            x.includes(path.sep + UPGRADABLE_BEACON_JSON),
+            x.includes(path.sep + getUpgradableContracts().UpgradeableBeacon + path.sep + UPGRADABLE_BEACON_JSON),
         );
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);

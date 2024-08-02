@@ -11,6 +11,7 @@ import path from 'path';
 import { UPGRADABLE_BEACON_JSON } from '../constants';
 import { DeployBeaconOptions } from '../utils/options';
 import { extractFactoryDeps } from '../utils/utils-general';
+import { getUpgradableContracts } from '../utils';
 import { deployBeaconImpl } from './deploy-impl';
 import { deploy, DeployTransaction } from './deploy';
 
@@ -39,7 +40,7 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFu
         }
 
         const upgradableBeaconPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-            x.includes(path.sep + UPGRADABLE_BEACON_JSON),
+            x.includes(path.sep + getUpgradableContracts().UpgradeableBeacon + path.sep + UPGRADABLE_BEACON_JSON),
         );
         assert(upgradableBeaconPath, 'Upgradable beacon artifact not found');
         const upgradeableBeaconContract = await import(upgradableBeaconPath);
