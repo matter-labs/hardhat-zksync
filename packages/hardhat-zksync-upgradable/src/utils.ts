@@ -36,7 +36,7 @@ export function isOpenzeppelinContractsVersionValid(): boolean {
     try {
         // eslint-disable-next-line import/no-extraneous-dependencies
         const versionContracts = require('@openzeppelin/contracts/package.json').version;
-        if (!versionContracts || semver.lt(versionContracts, '4.6.1') || semver.gt(versionContracts, '5.0.0')) {
+        if (!versionContracts || semver.lt(versionContracts, '4.6.0') || semver.gt(versionContracts, '5.0.0')) {
             return false;
         }
         return true;

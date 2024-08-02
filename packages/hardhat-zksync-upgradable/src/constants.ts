@@ -59,4 +59,4 @@ export const verifiableContracts = {
     proxyAdmin: { event: 'OwnershipTransferred(address,address)' },
 };
 
-export const OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR = `The @matterlabs/hardhat-zksync-upgradable plugin utilizes the @openzeppelin/contracts dependency for proxy contracts, compatible with versions between 4.6.1 and 4.9.6. Please update the dependecy to a version within this range for optimal functionality.`;
+export const OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR = `The @matterlabs/hardhat-zksync-upgradable plugin utilizes the @openzeppelin/contracts dependency for proxy contracts, compatible with versions between 4.6.0 and 4.9.6. Please update the dependecy to a version within this range for optimal functionality.`;
