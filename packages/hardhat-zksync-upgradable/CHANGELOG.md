@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.5.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.1...@matterlabs/hardhat-zksync-upgradable-v0.5.2) (2024-08-04)
+
+
+### Bug Fixes
+
+* use openzepplin/contracts as alias and remove unvalid peer dependencies ([068e0e0](https://github.com/matter-labs/hardhat-zksync/commit/068e0e0c265fb3b4853727553b72c3be77dd75d8))
+
 ## [0.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.0...@matterlabs/hardhat-zksync-upgradable-v0.5.1) (2024-06-27)
 
 
