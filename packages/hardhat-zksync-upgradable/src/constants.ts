@@ -13,13 +13,25 @@ export const MANIFEST_DEFAULT_DIR = '.upgradable';
 export const ZKSOLC_ARTIFACT_FORMAT_VERSION = 'hh-zksolc-artifact-1';
 export const ZKVYPER_ARTIFACT_FORMAT_VERSION = 'hh-zkvyper-artifact-1';
 
-export const PROXY_SOURCE_NAMES = [
-    '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
-    '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',
-    '@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol',
-    '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol',
-    '@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol',
-];
+export const UPGRADEABLE_CONTRACTS_FROM_ALIAS = {
+    TransparentUpgradeableProxy:
+        '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/transparent/TransparentUpgradeableProxy.sol',
+    ITransparentUpgradeableProxy:
+        '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/transparent/ITransparentUpgradeableProxy.sol',
+    ProxyAdmin: '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/transparent/ProxyAdmin.sol',
+    BeaconProxy: '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/beacon/BeaconProxy.sol',
+    UpgradeableBeacon: '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/beacon/UpgradeableBeacon.sol',
+    ERC1967Proxy: '@openzeppelin/contracts-hardhat-zksync-upgradable/proxy/ERC1967/ERC1967Proxy.sol',
+};
+
+export const UPGRADEABLE_CONTRACTS_FROM_CONTRACTS = {
+    TransparentUpgradeableProxy: '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
+    ITransparentUpgradeableProxy: '@openzeppelin/contracts/proxy/transparent/ITransparentUpgradeableProxy.sol',
+    ProxyAdmin: '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',
+    BeaconProxy: '@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol',
+    UpgradeableBeacon: '@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol',
+    ERC1967Proxy: '@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol',
+};
 
 export const UPGRADE_VERIFY_ERROR =
     'The verify plugin must be imported before the hardhat-upgrades plugin.' +
@@ -46,3 +58,5 @@ export const verifiableContracts = {
     transparentUpgradeableProxy: { event: 'AdminChanged(address,address)' },
     proxyAdmin: { event: 'OwnershipTransferred(address,address)' },
 };
+
+export const OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR = `The @matterlabs/hardhat-zksync-upgradable plugin utilizes the @openzeppelin/contracts dependency for proxy contracts, compatible with versions between 4.6.0 and 4.9.6. Please update the dependecy to a version within this range for optimal functionality.`;

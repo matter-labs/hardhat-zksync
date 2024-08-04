@@ -12,6 +12,7 @@ import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general
 import { getChainId } from '../core/provider';
 import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
 import { getAdminArtifact } from '../proxy-deployment/deploy-proxy-admin';
+import { getUpgradableContracts } from '../utils';
 
 export type EstimateProxyGasFunction = (
     deployer: Deployer,
@@ -109,7 +110,7 @@ async function estimateGasUUPS(
     quiet: boolean = false,
 ): Promise<bigint> {
     const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-        x.includes(path.sep + ERC1967_PROXY_JSON),
+        x.includes(path.sep + getUpgradableContracts().ERC1967Proxy + path.sep + ERC1967_PROXY_JSON),
     );
     assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
     const proxyContract = await import(ERC1967ProxyPath);
@@ -151,7 +152,9 @@ async function estimateGasTransparent(
         );
     }
 
-    const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + TUP_JSON));
+    const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+        x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + TUP_JSON),
+    );
     assert(TUPPath, 'TUP artifact not found');
     const TUPContract = await import(TUPPath);
 

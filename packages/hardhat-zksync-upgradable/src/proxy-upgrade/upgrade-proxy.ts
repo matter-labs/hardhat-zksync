@@ -14,6 +14,7 @@ import { extractFactoryDeps, getContractAddress } from '../utils/utils-general';
 import { deployProxyImpl } from '../proxy-deployment/deploy-impl';
 import { Manifest } from '../core/manifest';
 import { ITUP_JSON, PROXY_ADMIN_JSON } from '../constants';
+import { getUpgradableContracts } from '../utils';
 
 export type UpgradeFunction = (
     wallet: zk.Wallet,
@@ -66,7 +67,9 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
         const adminBytecode = await getCode(provider, adminAddress);
 
         if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-            const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + ITUP_JSON));
+            const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+                x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + ITUP_JSON),
+            );
             assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
             const transparentUpgradeableProxyContract = await import(TUPPath);
 
@@ -82,7 +85,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
             const manifest = await Manifest.forNetwork(provider);
 
             const proxyAdminPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-                x.includes(path.sep + PROXY_ADMIN_JSON),
+                x.includes(path.sep + getUpgradableContracts().ProxyAdmin + path.sep + PROXY_ADMIN_JSON),
             );
             assert(proxyAdminPath, 'Proxy admin artifact not found');
             const proxyAdminContract = await import(proxyAdminPath);
