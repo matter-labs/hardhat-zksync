@@ -4,4 +4,5 @@ contact_links:
       url: https://github.com/zkSync-Community-Hub/zksync-developers/discussions
       about: Please provide feedback, and ask questions here.
     - name: hardhat-zksync plugins documentation page
-      about: Please refer to the documentation for immediate answers.      url: https://docs.zksync.io/build/tooling/hardhat/getting-started
+      url: https://docs.zksync.io/build/tooling/hardhat/getting-started
+      about: Please refer to the documentation for immediate answers.
