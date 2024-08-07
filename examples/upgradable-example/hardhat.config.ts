@@ -17,17 +17,14 @@ const config: HardhatUserConfig = {
             },
         },
     },
+    defaultNetwork:'zkSyncNetwork',
     networks: {
         hardhat: {
             zksync: true,
         },
-        eth: {
-            zksync: true,
-            url: 'http://0.0.0.0:8545',
-        },
         zkSyncNetwork: {
             zksync: true,
-            ethNetwork: 'eth',
+            ethNetwork: 'http://0.0.0.0:8545',
             url: 'http://0.0.0.0:3050',
         },
     },
