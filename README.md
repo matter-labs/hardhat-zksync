@@ -25,15 +25,15 @@ Here is an overview of the plugins currently available:
 
 You can find more detailed explanations on how to use hardhat ZKsync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
 
-[hardhat-zksync-solc](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html)\
-[hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html)\
-[hardhat-zksync-verify](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html)\
-[hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html)\
-[hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html)\
-[hardhat-zksync](https://era.zksync.io/docs/tools/hardhat/plugins.html)\
-[hardhat-zksync-upgradeable](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-upgradable.html)\
-[hardhat-zksync-node](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-node.html)\
-[hardhat-zksync-ethers](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-ethers.html)
+[hardhat-zksync](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync)\
+[hardhat-zksync-solc](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-solc)\
+[hardhat-zksync-deploy](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-deploy)\
+[hardhat-zksync-verify](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify)\
+[hardhat-zksync-verify-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify-vyper)\
+[hardhat-zksync-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-vyper)\
+[hardhat-zksync-upgradeable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradeable)\
+[hardhat-zksync-node](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-node)\
+[hardhat-zksync-ethers](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-ethers)
 
 
 We hope you find these plugins useful in your development efforts.\
