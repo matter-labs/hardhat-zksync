@@ -111,7 +111,9 @@ async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string,
     const adminBytecode = await getCode(provider, adminAddress);
 
     if (isEmptySlot(adminAddress) || adminBytecode === '0x') {
-        const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) => x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + ITUP_JSON));
+        const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
+            x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + ITUP_JSON),
+        );
         assert(TUPPath, 'Transparent upgradeable proxy artifact not found');
         const transparentUpgradeableProxyContract = await import(TUPPath);
 
