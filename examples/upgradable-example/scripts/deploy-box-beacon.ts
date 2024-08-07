@@ -7,17 +7,15 @@ import * as hre from 'hardhat';
 async function main() {
     const contractName = 'Box';
     console.info(chalk.yellow(`Deploying ${contractName}...`));
-
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
     const zkWallet = Wallet.fromMnemonic(testMnemonic);
 
     const deployer = new Deployer(hre, zkWallet);
-
     const boxContract = await deployer.loadArtifact(contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract);
+    const beacon = await hre.upgrades.deployBeacon(deployer.zkWallet, boxContract);
     await beacon.waitForDeployment();
 
-    const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, await beacon.getAddress(), boxContract, [42]);
+    const box = await hre.upgrades.deployBeaconProxy(deployer.zkWallet, await beacon.getAddress(), boxContract, [42]);
     await box.waitForDeployment();
 
     box.connect(zkWallet);
