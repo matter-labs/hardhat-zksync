@@ -24,7 +24,7 @@ To use features like the deployer extension inside Hardhat Runtime Environment (
 
 ## 📣 Prerequisite
 
-- You are already familiar with deploying smart contracts on ZKsync Era. If not, please refer to the first section of the [quickstart tutorail](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html).
+- You are already familiar with deploying smart contracts on ZKsync Era. If not, please refer to the first section of the [quickstart tutorail](https://docs.zksync.io/build/start-coding/zksync-101).
 - You have a wallet with sufficient Sepolia or Goerli **ETH** on L1 to pay for bridging funds to ZKsync as well as deploying smart contracts. Use the third party faucets to get some test tokens in your account.
 - You know how to get your [private key from your MetaMask wallet](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key).
 
@@ -457,7 +457,7 @@ To run a specific script, add the `--script` argument, e.g. `yarn hardhat deploy
 
 To run a scripts with specific tags add the `--tags` argument, e.g `yarn hardhat deploy-zksync --tags all`. Run all scripts with tag `all`.
 
-`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how ZKsync deals with libraries on this [link](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+`yarn hardhat deploy-zksync:libraries` -- compilation and deployment of missing libraries (the list of all missing libraries is provided by the output of [matterlabs/hardhat-zksync-solc](https://www.npmjs.com/package/@matterlabs/hardhat-zksync-solc) plugin). Read more about how ZKsync deals with libraries on this [link](https://docs.zksync.io/build/tooling/hardhat/compiling-libraries).
 The account used for deployment will be the one specified by the `deployerAccount` configuration within the `hardhat.config.ts` file. If no such configuration is present, the account with index `0` will be used.
 
 `yarn hardhat deploy-zksync:contract --contract-name <contract name or FQN>`
@@ -487,11 +487,11 @@ The account used for deployment will be the one specified by the `deployerAccoun
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-deploy](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-deploy.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-deploy](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-deploy), ZKsync's Era [website](https://docs.zksync.io/build) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
-[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
+[Guides to get started](https://docs.zksync.io/build/start-coding/zksync-101): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://docs.zksync.io/build/tooling/hardhat/getting-started): Overview and guides for all Hardhat ZKsync Era plugins.\
+[ZK Chains](https://docs.zksync.io/zk-stack/concepts/zk-chains#what-are-zk-chains): Deep dive into the concept of ZK chains.
 
 ## 🤝 Contributing
 

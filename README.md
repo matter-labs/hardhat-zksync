@@ -23,7 +23,7 @@ Here is an overview of the plugins currently available:
 | hardhat-zksync-node           | Convenient plugin to run the ZKsync era-test-node locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on ZKsync.                                   |
 
-You can find more detailed explanations on how to use hardhat ZKsync plugins on our [documentation page](https://v2-docs.zksync.io/api/hardhat/plugins.html#plugins) where each plugin has its own section:
+You can find more detailed explanations on how to use hardhat ZKsync plugins on our [documentation page](https://docs.zksync.io/build/tooling/hardhat/getting-started) where each plugin has its own section:
 
 [hardhat-zksync](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync)\
 [hardhat-zksync-solc](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-solc)\
@@ -31,7 +31,7 @@ You can find more detailed explanations on how to use hardhat ZKsync plugins on 
 [hardhat-zksync-verify](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify)\
 [hardhat-zksync-verify-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify-vyper)\
 [hardhat-zksync-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-vyper)\
-[hardhat-zksync-upgradeable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradeable)\
+[hardhat-zksync-upgradable](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-upgradable)\
 [hardhat-zksync-node](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-node)\
 [hardhat-zksync-ethers](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-ethers)
 

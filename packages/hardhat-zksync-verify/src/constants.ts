@@ -39,7 +39,7 @@ If your constructor arguments are already encoded, they should be passed as a no
     constructorArguments: encodedConstructorArguments
   };
 
-  Please refer to the documentation page for more info: https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify.html
+  Please refer to the documentation page for more info: https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify
 `;
 
 export const BUILD_INFO_NOT_FOUND_ERROR = (
