@@ -496,7 +496,7 @@ describe('Plugin tests', async function () {
 
                     assert.isDefined(signer);
                     assert.equal((await signer.getAddress()).length, 42);
-                    assert.equal(await signer.getAddress(), '0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
+                    assert.equal(await signer.getAddress(), '0x0D43eB5B8a47bA8900d84AA36656c92024e9772e');
 
                     const gasPrice = await signer.provider.send('eth_gasPrice', []);
 
