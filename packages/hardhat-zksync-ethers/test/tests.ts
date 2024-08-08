@@ -97,6 +97,18 @@ describe('Plugin tests', async function () {
                 assert.isDefined(contract);
                 assert.equal((await contract.getAddress()).length, 42);
             });
+            it('should deploy with wallet using contract name', async function () {
+                const contract: Contract = await this.env.zksyncEthers.deployContract('Greeter', []);
+
+                assert.isDefined(contract);
+                assert.equal((await contract.getAddress()).length, 42);
+            });
+            it('should deploy with wallet using contract name without constructor arguments', async function () {
+                const contract: Contract = await this.env.zksyncEthers.deployContract('Greeter');
+
+                assert.isDefined(contract);
+                assert.equal((await contract.getAddress()).length, 42);
+            });
             it('should allow to use the call method', async function () {
                 const wallet = await this.env.zksyncEthers.getWallet();
 

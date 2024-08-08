@@ -45,12 +45,20 @@ extendEnvironment((hre) => {
             extractFactoryDeps: (artifact: ZkSyncArtifact) => extractFactoryDeps(hre, artifact),
             loadArtifact: (name: string) => loadArtifact(hre, name),
             deployContract: (
-                artifact: ZkSyncArtifact,
-                constructorArguments: any[],
+                artifactOrContractName: ZkSyncArtifact | string,
+                constructorArguments?: any[],
                 wallet?: Wallet,
                 overrides?: ethers.Overrides,
                 additionalFactoryDeps?: ethers.BytesLike[],
-            ) => deployContract(hre, artifact, constructorArguments, wallet, overrides, additionalFactoryDeps),
+            ) =>
+                deployContract(
+                    hre,
+                    artifactOrContractName,
+                    constructorArguments,
+                    wallet,
+                    overrides,
+                    additionalFactoryDeps,
+                ),
         };
     });
 });
