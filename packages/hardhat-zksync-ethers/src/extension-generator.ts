@@ -1,7 +1,8 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { Artifact, HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
 import { lazyObject } from 'hardhat/plugins';
-import { Overrides, BytesLike } from 'ethers';
+import { Overrides, BytesLike, Addressable, Signer } from 'ethers';
+import { FactoryOptions } from '@nomicfoundation/hardhat-ethers/types';
 import { createProviders } from './utils';
 import {
     deployContract,
@@ -110,11 +111,12 @@ class EthersGenerator implements Generator {
                 getImpersonatedSigner: (address: string) =>
                     hardhatEthersHelpers.getImpersonatedSigner(this._hre, address),
                 getContractFactory: hardhatEthersHelpers.getContractFactory.bind(null, this._hre) as any,
-                getContractFactoryFromArtifact: (...args: any[]) =>
-                    hardhatEthersHelpers.getContractFactoryFromArtifact(this._hre, args),
-                getContractAt: (...args: any[]) => hardhatEthersHelpers.getContractAt(this._hre, args),
-                getContractAtFromArtifact: (...args: any[]) =>
-                    hardhatEthersHelpers.getContractAtFromArtifact(this._hre, ...args),
+                getContractFactoryFromArtifact: (artifact: Artifact, signerOrOptions?: Signer | FactoryOptions) =>
+                    hardhatEthersHelpers.getContractFactoryFromArtifact(this._hre, artifact, signerOrOptions),
+                getContractAt: (nameOrAbi: string | any[], address: string | Addressable, signer?: Signer) =>
+                    hardhatEthersHelpers.getContractAt(this._hre, nameOrAbi, address, signer),
+                getContractAtFromArtifact: (artifact: Artifact, address: string | Addressable, signer?: Signer) =>
+                    hardhatEthersHelpers.getContractAtFromArtifact(this._hre, artifact, address, signer),
                 deployContract: hardhatEthersHelpers.deployContract.bind(null, this._hre) as any,
             };
         });

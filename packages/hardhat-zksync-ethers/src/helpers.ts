@@ -19,7 +19,7 @@ import {
     ZkSyncArtifact,
 } from './types';
 import { ZkSyncEthersPluginError } from './errors';
-import { getEthAccounts, getSignerOrWallet, getWalletsFromAccount, isArtifact, isNumber, isString } from './utils';
+import { getSignerAccounts, getSignerOrWallet, getWalletsFromAccount, isArtifact, isNumber, isString } from './utils';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
 import { HardhatZksyncSigner } from './hardhat-zksync-signer';
 
@@ -53,7 +53,7 @@ export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet
 }
 
 export async function getSigners(hre: HardhatRuntimeEnvironment): Promise<HardhatZksyncSigner[]> {
-    const accounts: string[] = await getEthAccounts(hre);
+    const accounts: string[] = await getSignerAccounts(hre);
 
     const signersWithAddress = await Promise.all(accounts.map((account) => getSigner(hre, account)));
 

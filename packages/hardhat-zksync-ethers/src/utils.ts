@@ -20,6 +20,7 @@ import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
 import { HardhatZksyncEthersProvider } from './hardhat-zksync-provider';
 import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { getWallets } from './helpers';
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
     return 'mnemonic' in object;
@@ -165,23 +166,25 @@ export function createProviders(hre: HardhatRuntimeEnvironment): {
 export async function findWalletFromAddress(
     hre: HardhatRuntimeEnvironment,
     address: string,
+    wallets?: Wallet[],
 ): Promise<Wallet | undefined> {
-    return (await hre.ethers.getWallets()).find((w) => isAddressEq(w.address, address));
+    if (!wallets) {
+        wallets = await getWallets(hre);
+    }
+    return wallets.find((w) => isAddressEq(w.address, address));
 }
 
-export async function getEthAccounts(hre: HardhatRuntimeEnvironment): Promise<string[]> {
-    const accounts = await hre.ethers.provider.send('eth_accounts', []);
+export async function getSignerAccounts(hre: HardhatRuntimeEnvironment): Promise<string[]> {
+    const accounts: [] = await hre.ethers.provider.send('eth_accounts', []);
 
     if (!accounts || accounts.length === 0) {
-        const chainId = await hre.ethers.providerL2.send('eth_chainId', []);
-        if (LOCAL_CHAIN_IDS.includes(chainId)) {
-            const chainIdEnum = chainId as LOCAL_CHAIN_IDS_ENUM;
-
-            return richWallets[chainIdEnum].map((wallet) => wallet.address);
-        }
+        const wallets = await getWallets(hre);
+        return wallets.map((w) => w.address);
     }
 
-    return accounts;
+    const allWallets = await getWallets(hre);
+
+    return accounts.filter((account: string) => allWallets.some((wallet) => isAddressEq(wallet.address, account)));
 }
 
 export async function getRichWalletsIfPossible(hre: HardhatRuntimeEnvironment): Promise<Wallet[]> {
@@ -217,7 +220,10 @@ export function getSignerOrWallet(
         } else if (signerWalletOrFactoryOptions.signer) {
             return signerWalletOrFactoryOptions.signer as HardhatZksyncSigner;
         }
+
+        return undefined;
     }
+
     return signerWalletOrFactoryOptions as HardhatZksyncSignerOrWallet;
 }
 

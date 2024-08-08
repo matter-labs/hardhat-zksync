@@ -2,7 +2,7 @@ import { ethers, getAddress, Networkish, resolveProperties } from 'ethers';
 import { Provider } from 'zksync-ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { HardhatZksyncSigner } from './hardhat-zksync-signer';
-import { getEthAccounts } from './utils';
+import { getSignerAccounts } from './utils';
 
 export class HardhatZksyncEthersProvider extends Provider {
     constructor(
@@ -11,7 +11,16 @@ export class HardhatZksyncEthersProvider extends Provider {
         network?: Networkish,
         options?: any,
     ) {
-        super(url, network, options);
+        if (!url) {
+            url = 'http://localhost:3050';
+        }
+
+        // Disable cache for local networ, other checks(localhost and 127.0.0.1) will be provided in the super constructor
+        const isLocalNetwork = typeof url === 'string' ? url.includes('0.0.0.0') : url.url.includes('0.0.0.0');
+
+        const optionsWithDisabledCache = isLocalNetwork ? { ...options, cacheTimeout: -1 } : options;
+
+        super(url, network, optionsWithDisabledCache);
     }
 
     public async getSigner(address?: string | number | undefined): Promise<HardhatZksyncSigner> {
@@ -19,7 +28,7 @@ export class HardhatZksyncEthersProvider extends Provider {
             address = 0;
         }
 
-        const accountsPromise = getEthAccounts(this._hre);
+        const accountsPromise = getSignerAccounts(this._hre);
 
         if (typeof address === 'number') {
             const allAccounts = (await accountsPromise) as string[];
