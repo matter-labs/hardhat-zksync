@@ -957,6 +957,9 @@ importers:
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../hardhat-zksync-solc
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.6
+        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chai:
         specifier: ^4.3.4
         version: 4.4.1
