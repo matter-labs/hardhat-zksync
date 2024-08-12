@@ -154,7 +154,7 @@ jobs:
           cat server.log
   zksync-ethers:
     runs-on: ubuntu-latest
-    name: upgradable
+    name: zksync-ethers
     steps:
       - uses: actions/checkout@v3
 
