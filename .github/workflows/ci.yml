@@ -64,8 +64,8 @@ jobs:
           pnpm hardhat run scripts/upgrade-factory-beacon.ts 
           pnpm hardhat run scripts/upgrade-factory-uups.ts 
           pnpm hardhat run scripts/upgrade-factory.ts 
-          
-      - name: Test zksolc example
+
+      - name: Test zksync-ethers example
         run: |
           cd examples/zksync-ethers-example
           pnpm hardhat compile
