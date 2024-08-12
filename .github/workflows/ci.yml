@@ -64,10 +64,18 @@ jobs:
           pnpm hardhat run scripts/upgrade-factory-beacon.ts 
           pnpm hardhat run scripts/upgrade-factory-uups.ts 
           pnpm hardhat run scripts/upgrade-factory.ts 
+          
+      - name: Test zksolc example
+        run: |
+          cd examples/zksync-ethers-example
+          pnpm hardhat compile
+          pnpm hardhat deploy-zksync
+
       - name: Show logs
         if: always()
         run: |
           cat server.log
+    
 
   upgradable:
     runs-on: ubuntu-latest
@@ -144,3 +152,36 @@ jobs:
         if: always()
         run: |
           cat server.log
+  zksync-ethers:
+    runs-on: ubuntu-latest
+    name: upgradable
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          repository: matter-labs/local-setup
+          path: local-setup
+
+      - name: Run server
+        run: |
+          cd local-setup
+          ./start.sh &>../server.log &
+      - uses: pnpm/action-setup@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: pnpm
+
+      - name: Setup environment
+        run: |
+          pnpm install
+          pnpm build
+      - name: Wait until server is up
+        run: |
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+      - name: Test zksync ethers plugin
+        run: |
+          cd packages/hardhat-zksync-ethers
+          pnpm test
