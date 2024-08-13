@@ -43,7 +43,7 @@ export function makeDeployBeaconProxy(
     return async function (
         ...args: Parameters<DeployBeaconProxyFactory | DeployBeaconProxyArtifact>
     ): Promise<zk.Contract> {
-        const target = args[0];
+        const target = args[1];
         if (target instanceof zk.ContractFactory) {
             return deployBeaconProxyFactory(hre, ...(args as Parameters<DeployBeaconProxyFactory>));
         } else {

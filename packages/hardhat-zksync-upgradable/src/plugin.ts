@@ -37,7 +37,7 @@ export async function deployBeacon(
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
     const factory = new ContractFactory(contract.abi, contract.bytecode, wallet);
-    const beacon = await hre.upgrades.deployBeacon(factory, [], {
+    const beacon = await hre.upgrades.deployBeacon(factory, {
         deploymentType: taskArgs.deploymentTypeImpl,
         salt: taskArgs.saltImpl,
     });

@@ -20,11 +20,9 @@ async function main() {
     await beacon.waitForDeployment();
 
     const box = await hre.upgrades.deployBeaconProxy(
-        deployer.zkWallet,
         await beacon.getAddress(),
-        boxArtifact,
-        [42],
-        {},
+        boxFactory,
+        [42]
     );
     await box.waitForDeployment();
 

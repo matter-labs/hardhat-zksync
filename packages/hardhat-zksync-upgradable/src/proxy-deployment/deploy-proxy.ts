@@ -23,6 +23,12 @@ export type DeployFunctionFactory = (
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
+export type DeployFunctionFactoryNoArgs = (
+    factory: zk.ContractFactory,
+    opts?: DeployProxyOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
+
 export type DeployFunctionArtifact = (
     wallet: zk.Wallet,
     artifact: ZkSyncArtifact,
@@ -31,10 +37,18 @@ export type DeployFunctionArtifact = (
     quiet?: boolean,
 ) => Promise<zk.Contract>;
 
-export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunctionFactory | DeployFunctionArtifact {
-    return async function (...args: Parameters<DeployFunctionFactory | DeployFunctionArtifact>): Promise<zk.Contract> {
+export function makeDeployProxy(
+    hre: HardhatRuntimeEnvironment,
+): DeployFunctionFactory | DeployFunctionFactoryNoArgs | DeployFunctionArtifact {
+    return async function (
+        ...args: Parameters<DeployFunctionFactory | DeployFunctionArtifact | DeployFunctionFactoryNoArgs>
+    ): Promise<zk.Contract> {
         const target = args[0];
         if (target instanceof zk.ContractFactory) {
+            const targetArgs = args[1];
+            if (targetArgs && 'initializer' in targetArgs) {
+                return await deployProxyFactoryNoArgs(hre, ...(args as Parameters<DeployFunctionFactoryNoArgs>));
+            }
             return await deployProxyFactory(hre, ...(args as Parameters<DeployFunctionFactory>));
         } else {
             return deployProxyArtifact(hre, ...(args as Parameters<DeployFunctionArtifact>));
@@ -63,6 +77,23 @@ export async function deployProxyFactory(
     opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
 
     return deployProxy(hre, factory, wallet, args, opts, quiet);
+}
+
+export async function deployProxyFactoryNoArgs(
+    hre: HardhatRuntimeEnvironment,
+    factory: zk.ContractFactory,
+    opts?: DeployProxyOptions,
+    quiet?: boolean,
+): Promise<zk.Contract> {
+    const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
+    if (!wallet) {
+        throw new ZkSyncUpgradablePluginError('Wallet is required for deployment');
+    }
+    opts = opts || {};
+    opts.provider = wallet?.provider;
+    opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
+
+    return deployProxy(hre, factory, wallet, undefined, opts, quiet);
 }
 
 export async function deployProxyArtifact(
@@ -94,7 +125,6 @@ async function deployProxy(
     }
 
     const manifest = await Manifest.forNetwork(wallet.provider);
-
     const { impl, kind } = await deployProxyImpl(hre, factory, opts);
     if (!quiet) {
         console.info(chalk.green(`Implementation contract was deployed to ${impl}`));

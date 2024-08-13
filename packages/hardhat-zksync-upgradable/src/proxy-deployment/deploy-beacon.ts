@@ -18,7 +18,6 @@ import { deploy, DeployTransaction } from './deploy';
 
 export type DeployBeaconFactory = (
     factory: zk.ContractFactory,
-    args?: unknown[],
     opts?: DeployBeaconOptions,
     quiet?: boolean,
 ) => Promise<zk.Contract>;
@@ -45,15 +44,9 @@ export function makeDeployBeacon(hre: HardhatRuntimeEnvironment): DeployBeaconFa
 export async function deployBeaconFactory(
     hre: HardhatRuntimeEnvironment,
     factory: zk.ContractFactory,
-    args?: unknown[],
     opts?: DeployBeaconOptions,
     quiet?: boolean,
 ): Promise<zk.Contract> {
-    if (!Array.isArray(args)) {
-        opts = args;
-        args = [];
-    }
-
     const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
     if (!wallet) {
         throw new ZkSyncUpgradablePluginError('Wallet is required for deployment');
@@ -63,7 +56,7 @@ export async function deployBeaconFactory(
     opts.provider = wallet?.provider;
     opts.factoryDeps = await extractFactoryDeps(hre, await getArtifactFromBytecode(hre, factory.bytecode));
 
-    return deployProxyBeacon(hre, factory, wallet, args, opts, quiet);
+    return deployProxyBeacon(hre, factory, wallet, undefined, opts, quiet);
 }
 
 export async function deployBeaconArtifact(

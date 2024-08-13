@@ -19,8 +19,11 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     return wallet;
 }
 
-export function checkOpenzeppelinVersions<T>(wrappedFunction: (...args: any) => T): (...args: any) => T {
-    return function (...args: any): T {
+export function wrapMakeFunction<T>(
+    hre: HardhatRuntimeEnvironment,
+    wrappedFunction: (...args: any) => T,
+): (...args: any) => Promise<T> {
+    return async function (...args: any): Promise<T> {
         try {
             if (!isOpenzeppelinContractsVersionValid()) {
                 throw new Error(OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR);
@@ -28,6 +31,18 @@ export function checkOpenzeppelinVersions<T>(wrappedFunction: (...args: any) => 
         } catch (e: any) {
             console.warn(chalk.yellow(e.message));
         }
+
+        const upgradableContracts = getUpgradableContracts();
+        hre.config.zksolc.settings.overrideContractsToCompile = [
+            upgradableContracts.ProxyAdmin,
+            upgradableContracts.TransparentUpgradeableProxy,
+            upgradableContracts.BeaconProxy,
+            upgradableContracts.UpgradeableBeacon,
+            upgradableContracts.ERC1967Proxy,
+        ];
+        await hre.run('compile', { quiet: true });
+        hre.config.zksolc.settings.overrideContractsToCompile = undefined;
+
         return wrappedFunction(...args);
     };
 }
@@ -51,4 +66,18 @@ export function getUpgradableContracts() {
     }
 
     return UPGRADEABLE_CONTRACTS_FROM_ALIAS;
+}
+
+export function tryRequire(id: string, resolveOnly?: boolean) {
+    try {
+        if (resolveOnly) {
+            require.resolve(id);
+        } else {
+            require(id);
+        }
+        return true;
+    } catch (e: any) {
+        // do nothing
+    }
+    return false;
 }
