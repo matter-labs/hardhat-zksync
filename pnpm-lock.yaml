@@ -1333,9 +1333,15 @@ importers:
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../hardhat-zksync-solc
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.6
+        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/contracts-hardhat-zksync-upgradable':
         specifier: npm:@openzeppelin/contracts@^4.9.2
         version: '@openzeppelin/contracts@4.9.6'
+      '@openzeppelin/defender-admin-client':
+        specifier: ^1.52.0
+        version: 1.54.6(bufferutil@4.0.8)(debug@4.3.5)(utf-8-validate@5.0.10)
       '@openzeppelin/hardhat-upgrades':
         specifier: ~2.5.1
         version: 2.5.1(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(bufferutil@4.0.8)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)

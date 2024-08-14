@@ -1,4 +1,5 @@
 import '@matterlabs/hardhat-zksync-solc';
+import '@nomicfoundation/hardhat-ethers';
 import './type-extensions';
 
 import { extendEnvironment, subtask, task, types } from 'hardhat/internal/core/config/config-env';
@@ -15,7 +16,7 @@ import {
     TASK_UPGRADE_ZKSYNC_PROXY,
 } from './task-names';
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
-import { ExtensionGenerator } from './extension-generator';
+import { ExtensionGenerator } from './generator';
 
 extendEnvironment((hre) => {
     const extesionGenerator = new ExtensionGenerator(hre);

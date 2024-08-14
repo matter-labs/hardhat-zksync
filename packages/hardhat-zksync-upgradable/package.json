@@ -38,6 +38,8 @@
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",
     "@openzeppelin/hardhat-upgrades": "~2.5.1",
     "@openzeppelin/upgrades-core": "^1.31.3",
+    "@nomicfoundation/hardhat-ethers": "^3.0.6",
+    "@openzeppelin/defender-admin-client": "^1.52.0",
     "chalk": "^4.1.2",
     "compare-versions": "^6.1.0",
     "ethereumjs-util": "^7.1.5",

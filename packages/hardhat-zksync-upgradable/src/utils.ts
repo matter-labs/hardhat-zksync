@@ -81,3 +81,11 @@ export function tryRequire(id: string, resolveOnly?: boolean) {
     }
     return false;
 }
+
+export type UndefinedFunctionType = (...args: any[]) => any;
+
+export function makeUndefinedFunction(): UndefinedFunctionType {
+    return (..._: any[]) => {
+        throw new Error('This function is not implemented');
+    };
+}
