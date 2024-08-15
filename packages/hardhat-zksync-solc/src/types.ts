@@ -43,7 +43,7 @@ export interface ZkSolcConfig {
         // Specific contracts present in source to be compiled
         contractsToCompile?: string[];
         // Specific only contracts forced to be compiled even if they are not present in source
-        overrideContractsToCompile?: string[];
+        forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
     };

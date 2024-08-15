@@ -48,7 +48,7 @@ export async function compileProxyContracts(hre: HardhatRuntimeEnvironment, noCo
     }
 
     const upgradableContracts = getUpgradableContracts();
-    hre.config.zksolc.settings.overrideContractsToCompile = [
+    hre.config.zksolc.settings.forceContractsToCompile = [
         upgradableContracts.ProxyAdmin,
         upgradableContracts.TransparentUpgradeableProxy,
         upgradableContracts.BeaconProxy,
@@ -56,7 +56,7 @@ export async function compileProxyContracts(hre: HardhatRuntimeEnvironment, noCo
         upgradableContracts.ERC1967Proxy,
     ];
     await hre.run('compile', { quiet: true });
-    delete hre.config.zksolc.settings.overrideContractsToCompile;
+    delete hre.config.zksolc.settings.forceContractsToCompile;
 }
 
 export function isOpenzeppelinContractsVersionValid(): boolean {
