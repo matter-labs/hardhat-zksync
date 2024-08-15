@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.1...@matterlabs/hardhat-zksync-solc-v1.2.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* introduce forceContrectsToCompile to ensure that contracts not present in the source path are compiled ([#1290](https://github.com/matter-labs/hardhat-zksync/issues/1290)) ([fcbcd1f](https://github.com/matter-labs/hardhat-zksync/commit/fcbcd1f56fd66be02af8fd60358656327521093e))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.0...@matterlabs/hardhat-zksync-solc-v1.2.1) (2024-07-09)
 
 
