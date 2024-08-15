@@ -9,6 +9,7 @@ import { EVENT_NOT_FOUND_ERROR, UPGRADE_VERIFY_ERROR } from '../constants';
 import { getContractCreationTxHash } from '../utils/utils-general';
 import { VerifiableContractInfo } from '../interfaces';
 import { ZkSyncUpgradablePluginError } from '../errors';
+import { compileProxyContracts } from '../utils';
 import { fullVerifyTransparentOrUUPS } from './verify-transparent-uups';
 import { fullVerifyBeacon, fullVerifyBeaconProxy } from './verify-beacon';
 
@@ -29,10 +30,13 @@ export async function verify(args: any, hre: HardhatRuntimeEnvironment, runSuper
     const proxyAddress = args.address;
 
     if (await isTransparentOrUUPSProxy(provider, proxyAddress)) {
+        await compileProxyContracts(hre, args.noCompile);
         await fullVerifyTransparentOrUUPS(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else if (await isBeaconProxy(provider, proxyAddress)) {
+        await compileProxyContracts(hre, args.noCompile);
         await fullVerifyBeaconProxy(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else if (await isBeacon(provider, proxyAddress)) {
+        await compileProxyContracts(hre, args.noCompile);
         await fullVerifyBeacon(hre, proxyAddress, hardhatZkSyncVerify, runSuper, args.noCompile);
     } else {
         return hardhatZkSyncVerify(proxyAddress);

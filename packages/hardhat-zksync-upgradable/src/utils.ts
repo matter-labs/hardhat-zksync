@@ -24,27 +24,39 @@ export function wrapMakeFunction<T>(
     wrappedFunction: (...args: any) => T,
 ): (...args: any) => Promise<T> {
     return async function (...args: any): Promise<T> {
-        try {
-            if (!isOpenzeppelinContractsVersionValid()) {
-                throw new Error(OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR);
-            }
-        } catch (e: any) {
-            console.warn(chalk.yellow(e.message));
-        }
+        checkOpenzeppelinVersion();
 
-        const upgradableContracts = getUpgradableContracts();
-        hre.config.zksolc.settings.overrideContractsToCompile = [
-            upgradableContracts.ProxyAdmin,
-            upgradableContracts.TransparentUpgradeableProxy,
-            upgradableContracts.BeaconProxy,
-            upgradableContracts.UpgradeableBeacon,
-            upgradableContracts.ERC1967Proxy,
-        ];
-        await hre.run('compile', { quiet: true });
-        hre.config.zksolc.settings.overrideContractsToCompile = undefined;
+        await compileProxyContracts(hre);
 
         return wrappedFunction(...args);
     };
+}
+
+function checkOpenzeppelinVersion() {
+    try {
+        if (!isOpenzeppelinContractsVersionValid()) {
+            throw new Error(OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR);
+        }
+    } catch (e: any) {
+        console.warn(chalk.yellow(e.message));
+    }
+}
+
+export async function compileProxyContracts(hre: HardhatRuntimeEnvironment, noCompile: boolean = false) {
+    if (noCompile) {
+        return;
+    }
+
+    const upgradableContracts = getUpgradableContracts();
+    hre.config.zksolc.settings.overrideContractsToCompile = [
+        upgradableContracts.ProxyAdmin,
+        upgradableContracts.TransparentUpgradeableProxy,
+        upgradableContracts.BeaconProxy,
+        upgradableContracts.UpgradeableBeacon,
+        upgradableContracts.ERC1967Proxy,
+    ];
+    await hre.run('compile', { quiet: true });
+    delete hre.config.zksolc.settings.overrideContractsToCompile;
 }
 
 export function isOpenzeppelinContractsVersionValid(): boolean {
