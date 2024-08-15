@@ -62,7 +62,7 @@ Starting from zksolc version 1.5.0, the ZKsync Era Solidity compiler will be use
 | metadata                    | Metadata settings. If the option is omitted, the metadata hash appends by default: bytecodeHash. Can only be none.   |
 | dockerImage                 | (deprecated) option used to identify the name of the compiler docker image.                                          |
 
-Learn more about [compiling libraries here](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html)
+Learn more about [compiling libraries here](https://docs.zksync.io/build/tooling/hardhat/compiling-libraries)
 
 Setting the forceEVMLA field to true can have the following negative impacts:
 
@@ -95,11 +95,11 @@ Compiles all the smart contracts in the contracts directory and creates the arti
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-solc](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-solc](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-solc), ZKsync's Era [website](https://docs.zksync.io/build) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
-[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
+[Guides to get started](https://docs.zksync.io/build/start-coding/zksync-101): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://docs.zksync.io/build/tooling/hardhat/getting-started): Overview and guides for all Hardhat ZKsync Era plugins.\
+[ZK Chains](https://docs.zksync.io/zk-stack/concepts/zk-chains#what-are-zk-chains): Deep dive into the concept of ZK chains.
 
 ## 🤝 Contributing
 
