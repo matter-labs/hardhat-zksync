@@ -94,6 +94,21 @@ describe('zksolc plugin', async function () {
             assert.equal(1, sourceNames.length);
             assert.equal('contracts/Greeter.sol', sourceNames[0]);
         });
+
+        it('Should successfully return only Greeter contract for compiling which is not present in source paths', async function () {
+            this.env.config.zksolc.settings.forceContractsToCompile = ['overrideContracts/Greeter.sol'];
+
+            const rootPath = this.env.config.paths.root;
+            const sourcePaths: string[] = [`${rootPath}/contracts/Greeter.sol`, `${rootPath}/contracts/Greeter2.sol`];
+
+            const sourceNames: string[] = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, {
+                rootPath,
+                sourcePaths,
+            });
+
+            assert.equal(1, sourceNames.length);
+            assert.equal('overrideContracts/Greeter.sol', sourceNames[0]);
+        });
     });
 
     describe('Compilation jobs', async function () {

@@ -193,6 +193,10 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: stri
         return await runSuper(args);
     }
 
+    if (hre.config.zksolc.settings.forceContractsToCompile) {
+        return hre.config.zksolc.settings.forceContractsToCompile;
+    }
+
     const contractsToCompile: string[] | undefined = hre.config.zksolc.settings.contractsToCompile;
 
     if (!contractsToCompile || contractsToCompile.length === 0) {
