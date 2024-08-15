@@ -40,8 +40,10 @@ export interface ZkSolcConfig {
         forceEvmla?: boolean;
         // Evmla intermediate representation
         forceEVMLA?: boolean;
-        // Specific contracts to be compiled
+        // Specific contracts present in source to be compiled
         contractsToCompile?: string[];
+        // Specific only contracts forced to be compiled even if they are not present in source
+        forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
     };
