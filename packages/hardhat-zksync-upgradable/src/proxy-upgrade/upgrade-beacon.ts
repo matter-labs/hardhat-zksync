@@ -103,7 +103,7 @@ async function upgradeBeacon(
 
 export function makeUpgradeBeacon(hre: HardhatRuntimeEnvironment): UpgradeBeaconArtifact | UpgradeBeaconFactory {
     return async function (...args: Parameters<UpgradeBeaconArtifact | UpgradeBeaconFactory>): Promise<zk.Contract> {
-        const target = args[0];
+        const target = args[1];
         if (target instanceof zk.ContractFactory) {
             return await upgradeBeaconFactory(hre, ...(args as Parameters<UpgradeBeaconFactory>));
         } else {

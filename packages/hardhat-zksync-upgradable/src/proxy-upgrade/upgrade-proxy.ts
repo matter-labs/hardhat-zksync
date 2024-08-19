@@ -36,8 +36,8 @@ type Upgrader = (nextImpl: string, call?: string) => Promise<TransactionResponse
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeProxyFactory | UpgradeProxyArtifact {
     return async function (...args: Parameters<UpgradeProxyFactory | UpgradeProxyArtifact>): Promise<zk.Contract> {
-        const target = args[0];
-        if (target instanceof zk.ContractFactory || args[1] instanceof zk.ContractFactory) {
+        const target = args[1];
+        if (target instanceof zk.ContractFactory) {
             return await upgradeProxyFactory(hre, ...(args as Parameters<UpgradeProxyFactory>));
         } else {
             return upgradeProxyArtifact(hre, ...(args as Parameters<UpgradeProxyArtifact>));
