@@ -325,8 +325,7 @@ subtask(
 
         const solcBuild: SolcBuild = await hre.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
             quiet: args.quiet,
-            solcVersion: args.solcVersion,
-            compilationJob: args.compilationJob,
+            solcVersion: args.compilationJob.getSolcConfig().version,
         });
 
         await hre.run(TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_START, {
@@ -365,74 +364,74 @@ subtask(
 // - prevent unnecessary solc downloads when using docker
 // - download zksolc binary if needed
 // - validate zksolc binary
-subtask(
-    TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
-    async (args: { solcVersion: string; compilationJob: CompilationJob }, hre, runSuper) => {
-        if (hre.network.zksync !== true) {
-            return await runSuper(args);
-        }
+subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: { solcVersion: string }, hre, runSuper) => {
+    if (hre.network.zksync !== true) {
+        return await runSuper(args);
+    }
 
-        if (hre.config.zksolc.compilerSource === 'docker') {
-            // Versions are wrong here when using docker, because there is no
-            // way to know them beforehand except to run the docker image, which
-            // adds 5-10 seconds to startup time. We cannot read them from artifacts,
-            // since that would make cache invalid every time, if the version is
-            // different from the one in the docker image.
-            //
-            // If you wish to know the actual versions from build-info files,
-            // please look at `output.version`, `output.long_version`
-            // and `output.zk_version` in the generated JSON.
-            return {
-                compilerPath: '',
-                isSolcJs: false,
-                version: args.solcVersion,
-                longVersion: '',
-            };
-        }
+    if (hre.config.zksolc.compilerSource === 'docker') {
+        // Versions are wrong here when using docker, because there is no
+        // way to know them beforehand except to run the docker image, which
+        // adds 5-10 seconds to startup time. We cannot read them from artifacts,
+        // since that would make cache invalid every time, if the version is
+        // different from the one in the docker image.
+        //
+        // If you wish to know the actual versions from build-info files,
+        // please look at `output.version`, `output.long_version`
+        // and `output.zk_version` in the generated JSON.
+        return {
+            compilerPath: '',
+            isSolcJs: false,
+            version: args.solcVersion,
+            longVersion: '',
+        };
+    }
 
-        const compiler = args.compilationJob.getSolcConfig();
+    const compiler = hre.config.solidity.compilers.find((c) => c.version === args.solcVersion);
+    if (!compiler) {
+        throw new Error(`Compiler with version ${args.solcVersion} not found`);
+    }
 
-        if (compiler.eraVersion) {
-            const compilersCache = await getCompilersDir();
-            let path: string = '';
-            let version: string = '';
-            let normalizedVersion: string = '';
+    if (compiler.eraVersion) {
+        const compilersCache = await getCompilersDir();
+        let path: string = '';
+        let version: string = '';
+        let normalizedVersion: string = '';
 
-            await zkVmSolcCompilerDownloaderMutex.use(async () => {
-                const zkVmSolcCompilerDownloader = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
-                    compiler.eraVersion!,
-                    compiler.version,
-                    compilersCache,
-                );
+        await zkVmSolcCompilerDownloaderMutex.use(async () => {
+            const zkVmSolcCompilerDownloader = await ZkVmSolcCompilerDownloader.getDownloaderWithVersionValidated(
+                compiler.eraVersion!,
+                compiler.version,
+                compilersCache,
+            );
 
-                const isZksolcDownloaded = await zkVmSolcCompilerDownloader.isCompilerDownloaded();
-                if (!isZksolcDownloaded) {
-                    await zkVmSolcCompilerDownloader.downloadCompiler();
-                }
+            const isZksolcDownloaded = await zkVmSolcCompilerDownloader.isCompilerDownloaded();
+            if (!isZksolcDownloaded) {
+                await zkVmSolcCompilerDownloader.downloadCompiler();
+            }
 
-                path = zkVmSolcCompilerDownloader.getCompilerPath();
-                version = zkVmSolcCompilerDownloader.getVersion();
-                normalizedVersion = getZkVmNormalizedVersion(
-                    zkVmSolcCompilerDownloader.getSolcVersion(),
-                    zkVmSolcCompilerDownloader.getZkVmSolcVersion(),
-                );
-            });
-            console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
+            path = zkVmSolcCompilerDownloader.getCompilerPath();
+            version = zkVmSolcCompilerDownloader.getVersion();
+            normalizedVersion = getZkVmNormalizedVersion(
+                zkVmSolcCompilerDownloader.getSolcVersion(),
+                zkVmSolcCompilerDownloader.getZkVmSolcVersion(),
+            );
+        });
+        console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
 
-            return {
-                compilerPath: path,
-                isSolcJs: false,
-                version,
-                longVersion: normalizedVersion,
-            };
-        } else {
-            const solcBuild = await runSuper(args);
+        return {
+            compilerPath: path,
+            isSolcJs: false,
+            version,
+            longVersion: normalizedVersion,
+        };
+    } else {
+        const solcBuild = await runSuper(args);
 
-            console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
-            return solcBuild;
-        }
-    },
-);
+        console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zksolc.version, args.solcVersion)));
+        return solcBuild;
+    }
+});
 
 subtask(
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
