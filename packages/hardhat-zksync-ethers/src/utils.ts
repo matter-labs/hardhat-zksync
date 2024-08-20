@@ -6,7 +6,7 @@ import {
     HttpNetworkConfig,
     NetworkConfig,
 } from 'hardhat/types';
-import { Signer, Wallet } from 'zksync-ethers';
+import { Provider, Signer, Wallet } from 'zksync-ethers';
 import { ethers } from 'ethers';
 import { isAddressEq } from 'zksync-ethers/build/utils';
 import {
@@ -15,7 +15,13 @@ import {
     ZkFactoryOptions,
     ZkSyncArtifact,
 } from './types';
-import { ETH_DEFAULT_NETWORK_RPC_URL, LOCAL_CHAIN_IDS, LOCAL_CHAIN_IDS_ENUM, SUPPORTED_L1_TESTNETS } from './constants';
+import {
+    ETH_DEFAULT_NETWORK_RPC_URL,
+    LOCAL_CHAIN_IDS,
+    LOCAL_CHAIN_IDS_ENUM,
+    LOCAL_CHAINS_WITH_IMPERSONATION,
+    SUPPORTED_L1_TESTNETS,
+} from './constants';
 import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
 import { HardhatZksyncEthersProvider } from './hardhat-zksync-provider';
@@ -242,4 +248,21 @@ export function isValidEthNetworkURL(string: string) {
     } catch (_) {
         return false;
     }
+}
+
+export async function isImpersonatedSigner(provider: Provider, address: string): Promise<boolean> {
+    const chainId = await provider.send('eth_chainId', []);
+
+    if (!LOCAL_CHAINS_WITH_IMPERSONATION.includes(chainId)) {
+        return false;
+    }
+
+    const result = await provider.send('hardhat_stopImpersonatingAccount', [address]);
+
+    if (!result) {
+        return false;
+    }
+
+    await provider.send('hardhat_impersonateAccount', [address]);
+    return true;
 }

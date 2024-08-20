@@ -1,6 +1,6 @@
 import type * as ethers from 'ethers';
 import type { Artifact } from 'hardhat/types';
-import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync-ethers';
+import { Contract, ContractFactory, Provider, Wallet } from 'zksync-ethers';
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
 import { HardhatZksyncSigner } from './hardhat-zksync-signer';
 
@@ -98,7 +98,7 @@ export interface HardhatZksyncEthersHelpers {
     getWallet: (privateKeyOrIndex?: string | number) => Promise<Wallet>;
     getContractFactory: typeof getContractFactory;
     getContractAt: typeof getContractAt;
-    getImpersonatedSigner: (address: string) => Promise<Signer>;
+    getImpersonatedSigner: (address: string) => Promise<HardhatZksyncSigner>;
     extractFactoryDeps: (artifact: ZkSyncArtifact) => Promise<string[]>;
     loadArtifact: (name: string) => Promise<ZkSyncArtifact>;
     deployContract: (
