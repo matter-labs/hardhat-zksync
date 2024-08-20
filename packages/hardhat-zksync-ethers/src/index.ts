@@ -1,6 +1,6 @@
 import { extendEnvironment } from 'hardhat/config';
 import './type-extensions';
-import { ExtensionGenerator } from './extension-generator';
+import { ExtensionGenerator } from './generator';
 
 extendEnvironment((hre) => {
     const extensionGenerator = new ExtensionGenerator(hre);
