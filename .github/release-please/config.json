@@ -6,14 +6,20 @@
     "bump-patch-for-minor-pre-major": false,
     "packages": {
         "packages/hardhat-zksync-deploy": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-deploy"
         },
         "packages/hardhat-zksync-upgradable": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-upgradable"
         },
         "packages/hardhat-zksync": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync"
         }
