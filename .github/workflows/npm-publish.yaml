@@ -48,4 +48,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         run: |
-          pnpm publish packages/${{inputs.package}} --tag ${{ inputs.tag }} --access=public
+          pnpm publish packages/${{inputs.package}} --tag ${{ inputs.tag }} --access=public --no-git-checks
