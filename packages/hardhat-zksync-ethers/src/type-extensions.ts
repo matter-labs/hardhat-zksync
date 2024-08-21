@@ -1,6 +1,8 @@
 import * as zk from 'zksync-ethers';
-import type { EthNetwork, HardhatZksyncEthersHelpers } from './types';
 
+import { HardhatEthersHelpers } from '@nomicfoundation/hardhat-ethers/types';
+import { ethers } from 'ethers';
+import type { EthNetwork, HardhatZksyncEthersHelpers } from './types';
 import 'hardhat/types/runtime';
 
 declare module 'hardhat/types/config' {
@@ -29,6 +31,7 @@ declare module 'hardhat/types/runtime' {
     }
 
     interface HardhatRuntimeEnvironment {
+        ethers: (typeof zk & typeof ethers) & (HardhatZksyncEthersHelpers & HardhatEthersHelpers);
         zksyncEthers: typeof zk & HardhatZksyncEthersHelpers;
     }
 }

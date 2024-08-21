@@ -1,22 +1,34 @@
-import { Contract, ContractFactory, Provider, Signer, Wallet } from 'zksync-ethers';
+import { Contract, ContractFactory, Wallet } from 'zksync-ethers';
 
 import * as ethers from 'ethers';
 
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
-import { FactoryOptions, ZkSyncArtifact } from './types';
+import {
+    GetContractAt,
+    GetContractAtFromAbi,
+    GetContractAtFromArtifact,
+    GetContractAtFromName,
+    GetContractFactory,
+    GetContractFactoryAbiBytecode,
+    GetContractFactoryArtifact,
+    GetContractFactoryArtifactName,
+    HardhatZksyncSignerOrWallet,
+    HardhatZksyncSignerOrWalletOrFactoryOptions,
+    ZkSyncArtifact,
+} from './types';
 import { ZkSyncEthersPluginError } from './errors';
-import { richWallets } from './rich-wallets';
-import { getWalletsFromAccount, isArtifact, isFactoryOptions, isNumber, isString } from './utils';
+import { getSignerAccounts, getSignerOrWallet, getWalletsFromAccount, isArtifact, isNumber, isString } from './utils';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
+import { HardhatZksyncSigner } from './hardhat-zksync-signer';
 
 export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrIndex?: string | number): Promise<Wallet> {
     const privateKey = isString(privateKeyOrIndex) ? (privateKeyOrIndex as string) : undefined;
     const accountNumber = isNumber(privateKeyOrIndex) ? (privateKeyOrIndex as number) : undefined;
 
     if (privateKey) {
-        return new Wallet(privateKey, hre.zksyncEthers.providerL2).connectToL1(hre.zksyncEthers.providerL1);
+        return new Wallet(privateKey, hre.ethers.provider).connectToL1(hre.ethers.providerL1);
     }
 
     const accounts = hre.network.config.accounts;
@@ -40,82 +52,74 @@ export async function getWallets(hre: HardhatRuntimeEnvironment): Promise<Wallet
     return await getWalletsFromAccount(hre, accounts);
 }
 
-function _getSigners(hre: HardhatRuntimeEnvironment): Signer[] {
-    const accounts: string[] = richWallets.map((wallet) => wallet.address);
+export async function getSigners(hre: HardhatRuntimeEnvironment): Promise<HardhatZksyncSigner[]> {
+    const accounts: string[] = await getSignerAccounts(hre);
 
-    const signersWithAddress = accounts.map((account) => getSigner(hre, account));
+    const signersWithAddress = await Promise.all(accounts.map((account) => getSigner(hre, account)));
 
     return signersWithAddress;
 }
 
-function getSigner(hre: HardhatRuntimeEnvironment, address: string): Signer {
-    return Signer.from(new Signer(hre.zksyncEthers.providerL2, address), hre.network.config.chainId!);
+export async function getSigner(hre: HardhatRuntimeEnvironment, address: string): Promise<HardhatZksyncSigner> {
+    const { HardhatZksyncSigner: SignerWithAddressImpl } = await import('./hardhat-zksync-signer');
+
+    return await SignerWithAddressImpl.create(hre, hre.ethers.provider, address);
 }
 
-export async function getImpersonatedSigner(hre: HardhatRuntimeEnvironment, address: string): Promise<Signer> {
-    await hre.zksyncEthers.providerL2.send('hardhat_impersonateAccount', [address]);
-    return getSigner(hre, address);
+export async function getImpersonatedSigner(
+    hre: HardhatRuntimeEnvironment,
+    address: string,
+): Promise<HardhatZksyncSigner> {
+    await hre.ethers.provider.send('hardhat_impersonateAccount', [address]);
+    return await getSigner(hre, address);
 }
 
-export async function getContractFactory<A extends any[] = any[], I = Contract>(
-    hre: HardhatRuntimeEnvironment,
-    name: string,
-    walletOrOption?: Wallet | FactoryOptions,
-): Promise<ContractFactory<A, I>>;
+export function makeGetContractFactory(hre: HardhatRuntimeEnvironment): GetContractFactory {
+    return async function <A extends any[] = any[], I = Contract>(
+        ...args: Parameters<
+            | GetContractFactoryArtifact<A, I>
+            | GetContractFactoryArtifactName<A, I>
+            | GetContractFactoryAbiBytecode<A, I>
+        >
+    ): Promise<ContractFactory<A, I>> {
+        if (isArtifact(args[0])) {
+            return getContractFactoryFromArtifact(hre, ...(args as Parameters<GetContractFactoryArtifact<A, I>>));
+        }
 
-export async function getContractFactory<A extends any[] = any[], I = Contract>(
-    hre: HardhatRuntimeEnvironment,
-    abi: any[],
-    bytecode: ethers.BytesLike,
-    wallet?: Wallet,
-    deploymentType?: DeploymentType,
-): Promise<ContractFactory<A, I>>;
+        if (args[0] instanceof Array && ethers.isBytesLike(args[1])) {
+            return getContractFactoryByAbiAndBytecode(
+                hre,
+                ...(args as Parameters<GetContractFactoryAbiBytecode<A, I>>),
+            );
+        }
 
-export async function getContractFactory<A extends any[] = any[], I = Contract>(
-    hre: HardhatRuntimeEnvironment,
-    nameOrAbi: string | any[],
-    bytecodeOrFactoryOptions?: (Wallet | FactoryOptions) | ethers.BytesLike,
-    wallet?: Wallet,
-    deploymentType?: DeploymentType,
-): Promise<ContractFactory<A, I>> {
-    if (typeof nameOrAbi === 'string') {
-        const artifact = await loadArtifact(hre, nameOrAbi);
+        if (typeof args[0] === 'string') {
+            const artifact = await loadArtifact(hre, args[0] as string);
 
-        return getContractFactoryFromArtifact(
-            hre,
-            artifact,
-            bytecodeOrFactoryOptions as Wallet | FactoryOptions | undefined,
-            deploymentType,
+            return getContractFactoryFromArtifact(
+                hre,
+                artifact,
+                args[1] as HardhatZksyncSignerOrWalletOrFactoryOptions,
+                args[2] as DeploymentType,
+            );
+        }
+
+        throw new ZkSyncEthersPluginError(
+            `You are trying to create a contract factory, but you have not passed a valid parameter.`,
         );
-    }
-
-    return getContractFactoryByAbiAndBytecode(
-        hre,
-        nameOrAbi,
-        bytecodeOrFactoryOptions as ethers.BytesLike,
-        wallet,
-        deploymentType,
-    );
+    };
 }
 
 export async function getContractFactoryFromArtifact<A extends any[] = any[], I = Contract>(
     hre: HardhatRuntimeEnvironment,
     artifact: ZkSyncArtifact,
-    walletOrOptions?: Wallet | FactoryOptions,
+    walletOrSignerOrOptions?: HardhatZksyncSignerOrWalletOrFactoryOptions,
     deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>> {
-    let wallet: Wallet | undefined;
-
     if (!isArtifact(artifact)) {
         throw new ZkSyncEthersPluginError(
             `You are trying to create a contract factory from an artifact, but you have not passed a valid artifact parameter.`,
         );
-    }
-
-    if (isFactoryOptions(walletOrOptions)) {
-        wallet = walletOrOptions.wallet;
-    } else {
-        wallet = walletOrOptions;
     }
 
     if (artifact.bytecode === '0x') {
@@ -125,66 +129,76 @@ If you want to call a contract using ${artifact.contractName} as its interface u
         );
     }
 
-    return getContractFactoryByAbiAndBytecode(hre, artifact.abi, artifact.bytecode, wallet, deploymentType);
+    return getContractFactoryByAbiAndBytecode(
+        hre,
+        artifact.abi,
+        artifact.bytecode,
+        walletOrSignerOrOptions,
+        deploymentType,
+    );
 }
 
 async function getContractFactoryByAbiAndBytecode<A extends any[] = any[], I = Contract>(
     hre: HardhatRuntimeEnvironment,
     abi: any[],
     bytecode: ethers.BytesLike,
-    wallet?: Wallet,
+    walletOrSignerOrOptions?: HardhatZksyncSignerOrWalletOrFactoryOptions,
     deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>> {
-    if (!wallet) {
-        wallet = await getWallet(hre);
+    let walletOrSigner: HardhatZksyncSignerOrWallet | undefined = getSignerOrWallet(walletOrSignerOrOptions);
+
+    if (!walletOrSigner) {
+        walletOrSigner = (await getSigners(hre))[0];
     }
 
-    return new ContractFactory<A, I>(abi, bytecode, wallet, deploymentType);
+    return new ContractFactory<A, I>(abi, bytecode, walletOrSigner, deploymentType);
 }
 
-export async function getContractAt(
-    hre: HardhatRuntimeEnvironment,
-    nameOrAbi: string | any[],
-    address: string | Address,
-    wallet?: Wallet,
-): Promise<Contract> {
-    if (typeof nameOrAbi === 'string') {
-        const artifact = await loadArtifact(hre, nameOrAbi);
+export function makeContractAt(hre: HardhatRuntimeEnvironment): GetContractAt {
+    return async function getContractAt(
+        ...args: Parameters<GetContractAtFromName | GetContractAtFromAbi | GetContractAtFromArtifact>
+    ): Promise<Contract> {
+        if (isArtifact(args[0])) {
+            return getContractAtFromArtifact(hre, ...(args as Parameters<GetContractAtFromArtifact>));
+        }
 
-        return getContractAtFromArtifact(hre, artifact, address, wallet);
-    }
+        if (typeof args[0] === 'string') {
+            const artifact = await loadArtifact(hre, args[0]);
+            return getContractAtFromArtifact(
+                hre,
+                artifact,
+                args[1] as string | Address,
+                args[2] as HardhatZksyncSignerOrWallet,
+            );
+        }
 
-    if (!wallet) {
-        wallet = await getWallet(hre);
-    }
-
-    // If there's no signer, we want to put the provider for the selected network here.
-    // This allows read only operations on the contract interface.
-    const walletOrProvider: Wallet | Provider = wallet !== undefined ? wallet : hre.zksyncEthers.providerL2;
-
-    return new Contract(address, nameOrAbi, walletOrProvider);
+        return getContractAtFromAbi(hre, ...(args as Parameters<GetContractAtFromAbi>));
+    };
 }
 
 export async function getContractAtFromArtifact(
     hre: HardhatRuntimeEnvironment,
     artifact: ZkSyncArtifact,
     address: string | Address,
-    wallet?: Wallet,
+    walletOrSigner?: HardhatZksyncSignerOrWallet,
 ): Promise<Contract> {
-    if (!isArtifact(artifact)) {
-        throw new ZkSyncEthersPluginError(
-            `You are trying to create a contract by artifact, but you have not passed a valid artifact parameter.`,
-        );
+    return getContractAtFromAbi(hre, artifact.abi, address, walletOrSigner);
+}
+
+async function getContractAtFromAbi(
+    hre: HardhatRuntimeEnvironment,
+    abi: any[],
+    address: string | Address,
+    walletOrSigner?: HardhatZksyncSignerOrWallet,
+): Promise<Contract> {
+    if (!walletOrSigner) {
+        walletOrSigner = (await getSigners(hre))[0];
     }
 
-    if (!wallet) {
-        wallet = await getWallet(hre);
-    }
-
-    let contract = new Contract(address, artifact.abi, wallet);
+    let contract = new Contract(address, abi, walletOrSigner);
 
     if (contract.runner === null) {
-        contract = contract.connect(hre.zksyncEthers.providerL2) as Contract;
+        contract = contract.connect(hre.ethers.provider) as Contract;
     }
 
     return contract;
@@ -192,17 +206,20 @@ export async function getContractAtFromArtifact(
 
 export async function deployContract(
     hre: HardhatRuntimeEnvironment,
-    artifact: ZkSyncArtifact,
-    constructorArguments: any[],
-    wallet?: Wallet,
+    artifactOrContract: ZkSyncArtifact | string,
+    constructorArguments: any[] = [],
+    walletOrSigner?: HardhatZksyncSignerOrWallet,
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<Contract> {
-    if (!wallet) {
-        wallet = await getWallet(hre);
+    if (!walletOrSigner) {
+        walletOrSigner = (await getSigners(hre))[0];
     }
 
-    const factory = await getContractFactoryFromArtifact(hre, artifact, wallet);
+    const artifact =
+        typeof artifactOrContract === 'string' ? await loadArtifact(hre, artifactOrContract) : artifactOrContract;
+
+    const factory = await getContractFactoryFromArtifact(hre, artifact, walletOrSigner);
 
     const baseDeps = await extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
@@ -215,7 +232,6 @@ export async function deployContract(
         ..._overrides,
         customData: {
             ...customData,
-            salt: ethers.ZeroHash,
             factoryDeps,
         },
     });
