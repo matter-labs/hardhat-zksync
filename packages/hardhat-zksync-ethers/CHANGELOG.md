@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.0-beta.1...@matterlabs/hardhat-zksync-ethers-v1.3.0-beta.1) (2024-08-21)
+
+
+### Features
+
+* introducing hardhat zksync-ethers sdk helpers and ethers extension in hre ([624ebec](https://github.com/matter-labs/hardhat-zksync/commit/624ebec66e8db7b44b3b9b95ef7e4f9dc5959663))
+
 ## [1.2.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.1.0-beta.1...@matterlabs/hardhat-zksync-ethers-v1.2.0-beta.1) (2024-08-21)
 
 
