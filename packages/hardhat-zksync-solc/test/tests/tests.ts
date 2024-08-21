@@ -19,6 +19,7 @@ import { ZksolcCompilerDownloader } from '../../src/compile/downloader';
 import { useEnvironment } from '../helpers';
 import { ZkSyncArtifact } from '../../src/types';
 import { TASK_DOWNLOAD_ZKSOLC } from '../../src/constants';
+import { ZkVmSolcCompilerDownloader } from '../../src/compile/zkvm-solc-downloader';
 
 chai.use(sinonChai);
 
@@ -262,6 +263,11 @@ describe('zksolc plugin', async function () {
                     longVersion: 'solc/solc-version-0-long',
                     isSolcJs: false,
                 });
+                sandbox
+                    .stub(ZkVmSolcCompilerDownloader.prototype, 'isCompilerDownloaded')
+                    .returns(isCompilerDownloaded());
+                sandbox.stub(ZkVmSolcCompilerDownloader.prototype, 'getCompilerPath').returns('zkvmsolc/0.8.17-1.0.0');
+                sandbox.stub(ZkVmSolcCompilerDownloader.prototype, 'getVersion').returns('0.8.17-1.0.0');
             });
 
             afterEach(() => {
@@ -283,6 +289,38 @@ describe('zksolc plugin', async function () {
                             };
                         },
                     },
+                });
+
+                assert.equal(build.compilerPath, 'solc/solc-version-0');
+                assert.equal(build.isSolcJs, false);
+                assert.equal(build.version, '0.8.17');
+                assert.equal(build.longVersion, 'solc/solc-version-0-long');
+            });
+
+            it('Should get solc build for binary compiler with era version', async function () {
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
+                    compilationJob: {
+                        getSolcConfig: () => {
+                            return {
+                                version: '0.8.17',
+                                eraVersion: '1.0.0',
+                            };
+                        },
+                    },
+                });
+
+                assert.equal(build.compilerPath, 'zkvmsolc/0.8.17-1.0.0');
+                assert.equal(build.isSolcJs, false);
+                assert.equal(build.version, '0.8.17-1.0.0');
+                assert.equal(build.longVersion, 'zkVM-0.8.17-1.0.0');
+            });
+
+            it('Should get solc build for binary compiler without compilation job', async function () {
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
                 });
 
                 assert.equal(build.compilerPath, 'solc/solc-version-0');
