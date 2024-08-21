@@ -3,9 +3,9 @@ name: Publish packages to github
 on:
   push:
     branches:
+      - beta
       - main
       - ethers-v5
-      - beta
       - beta-ethers-v5
   workflow_dispatch:
 
@@ -24,6 +24,7 @@ jobs:
         uses: google-github-actions/release-please-action@v3
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
+            target_branch: beta
             command: manifest
             config-file: .github/release-please/config.json
             manifest-file: .github/release-please/manifest.json
