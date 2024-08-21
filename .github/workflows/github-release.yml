@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - ethers-v5
+      - beta
+      - beta-ethers-v5
   workflow_dispatch:
 
 permissions:
