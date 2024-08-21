@@ -14,8 +14,8 @@
     "typescript": "^5.3.0"
   },
   "scripts": {
-    "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-upgradable packages/hardhat-zksync",
-    "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-upgradable packages/hardhat-zksync",
+    "build": "tsc --build packages/hardhat-zksync-deploy packages/hardhat-zksync-upgradable packages/hardhat-zksync-ethers packages/hardhat-zksync",
+    "watch": "tsc --build --watch packages/hardhat-zksync-deploy packages/hardhat-zksync-upgradable packages/hardhat-zksync-ethers packages/hardhat-zksync",
     "clean": "pnpm run --recursive clean",
     "lint": "pnpm run --recursive lint",
     "lint:fix": "pnpm run --recursive lint:fix",

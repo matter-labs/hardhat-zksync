@@ -17,6 +17,10 @@
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-upgradable"
         },
+        "packages/hardhat-zksync-ethers": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-ethers"
+        },
         "packages/hardhat-zksync": {
             "prerelease-type": "beta",
             "prerelease": true,
