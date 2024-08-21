@@ -33,8 +33,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-deploy": "^1.5.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.2",
     "@openzeppelin/upgrades-core": "^1.31.3",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",
     "chalk": "^4.1.2",

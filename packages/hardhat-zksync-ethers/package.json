@@ -37,8 +37,8 @@
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
     "chai": "^4.3.4",
-    "@matterlabs/hardhat-zksync-solc": "workspace:^",
-    "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.2",
+    "@matterlabs/hardhat-zksync-deploy": "^1.5.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.6"
   },
   "devDependencies": {

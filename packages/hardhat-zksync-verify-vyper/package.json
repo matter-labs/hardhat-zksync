@@ -34,7 +34,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-vyper": "workspace:^",
+    "@matterlabs/hardhat-zksync-vyper": "^1.0.8",
     "axios": "^1.7.2",
     "chai": "^4.3.4",
     "chalk": "^4.1.2",
@@ -43,7 +43,7 @@
     "@ethersproject/address": "^5.7.0"
   },
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-vyper": "workspace:^",
+    "@matterlabs/hardhat-zksync-vyper": "^1.0.8",
     "@types/chai": "^4.3.16",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",
