@@ -7,11 +7,9 @@ on:
         required: true
         type: choice
         description: tag to publish
-        default: latest
+        default: beta
         options: 
-          - latest
           - beta
-          - alpha
 
       package:
         required: true
@@ -28,7 +26,6 @@ on:
           - hardhat-zksync-node
           - hardhat-zksync-chai-matchers
           - hardhat-zksync-ethers
-          - hardhat-zksync-verify-vyper
 
 jobs:
   publish:

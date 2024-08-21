@@ -6,42 +6,52 @@
     "bump-patch-for-minor-pre-major": false,
     "packages": {
         "packages/hardhat-zksync-deploy": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-deploy"
         },
         "packages/hardhat-zksync-solc": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-solc"
         },
         "packages/hardhat-zksync-upgradable": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-upgradable"
         },
         "packages/hardhat-zksync-vyper": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-vyper"
         },
         "packages/hardhat-zksync-verify": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-verify"
         },
         "packages/hardhat-zksync": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync"
         },
         "packages/hardhat-zksync-node": {
+            "prerelease-type": "beta",
+            "prerelease": true,
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-node"
         },
         "packages/hardhat-zksync-ethers": {
-            "release-type": "node",
-            "component": "@matterlabs/hardhat-zksync-ethers"
-        },
-        "packages/hardhat-zksync-verify-vyper": {
-            "prerelease-type": "alpha",
+            "prerelease-type": "beta",
             "prerelease": true,
             "release-type": "node",
-            "component": "@matterlabs/hardhat-zksync-verify-vyper"
+            "component": "@matterlabs/hardhat-zksync-ethers"
         }
     }
 }
