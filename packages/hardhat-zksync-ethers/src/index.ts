@@ -12,4 +12,4 @@ extendEnvironment((hre) => {
 });
 
 export { HardhatZksyncEthersProvider } from './hardhat-zksync-provider';
-export { HardhatZksyncSigner } from './hardhat-zksync-signer';
+export { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
