@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { Provider } from 'zksync-ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { ConnectionInfo } from 'ethers/lib/utils';
-import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 
 export class HardhatZksyncEthersProvider extends Provider {
     constructor(
