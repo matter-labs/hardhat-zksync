@@ -1,27 +1,11 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { lazyObject } from 'hardhat/plugins';
-import { wrapMakeFunction } from './utils';
-import { HardhatUpgrades, HardhatUpgradesOZ, makeUndefinedFunction, PlatformHardhatUpgrades } from './interfaces';
+import { makeUndefinedFunction, wrapMakeFunction } from './utils';
+import { HardhatUpgrades } from './interfaces';
+import { HardhatUpgradesOZ } from './openzeppelin-hardhat-upgrades/interfaces';
+import { Generator } from './generator';
 
-interface Generator {
-    populateExtension(): any;
-}
-
-export class ExtensionGenerator {
-    constructor(private _hre: HardhatRuntimeEnvironment) {}
-
-    public populatedExtension(): any {
-        if (this._hre.network.zksync) {
-            const zkSyncGenerator = new ZkSyncGenerator(this._hre);
-            return zkSyncGenerator.populateExtension();
-        } else {
-            const openzeppelinGenerator = new OpenZeppelinGenerator(this._hre);
-            return openzeppelinGenerator.populateExtension();
-        }
-    }
-}
-
-class ZkSyncGenerator implements Generator {
+export class ZkSyncGenerator implements Generator {
     constructor(private _hre: HardhatRuntimeEnvironment) {}
 
     private makeFunctions(): HardhatUpgrades {
@@ -73,88 +57,5 @@ class ZkSyncGenerator implements Generator {
     public populateExtension(): any {
         this._hre.upgrades = lazyObject(() => this.makeFunctions() as HardhatUpgrades & HardhatUpgradesOZ);
         this._hre.zkUpgrades = lazyObject(() => this.makeFunctions());
-    }
-}
-
-class OpenZeppelinGenerator implements Generator {
-    constructor(private _hre: HardhatRuntimeEnvironment) {}
-
-    public populateExtension(): void {
-        this._hre.upgrades = lazyObject(() => this.makeFunctions(false));
-        this._hre.platform = lazyObject(() => this.makePlatformFunctions(this._hre));
-    }
-
-    private makeFunctions(platform: boolean) {
-        const {
-            silenceWarnings,
-            getAdminAddress,
-            getImplementationAddress,
-            getBeaconAddress,
-        } = require('@openzeppelin/upgrades-core');
-        const { makeDeployProxy } = require('@openzeppelin/hardhat-upgrades/dist/deploy-proxy');
-        const { makeDeployProxyAdmin } = require('@openzeppelin/hardhat-upgrades/dist/deploy-proxy-admin');
-        const { makeUpgradeProxy } = require('@openzeppelin/hardhat-upgrades/dist/upgrade-proxy');
-        const { makeValidateImplementation } = require('@openzeppelin/hardhat-upgrades/dist/validate-implementation');
-        const { makeValidateUpgrade } = require('@openzeppelin/hardhat-upgrades/dist/validate-upgrade');
-        const { makeDeployImplementation } = require('@openzeppelin/hardhat-upgrades/dist/deploy-implementation');
-        const { makePrepareUpgrade } = require('@openzeppelin/hardhat-upgrades/dist/prepare-upgrade');
-        const { makeDeployBeacon } = require('@openzeppelin/hardhat-upgrades/dist/deploy-beacon');
-        const { makeDeployBeaconProxy } = require('@openzeppelin/hardhat-upgrades/dist/deploy-beacon-proxy');
-        const { makeUpgradeBeacon } = require('@openzeppelin/hardhat-upgrades/dist/upgrade-beacon');
-        const { makeForceImport } = require('@openzeppelin/hardhat-upgrades/dist/force-import');
-        const {
-            makeChangeProxyAdmin,
-            makeTransferProxyAdminOwnership,
-            makeGetInstanceFunction,
-        } = require('@openzeppelin/hardhat-upgrades/dist/admin');
-        const { getImplementationAddressFromBeacon } = require('@openzeppelin/upgrades-core/dist/impl-address');
-
-        return {
-            silenceWarnings,
-            deployProxy: makeDeployProxy(this._hre, platform),
-            upgradeProxy: makeUpgradeProxy(this._hre, platform), // block on platform
-            validateImplementation: makeValidateImplementation(this._hre),
-            validateUpgrade: makeValidateUpgrade(this._hre),
-            deployImplementation: makeDeployImplementation(this._hre, platform),
-            prepareUpgrade: makePrepareUpgrade(this._hre, platform),
-            deployBeacon: makeDeployBeacon(this._hre, platform), // block on platform
-            deployBeaconProxy: makeDeployBeaconProxy(this._hre, platform),
-            upgradeBeacon: makeUpgradeBeacon(this._hre, platform), // block on platform
-            deployProxyAdmin: makeDeployProxyAdmin(this._hre, platform), // block on platform
-            forceImport: makeForceImport(this._hre),
-            admin: {
-                getInstance: makeGetInstanceFunction(this._hre),
-                changeProxyAdmin: makeChangeProxyAdmin(this._hre, platform), // block on platform
-                transferProxyAdminOwnership: makeTransferProxyAdminOwnership(this._hre, platform), // block on platform
-            },
-            erc1967: {
-                getAdminAddress: (proxyAddress: string) => getAdminAddress(this._hre.network.provider, proxyAddress),
-                getImplementationAddress: (proxyAddress: string) =>
-                    getImplementationAddress(this._hre.network.provider, proxyAddress),
-                getBeaconAddress: (proxyAddress: string) => getBeaconAddress(this._hre.network.provider, proxyAddress),
-            },
-            beacon: {
-                getImplementationAddress: (beaconAddress: string) =>
-                    getImplementationAddressFromBeacon(this._hre.network.provider, beaconAddress),
-            },
-            estimation: {
-                estimateGasProxy: makeUndefinedFunction(),
-                estimateGasBeacon: makeUndefinedFunction(),
-                estimateGasBeaconProxy: makeUndefinedFunction(),
-            },
-        };
-    }
-
-    private makePlatformFunctions(hre: HardhatRuntimeEnvironment): PlatformHardhatUpgrades {
-        const { makeDeployContract } = require('./deploy-contract');
-        const { makeProposeUpgrade } = require('./platform/propose-upgrade');
-        const { makeGetDefaultApprovalProcess } = require('./platform/get-default-approval-process');
-
-        return {
-            ...this.makeFunctions(true),
-            deployContract: makeDeployContract(hre, true),
-            proposeUpgrade: makeProposeUpgrade(hre, true),
-            getDefaultApprovalProcess: makeGetDefaultApprovalProcess(hre),
-        };
     }
 }

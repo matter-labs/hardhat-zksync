@@ -12,10 +12,12 @@ async function main() {
 
     // upgrade beacon
 
-    const boxV2 = await hre.ethers.getContractFactory('Box');
+    const boxV2 = await hre.ethers.getContractFactory('BoxV2');
     const boxV2Upgraded = await hre.upgrades.upgradeBeacon(beacon.address, boxV2);
     console.info(chalk.green('Successfully upgraded beacon Box to BoxV2 on address: ', beacon.address));
+    await boxV2Upgraded.deployed();
 
+    console.log(boxV2Upgraded.signer);
     // wait some time before the next call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const value = await boxV2Upgraded.retrieve();

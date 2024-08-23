@@ -1,12 +1,10 @@
 import '@matterlabs/hardhat-zksync-solc';
+import '@nomiclabs/hardhat-ethers';
 import './type-extensions';
 
 import { extendEnvironment, subtask, task, types } from 'hardhat/internal/core/config/config-env';
 
-import {
-    TASK_COMPILE_SOLIDITY_COMPILE,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-} from 'hardhat/builtin-tasks/task-names';
+import { TASK_COMPILE_SOLIDITY_COMPILE } from 'hardhat/builtin-tasks/task-names';
 
 import { RunCompilerArgs } from './interfaces';
 import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
@@ -18,9 +16,8 @@ import {
     TASK_UPGRADE_ZKSYNC_BEACON,
     TASK_UPGRADE_ZKSYNC_PROXY,
 } from './task-names';
-import { getUpgradableContracts } from './utils';
 
-import { ExtensionGenerator } from './extension-generator';
+import { ExtensionGenerator } from './generator';
 
 extendEnvironment((hre) => {
     const extesionGenerator = new ExtensionGenerator(hre);
@@ -101,22 +98,6 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSup
     }
 
     return { output, solcBuild };
-});
-
-subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
-    const sourceNames = await runSuper();
-
-    const upgradableContracts = getUpgradableContracts();
-    return [
-        ...sourceNames,
-        ...[
-            upgradableContracts.ProxyAdmin,
-            upgradableContracts.TransparentUpgradeableProxy,
-            upgradableContracts.BeaconProxy,
-            upgradableContracts.UpgradeableBeacon,
-            upgradableContracts.ERC1967Proxy,
-        ],
-    ];
 });
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {
