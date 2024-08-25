@@ -106,7 +106,7 @@ export class HardhatZksyncSigner extends Signer {
         tx.customData = tx.customData || {};
         tx.customData.customSignature = await (this.accountWallet as EIP712Signer).sign(transaction);
 
-        const txBytes = serialize(transaction);
+        const txBytes = serialize(tx);
         return await this.provider.sendTransaction(txBytes);
     }
 
