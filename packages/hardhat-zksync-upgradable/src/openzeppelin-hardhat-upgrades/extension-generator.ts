@@ -78,7 +78,7 @@ export class OpenzeppelinGenerator implements Generator {
         const { makeProposeUpgrade } = require('./platform/propose-upgrade');
         const {
             makeGetDefaultApprovalProcess,
-        } = require('@openzeppelin/hardhat-upgrades/dist/get-default-approval-process');
+        } = require('@openzeppelin/hardhat-upgrades/dist/platform/get-default-approval-process');
 
         return {
             ...this.makeFunctions(true),

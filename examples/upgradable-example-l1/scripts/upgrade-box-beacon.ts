@@ -17,7 +17,6 @@ async function main() {
     console.info(chalk.green('Successfully upgraded beacon Box to BoxV2 on address: ', beacon.address));
     await boxV2Upgraded.deployed();
 
-    console.log(boxV2Upgraded.signer);
     // wait some time before the next call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const value = await boxV2Upgraded.retrieve();
