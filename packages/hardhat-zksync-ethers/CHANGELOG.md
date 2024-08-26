@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.2.0-beta.1...@matterlabs/hardhat-zksync-ethers-v0.2.0-beta.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* implement signing methods for both impersionated and normal accounts ([9cfdd66](https://github.com/matter-labs/hardhat-zksync/commit/9cfdd66e269bb4cd3ca20b32f3b15096bae1cb07))
+* serialize populated transaction ([50556e3](https://github.com/matter-labs/hardhat-zksync/commit/50556e3f5d90c981cbe07bf68ac3549feb5a7bdd))
+
 ## [0.2.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.1.0-beta.1...@matterlabs/hardhat-zksync-ethers-v0.2.0-beta.1) (2024-08-21)
 
 
