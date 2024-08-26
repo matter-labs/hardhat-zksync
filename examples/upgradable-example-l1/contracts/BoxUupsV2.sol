@@ -1,38 +1,27 @@
-// contracts/Box.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
+import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
+import '@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-
-contract BoxWithStorageGapV2Invalid is Initializable {
+contract BoxUupsV2 is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 private value;
     uint256 private secondValue;
-    uint256[9] private __gap;
     uint256 private thirdValue;
-    address private newAddress;
-
-    // Emitted when the stored value changes
-    event ValueChanged(uint256 newValue);
 
     function initialize(uint256 initValue) public initializer {
         value = initValue;
     }
 
-    // Stores a new value in the contract
-    function store(uint256 newValue) public {
-        value = newValue;
-        emit ValueChanged(newValue);
-    }
-
     // Reads the last stored value and returns it with a prefix
     function retrieve() public view returns (string memory) {
-        return string(abi.encodePacked("V2: ", uint2str(value)));
+        return string(abi.encodePacked('V2: ', uint2str(value)));
     }
 
     // Converts a uint to a string
     function uint2str(uint _i) internal pure returns (string memory) {
         if (_i == 0) {
-            return "0";
+            return '0';
         }
         uint j = _i;
         uint len;
@@ -51,4 +40,15 @@ contract BoxWithStorageGapV2Invalid is Initializable {
         }
         return string(bstr);
     }
+
+    // Stores a new value in the contract
+    function store(uint256 newValue) public {
+        value = newValue;
+        emit ValueChanged(newValue);
+    }
+
+    function _authorizeUpgrade(address) internal override onlyOwner {}
+
+    // Emitted when the stored value changes
+    event ValueChanged(uint256 newValue);
 }

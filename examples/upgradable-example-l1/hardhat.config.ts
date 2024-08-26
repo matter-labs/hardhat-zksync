@@ -1,8 +1,4 @@
-import '@matterlabs/hardhat-zksync-solc';
-import '@matterlabs/hardhat-zksync-deploy';
-import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
-import '@matterlabs/hardhat-zksync-ethers';
 import "@nomicfoundation/hardhat-ethers"
 
 import { HardhatUserConfig } from 'hardhat/config';
@@ -17,14 +13,17 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork:'zkSyncNetwork',
     networks: {
         hardhat: {
+            zksync: false,
+        },
+        eth: {
             zksync: true,
+            url: 'http://0.0.0.0:8545',
         },
         zkSyncNetwork: {
             zksync: true,
-            ethNetwork: 'http://0.0.0.0:8545',
+            ethNetwork: 'eth',
             url: 'http://0.0.0.0:3050',
         },
     },

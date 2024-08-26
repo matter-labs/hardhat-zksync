@@ -1,15 +1,12 @@
-// contracts/Box.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract BoxWithStorageGapV2Invalid is Initializable {
+contract BoxV2 is Initializable{
     uint256 private value;
     uint256 private secondValue;
-    uint256[9] private __gap;
     uint256 private thirdValue;
-    address private newAddress;
 
     // Emitted when the stored value changes
     event ValueChanged(uint256 newValue);

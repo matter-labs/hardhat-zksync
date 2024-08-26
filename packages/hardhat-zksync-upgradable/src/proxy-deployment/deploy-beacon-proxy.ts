@@ -16,106 +16,143 @@ import path from 'path';
 import { ContractAddressOrInstance, getContractAddress, getInitializerData } from '../utils/utils-general';
 import { DeployBeaconProxyOptions } from '../utils/options';
 import { BEACON_PROXY_JSON } from '../constants';
-import { ZkSyncUpgradablePluginError } from '../errors';
 import { Manifest } from '../core/manifest';
 import { getUpgradableContracts } from '../utils';
 import { deploy, DeployTransaction } from './deploy';
 
-export interface DeployBeaconProxyFunction {
-    (
-        wallet: zk.Wallet,
-        beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        args?: unknown[],
-        opts?: DeployBeaconProxyOptions,
-        quiet?: boolean,
-    ): Promise<zk.Contract>;
-    (
-        wallet: zk.Wallet,
-        beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        opts?: DeployBeaconProxyOptions,
-    ): Promise<zk.Contract>;
+export type DeployBeaconProxyFactory = (
+    beacon: ContractAddressOrInstance,
+    factory: zk.ContractFactory,
+    args?: unknown[],
+    opts?: DeployBeaconProxyOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
+
+export type DeployBeaconProxyArtifact = (
+    wallet: zk.Wallet,
+    beacon: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    args?: unknown[],
+    opts?: DeployBeaconProxyOptions,
+    quiet?: boolean,
+) => Promise<zk.Contract>;
+
+export function makeDeployBeaconProxy(
+    hre: HardhatRuntimeEnvironment,
+): DeployBeaconProxyFactory | DeployBeaconProxyArtifact {
+    return async function (
+        ...args: Parameters<DeployBeaconProxyFactory | DeployBeaconProxyArtifact>
+    ): Promise<zk.Contract> {
+        const target = args[1];
+        if (target instanceof zk.ContractFactory) {
+            return deployBeaconProxyFactory(hre, ...(args as Parameters<DeployBeaconProxyFactory>));
+        } else {
+            return deployBeaconProxyArtifact(hre, ...(args as Parameters<DeployBeaconProxyArtifact>));
+        }
+    };
 }
 
-export function makeDeployBeaconProxy(hre: HardhatRuntimeEnvironment): DeployBeaconProxyFunction {
-    return async function deployBeaconProxy(
-        wallet: zk.Wallet,
-        beacon: ContractAddressOrInstance,
-        artifact: ZkSyncArtifact,
-        args: unknown[] | DeployBeaconProxyOptions = [],
-        opts: DeployBeaconProxyOptions = {},
-        quiet: boolean = false,
-    ) {
-        const attachTo = new zk.ContractFactory<any[], zk.Contract>(artifact.abi, artifact.bytecode, wallet);
+export function deployBeaconProxyArtifact(
+    hre: HardhatRuntimeEnvironment,
+    wallet: zk.Wallet,
+    beacon: ContractAddressOrInstance,
+    artifact: ZkSyncArtifact,
+    args: unknown[] = [],
+    opts: DeployBeaconProxyOptions = {},
+    quiet: boolean = false,
+): Promise<zk.Contract> {
+    if (opts && opts.kind !== undefined && opts.kind !== 'beacon') {
+        throw new DeployBeaconProxyKindError(opts.kind);
+    }
+    const factory = new zk.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    opts = opts || {};
+    opts.kind = 'beacon';
+    return deployBeaconProxy(hre, beacon, factory, args, opts, wallet, quiet);
+}
 
-        if (!(attachTo instanceof zk.ContractFactory)) {
-            throw new ZkSyncUpgradablePluginError(
-                `attachTo must specify a contract factory\n` +
-                    `Include the contract factory for the beacon's current implementation in the attachTo parameter`,
+export async function deployBeaconProxyFactory(
+    hre: HardhatRuntimeEnvironment,
+    beacon: ContractAddressOrInstance,
+    factory: zk.ContractFactory,
+    args: unknown[] = [],
+    opts: DeployBeaconProxyOptions = {},
+    quiet: boolean = false,
+): Promise<zk.Contract> {
+    if (opts && opts.kind !== undefined && opts.kind !== 'beacon') {
+        throw new DeployBeaconProxyKindError(opts.kind);
+    }
+    opts = opts || {};
+    opts.kind = 'beacon';
+
+    const wallet = factory.runner && 'getAddress' in factory.runner ? (factory.runner as zk.Wallet) : undefined;
+    if (!wallet) throw new Error('Wallet not found. Please pass it in the arguments.');
+
+    return deployBeaconProxy(hre, beacon, factory, args, opts, wallet, quiet);
+}
+
+async function deployBeaconProxy(
+    hre: HardhatRuntimeEnvironment,
+    beacon: ContractAddressOrInstance,
+    attachTo: zk.ContractFactory,
+    args: unknown[] = [],
+    opts: DeployBeaconProxyOptions = {},
+    wallet: zk.Wallet,
+    quiet: boolean = false,
+): Promise<zk.Contract> {
+    if (!Array.isArray(args)) {
+        opts = args;
+        args = [];
+    }
+
+    const manifest = await Manifest.forNetwork(wallet.provider);
+    const beaconAddress = await getContractAddress(beacon);
+    if (!(await isBeacon(wallet.provider, beaconAddress))) {
+        throw new DeployBeaconProxyUnsupportedError(beaconAddress);
+    }
+
+    const data = getInitializerData(attachTo.interface, args, opts.initializer);
+
+    if (await manifest.getAdmin()) {
+        if (!quiet) {
+            console.info(
+                chalk.yellow(`A proxy admin was previously deployed on this network`, [
+                    `This is not natively used with the current kind of proxy ('beacon').`,
+                    `Changes to the admin will have no effect on this new proxy.`,
+                ]),
             );
         }
-        if (!Array.isArray(args)) {
-            opts = args;
-            args = [];
-        }
+    }
 
-        const manifest = await Manifest.forNetwork(wallet.provider);
+    const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
+        artifactPath.includes(path.sep + getUpgradableContracts().BeaconProxy + path.sep + BEACON_PROXY_JSON),
+    );
+    assert(beaconProxyPath, 'Beacon proxy artifact not found');
+    const beaconProxyContract = await import(beaconProxyPath);
 
-        if (opts.kind !== undefined && opts.kind !== 'beacon') {
-            throw new DeployBeaconProxyKindError(opts.kind);
-        }
-        opts.kind = 'beacon';
+    const beaconProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
+        beaconProxyContract.abi,
+        beaconProxyContract.bytecode,
+        wallet,
+        opts.deploymentType,
+    );
 
-        const beaconAddress = await getContractAddress(beacon);
-        if (!(await isBeacon(wallet.provider, beaconAddress))) {
-            throw new DeployBeaconProxyUnsupportedError(beaconAddress);
-        }
-
-        const data = getInitializerData(attachTo.interface, args, opts.initializer);
-
-        if (await manifest.getAdmin()) {
-            if (!quiet) {
-                console.info(
-                    chalk.yellow(`A proxy admin was previously deployed on this network`, [
-                        `This is not natively used with the current kind of proxy ('beacon').`,
-                        `Changes to the admin will have no effect on this new proxy.`,
-                    ]),
-                );
-            }
-        }
-
-        const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
-            artifactPath.includes(path.sep + getUpgradableContracts().BeaconProxy + path.sep + BEACON_PROXY_JSON),
-        );
-        assert(beaconProxyPath, 'Beacon proxy artifact not found');
-        const beaconProxyContract = await import(beaconProxyPath);
-
-        const beaconProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
-            beaconProxyContract.abi,
-            beaconProxyContract.bytecode,
-            wallet,
-            opts.deploymentType,
-        );
-
-        const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
-            kind: opts.kind,
-            ...(await deploy(beaconProxyFactory, beaconAddress, data, {
-                customData: {
-                    salt: opts.salt,
-                },
-            })),
-        };
-
-        if (!quiet) {
-            console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
-        }
-
-        await manifest.addProxy(proxyDeployment);
-
-        const inst = attachTo.attach(proxyDeployment.address);
-        // @ts-ignore Won't be readonly because inst was created through attach.
-        inst.deployTransaction = proxyDeployment.deployTransaction;
-        return inst;
+    const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
+        kind: opts.kind!,
+        ...(await deploy(beaconProxyFactory, beaconAddress, data, {
+            customData: {
+                salt: opts.salt,
+            },
+        })),
     };
+
+    if (!quiet) {
+        console.info(chalk.green('Beacon proxy deployed at: ', proxyDeployment.address));
+    }
+
+    await manifest.addProxy(proxyDeployment);
+
+    const inst = attachTo.attach(proxyDeployment.address) as zk.Contract;
+    // @ts-ignore Won't be readonly because inst was created through attach.
+    inst.deployTransaction = proxyDeployment.deployTransaction;
+    return inst.runner ? inst : (inst.connect(wallet) as zk.Contract);
 }

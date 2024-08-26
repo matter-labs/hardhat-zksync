@@ -7,9 +7,9 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 contract BoxWithStorageGapV2 is Initializable {
     uint256 private value;
     uint256 private secondValue;
-    address private newAddress;
-    uint256[9] private __gap;
+    uint256[10] private __gap;
     uint256 private thirdValue;
+    address private newAddress;
 
     // Emitted when the stored value changes
     event ValueChanged(uint256 newValue);
