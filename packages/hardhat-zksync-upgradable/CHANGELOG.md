@@ -1,6 +1,6 @@
 # @matterlabs/hardhat-zksync-upgradable
 
-## [0.6.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.2-beta.1...@matterlabs/hardhat-zksync-upgradable-v0.6.0-beta.1) (2024-08-26)
+## [0.6.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.2...@matterlabs/hardhat-zksync-upgradable-v0.6.0-beta.1) (2024-08-26)
 
 
 ### Features
