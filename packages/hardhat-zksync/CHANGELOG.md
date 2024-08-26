@@ -1,5 +1,17 @@
 # @matterlabs/hardhat-zksync
 
+## [0.3.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.2.0-beta.1...@matterlabs/hardhat-zksync-v0.3.0-beta.1) (2024-08-26)
+
+
+### Features
+
+* add upgrades extension in hre ([5455371](https://github.com/matter-labs/hardhat-zksync/commit/5455371ce2fc47eee3d0ccdc210a3b90356afdd4))
+
+
+### Bug Fixes
+
+* refactor code and logic and fix types ([43846fa](https://github.com/matter-labs/hardhat-zksync/commit/43846faa4d46aab40462053a2b342725095a574e))
+
 ## [0.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v0.1.0...@matterlabs/hardhat-zksync-v0.2.0) (2024-06-20)
 
 
