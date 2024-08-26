@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "^1.2.0-beta.3",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",

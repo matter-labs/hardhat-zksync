@@ -432,8 +432,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-ethers':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-ethers
+        specifier: ^1.2.0-beta.3
+        version: 1.2.0-beta.3(bufferutil@4.0.8)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)(zksync-ethers@6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
@@ -514,8 +514,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
       '@matterlabs/hardhat-zksync-ethers':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-ethers
+        specifier: ^1.2.0-beta.3
+        version: 1.2.0-beta.3(bufferutil@4.0.8)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)(zksync-ethers@6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc

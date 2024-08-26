@@ -1,5 +1,5 @@
 import '@matterlabs/hardhat-zksync-upgradable';
-import "@nomicfoundation/hardhat-ethers"
+import "@matterlabs/hardhat-zksync-ethers";
 
 import { HardhatUserConfig } from 'hardhat/config';
 
