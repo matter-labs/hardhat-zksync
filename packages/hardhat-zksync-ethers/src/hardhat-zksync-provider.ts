@@ -1,7 +1,7 @@
 import { ethers, getAddress, Networkish, resolveProperties } from 'ethers';
 import { Provider } from 'zksync-ethers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 import { getSignerAccounts } from './utils';
 
 export class HardhatZksyncEthersProvider extends Provider {

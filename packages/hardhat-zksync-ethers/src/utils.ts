@@ -25,7 +25,7 @@ import {
 import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
 import { HardhatZksyncEthersProvider } from './hardhat-zksync-provider';
-import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 import { getWallets } from './helpers';
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
