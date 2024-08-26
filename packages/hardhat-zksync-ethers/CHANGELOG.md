@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.0-beta.2...@matterlabs/hardhat-zksync-ethers-v1.2.1-beta.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* implement signing methods for both impersionated and normal accounts ([d28214a](https://github.com/matter-labs/hardhat-zksync/commit/d28214a808330cd9bdd55d6733df526db4613809))
+* implement signing methods for both impersionated and normal accounts ([bfd8882](https://github.com/matter-labs/hardhat-zksync/commit/bfd8882cd18d958b2b3b1068cfc05708c6de7ccb))
+
 ## [1.2.0-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.0-beta.1...@matterlabs/hardhat-zksync-ethers-v1.2.0-beta.2) (2024-08-21)
 
 
