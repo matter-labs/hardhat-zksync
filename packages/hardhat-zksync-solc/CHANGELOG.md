@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.2.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.2...@matterlabs/hardhat-zksync-solc-v1.2.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* make compilationJobs argument optional at TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD subtask ([#1322](https://github.com/matter-labs/hardhat-zksync/issues/1322)) ([6877903](https://github.com/matter-labs/hardhat-zksync/commit/68779035a5f611593331f6063a9d7f8b8f07a899))
+
 ## [1.2.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.1...@matterlabs/hardhat-zksync-solc-v1.2.2) (2024-08-15)
 
 
