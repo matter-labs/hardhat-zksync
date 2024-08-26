@@ -2,7 +2,7 @@ import { Deployer } from '@matterlabs/hardhat-zksync-deploy/dist/deployer';
 import { getConstructorArguments } from '@matterlabs/hardhat-zksync-deploy/dist/utils';
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { Contract } from 'zksync-ethers';
+import { Contract, ContractFactory } from 'zksync-ethers';
 import { DeploymentType } from 'zksync-ethers/build/types';
 import { getWallet } from './utils';
 
@@ -36,7 +36,9 @@ export async function deployBeacon(
     const deployer = new Deployer(hre, wallet);
 
     const contract = await deployer.loadArtifact(taskArgs.contractName);
-    const beacon = await hre.zkUpgrades.deployBeacon(wallet, contract, {
+    const factory = new ContractFactory(contract.abi, contract.bytecode, wallet);
+
+    const beacon = await hre.zkUpgrades.deployBeacon(factory, [], {
         deploymentType: taskArgs.deploymentTypeImpl,
         salt: taskArgs.saltImpl,
     });
