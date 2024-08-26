@@ -389,10 +389,9 @@ subtask(
                 longVersion: '',
             };
         }
+        const compiler = args.compilationJob?.getSolcConfig();
 
-        const compiler = args.compilationJob.getSolcConfig();
-
-        if (compiler.eraVersion) {
+        if (compiler && compiler.eraVersion) {
             const compilersCache = await getCompilersDir();
             let path: string = '';
             let version: string = '';
