@@ -135,6 +135,7 @@ async function deployProxy(
     const customDataProxy = {
         customData: {
             salt: opts.saltProxy,
+            paymasterParams: opts.paymasterProxyParams,
         },
     };
 

@@ -91,6 +91,10 @@ async function deployImpl<TRequiredSeperateForProxy extends boolean | undefined>
                                         'salt' in opts
                                             ? (opts as UpgradeOptions<false>).salt
                                             : (opts as UpgradeOptions).saltImpl,
+                                    paymasterParams:
+                                        'paymasterParams' in opts
+                                            ? (opts as UpgradeOptions<false>).paymasterParams
+                                            : (opts as UpgradeOptions).paymasterImplParams,
                                 },
                             },
                         ],

@@ -8,6 +8,7 @@ import {
 } from '@openzeppelin/upgrades-core';
 
 import { DeploymentType } from 'zksync-ethers/build/types';
+import { BytesLike } from 'ethers';
 import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 
 export type StandaloneOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
@@ -26,10 +27,13 @@ export type DeploymentTypesOptions<TRequiredSeperateForProxy extends boolean | u
               deploymentTypeProxy?: DeploymentType;
               saltImpl?: string;
               saltProxy?: string;
+              paymasterImplParams?: BytesLike;
+              paymasterProxyParams?: BytesLike;
           }
         : {
               deploymentType?: DeploymentType;
               salt?: string;
+              paymasterParams?: BytesLike;
           };
 
 export type UpgradeOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =

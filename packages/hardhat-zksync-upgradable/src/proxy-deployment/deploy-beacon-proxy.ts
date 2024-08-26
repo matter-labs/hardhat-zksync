@@ -141,6 +141,7 @@ async function deployBeaconProxy(
         ...(await deploy(beaconProxyFactory, beaconAddress, data, {
             customData: {
                 salt: opts.salt,
+                paymasterParams: opts.paymasterParams,
             },
         })),
     };
