@@ -21,7 +21,7 @@ import {
 import { ZkSyncEthersPluginError } from './errors';
 import { getSignerAccounts, getSignerOrWallet, getWalletsFromAccount, isArtifact, isNumber, isString } from './utils';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
-import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 
 export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrIndex?: string | number): Promise<Wallet> {
     const privateKey = isString(privateKeyOrIndex) ? (privateKeyOrIndex as string) : undefined;

@@ -2,7 +2,7 @@ import type * as ethers from 'ethers';
 import type { Artifact } from 'hardhat/types';
 import { Contract, ContractFactory, Provider, Wallet } from 'zksync-ethers';
 import { Address, DeploymentType } from 'zksync-ethers/build/types';
-import { HardhatZksyncSigner } from './hardhat-zksync-signer';
+import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 
 export type EthNetwork = string;
 
