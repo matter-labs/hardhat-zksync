@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.6.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.2-beta.1...@matterlabs/hardhat-zksync-upgradable-v0.6.0-beta.1) (2024-08-26)
+
+
+### Features
+
+* add upgrades extension in hre ([5455371](https://github.com/matter-labs/hardhat-zksync/commit/5455371ce2fc47eee3d0ccdc210a3b90356afdd4))
+
+
+### Bug Fixes
+
+* change dependency path and remove unused cache ([bc883ec](https://github.com/matter-labs/hardhat-zksync/commit/bc883ec9db923598a470e3c0682b5d3615764368))
+* refactor code and logic and fix types ([43846fa](https://github.com/matter-labs/hardhat-zksync/commit/43846faa4d46aab40462053a2b342725095a574e))
+
 ## [0.5.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.1...@matterlabs/hardhat-zksync-upgradable-v0.5.2) (2024-08-04)
 
 
