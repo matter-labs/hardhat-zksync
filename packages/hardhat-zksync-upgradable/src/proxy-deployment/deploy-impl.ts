@@ -95,6 +95,7 @@ async function deployImpl<TRequiredSeperateForProxy extends boolean | undefined>
                                         'paymasterParams' in opts
                                             ? (opts as UpgradeOptions<false>).paymasterParams
                                             : (opts as UpgradeOptions).paymasterImplParams,
+                                    ...opts.otherCustomData,
                                 },
                             },
                         ],

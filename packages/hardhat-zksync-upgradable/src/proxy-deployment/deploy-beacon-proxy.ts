@@ -142,6 +142,7 @@ async function deployBeaconProxy(
             customData: {
                 salt: opts.salt,
                 paymasterParams: opts.paymasterParams,
+                ...opts.otherCustomData,
             },
         })),
     };
