@@ -134,6 +134,8 @@ async function deployProxy(
     const customDataProxy = {
         customData: {
             salt: opts.saltProxy,
+            paymasterParams: opts.paymasterProxyParams,
+            ...opts.otherCustomData,
         },
     };
 
@@ -176,7 +178,9 @@ async function deployProxy(
         }
 
         case 'transparent': {
-            const adminAddress = await hre.zkUpgrades.deployProxyAdmin(wallet, {});
+            const adminAddress = await hre.upgrades.deployProxyAdmin(wallet, {
+                paymasterParams: opts.paymasterProxyParams,
+            });
             if (!quiet) {
                 console.info(chalk.green(`Admin was deployed to ${adminAddress}`));
             }

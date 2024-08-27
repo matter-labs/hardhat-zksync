@@ -106,7 +106,7 @@ subtask('verify:verify').setAction(async (args, hre, runSuper) => {
         const { verify } = await import('@openzeppelin/hardhat-upgrades/dist/verify-proxy');
         return await verify(args, hre, runSuper);
     }
-    
+
     const { verify } = await import('./verify/verify-proxy');
     return await verify(args, hre, runSuper);
 });

@@ -8,6 +8,7 @@ import {
 } from '@openzeppelin/upgrades-core';
 
 import { DeploymentType } from 'zksync-ethers/src/types';
+import { BytesLike } from 'ethers';
 import { LOCAL_SETUP_ZKSYNC_NETWORK } from '../constants';
 
 export type StandaloneOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
@@ -17,19 +18,24 @@ export type StandaloneOptions<TRequiredSeperateForProxy extends boolean | undefi
             useDeployedImplementation?: boolean;
             provider?: any;
             factoryDeps?: string[];
-        } & DeploymentTypesOptions<TRequiredSeperateForProxy>;
+        } & CustomDataOptions<TRequiredSeperateForProxy>;
 
-export type DeploymentTypesOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
+export type CustomDataOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
     TRequiredSeperateForProxy extends true | undefined
         ? {
+              otherCustomData?: any;
               deploymentTypeImpl?: DeploymentType;
               deploymentTypeProxy?: DeploymentType;
               saltImpl?: string;
               saltProxy?: string;
+              paymasterImplParams?: BytesLike;
+              paymasterProxyParams?: BytesLike;
           }
         : {
+              otherCustomData?: any;
               deploymentType?: DeploymentType;
               salt?: string;
+              paymasterParams?: BytesLike;
           };
 
 export type UpgradeOptions<TRequiredSeperateForProxy extends boolean | undefined = true | undefined> =
@@ -53,10 +59,10 @@ interface Initializer {
     initializer?: string | false;
 }
 
-export type DeployBeaconProxyOptions = ProxyKindOption & Initializer & DeploymentTypesOptions<false>;
+export type DeployBeaconProxyOptions = ProxyKindOption & Initializer & CustomDataOptions<false>;
 export type DeployBeaconOptions = StandaloneOptions<false>;
 export type DeployImplementationOptions = StandaloneOptions;
-export type DeployProxyAdminOptions = DeployOpts;
+export type DeployProxyAdminOptions = DeployOpts & CustomDataOptions<false>;
 export type DeployProxyOptions = StandaloneOptions & Initializer;
 export type UpgradeBeaconOptions = UpgradeOptions<false>;
 export type UpgradeProxyOptions = UpgradeOptions<false> & {
