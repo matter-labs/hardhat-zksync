@@ -1,5 +1,16 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.6.1-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.6.0-beta.1...@matterlabs/hardhat-zksync-upgradable-v0.6.1-beta.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* add paymaster params for proxy and implementation deployment ([25ec2c4](https://github.com/matter-labs/hardhat-zksync/commit/25ec2c40c11447d4e6e63976e0d0dcc64d2e916a))
+* add verify for non zksync networks ([b589d78](https://github.com/matter-labs/hardhat-zksync/commit/b589d78895ab6d7a4898bef954c9e7cb67c728d3))
+* change custom data for proxy admin and update readme file ([abd0aae](https://github.com/matter-labs/hardhat-zksync/commit/abd0aaeb80063ed9b417af70538c01b067c8d4d5))
+* change hardhat-etherscan to hardhat-verify ([a63149a](https://github.com/matter-labs/hardhat-zksync/commit/a63149a6d2a7e5aea2acc5b7c3f432821b4a3f4b))
+* change paymaster params to PaymasterParams from zksync-ethers ([0f0d7a8](https://github.com/matter-labs/hardhat-zksync/commit/0f0d7a883191e4a7294db017fcd099caa3fcc2b6))
+
 ## [0.6.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.2...@matterlabs/hardhat-zksync-upgradable-v0.6.0-beta.1) (2024-08-26)
 
 
