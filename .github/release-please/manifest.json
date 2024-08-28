@@ -1,7 +1,7 @@
 {
     "packages/hardhat-zksync-deploy": "1.5.0-beta.1",
     "packages/hardhat-zksync-solc": "1.2.2-beta.1",
-    "packages/hardhat-zksync-upgradable": "1.5.2-beta.1",
+    "packages/hardhat-zksync-upgradable": "1.6.0-beta.1",
     "packages/hardhat-zksync-vyper": "1.0.8-beta.1",
     "packages/hardhat-zksync-verify": "1.6.0-beta.1",
     "packages/hardhat-zksync": "1.1.0-beta.1",
