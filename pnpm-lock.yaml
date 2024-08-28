@@ -706,10 +706,16 @@ importers:
       solidity-ast:
         specifier: ^0.4.56
         version: 0.4.56
+      undici:
+        specifier: ^6.19.2
+        version: 6.19.2
       zksync-ethers:
         specifier: ^5.8.0
         version: 5.8.0(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
+      '@nomicfoundation/hardhat-verify':
+        specifier: ^2.0.8
+        version: 2.0.8(hardhat@2.14.0(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.36)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@types/debug':
         specifier: ^4.1.12
         version: 4.1.12
