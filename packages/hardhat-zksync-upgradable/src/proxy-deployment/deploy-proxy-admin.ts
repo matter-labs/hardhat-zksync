@@ -15,14 +15,18 @@ export type DeployAdminFunction = (wallet?: zk.Wallet, opts?: DeployProxyAdminOp
 export function makeDeployProxyAdmin(hre: HardhatRuntimeEnvironment): any {
     return async function deployProxyAdmin(wallet: zk.Wallet, opts: DeployProxyAdminOptions = {}) {
         const adminFactory = await getAdminFactory(hre, wallet, opts.deploymentType);
-
-        return await fetchOrDeployAdmin(wallet.provider, () => deploy(adminFactory, {
-            customData:{
-                salt: opts.salt,
-                paymasterParams: opts.paymasterParams,
-                ...opts.otherCustomData,
-            }
-        }), opts);
+        return await fetchOrDeployAdmin(
+            wallet.provider,
+            () =>
+                deploy(adminFactory, {
+                    customData: {
+                        salt: opts.salt,
+                        paymasterParams: opts.paymasterParams,
+                        ...opts.otherCustomData,
+                    },
+                }),
+            opts,
+        );
     };
 }
 
