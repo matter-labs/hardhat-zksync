@@ -52,9 +52,11 @@
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.6.2",
-    "compare-versions": "^6.1.0"
+    "compare-versions": "^6.1.0",
+    "undici": "^6.19.2"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^2.0.8",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
@@ -73,7 +75,9 @@
     "typescript": "^5.3.0",
     "c8": "^9.0.1"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@nomicfoundation/hardhat-verify": "^2.0.8"
+  },
   "prettier": {
     "tabWidth": 4,
     "printWidth": 120,
