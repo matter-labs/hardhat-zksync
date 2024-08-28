@@ -47,7 +47,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@openzeppelin/contracts": "^4.9.2",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.8.0",
+    "zksync-ethers": "^6.12.0",
     "chai": "^4.3.4",
     "sinon-chai": "^3.7.0",
     "sinon": "^18.0.0"
