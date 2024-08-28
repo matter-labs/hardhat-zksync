@@ -65,6 +65,19 @@ await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFuncti
 Permissible values for the deployment type include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`.
 If the salt parameters are ommited, the default value will be `0x0000000000000000000000000000000000000000000000000000000000000000`.
 
+In the options section, paymaster parameters can be included for both proxy and implementation deployments. To do so, use:
+ - `paymasterProxyParams`
+ - `paymasterImplParams`
+
+ ```
+await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [initializerFunctionArguments], 
+  { initializer: "initialize",
+    paymasterProxyParams: params,
+    paymasterImplParams: params,
+  }
+);
+```
+
 - **Deploying UUPS proxies**
 
 The UUPS proxy pattern is similar to the transparent proxy pattern, except that the upgrade is triggered via the logic contract instead of from the proxy contract.
@@ -119,6 +132,19 @@ const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, bo
 Permissible values for the deployment type include `create`, `create2`, `createAccount`, and `create2Account`. If this parameter is omitted, the default value will be `create`.
 If the salt parameters are ommited, the default value will be `0x0000000000000000000000000000000000000000000000000000000000000000`.
 
+In the options section, you can include paymaster parameters. To do so, use
+`paymasterParams` argument.
+
+```
+await hre.zkUpgrades.deployBeacon(deployer.zkWallet, boxContract, {
+  paymasterParams: params
+});
+
+const box = await hre.zkUpgrades.deployBeaconProxy(deployer.zkWallet, beacon, boxContract, [42], {
+  paymasterParams: params
+});
+
+```
 - **Upgrading proxies**
 
 In order for a smart contract implementation to be upgradable, it has to follow specific [rules](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable).
