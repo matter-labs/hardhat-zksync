@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.6.0-beta.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.2...@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.3) (2024-08-28)
+
+
+### Bug Fixes
+
+* change paymaster params to PaymasterParams from zksync-ethers ([438e834](https://github.com/matter-labs/hardhat-zksync/commit/438e83403395b4654edb2a398a1c232c11440972))
+
 ## [1.6.0-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.1...@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.2) (2024-08-28)
 
 
