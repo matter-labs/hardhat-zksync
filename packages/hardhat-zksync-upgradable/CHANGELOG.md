@@ -1,5 +1,16 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.6.0-beta.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.1...@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.2) (2024-08-28)
+
+
+### Bug Fixes
+
+* add paymaster params for admin and add other custom data ([ee97c23](https://github.com/matter-labs/hardhat-zksync/commit/ee97c23f223aa9517e74fcd530e3b8503f8454fd))
+* add paymaster params for proxy and implementation deployment ([dfb12bc](https://github.com/matter-labs/hardhat-zksync/commit/dfb12bce87ad73b7f4c9b01585e5158dd0a99d8f))
+* add verify for non zksync networks ([9005368](https://github.com/matter-labs/hardhat-zksync/commit/9005368cd19d63735930cbacdd78b43113894220))
+* change custom data for proxy admin ([671feb4](https://github.com/matter-labs/hardhat-zksync/commit/671feb4df430918829b42902b0b0d5023e2dd1a5))
+* change custom data for proxy admin ([6678eb1](https://github.com/matter-labs/hardhat-zksync/commit/6678eb17ec2b31e3d6ae173fbb29a2465ad17b79))
+
 ## [1.6.0-beta.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.5.2-beta.1...@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.1) (2024-08-26)
 
 
