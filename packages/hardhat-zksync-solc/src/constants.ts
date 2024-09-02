@@ -50,6 +50,8 @@ export const DEFAULT_COMPILER_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; /
 
 export const COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR = 'Could not find zksolc compiler version info file.';
 
+export const COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN = '1.5.3';
+
 export const COMPILER_VERSION_RANGE_ERROR = (version: string, minVersion: string, latestVersion: string) =>
     `The zksolc compiler version (${version}) in the hardhat config file is not within the allowed range. Please use versions ${minVersion} to ${latestVersion}.`;
 export const COMPILER_VERSION_WARNING = (version: string, latestVersion: string) =>
