@@ -13,7 +13,6 @@ import { TransactionResponse } from 'zksync-ethers/src/types';
 import { DeployProxyOptions, UpgradeOptions, withDefaults } from '../utils/options';
 import { validateBeaconImpl, validateProxyImpl } from '../validations/validate-impl';
 import { readValidations } from '../validations/validations';
-
 import { fetchOrDeployGetDeployment } from '../core/impl-store';
 import { FORMAT_TYPE_MINIMAL, IMPL_CONTRACT_NOT_DEPLOYED_ERROR } from '../constants';
 import { ZkSyncUpgradablePluginError } from '../errors';
