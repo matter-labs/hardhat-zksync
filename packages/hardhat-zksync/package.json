@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.22.10",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",

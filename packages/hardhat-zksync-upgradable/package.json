@@ -38,7 +38,7 @@
     "@openzeppelin/upgrades-core": "^1.31.3",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",
     "chalk": "^4.1.2",
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.22.10",
     "fs-extra": "^11.2.0",
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.12.2",

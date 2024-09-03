@@ -35,7 +35,7 @@
     "chalk": "^4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "ethers": "^6.7.1",
-    "hardhat": "^2.22.5"
+    "hardhat": "^2.22.10"
   },
   "prettier": {
     "tabWidth": 4,
