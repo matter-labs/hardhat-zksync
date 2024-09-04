@@ -43,13 +43,13 @@ importers:
         version: link:../../packages/hardhat-zksync-solc
       '@matterlabs/zksync-contracts':
         specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2))(@openzeppelin/contracts@5.0.2)
+        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)
       '@openzeppelin/contracts':
-        specifier: ^5.0.2
-        version: 5.0.2
+        specifier: ^4.9.6
+        version: 4.9.6
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        specifier: ^4.9.6
+        version: 4.9.6
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -2169,10 +2169,16 @@ packages:
     resolution: {integrity: sha512-gGq0NJkIGSwdbUt4yhdF8ZrmkGKVz9vAdVzpOfnom+V8PLSmSOVhZwbNvZZS1EYcJN5hzzKBxmmVVAInM6HQLg==, tarball: https://registry.npmjs.org/@npmcli/promise-spawn/-/promise-spawn-6.0.2.tgz}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  '@openzeppelin/contracts-upgradeable@4.9.6':
+    resolution: {integrity: sha512-m4iHazOsOCv1DgM7eD7GupTJ+NFVujRZt1wzddDPSVGpWdKq1SKkla5htKG7+IS4d2XOCtzkUNwRZ7Vq5aEUMA==, tarball: https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.6.tgz}
+
   '@openzeppelin/contracts-upgradeable@5.0.2':
     resolution: {integrity: sha512-0MmkHSHiW2NRFiT9/r5Lu4eJq5UJ4/tzlOgYXNAIj/ONkQTVnz22pLxDvp4C4uZ9he7ZFvGn3Driptn1/iU7tQ==, tarball: https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-5.0.2.tgz}
     peerDependencies:
       '@openzeppelin/contracts': 5.0.2
+
+  '@openzeppelin/contracts@4.9.6':
+    resolution: {integrity: sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==, tarball: https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.6.tgz}
 
   '@openzeppelin/contracts@5.0.2':
     resolution: {integrity: sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==, tarball: https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-5.0.2.tgz}
@@ -5584,6 +5590,11 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
+  '@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)':
+    dependencies:
+      '@openzeppelin/contracts': 4.9.6
+      '@openzeppelin/contracts-upgradeable': 4.9.6
+
   '@matterlabs/zksync-contracts@0.6.1(@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2))(@openzeppelin/contracts@5.0.2)':
     dependencies:
       '@openzeppelin/contracts': 5.0.2
@@ -5795,9 +5806,13 @@ snapshots:
     dependencies:
       which: 3.0.1
 
+  '@openzeppelin/contracts-upgradeable@4.9.6': {}
+
   '@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2)':
     dependencies:
       '@openzeppelin/contracts': 5.0.2
+
+  '@openzeppelin/contracts@4.9.6': {}
 
   '@openzeppelin/contracts@5.0.2': {}
 
