@@ -4,12 +4,12 @@ import {
     assertUpgradeSafe,
     getImplementationAddress,
     getImplementationAddressFromBeacon,
-    getStorageLayoutForAddress,
-    Manifest,
-    processProxyKind,
     ValidationOptions,
 } from '@openzeppelin/upgrades-core';
+import { getStorageLayoutForAddress } from '../core/manifest-storage-layout';
+import { Manifest } from '../core/manifest';
 import { DeployData } from '../proxy-deployment/deploy-impl';
+import { processProxyKind } from '../core/proxy-kind';
 
 /**
  * Processes the proxy kind and returns the implementation address if proxyAddress is provided.
