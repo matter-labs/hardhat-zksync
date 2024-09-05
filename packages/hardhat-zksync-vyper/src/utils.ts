@@ -9,7 +9,12 @@ import type { Dispatcher } from 'undici';
 import { MultiVyperConfig } from '@nomiclabs/hardhat-vyper/dist/src/types';
 
 import { CompilerVersionInfo } from './compile/downloader';
-import { DEFAULT_TIMEOUT_MILISECONDS, UNSUPPORTED_VYPER_VERSIONS, VYPER_VERSION_ERROR } from './constants';
+import {
+    COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN,
+    DEFAULT_TIMEOUT_MILISECONDS,
+    UNSUPPORTED_VYPER_VERSIONS,
+    VYPER_VERSION_ERROR,
+} from './constants';
 import { ZkSyncVyperPluginError } from './errors';
 
 const TEMP_FILE_PREFIX = 'tmp-';
@@ -22,8 +27,11 @@ export function zeroxlify(hex: string): string {
 export function getZkvyperUrl(repo: string, version: string, isRelease: boolean = true): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
-    // @ts-ignore
-    const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
+    const toolchain = semver.lt(version, COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN)
+        ? // @ts-ignore
+          { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform]
+        : // @ts-ignore
+          { linux: '-gnu', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch === 'x64' ? 'amd64' : process.arch;
     const ext = process.platform === 'win32' ? '.exe' : '';
 
