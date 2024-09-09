@@ -76,7 +76,6 @@ export async function deployProxy(
         saltImpl?: string;
         saltProxy?: string;
         initialOwner?: string;
-        unsafeStateVariableAssignment?: boolean;
         noCompile?: boolean;
     },
 ): Promise<Contract> {
@@ -101,7 +100,6 @@ export async function deployProxy(
         saltProxy: taskArgs.saltProxy,
         initializer: taskArgs.initializer,
         initialOwner: taskArgs.initialOwner,
-        unsafeAllow: taskArgs.unsafeStateVariableAssignment ? ['state-variable-assignment'] : undefined,
     });
 
     await proxy.waitForDeployment();
@@ -161,7 +159,6 @@ export async function upgradeProxy(
     const proxyUpgrade = await hre.upgrades.upgradeProxy(wallet, taskArgs.proxyAddress, contractV2, {
         deploymentType: taskArgs.deploymentType,
         salt: taskArgs.salt,
-        unsafeAllow: taskArgs.unsafeStateVariableAssignment ? ['state-variable-assignment'] : undefined,
     });
 
     await proxyUpgrade.waitForDeployment();
