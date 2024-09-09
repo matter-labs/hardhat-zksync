@@ -1,5 +1,20 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.7.0-beta.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.3...@matterlabs/hardhat-zksync-upgradable-v1.7.0-beta.3) (2024-09-09)
+
+
+### Features
+
+* bump openzeppelin contracts to v5 ([cbd0262](https://github.com/matter-labs/hardhat-zksync/commit/cbd026216043106172c39360a4f9ddeefdb33ab6))
+* bump openzeppelin contracts to v5 ([2479f87](https://github.com/matter-labs/hardhat-zksync/commit/2479f8731e65923fde00346fb595bd5525401c6e))
+
+
+### Bug Fixes
+
+* remove unsafeAllow for uups proxies ([58815f7](https://github.com/matter-labs/hardhat-zksync/commit/58815f749be81bc7e7ac458e4a163cfaa5fc215a))
+* revert manifest and storage layout ([50b46c1](https://github.com/matter-labs/hardhat-zksync/commit/50b46c14ac4baeea4414996b175abab7a07bf93a))
+* revert oz contracts for basic example and update readme file ([bc4368a](https://github.com/matter-labs/hardhat-zksync/commit/bc4368a4517d6485d9c9aee6d5c178f8cfc7e163))
+
 ## [1.6.0-beta.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.2...@matterlabs/hardhat-zksync-upgradable-v1.6.0-beta.3) (2024-08-28)
 
 
