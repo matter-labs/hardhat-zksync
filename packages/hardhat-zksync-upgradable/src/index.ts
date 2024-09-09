@@ -65,10 +65,6 @@ task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for ZKsync network')
     .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
     .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
     .addOptionalParam('initialOwner', 'Initial owner of the proxy', undefined)
-    .addFlag(
-        'unsafeStateVariableAssignment',
-        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy deployment.',
-    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncProxy);
 
@@ -85,10 +81,6 @@ task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for ZKsync network')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addOptionalParam('salt', 'Salt for deployment', undefined)
-    .addFlag(
-        'unsafeStateVariableAssignment',
-        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy upgrade.',
-    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncProxy);
 

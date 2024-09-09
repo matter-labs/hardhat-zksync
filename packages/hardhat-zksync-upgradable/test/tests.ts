@@ -90,7 +90,6 @@ describe('Upgradable plugin tests', function () {
             const boxArtifact = await this.deployer.loadArtifact(contractName1);
             boxUupsProxy = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, boxArtifact, [42], {
                 initializer: 'initialize',
-                unsafeAllow: ['state-variable-assignment'],
             });
             await boxUupsProxy.waitForDeployment();
 
@@ -103,7 +102,6 @@ describe('Upgradable plugin tests', function () {
                 [42],
                 {
                     initializer: 'initialize',
-                    unsafeAllow: ['state-variable-assignment'],
                 },
             );
             await boxUupsPublicProxy.waitForDeployment();
@@ -128,9 +126,6 @@ describe('Upgradable plugin tests', function () {
                 this.deployer.zkWallet,
                 await boxUupsProxy.getAddress(),
                 BoxV2,
-                {
-                    unsafeAllow: ['state-variable-assignment'],
-                },
             );
             await new Promise((resolve) => setTimeout(resolve, 1500));
             box2.connect(this.deployer.zkWallet);
@@ -144,9 +139,7 @@ describe('Upgradable plugin tests', function () {
             const BoxV2 = await this.deployer.loadArtifact(contractName);
 
             await assert.rejects(
-                this.env.zkUpgrades.upgradeProxy(this.zkWallet2, await boxUupsProxy.getAddress(), BoxV2, {
-                    unsafeAllow: ['state-variable-assignment'],
-                }),
+                this.env.zkUpgrades.upgradeProxy(this.zkWallet2, await boxUupsProxy.getAddress(), BoxV2),
             );
         });
 
@@ -160,9 +153,6 @@ describe('Upgradable plugin tests', function () {
                 this.zkWallet2,
                 await boxUupsPublicProxy.getAddress(),
                 BoxV2,
-                {
-                    unsafeAllow: ['state-variable-assignment'],
-                },
             );
             await box2.waitForDeployment();
             console.info(chalk.green('Successfully upgraded BoxUupsPublic to BoxUupsV2'));
@@ -183,7 +173,6 @@ describe('Upgradable plugin tests', function () {
                 this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                     initializer: 'initialize',
                     kind: 'uups',
-                    unsafeAllow: ['state-variable-assignment'],
                 }),
                 (error: any) => error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO),
             );
@@ -198,7 +187,6 @@ describe('Upgradable plugin tests', function () {
             await assert.rejects(
                 this.env.zkUpgrades.upgradeProxy(this.deployer.zkWallet, await boxUupsProxy.getAddress(), boxV2, {
                     kind: 'uups',
-                    unsafeAllow: ['state-variable-assignment'],
                 }),
                 (error: any) =>
                     error.message.includes(standaloneValidationErrors.MISSING_PUBLIC_UPGRADE_TO) &&
@@ -321,7 +309,7 @@ describe('Upgradable plugin tests', function () {
             );
         });
 
-        it.only('Should fail to change the admin - wrong signer', async function () {
+        it('Should fail to change the admin - wrong signer', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow(`Deploying ${contractName}...`));
 
@@ -520,7 +508,6 @@ describe('Upgradable plugin tests', function () {
             const box = await this.env.zkUpgrades.deployProxy(this.deployer.zkWallet, contract, [42], {
                 initializer: 'initialize',
                 kind: 'uups',
-                unsafeAllow: ['state-variable-assignment'],
             });
             await box.waitForDeployment();
 
@@ -606,7 +593,6 @@ describe('Test for upgrades for shortcuts commands', function () {
             const box = await deployProxy(this.env, {
                 contractName: 'BoxUups',
                 constructorArgsParams: [42],
-                unsafeStateVariableAssignment: true,
             });
 
             const value = await box.retrieve();
