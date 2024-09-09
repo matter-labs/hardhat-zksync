@@ -43,7 +43,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.12.2",
     "zksync-ethers": "^6.8.0",
-    "solidity-ast": "^0.4.56",
+    "solidity-ast": "^0.4.59",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.6.2",
     "compare-versions": "^6.1.0"
