@@ -11,13 +11,10 @@ import * as zk from 'zksync-ethers';
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 
 import chalk from 'chalk';
-import assert from 'assert';
-import path from 'path';
 import { ContractAddressOrInstance, getContractAddress, getInitializerData } from '../utils/utils-general';
 import { DeployBeaconProxyOptions } from '../utils/options';
-import { BEACON_PROXY_JSON } from '../constants';
 import { Manifest } from '../core/manifest';
-import { getUpgradableContracts } from '../utils';
+import { getBeaconProxyFactory } from '../utils/factories';
 import { deploy, DeployTransaction } from './deploy';
 
 export type DeployBeaconProxyFactory = (
@@ -123,18 +120,7 @@ async function deployBeaconProxy(
         }
     }
 
-    const beaconProxyPath = (await hre.artifacts.getArtifactPaths()).find((artifactPath) =>
-        artifactPath.includes(path.sep + getUpgradableContracts().BeaconProxy + path.sep + BEACON_PROXY_JSON),
-    );
-    assert(beaconProxyPath, 'Beacon proxy artifact not found');
-    const beaconProxyContract = await import(beaconProxyPath);
-
-    const beaconProxyFactory = new zk.ContractFactory<any[], zk.Contract>(
-        beaconProxyContract.abi,
-        beaconProxyContract.bytecode,
-        wallet,
-        opts.deploymentType,
-    );
+    const beaconProxyFactory = await getBeaconProxyFactory(hre, wallet, opts.deploymentType);
 
     const proxyDeployment: Required<ProxyDeployment & DeployTransaction> = {
         kind: opts.kind!,

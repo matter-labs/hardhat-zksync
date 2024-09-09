@@ -13,7 +13,7 @@ async function main() {
     const contractName = 'BoxUups';
 
     const contract = await deployer.loadArtifact(contractName);
-    const box = await hre.upgrades.deployProxy(deployer.zkWallet, contract, [42], { initializer: 'initialize' });
+    const box = await hre.upgrades.deployProxy(deployer.zkWallet, contract, [42], { initializer: 'initialize', unsafeAllow: ['state-variable-assignment'] });
 
     await box.waitForDeployment();
 

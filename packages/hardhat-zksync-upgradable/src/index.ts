@@ -9,6 +9,7 @@ import { TASK_COMPILE_SOLIDITY_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { RunCompilerArgs } from './interfaces';
 import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
+
 import {
     TASK_DEPLOY_ZKSYNC_BEACON,
     TASK_DEPLOY_ZKSYNC_PROXY,
@@ -41,6 +42,7 @@ task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for ZKsync network')
     .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
     .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
     .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
+    .addOptionalParam('initialOwner', 'Initial owner of the proxy', undefined)
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncBeacon);
 
@@ -62,6 +64,11 @@ task(TASK_DEPLOY_ZKSYNC_PROXY, 'Deploy proxy for ZKsync network')
     .addOptionalParam('deploymentTypeProxy', 'Type of deployment for proxy', undefined)
     .addOptionalParam('saltImpl', 'Salt for implementation deployment', undefined)
     .addOptionalParam('saltProxy', 'Salt for proxy deployment', undefined)
+    .addOptionalParam('initialOwner', 'Initial owner of the proxy', undefined)
+    .addFlag(
+        'unsafeStateVariableAssignment',
+        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy deployment.',
+    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(deployZkSyncProxy);
 
@@ -78,6 +85,10 @@ task(TASK_UPGRADE_ZKSYNC_PROXY, 'Runs the proxy upgrade for ZKsync network')
     .addParam('proxyAddress', 'Proxy address of the deployed contract', '')
     .addOptionalParam('deploymentType', 'Type of deployment', undefined)
     .addOptionalParam('salt', 'Salt for deployment', undefined)
+    .addFlag(
+        'unsafeStateVariableAssignment',
+        'Allow unsafe state-variable-assignment. This flag is mandatory for uups proxy upgrade.',
+    )
     .addFlag('noCompile', 'No compile flag')
     .setAction(upgradeZkSyncProxy);
 

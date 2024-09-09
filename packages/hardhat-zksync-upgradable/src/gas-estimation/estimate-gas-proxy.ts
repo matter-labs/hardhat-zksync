@@ -1,8 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as ethers from 'ethers';
 import chalk from 'chalk';
-import assert from 'assert';
-import path from 'path';
+
 import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/src/types';
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy';
 
@@ -10,9 +9,7 @@ import { ZkSyncUpgradablePluginError } from '../errors';
 import { DeployProxyOptions } from '../utils/options';
 import { convertGasPriceToEth, getInitializerData } from '../utils/utils-general';
 import { getChainId } from '../core/provider';
-import { ERC1967_PROXY_JSON, TUP_JSON } from '../constants';
-import { getAdminArtifact } from '../proxy-deployment/deploy-proxy-admin';
-import { getUpgradableContracts } from '../utils';
+import { getProxyAdminArtifact, getProxyArtifact, getTransparentUpgradeableProxyArtifact } from '../utils/factories';
 
 export type EstimateProxyGasFunction = (
     deployer: Deployer,
@@ -36,7 +33,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
     ): Promise<bigint> {
         let totalGasCost: bigint;
 
-        const mockArtifact = await getAdminArtifact(hre);
+        const mockArtifact = await getProxyAdminArtifact(hre);
         const kind = opts.kind;
 
         const chainId = await getChainId(deployer.zkWallet.provider);
@@ -44,6 +41,8 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
         if (!chainId) {
             throw new ZkSyncUpgradablePluginError(`Chain id ${chainId} is not supported!`);
         }
+
+        const initialOwner = opts.initialOwner ?? deployer.zkWallet.address;
 
         const mockImplAddress = await getProxyAdminContractAddress();
         const data = getInitializerData(new ethers.Interface(mockArtifact.abi), args, opts.initializer);
@@ -77,6 +76,7 @@ export function makeEstimateGasProxy(hre: HardhatRuntimeEnvironment): EstimatePr
                     deployer,
                     mockImplAddress,
                     data,
+                    initialOwner,
                     quiet,
                 );
                 totalGasCost = implGasCost + adminGasCost + proxyGasCost;
@@ -109,11 +109,7 @@ async function estimateGasUUPS(
     data: string,
     quiet: boolean = false,
 ): Promise<bigint> {
-    const ERC1967ProxyPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-        x.includes(path.sep + getUpgradableContracts().ERC1967Proxy + path.sep + ERC1967_PROXY_JSON),
-    );
-    assert(ERC1967ProxyPath, 'ERC1967Proxy artifact not found');
-    const proxyContract = await import(ERC1967ProxyPath);
+    const proxyContract = await getProxyArtifact(hre);
 
     try {
         const uupsGasCost: bigint = await deployer.estimateDeployFee(proxyContract, [mockImplAddress, data]);
@@ -137,10 +133,11 @@ async function estimateGasTransparent(
     deployer: Deployer,
     mockImplAddress: string,
     data: string,
+    initialOwner?: string,
     quiet: boolean = false,
 ): Promise<GasCosts> {
-    const adminArtifact = await getAdminArtifact(hre);
-    const adminGasCost = await deployer.estimateDeployFee(adminArtifact, []);
+    const adminArtifact = await getProxyAdminArtifact(hre);
+    const adminGasCost = await deployer.estimateDeployFee(adminArtifact, [initialOwner ?? deployer.zkWallet.address]);
     let proxyGasCost;
     if (!quiet) {
         console.info(
@@ -152,14 +149,14 @@ async function estimateGasTransparent(
         );
     }
 
-    const TUPPath = (await hre.artifacts.getArtifactPaths()).find((x) =>
-        x.includes(path.sep + getUpgradableContracts().TransparentUpgradeableProxy + path.sep + TUP_JSON),
-    );
-    assert(TUPPath, 'TUP artifact not found');
-    const TUPContract = await import(TUPPath);
+    const TUPContract = await getTransparentUpgradeableProxyArtifact(hre);
 
     try {
-        proxyGasCost = await deployer.estimateDeployFee(TUPContract, [mockImplAddress, mockImplAddress, data]);
+        proxyGasCost = await deployer.estimateDeployFee(TUPContract, [
+            mockImplAddress,
+            initialOwner ?? deployer.zkWallet.address,
+            data,
+        ]);
         if (!quiet) {
             console.info(
                 chalk.cyan(

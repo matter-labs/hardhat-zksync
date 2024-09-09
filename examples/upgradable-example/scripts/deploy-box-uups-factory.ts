@@ -14,7 +14,7 @@ async function main() {
     const deployer = new Deployer(hre, zkWallet);
 
     const boxFactory = await hre.zksyncEthers.getContractFactory('BoxUups', deployer.zkWallet);
-    const box = await hre.upgrades.deployProxy(boxFactory, [42], { initializer: 'initialize' });
+    const box = await hre.upgrades.deployProxy(boxFactory, [42], { initializer: 'initialize', unsafeAllow: ['state-variable-assignment']});
 
     await box.waitForDeployment();
 
