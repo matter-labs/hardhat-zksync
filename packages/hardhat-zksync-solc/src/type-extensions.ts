@@ -29,6 +29,7 @@ declare module 'hardhat/types/config' {
 
     interface SolcConfig {
         eraVersion?: string;
+        suppressedErrors?: string[];
     }
 
     interface SolcUserConfig {
