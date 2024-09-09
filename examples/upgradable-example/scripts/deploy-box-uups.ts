@@ -9,7 +9,7 @@ async function main() {
     console.info(chalk.yellow(`Deploying ${contractName}...`));
 
     const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const zkWallet = new Wallet('0x9d81dd1aaccd4bd613a641e42728ccfa49aaf5c0eda8ce5faeb159c493894329')
+    const zkWallet = Wallet.fromMnemonic(testMnemonic);
 
     const deployer = new Deployer(hre, zkWallet);
 
