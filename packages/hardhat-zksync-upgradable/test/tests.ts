@@ -309,7 +309,7 @@ describe('Upgradable plugin tests', function () {
             );
         });
 
-        it.only('Should fail to change the admin - wrong signer', async function () {
+        it('Should fail to change the admin - wrong signer', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow(`Deploying ${contractName}...`));
 
