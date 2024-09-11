@@ -1,9 +1,10 @@
 import { exec } from 'child_process';
+import { CompilerInput } from 'hardhat/types';
 import { ZkSolcConfig } from '../types';
-import { isBreakableCompilerVersion } from '../utils';
+import { isBreakableCompilerVersion, isCompilerVersionWithSupportForSuppressedErrorsAndWarnings } from '../utils';
 
 export async function compileWithBinary(
-    input: any,
+    input: CompilerInput,
     config: ZkSolcConfig,
     solcPath: string,
     detectMissingLibrariesMode: boolean = false,
@@ -22,7 +23,24 @@ export async function compileWithBinary(
     }
 
     if (isBreakableCompilerVersion(config.version)) {
+        // @ts-expect-error The CompilerInput type should be properly extended with the ZkSolc specific fields
         input.settings.detectMissingLibraries = detectMissingLibrariesMode;
+    }
+
+    if (
+        config.settings.suppressedErrors &&
+        isCompilerVersionWithSupportForSuppressedErrorsAndWarnings(config.version)
+    ) {
+        // @ts-expect-error The CompilerInput type should be properly extended with the ZkSolc specific fields
+        input.settings.suppressedErrors = config.settings.suppressedErrors;
+    }
+
+    if (
+        config.settings.suppressedWarnings &&
+        isCompilerVersionWithSupportForSuppressedErrorsAndWarnings(config.version)
+    ) {
+        // @ts-expect-error The CompilerInput type should be properly extended with the ZkSolc specific fields
+        input.settings.suppressedWarnings = config.settings.suppressedWarnings;
     }
 
     const output: string = await new Promise((resolve, reject) => {

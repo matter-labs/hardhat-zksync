@@ -24,6 +24,7 @@ import {
     COMPILER_ZKSOLC_IS_SYSTEM_USE,
     COMPILER_ZKSOLC_FORCE_EVMLA_USE,
     COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN,
+    ZKSOLC_COMPILER_MIN_VERSION_WITH_SUPPORT_FOR_SUPPRESSED_ERRORS_AND_WARNINGS,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -141,6 +142,20 @@ export function updateBreakableCompilerConfig(
 
 export function isBreakableCompilerVersion(zksolcVersion: string): boolean {
     return zksolcVersion === 'latest' || semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_BREAKABLE_CHANGE);
+}
+
+/**
+ * Checks if the given zksolc version supports suppressed errors and warnings.
+ * Before this version, the zksolc required suppressed errors and warnings to be specified in a specific casing when specified in Standard JSON.
+ * E.g., "SendTransfer" instead of "sendtransfer". To not support multiple versions, we check for the updated compiler version.
+ * @param zksolcVersion - The version of zksolc to check.
+ * @returns True if the version supports suppressed errors and warnings, false otherwise.
+ */
+export function isCompilerVersionWithSupportForSuppressedErrorsAndWarnings(zksolcVersion: string): boolean {
+    return (
+        zksolcVersion === 'latest' ||
+        semver.gte(zksolcVersion, ZKSOLC_COMPILER_MIN_VERSION_WITH_SUPPORT_FOR_SUPPRESSED_ERRORS_AND_WARNINGS)
+    );
 }
 
 export function zeroxlify(hex: string): string {
@@ -339,9 +354,7 @@ export async function download(
     const text = await response.body.text();
 
     // eslint-disable-next-line
-    throw new Error(
-        `Failed to download ${url} - ${response.statusCode} received. ${text}`
-    );
+    throw new Error(`Failed to download ${url} - ${response.statusCode} received. ${text}`);
 }
 
 export async function getLatestRelease(

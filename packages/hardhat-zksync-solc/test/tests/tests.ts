@@ -533,5 +533,21 @@ describe('zksolc plugin', async function () {
                 fs.unlinkSync(this.env.config.zksolc.settings.missingLibrariesPath!);
             });
         });
+
+        describe('Suppressed errors', async function () {
+            useEnvironment('suppressed-errors');
+
+            it('Should successfully compile a contract with a compiler error if the error is suppressed', async function () {
+                await this.env.run(TASK_COMPILE);
+
+                const artifact = this.env.artifacts.readArtifactSync('Middleman') as ZkSyncArtifact;
+
+                assert.equal(artifact.contractName, 'Middleman');
+                assert.isNotEmpty(artifact.bytecode, "Contract's bytecode is empty");
+
+                // Check that ZKsync-specific artifact information was added.
+                assert.deepEqual(artifact.factoryDeps, {}, 'Contract unexpectedly has dependencies');
+            });
+        });
     });
 });

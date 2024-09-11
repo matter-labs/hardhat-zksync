@@ -40,6 +40,8 @@ zksolc: {
         dockerImage: '', // deprecated
         tag: ''   // deprecated
       },
+      suppressedErrors: ['sendtransfer'], // optional
+      suppressedWarnings: ['txorigin'], // optional
     }
 },
 ```
@@ -61,6 +63,8 @@ Starting from zksolc version 1.5.0, the ZKsync Era Solidity compiler will be use
 | optimizer                   | Compiler optimizations (enabled: true (default) or false), mode: 3 (default), fallback_to_optimizing_for_size: false (default) recommended for most projects.          |
 | metadata                    | Metadata settings. If the option is omitted, the metadata hash appends by default: bytecodeHash. Can only be none.   |
 | dockerImage                 | (deprecated) option used to identify the name of the compiler docker image.                                          |
+| suppressedErrors             | Suppressed compiler errors. Supported values: 'sendtransfer'                                                         |
+| suppressedWarnings             | Suppressed compiler warnings. Supported values: 'txorigin'                                                         |
 
 Learn more about [compiling libraries here](https://docs.zksync.io/build/tooling/hardhat/compiling-libraries)
 

@@ -1,5 +1,9 @@
 import { Artifact } from 'hardhat/types';
 
+// The casing is required by the compiler, despite the warning saying that it should be all lowercase.
+type SuppressableErrors = 'sendtransfer';
+type SuppressableWarnings = 'txorigin';
+
 export interface ZkSolcConfig {
     version: string; // Currently ignored.
     compilerSource?: 'binary' | 'docker'; // Docker support is currently in an early experimental state.
@@ -46,6 +50,10 @@ export interface ZkSolcConfig {
         forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
+        // A list of suppressed errors
+        suppressedErrors?: SuppressableErrors[];
+        // A list of suppressed warnings
+        suppressedWarnings?: SuppressableWarnings[];
     };
 }
 
