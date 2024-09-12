@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import { task, subtask, types } from 'hardhat/config';
 import {
     TASK_COMPILE,
+    TASK_NODE,
     TASK_TEST,
     TASK_TEST_GET_TEST_FILES,
     TASK_TEST_RUN_MOCHA_TESTS,
@@ -24,6 +25,7 @@ import {
     getAvailablePort,
     getPlatform,
     getRPCServerBinariesDir,
+    startServer,
     waitForNodeToBeReady,
 } from './utils';
 import { RPCServerDownloader } from './downloader';
@@ -74,6 +76,20 @@ subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for ZKsync no
             return server;
         },
     );
+
+task(TASK_NODE, 'Start a ZKSync Node')
+    .addOptionalParam('tag', 'Version tag', undefined, types.string)
+    .addOptionalParam('force', 'Force download', undefined, types.boolean)
+    .setAction(async ({ tag, force }, { network }, runSuper) => {
+        if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
+            return await runSuper();
+        }
+
+        const { port, server, commandArgs } = await startServer(tag, force);
+        const _ = server.listen(commandArgs);
+        await waitForNodeToBeReady(port);
+        await server.stop();
+    });
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
