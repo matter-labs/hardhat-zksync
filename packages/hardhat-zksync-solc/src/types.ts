@@ -12,6 +12,8 @@ export interface ZkSolcConfig {
         missingLibrariesPath?: string;
         // Whether there are missing libraries. This is used as a temp flag that will enable or disable logs for successful compilation.
         areLibrariesMissing?: boolean;
+        // Flag to enable or disable library linking. By default, it is disabled.
+        linkLibraries?: LinkLibraries;
         // Optimizer settings
         optimizer?: {
             enabled?: boolean;
@@ -72,4 +74,11 @@ export interface MissingLibrary {
     contractName: string;
     contractPath: string;
     missingLibraries: string[];
+}
+
+export interface LinkLibraries {
+    contractZbinPath: string;
+    libraries?: {
+        [libraryName: string]: string;
+    };
 }

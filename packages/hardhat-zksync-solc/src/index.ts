@@ -14,7 +14,7 @@ import {
     TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
     TASK_COMPILE,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, task, types } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
@@ -32,7 +32,10 @@ import {
     TaskArguments,
 } from 'hardhat/types';
 import debug from 'debug';
-import { compile } from './compile';
+import semver from 'semver';
+import lodash from 'lodash';
+import path from 'path';
+import { compile, link } from './compile';
 import {
     zeroxlify,
     getZksolcUrl,
@@ -43,6 +46,9 @@ import {
     getZkVmNormalizedVersion,
     updateBreakableCompilerConfig,
     getLatestEraVersion,
+    getLibraryLink,
+    generateFQN,
+    replaceArtifactBytecodeAndSave,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -56,6 +62,8 @@ import {
     ZKSOLC_COMPILER_PATH_VERSION,
     TASK_UPDATE_SOLIDITY_COMPILERS,
     TASK_DOWNLOAD_ZKSOLC,
+    TASK_COMPILE_LINK,
+    ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -66,6 +74,7 @@ import {
     SolcUserConfigExtractor,
 } from './config-extractor';
 import { FactoryDeps } from './types';
+import { ZkSyncSolcPluginError } from './errors';
 
 const logDebug = debug('hardhat:core:tasks:compile');
 
@@ -131,6 +140,50 @@ task(TASK_COMPILE).setAction(
         await runSuper(compilationArgs);
     },
 );
+
+subtask(TASK_COMPILE_LINK)
+    .addParam('sourceName', 'Source name')
+    .addParam('contractName', 'ContractName')
+    .addOptionalParam('libraries', undefined, undefined, types.any)
+    .setAction(async ({ sourceName, contractName, libraries }, hre: HardhatRuntimeEnvironment) => {
+        if (!hre.network.zksync) {
+            throw new ZkSyncSolcPluginError('This task is only available for zkSync network');
+        }
+
+        await hre.run(TASK_DOWNLOAD_ZKSOLC);
+        await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
+
+        if (semver.lt(hre.config.zksolc.version, ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING)) {
+            throw new ZkSyncSolcPluginError(
+                `Linking libraries is only supported for zksolc compiler version ${ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING} or higher`,
+            );
+        }
+        const contractFQN = generateFQN(sourceName, contractName);
+        const contractFilePath = path.join(hre.config.paths.artifacts, sourceName, `${contractName}.zbin`);
+        const artifact = await hre.artifacts.readArtifact(contractFQN);
+
+        fs.writeFileSync(contractFilePath, artifact.bytecode);
+
+        const output = await link(hre.config.zksolc, await getLibraryLink(hre, libraries, contractFilePath));
+
+        if (!lodash.isEmpty(output.unlinked)) {
+            throw new ZkSyncSolcPluginError(
+                `Libraries for contract ${contractFQN} are not linked: ${Object.values(output.unlinked[contractFQN])
+                    .map((lib) => `${lib}`)
+                    .join(', ')}`,
+            );
+        }
+
+        if (!lodash.isEmpty(output.ignored)) {
+            console.warn(
+                `Linking of libraries for contract ${contractFQN} are ignored, delete artifacts and cache folders and try again with new library addresses`,
+            );
+        }
+
+        await replaceArtifactBytecodeAndSave(hre, artifact, contractFilePath);
+
+        return output;
+    });
 
 subtask(TASK_DOWNLOAD_ZKSOLC, async (_args: any, hre: HardhatRuntimeEnvironment) => {
     if (!hre.network.zksync) {
@@ -393,7 +446,7 @@ subtask(
 
         if (compiler && compiler.eraVersion) {
             const compilersCache = await getCompilersDir();
-            let path: string = '';
+            let compilerPath: string = '';
             let version: string = '';
             let normalizedVersion: string = '';
 
@@ -409,7 +462,7 @@ subtask(
                     await zkVmSolcCompilerDownloader.downloadCompiler();
                 }
 
-                path = zkVmSolcCompilerDownloader.getCompilerPath();
+                compilerPath = zkVmSolcCompilerDownloader.getCompilerPath();
                 version = zkVmSolcCompilerDownloader.getVersion();
                 normalizedVersion = getZkVmNormalizedVersion(
                     zkVmSolcCompilerDownloader.getSolcVersion(),
@@ -419,7 +472,7 @@ subtask(
             console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
 
             return {
-                compilerPath: path,
+                compilerPath,
                 isSolcJs: false,
                 version,
                 longVersion: normalizedVersion,

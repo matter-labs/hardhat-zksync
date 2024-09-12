@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig }
 import { DeploymentType } from 'zksync-ethers/build/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
-import { ZkSyncArtifact } from './types';
+import { ZkSyncArtifact, ZkSyncOverrides } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
 import { loadCache, saveCache } from './deployment-saver';
@@ -64,9 +64,11 @@ export async function deploy(
     constructorArguments: any[] = [],
     zkWallet: zk.Wallet,
     deploymentType: DeploymentType = 'create',
-    overrides?: ethers.Overrides,
+    overrides?: ZkSyncOverrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
+    await linkLibrariesIfNeeded(hre, contractNameOrArtifact, overrides?.libraries);
+
     const artifact: ZkSyncArtifact =
         typeof contractNameOrArtifact === 'string'
             ? await loadArtifact(hre, contractNameOrArtifact)
@@ -201,6 +203,18 @@ export async function _extractFactoryDepsRecursive(
     }
 
     return factoryDeps;
+}
+
+export async function linkLibrariesIfNeeded(
+    hre: HardhatRuntimeEnvironment,
+    contractNameOrArtifact: ZkSyncArtifact | string,
+    libraries?: { [libraryName: string]: string },
+) {
+    const artifact: ZkSyncArtifact =
+        typeof contractNameOrArtifact === 'string'
+            ? await loadArtifact(hre, contractNameOrArtifact)
+            : contractNameOrArtifact;
+    await hre.run('compile:link', { sourceName: artifact.sourceName, contractName: artifact.contractName, libraries });
 }
 
 export function createProviders(

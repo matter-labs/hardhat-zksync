@@ -1,7 +1,7 @@
 import { HardhatDocker, Image } from '@nomiclabs/hardhat-docker';
 import semver from 'semver';
 import { CompilerInput } from 'hardhat/types';
-import { ZkSolcConfig } from '../types';
+import { LinkLibraries, ZkSolcConfig } from '../types';
 import { ZkSyncSolcPluginError } from '../errors';
 import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFile } from '../utils';
 import {
@@ -16,7 +16,7 @@ import {
     compileWithDocker,
     getSolcVersion,
 } from './docker';
-import { compileWithBinary } from './binary';
+import { compileWithBinary, linkWithBinary } from './binary';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
     let compiler: ICompiler;
@@ -42,8 +42,21 @@ export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, 
     return await compiler.compile(input, zksolcConfig);
 }
 
+export async function link(zksolcConfig: ZkSolcConfig, linkLibraries: LinkLibraries) {
+    let compiler: ICompiler;
+
+    if (zksolcConfig.compilerSource === 'binary') {
+        compiler = new BinaryCompiler('');
+    } else {
+        throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+    }
+
+    return await compiler.link(zksolcConfig, linkLibraries);
+}
+
 export interface ICompiler {
     compile(input: CompilerInput, config: ZkSolcConfig): Promise<any>;
+    link(config: ZkSolcConfig, linkLibraries: LinkLibraries): Promise<any>;
 }
 
 export class BinaryCompiler implements ICompiler {
@@ -51,7 +64,10 @@ export class BinaryCompiler implements ICompiler {
 
     public async compile(input: CompilerInput, config: ZkSolcConfig) {
         // Check for missing libraries
-        if (semver.gte(config.version, DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION)) {
+        if (
+            semver.gte(config.version, DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION) &&
+            semver.lt(config.version, '1.6.0')
+        ) {
             const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
 
             const missingLibraries = findMissingLibraries(zkSolcOutput);
@@ -69,8 +85,13 @@ export class BinaryCompiler implements ICompiler {
                 return zkSolcOutput;
             }
         }
+
         config.settings.areLibrariesMissing = false;
         return await compileWithBinary(input, config, this.solcPath);
+    }
+
+    public async link(config: ZkSolcConfig, linkLibraries: LinkLibraries) {
+        return await linkWithBinary(config, linkLibraries);
     }
 }
 
@@ -100,5 +121,9 @@ export class DockerCompiler implements ICompiler {
         const longVersion = versionOutput.match(/^Version: (.*)$/)![1];
         const version = longVersion.split('+')[0];
         return { version, longVersion };
+    }
+
+    public async link(_: ZkSolcConfig, __: LinkLibraries) {
+        throw new ZkSyncSolcPluginError('Linking is not supported with docker compiler');
     }
 }

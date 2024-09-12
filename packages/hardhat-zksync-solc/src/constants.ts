@@ -14,6 +14,9 @@ export const TASK_DOWNLOAD_ZKSOLC = 'compile:zksolc:download';
 
 export const ZKSOLC_COMPILER_PATH_VERSION = 'local_or_remote';
 
+export const TASK_COMPILE_LINK: string = 'compile:link';
+export const ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING = '1.6.0';
+
 export const defaultZkSolcConfig: ZkSolcConfig = {
     version: 'latest',
     compilerSource: 'binary',

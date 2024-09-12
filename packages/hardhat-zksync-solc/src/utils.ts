@@ -1,6 +1,6 @@
 import semver from 'semver';
 import crypto from 'crypto';
-import { SolcUserConfig } from 'hardhat/types';
+import { Artifact, HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import fs from 'fs';
@@ -393,4 +393,45 @@ export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: s
 
 export async function getLatestEraVersion(): Promise<string> {
     return (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
+}
+
+export function generateFQN(sourceName: string, contractName: string): string {
+    return `${sourceName}:${contractName}`;
+}
+
+export async function getLibraryLink(
+    hre: HardhatRuntimeEnvironment,
+    libraries: { [contractName: string]: string },
+    contractZbinPath: string,
+) {
+    if (libraries === undefined || Object.keys(libraries).length === 0) {
+        return {
+            contractZbinPath,
+        };
+    }
+
+    const populatedLibraries: { [contractName: string]: string } = {};
+
+    await Promise.all(
+        Object.entries(libraries).map(async (libraryInfo) => {
+            const artifact = await hre.artifacts.readArtifact(libraryInfo[0]);
+            populatedLibraries[generateFQN(artifact.sourceName, artifact.contractName)] = libraryInfo[1] as string;
+        }),
+    );
+
+    return {
+        contractZbinPath,
+        libraries: populatedLibraries,
+    };
+}
+
+export async function replaceArtifactBytecodeAndSave(
+    hre: HardhatRuntimeEnvironment,
+    artifact: Artifact,
+    contractFilePath: string,
+) {
+    const newBytecode = fs.readFileSync(contractFilePath, { encoding: 'utf-8' });
+    artifact.bytecode = newBytecode;
+    artifact.deployedBytecode = newBytecode;
+    await hre.artifacts.saveArtifactAndDebugFile(artifact);
 }
