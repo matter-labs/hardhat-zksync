@@ -78,18 +78,126 @@ subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for ZKsync no
     );
 
 task(TASK_NODE, 'Start a ZKSync Node')
-    .addOptionalParam('tag', 'Version tag', undefined, types.string)
+    .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
+    .addOptionalParam(
+        'logFilePath',
+        'Path to the file where logs should be written - default: `era_test_node.log`',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
+    .addOptionalParam(
+        'cacheDir',
+        'Cache directory location for `disk` cache - default: `.cache`',
+        undefined,
+        types.string,
+    )
+    .addFlag('resetCache', 'Reset the local `disk` cache')
+    .addOptionalParam(
+        'showCalls',
+        'Show call debug information (none, user, system, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showStorageLogs',
+        'Show storage log information (none, read, write, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showVmDetails',
+        'Show VM details information (none, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showGasDetails',
+        'Show Gas details information (none, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addFlag(
+        'resolveHashes',
+        'Try to contact openchain to resolve the ABI & topic names. It enabled, it makes debug log more readable, but will decrease the performance',
+    )
+    .addFlag(
+        'devUseLocalContracts',
+        'Loads the locally compiled system contracts (useful when doing changes to system contracts or bootloader)',
+    )
+    .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
     .addOptionalParam('force', 'Force download', undefined, types.boolean)
-    .setAction(async ({ tag, force }, { network }, runSuper) => {
-        if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
-            return await runSuper();
-        }
+    .setAction(
+        async (
+            {
+                port,
+                log,
+                logFilePath,
+                cache,
+                cacheDir,
+                resetCache,
+                showCalls,
+                showStorageLogs,
+                showVmDetails,
+                showGasDetails,
+                resolveHashes,
+                devUseLocalContracts,
+                fork,
+                forkBlockNumber,
+                replayTx,
+                tag,
+                force,
+            }: {
+                port: number;
+                log: string;
+                logFilePath: string;
+                cache: string;
+                cacheDir: string;
+                resetCache: boolean;
+                showCalls: string;
+                showStorageLogs: string;
+                showVmDetails: string;
+                showGasDetails: string;
+                resolveHashes: boolean;
+                devUseLocalContracts: boolean;
+                fork: string;
+                forkBlockNumber: number;
+                replayTx: string;
+                tag: string;
+                binaryTag: string;
+                force: boolean;
+            },
+            { network },
+            runSuper,
+        ) => {
+            if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
+                return await runSuper();
+            }
 
-        const { port, server, commandArgs } = await startServer(tag, force);
-        const _ = server.listen(commandArgs);
-        await waitForNodeToBeReady(port);
-        await server.stop();
-    });
+            const commandArgs = constructCommandArgs({
+                port,
+                log,
+                logFilePath,
+                cache,
+                cacheDir,
+                resetCache,
+                showCalls,
+                showStorageLogs,
+                showVmDetails,
+                showGasDetails,
+                resolveHashes,
+                devUseLocalContracts,
+                fork,
+                forkBlockNumber,
+                replayTx,
+            });
+
+            const { server } = await startServer(tag, force);
+            const _ = server.listen(commandArgs);
+            await waitForNodeToBeReady(port);
+        },
+    );
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
