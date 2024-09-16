@@ -25,7 +25,6 @@ import {
     getAvailablePort,
     getPlatform,
     getRPCServerBinariesDir,
-    startServer,
     waitForNodeToBeReady,
 } from './utils';
 import { RPCServerDownloader } from './downloader';
@@ -168,12 +167,14 @@ task(TASK_NODE, 'Start a ZKSync Node')
                 binaryTag: string;
                 force: boolean;
             },
-            { network },
+            { network, run },
             runSuper,
         ) => {
             if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
                 return await runSuper();
             }
+
+            port = START_PORT;
 
             const commandArgs = constructCommandArgs({
                 port,
@@ -193,9 +194,17 @@ task(TASK_NODE, 'Start a ZKSync Node')
                 replayTx,
             });
 
-            const { server } = await startServer(tag, force);
-            const _ = server.listen(commandArgs);
-            await waitForNodeToBeReady(port);
+            // Download the binary
+            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
+
+            // Create the server
+            const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
+
+            try {
+                await server.listen(commandArgs);
+            } catch (error: any) {
+                throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
+            }
         },
     );
 
