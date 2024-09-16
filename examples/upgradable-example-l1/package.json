@@ -35,7 +35,6 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
-    "@nomicfoundation/hardhat-ethers": "3.0.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "chalk": "^4.1.2",
     "ethers": "^6.12.2",

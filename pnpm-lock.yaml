@@ -443,15 +443,9 @@ importers:
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
-      '@nomicfoundation/hardhat-ethers':
-        specifier: 3.0.6
-        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/contracts-upgradeable':
         specifier: ^4.9.2
         version: 4.9.6
-      '@openzeppelin/hardhat-upgrades':
-        specifier: ^2.5.1
-        version: 2.5.1(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(bufferutil@4.0.8)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -525,9 +519,6 @@ importers:
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-verify
-      '@nomicfoundation/hardhat-ethers':
-        specifier: 3.0.6
-        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/contracts-upgradeable':
         specifier: ^4.9.2
         version: 4.9.6
