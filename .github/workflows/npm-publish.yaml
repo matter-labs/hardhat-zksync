@@ -22,6 +22,7 @@ on:
         options: 
           - hardhat-zksync-deploy
           - hardhat-zksync-upgradable
+          - hardhat-zksync-ethers
           - hardhat-zksync
 
 jobs:
