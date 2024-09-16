@@ -97,11 +97,11 @@ const verificationId = await hre.run("verify:verify:vyper", {
 ```
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-verify-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-verify-vyper.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-verify-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-verify-vyper), ZKsync's Era [website](https://docs.zksync.io/build) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
-[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
+[Guides to get started](https://docs.zksync.io/build/start-coding/zksync-101): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://docs.zksync.io/build/tooling/hardhat/getting-started): Overview and guides for all Hardhat ZKsync Era plugins.\
+[ZK Chains](https://docs.zksync.io/zk-stack/concepts/zk-chains#what-are-zk-chains): Deep dive into the concept of ZK chains.
 
 ## 🤝 Contributing
 

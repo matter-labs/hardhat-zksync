@@ -59,7 +59,7 @@ const config: HardhatUserConfig = {
 | dockerImage                 | (deprecated) option used to identify the name of the compiler docker image.                                          |
 
 
-Learn more about [compiling libraries](https://era.zksync.io/docs/tools/hardhat/compiling-libraries.html).
+Learn more about [compiling libraries](https://docs.zksync.io/build/tooling/hardhat/compiling-libraries).
 
 **Create a simple vyper contract**
 
@@ -110,11 +110,11 @@ Greeter was deployed to 0x7CDF8A4334fafE21B8dCCe70487d6CBC00183c0d
 
 ## 📝 Documentation
 
-In addition to the [hardhat-zksync-vyper](https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-vyper.html), ZKsync's Era [website](https://era.zksync.io/docs/) offers a variety of resources including:
+In addition to the [hardhat-zksync-vyper](https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-vyper), ZKsync's Era [website](https://docs.zksync.io/build) offers a variety of resources including:
 
-[Guides to get started](https://era.zksync.io/docs/dev/building-on-zksync/hello-world.html): Learn how to start building on ZKsync Era.\
-[Hardhat ZKsync Era plugins](https://era.zksync.io/docs/tools/hardhat/getting-started.html): Overview and guides for all Hardhat ZKsync Era plugins.\
-[Hyperscaling](https://era.zksync.io/docs/reference/concepts/hyperscaling.html#what-are-hyperchains): Deep dive into hyperscaling on ZKsync Era.
+[Guides to get started](https://docs.zksync.io/build/start-coding/zksync-101): Learn how to start building on ZKsync Era.\
+[Hardhat ZKsync Era plugins](https://docs.zksync.io/build/tooling/hardhat/getting-started): Overview and guides for all Hardhat ZKsync Era plugins.\
+[ZK Chains](https://docs.zksync.io/zk-stack/concepts/zk-chains#what-are-zk-chains): Deep dive into the concept of ZK chains.
 
 ## 🤝 Contributing
 
