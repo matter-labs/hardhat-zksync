@@ -2,6 +2,7 @@ import '@matterlabs/hardhat-zksync-solc';
 import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
+import '@matterlabs/hardhat-zksync-ethers';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
@@ -20,13 +21,9 @@ const config: HardhatUserConfig = {
         hardhat: {
             zksync: true,
         },
-        eth: {
-            zksync: true,
-            url: 'http://0.0.0.0:8545',
-        },
         zkSyncNetwork: {
             zksync: true,
-            ethNetwork: 'eth',
+            ethNetwork: 'http://0.0.0.0:8545',
             url: 'http://0.0.0.0:3050',
         },
     },

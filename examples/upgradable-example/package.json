@@ -34,11 +34,12 @@
     "zksync-ethers": "^6.11.2",
     "hardhat": "^2.22.5",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
-    "chalk": "^4.1.2",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "chalk": "^4.1.2",
     "zksync": "^0.13.1"
   },
   "prettier": {

@@ -18,7 +18,8 @@ export const storageLayoutErrors = {
     RENAMED_VARIABLE: 'Renamed `thirdValue` to `renamedValue`',
     DELETED_VARIABLE: 'Deleted `fifthValue`',
     CHANGE_VARIABLE_TYPE: 'Upgraded `secondValue` to an incompatible type',
-    STORAGE_GAP_SIZE: 'Layout changed for `__gap`',
+    STORAGE_GAP_SIZE: 'Bad storage gap resize from 10 to 9',
+    STORAGE_GAP_RESIZE: 'Upgraded `__gap` to an incompatible type',
 };
 
 export const TEST_ADDRESS = '0x8e1DC7E4Bb15927E76a854a92Bf8053761501fdC';

@@ -482,7 +482,7 @@ describe('Upgradable plugin tests', function () {
                     boxV2Artifact,
                 ),
                 (error: any) =>
-                    error.message.includes(storageLayoutErrors.INCOMPATIBLE_STORAGE_LAYOUT) &&
+                    error.message.includes(storageLayoutErrors.STORAGE_GAP_RESIZE) &&
                     error.message.includes(storageLayoutErrors.STORAGE_GAP_SIZE),
             );
         });
