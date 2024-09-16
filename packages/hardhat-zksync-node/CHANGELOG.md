@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.1.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.1...@matterlabs/hardhat-zksync-node-v1.1.2) (2024-09-16)
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.0...@matterlabs/hardhat-zksync-node-v1.1.1) (2024-07-15)
 
 
