@@ -17,6 +17,7 @@ import {
 } from './task-names';
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import { ExtensionGenerator } from './generator';
+import { ZkSyncUpgradablePluginError } from './errors';
 
 extendEnvironment((hre) => {
     const extesionGenerator = new ExtensionGenerator(hre);
@@ -94,6 +95,18 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSup
     }
 
     return { output, solcBuild };
+});
+
+subtask('verify:etherscan').setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync) {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const { verify } = await import('@openzeppelin/hardhat-upgrades/dist/verify-proxy');
+        return await verify(args, hre, runSuper);
+    }
+
+    throw new ZkSyncUpgradablePluginError(
+        'This task is only available for zkSync network, use `verify:verify` instead',
+    );
 });
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {
