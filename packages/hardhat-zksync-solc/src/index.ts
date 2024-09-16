@@ -142,8 +142,8 @@ task(TASK_COMPILE).setAction(
 );
 
 subtask(TASK_COMPILE_LINK)
-    .addParam('sourceName', 'Source name')
-    .addParam('contractName', 'ContractName')
+    .addParam('sourceName', 'Source name of the artifact')
+    .addParam('contractName', 'Contract name of the artifact')
     .addOptionalParam('libraries', undefined, undefined, types.any)
     .setAction(async ({ sourceName, contractName, libraries }, hre: HardhatRuntimeEnvironment) => {
         if (!hre.network.zksync) {
@@ -154,21 +154,21 @@ subtask(TASK_COMPILE_LINK)
         await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
 
         if (semver.lt(hre.config.zksolc.version, ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING)) {
-            throw new ZkSyncSolcPluginError(
-                `Linking libraries is only supported for zksolc compiler version ${ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING} or higher`,
-            );
+            return undefined;
         }
+
         const contractFQN = generateFQN(sourceName, contractName);
         const contractFilePath = path.join(hre.config.paths.artifacts, sourceName, `${contractName}.zbin`);
         const artifact = await hre.artifacts.readArtifact(contractFQN);
 
         fs.writeFileSync(contractFilePath, artifact.bytecode);
-
         const output = await link(hre.config.zksolc, await getLibraryLink(hre, libraries, contractFilePath));
 
         if (!lodash.isEmpty(output.unlinked)) {
             throw new ZkSyncSolcPluginError(
-                `Libraries for contract ${contractFQN} are not linked: ${Object.values(output.unlinked[contractFQN])
+                `Libraries for contract ${contractFQN} are not linked: ${Object.values(
+                    output.unlinked[contractFilePath],
+                )
                     .map((lib) => `${lib}`)
                     .join(', ')}`,
             );
@@ -176,7 +176,7 @@ subtask(TASK_COMPILE_LINK)
 
         if (!lodash.isEmpty(output.ignored)) {
             console.warn(
-                `Linking of libraries for contract ${contractFQN} are ignored, delete artifacts and cache folders and try again with new library addresses`,
+                `Linking of some libraries for contract ${contractFQN} are ignored, delete artifacts and cache folders and try again with new library addresses if that was intended`,
             );
         }
 

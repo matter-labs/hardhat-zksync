@@ -8,6 +8,7 @@ import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
 import chalk from 'chalk';
+import { BUILD_INFO_DIR_NAME } from 'hardhat/internal/constants';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import {
@@ -433,5 +434,13 @@ export async function replaceArtifactBytecodeAndSave(
     const newBytecode = fs.readFileSync(contractFilePath, { encoding: 'utf-8' });
     artifact.bytecode = newBytecode;
     artifact.deployedBytecode = newBytecode;
+
+    const buildInfo = await hre.artifacts.getBuildInfo(generateFQN(artifact.sourceName, artifact.contractName));
+    if (buildInfo) {
+        buildInfo.output.contracts[artifact.sourceName][artifact.contractName].evm.bytecode.object = newBytecode;
+        const buildInfoPath = path.join(hre.config.paths.artifacts, BUILD_INFO_DIR_NAME, `${buildInfo?.id}.json`);
+        await fse.writeJSON(buildInfoPath, buildInfo);
+    }
+
     await hre.artifacts.saveArtifactAndDebugFile(artifact);
 }

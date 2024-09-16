@@ -2,6 +2,8 @@ import { HardhatRuntimeEnvironment, HttpNetworkConfig, Network, NetworksConfig }
 import { DeploymentType } from 'zksync-ethers/build/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
+import { TASK_COMPILE_LINK } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
+import { generateFQN } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { ZkSyncArtifact, ZkSyncOverrides } from './types';
 import { ZkSyncDeployPluginError } from './errors';
 import { isHttpNetworkConfig, isValidEthNetworkURL } from './utils';
@@ -72,7 +74,10 @@ export async function deploy(
     const artifact: ZkSyncArtifact =
         typeof contractNameOrArtifact === 'string'
             ? await loadArtifact(hre, contractNameOrArtifact)
-            : contractNameOrArtifact;
+            : await loadArtifact(
+                  hre,
+                  generateFQN(contractNameOrArtifact.sourceName, contractNameOrArtifact.contractName),
+              );
 
     const baseDeps = await _extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
@@ -214,7 +219,11 @@ export async function linkLibrariesIfNeeded(
         typeof contractNameOrArtifact === 'string'
             ? await loadArtifact(hre, contractNameOrArtifact)
             : contractNameOrArtifact;
-    await hre.run('compile:link', { sourceName: artifact.sourceName, contractName: artifact.contractName, libraries });
+    await hre.run(TASK_COMPILE_LINK, {
+        sourceName: artifact.sourceName,
+        contractName: artifact.contractName,
+        libraries,
+    });
 }
 
 export function createProviders(
