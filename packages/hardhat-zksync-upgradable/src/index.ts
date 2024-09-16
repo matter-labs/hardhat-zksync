@@ -1,5 +1,5 @@
 import '@matterlabs/hardhat-zksync-solc';
-import '@nomicfoundation/hardhat-ethers';
+import '@matterlabs/hardhat-zksync-ethers';
 import './type-extensions';
 
 import { extendEnvironment, subtask, task, types } from 'hardhat/internal/core/config/config-env';

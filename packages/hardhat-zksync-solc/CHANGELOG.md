@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.2.4](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.3...@matterlabs/hardhat-zksync-solc-v1.2.4) (2024-09-05)
+
+
+### Bug Fixes
+
+* add gnu toolchain for linux as default from compiler version 1.5.3 ([#1354](https://github.com/matter-labs/hardhat-zksync/issues/1354)) ([448a2ce](https://github.com/matter-labs/hardhat-zksync/commit/448a2ceb6141e519e4d00a41edbf3381b282e128))
+
 ## [1.2.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.2...@matterlabs/hardhat-zksync-solc-v1.2.3) (2024-08-26)
 
 

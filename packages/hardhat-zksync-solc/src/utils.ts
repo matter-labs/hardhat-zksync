@@ -23,6 +23,7 @@ import {
     USER_AGENT,
     COMPILER_ZKSOLC_IS_SYSTEM_USE,
     COMPILER_ZKSOLC_FORCE_EVMLA_USE,
+    COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -167,8 +168,11 @@ export function saltFromUrl(url: string): string {
 export function getZksolcUrl(repo: string, version: string, isRelease: boolean = true): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
-    // @ts-ignore
-    const toolchain = { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform];
+    const toolchain = semver.lt(version, COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN)
+        ? // @ts-ignore
+          { linux: '-musl', win32: '-gnu', darwin: '' }[process.platform]
+        : // @ts-ignore
+          { linux: '-gnu', win32: '-gnu', darwin: '' }[process.platform];
     const arch = process.arch === 'x64' ? 'amd64' : process.arch;
     const ext = process.platform === 'win32' ? '.exe' : '';
 
