@@ -9,6 +9,7 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
+import { TaskArguments } from 'hardhat/types';
 import {
     MAX_PORT_ATTEMPTS,
     START_PORT,
@@ -17,7 +18,7 @@ import {
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS,
 } from './constants';
-import { JsonRpcServer } from './server';
+import { JsonRpcServer, RpcServer } from './server';
 import {
     adjustTaskArgsForPort,
     configureNetwork,
@@ -126,87 +127,18 @@ task(TASK_NODE, 'Start a ZKSync Node')
     )
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     .addOptionalParam('tag', 'Specified node release for use', undefined)
-    .addOptionalParam('force', 'Force download', undefined, types.boolean)
-    .setAction(
-        async (
-            {
-                port,
-                log,
-                logFilePath,
-                cache,
-                cacheDir,
-                resetCache,
-                showCalls,
-                showStorageLogs,
-                showVmDetails,
-                showGasDetails,
-                resolveHashes,
-                devUseLocalContracts,
-                fork,
-                forkBlockNumber,
-                replayTx,
-                tag,
-                force,
-            }: {
-                port: number;
-                log: string;
-                logFilePath: string;
-                cache: string;
-                cacheDir: string;
-                resetCache: boolean;
-                showCalls: string;
-                showStorageLogs: string;
-                showVmDetails: string;
-                showGasDetails: string;
-                resolveHashes: boolean;
-                devUseLocalContracts: boolean;
-                fork: string;
-                forkBlockNumber: number;
-                replayTx: string;
-                tag: string;
-                binaryTag: string;
-                force: boolean;
-            },
-            { network, run },
-            runSuper,
-        ) => {
-            if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
-                return await runSuper();
-            }
+    // .addOptionalParam('force', 'Force download', undefined, types.boolean)
+    .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
+        if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
+            return await runSuper();
+        }
+        // Hardhat doesn't allow to override the port value, so we need to do it manually. With this approach we don't allow 8545 for the user.
+        if (args.port === 8545) {
+            delete args.port;
+        }
 
-            port = START_PORT;
-
-            const commandArgs = constructCommandArgs({
-                port,
-                log,
-                logFilePath,
-                cache,
-                cacheDir,
-                resetCache,
-                showCalls,
-                showStorageLogs,
-                showVmDetails,
-                showGasDetails,
-                resolveHashes,
-                devUseLocalContracts,
-                fork,
-                forkBlockNumber,
-                replayTx,
-            });
-
-            // Download the binary
-            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
-
-            // Create the server
-            const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
-
-            try {
-                await server.listen(commandArgs);
-            } catch (error: any) {
-                throw new ZkSyncNodePluginError(`Failed when running node: ${error.message}`);
-            }
-        },
-    );
+        await run(TASK_NODE_ZKSYNC, args);
+    });
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
@@ -329,7 +261,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
             const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
 
             // Create the server
-            const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
+            const server: RpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
 
             try {
                 await server.listen(commandArgs);
