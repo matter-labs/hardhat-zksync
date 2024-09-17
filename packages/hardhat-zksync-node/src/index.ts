@@ -132,17 +132,13 @@ task(TASK_NODE, 'Start a ZKSync Node')
         if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
             return await runSuper();
         }
-        // Hardhat doesn't allow to override the port value, so we need to do it manually. With this approach we don't allow 8545 for the user.
-        if (args.port === 8545) {
-            delete args.port;
-        }
 
         await run(TASK_NODE_ZKSYNC, args);
     });
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
-    .addOptionalParam('port', 'Port to listen on - default: 8011', undefined, types.int)
+    .addOptionalParam('port', 'Port to listen on - default: 8545', 8545, types.int)
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
