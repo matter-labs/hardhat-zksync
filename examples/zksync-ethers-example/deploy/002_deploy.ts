@@ -96,4 +96,11 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.green(`Greeter from getContractAt set to: ${await contract3.greet()}`));
     const contract3Runner = contract3.signer as Signer;
     console.info(chalk.green('Runner from getContractAt set to: ', await contract3Runner.getAddress()));
+
+    const newContractFactory = new hre.ethers.ContractFactory(artifact.abi, artifact.bytecode, signer);
+    const deployedContract = await newContractFactory.deploy('Hello World with new contract factory.');
+    console.info(chalk.green(`Contract with new ContractFactory deployed to ${deployedContract}`));
+
+    const newContract = new hre.ethers.Contract(deployedContract.address, artifact.abi, signer);
+    console.info(await newContract.greet());
 }

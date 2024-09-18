@@ -46,4 +46,11 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const tx2 = await greeter.setGreeting('Hello, world again with name!');
     await tx2.wait();
     console.info(chalk.green(`Greeter greeting set to: ${await greeter.greet()}`));
+
+    const newContractFactory = new hre.zksyncEthers.ContractFactory(artifact.abi, artifact.bytecode, wallet);
+    const deployedContract = await newContractFactory.deploy('Hello World with new contract factory.');
+    console.info(chalk.green(`Contract with new ContractFactory deployed to ${deployedContract.address}`));
+
+    const newContract = new hre.zksyncEthers.Contract(deployedContract.address, artifact.abi, wallet);
+    console.info(await newContract.greet());
 }
