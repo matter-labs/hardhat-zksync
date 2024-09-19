@@ -25,7 +25,7 @@ export class ZkSyncGenerator implements Generator {
 
     public populateExtension(): any {
         return lazyObject(() => {
-            const { zksyncEthers } = require('zksync-ethers');
+            const zksyncEthers = require('zksync-ethers');
             const { ethWeb3Provider, zkWeb3Provider } = createProviders(this._hre);
             const { ethers } = require('ethers');
 
