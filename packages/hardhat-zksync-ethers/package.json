@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-ethers",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Hardhat plugin for integration with zksync-ethers library",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-ethers",
