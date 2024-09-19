@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.2.0...@matterlabs/hardhat-zksync-ethers-v0.2.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* update zksync-ethers import syntax v5 ([#1422](https://github.com/matter-labs/hardhat-zksync/issues/1422)) ([7ed1290](https://github.com/matter-labs/hardhat-zksync/commit/7ed1290f7aa2d4046719e1b629e1792e059b4087))
+
 ## [0.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v0.1.0...@matterlabs/hardhat-zksync-ethers-v0.2.0) (2024-09-16)
 
 
