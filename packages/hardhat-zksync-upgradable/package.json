@@ -38,7 +38,7 @@
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",
     "@openzeppelin/hardhat-upgrades": "~2.5.1",
-    "@openzeppelin/upgrades-core": "^1.31.3",
+    "@openzeppelin/upgrades-core": "^1.38.0",
     "@openzeppelin/defender-admin-client": "^1.52.0",
     "chalk": "^4.1.2",
     "compare-versions": "^6.1.0",
