@@ -1,4 +1,4 @@
-import { Artifact } from 'hardhat/types';
+import { Artifact, CompilerInput } from 'hardhat/types';
 
 export interface ZkSolcConfig {
     version: string; // Currently ignored.
@@ -48,7 +48,18 @@ export interface ZkSolcConfig {
         forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
+        // Suppress specified warnings. Currently supported: txorigin, sendtransfer
+        suppressedWarnings?: string[];
+        // Suppress specified errors. Currently supported: txorigin, sendtransfer
+        suppressedErrors?: string[];
     };
+}
+
+export interface ZkSyncCompilerInput extends CompilerInput {
+    // Suppress specified warnings. Currently supported: txorigin, sendtransfer
+    suppressedWarnings?: string[];
+    // Suppress specified errors. Currently supported: txorigin, sendtransfer
+    suppressedErrors?: string[];
 }
 
 export interface CompilerOutputSelection {

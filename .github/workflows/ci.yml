@@ -191,6 +191,23 @@ jobs:
           pnpm hardhat run scripts/deploy-box-uups.ts 
           pnpm hardhat run scripts/upgrade-box-beacon.ts 
           pnpm hardhat run scripts/upgrade-box-uups.ts 
+          pnpm hardhat run scripts/upgrade-box.ts
+          pnpm hardhat run scripts/deploy-box-beacon-factory.ts 
+          pnpm hardhat run scripts/deploy-box-proxy-factory.ts 
+          pnpm hardhat run scripts/deploy-box-uups-factory.ts 
+          pnpm hardhat run scripts/upgrade-box-uups-factory.ts 
+          pnpm hardhat run scripts/upgrade-box-beacon-factory.ts 
+          pnpm hardhat run scripts/upgrade-box-factory.ts 
+
+      - name: Test upgradable example
+        run: |
+          cd examples/upgradable-example-l1
+          pnpm hardhat compile
+          pnpm hardhat run scripts/deploy-box-beacon.ts 
+          pnpm hardhat run scripts/deploy-box-proxy.ts 
+          pnpm hardhat run scripts/deploy-box-uups.ts 
+          pnpm hardhat run scripts/upgrade-box-beacon.ts 
+          pnpm hardhat run scripts/upgrade-box-uups.ts 
           pnpm hardhat run scripts/upgrade-box.ts 
 
       - name: Test zksync-ethers example

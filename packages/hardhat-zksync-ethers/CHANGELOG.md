@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.0...@matterlabs/hardhat-zksync-ethers-v1.2.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* update zksync-ethers import syntax ([#1421](https://github.com/matter-labs/hardhat-zksync/issues/1421)) ([684d5be](https://github.com/matter-labs/hardhat-zksync/commit/684d5becaae410c007164890b2ebe240ea293152))
+
+## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.1.0...@matterlabs/hardhat-zksync-ethers-v1.2.0) (2024-09-16)
+
+
+### Features
+
+* introducing ethers extension in hre ([#1283](https://github.com/matter-labs/hardhat-zksync/issues/1283)) ([8e471bc](https://github.com/matter-labs/hardhat-zksync/commit/8e471bcbbbf1ee712fe79cd5d5782c11e52e3b75))
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.0.0...@matterlabs/hardhat-zksync-ethers-v1.1.0) (2024-06-19)
 
 

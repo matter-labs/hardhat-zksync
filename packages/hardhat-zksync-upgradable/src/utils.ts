@@ -19,17 +19,44 @@ export async function getWallet(hre: HardhatRuntimeEnvironment, privateKeyOrInde
     return wallet;
 }
 
-export function checkOpenzeppelinVersions<T>(wrappedFunction: (...args: any) => T): (...args: any) => T {
-    return function (...args: any): T {
-        try {
-            if (!isOpenzeppelinContractsVersionValid()) {
-                throw new Error(OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR);
-            }
-        } catch (e: any) {
-            console.warn(chalk.yellow(e.message));
-        }
+export function wrapMakeFunction<T>(
+    hre: HardhatRuntimeEnvironment,
+    wrappedFunction: (...args: any) => T,
+): (...args: any) => Promise<T> {
+    return async function (...args: any): Promise<T> {
+        checkOpenzeppelinVersion();
+
+        await compileProxyContracts(hre);
+
         return wrappedFunction(...args);
     };
+}
+
+function checkOpenzeppelinVersion() {
+    try {
+        if (!isOpenzeppelinContractsVersionValid()) {
+            throw new Error(OZ_CONTRACTS_VERISION_INCOMPATIBLE_ERROR);
+        }
+    } catch (e: any) {
+        console.warn(chalk.yellow(e.message));
+    }
+}
+
+export async function compileProxyContracts(hre: HardhatRuntimeEnvironment, noCompile: boolean = false) {
+    if (noCompile) {
+        return;
+    }
+
+    const upgradableContracts = getUpgradableContracts();
+    hre.config.zksolc.settings.forceContractsToCompile = [
+        upgradableContracts.ProxyAdmin,
+        upgradableContracts.TransparentUpgradeableProxy,
+        upgradableContracts.BeaconProxy,
+        upgradableContracts.UpgradeableBeacon,
+        upgradableContracts.ERC1967Proxy,
+    ];
+    await hre.run('compile', { quiet: true });
+    delete hre.config.zksolc.settings.forceContractsToCompile;
 }
 
 export function isOpenzeppelinContractsVersionValid(): boolean {
@@ -51,4 +78,26 @@ export function getUpgradableContracts() {
     }
 
     return UPGRADEABLE_CONTRACTS_FROM_ALIAS;
+}
+
+export function tryRequire(id: string, resolveOnly?: boolean) {
+    try {
+        if (resolveOnly) {
+            require.resolve(id);
+        } else {
+            require(id);
+        }
+        return true;
+    } catch (e: any) {
+        // do nothing
+    }
+    return false;
+}
+
+export type UndefinedFunctionType = (...args: any[]) => any;
+
+export function makeUndefinedFunction(): UndefinedFunctionType {
+    return (..._: any[]) => {
+        throw new Error('This function is not implemented');
+    };
 }

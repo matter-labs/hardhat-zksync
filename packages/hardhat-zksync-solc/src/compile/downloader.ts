@@ -25,6 +25,7 @@ import {
     ZKSOLC_BIN_REPOSITORY_NAME,
     USER_AGENT,
     ZKSOLC_COMPILER_PATH_VERSION,
+    fallbackLatestZkSolcVersion,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -210,7 +211,12 @@ export class ZksolcCompilerDownloader {
         We are currently limited in that each new version requires an update of the plugin version.
     */
     private static async _downloadCompilerVersionInfo(compilersDir: string): Promise<void> {
-        const latestRelease = await getLatestRelease(ZKSOLC_BIN_OWNER, ZKSOLC_BIN_REPOSITORY_NAME, USER_AGENT);
+        const latestRelease = await getLatestRelease(
+            ZKSOLC_BIN_OWNER,
+            ZKSOLC_BIN_REPOSITORY_NAME,
+            USER_AGENT,
+            fallbackLatestZkSolcVersion,
+        );
 
         const releaseToSave = {
             latest: latestRelease,

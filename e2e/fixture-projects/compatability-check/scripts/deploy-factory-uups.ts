@@ -24,7 +24,7 @@ async function main() {
             'Something went wrong during deployment of a Factory contract. Initialize functions is probably not called.',
         );
     }
-    console.info("Successfully deployed upgradable factor contract.")
+    console.info("Successfully deployed upgradable factory contract.")
 }
 
 main().catch((error) => {
