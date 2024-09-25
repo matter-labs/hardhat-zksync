@@ -848,21 +848,12 @@ importers:
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../hardhat-zksync-verify
-      '@matterlabs/zksync-contracts':
-        specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@4.9.6)(@openzeppelin/contracts@4.9.6)
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.4
         version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-verify':
         specifier: ^2.0.0
         version: 2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
-      '@openzeppelin/contracts':
-        specifier: ^4.9.2
-        version: 4.9.6
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.2
-        version: 4.9.6
       '@openzeppelin/upgrades-core':
         specifier: ^1.31.3
         version: 1.33.1
