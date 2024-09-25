@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "zkSync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync",
@@ -76,7 +76,6 @@
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-node": "^1.1.1",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^"
-
   },
   "prettier": {
     "tabWidth": 4,
