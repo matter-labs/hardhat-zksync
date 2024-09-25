@@ -17,6 +17,7 @@ import {
     sha1,
     updateBreakableCompilerConfig,
 } from '../../src/utils';
+import { fallbackLatestZkSolcVersion } from '../../src/constants';
 
 describe('Utils', () => {
     describe('filterSupportedOutputSelections', () => {
@@ -343,7 +344,7 @@ describe('Utils', () => {
                     },
                 );
 
-            const release = await getLatestRelease(owner, repo, userAgent);
+            const release = await getLatestRelease(owner, repo, userAgent, fallbackLatestZkSolcVersion);
 
             expect(release).to.deep.equal('1.0.0');
         });

@@ -24,6 +24,7 @@ import {
     COMPILER_ZKSOLC_IS_SYSTEM_USE,
     COMPILER_ZKSOLC_FORCE_EVMLA_USE,
     COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN,
+    fallbackLatestEraCompilerVersion,
 } from './constants';
 import { ZkSyncSolcPluginError } from './errors';
 import {
@@ -348,6 +349,7 @@ export async function getLatestRelease(
     owner: string,
     repo: string,
     userAgent: string,
+    defaultValue: string,
     tagPrefix: string = 'v',
     timeout: number = DEFAULT_TIMEOUT_MILISECONDS,
 ): Promise<any> {
@@ -356,33 +358,39 @@ export async function getLatestRelease(
 
     const { request } = await import('undici');
 
-    const response = await request(url, {
-        headersTimeout: timeout,
-        maxRedirections: 0,
-        method: 'GET',
-        headers: {
-            'User-Agent': `${userAgent}`,
-        },
-    });
+    try {
+        const response = await request(url, {
+            headersTimeout: timeout,
+            maxRedirections: 0,
+            method: 'GET',
+            headers: {
+                'User-Agent': `${userAgent}`,
+            },
+        });
 
-    // Check if the response is a redirect
-    if (response.statusCode >= 300 && response.statusCode < 400) {
-        // Get the URL from the 'location' header
-        if (response.headers.location && typeof response.headers.location === 'string') {
-            // Check if the redirect URL matches the expected pattern
-            if (response.headers.location.startsWith(redirectUrlPattern)) {
-                // Extract the tag from the redirect URL
-                return response.headers.location.substring(redirectUrlPattern.length);
+        // Check if the response is a redirect
+        if (response.statusCode >= 300 && response.statusCode < 400) {
+            // Get the URL from the 'location' header
+            if (response.headers.location && typeof response.headers.location === 'string') {
+                // Check if the redirect URL matches the expected pattern
+                if (response.headers.location.startsWith(redirectUrlPattern)) {
+                    // Extract the tag from the redirect URL
+                    return response.headers.location.substring(redirectUrlPattern.length);
+                }
+
+                throw new ZkSyncSolcPluginError(
+                    `Unexpected redirect URL: ${response.headers.location} for URL: ${url}`,
+                );
+            } else {
+                // Throw an error if the 'location' header is missing in a redirect response
+                throw new ZkSyncSolcPluginError(`Redirect location not found for URL: ${url}`);
             }
-
-            throw new ZkSyncSolcPluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
         } else {
-            // Throw an error if the 'location' header is missing in a redirect response
-            throw new ZkSyncSolcPluginError(`Redirect location not found for URL: ${url}`);
+            // Throw an error for non-redirect responses
+            throw new ZkSyncSolcPluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
         }
-    } else {
-        // Throw an error for non-redirect responses
-        throw new ZkSyncSolcPluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
+    } catch {
+        return defaultValue;
     }
 }
 
@@ -396,5 +404,13 @@ export function getZkVmNormalizedVersion(solcVersion: string, zkVmSolcVersion: s
 }
 
 export async function getLatestEraVersion(): Promise<string> {
-    return (await getLatestRelease(ZKSOLC_BIN_OWNER, ZKVM_SOLC_BIN_REPOSITORY_NAME, USER_AGENT, '')).split('-')[1];
+    return (
+        await getLatestRelease(
+            ZKSOLC_BIN_OWNER,
+            ZKVM_SOLC_BIN_REPOSITORY_NAME,
+            USER_AGENT,
+            fallbackLatestEraCompilerVersion,
+            '',
+        )
+    ).split('-')[1];
 }
