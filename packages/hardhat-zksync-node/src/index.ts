@@ -3,6 +3,7 @@ import { task, subtask, types } from 'hardhat/config';
 import {
     TASK_COMPILE,
     TASK_NODE,
+    TASK_RUN,
     TASK_TEST,
     TASK_TEST_GET_TEST_FILES,
     TASK_TEST_RUN_MOCHA_TESTS,
@@ -10,6 +11,7 @@ import {
 
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 import { TaskArguments } from 'hardhat/types';
+import path from 'path';
 import {
     MAX_PORT_ATTEMPTS,
     START_PORT,
@@ -30,6 +32,16 @@ import {
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
+import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
+import { runScriptWithHardhat } from './core/script-runner';
+
+task(TASK_RUN).setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync) {
+        await runSuper(args, hre);
+    }
+
+    await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
+});
 
 // Subtask to download the binary
 subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary')
@@ -352,3 +364,5 @@ task(
         }
     },
 );
+
+interceptAndWrapTasksWithNode();

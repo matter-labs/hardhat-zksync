@@ -6,8 +6,12 @@ import './type-extensions';
 import { deployZkSyncContract, zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
 import { DeployerExtension } from './deployer-extension';
-
+import { ZKSyncTasksForWrapping, ZKSyncTasksWithWrappedNode } from './core/global-tasks';
 export * from './deployer';
+
+if (!(global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping) {
+    (global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping = new ZKSyncTasksForWrapping();
+}
 
 extendConfig((config, userConfig) => {
     config.paths.deployPaths = userConfig.paths?.deployPaths ?? DEFAULT_DEPLOY_SCRIPTS_PATH;
@@ -71,6 +75,9 @@ task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for ZKsync network')
     .addFlag('noCompile', 'Flag to disable auto compilation')
     .setAction(deployZkSyncContract);
 
+(global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping.addTask(TASK_DEPLOY_ZKSYNC);
+(global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping.addTask(TASK_DEPLOY_ZKSYNC_LIBRARIES);
+(global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping.addTask(TASK_DEPLOY_ZKSYNC_CONTRACT);
 try {
     require.resolve('zksync2-js');
     console.info(chalk.red('The package zksync2-js is deprecated. Please use zksync-ethers.'));
