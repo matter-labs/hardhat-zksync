@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [0.12.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v0.11.0...@matterlabs/hardhat-zksync-deploy-v0.12.0) (2024-09-25)
+
+
+### Features
+
+* add upgrades extension in hre ([#1414](https://github.com/matter-labs/hardhat-zksync/issues/1414)) ([d1740bc](https://github.com/matter-labs/hardhat-zksync/commit/d1740bc9b9981aab6ebfbac3960a302ad0b66ec6))
+* remove zksync contracts dependecy, update hardhat-zksync-solc version and add hardhat-zksync-ethers as dependency ([a7beaa9](https://github.com/matter-labs/hardhat-zksync/commit/a7beaa9b9395c41d04458f1e6713b2988a4d8742))
+
 ## [0.11.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v0.10.0...@matterlabs/hardhat-zksync-deploy-v0.11.0) (2024-06-20)
 
 
