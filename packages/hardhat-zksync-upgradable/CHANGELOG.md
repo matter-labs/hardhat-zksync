@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [0.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.6.0...@matterlabs/hardhat-zksync-upgradable-v0.7.0) (2024-09-25)
+
+
+### Features
+
+* remove zksync contracts dependecy, update hardhat-zksync-solc version and add hardhat-zksync-ethers as dependency ([a7beaa9](https://github.com/matter-labs/hardhat-zksync/commit/a7beaa9b9395c41d04458f1e6713b2988a4d8742))
+
 ## [0.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v0.5.2...@matterlabs/hardhat-zksync-upgradable-v0.6.0) (2024-09-16)
 
 
