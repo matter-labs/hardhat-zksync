@@ -69,7 +69,7 @@ export async function deploy(
     overrides?: ZkSyncOverrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<zk.Contract> {
-    await linkLibrariesIfNeeded(hre, contractNameOrArtifact, overrides?.libraries);
+    const linkedBytecode = await linkLibrariesIfNeeded(hre, contractNameOrArtifact, overrides?.libraries);
 
     const artifact: ZkSyncArtifact =
         typeof contractNameOrArtifact === 'string'
@@ -78,6 +78,11 @@ export async function deploy(
                   hre,
                   generateFQN(contractNameOrArtifact.sourceName, contractNameOrArtifact.contractName),
               );
+
+    if (linkedBytecode) {
+        artifact.bytecode = linkedBytecode;
+        artifact.deployedBytecode = linkedBytecode;
+    }
 
     const baseDeps = await _extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
@@ -219,7 +224,8 @@ export async function linkLibrariesIfNeeded(
         typeof contractNameOrArtifact === 'string'
             ? await loadArtifact(hre, contractNameOrArtifact)
             : contractNameOrArtifact;
-    await hre.run(TASK_COMPILE_LINK, {
+
+    return await hre.run(TASK_COMPILE_LINK, {
         sourceName: artifact.sourceName,
         contractName: artifact.contractName,
         libraries,

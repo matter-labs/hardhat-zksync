@@ -1,6 +1,6 @@
 import semver from 'semver';
 import crypto from 'crypto';
-import { Artifact, HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import fs from 'fs';
@@ -8,7 +8,6 @@ import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
 import chalk from 'chalk';
-import { BUILD_INFO_DIR_NAME } from 'hardhat/internal/constants';
 import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import {
@@ -422,7 +421,7 @@ export function generateFQN(sourceName: string, contractName: string): string {
 
 export async function getLibraryLink(
     hre: HardhatRuntimeEnvironment,
-    libraries: { [contractName: string]: string },
+    libraries: { [contractName: string]: string } | undefined,
     contractZbinPath: string,
 ) {
     if (libraries === undefined || Object.keys(libraries).length === 0) {
@@ -444,23 +443,4 @@ export async function getLibraryLink(
         contractZbinPath,
         libraries: populatedLibraries,
     };
-}
-
-export async function replaceArtifactBytecodeAndSave(
-    hre: HardhatRuntimeEnvironment,
-    artifact: Artifact,
-    contractFilePath: string,
-) {
-    const newBytecode = fs.readFileSync(contractFilePath, { encoding: 'utf-8' });
-    artifact.bytecode = newBytecode;
-    artifact.deployedBytecode = newBytecode;
-
-    const buildInfo = await hre.artifacts.getBuildInfo(generateFQN(artifact.sourceName, artifact.contractName));
-    if (buildInfo) {
-        buildInfo.output.contracts[artifact.sourceName][artifact.contractName].evm.bytecode.object = newBytecode;
-        const buildInfoPath = path.join(hre.config.paths.artifacts, BUILD_INFO_DIR_NAME, `${buildInfo?.id}.json`);
-        await fse.writeJSON(buildInfoPath, buildInfo);
-    }
-
-    await hre.artifacts.saveArtifactAndDebugFile(artifact);
 }

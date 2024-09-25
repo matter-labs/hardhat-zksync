@@ -9,6 +9,7 @@ import {
 import { Provider, Signer, Wallet } from 'zksync-ethers';
 import { ethers } from 'ethers';
 import { isAddressEq } from 'zksync-ethers/build/utils';
+import { TASK_COMPILE_LINK } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
 import {
     HardhatZksyncSignerOrWallet,
     HardhatZksyncSignerOrWalletOrFactoryOptions,
@@ -26,7 +27,7 @@ import { richWallets } from './rich-wallets';
 import { ZkSyncEthersPluginError } from './errors';
 import { HardhatZksyncEthersProvider } from './hardhat-zksync-provider';
 import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
-import { getWallets } from './helpers';
+import { getWallets, loadArtifact } from './helpers';
 
 export function isHardhatNetworkHDAccountsConfig(object: any): object is HardhatNetworkHDAccountsConfig {
     return 'mnemonic' in object;
@@ -261,4 +262,21 @@ export async function isImpersonatedSigner(provider: Provider, address: string):
 
     await provider.send('hardhat_impersonateAccount', [address]);
     return true;
+}
+
+export async function linkLibrariesIfNeeded(
+    hre: HardhatRuntimeEnvironment,
+    contractNameOrArtifact: ZkSyncArtifact | string,
+    libraries?: { [libraryName: string]: string },
+) {
+    const artifact: ZkSyncArtifact =
+        typeof contractNameOrArtifact === 'string'
+            ? await loadArtifact(hre, contractNameOrArtifact)
+            : contractNameOrArtifact;
+
+    return await hre.run(TASK_COMPILE_LINK, {
+        sourceName: artifact.sourceName,
+        contractName: artifact.contractName,
+        libraries,
+    });
 }

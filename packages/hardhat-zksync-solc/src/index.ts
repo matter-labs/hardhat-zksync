@@ -33,10 +33,7 @@ import {
     TaskArguments,
 } from 'hardhat/types';
 import debug from 'debug';
-import semver from 'semver';
-import lodash from 'lodash';
-import path from 'path';
-import { compile, link } from './compile';
+import { compile } from './compile';
 import {
     zeroxlify,
     getZksolcUrl,
@@ -47,9 +44,6 @@ import {
     getZkVmNormalizedVersion,
     updateBreakableCompilerConfig,
     getLatestEraVersion,
-    getLibraryLink,
-    generateFQN,
-    replaceArtifactBytecodeAndSave,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -64,7 +58,6 @@ import {
     TASK_UPDATE_SOLIDITY_COMPILERS,
     TASK_DOWNLOAD_ZKSOLC,
     TASK_COMPILE_LINK,
-    ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING,
 } from './constants';
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
@@ -74,8 +67,8 @@ import {
     SolcStringUserConfigExtractor,
     SolcUserConfigExtractor,
 } from './config-extractor';
-import { ZkSyncSolcPluginError } from './errors';
 import { FactoryDeps, ZkSyncCompilerInput } from './types';
+import { compileLink } from './plugin';
 
 const logDebug = debug('hardhat:core:tasks:compile');
 
@@ -146,45 +139,7 @@ subtask(TASK_COMPILE_LINK)
     .addParam('sourceName', 'Source name of the artifact')
     .addParam('contractName', 'Contract name of the artifact')
     .addOptionalParam('libraries', undefined, undefined, types.any)
-    .setAction(async ({ sourceName, contractName, libraries }, hre: HardhatRuntimeEnvironment) => {
-        if (!hre.network.zksync) {
-            throw new ZkSyncSolcPluginError('This task is only available for zkSync network');
-        }
-
-        await hre.run(TASK_DOWNLOAD_ZKSOLC);
-        await hre.run(TASK_UPDATE_SOLIDITY_COMPILERS);
-
-        if (semver.lt(hre.config.zksolc.version, ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING)) {
-            return undefined;
-        }
-
-        const contractFQN = generateFQN(sourceName, contractName);
-        const contractFilePath = path.join(hre.config.paths.artifacts, sourceName, `${contractName}.zbin`);
-        const artifact = await hre.artifacts.readArtifact(contractFQN);
-
-        fs.writeFileSync(contractFilePath, artifact.bytecode);
-        const output = await link(hre.config.zksolc, await getLibraryLink(hre, libraries, contractFilePath));
-
-        if (!lodash.isEmpty(output.unlinked)) {
-            throw new ZkSyncSolcPluginError(
-                `Libraries for contract ${contractFQN} are not linked: ${Object.values(
-                    output.unlinked[contractFilePath],
-                )
-                    .map((lib) => `${lib}`)
-                    .join(', ')}`,
-            );
-        }
-
-        if (!lodash.isEmpty(output.ignored)) {
-            console.warn(
-                `Linking of some libraries for contract ${contractFQN} are ignored, delete artifacts and cache folders and try again with new library addresses if that was intended`,
-            );
-        }
-
-        await replaceArtifactBytecodeAndSave(hre, artifact, contractFilePath);
-
-        return output;
-    });
+    .setAction(compileLink);
 
 subtask(TASK_DOWNLOAD_ZKSOLC, async (_args: any, hre: HardhatRuntimeEnvironment) => {
     if (!hre.network.zksync) {
