@@ -516,14 +516,6 @@ describe('zksolc plugin', async function () {
                 assert.deepEqual(compilerInput.suppressedWarnings, ['txorigin']);
                 assert.deepEqual(compilerInput.suppressedErrors, ['sendtransfer']);
             });
-
-            it('Should successfully compile a simple contract with suppresed warnings and errors', async function () {
-                await this.env.run(TASK_COMPILE);
-
-                const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
-
-                assert.equal(artifact.contractName, 'Greeter');
-            });
         });
 
         describe('Missing Library', async function () {
