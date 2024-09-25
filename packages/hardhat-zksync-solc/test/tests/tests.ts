@@ -513,8 +513,16 @@ describe('zksolc plugin', async function () {
                     compilationJob: jobs[0],
                 });
 
-                assert.deepEqual(compilerInput.suppressedWarnings, ['TxOrigin']);
-                assert.deepEqual(compilerInput.suppressedErrors, ['SendTransfer']);
+                assert.deepEqual(compilerInput.suppressedWarnings, ['txorigin']);
+                assert.deepEqual(compilerInput.suppressedErrors, ['sendtransfer']);
+            });
+
+            it('Should successfully compile a simple contract with suppresed warnings and errors', async function () {
+                await this.env.run(TASK_COMPILE);
+
+                const artifact = this.env.artifacts.readArtifactSync('Greeter') as ZkSyncArtifact;
+
+                assert.equal(artifact.contractName, 'Greeter');
             });
         });
 

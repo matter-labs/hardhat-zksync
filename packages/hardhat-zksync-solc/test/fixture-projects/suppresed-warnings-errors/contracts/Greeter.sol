@@ -10,7 +10,7 @@ contract Greeter {
         greeting = _greeting;
     }
 
-    function payGreet(address payable a) public payable returns (bool memory) {
+    function payGreet(address payable a) public payable returns (bool) {
         require(a != address(0), "Invalid address");
         bool success = a.send(1);
         return success;

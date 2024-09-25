@@ -46,23 +46,18 @@ export interface ZkSolcConfig {
         forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
-        // Suppress specified warnings. Currently supported: TxOrigin, SendTransfer
-        suppressedWarnings?: SuppressedMessageType[];
-        // Suppress specified errors. Currently supported: TxOrigin, SendTransfer
-        suppressedErrors?: SuppressedMessageType[];
+        // Suppress specified warnings. Currently supported: txorigin, sendtransfer
+        suppressedWarnings?: string[];
+        // Suppress specified errors. Currently supported: txorigin, sendtransfer
+        suppressedErrors?: string[];
     };
 }
 
 export interface ZkSyncCompilerInput extends CompilerInput {
-    // Suppress specified warnings. Currently supported: TxOrigin, SendTransfer
-    suppressedWarnings?: SuppressedMessageType[];
-    // Suppress specified errors. Currently supported: TxOrigin, SendTransfer
-    suppressedErrors?: SuppressedMessageType[];
-}
-
-export enum SuppressedMessageType {
-    TxOrigin = 'TxOrigin',
-    SendTransfer = 'SendTransfer',
+    // Suppress specified warnings. Currently supported: txorigin, sendtransfer
+    suppressedWarnings?: string[];
+    // Suppress specified errors. Currently supported: txorigin, sendtransfer
+    suppressedErrors?: string[];
 }
 
 export interface CompilerOutputSelection {

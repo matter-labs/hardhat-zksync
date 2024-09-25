@@ -1,13 +1,12 @@
 import '../../../src/index';
 import { HardhatUserConfig } from 'hardhat/config';
-import { SuppressedMessageType } from '../../../src/types';
 
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
         settings: {
-            suppressedErrors: [SuppressedMessageType.SendTransfer],
-            suppressedWarnings: [SuppressedMessageType.TxOrigin],
+            suppressedErrors: ['sendtransfer'],
+            suppressedWarnings: ['txorigin'],
         },
     },
     networks: {
