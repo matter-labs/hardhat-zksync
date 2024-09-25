@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.2.5](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.4...@matterlabs/hardhat-zksync-solc-v1.2.5) (2024-09-25)
+
+
+### Bug Fixes
+
+* add suppressed errors and warnings ([#1375](https://github.com/matter-labs/hardhat-zksync/issues/1375)) ([a0bf6e5](https://github.com/matter-labs/hardhat-zksync/commit/a0bf6e57c17b063b292e26acfa8bf8f8d1974644))
+* return default zksolc version of fetching fails ([#1438](https://github.com/matter-labs/hardhat-zksync/issues/1438)) ([b5e4582](https://github.com/matter-labs/hardhat-zksync/commit/b5e4582c36ad79a809778bfaf29e83549668c1d6))
+
 ## [1.2.4](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.3...@matterlabs/hardhat-zksync-solc-v1.2.4) (2024-09-05)
 
 
