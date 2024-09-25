@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "^1.2.1",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.5",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "chalk": "^4.1.2",
     "hardhat": "^2.14.0",

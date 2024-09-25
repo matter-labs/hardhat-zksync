@@ -35,7 +35,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "^1.2.2",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.5",
     "@openzeppelin/upgrades-core": "~1.29.0",
     "@openzeppelin/hardhat-upgrades": "^1.28.0",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^4.9.2",

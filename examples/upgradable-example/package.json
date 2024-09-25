@@ -32,7 +32,7 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "^1.2.2",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.5",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "zksync": "^0.13.1",
