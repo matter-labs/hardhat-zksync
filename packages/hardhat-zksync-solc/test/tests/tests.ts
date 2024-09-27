@@ -1,6 +1,7 @@
 import {
     TASK_COMPILE,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
+    TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT,
     TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
     TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
@@ -481,6 +482,39 @@ describe('zksolc plugin', async function () {
                 );
                 assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, 'Artifacts do not match');
                 assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, 'Artifacts do not match');
+            });
+        });
+
+        describe('Suppresed warnings and errors', async function () {
+            useEnvironment('suppresed-warnings-errors');
+
+            it('Should populate proper compiler input suppresed warnings and errors', async function () {
+                const rootPath = this.env.config.paths.root;
+                const sourceNames: string[] = ['contracts/Greeter.sol'];
+
+                const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
+
+                const dependencyGraph: DependencyGraph = await this.env.run(
+                    TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
+                    {
+                        rootPath,
+                        sourceNames,
+                        solidityFilesCachePath,
+                    },
+                );
+
+                const { jobs, _ } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                    dependencyGraph,
+                    solidityFilesCachePath,
+                });
+
+                assert.equal(1, jobs.length);
+                const compilerInput = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, {
+                    compilationJob: jobs[0],
+                });
+
+                assert.deepEqual(compilerInput.suppressedWarnings, ['txorigin']);
+                assert.deepEqual(compilerInput.suppressedErrors, ['sendtransfer']);
             });
         });
 

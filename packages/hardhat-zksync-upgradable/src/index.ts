@@ -1,16 +1,13 @@
 import '@matterlabs/hardhat-zksync-solc';
+import '@matterlabs/hardhat-zksync-ethers';
 import './type-extensions';
 
 import { extendEnvironment, subtask, task, types } from 'hardhat/internal/core/config/config-env';
 
-import {
-    TASK_COMPILE_SOLIDITY_COMPILE,
-    TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
-} from 'hardhat/builtin-tasks/task-names';
+import { TASK_COMPILE_SOLIDITY_COMPILE } from 'hardhat/builtin-tasks/task-names';
 
-import { lazyObject } from 'hardhat/plugins';
-import { HardhatUpgrades, RunCompilerArgs } from './interfaces';
-import { extendCompilerOutputSelection, isFullZkSolcOutput } from './utils/utils-general';
+import { RunCompilerArgs } from './interfaces';
+import { isFullZkSolcOutput } from './utils/utils-general';
 import { validate } from './core/validate';
 import {
     TASK_DEPLOY_ZKSYNC_BEACON,
@@ -19,45 +16,12 @@ import {
     TASK_UPGRADE_ZKSYNC_PROXY,
 } from './task-names';
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
-import { checkOpenzeppelinVersions, getUpgradableContracts } from './utils';
+import { ExtensionGenerator } from './generator';
+import { ZkSyncUpgradablePluginError } from './errors';
 
 extendEnvironment((hre) => {
-    hre.zkUpgrades = lazyObject((): HardhatUpgrades => {
-        const { makeDeployProxy } = require('./proxy-deployment/deploy-proxy');
-        const { makeUpgradeProxy } = require('./proxy-upgrade/upgrade-proxy');
-        const { makeValidateImplementation } = require('./validations/validate-implementation');
-        const { makeDeployBeacon } = require('./proxy-deployment/deploy-beacon');
-        const { makeDeployBeaconProxy } = require('./proxy-deployment/deploy-beacon-proxy');
-        const { makeUpgradeBeacon } = require('./proxy-upgrade/upgrade-beacon');
-        const { makeDeployProxyAdmin } = require('./proxy-deployment/deploy-proxy-admin');
-        const { makeEstimateGasProxy } = require('./gas-estimation/estimate-gas-proxy');
-        const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
-        const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
-        const { makeGetInstanceFunction, makeChangeProxyAdmin, makeTransferProxyAdminOwnership } = require('./admin');
-        return {
-            deployProxy: checkOpenzeppelinVersions(makeDeployProxy(hre)),
-            upgradeProxy: checkOpenzeppelinVersions(makeUpgradeProxy(hre)),
-            validateImplementation: checkOpenzeppelinVersions(makeValidateImplementation(hre)),
-            deployBeacon: checkOpenzeppelinVersions(makeDeployBeacon(hre)),
-            deployBeaconProxy: checkOpenzeppelinVersions(makeDeployBeaconProxy(hre)),
-            upgradeBeacon: checkOpenzeppelinVersions(makeUpgradeBeacon(hre)),
-            deployProxyAdmin: checkOpenzeppelinVersions(makeDeployProxyAdmin(hre)),
-            admin: {
-                getInstance: checkOpenzeppelinVersions(makeGetInstanceFunction(hre)),
-                changeProxyAdmin: checkOpenzeppelinVersions(makeChangeProxyAdmin(hre)),
-                transferProxyAdminOwnership: checkOpenzeppelinVersions(makeTransferProxyAdminOwnership(hre)),
-            },
-            estimation: {
-                estimateGasProxy: checkOpenzeppelinVersions(makeEstimateGasProxy(hre)),
-                estimateGasBeacon: checkOpenzeppelinVersions(makeEstimateGasBeacon(hre)),
-                estimateGasBeaconProxy: checkOpenzeppelinVersions(makeEstimateGasBeaconProxy(hre)),
-            },
-        };
-    });
-
-    hre.config.solidity.compilers.forEach((compiler) => {
-        extendCompilerOutputSelection(compiler);
-    });
+    const extesionGenerator = new ExtensionGenerator(hre);
+    extesionGenerator.populateExtension();
 });
 
 task(TASK_DEPLOY_ZKSYNC_BEACON, 'Runs the beaccon deploy for ZKsync network')
@@ -133,23 +97,25 @@ subtask(TASK_COMPILE_SOLIDITY_COMPILE, async (args: RunCompilerArgs, hre, runSup
     return { output, solcBuild };
 });
 
-subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: RunCompilerArgs, _, runSuper) => {
-    const sourceNames = await runSuper();
+subtask('verify:etherscan').setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync) {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const { verify } = await import('@openzeppelin/hardhat-upgrades/dist/verify-proxy');
+        return await verify(args, hre, runSuper);
+    }
 
-    const upgradableContracts = getUpgradableContracts();
-    return [
-        ...sourceNames,
-        ...[
-            upgradableContracts.ProxyAdmin,
-            upgradableContracts.TransparentUpgradeableProxy,
-            upgradableContracts.BeaconProxy,
-            upgradableContracts.UpgradeableBeacon,
-            upgradableContracts.ERC1967Proxy,
-        ],
-    ];
+    throw new ZkSyncUpgradablePluginError(
+        'This task is only available for zkSync network, use `verify:verify` instead',
+    );
 });
 
 subtask('verify:verify').setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync) {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const { verify } = await import('@openzeppelin/hardhat-upgrades/dist/verify-proxy');
+        return await verify(args, hre, runSuper);
+    }
+
     const { verify } = await import('./verify/verify-proxy');
     return await verify(args, hre, runSuper);
 });
