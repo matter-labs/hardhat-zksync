@@ -8,7 +8,9 @@ export type ZKSyncTasksWithWrappedNode = typeof global & {
 export class ZKSyncTasksForWrapping {
     public taskNames: string[] = [];
 
-    constructor() {}
+    constructor() {
+        this.taskNames = [];
+    }
 
     public addTask(taskName: string) {
         this.taskNames.push(taskName);

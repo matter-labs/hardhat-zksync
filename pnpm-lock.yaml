@@ -1136,6 +1136,9 @@ importers:
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
+      debug:
+        specifier: ^4.3.5
+        version: 4.3.5
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -1148,6 +1151,9 @@ importers:
       sinon-chai:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
       undici:
         specifier: ^6.18.2
         version: 6.18.2

@@ -1,9 +1,8 @@
 import { isRunningHardhatCoreTests } from 'hardhat/internal/core/execution-mode';
 import { HardhatArguments } from 'hardhat/types';
 import { getEnvVariablesMap } from 'hardhat/internal/core/params/env-variables';
-import { HardhatContext } from 'hardhat/internal/context';
-import { request } from 'http';
-import { configureNetwork, startServer, waitForNodeToBeReady } from '../utils';
+import path from 'path';
+import { startServer, waitForNodeToBeReady } from '../utils';
 
 export async function runScript(
     scriptPath: string,
@@ -20,7 +19,11 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const envVars = { ...process.env, ...extraEnvVars };
+    const { commandArgs, server, port } = await startServer();
+    await server.listen(commandArgs, false);
+    await waitForNodeToBeReady(port);
+
+    const envVars = { ...process.env, ...extraEnvVars, ZKNodePort: port.toString() };
 
     return new Promise((resolve, reject) => {
         const childProcess = fork(scriptPath, scriptArgs, {
@@ -29,31 +32,13 @@ export async function runScript(
             env: envVars,
         });
 
-        let runnedServer: any;
-
-        childProcess.on('spawn', () => {
-            return new Promise(async (_, rejectChild) => {
-                try {
-                    request('hardhat/register');
-                    const ctx = HardhatContext.getHardhatContext();
-                    const { commandArgs, server, port } = await startServer();
-                    runnedServer = server;
-                    await server.listen(commandArgs, false);
-                    await waitForNodeToBeReady(port);
-                    await configureNetwork(ctx.environment!.config, ctx.environment!.network, port);
-                } catch (error) {
-                    rejectChild(error);
-                }
-            });
-        });
-
-        childProcess.once('close', (status) => {
-            runnedServer?.stop();
+        childProcess.once('close', async (status) => {
+            await server.stop();
             resolve(status as number);
         });
 
-        childProcess.once('error', (error) => {
-            runnedServer?.stop();
+        childProcess.once('error', async (error) => {
+            await server.stop();
             reject(error);
         });
     });
@@ -66,7 +51,7 @@ export async function runScriptWithHardhat(
     extraNodeArgs: string[] = [],
     extraEnvVars: { [name: string]: string } = {},
 ): Promise<number> {
-    return runScript(scriptPath, scriptArgs, [...extraNodeArgs], {
+    return runScript(scriptPath, scriptArgs, [...extraNodeArgs, '--require', path.join(__dirname, 'register')], {
         ...getEnvVariablesMap(hardhatArguments),
         ...extraEnvVars,
     });

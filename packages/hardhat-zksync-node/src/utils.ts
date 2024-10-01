@@ -388,7 +388,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
     return taskArgs;
 }
 
-function getNetworkConfig(url: string) {
+export function getNetworkConfig(url: string) {
     return {
         accounts: NETWORK_ACCOUNTS.REMOTE,
         gas: NETWORK_GAS.AUTO,
@@ -398,6 +398,7 @@ function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
+        chainId: 260,
         zksync: true,
     };
 }

@@ -41,7 +41,9 @@
     "chai": "^4.3.4",
     "undici": "^6.18.2",
     "sinon-chai": "^3.7.0",
-    "sinon": "^18.0.0"
+    "sinon": "^18.0.0",
+    "source-map-support": "^0.5.21",
+    "debug": "^4.3.5"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",

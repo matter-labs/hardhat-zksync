@@ -36,8 +36,9 @@ import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
 
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
-    if (!hre.network.zksync) {
+    if (!hre.network.zksync || hre.network.name !== HARDHAT_NETWORK_NAME) {
         await runSuper(args, hre);
+        return;
     }
 
     await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
