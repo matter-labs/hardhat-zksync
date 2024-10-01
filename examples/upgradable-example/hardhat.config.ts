@@ -3,7 +3,6 @@ import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-ethers';
-import "@nomicfoundation/hardhat-ethers"
 
 import { HardhatUserConfig } from 'hardhat/config';
 

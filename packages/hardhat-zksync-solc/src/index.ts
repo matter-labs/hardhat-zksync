@@ -13,6 +13,7 @@ import {
     TASK_COMPILE_SOLIDITY_LOG_RUN_COMPILER_END,
     TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
     TASK_COMPILE,
+    TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT,
 } from 'hardhat/builtin-tasks/task-names';
 import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
@@ -65,7 +66,7 @@ import {
     SolcStringUserConfigExtractor,
     SolcUserConfigExtractor,
 } from './config-extractor';
-import { FactoryDeps } from './types';
+import { FactoryDeps, ZkSyncCompilerInput } from './types';
 
 const logDebug = debug('hardhat:core:tasks:compile');
 
@@ -389,10 +390,9 @@ subtask(
                 longVersion: '',
             };
         }
+        const compiler = args.compilationJob?.getSolcConfig();
 
-        const compiler = args.compilationJob.getSolcConfig();
-
-        if (compiler.eraVersion) {
+        if (compiler && compiler.eraVersion) {
             const compilersCache = await getCompilersDir();
             let path: string = '';
             let version: string = '';
@@ -554,6 +554,23 @@ subtask(TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS).setAction(
         return { artifactsEmittedPerFile };
     },
 );
+
+subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper) => {
+    const compilerInput: ZkSyncCompilerInput = await runSuper(taskArgs);
+    if (hre.network.zksync !== true) {
+        return compilerInput;
+    }
+
+    if (hre.config.zksolc.settings.suppressedErrors && hre.config.zksolc.settings.suppressedErrors.length > 0) {
+        compilerInput.suppressedErrors = hre.config.zksolc.settings.suppressedErrors;
+    }
+
+    if (hre.config.zksolc.settings.suppressedWarnings && hre.config.zksolc.settings.suppressedWarnings.length > 0) {
+        compilerInput.suppressedWarnings = hre.config.zksolc.settings.suppressedWarnings;
+    }
+
+    return compilerInput;
+});
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
     if (hre.network.zksync !== true || !hre.config.zksolc.settings.areLibrariesMissing) {

@@ -60,8 +60,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -118,8 +118,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -176,8 +176,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -310,8 +310,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -386,8 +386,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -451,7 +451,7 @@ importers:
         version: 5.0.2(@openzeppelin/contracts@5.0.2)
       '@openzeppelin/hardhat-upgrades':
         specifier: ^3.2.1
-        version: 3.2.1(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        version: 3.4.0(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -465,8 +465,8 @@ importers:
         specifier: ^0.13.1
         version: 0.13.1(@ethersproject/logger@5.7.0)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -545,7 +545,7 @@ importers:
         version: 0.13.1(@ethersproject/logger@5.7.0)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       zksync-ethers:
         specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -614,8 +614,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -736,8 +736,8 @@ importers:
         specifier: ^6.12.2
         version: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -797,8 +797,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -857,24 +857,12 @@ importers:
       '@matterlabs/hardhat-zksync-verify':
         specifier: workspace:^
         version: link:../hardhat-zksync-verify
-      '@matterlabs/zksync-contracts':
-        specifier: ^0.6.1
-        version: 0.6.1(@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2))(@openzeppelin/contracts@5.0.2)
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.4
-        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-verify':
         specifier: ^2.0.0
         version: 2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
-      '@openzeppelin/contracts':
-        specifier: ^5.0.2
-        version: 5.0.2
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
       '@openzeppelin/upgrades-core':
         specifier: ^1.37.0
-        version: 1.37.0
+        version: 1.38.0
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -891,8 +879,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1034,8 +1022,8 @@ importers:
         specifier: ^5.3.0
         version: 5.4.5
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
 
   packages/hardhat-zksync-ethers:
     dependencies:
@@ -1045,6 +1033,9 @@ importers:
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../hardhat-zksync-solc
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.6
+        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -1122,8 +1113,8 @@ importers:
         specifier: ^5.3.0
         version: 5.4.5
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
 
   packages/hardhat-zksync-node:
     dependencies:
@@ -1330,12 +1321,12 @@ importers:
       '@matterlabs/hardhat-zksync-deploy':
         specifier: workspace:^
         version: link:../hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-ethers':
+        specifier: workspace:^
+        version: link:../hardhat-zksync-ethers
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../hardhat-zksync-solc
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.6
-        version: 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/contracts-hardhat-zksync-upgradable':
         specifier: npm:@openzeppelin/contracts@^5.0.2
         version: '@openzeppelin/contracts@5.0.2'
@@ -1344,16 +1335,16 @@ importers:
         version: 1.14.3
       '@openzeppelin/defender-sdk-deploy-client':
         specifier: ^1.10.0
-        version: 1.14.3(debug@4.3.5)
+        version: 1.14.3
       '@openzeppelin/defender-sdk-network-client':
         specifier: ^1.10.0
-        version: 1.14.3(debug@4.3.5)
+        version: 1.14.4(debug@4.3.5)
       '@openzeppelin/hardhat-upgrades':
         specifier: ^3.2.1
-        version: 3.2.1(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+        version: 3.4.0(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@openzeppelin/upgrades-core':
         specifier: ^1.37.0
-        version: 1.37.0
+        version: 1.38.0
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1382,8 +1373,8 @@ importers:
         specifier: ^0.4.56
         version: 0.4.56
       zksync-ethers:
-        specifier: ^6.8.0
-        version: 6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.11.2
+        version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -2186,14 +2177,20 @@ packages:
   '@openzeppelin/defender-sdk-base-client@1.14.3':
     resolution: {integrity: sha512-4yG9E8N1c/ZP2jNR+Ah19wi7SBKpauAV/VcYcm7rg1dltDbzbH/oZnnXJlymT7IfjTPXkKHW8TPsaqz3EjS7tA==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-base-client/-/defender-sdk-base-client-1.14.3.tgz}
 
+  '@openzeppelin/defender-sdk-base-client@1.14.4':
+    resolution: {integrity: sha512-tOePVQLKpqfGQ1GMzHvSBNd2psPYd86LDNpvdl5gjD0Y2kW/zNh5qBXy29RraGtk/qc8zs9hzS5pAOh0vhGkGQ==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-base-client/-/defender-sdk-base-client-1.14.4.tgz}
+
   '@openzeppelin/defender-sdk-deploy-client@1.14.3':
     resolution: {integrity: sha512-51WIZJz251lndK7uQU4gBE0gBX+2ZNTgf+hemtJUEPCpHtkooBRFFMID3EPGMKXVqf872pU8K3Huu9PyYQu6bw==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-deploy-client/-/defender-sdk-deploy-client-1.14.3.tgz}
 
-  '@openzeppelin/defender-sdk-network-client@1.14.3':
-    resolution: {integrity: sha512-qrJLs2ubKSwrhP0x4V2QOPhlc1q8TYnkAcvjvk34VXMS8lhY1cpXSGoxnTw3Mi+eCSE1xOzKWISLi1UAOQOJIw==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-network-client/-/defender-sdk-network-client-1.14.3.tgz}
+  '@openzeppelin/defender-sdk-deploy-client@1.14.4':
+    resolution: {integrity: sha512-+diSoz1zid37LMsY2RDxI+uAsYx9Eryg8Vz+yfvuyd56fXrzjQEln7BBtYQw+2zp9yvyAByOL5XSQdrQga9OBQ==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-deploy-client/-/defender-sdk-deploy-client-1.14.4.tgz}
 
-  '@openzeppelin/hardhat-upgrades@3.2.1':
-    resolution: {integrity: sha512-Zy5M3QhkzwGdpzQmk+xbWdYOGJWjoTvwbBKYLhctu9B91DoprlhDRaZUwCtunwTdynkTDGdVfGr0kIkvycyKjw==, tarball: https://registry.npmjs.org/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-3.2.1.tgz}
+  '@openzeppelin/defender-sdk-network-client@1.14.4':
+    resolution: {integrity: sha512-OS0H5b0vgYacJcwkvUFJUaRuyUaXhIRl916W5xLvGia5H6i/qn3dP8MZ7oLcPwKc8jB+ucRytO4H/AHsea0aVA==, tarball: https://registry.npmjs.org/@openzeppelin/defender-sdk-network-client/-/defender-sdk-network-client-1.14.4.tgz}
+
+  '@openzeppelin/hardhat-upgrades@3.4.0':
+    resolution: {integrity: sha512-bfPtUCmRT6kfh/Mz56tAAGS8N22Zr3rdCMG3E3g8CW61QRGsaeFHnZRetBgu1JoKocjCavEtis5/x60m+o5XUQ==, tarball: https://registry.npmjs.org/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-3.4.0.tgz}
     hasBin: true
     peerDependencies:
       '@nomicfoundation/hardhat-ethers': ^3.0.0
@@ -2204,8 +2201,8 @@ packages:
       '@nomicfoundation/hardhat-verify':
         optional: true
 
-  '@openzeppelin/upgrades-core@1.37.0':
-    resolution: {integrity: sha512-vpxe60KrbFubY09vlGZqBJdBXs0IqvZmH7+UueFiM0xK/V12lMwxyiNXkFv8+HZ7K8abRevYphVtEzrUWelQhQ==, tarball: https://registry.npmjs.org/@openzeppelin/upgrades-core/-/upgrades-core-1.37.0.tgz}
+  '@openzeppelin/upgrades-core@1.38.0':
+    resolution: {integrity: sha512-0kbc6Wd6S8/Kmhg7oqRIn+GBpAL+EccYQh+SjgVBEktpkzTDN56KHuuxYHXnpXclWaO6l7u/TRMe6LsHCHqJHw==, tarball: https://registry.npmjs.org/@openzeppelin/upgrades-core/-/upgrades-core-1.38.0.tgz}
     hasBin: true
 
   '@pkgjs/parseargs@0.11.0':
@@ -5163,8 +5160,8 @@ packages:
   zksync-crypto@0.6.2:
     resolution: {integrity: sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==, tarball: https://registry.npmjs.org/zksync-crypto/-/zksync-crypto-0.6.2.tgz}
 
-  zksync-ethers@6.8.0:
-    resolution: {integrity: sha512-y/8IZcotKfdG04qKKhGTWA0k/6woe3LmrwKVBqQ5NuvWPb0ClEv5y9QF/oNY9V5hZXotavk5N+MRAG0mt2DF9w==, tarball: https://registry.npmjs.org/zksync-ethers/-/zksync-ethers-6.8.0.tgz}
+  zksync-ethers@6.11.2:
+    resolution: {integrity: sha512-m7KonDmrOaQGlA2BIM7JnejKPrEDXAnn0NY5HMU9Ynn8AApu81GHQiQkyHU9jtdHDlxR7c7+Sw+RgYS52qSf1A==, tarball: https://registry.npmjs.org/zksync-ethers/-/zksync-ethers-6.11.2.tgz}
     engines: {node: '>=18.9.0'}
     peerDependencies:
       ethers: ^6.7.1
@@ -5823,7 +5820,14 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@openzeppelin/defender-sdk-deploy-client@1.14.3(debug@4.3.5)':
+  '@openzeppelin/defender-sdk-base-client@1.14.4':
+    dependencies:
+      amazon-cognito-identity-js: 6.3.12
+      async-retry: 1.3.3
+    transitivePeerDependencies:
+      - encoding
+
+  '@openzeppelin/defender-sdk-deploy-client@1.14.3':
     dependencies:
       '@openzeppelin/defender-sdk-base-client': 1.14.3
       axios: 1.7.2(debug@4.3.5)
@@ -5832,22 +5836,31 @@ snapshots:
       - debug
       - encoding
 
-  '@openzeppelin/defender-sdk-network-client@1.14.3(debug@4.3.5)':
+  '@openzeppelin/defender-sdk-deploy-client@1.14.4(debug@4.3.5)':
     dependencies:
-      '@openzeppelin/defender-sdk-base-client': 1.14.3
+      '@openzeppelin/defender-sdk-base-client': 1.14.4
       axios: 1.7.2(debug@4.3.5)
       lodash: 4.17.21
     transitivePeerDependencies:
       - debug
       - encoding
 
-  '@openzeppelin/hardhat-upgrades@3.2.1(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
+  '@openzeppelin/defender-sdk-network-client@1.14.4(debug@4.3.5)':
+    dependencies:
+      '@openzeppelin/defender-sdk-base-client': 1.14.4
+      axios: 1.7.2(debug@4.3.5)
+      lodash: 4.17.21
+    transitivePeerDependencies:
+      - debug
+      - encoding
+
+  '@openzeppelin/hardhat-upgrades@3.4.0(@nomicfoundation/hardhat-ethers@3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
     dependencies:
       '@nomicfoundation/hardhat-ethers': 3.0.6(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
-      '@openzeppelin/defender-sdk-base-client': 1.14.3
-      '@openzeppelin/defender-sdk-deploy-client': 1.14.3(debug@4.3.5)
-      '@openzeppelin/defender-sdk-network-client': 1.14.3(debug@4.3.5)
-      '@openzeppelin/upgrades-core': 1.37.0
+      '@openzeppelin/defender-sdk-base-client': 1.14.4
+      '@openzeppelin/defender-sdk-deploy-client': 1.14.4(debug@4.3.5)
+      '@openzeppelin/defender-sdk-network-client': 1.14.4(debug@4.3.5)
+      '@openzeppelin/upgrades-core': 1.38.0
       chalk: 4.1.2
       debug: 4.3.5
       ethereumjs-util: 7.1.5
@@ -5861,7 +5874,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@openzeppelin/upgrades-core@1.37.0':
+  '@openzeppelin/upgrades-core@1.38.0':
     dependencies:
       '@nomicfoundation/slang': 0.17.0
       cbor: 9.0.2
@@ -9343,7 +9356,7 @@ snapshots:
 
   zksync-crypto@0.6.2: {}
 
-  zksync-ethers@6.8.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
+  zksync-ethers@6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
     dependencies:
       ethers: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 

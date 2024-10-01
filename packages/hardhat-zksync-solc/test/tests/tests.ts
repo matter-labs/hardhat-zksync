@@ -1,6 +1,7 @@
 import {
     TASK_COMPILE,
     TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS,
+    TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT,
     TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
     TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD,
     TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES,
@@ -19,6 +20,7 @@ import { ZksolcCompilerDownloader } from '../../src/compile/downloader';
 import { useEnvironment } from '../helpers';
 import { ZkSyncArtifact } from '../../src/types';
 import { TASK_DOWNLOAD_ZKSOLC } from '../../src/constants';
+import { ZkVmSolcCompilerDownloader } from '../../src/compile/zkvm-solc-downloader';
 
 chai.use(sinonChai);
 
@@ -262,6 +264,11 @@ describe('zksolc plugin', async function () {
                     longVersion: 'solc/solc-version-0-long',
                     isSolcJs: false,
                 });
+                sandbox
+                    .stub(ZkVmSolcCompilerDownloader.prototype, 'isCompilerDownloaded')
+                    .returns(isCompilerDownloaded());
+                sandbox.stub(ZkVmSolcCompilerDownloader.prototype, 'getCompilerPath').returns('zkvmsolc/0.8.17-1.0.0');
+                sandbox.stub(ZkVmSolcCompilerDownloader.prototype, 'getVersion').returns('0.8.17-1.0.0');
             });
 
             afterEach(() => {
@@ -283,6 +290,38 @@ describe('zksolc plugin', async function () {
                             };
                         },
                     },
+                });
+
+                assert.equal(build.compilerPath, 'solc/solc-version-0');
+                assert.equal(build.isSolcJs, false);
+                assert.equal(build.version, '0.8.17');
+                assert.equal(build.longVersion, 'solc/solc-version-0-long');
+            });
+
+            it('Should get solc build for binary compiler with era version', async function () {
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
+                    compilationJob: {
+                        getSolcConfig: () => {
+                            return {
+                                version: '0.8.17',
+                                eraVersion: '1.0.0',
+                            };
+                        },
+                    },
+                });
+
+                assert.equal(build.compilerPath, 'zkvmsolc/0.8.17-1.0.0');
+                assert.equal(build.isSolcJs, false);
+                assert.equal(build.version, '0.8.17-1.0.0');
+                assert.equal(build.longVersion, 'zkVM-0.8.17-1.0.0');
+            });
+
+            it('Should get solc build for binary compiler without compilation job', async function () {
+                const build = await this.env.run(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, {
+                    quiet: true,
+                    solcVersion: '0.8.17',
                 });
 
                 assert.equal(build.compilerPath, 'solc/solc-version-0');
@@ -443,6 +482,39 @@ describe('zksolc plugin', async function () {
                 );
                 assert.equal(fooDepArtifactFromFactoryDeps.bytecode, fooDepArtifact.bytecode, 'Artifacts do not match');
                 assert.deepEqual(fooDepArtifactFromFactoryDeps.abi, fooDepArtifact.abi, 'Artifacts do not match');
+            });
+        });
+
+        describe('Suppresed warnings and errors', async function () {
+            useEnvironment('suppresed-warnings-errors');
+
+            it('Should populate proper compiler input suppresed warnings and errors', async function () {
+                const rootPath = this.env.config.paths.root;
+                const sourceNames: string[] = ['contracts/Greeter.sol'];
+
+                const solidityFilesCachePath = path.join(this.env.config.paths.cache, SOLIDITY_FILES_CACHE_FILENAME);
+
+                const dependencyGraph: DependencyGraph = await this.env.run(
+                    TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH,
+                    {
+                        rootPath,
+                        sourceNames,
+                        solidityFilesCachePath,
+                    },
+                );
+
+                const { jobs, _ } = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, {
+                    dependencyGraph,
+                    solidityFilesCachePath,
+                });
+
+                assert.equal(1, jobs.length);
+                const compilerInput = await this.env.run(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, {
+                    compilationJob: jobs[0],
+                });
+
+                assert.deepEqual(compilerInput.suppressedWarnings, ['txorigin']);
+                assert.deepEqual(compilerInput.suppressedErrors, ['sendtransfer']);
             });
         });
 

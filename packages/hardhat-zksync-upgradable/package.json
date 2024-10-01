@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-upgradable",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Hardhat plugin to deploy and update upgradable smart contracts for the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
@@ -35,10 +35,10 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^5.0.2",
     "@openzeppelin/hardhat-upgrades": "^3.2.1",
     "@openzeppelin/upgrades-core": "^1.37.0",
-    "@nomicfoundation/hardhat-ethers": "^3.0.6",
     "@openzeppelin/defender-sdk-base-client": "^1.10.0",
     "@openzeppelin/defender-sdk-deploy-client": "^1.10.0",
     "@openzeppelin/defender-sdk-network-client": "^1.10.0",
@@ -48,10 +48,10 @@
     "ethers": "^6.12.2",
     "fs-extra": "^11.2.0",
     "hardhat": "^2.22.5",
-    "proper-lockfile": "^4.1.2",
-    "semver": "^7.6.2",
+    "zksync-ethers": "^6.11.2",
     "solidity-ast": "^0.4.56",
-    "zksync-ethers": "^6.8.0"
+    "proper-lockfile": "^4.1.2",
+    "semver": "^7.6.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
