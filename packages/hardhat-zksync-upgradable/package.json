@@ -43,7 +43,7 @@
     "chalk": "^4.1.2",
     "compare-versions": "^6.1.0",
     "ethereumjs-util": "^7.1.5",
-    "ethers": "^6.12.2",
+    "ethers": "^6.13.3",
     "fs-extra": "^11.2.0",
     "hardhat": "^2.22.5",
     "zksync-ethers": "^6.11.2",

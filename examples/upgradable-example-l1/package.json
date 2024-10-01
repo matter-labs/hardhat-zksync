@@ -37,7 +37,7 @@
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "chalk": "^4.1.2",
-    "ethers": "^6.12.2",
+    "ethers": "^6.13.3",
     "hardhat": "^2.22.5",
     "zksync": "^0.13.1",
     "zksync-ethers": "^6.8.0"
