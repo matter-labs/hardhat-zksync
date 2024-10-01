@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync
 
+## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.1.0...@matterlabs/hardhat-zksync-v1.2.0) (2024-09-25)
+
+
+### Features
+
+* introducing ethers extension in hre ([#1283](https://github.com/matter-labs/hardhat-zksync/issues/1283)) ([8e471bc](https://github.com/matter-labs/hardhat-zksync/commit/8e471bcbbbf1ee712fe79cd5d5782c11e52e3b75))
+* remove zksync contracts dependecy ([#1450](https://github.com/matter-labs/hardhat-zksync/issues/1450)) ([a70bbaf](https://github.com/matter-labs/hardhat-zksync/commit/a70bbaf7205e91c3e6fe5cece3fb54f11100583e))
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.0.0...@matterlabs/hardhat-zksync-v1.1.0) (2024-06-19)
 
 
