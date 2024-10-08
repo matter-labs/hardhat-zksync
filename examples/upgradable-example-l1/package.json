@@ -41,7 +41,7 @@
     "ethers": "^6.12.2",
     "hardhat": "^2.22.5",
     "zksync": "^0.13.1",
-    "zksync-ethers": "^6.8.0"
+    "zksync-ethers": "^6.13.1"
   },
   "prettier": {
     "tabWidth": 4,
