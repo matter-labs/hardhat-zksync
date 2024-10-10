@@ -83,14 +83,25 @@ export async function verifyContract(
     const vyperVersion = contractCache.vyperConfig.version;
 
     const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, CompilerType.VYPER);
-    if (!compilerPossibleVersions.includes(vyperVersion)) {
+    const isVyperVersionSupported = compilerPossibleVersions.some((version) => version.trim() === vyperVersion.trim());
+    if (!isVyperVersionSupported) {
         throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
     }
 
-    const zkVyperVersion = `v${hre.config.zkvyper.version}`;
-
     const zkCompilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL, CompilerType.ZKVYPER);
-    if (!zkCompilerPossibleVersions.includes(zkVyperVersion)) {
+    let zkVyperVersion;
+    if (hre.config.zkvyper.version === 'latest') {
+        zkVyperVersion = `${zkCompilerPossibleVersions[zkCompilerPossibleVersions.length - 1]}`;
+    } else {
+        zkVyperVersion = `v${hre.config.zkvyper.version}`;
+    }
+
+    // Use Array.prototype.some() for comparison of zkvyper versions
+    const isZkVyperVersionSupported = zkCompilerPossibleVersions.some(
+        (version) => version.trim() === zkVyperVersion.trim(),
+    );
+
+    if (!isZkVyperVersionSupported) {
         throw new ZkSyncVerifyPluginError(ZK_COMPILER_VERSION_NOT_SUPPORTED);
     }
 
