@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.2.0...@matterlabs/hardhat-zksync-v1.3.0) (2024-10-21)
+
+
+### Features
+
+* bump openzeppelin contracts to v5 ([#1463](https://github.com/matter-labs/hardhat-zksync/issues/1463)) ([ebb668b](https://github.com/matter-labs/hardhat-zksync/commit/ebb668b0f88a39f23009d8697bb6d7e534d46928))
+
 ## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.1.0...@matterlabs/hardhat-zksync-v1.2.0) (2024-09-25)
 
 
