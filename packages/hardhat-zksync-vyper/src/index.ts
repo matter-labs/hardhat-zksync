@@ -65,17 +65,15 @@ extendEnvironment((hre) => {
     }
 });
 
-subtask(TASK_COMPILE_VYPER)
-  .setAction(
-    async (args: TaskArguments, hre, runSuper) => {
-        if(hre.network.zksync) {
-            await hre.run(TASK_DOWNLOAD_ZKVYPER)
-        }
-        
-        await runSuper(args);
-  });
+subtask(TASK_COMPILE_VYPER).setAction(async (args: TaskArguments, hre, runSuper) => {
+    if (hre.network.zksync) {
+        await hre.run(TASK_DOWNLOAD_ZKVYPER);
+    }
 
-  subtask(TASK_DOWNLOAD_ZKVYPER, async (_args, hre) => {
+    await runSuper(args);
+});
+
+subtask(TASK_DOWNLOAD_ZKVYPER, async (_args, hre) => {
     if (!hre.network.zksync) {
         return;
     }
@@ -118,6 +116,8 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
 
     delete compilerOutput.zk_version;
     delete compilerOutput.long_version;
+    delete compilerOutput.project_metadata;
+    delete compilerOutput.extra_data;
 
     proxyNames.forEach((proxyName) => {
         if (compilerOutput[proxyName]) {

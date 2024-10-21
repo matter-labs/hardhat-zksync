@@ -6,7 +6,7 @@ export const ZKVYPER_BIN_REPOSITORY = 'https://github.com/matter-labs/zkvyper-bi
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 export const TASK_COMPILE_VYPER_CHECK_ERRORS = 'compile:vyper:check-errors';
 export const TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS = 'compile:vyper:log:compilation-errors';
-export const TASK_DOWNLOAD_ZKVYPER = 'compile:zkvyper:download'
+export const TASK_DOWNLOAD_ZKVYPER = 'compile:zkvyper:download';
 export const ZKVYPER_COMPILER_PATH_VERSION = 'local_or_remote';
 
 // User agent of MacOSX Chrome 120.0.0.0
