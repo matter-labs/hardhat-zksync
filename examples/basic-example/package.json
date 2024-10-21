@@ -37,7 +37,7 @@
     "zksync-ethers": "^6.11.2",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.9.6",
-    "@openzeppelin/contracts-upgradeable": "^4.9.6"
+    "@openzeppelin/contracts-upgradeable": "^5.1.0"
   },
   "prettier": {
     "tabWidth": 4,
