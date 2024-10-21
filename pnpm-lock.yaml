@@ -735,9 +735,6 @@ importers:
       ethers:
         specifier: ^6.12.2
         version: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      hardhat:
-        specifier: ^2.22.5
-        version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
         specifier: ^6.11.2
         version: 6.11.2(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
