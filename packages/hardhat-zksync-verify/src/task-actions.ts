@@ -1,53 +1,73 @@
 import { HardhatRuntimeEnvironment, RunSuperFunction, TaskArguments } from 'hardhat/types';
 
 import { parseFullyQualifiedName } from 'hardhat/utils/contract-names';
-import chalk from 'chalk';
+
 import path from 'path';
 import { getLatestEraVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { ZKSOLC_COMPILER_PATH_VERSION } from '@matterlabs/hardhat-zksync-solc/dist/src/constants';
-import { getSupportedCompilerVersions, verifyContractRequest } from './zksync-block-explorer/service';
 
+import { VerificationSubtask } from '@nomicfoundation/hardhat-verify';
+import chalk from 'chalk';
 import {
-    TASK_COMPILE,
     TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS,
-    TASK_VERIFY_VERIFY,
-    TESTNET_VERIFY_URL,
     NO_VERIFIABLE_ADDRESS_ERROR,
-    CONST_ARGS_ARRAY_ERROR,
-    TASK_VERIFY_GET_COMPILER_VERSIONS,
-    TASK_VERIFY_GET_CONTRACT_INFORMATION,
     NO_MATCHING_CONTRACT,
-    COMPILER_VERSION_NOT_SUPPORTED,
-    TASK_CHECK_VERIFICATION_STATUS,
-    JSON_INPUT_CODE_FORMAT,
-    UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE,
     ENCODED_ARAGUMENTS_NOT_FOUND_ERROR,
     CONSTRUCTOR_MODULE_IMPORTING_ERROR,
     BUILD_INFO_NOT_FOUND_ERROR,
-    COMPILATION_ERRORS,
     USING_COMPILER_PATH_ERROR,
+    TASK_VERIFY_RESOLVE_ARGUMENTS,
+    TASK_VERIFY_ZKSYNC_ETHERSCAN,
+    TASK_VERIFY_ZKSYNC_EXPLORER,
+    TASK_VERIFY_GET_VERIFICATION_SUBTASKS,
 } from './constants';
 
-import { encodeArguments, extractModule, normalizeCompilerVersions, retrieveContractBytecode } from './utils';
+import { extractModule, normalizeCompilerVersions, printVerificationErrors } from './utils';
 import { Libraries } from './types';
 import { ZkSyncVerifyPluginError } from './errors';
 
-import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
+import { extractMatchingContractInformation } from './solc/bytecode';
 
-import { ContractInformation } from './solc/types';
-import {
-    checkContractName,
-    getLibraries,
-    getMinimalResolvedFiles,
-    getSolidityStandardJsonInput,
-    inferContractArtifacts,
-} from './plugin';
+import { checkContractName, getLibraries, inferContractArtifacts } from './plugin';
 import {
     SolcMultiUserConfigExtractor,
     SolcSoloUserConfigExtractor,
     SolcStringUserConfigExtractor,
     SolcUserConfigExtractor,
 } from './config-extractor';
+
+export async function resolveArguments(
+    args: {
+        address: string;
+        constructorArgs: string;
+        contract: string;
+        constructorArgsParams: any[];
+        libraries: string;
+        force: boolean;
+        noCompile: boolean;
+    },
+    hre: HardhatRuntimeEnvironment,
+    _: RunSuperFunction<TaskArguments>,
+) {
+    if (args.address === undefined) {
+        throw new ZkSyncVerifyPluginError(NO_VERIFIABLE_ADDRESS_ERROR);
+    }
+
+    const constructorArguments: any[] = await hre.run(TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS, {
+        constructorArgsModule: args.constructorArgs,
+        constructorArgsParams: args.constructorArgsParams,
+    });
+
+    const libraries: Libraries = await getLibraries(args.libraries);
+
+    return {
+        address: args.address,
+        constructorArguments,
+        contract: args.contract,
+        libraries,
+        noCompile: args.noCompile,
+    };
+}
 
 export async function verify(
     args: {
@@ -65,28 +85,24 @@ export async function verify(
         return await runSuper(args);
     }
 
-    if (hre.network.verifyURL === undefined) {
-        hre.network.verifyURL = TESTNET_VERIFY_URL;
+    const resolvedAruments = await hre.run(TASK_VERIFY_RESOLVE_ARGUMENTS, args);
+
+    const verificationSubtasks: VerificationSubtask[] = await hre.run(TASK_VERIFY_GET_VERIFICATION_SUBTASKS);
+
+    const errors: Record<string, ZkSyncVerifyPluginError> = {};
+    for (const { label, subtaskName } of verificationSubtasks) {
+        try {
+            await hre.run(subtaskName, resolvedAruments);
+        } catch (error) {
+            errors[label] = error as ZkSyncVerifyPluginError;
+        }
     }
 
-    if (args.address === undefined) {
-        throw new ZkSyncVerifyPluginError(NO_VERIFIABLE_ADDRESS_ERROR);
+    const hasErrors = Object.keys(errors).length > 0;
+    if (hasErrors) {
+        printVerificationErrors(errors);
+        process.exit(1);
     }
-
-    const constructorArguments: any[] = await hre.run(TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS, {
-        constructorArgsModule: args.constructorArgs,
-        constructorArgsParams: args.constructorArgsParams,
-    });
-
-    const libraries: Libraries = await getLibraries(args.libraries);
-
-    await hre.run(TASK_VERIFY_VERIFY, {
-        address: args.address,
-        constructorArguments,
-        contract: args.contract,
-        libraries,
-        noCompile: args.noCompile,
-    });
 }
 
 const extractors: SolcUserConfigExtractor[] = [
@@ -161,7 +177,6 @@ export async function getConstructorArguments(
     try {
         const constructorArguments = await extractModule(constructorArgsModulePath);
 
-        // Since our plugin supports both encoded and decoded constructor arguments, we need to check how are they passed
         if (!Array.isArray(constructorArguments) && !constructorArguments.startsWith('0x')) {
             throw new ZkSyncVerifyPluginError(ENCODED_ARAGUMENTS_NOT_FOUND_ERROR(constructorArgsModulePath));
         }
@@ -171,106 +186,60 @@ export async function getConstructorArguments(
     }
 }
 
-export async function verifyContract(
-    { address, contract: contractFQN, constructorArguments, libraries, noCompile }: TaskArguments,
-    hre: HardhatRuntimeEnvironment,
+export async function getVerificationSubtasks(
+    _: TaskArguments,
+    { config, network }: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
-): Promise<number> {
-    if (!hre.network.zksync) {
-        return await runSuper({ address, contractFQN, constructorArguments, libraries });
+): Promise<VerificationSubtask[]> {
+    if (!network.zksync) {
+        return await runSuper();
     }
 
-    const { isAddress } = await import('@ethersproject/address');
-    if (!isAddress(address)) {
-        throw new ZkSyncVerifyPluginError(`${address} is an invalid address.`);
+    const verificationSubtasks: VerificationSubtask[] = [];
+
+    if (config.etherscan.apiKey && config.etherscan.enabled) {
+        verificationSubtasks.push({
+            label: 'ZkSyncEtherscan',
+            subtaskName: TASK_VERIFY_ZKSYNC_ETHERSCAN,
+        });
+
+        return verificationSubtasks;
     }
 
-    const deployedBytecodeHex = await retrieveContractBytecode(address, hre);
-    const deployedBytecode = new Bytecode(deployedBytecodeHex);
+    console.warn(
+        chalk.yellow(
+            `[WARNING] Since Etherscan is disabled or the API key is missing, verification will default to the ZKSync block explorer.`,
+        ),
+    );
 
-    if (!noCompile) {
-        await hre.run(TASK_COMPILE, { quiet: true });
-    }
-
-    const compilerVersions: string[] = await hre.run(TASK_VERIFY_GET_COMPILER_VERSIONS);
-
-    const contractInformation: ContractInformation = await hre.run(TASK_VERIFY_GET_CONTRACT_INFORMATION, {
-        contractFQN,
-        deployedBytecode,
-        matchingCompilerVersions: compilerVersions,
-        libraries,
+    verificationSubtasks.push({
+        label: 'ZkSyncBlockExplorer',
+        subtaskName: TASK_VERIFY_ZKSYNC_EXPLORER,
     });
 
-    const optimizationUsed = contractInformation.compilerInput.settings.optimizer.enabled ?? false;
+    return verificationSubtasks;
+}
 
-    const solcVersion = contractInformation.solcVersion;
-
-    let deployArgumentsEncoded;
-    if (!Array.isArray(constructorArguments)) {
-        if (constructorArguments.startsWith('0x')) {
-            deployArgumentsEncoded = constructorArguments;
-        } else {
-            throw new ZkSyncVerifyPluginError(chalk.red(CONST_ARGS_ARRAY_ERROR));
-        }
-    } else {
-        deployArgumentsEncoded = `0x${await encodeArguments(
-            contractInformation.contractOutput.abi,
-            constructorArguments,
-        )}`;
+export async function verifyContract(
+    args: TaskArguments,
+    { config, network, run }: HardhatRuntimeEnvironment,
+    runSuper: RunSuperFunction<TaskArguments>,
+): Promise<number> {
+    if (!network.zksync) {
+        return await runSuper(args);
     }
 
-    const compilerPossibleVersions = await getSupportedCompilerVersions(hre.network.verifyURL);
-    const compilerVersion: string = contractInformation.solcVersion;
-    if (!compilerPossibleVersions.includes(compilerVersion)) {
-        throw new ZkSyncVerifyPluginError(COMPILER_VERSION_NOT_SUPPORTED);
+    if (config.etherscan.apiKey && config.etherscan.enabled) {
+        return await run(TASK_VERIFY_ZKSYNC_ETHERSCAN, args);
     }
-    const compilerZksolcVersion = `v${contractInformation.contractOutput.metadata.zk_version}`;
 
-    contractInformation.contractName = `${contractInformation.sourceName}:${contractInformation.contractName}`;
-
-    const request = {
-        contractAddress: address,
-        sourceCode: getSolidityStandardJsonInput(
-            hre,
-            await getMinimalResolvedFiles(hre, contractInformation.sourceName),
-            contractInformation.compilerInput,
+    console.warn(
+        chalk.yellow(
+            `[WARNING] Since Etherscan is disabled or the API key is missing, verification will default to the ZKSync block explorer.`,
         ),
-        codeFormat: JSON_INPUT_CODE_FORMAT,
-        contractName: contractInformation.contractName,
-        compilerSolcVersion: solcVersion,
-        compilerZksolcVersion,
-        constructorArguments: deployArgumentsEncoded,
-        optimizationUsed,
-    };
+    );
 
-    const response = await verifyContractRequest(request, hre.network.verifyURL);
-    const verificationId = parseInt(response.message, 10);
-
-    console.info(chalk.cyan(`Your verification ID is: ${verificationId}`));
-
-    try {
-        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId });
-    } catch (error: any) {
-        // The first verirication attempt with 'minimal' source code was unnsuccessful.
-        // Now try with the full source code from the compilation context.
-        if (
-            error.message !== NO_MATCHING_CONTRACT &&
-            COMPILATION_ERRORS.filter((compilationError) => compilationError.pattern.test(error.message)).length === 0
-        ) {
-            throw error;
-        }
-        console.info(chalk.red(UNSUCCESSFUL_CONTEXT_COMPILATION_MESSAGE));
-
-        request.sourceCode.sources = contractInformation.compilerInput.sources;
-
-        const fallbackResponse = await verifyContractRequest(request, hre.network.verifyURL);
-        const fallbackVerificationId = parseInt(fallbackResponse.message, 10);
-
-        console.info(chalk.cyan(`Your verification ID is: ${fallbackVerificationId}`));
-        await hre.run(TASK_CHECK_VERIFICATION_STATUS, { verificationId: fallbackVerificationId });
-    }
-
-    return verificationId;
+    return await run(TASK_VERIFY_ZKSYNC_EXPLORER, args);
 }
 
 export async function getContractInfo(

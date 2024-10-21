@@ -5,7 +5,6 @@ import { fail } from 'assert';
 import path from 'path';
 import {
     checkContractName,
-    checkVerificationStatus,
     flattenContractFile,
     getLibraries,
     getSolidityStandardJsonInput,
@@ -16,7 +15,6 @@ import * as bytecodes from '../../src/solc/bytecode';
 import { useEnvironment } from '../helpers';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT } from '../../src/constants';
 import { ContractInformation } from '../../src/solc/types';
-import { VerificationStatusResponse } from '../../src/zksync-block-explorer/verification-status-response';
 
 describe('Plugin', () => {
     const artifacts: Artifacts = {
@@ -404,57 +402,6 @@ Instead, this name was received: ${contractFQN}`);
             const libraries = await getLibraries({} as any);
 
             expect(libraries).to.deep.equal({});
-        });
-    });
-
-    describe('checkVerificationStatus', async function () {
-        useEnvironment('localGreeter');
-
-        it('should throw ZkSyncVerifyPluginError when backend verification error exists', async function () {
-            sinon.stub(VerificationStatusResponse.prototype, 'errorExists').returns(true);
-
-            const args = {
-                verificationId: 123,
-            };
-
-            try {
-                await checkVerificationStatus(args, this.env);
-                fail('Expected an error to be thrown');
-            } catch (error: any) {
-                expect(error.message).to.equal(
-                    'Backend verification error: Deployed bytecode is not equal to generated one from given source',
-                );
-            }
-        });
-
-        it.skip('should log a success message and return true when verification is successful', async function () {
-            sinon.stub(VerificationStatusResponse.prototype, 'errorExists').returns(false);
-
-            const args = {
-                verificationId: 123,
-            };
-
-            const consoleInfoSpy = sinon.spy(console, 'info');
-            const result = await checkVerificationStatus(args, this.env);
-
-            sinon.assert.calledWith(
-                consoleInfoSpy,
-                '\u001b[32mContract successfully verified on ZKsync block explorer!\u001b[39m',
-            );
-            expect(result).to.equal(true);
-        });
-    });
-
-    describe('normalizeBytecode', () => {
-        it('should not modify bytecode when it does not start with the expected placeholder', async () => {
-            const mockBytecode = 'abcdef1234567890';
-            const symbols = {
-                object: '73',
-            };
-
-            const result = await bytecodes.normalizeBytecode(mockBytecode, symbols as any);
-
-            expect(result.normalizedBytecode).to.equal(mockBytecode);
         });
     });
 });

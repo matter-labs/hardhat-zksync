@@ -5,12 +5,10 @@ import {
 import { Artifacts, CompilerInput, DependencyGraph, HardhatRuntimeEnvironment, ResolvedFile } from 'hardhat/types';
 import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/contract-names';
 import path from 'path';
-import chalk from 'chalk';
 import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
-import { executeVeificationWithRetry } from './utils';
 
 export async function inferContractArtifacts(
     artifacts: Artifacts,
@@ -104,6 +102,8 @@ export function getSolidityStandardJsonInput(
           }
         : {
               ...input.settings,
+              isSystem: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
+              forceEvmla: hre.config.zksolc.settings.forceEVMLA ?? false,
           };
 
     return standardInput;
@@ -130,15 +130,4 @@ export async function getLibraries(librariesModule: string) {
             error,
         );
     }
-}
-
-export async function checkVerificationStatus(args: { verificationId: number }, hre: HardhatRuntimeEnvironment) {
-    const isValidVerification = await executeVeificationWithRetry(args.verificationId, hre.network.verifyURL);
-
-    if (isValidVerification?.errorExists()) {
-        throw new ZkSyncVerifyPluginError(`Backend verification error: ${isValidVerification.getError()}`);
-    }
-
-    console.info(chalk.green(`Contract successfully verified on ZKsync block explorer!`));
-    return true;
 }
