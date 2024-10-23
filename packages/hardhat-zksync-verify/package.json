@@ -40,7 +40,7 @@
     "axios": "^1.7.2",
     "semver": "^7.6.2",
     "cbor": "^9.0.2",
-    "chai": "^4.3.4",
+    "chai": "^5.1.2",
     "chalk": "^4.1.2",
     "debug": "^4.3.5",
     "sinon": "^18.0.0",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.8",
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^5.0.0",
     "@types/debug": "^4.1.12",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",

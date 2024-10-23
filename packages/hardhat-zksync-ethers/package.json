@@ -36,13 +36,13 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
-    "chai": "^4.3.4",
+    "chai": "^5.1.2",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@nomicfoundation/hardhat-ethers": "^3.0.6"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^5.0.0",
     "@types/chai-as-promised": "^7.1.8",
     "@types/lodash.isequal": "^4.5.8",
     "@types/mocha": "^10.0.6",
