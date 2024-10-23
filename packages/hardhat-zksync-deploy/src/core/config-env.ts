@@ -12,7 +12,7 @@ export function taskWithEraTestNode<TaskArgumentsT extends TaskArguments>(
     const dsl = ctx.tasksDSL;
 
     if (withNode) {
-        if ((global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping) {
+        if (!(global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping) {
             (global as ZKSyncTasksWithWrappedNode)._zkSyncTasksForWrapping = new ZKSyncTasksForWrapping();
         }
 

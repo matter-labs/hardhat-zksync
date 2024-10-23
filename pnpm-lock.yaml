@@ -14,9 +14,15 @@ importers:
       '@npmcli/promise-spawn':
         specifier: ^6.0.2
         version: 6.0.2
+      '@types/find-up':
+        specifier: ^2.1.1
+        version: 2.1.1
       commander:
         specifier: ^10.0.0
         version: 10.0.1
+      find-up:
+        specifier: ^2.1.0
+        version: 2.1.0
       get-monorepo-packages:
         specifier: ^1.2.0
         version: 1.2.0
@@ -2341,6 +2347,9 @@ packages:
 
   '@types/dockerode@3.3.29':
     resolution: {integrity: sha512-5PRRq/yt5OT/Jf77ltIdz4EiR9+VLnPF+HpU4xGFwUqmV24Co2HKBNW3w+slqZ1CYchbcDeqJASHDYWzZCcMiQ==, tarball: https://registry.npmjs.org/@types/dockerode/-/dockerode-3.3.29.tgz}
+
+  '@types/find-up@2.1.1':
+    resolution: {integrity: sha512-60LC501bQRN9/3yfVaEEMd7IndaufffL56PBRAejPpUrY304Ps1jfnjNqPw5jmM5R8JHWiKBAe5IHzNcPV41AA==, tarball: https://registry.npmjs.org/@types/find-up/-/find-up-2.1.1.tgz}
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==, tarball: https://registry.npmjs.org/@types/fs-extra/-/fs-extra-11.0.4.tgz}
@@ -6210,6 +6219,8 @@ snapshots:
       '@types/docker-modem': 3.0.6
       '@types/node': 18.19.33
       '@types/ssh2': 1.15.0
+
+  '@types/find-up@2.1.1': {}
 
   '@types/fs-extra@11.0.4':
     dependencies:

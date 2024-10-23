@@ -151,7 +151,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
-    .addOptionalParam('port', 'Port to listen on - default: 8545', 8545, types.int)
+    .addOptionalParam('port', 'Port to listen on - default: 8011', undefined, types.int)
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
