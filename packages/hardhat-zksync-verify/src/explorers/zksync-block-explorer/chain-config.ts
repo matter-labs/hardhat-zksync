@@ -3,7 +3,7 @@ import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 export const builtinChains: ChainConfig[] = [
     {
         network: 'zksyncmainnet',
-        chainId: 270,
+        chainId: 324,
         urls: {
             apiURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification',
             browserURL: 'https://explorer.zksync.io/',

@@ -3,7 +3,7 @@ import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 export const builtinChains: ChainConfig[] = [
     {
         network: 'zksyncmainnet',
-        chainId: 270,
+        chainId: 324,
         urls: {
             apiURL: 'https://api-era.zksync.network/api',
             browserURL: 'https://era.zksync.network/',

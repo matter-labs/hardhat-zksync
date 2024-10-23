@@ -102,8 +102,6 @@ export function getSolidityStandardJsonInput(
           }
         : {
               ...input.settings,
-              isSystem: hre.config.zksolc.settings.enableEraVMExtensions ?? false,
-              forceEvmla: hre.config.zksolc.settings.forceEVMLA ?? false,
           };
 
     return standardInput;
