@@ -790,9 +790,6 @@ importers:
       '@matterlabs/hardhat-zksync-ethers':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-ethers
-      '@matterlabs/hardhat-zksync-node':
-        specifier: workspace:^
-        version: link:../../packages/hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
