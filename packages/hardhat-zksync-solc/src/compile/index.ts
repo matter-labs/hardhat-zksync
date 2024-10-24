@@ -7,6 +7,7 @@ import { findMissingLibraries, mapMissingLibraryDependencies, writeLibrariesToFi
 import {
     DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION,
     ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ,
+    ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING,
 } from '../constants';
 import {
     validateDockerIsInstalled,
@@ -66,7 +67,7 @@ export class BinaryCompiler implements ICompiler {
         // Check for missing libraries
         if (
             semver.gte(config.version, DETECT_MISSING_LIBRARY_MODE_COMPILER_VERSION) &&
-            semver.lt(config.version, '1.6.0')
+            semver.lt(config.version, ZKSOLC_COMPILER_VERSION_WITH_LIBRARY_LINKING)
         ) {
             const zkSolcOutput = await compileWithBinary(input, config, this.solcPath, true);
 

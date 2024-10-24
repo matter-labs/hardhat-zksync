@@ -53,7 +53,7 @@ export async function linkWithBinary(config: ZkSolcConfig, linkLibraries: LinkLi
     if (linkLibraries.libraries) {
         processCommand += ` --libraries ${Object.entries(linkLibraries.libraries)
             .map((lib) => `${lib[0]}=${lib[1]}`)
-            .join(',')}`;
+            .join(' ')}`;
     }
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(

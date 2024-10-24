@@ -17,6 +17,7 @@ export async function compileLink(
         sourceName: string;
         contractName: string;
         libraries?: { [libraryName: string]: string };
+        withoutError?: boolean;
     },
     hre: HardhatRuntimeEnvironment,
 ): Promise<string | undefined> {
@@ -43,6 +44,10 @@ export async function compileLink(
     const output = await link(hre.config.zksolc, await getLibraryLink(hre, taskArgs.libraries, contractFilePath));
 
     if (!lodash.isEmpty(output.unlinked)) {
+        if (taskArgs.withoutError) {
+            return undefined;
+        }
+
         throw new ZkSyncSolcPluginError(
             `Libraries for contract ${contractFQN} are not linked: ${Object.values(output.unlinked[contractFilePath])
                 .map((lib) => `${lib}`)

@@ -139,6 +139,7 @@ subtask(TASK_COMPILE_LINK)
     .addParam('sourceName', 'Source name of the artifact')
     .addParam('contractName', 'Contract name of the artifact')
     .addOptionalParam('libraries', undefined, undefined, types.any)
+    .addFlag('withoutError', undefined)
     .setAction(compileLink);
 
 subtask(TASK_DOWNLOAD_ZKSOLC, async (_args: any, hre: HardhatRuntimeEnvironment) => {
