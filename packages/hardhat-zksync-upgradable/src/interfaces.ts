@@ -13,9 +13,8 @@ import { DeployBeaconArtifact, DeployBeaconFactory } from './proxy-deployment/de
 import { DeployBeaconProxyArtifact, DeployBeaconProxyFactory } from './proxy-deployment/deploy-beacon-proxy';
 import { EstimateProxyGasFunction } from './gas-estimation/estimate-gas-proxy';
 import { EstimateBeaconGasFunction } from './gas-estimation/estimate-gas-beacon-proxy';
-import { ChangeAdminFunction, GetInstanceFunction, TransferProxyAdminOwnershipFunction } from './admin';
+import { ChangeAdminFunction, TransferProxyAdminOwnershipFunction } from './admin';
 import { ValidateImplementationOptions } from './utils/options';
-import { DeployAdminFunction } from './proxy-deployment/deploy-proxy-admin';
 import { UndefinedFunctionType } from './utils';
 
 export type ValidateImplementationFunction = (
@@ -30,9 +29,7 @@ export interface HardhatZksyncUpgrades {
     deployBeacon: DeployBeaconArtifact & DeployBeaconFactory;
     deployBeaconProxy: DeployBeaconProxyFactory & DeployBeaconProxyArtifact;
     upgradeBeacon: UpgradeBeaconFactory & UpgradeBeaconArtifact;
-    deployProxyAdmin: DeployAdminFunction;
     admin: {
-        getInstance: GetInstanceFunction;
         changeProxyAdmin: ChangeAdminFunction;
         transferProxyAdminOwnership: TransferProxyAdminOwnershipFunction;
     };

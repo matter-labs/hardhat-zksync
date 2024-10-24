@@ -6,12 +6,10 @@ import { UpgradeFunction as UpgradeFunctionOZ } from '@openzeppelin/hardhat-upgr
 import { DeployBeaconFunction as DeployBeaconFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/deploy-beacon';
 import { DeployBeaconProxyFunction as DeployBeaconProxyFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/deploy-beacon-proxy';
 import { UpgradeBeaconFunction as UpgradeBeaconFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/upgrade-beacon';
-import { DeployAdminFunction as DeployAdminFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/deploy-proxy-admin';
 import { ForceImportFunction as ForceImportFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/force-import';
 import {
     ChangeAdminFunction as ChangeAdminFunctionOZ,
     TransferProxyAdminOwnershipFunction as TransferProxyAdminOwnershipFunctionOZ,
-    GetInstanceFunction as GetInstanceFunctionOZ,
 } from '@openzeppelin/hardhat-upgrades/dist/admin';
 import { ValidateImplementationFunction as ValidateImplementationFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/validate-implementation';
 import { ValidateUpgradeFunction as ValidateUpgradeFunctionOZ } from '@openzeppelin/hardhat-upgrades/dist/validate-upgrade';
@@ -22,14 +20,6 @@ import {
     GetUpgradeApprovalProcessFunction as GetUpgradeApprovalProcessFunctionOZ,
 } from '@openzeppelin/hardhat-upgrades/dist/defender/get-approval-process';
 
-import type { ProposeUpgradeFunction as ProposeUpgradeFunctionOZ } from '../openzeppelin-hardhat-upgrades/defender-v1/propose-upgrade';
-import type {
-    VerifyDeployFunction as VerifyDeployFunctionOZ,
-    VerifyDeployWithUploadedArtifactFunction as VerifyDeployWithUploadedArtifactFunctionOZ,
-    GetVerifyDeployArtifactFunction as GetVerifyDeployArtifactFunctionOZ,
-    GetVerifyDeployBuildInfoFunction as GetVerifyDeployBuildInfoFunctionOZ,
-    GetBytecodeDigestFunction as GetBytecodeDigestFunctionOZ,
-} from '../openzeppelin-hardhat-upgrades/defender-v1/verify-deployment';
 import { UndefinedFunctionType } from '../utils';
 
 export interface HardhatUpgradesOZ {
@@ -42,12 +32,9 @@ export interface HardhatUpgradesOZ {
     deployBeacon: DeployBeaconFunctionOZ;
     deployBeaconProxy: DeployBeaconProxyFunctionOZ;
     upgradeBeacon: UpgradeBeaconFunctionOZ;
-    deployProxyAdmin: DeployAdminFunctionOZ;
     forceImport: ForceImportFunctionOZ;
     silenceWarnings: typeof silenceWarnings;
     admin: {
-        // property from zksync
-        getInstance: GetInstanceFunctionOZ;
         changeProxyAdmin: ChangeAdminFunctionOZ;
         transferProxyAdminOwnership: TransferProxyAdminOwnershipFunctionOZ;
     };
@@ -67,15 +54,6 @@ export interface HardhatUpgradesOZ {
     };
 }
 
-export interface DefenderV1HardhatUpgradesOZ {
-    proposeUpgrade: ProposeUpgradeFunctionOZ;
-    verifyDeployment: VerifyDeployFunctionOZ;
-    verifyDeploymentWithUploadedArtifact: VerifyDeployWithUploadedArtifactFunctionOZ;
-    getDeploymentArtifact: GetVerifyDeployArtifactFunctionOZ;
-    getDeploymentBuildInfo: GetVerifyDeployBuildInfoFunctionOZ;
-    getBytecodeDigest: GetBytecodeDigestFunctionOZ;
-}
-
 export type DefenderHardhatUpgradesOZ = {
     deployContract: DeployContractFunctionOZ;
     proposeUpgradeWithApproval: any;
@@ -85,5 +63,4 @@ export type DefenderHardhatUpgradesOZ = {
      * @deprecated Use `getUpgradeApprovalProcess` instead.
      */
     getDefaultApprovalProcess: GetUpgradeApprovalProcessFunctionOZ;
-} & HardhatUpgradesOZ &
-    DefenderV1HardhatUpgradesOZ;
+} & HardhatUpgradesOZ;

@@ -20,11 +20,10 @@ export class ZkSyncGenerator implements Generator {
         const { makeDeployBeacon } = require('./proxy-deployment/deploy-beacon');
         const { makeDeployBeaconProxy } = require('./proxy-deployment/deploy-beacon-proxy');
         const { makeUpgradeBeacon } = require('./proxy-upgrade/upgrade-beacon');
-        const { makeDeployProxyAdmin } = require('./proxy-deployment/deploy-proxy-admin');
         const { makeEstimateGasProxy } = require('./gas-estimation/estimate-gas-proxy');
         const { makeEstimateGasBeacon } = require('./gas-estimation/estimate-gas-beacon');
         const { makeEstimateGasBeaconProxy } = require('./gas-estimation/estimate-gas-beacon-proxy');
-        const { makeGetInstanceFunction, makeChangeProxyAdmin, makeTransferProxyAdminOwnership } = require('./admin');
+        const { makeChangeProxyAdmin, makeTransferProxyAdminOwnership } = require('./admin');
         return {
             deployProxy: wrapMakeFunction(this._hre, makeDeployProxy(this._hre)),
             upgradeProxy: wrapMakeFunction(this._hre, makeUpgradeProxy(this._hre)),
@@ -32,9 +31,7 @@ export class ZkSyncGenerator implements Generator {
             deployBeacon: wrapMakeFunction(this._hre, makeDeployBeacon(this._hre)),
             deployBeaconProxy: wrapMakeFunction(this._hre, makeDeployBeaconProxy(this._hre)),
             upgradeBeacon: wrapMakeFunction(this._hre, makeUpgradeBeacon(this._hre)),
-            deployProxyAdmin: wrapMakeFunction(this._hre, makeDeployProxyAdmin(this._hre)),
             admin: {
-                getInstance: wrapMakeFunction(this._hre, makeGetInstanceFunction(this._hre)),
                 changeProxyAdmin: wrapMakeFunction(this._hre, makeChangeProxyAdmin(this._hre)),
                 transferProxyAdminOwnership: wrapMakeFunction(this._hre, makeTransferProxyAdminOwnership(this._hre)),
             },

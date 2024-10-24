@@ -3,6 +3,7 @@ import {
     TASK_COMPILE_VYPER_GET_BUILD,
     TASK_COMPILE_VYPER_LOG_COMPILATION_RESULT,
     TASK_COMPILE_VYPER_LOG_DOWNLOAD_COMPILER_START,
+    TASK_COMPILE_VYPER,
 } from '@nomiclabs/hardhat-vyper/dist/src/task-names';
 import {
     TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
@@ -13,7 +14,7 @@ import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import chalk from 'chalk';
-import { CompilationJob, HardhatRuntimeEnvironment } from 'hardhat/types';
+import { CompilationJob, HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import { PROXY_NAME, ProxtContractOutput, ZkArtifacts, proxyNames } from './artifacts';
 import { compile } from './compile';
 import { checkSupportedVyperVersions, pluralize } from './utils';
@@ -23,10 +24,13 @@ import {
     TASK_COMPILE_LINK,
     TASK_COMPILE_VYPER_CHECK_ERRORS,
     TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS,
+    TASK_DOWNLOAD_ZKVYPER,
     ZKVYPER_COMPILER_PATH_VERSION,
 } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
 import { ZkSyncVyperPluginError } from './errors';
+
+const zkVyperCompilerDownloaderMutex = new Mutex();
 
 extendConfig((config, userConfig) => {
     defaultZkVyperConfig.version = userConfig.zkvyper?.settings?.compilerPath
@@ -76,6 +80,37 @@ subtask(TASK_COMPILE_LINK)
         return undefined;
     });
 
+subtask(TASK_COMPILE_VYPER).setAction(async (args: TaskArguments, hre, runSuper) => {
+    if (hre.network.zksync) {
+        await hre.run(TASK_DOWNLOAD_ZKVYPER);
+    }
+
+    await runSuper(args);
+});
+
+subtask(TASK_DOWNLOAD_ZKVYPER, async (_args, hre) => {
+    if (!hre.network.zksync) {
+        return;
+    }
+
+    const compilersCache = await getCompilersDir();
+
+    await zkVyperCompilerDownloaderMutex.use(async () => {
+        const zkvyperDownloader = await ZkVyperCompilerDownloader.getDownloaderWithVersionValidated(
+            hre.config.zkvyper.version,
+            hre.config.zkvyper.settings.compilerPath ?? '',
+            compilersCache,
+        );
+
+        const isZksolcDownloaded = await zkvyperDownloader.isCompilerDownloaded();
+        if (!isZksolcDownloaded) {
+            await zkvyperDownloader.downloadCompiler();
+        }
+        hre.config.zkvyper.settings.compilerPath = zkvyperDownloader.getCompilerPath();
+        hre.config.zkvyper.version = zkvyperDownloader.getVersion();
+    });
+});
+
 // If there're no .sol files to compile - that's ok.
 subtask(TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE, async () => {});
 
@@ -96,6 +131,8 @@ subtask(TASK_COMPILE_VYPER_RUN_BINARY, async (args: { inputPaths: string[]; vype
 
     delete compilerOutput.zk_version;
     delete compilerOutput.long_version;
+    delete compilerOutput.project_metadata;
+    delete compilerOutput.extra_data;
 
     proxyNames.forEach((proxyName) => {
         if (compilerOutput[proxyName]) {
@@ -132,23 +169,6 @@ subtask(TASK_COMPILE_VYPER_GET_BUILD, async (args: { vyperVersion: string }, hre
     }
 
     const vyperBuild = await runSuper(args);
-    const compilersCache = await getCompilersDir();
-
-    const mutex = new Mutex();
-    await mutex.use(async () => {
-        const zkvyperDownloader = await ZkVyperCompilerDownloader.getDownloaderWithVersionValidated(
-            hre.config.zkvyper.version,
-            hre.config.zkvyper.settings.compilerPath ?? '',
-            compilersCache,
-        );
-
-        const isZksolcDownloaded = await zkvyperDownloader.isCompilerDownloaded();
-        if (!isZksolcDownloaded) {
-            await zkvyperDownloader.downloadCompiler();
-        }
-        hre.config.zkvyper.settings.compilerPath = zkvyperDownloader.getCompilerPath();
-        hre.config.zkvyper.version = zkvyperDownloader.getVersion();
-    });
 
     console.info(chalk.yellow(COMPILING_INFO_MESSAGE(hre.config.zkvyper.version, args.vyperVersion)));
 
