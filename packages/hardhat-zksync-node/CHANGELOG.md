@@ -1,5 +1,17 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.1...@matterlabs/hardhat-zksync-node-v1.2.0) (2024-10-24)
+
+
+### Features
+
+* override run task for zksync hardhat network ([#1462](https://github.com/matter-labs/hardhat-zksync/issues/1462)) ([a49c593](https://github.com/matter-labs/hardhat-zksync/commit/a49c5932abcb7e5244314471c9b7f701c1c90a20))
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.0...@matterlabs/hardhat-zksync-node-v1.1.1) (2024-07-15)
 
 
