@@ -1,5 +1,6 @@
-import { CompilerOutputBytecode } from 'hardhat/types';
+import { CompilerOutputBytecode, HardhatRuntimeEnvironment } from 'hardhat/types';
 
+import { FormatedLibrariesForConfig, Libraries } from '../types';
 import { inferSolcVersion } from './metadata';
 import {
     BuildInfo,
@@ -47,17 +48,19 @@ export class Bytecode {
 }
 
 export async function extractMatchingContractInformation(
+    hre: HardhatRuntimeEnvironment,
     sourceName: SourceName,
     contractName: ContractName,
     buildInfo: BuildInfo,
     deployedBytecode: Bytecode,
+    libraries: Libraries,
 ): Promise<ContractInformation | null> {
     const contract = buildInfo.output.contracts[sourceName][contractName];
 
     if (contract.hasOwnProperty('evm')) {
         const { bytecode: runtimeBytecodeSymbols } = contract.evm;
 
-        const analyzedBytecode = runtimeBytecodeSymbols
+        let analyzedBytecode = runtimeBytecodeSymbols
             ? await compareBytecode(deployedBytecode, runtimeBytecodeSymbols)
             : null;
 
@@ -72,10 +75,61 @@ export async function extractMatchingContractInformation(
             };
         }
 
+        // Checking a elf header 0x7F followed by ELF(45 4c 46) in ASCII
+        const isElfWrapper = runtimeBytecodeSymbols.object.slice(0, 8) === '7f454c46';
+        if (!isElfWrapper) {
+            return null;
+        }
+
+        const linkedbytecode: string = await hre.run('compile:link', {
+            sourceName,
+            contractName,
+            libraries,
+            withoutError: true,
+        });
+
+        analyzedBytecode = linkedbytecode
+            ? await compareBytecode(deployedBytecode, {
+                  object: linkedbytecode,
+                  opcodes: '',
+                  sourceMap: '',
+                  linkReferences: {},
+              })
+            : null;
+
+        if (analyzedBytecode !== null) {
+            return {
+                ...analyzedBytecode,
+                compilerInput: buildInfo.input,
+                contractOutput: buildInfo.output.contracts[sourceName][contractName],
+                solcVersion: buildInfo.solcVersion,
+                sourceName,
+                contractName,
+                libraries: await resolveLibraries(hre, libraries),
+            };
+        }
         return null;
     }
 
     return null;
+}
+
+export async function resolveLibraries(
+    hre: HardhatRuntimeEnvironment,
+    libraries: Libraries,
+): Promise<FormatedLibrariesForConfig> {
+    const populatedLibraries: FormatedLibrariesForConfig = {};
+
+    await Promise.all(
+        Object.entries(libraries).map(async (libraryInfo) => {
+            const artifact = await hre.artifacts.readArtifact(libraryInfo[0]);
+            populatedLibraries[artifact.sourceName] = {
+                [artifact.contractName]: libraryInfo[1],
+            };
+        }),
+    );
+
+    return populatedLibraries;
 }
 
 export async function compareBytecode(

@@ -14,6 +14,7 @@ export interface ContractInformation {
     sourceName: string;
     contractName: string;
     contractOutput: CompilerOutputContract;
+    libraries?: Record<string, Record<string, string>>;
 }
 
 export interface CompilerOutput {

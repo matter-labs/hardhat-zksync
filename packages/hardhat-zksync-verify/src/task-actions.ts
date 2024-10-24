@@ -200,7 +200,6 @@ export async function verifyContract(
         matchingCompilerVersions: compilerVersions,
         libraries,
     });
-
     const optimizationUsed = contractInformation.compilerInput.settings.optimizer.enabled ?? false;
 
     const solcVersion = contractInformation.solcVersion;
@@ -234,6 +233,7 @@ export async function verifyContract(
             hre,
             await getMinimalResolvedFiles(hre, contractInformation.sourceName),
             contractInformation.compilerInput,
+            contractInformation.libraries,
         ),
         codeFormat: JSON_INPUT_CODE_FORMAT,
         contractName: contractInformation.contractName,
@@ -297,17 +297,25 @@ export async function getContractInfo(
 
         const { sourceName, contractName } = parseFullyQualifiedName(contractFQN);
         contractInformation = await extractMatchingContractInformation(
+            hre,
             sourceName,
             contractName,
             buildInfo,
             deployedBytecode,
+            libraries,
         );
 
         if (contractInformation === undefined || contractInformation === null) {
             throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
         }
     } else {
-        contractInformation = await inferContractArtifacts(artifacts, matchingCompilerVersions, deployedBytecode);
+        contractInformation = await inferContractArtifacts(
+            hre,
+            artifacts,
+            matchingCompilerVersions,
+            deployedBytecode,
+            libraries,
+        );
     }
     return contractInformation;
 }

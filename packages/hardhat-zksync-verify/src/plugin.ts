@@ -11,11 +11,14 @@ import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR }
 import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 import { executeVeificationWithRetry } from './utils';
+import { Libraries } from './types';
 
 export async function inferContractArtifacts(
+    hre: HardhatRuntimeEnvironment,
     artifacts: Artifacts,
     matchingCompilerVersions: string[],
     deployedBytecode: Bytecode,
+    libraries: Libraries,
 ): Promise<any> {
     const contractMatches = [];
     const fqNames = await artifacts.getAllFullyQualifiedNames();
@@ -34,10 +37,12 @@ export async function inferContractArtifacts(
         const { sourceName, contractName } = parseFullyQualifiedName(fqName);
 
         const contractInformation = await extractMatchingContractInformation(
+            hre,
             sourceName,
             contractName,
             buildInfo,
             deployedBytecode,
+            libraries,
         );
         if (contractInformation !== null) {
             contractMatches.push(contractInformation);
@@ -88,6 +93,7 @@ export function getSolidityStandardJsonInput(
     hre: HardhatRuntimeEnvironment,
     resolvedFiles: ResolvedFile[],
     input: CompilerInput,
+    libraries?: Record<string, Record<string, string>>,
 ): any {
     const standardInput = {
         language: input.language,
@@ -105,6 +111,10 @@ export function getSolidityStandardJsonInput(
         : {
               ...input.settings,
           };
+
+    if (libraries) {
+        Object.assign((standardInput.settings as any).libraries, libraries);
+    }
 
     return standardInput;
 }
