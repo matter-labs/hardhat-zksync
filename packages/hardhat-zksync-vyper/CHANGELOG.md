@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.1.0...@matterlabs/hardhat-zksync-vyper-v1.1.1) (2024-10-21)
+
+
+### Bug Fixes
+
+* download zkvyper if needed before compilation ([#1484](https://github.com/matter-labs/hardhat-zksync/issues/1484)) ([9763aba](https://github.com/matter-labs/hardhat-zksync/commit/9763aba2c84cc2c53915e1aa9ca9e3be81ea083e))
+
 ## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.0.8...@matterlabs/hardhat-zksync-vyper-v1.1.0) (2024-09-05)
 
 

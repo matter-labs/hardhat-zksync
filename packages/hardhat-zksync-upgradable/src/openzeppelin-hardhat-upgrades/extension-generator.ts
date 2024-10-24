@@ -34,11 +34,9 @@ export class OpenzeppelinGenerator implements Generator {
         const { makeDeployBeaconProxy } = require('@openzeppelin/hardhat-upgrades/dist/deploy-beacon-proxy');
         const { makeUpgradeBeacon } = require('@openzeppelin/hardhat-upgrades/dist/upgrade-beacon');
         const { makeForceImport } = require('@openzeppelin/hardhat-upgrades/dist/force-import');
-        const { makeDeployProxyAdmin } = require('@openzeppelin/hardhat-upgrades/dist/deploy-proxy-admin');
         const {
             makeChangeProxyAdmin,
             makeTransferProxyAdminOwnership,
-            makeGetInstanceFunction,
         } = require('@openzeppelin/hardhat-upgrades/dist/admin');
 
         return {
@@ -51,11 +49,9 @@ export class OpenzeppelinGenerator implements Generator {
             prepareUpgrade: makePrepareUpgrade(this._hre, defender),
             deployBeacon: makeDeployBeacon(this._hre, defender), // block on defender
             deployBeaconProxy: makeDeployBeaconProxy(this._hre, defender),
-            deployProxyAdmin: makeDeployProxyAdmin(this._hre, defender),
             upgradeBeacon: makeUpgradeBeacon(this._hre, defender), // block on defender
             forceImport: makeForceImport(this._hre),
             admin: {
-                getInstance: makeGetInstanceFunction(this._hre, defender), // block on defender
                 changeProxyAdmin: makeChangeProxyAdmin(this._hre, defender), // block on defender
                 transferProxyAdminOwnership: makeTransferProxyAdminOwnership(this._hre, defender), // block on defender
             },

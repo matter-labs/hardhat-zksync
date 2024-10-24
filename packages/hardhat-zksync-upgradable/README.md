@@ -282,7 +282,7 @@ const config: HardhatUserConfig = {
 
 ### 🕹 Command list
 
-`yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--initializer <initialize method>] [--no-compile] [--deployment-type-impl <deployment type>] [--salt-impl <salt>] [--deployment-type-proxy <deployment type>] [--salt-proxy <salt>]`
+`yarn hardhat deploy-zksync:proxy --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--initializer <initialize method>] [--no-compile] [--initial-owner <initial owner>] [--deployment-type-impl <deployment type>] [--salt-impl <salt>] [--deployment-type-proxy <deployment type>] [--salt-proxy <salt>]`
 
 When executed, this command will automatically determine whether the deployment is for a Transparent or UUPS proxy. 
 If the Transparent proxy is chosen, it will deploy implementation, admin, and proxy. 
@@ -293,7 +293,7 @@ If the UUPS proxy is chosen, it will deploy implementation and proxy.
 When executed, this command upgrade UUPS or Transparent implementation.
 To upgrade a implementation we need to specify proxy address, add `--proxy-address <proxy address>` argument, e.g. `yarn hardhat upgrade-zksync:proxy --contract-name BoxV2 --proxy-address 0x4bbeEB066eD09B7AEd07bF39EEe0460DFa261520`.
 
-`yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--initializer <initialize method>] [--deployment-type-impl <deployment type>] [--salt-impl <salt>] [--deployment-type-proxy <deployment type>] [--salt-proxy <salt>] [--no-compile]`
+`yarn hardhat deploy-zksync:beacon --contract-name <contract name or FQN> [<constructor arguments>] [--constructor-args <javascript module name>] [--initializer <initialize method>] [--deployment-type-impl <deployment type>] [--salt-impl <salt>] [--deployment-type-proxy <deployment type>] [--salt-proxy <salt>] [--initial-owner <initial owner>] [--no-compile]`
 
 When executed, this command deploys the provided implementation, beacon and proxy on the specified network, using the provided contract constructor arguments.
 
@@ -319,6 +319,7 @@ module.exports = [
 ```
 - To provide a initializer method name at deploy tasks, add `--initializer <initializer method>`, e.g. `hardhat deploy-zksync:proxy --contract-name Contract --initializer store`. If this parameter is omitted, the default value will be `initialize`.
 - To allows the task to skip the compilation process, add  `--no-compile` argument, e.g. `hardhat deploy-zksync:beacon --contract-name Contract --no-compile`.
+- To specify inital contract owner, add `--initial-owner` argument, e.g `hardhat deploy-zksync:beacon --contract-name Contract --initial-owner 0xa61464658AfeAf65CccaaFD3a512b69A83B77618`. If this argument is ommited wallet address will be used.
 - To allows the task to specify which deployer smart contract function will be called for implementation, add `--deployment-type-impl` argument, e.g. `hardhat deploy-zksync:beacon --contract-name Greeter 'Hello' --deployment-type-impl create2`.
 - To allows the task to specify which deployer smart contract function will be called for proxy, add `--deployment-type-proxy` argument, e.g. `hardhat deploy-zksync:beacon --contract-name Greeter 'Hello' --deployment-type-proxy create2`.
 - To specify which salt will be used in deployment of the implementation, add `--salt-impl` argument, e.g. `hardhat deploy-zksync:beacon --contract-name Greeter 'Hello' --salt-impl 0x42737956734178574166864921632769419836642485081335718122152413290`

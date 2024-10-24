@@ -11,7 +11,7 @@ contract BoxUupsMissingUpgradeTo is Initializable, OwnableUpgradeable {
 
     function initialize(uint256 initValue) public initializer {
         value = initValue;
-        __Ownable_init();
+        __Ownable_init(msg.sender);
     }
 
     // Reads the last stored value
