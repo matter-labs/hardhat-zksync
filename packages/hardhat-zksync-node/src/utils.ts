@@ -19,16 +19,20 @@ import {
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
     BASE_URL,
+    MAX_PORT_ATTEMPTS,
     NETWORK_ACCOUNTS,
     NETWORK_ETH,
     NETWORK_GAS,
     NETWORK_GAS_PRICE,
     PLATFORM_MAP,
+    START_PORT,
     TEMP_FILE_PREFIX,
     ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
 } from './constants';
 import { ZkSyncNodePluginError } from './errors';
 import { CommandArguments } from './types';
+import { RPCServerDownloader } from './downloader';
+import { JsonRpcServer } from './server';
 
 // Generates command arguments for running the era-test-node binary
 export function constructCommandArgs(args: CommandArguments): string[] {
@@ -384,7 +388,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
     return taskArgs;
 }
 
-function getNetworkConfig(url: string) {
+export function getNetworkConfig(url: string) {
     return {
         accounts: NETWORK_ACCOUNTS.REMOTE,
         gas: NETWORK_GAS.AUTO,
@@ -394,6 +398,7 @@ function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
+        chainId: 260,
         zksync: true,
     };
 }
@@ -406,3 +411,25 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
     config.networks[network.name] = network.config;
     network.provider = await createProvider(config, network.name);
 }
+
+export const startServer = async (tag?: string, force: boolean = false) => {
+    const platform = getPlatform();
+    if (platform === 'windows' || platform === '') {
+        throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
+    }
+    const rpcServerBinaryDir = await getRPCServerBinariesDir();
+
+    const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+
+    await downloader.downloadIfNeeded(force);
+    const binaryPath = await downloader.getBinaryPath();
+
+    const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
+    const commandArgs = constructCommandArgs({ port: currentPort });
+
+    return {
+        commandArgs,
+        server: new JsonRpcServer(binaryPath),
+        port: currentPort,
+    };
+};

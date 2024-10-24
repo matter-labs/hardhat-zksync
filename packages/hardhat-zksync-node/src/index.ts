@@ -2,12 +2,16 @@ import { spawn } from 'child_process';
 import { task, subtask, types } from 'hardhat/config';
 import {
     TASK_COMPILE,
+    TASK_NODE,
+    TASK_RUN,
     TASK_TEST,
     TASK_TEST_GET_TEST_FILES,
     TASK_TEST_RUN_MOCHA_TESTS,
 } from 'hardhat/builtin-tasks/task-names';
 
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
+import { TaskArguments } from 'hardhat/types';
+import path from 'path';
 import {
     MAX_PORT_ATTEMPTS,
     START_PORT,
@@ -16,7 +20,7 @@ import {
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS,
 } from './constants';
-import { JsonRpcServer } from './server';
+import { JsonRpcServer, RpcServer } from './server';
 import {
     adjustTaskArgsForPort,
     configureNetwork,
@@ -28,6 +32,17 @@ import {
 } from './utils';
 import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
+import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
+import { runScriptWithHardhat } from './core/script-runner';
+
+task(TASK_RUN).setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync || hre.network.name !== HARDHAT_NETWORK_NAME) {
+        await runSuper(args, hre);
+        return;
+    }
+
+    await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
+});
 
 // Subtask to download the binary
 subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary')
@@ -74,6 +89,65 @@ subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for ZKsync no
             return server;
         },
     );
+
+task(TASK_NODE, 'Start a ZKSync Node')
+    .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
+    .addOptionalParam(
+        'logFilePath',
+        'Path to the file where logs should be written - default: `era_test_node.log`',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
+    .addOptionalParam(
+        'cacheDir',
+        'Cache directory location for `disk` cache - default: `.cache`',
+        undefined,
+        types.string,
+    )
+    .addFlag('resetCache', 'Reset the local `disk` cache')
+    .addOptionalParam(
+        'showCalls',
+        'Show call debug information (none, user, system, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showStorageLogs',
+        'Show storage log information (none, read, write, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showVmDetails',
+        'Show VM details information (none, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'showGasDetails',
+        'Show Gas details information (none, all) - default: none',
+        undefined,
+        types.string,
+    )
+    .addFlag(
+        'resolveHashes',
+        'Try to contact openchain to resolve the ABI & topic names. It enabled, it makes debug log more readable, but will decrease the performance',
+    )
+    .addFlag(
+        'devUseLocalContracts',
+        'Loads the locally compiled system contracts (useful when doing changes to system contracts or bootloader)',
+    )
+    .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
+    // .addOptionalParam('force', 'Force download', undefined, types.boolean)
+    .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
+        if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
+            return await runSuper();
+        }
+
+        await run(TASK_NODE_ZKSYNC, args);
+    });
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
@@ -196,7 +270,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
             const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
 
             // Create the server
-            const server: JsonRpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
+            const server: RpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
 
             try {
                 await server.listen(commandArgs);
@@ -291,3 +365,5 @@ task(
         }
     },
 );
+
+interceptAndWrapTasksWithNode();

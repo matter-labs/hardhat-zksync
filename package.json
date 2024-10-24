@@ -12,6 +12,8 @@
     "husky": "^8.0.3",
     "prettier": "^3.3.0",
     "typescript": "^5.3.0",
+    "find-up": "^2.1.0",
+    "@types/find-up": "^2.1.1",
     "wsrun": "^5.2.2"
   },
   "scripts": {
