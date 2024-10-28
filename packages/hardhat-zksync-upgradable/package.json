@@ -47,7 +47,7 @@
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.12.2",
     "fs-extra": "^11.2.0",
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.22.15",
     "zksync-ethers": "^6.11.2",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
