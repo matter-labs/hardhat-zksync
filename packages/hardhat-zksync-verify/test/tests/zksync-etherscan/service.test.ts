@@ -4,12 +4,12 @@ import axios from 'axios';
 import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 import { EthereumProvider } from 'hardhat/types';
 import assert from 'assert';
-import { ZksyncBlockExplorerResponse } from '../../../src/explorers/zksync-block-explorer/verification-status-response';
-import { ZkSyncExplorerService } from '../../../src/explorers/zksync-block-explorer/service';
-import * as utils from '../../../src/utils';
 import * as metadata from '../../../src/solc/metadata';
+import * as utils from '../../../src/utils';
+import { ZkSyncEtherscanExplorerService } from '../../../src/explorers/zksync-etherscan/service';
+import { ZksyncEtherscanResponse } from '../../../src/explorers/zksync-etherscan/verification-status-response';
 
-describe('ZkSyncBlockExplorer Service', () => {
+describe('ZkSyncEtherscan Service', () => {
     describe('fromChainConfig', () => {
         let hre: any;
         let chainConfig: ChainConfig;
@@ -25,9 +25,9 @@ describe('ZkSyncBlockExplorer Service', () => {
             };
         });
 
-        it('should create an instance of ZkSyncExplorerService with valid config', async () => {
-            const service = await ZkSyncExplorerService.fromChainConfig(hre, chainConfig);
-            expect(service).instanceOf(ZkSyncExplorerService);
+        it('should create an instance of ZkSyncEtherscan with valid config', async () => {
+            const service = await ZkSyncEtherscanExplorerService.fromChainConfig(hre, 'api', chainConfig);
+            expect(service).instanceOf(ZkSyncEtherscanExplorerService);
         });
     });
 
@@ -94,7 +94,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                 },
             } as unknown as EthereumProvider;
 
-            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+            const currentChainConfig = await ZkSyncEtherscanExplorerService.getCurrentChainConfig(
                 ethereumProvider,
                 customChains,
                 defaultChains,
@@ -111,7 +111,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                     return (260).toString(16);
                 },
             } as unknown as EthereumProvider;
-            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+            const currentChainConfig = await ZkSyncEtherscanExplorerService.getCurrentChainConfig(
                 ethereumProvider,
                 customChains,
                 defaultChains,
@@ -129,7 +129,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                 },
             } as unknown as EthereumProvider;
 
-            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+            const currentChainConfig = await ZkSyncEtherscanExplorerService.getCurrentChainConfig(
                 ethereumProvider,
                 [
                     ...customChains,
@@ -157,7 +157,11 @@ describe('ZkSyncBlockExplorer Service', () => {
             } as unknown as EthereumProvider;
 
             try {
-                await ZkSyncExplorerService.getCurrentChainConfig(ethereumProvider, customChains, defaultChains);
+                await ZkSyncEtherscanExplorerService.getCurrentChainConfig(
+                    ethereumProvider,
+                    customChains,
+                    defaultChains,
+                );
             } catch (e: any) {
                 expect(e.message).to.contains('The provided chain with id 21343214123 is not supported by default!');
             }
@@ -171,15 +175,17 @@ describe('ZkSyncBlockExplorer Service', () => {
         });
 
         it('should return the verification status response', async () => {
-            const requestId = 123;
-            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
+            const requestId = '123';
+            const explorer = new ZkSyncEtherscanExplorerService(
+                {} as any,
+                'https://example.com/verify',
+                'https://example.com/',
+            );
             const response = {
                 status: 200,
                 data: {
-                    status: 'successful',
-                    message: 'Verification successful',
-                    error: undefined,
-                    compilationErrors: undefined,
+                    status: 1,
+                    result: 'Pass - Verified',
                 },
             };
 
@@ -190,14 +196,18 @@ describe('ZkSyncBlockExplorer Service', () => {
             });
 
             expect(!result.errorExists());
-            expect(result).to.be.instanceOf(ZksyncBlockExplorerResponse);
+            expect(result).to.be.instanceOf(ZksyncEtherscanResponse);
             expect(result.status).to.equal(response.data.status);
             expect(result.isSuccess()).to.equal(true);
         });
 
         it('should return the error', async () => {
-            const requestId = 123;
-            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
+            const requestId = '123';
+            const explorer = new ZkSyncEtherscanExplorerService(
+                {} as any,
+                'https://example.com/verify',
+                'https://example.com/',
+            );
             const response = {
                 status: 400,
                 data: {
@@ -221,8 +231,12 @@ describe('ZkSyncBlockExplorer Service', () => {
         });
 
         it('should handle axios error', async () => {
-            const requestId = 123;
-            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
+            const requestId = '123';
+            const explorer = new ZkSyncEtherscanExplorerService(
+                {} as any,
+                'https://example.com/verify',
+                'https://example.com/',
+            );
             const error = new Error('Network error');
 
             sandbox.stub(axios, 'get').rejects(error);
@@ -248,14 +262,14 @@ describe('ZkSyncBlockExplorer Service', () => {
             sandbox.restore();
         });
 
-        it('should return the ZkSyncBlockExplorerResponse when verification is successful', async () => {
+        it('should return the ZkSyncEtherscan when verification is successful', async () => {
             sandbox.stub(axios, 'post').resolves({
                 status: 200,
-                data: '24444',
-            });
-            sandbox.stub(axios, 'get').resolves({
-                status: 200,
-                data: ['0.8.0'],
+                data: {
+                    status: '1',
+                    message: 'OK',
+                    result: '24444',
+                },
             });
 
             sandbox.stub().resolves(0);
@@ -329,8 +343,11 @@ describe('ZkSyncBlockExplorer Service', () => {
                             },
                         },
                         solcVersion: '0.8.0',
+                        solcLongVersion: '0.8.0',
                     })
                     .onCall(3)
+                    .resolves(['0.8.0'])
+                    .onCall(4)
                     .resolves({
                         getResolvedFiles: sandbox.stub().resolves([
                             {
@@ -342,7 +359,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                         ]),
                     }),
             };
-            const explorer = new ZkSyncExplorerService(
+            const explorer = new ZkSyncEtherscanExplorerService(
                 hre as any,
                 'https://example.com/verify',
                 'https://example.com/',
@@ -356,7 +373,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                 false,
             );
 
-            expect(result.verificationId).to.equal(24444);
+            expect(result.verificationId).to.equal('24444');
             expect(result.contractVerifyDataInfo.contractAddress).to.equal(
                 '0x275a050Fd05883dbB572D76F8B5E53A892b370AD',
             );
@@ -365,12 +382,12 @@ describe('ZkSyncBlockExplorer Service', () => {
 
         it('should throw the error when verification is unsuccessful', async () => {
             sandbox.stub(axios, 'post').resolves({
-                status: 500,
-                data: 'Cannot verify contract',
-            });
-            sandbox.stub(axios, 'get').resolves({
                 status: 200,
-                data: ['0.8.0'],
+                data: {
+                    status: '0',
+                    message: 'NOTOK',
+                    result: 'Error!',
+                },
             });
 
             sandbox.stub().resolves(0);
@@ -444,8 +461,11 @@ describe('ZkSyncBlockExplorer Service', () => {
                             },
                         },
                         solcVersion: '0.8.0',
+                        solcLongVersion: '0.8.0',
                     })
                     .onCall(3)
+                    .resolves(['0.8.0'])
+                    .onCall(4)
                     .resolves({
                         getResolvedFiles: sandbox.stub().resolves([
                             {
@@ -457,7 +477,7 @@ describe('ZkSyncBlockExplorer Service', () => {
                         ]),
                     }),
             };
-            const explorer = new ZkSyncExplorerService(
+            const explorer = new ZkSyncEtherscanExplorerService(
                 hre as any,
                 'https://example.com/verify',
                 'https://example.com/',
@@ -472,7 +492,8 @@ describe('ZkSyncBlockExplorer Service', () => {
                     false,
                 );
             } catch (e: any) {
-                expect(e.message).to.contains('Reason: ZkSyncVerifyPluginError: Cannot verify contract');
+                console.log(e.message);
+                expect(e.message).to.contains('Reason: ZkSyncVerifyPluginError: Error!');
             }
         });
     });

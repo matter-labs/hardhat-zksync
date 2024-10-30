@@ -1,6 +1,6 @@
 import '@nomicfoundation/hardhat-verify';
 
-import { subtask, task, types } from 'hardhat/config';
+import { extendEnvironment, subtask, task, types } from 'hardhat/config';
 import './type-extensions';
 import './explorers/zksync-block-explorer/task-actions';
 import './explorers/zksync-etherscan/task-actions';
@@ -24,6 +24,12 @@ import {
     resolveArguments,
     getVerificationSubtasks,
 } from './task-actions';
+
+extendEnvironment((hre) => {
+    if (hre.network.config.zksync) {
+        hre.network.config.enableVerifyURL = hre.network.config.enableVerifyURL ?? false;
+    }
+});
 
 subtask(TASK_VERIFY_GET_VERIFICATION_SUBTASKS).setAction(getVerificationSubtasks);
 

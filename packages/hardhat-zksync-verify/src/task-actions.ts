@@ -196,13 +196,25 @@ export async function getVerificationSubtasks(
     }
 
     const verificationSubtasks: VerificationSubtask[] = [];
-
+    let isEtherscanRunned = false;
     if (config.etherscan.apiKey && config.etherscan.enabled) {
+        isEtherscanRunned = true;
         verificationSubtasks.push({
             label: 'ZkSyncEtherscan',
             subtaskName: TASK_VERIFY_ZKSYNC_ETHERSCAN,
         });
+    }
 
+    if (network.config.enableVerifyURL) {
+        verificationSubtasks.push({
+            label: 'ZkSyncBlockExplorer',
+            subtaskName: TASK_VERIFY_ZKSYNC_EXPLORER,
+        });
+
+        return verificationSubtasks;
+    }
+
+    if (isEtherscanRunned) {
         return verificationSubtasks;
     }
 
@@ -224,13 +236,22 @@ export async function verifyContract(
     args: TaskArguments,
     { config, network, run }: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
-): Promise<number> {
+) {
     if (!network.zksync) {
         return await runSuper(args);
     }
-
+    let isEtherscanRunned = false;
     if (config.etherscan.apiKey && config.etherscan.enabled) {
-        return await run(TASK_VERIFY_ZKSYNC_ETHERSCAN, args);
+        isEtherscanRunned = true;
+        await run(TASK_VERIFY_ZKSYNC_ETHERSCAN, args);
+    }
+
+    if (network.config.enableVerifyURL) {
+        return await run(TASK_VERIFY_ZKSYNC_EXPLORER, args);
+    }
+
+    if (isEtherscanRunned) {
+        return;
     }
 
     console.warn(
