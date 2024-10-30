@@ -1,4 +1,4 @@
-import { extendConfig, extendEnvironment, task, types } from 'hardhat/config';
+import { extendConfig, extendEnvironment, types } from 'hardhat/config';
 import chalk from 'chalk';
 import { string } from 'hardhat/internal/core/params/argumentTypes';
 import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES, TASK_DEPLOY_ZKSYNC_CONTRACT } from './task-names';
@@ -6,7 +6,7 @@ import './type-extensions';
 import { deployZkSyncContract, zkSyncDeploy, zkSyncLibraryDeploy } from './task-actions';
 import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './constants';
 import { DeployerExtension } from './deployer-extension';
-
+import { taskWithEraTestNode } from './core/config-env';
 export * from './deployer';
 
 extendConfig((config, userConfig) => {
@@ -27,12 +27,12 @@ extendEnvironment((hre) => {
     hre.deployer = new DeployerExtension(hre);
 });
 
-task(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for ZKsync network')
+taskWithEraTestNode(TASK_DEPLOY_ZKSYNC, 'Runs the deploy scripts for ZKsync network', true)
     .addParam('script', 'A certain deploy script to be launched', '')
     .addOptionalParam('tags', 'specify which deploy script to execute via tags, separated by commas', undefined, string)
     .setAction(zkSyncDeploy);
 
-task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for ZKsync network')
+taskWithEraTestNode(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for ZKsync network', true)
     .addOptionalParam(
         'privateKeyOrIndex',
         'Private key or index of the account that will deploy the libraries',
@@ -53,7 +53,7 @@ task(TASK_DEPLOY_ZKSYNC_LIBRARIES, 'Runs the library deploy for ZKsync network')
     .addFlag('compileAllContracts', 'Flag to compile all contracts at the end of the process')
     .setAction(zkSyncLibraryDeploy);
 
-task(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for ZKsync network')
+taskWithEraTestNode(TASK_DEPLOY_ZKSYNC_CONTRACT, 'Runs the deploy scripts for ZKsync network', true)
     .addParam('contractName', 'A contract name or a FQN', '')
     .addOptionalVariadicPositionalParam(
         'constructorArgsParams',

@@ -3,7 +3,12 @@ import chalk from 'chalk';
 
 import { PROCESS_TERMINATION_SIGNALS } from './constants';
 
-export class JsonRpcServer {
+export interface RpcServer {
+    listen(args?: string[], blockProcess?: boolean): Promise<void>;
+    stop(): Promise<void>;
+}
+
+export class JsonRpcServer implements RpcServer {
     private serverProcess: ChildProcess | null = null;
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
