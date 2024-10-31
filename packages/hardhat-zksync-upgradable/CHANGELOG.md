@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.7.0...@matterlabs/hardhat-zksync-upgradable-v1.8.0) (2024-10-31)
+
+
+### Features
+
+* add etherscan as verification interface ([#1518](https://github.com/matter-labs/hardhat-zksync/issues/1518)) ([cb38fa2](https://github.com/matter-labs/hardhat-zksync/commit/cb38fa2f87d524de89106f4727e13a446d1be936))
+
 ## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0...@matterlabs/hardhat-zksync-upgradable-v1.7.0) (2024-10-01)
 
 
