@@ -67,6 +67,7 @@ export async function extractMatchingContractInformation(
                 compilerInput: buildInfo.input,
                 contractOutput: buildInfo.output.contracts[sourceName][contractName],
                 solcVersion: buildInfo.solcVersion,
+                solcLongVersion: buildInfo.solcLongVersion,
                 sourceName,
                 contractName,
             };

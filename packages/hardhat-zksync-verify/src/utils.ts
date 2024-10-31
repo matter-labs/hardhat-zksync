@@ -1,10 +1,8 @@
 import axios from 'axios';
 import chalk from 'chalk';
 import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
-import { VerificationStatusResponse } from './zksync-block-explorer/verification-status-response';
-import { checkVerificationStatusService } from './zksync-block-explorer/service';
 import { ZkSyncVerifyPluginError } from './errors';
-import { PENDING_CONTRACT_INFORMATION_MESSAGE, WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
+import { WRONG_CONSTRUCTOR_ARGUMENTS } from './constants';
 import {
     CompilerSolcUserConfigNormalizer,
     OverrideCompilerSolcUserConfigNormalizer,
@@ -52,31 +50,6 @@ export function nextAttemptDelay(currentAttempt: number, baseDelay: number, base
     return baseDelay * 2 ** (currentAttempt - baseNumberOfAttempts);
 }
 
-export async function executeVeificationWithRetry(
-    requestId: number,
-    verifyURL: string,
-    maxRetries = 11,
-    baseRetries = 5,
-    baseDelayInMs = 2000,
-): Promise<VerificationStatusResponse | undefined> {
-    let retries = 0;
-
-    while (true) {
-        const response = await checkVerificationStatusService(requestId, verifyURL);
-        if (response.isVerificationSuccess() || response.isVerificationFailure()) {
-            return response;
-        }
-        retries += 1;
-        if (retries > maxRetries) {
-            console.info(chalk.cyan(PENDING_CONTRACT_INFORMATION_MESSAGE(requestId)));
-            return;
-        }
-
-        const delayInMs = nextAttemptDelay(retries, baseDelayInMs, baseRetries);
-        await delay(delayInMs);
-    }
-}
-
 export async function retrieveContractBytecode(address: string, hre: HardhatRuntimeEnvironment): Promise<string> {
     const provider = hre.network.provider;
     const bytecodeString = (await provider.send('eth_getCode', [address, 'latest'])) as string;
@@ -89,25 +62,6 @@ export async function retrieveContractBytecode(address: string, hre: HardhatRunt
         );
     }
     return deployedBytecode;
-}
-
-export function removeMultipleSubstringOccurrences(inputString: string, stringToRemove: string): string {
-    const lines = inputString.split('\n');
-    let output = '';
-    let firstIdentifierFound = false;
-
-    for (const line of lines) {
-        if (line.trim().includes(stringToRemove)) {
-            if (!firstIdentifierFound) {
-                output += `${line}\n`;
-                firstIdentifierFound = true;
-            }
-        } else {
-            output += `${line}\n`;
-        }
-    }
-
-    return output.trim();
 }
 
 export function parseWrongConstructorArgumentsError(string: string): string {
@@ -152,4 +106,14 @@ export function extractQueryParams(url: string): [string, { [k: string]: string 
     const newURL = parsedURL.origin + parsedURL.pathname;
 
     return [newURL, params];
+}
+
+export function printVerificationErrors(errors: Record<string, ZkSyncVerifyPluginError>) {
+    let errorMessage = 'hardhat-zksync-verify found one or more errors during the verification process:\n\n';
+
+    for (const [subtaskLabel, error] of Object.entries(errors)) {
+        errorMessage += `${subtaskLabel}:\n${error.message}\n\n`;
+    }
+
+    console.error(chalk.red(errorMessage));
 }

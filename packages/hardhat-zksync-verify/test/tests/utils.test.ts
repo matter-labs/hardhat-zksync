@@ -4,121 +4,12 @@ import axion from 'axios';
 import {
     delay,
     encodeArguments,
-    executeVeificationWithRetry,
     extractQueryParams,
     getZkVmNormalizedVersion,
     handleAxiosError,
     parseWrongConstructorArgumentsError,
-    removeMultipleSubstringOccurrences,
     retrieveContractBytecode,
 } from '../../src/utils';
-import * as service from '../../src/zksync-block-explorer/service';
-import { SolcMultiUserConfigExtractor } from '../../src/config-extractor';
-
-describe('executeVeificationWithRetry', () => {
-    let checkVerificationStatusServiceStub: sinon.SinonStub;
-
-    beforeEach(() => {
-        sinon.restore();
-    });
-
-    it('should return the verification status response when verification is successful', async () => {
-        const requestId = 123;
-        const verifyURL = 'https://example.com/verify';
-        const response = {
-            isVerificationSuccess: sinon.stub().returns(true),
-            isVerificationFailure: sinon.stub().returns(false),
-        };
-
-        checkVerificationStatusServiceStub = sinon
-            .stub(service, 'checkVerificationStatusService')
-            .resolves(response as any);
-
-        const result = await executeVeificationWithRetry(requestId, verifyURL);
-
-        expect(result).to.equal(response);
-        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
-    });
-
-    it('should return the verification status response when verification is failed', async () => {
-        const requestId = 123;
-        const verifyURL = 'https://example.com/verify';
-        const response = {
-            isVerificationSuccess: sinon.stub().returns(false),
-            isVerificationFailure: sinon.stub().returns(true),
-        };
-
-        checkVerificationStatusServiceStub = sinon
-            .stub(service, 'checkVerificationStatusService')
-            .resolves(response as any);
-
-        const result = await executeVeificationWithRetry(requestId, verifyURL);
-
-        expect(result).to.equal(response);
-        expect(checkVerificationStatusServiceStub.calledOnceWith(requestId, verifyURL)).to.equal(true);
-    });
-
-    it('should handle undefined overrides gracefully', () => {
-        const solidityConfig = {
-            compilers: [
-                {
-                    version: '0.8.17',
-                    eraVersion: 'latest',
-                    settings: {
-                        optimizer: {
-                            enabled: true,
-                            runs: 200,
-                        },
-                        outputSelection: {},
-                        metadata: {},
-                    },
-                },
-            ],
-            overrides: undefined,
-        };
-        const extractor = new SolcMultiUserConfigExtractor();
-
-        const result = extractor.extract(solidityConfig);
-
-        expect(result.compilers).to.deep.equal([
-            {
-                version: '0.8.17',
-                eraVersion: 'latest',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                    outputSelection: {},
-                    metadata: {},
-                },
-            },
-        ]);
-        expect(result!.overides!.size).to.equal(0);
-    });
-
-    it('should return undefined when max retries exceeded', async () => {
-        const requestId = 123;
-        const verifyURL = 'https://example.com/verify';
-        const maxRetries = 2;
-        const delayInMs = 100;
-
-        const response = {
-            isVerificationSuccess: sinon.stub().returns(false),
-            isVerificationFailure: sinon.stub().returns(false),
-        };
-
-        checkVerificationStatusServiceStub = sinon
-            .stub(service, 'checkVerificationStatusService')
-            .resolves(response as any);
-
-        const result = await executeVeificationWithRetry(requestId, verifyURL, maxRetries, delayInMs);
-
-        expect(result).to.equal(undefined);
-        expect(checkVerificationStatusServiceStub.callCount).to.equal(maxRetries + 1);
-        expect(checkVerificationStatusServiceStub.calledWith(requestId, verifyURL)).to.equal(true);
-    });
-});
 
 describe('handleAxiosError', () => {
     beforeEach(() => {
@@ -241,48 +132,6 @@ describe('retrieveContractBytecode', () => {
 
         const bytecode = await retrieveContractBytecode(address, hre as any);
         assert.strictEqual(bytecode, '1234', 'The function did not return the expected bytecode.');
-    });
-});
-
-describe('removeMultipleSubstringOccurrences', () => {
-    it('should remove all occurrences of the specified substring', () => {
-        const inputString = 'Hello, World!\n Hello, World! \nHello, World!';
-        const stringToRemove = 'Hello, World!';
-        const expectedOutput = 'Hello, World!';
-
-        const result = removeMultipleSubstringOccurrences(inputString, stringToRemove);
-
-        expect(result).to.equal(expectedOutput);
-    });
-
-    it('should handle empty input string', () => {
-        const inputString = '';
-        const stringToRemove = 'Hello, ';
-        const expectedOutput = '';
-
-        const result = removeMultipleSubstringOccurrences(inputString, stringToRemove);
-
-        expect(result).to.equal(expectedOutput);
-    });
-
-    it('should handle empty string to remove', () => {
-        const inputString = 'Hello, World!';
-        const stringToRemove = '';
-        const expectedOutput = 'Hello, World!';
-
-        const result = removeMultipleSubstringOccurrences(inputString, stringToRemove);
-
-        expect(result).to.equal(expectedOutput);
-    });
-
-    it('should handle no occurrences of the substring', () => {
-        const inputString = 'Hello, World!';
-        const stringToRemove = 'Foo, ';
-        const expectedOutput = 'Hello, World!';
-
-        const result = removeMultipleSubstringOccurrences(inputString, stringToRemove);
-
-        expect(result).to.equal(expectedOutput);
     });
 });
 

@@ -31,8 +31,6 @@ Import the plugin in the hardhat.config.ts file:
 
 `import "@matterlabs/hardhat-zksync-verify";`
 
-Add the verifyURL property to the ZKsync Era network in the hardhat.config.ts file as shown below:
-
 ```
 networks: {
     sepolia: {
@@ -42,12 +40,24 @@ networks: {
       url: "https://sepolia.era.zksync.dev", // The testnet RPC URL of ZKsync Era network.
       ethNetwork: "sepolia", // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
       zksync: true,
-      // Verification endpoint for Sepolia
-      verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification'
     }
 },
 
 ```
+### Updates introduced in plugin version 1.7.0.
+
+Etherscan verification is supported. To enable it, configure the etherscan property in the Hardhat configuration: 
+
+```
+etherscan: {
+  apiKey: 'APIKEY'
+}
+```
+If the etherscan property is configured and enabled, verification will run on Etherscan. Otherwise, the plugin will default to verifying on the ZKsync block explorer.
+
+For more information on how to create api keys, please [visit the documentation](https://docs.zksync.network/getting-started/viewing-api-usage-statistics).
+For more information on how to configre etherscan for multiple api keys, please [visit the documentation](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-verify#multiple-api-keys-and-alternative-block-explorers)
+
 | 🔧 properties              | 📄 Description                                                                                                                       |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | zkTestnet                  | Arbitrary ZKsync Era network name. You can select this as the default network using the defaultNetwork property.                     |
@@ -55,7 +65,9 @@ networks: {
 | ethNetwork                 | Field with the URL of the Ethereum node.                                                                                             |
 | ethers                     | Provider for the network if the configuration is not provided. This field is required for all ZKsync networks used by this plugin.   |
 | zksync                     | Flag that indicates a ZKsync Era network configuration. This field is set to true for all ZKsync Era networks.                       |
-| verifyURL                  | Field that points to the verification endpoint for the specific ZKsync network. This parameter is optional.                          |
+| verifyURL                  | This field specifies the verification endpoint for the connected ZKsync network. From version 1.7.0, the plugin automatically resolves this endpoint based on the network configuration. If you are using a custom chain with an API compatible with the zksync block explorer, you can manually set the URL here.                     |
+| browserVerifyURL                  | Introduced in version 1.7.0 of the plugin, this field automatically resolves the browser URL based on the network configuration. If you're using a custom chain, you can manually specify the URL here.                     |
+| enableVerifyURL                  | Introduced in version 1.7.0 of the plugin, this flag forces verification on the ZKsync block explorer. It allows you to verify the same contract on both Etherscan and the ZKsync block explorer.                     |
 
 Default values for verifyURL are:
 
@@ -72,12 +84,6 @@ When executed in this manner, the verification task attempts to compare the comp
 `yarn hardhat verify --network <network> <contract address> --contract <fully qualified name>`
 
 With the --contract parameter you can also specify which contract from your local setup you want to verify by specifying its Fully qualified name. Fully qualified name structure looks like this: "contracts/AContract.sol:TheContract"
-
-The following command checks the status of the verification request for the specific verification ID:
-
-`yarn hardhat verify-status --verification-id <your verification id>`
-
-
 
 **Constructor arguments**
 

@@ -1,12 +1,7 @@
-enum VerificationStatusEnum {
-    SUCCESSFUL = 'successful',
-    FAILED = 'failed',
-    QUEUED = 'queued',
-    IN_PROGRESS = 'in_progress',
-}
+import { VerificationStatusResponse } from '../verification-status-response';
 
-export class VerificationStatusResponse {
-    public readonly status: VerificationStatusEnum;
+export class ZksyncBlockExplorerResponse implements VerificationStatusResponse {
+    public readonly status: string;
     public readonly error: string | undefined;
     public readonly compilationErrors: string[] | undefined;
 
@@ -35,18 +30,18 @@ export class VerificationStatusResponse {
     }
 
     public isPending() {
-        return this.status === VerificationStatusEnum.IN_PROGRESS;
+        return this.status === 'in_progress' || this.status === 'queued';
     }
 
-    public isVerificationFailure() {
-        return this.status === VerificationStatusEnum.FAILED;
+    public isFailure() {
+        return this.status === 'failed';
     }
 
-    public isQueued() {
-        return this.status === VerificationStatusEnum.QUEUED;
+    public isOk() {
+        return this.status === 'successful';
     }
 
-    public isVerificationSuccess() {
-        return this.status === VerificationStatusEnum.SUCCESSFUL;
+    public isSuccess() {
+        return this.isOk();
     }
 }

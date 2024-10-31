@@ -7,6 +7,13 @@ export const TASK_VERIFY = 'verify';
 export const TASK_VERIFY_VERIFY = 'verify:verify';
 export const TASK_VERIFY_CONTRACT = 'zk:verify:contract';
 export const TASK_CHECK_VERIFICATION_STATUS = 'verify-status';
+export const TASK_VERIFY_ETHERSCAN = 'verify:etherscan';
+
+export const TASK_VERIFY_ZKSYNC_EXPLORER = 'verify:zksync-blockexplorer';
+export const TASK_VERIFY_ZKSYNC_ETHERSCAN = 'verify:zksync-etherscan';
+
+export const TASK_VERIFY_RESOLVE_ARGUMENTS = 'verify:resolve-arguments';
+export const TASK_VERIFY_GET_VERIFICATION_SUBTASKS = 'verify:get-verification-subtasks';
 
 export const TASK_VERIFY_GET_CONSTRUCTOR_ARGUMENTS = 'verify:get-constructor-arguments';
 export const TASK_VERIFY_GET_LIBRARIES = 'verify:get-libraries';
@@ -93,13 +100,11 @@ export const COMPILER_VERSION_NOT_SUPPORTED =
 
 export const WRONG_CONSTRUCTOR_ARGUMENTS = 'types/values length mismatch';
 
-export const PENDING_CONTRACT_INFORMATION_MESSAGE = (verificationId: number) => `
+export const PENDING_CONTRACT_INFORMATION_MESSAGE = (browserUrl?: string) => `
 Your verification request has been sent, but our servers are currently overloaded and we could not confirm that the verification was successful.
 Please try one of the following options:
-  1. Use the your verification request ID (${verificationId}) to check the status of the pending verification process by typing the command 'yarn hardhat verify-status --verification-id ${verificationId}'
-  2. Manually check the contract's code on the zksync block explorer: https://explorer.zksync.io/
-  3. Run the verification process again
-  `;
+  1. Manually check the contract's code on the explorer ${browserUrl ? `: ${browserUrl}` : '.'}
+  2. Run the verification process again`;
 
 export const SINGLE_FILE_CODE_FORMAT = 'solidity-single-file';
 export const JSON_INPUT_CODE_FORMAT = 'solidity-standard-json-input';
