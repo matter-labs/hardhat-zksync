@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.8.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.0...@matterlabs/hardhat-zksync-upgradable-v1.8.1) (2024-11-01)
+
+
+### Bug Fixes
+
+* provide paymaster params for the beacon deployment ([#1523](https://github.com/matter-labs/hardhat-zksync/issues/1523)) ([6453bfa](https://github.com/matter-labs/hardhat-zksync/commit/6453bfa4ade4ad31879fd99f4556b1e727088927))
+
 ## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.7.0...@matterlabs/hardhat-zksync-upgradable-v1.8.0) (2024-10-31)
 
 
