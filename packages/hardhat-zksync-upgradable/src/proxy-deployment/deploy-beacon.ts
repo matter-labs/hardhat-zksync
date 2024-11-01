@@ -89,13 +89,23 @@ async function deployProxyBeacon(
         console.info(chalk.green('Beacon impl deployed at', impl));
     }
 
+    const customDataBeacon = {
+        customData: {
+            salt: opts.salt,
+            paymasterParams: opts.paymasterParams,
+            ...opts.otherCustomData,
+        },
+    };
+
     const upgradeableBeaconFactory = await getUpgradeableBeaconFactory(hre, wallet);
 
     const beaconDeployment: Required<Deployment & DeployTransaction> = await deploy(
         upgradeableBeaconFactory,
         impl,
         opts.initialOwner ?? wallet.address,
+        customDataBeacon,
     );
+
     if (!quiet) {
         console.info(chalk.green('Beacon deployed at: ', beaconDeployment.address));
     }
