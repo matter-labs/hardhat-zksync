@@ -14,7 +14,7 @@ const config: HardhatUserConfig = {
             },
         },
     },
-    defaultNetwork:'zkSyncNetwork',
+    defaultNetwork:'inMemoryNode',
     networks: {
         hardhat: {
             zksync: true,
@@ -27,6 +27,11 @@ const config: HardhatUserConfig = {
             zksync: true,
             ethNetwork: 'eth',
             url: 'http://0.0.0.0:3050',
+        },
+        inMemoryNode: {
+            url: "http://0.0.0.0:8011",
+            ethNetwork: "",
+            zksync: true,
         },
     },
     solidity: {

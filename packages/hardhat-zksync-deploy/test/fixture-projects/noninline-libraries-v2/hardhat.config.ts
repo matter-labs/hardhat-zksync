@@ -13,7 +13,7 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:8545',
         },
         zkSyncNetwork: {
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'ethNetwork',
             zksync: true,
             accounts: ['0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110'],

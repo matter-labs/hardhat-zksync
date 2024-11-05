@@ -86,17 +86,20 @@ jobs:
           cache: pnpm
       - uses: actions/checkout@v3
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          repository: matter-labs/era-test-node
+          path: era-test-node
 
       - name: Run server
         run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+          cd era-test-node
+          cd scripts
+          chmod +x install.sh
+          ./install.sh
+          era_test_node run &
 
       - name: Wait until server is up
         run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do sleep 1; done
       
       - name: Run fixture-projects script
         run: |
@@ -118,13 +121,16 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          repository: matter-labs/era-test-node
+          path: era-test-node
 
       - name: Run server
         run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+          cd era-test-node
+          cd scripts
+          chmod +x install.sh
+          ./install.sh
+          era_test_node run &
 
       - uses: pnpm/action-setup@v3
 
@@ -140,7 +146,7 @@ jobs:
 
       - name: Wait until server is up
         run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do sleep 1; done
 
       - name: Test zksolc example
         run: |
@@ -234,13 +240,16 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          repository: matter-labs/era-test-node
+          path: era-test-node
 
       - name: Run server
         run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+          cd era-test-node
+          cd scripts
+          chmod +x install.sh
+          ./install.sh
+          era_test_node run &
 
       - uses: pnpm/action-setup@v3
 
@@ -256,7 +265,7 @@ jobs:
 
       - name: Wait until server is up
         run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do sleep 1; done
 
       - name: Test zksync upgradable plugin
         run: |
@@ -332,15 +341,16 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          repository: matter-labs/era-test-node
+          path: era-test-node
 
       - name: Run server
         run: |
-          cd local-setup
-          ./start.sh &>../server.log &
-
-      - uses: pnpm/action-setup@v3
+          cd era-test-node
+          cd scripts
+          chmod +x install.sh
+          ./install.sh
+          era_test_node run &
 
       - uses: actions/setup-node@v3
         with:
@@ -354,7 +364,7 @@ jobs:
 
       - name: Wait until server is up
         run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do sleep 1; done
 
       - name: Test deploy package
         run: |
@@ -379,13 +389,16 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          repository: matter-labs/era-test-node
+          path: era-test-node
 
       - name: Run server
         run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+          cd era-test-node
+          cd scripts
+          chmod +x install.sh
+          ./install.sh
+          era_test_node run &
 
       - uses: pnpm/action-setup@v3
 
@@ -401,7 +414,7 @@ jobs:
 
       - name: Wait until server is up
         run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
+          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:8011; do sleep 1; done
 
       - name: Test zksync-ethers example
         run: |

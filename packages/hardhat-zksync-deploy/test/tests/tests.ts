@@ -56,7 +56,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('noninline-libraries artifact', async function () {
-        useEnvironment('noninline-libraries-v1', 'ZKsyncNetwork');
+        useEnvironment('noninline-libraries-v1', 'zkSyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -79,7 +79,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('noninline-libraries artifact with private key in config', async function () {
-        useEnvironment('noninline-libraries-v2', 'ZKsyncNetwork');
+        useEnvironment('noninline-libraries-v2', 'zkSyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -100,7 +100,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('should deploy libraries using mnemonic', async function () {
-        useEnvironment('deployment-with-mnemonic', 'ZKsyncNetwork');
+        useEnvironment('deployment-with-mnemonic', 'zkSyncNetwork');
 
         it('Should compile libraries', async function () {
             const libraries = this.env.config.zksolc.settings.libraries;
@@ -154,7 +154,7 @@ describe('Plugin tests', async function () {
             );
             assert.equal(
                 deployer.zkWallet.provider._getConnection().url,
-                'http://localhost:3050',
+                'http://127.0.0.1:3050',
                 'Incorrect default L2 network provider',
             );
         });
@@ -249,7 +249,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('Test with integritated deployer in hre', async function () {
-        useEnvironment('deployer-in-hre', 'ZKsyncNetwork2');
+        useEnvironment('deployer-in-hre', 'zkSyncNetwork2');
 
         it('should deploy with integrated wallet', async function () {
             await this.env.run('compile');
@@ -390,7 +390,7 @@ describe('Plugin tests', async function () {
     });
 
     describe('Deply scripts with priority for all deploy folders', async function () {
-        useEnvironment('priority', 'ZKsyncNetwork');
+        useEnvironment('priority', 'zkSyncNetwork');
         it('Should run scripts is order with priority', async function () {
             const baseDir = this.env.config.paths.root;
 

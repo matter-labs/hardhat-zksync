@@ -44,6 +44,9 @@ importers:
       '@matterlabs/hardhat-zksync-deploy':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-deploy
+      '@matterlabs/hardhat-zksync-node':
+        specifier: workspace:^
+        version: link:../../packages/hardhat-zksync-node
       '@matterlabs/hardhat-zksync-solc':
         specifier: workspace:^
         version: link:../../packages/hardhat-zksync-solc
@@ -3356,6 +3359,7 @@ packages:
 
   ethereumjs-abi@0.6.8:
     resolution: {integrity: sha512-Tx0r/iXI6r+lRsdvkFDlut0N08jWMnKRZ6Gkq+Nmw75lZe4e6o3EkSnkaBP5NF6+m5PTGAr9JP43N3LyeoglsA==, tarball: https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz}
+    deprecated: This library has been deprecated and usage is discouraged.
 
   ethereumjs-util@6.2.1:
     resolution: {integrity: sha512-W2Ktez4L01Vexijrm5EB6w7dg4n/TgpoYU4avuT5T3Vmnw/eCRtiBrJfQYS/DCSvDIOLn2k57GcHdeBcgVxAqw==, tarball: https://registry.npmjs.org/ethereumjs-util/-/ethereumjs-util-6.2.1.tgz}

@@ -17,6 +17,7 @@ const config: HardhatUserConfig = {
             },
         }
     },
+    defaultNetwork: 'inMemoryNode',
     networks: {
         hardhat: {
             zksync: true,

@@ -13,6 +13,7 @@ const config = {
             },
         }
     },
+    defaultNetwork: 'inMemoryNode',
     networks: {
         hardhat: {
             zksync: true,

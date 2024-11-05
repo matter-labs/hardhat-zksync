@@ -12,7 +12,7 @@ const config: HardhatUserConfig = {
         },
         zkSyncNetwork: {
             zksync: true,
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'ethNetwork',
             verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification',
         },

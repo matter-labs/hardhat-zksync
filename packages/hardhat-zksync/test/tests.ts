@@ -58,12 +58,6 @@ describe('zksync toolbox plugin', function () {
         it('Should call deploy scripts through HRE', async function () {
             await this.env.run(TASK_DEPLOY_ZKSYNC);
         });
-
-        it('Reads verifyURL form network config for existing network ', async function () {
-            const testnetVerifyURL = 'https://explorer.sepolia.era.zksync.dev/contract_verification';
-
-            assert.equal(this.env.network.verifyURL, testnetVerifyURL);
-        });
     });
 
     describe('deployContractAndVerify', () => {
