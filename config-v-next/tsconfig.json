@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.node20.json",
+  "compilerOptions": {
+    "outDir": "${configDir}/dist",
+    "declaration": true,
+    "declarationMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "isolatedDeclarations": false,
+    "noEmitOnError": true,
+    "noImplicitOverride": true,
+    "skipDefaultLibCheck": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "allowJs": true,
+    "typeRoots": ["${configDir}/node_modules/@types"]
+  },
+  "exclude": ["${configDir}/dist", "${configDir}/node_modules"]
+}

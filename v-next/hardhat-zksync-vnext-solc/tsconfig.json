@@ -1,0 +1,7 @@
+{
+  "extends": "../../config-v-next/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+  },
+  "exclude": ["./dist", "./node_modules", "./test/fixture-projects"]
+}
