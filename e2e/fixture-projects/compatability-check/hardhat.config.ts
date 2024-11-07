@@ -20,14 +20,9 @@ const config = {
         },
         inMemoryNode: {
             url: "http://0.0.0.0:8011",
-            ethNetwork: "",
-            zksync: true,
-        },
-        dockerizedNode: {
-            url: "http://0.0.0.0:3050",
             ethNetwork: "http://0.0.0.0:8545",
             zksync: true,
-          },
+        },
     },
     solidity: {
         version: '0.8.17',

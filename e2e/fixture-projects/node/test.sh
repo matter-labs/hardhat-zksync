@@ -6,19 +6,13 @@ set -e
 
 echo "Running node"
 
-# Kill any existing process on port 8011
-kill_process_on_port 8011
-
-pnpm add @matterlabs/hardhat-zksync-node@1.0.3
-pnpm add ethers@6.0.0
-
 pnpm hardhat node-zksync &
 
 sleep 3
 
 LOG_FILE="./era_test_node.log"
 
-if grep -q "Node is ready at 127.0.0.1:8011" "$LOG_FILE"; then
+if grep -q "Node is ready at 127.0.0.1:8012" "$LOG_FILE"; then
     echo "ZKsync node started successfully."
 else
     echo "Failed to start ZKsync node. Exiting with code 1."
