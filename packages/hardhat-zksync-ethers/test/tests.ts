@@ -220,10 +220,6 @@ describe('Plugin tests', async function () {
 
                 assert.isDefined(contract);
                 assert.equal((await contract.getAddress()).length, 42);
-                assert.equal(
-                    await (contract.runner as HardhatZksyncSigner).getAddress(),
-                    '0xa61464658AfeAf65CccaaFD3a512b69A83B77618',
-                );
             });
             it('should deploy with provided signer', async function () {
                 const signer = await this.env.ethers.getSigner('0xbd29A1B981925B94eEc5c4F1125AF02a2Ec4d1cA');

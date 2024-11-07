@@ -197,11 +197,6 @@ jobs:
           pnpm hardhat compile
           pnpm hardhat deploy-zksync
 
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
-
   upgradable:
     strategy:
       matrix:
@@ -320,11 +315,6 @@ jobs:
           cd packages/hardhat-zksync-deploy
           pnpm test
 
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
-
   zksync-ethers:
     strategy:
       matrix:
@@ -357,11 +347,6 @@ jobs:
         run: |
           cd packages/hardhat-zksync-ethers
           pnpm test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   node:
     strategy:
