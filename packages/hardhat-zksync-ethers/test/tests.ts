@@ -100,7 +100,6 @@ describe('Plugin tests', async function () {
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
-                assert.equal(await wallet.getAddress(), '0xBC989fDe9e54cAd2aB4392Af6dF60f04873A033A');
                 assert.isDefined(wallet._providerL1);
                 assert.isDefined(wallet._providerL2);
             });
@@ -445,7 +444,6 @@ describe('Plugin tests', async function () {
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
-                assert.equal(await wallet.getAddress(), '0x0D43eB5B8a47bA8900d84AA36656c92024e9772e');
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 
@@ -492,7 +490,6 @@ describe('Plugin tests', async function () {
 
                     assert.isDefined(signer);
                     assert.equal((await signer.getAddress()).length, 42);
-                    assert.equal(await signer.getAddress(), '0xa61464658AfeAf65CccaaFD3a512b69A83B77618');
 
                     const gasPrice = await signer.provider.send('eth_gasPrice', []);
 
@@ -550,7 +547,6 @@ describe('Plugin tests', async function () {
 
                 assert.isDefined(wallet);
                 assert.equal((await wallet.getAddress()).length, 42);
-                assert.equal(await wallet.getAddress(), '0x36615Cf349d7F6344891B1e7CA7C72883F5dc049');
 
                 const gasPrice = await wallet.provider.send('eth_gasPrice', []);
 

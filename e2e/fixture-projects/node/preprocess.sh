@@ -76,11 +76,13 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0",
     "zksync-ethers": "^6.15.0",
+    "ethers": "^6.12.2",
     "c8": "^9.1.0"
   },
   "peerDependencies": {
     "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.15.0"
+    "zksync-ethers": "^6.15.0",
+    "ethers": "^6.12.2"
   },
   "prettier": {
     "tabWidth": 4,
