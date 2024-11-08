@@ -25,14 +25,14 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:8545',
         },
         ZKsyncNetwork: {
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'ethNetwork',
             zksync: true,
             deployPaths: ['deploy-ZKsync', 'deploy'],
             accounts: ['0xac1e735be8536c6534bb4f17f06f6afc73b2b5ba84ac2cfb12f7461b20c0bbe3', '0x28a574ab2de8a00364d5dd4b07c4f2f574ef7fcc2a86a197f65abaec836d1959'],
         },
         ZKsyncNetworkV2: {
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'ethNetwork',
             zksync: true,
             forceDeploy: true,

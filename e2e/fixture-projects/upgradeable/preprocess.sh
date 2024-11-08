@@ -52,7 +52,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "fs-extra": "^11.2.0",
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.8.0",
+    "zksync-ethers": "^6.15.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
     "compare-versions": "^6.1.0"

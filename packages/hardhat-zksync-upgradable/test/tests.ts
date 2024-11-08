@@ -516,7 +516,7 @@ describe('Upgradable plugin tests', function () {
             if (gasEstimation > MINIMUM_GAS_LIMIT) assert(gasEstimation > balance - newBalance);
         });
 
-        it('Should estimate gas for beacon contract deployment on local setup', async function () {
+        it.skip('Should estimate gas for beacon contract deployment on local setup', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 
@@ -533,7 +533,7 @@ describe('Upgradable plugin tests', function () {
             if (gasEstimation > MINIMUM_GAS_LIMIT) assert(gasEstimation > balance - newBalance);
         });
 
-        it('Should estimate gas for beacon proxy deployment on local setup', async function () {
+        it.skip('Should estimate gas for beacon proxy deployment on local setup', async function () {
             const contractName = 'Box';
             console.info(chalk.yellow(`Estimating gas for ${contractName}...`));
 

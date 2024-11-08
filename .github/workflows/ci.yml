@@ -84,20 +84,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
+
       - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
 
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
 
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-      
       - name: Run fixture-projects script
         run: |
             cd e2e
@@ -116,15 +108,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
 
       - uses: pnpm/action-setup@v3
 
@@ -137,10 +122,6 @@ jobs:
         run: |
           pnpm install
           pnpm build
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksolc example
         run: |
@@ -216,11 +197,6 @@ jobs:
           pnpm hardhat compile
           pnpm hardhat deploy-zksync
 
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
-
   upgradable:
     strategy:
       matrix:
@@ -232,15 +208,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
 
       - uses: pnpm/action-setup@v3
 
@@ -253,10 +222,6 @@ jobs:
         run: |
           pnpm install
           pnpm build
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksync upgradable plugin
         run: |
@@ -330,15 +295,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
 
       - uses: pnpm/action-setup@v3
 
@@ -352,19 +310,10 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-
       - name: Test deploy package
         run: |
           cd packages/hardhat-zksync-deploy
           pnpm test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   zksync-ethers:
     strategy:
@@ -378,14 +327,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
 
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run Era Test Node
+        uses: dutterbutter/era-test-node-action@latest
 
       - uses: pnpm/action-setup@v3
 
@@ -399,19 +343,10 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-
       - name: Test zksync-ethers example
         run: |
           cd packages/hardhat-zksync-ethers
           pnpm test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   node:
     strategy:

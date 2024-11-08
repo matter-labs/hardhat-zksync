@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
       }
     }
   },
-  defaultNetwork:'dockerizedNode',
+  defaultNetwork:'inMemoryNode',
   networks: {
     hardhat: {
       zksync: true,
@@ -32,6 +32,11 @@ const config: HardhatUserConfig = {
       ethNetwork: "http://0.0.0.0:8545",
       zksync: true,
     },
+    inMemoryNode: {
+      url: "http://0.0.0.0:8011",
+      ethNetwork: "",
+      zksync: true,
+  }
   },
   vyper: {
     version: "0.3.3"

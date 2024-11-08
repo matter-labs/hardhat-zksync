@@ -18,18 +18,18 @@ assert_directory_exists "artifacts-zk/contracts/Constant.sol"
 assert_directory_not_empty "artifacts-zk"
 assert_directory_not_empty "cache-zk"
 
-DEPLOY_GREETER_OUTPUT=$(pnpm hardhat run scripts/deploy-greeter.ts --network dockerizedNode)
+DEPLOY_GREETER_OUTPUT=$(pnpm hardhat run scripts/deploy-greeter.ts)
 
 check_log_value "$DEPLOY_GREETER_OUTPUT" "Successful greeting from the contract"
 
-DEPLOY_BOX_OUTPUT=$(pnpm hardhat run scripts/deploy-box-proxy.ts --network dockerizedNode)
+DEPLOY_BOX_OUTPUT=$(pnpm hardhat run scripts/deploy-box-proxy.ts)
 
 check_log_value "$DEPLOY_BOX_OUTPUT" "Box value is:  42n"
 
-UPGRADE_BOX_OUTPUT=$(pnpm hardhat run scripts/upgrade-box.ts --network dockerizedNode)
+UPGRADE_BOX_OUTPUT=$(pnpm hardhat run scripts/upgrade-box.ts)
 
 check_log_value "$UPGRADE_BOX_OUTPUT" "Successfully upgraded Box to BoxV2"
 
-DEPLOY_VOTING_OUTPUT=$(pnpm hardhat deploy-zksync --network dockerizedNode)
+DEPLOY_VOTING_OUTPUT=$(pnpm hardhat deploy-zksync)
 
 check_log_value "$DEPLOY_VOTING_OUTPUT" "Voting sucessfull!"

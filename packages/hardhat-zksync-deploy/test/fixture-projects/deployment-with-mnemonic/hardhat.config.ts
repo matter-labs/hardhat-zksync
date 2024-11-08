@@ -14,15 +14,12 @@ const config: HardhatUserConfig = {
             url: 'http://0.0.0.0:8545',
         },
         zkSyncNetwork: {
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'ethNetwork',
             zksync: true,
             accounts: {
                 // found in zksync-era github repo
-                mnemonic: 'fine music test violin matrix prize squirrel panther purchase material script deal',
-                path: "m/44'/60'/0'/1",
-                initialIndex: 0,
-                count: 2,
+                mnemonic: 'mass wild lava ripple clog cabbage witness shell unable tribe rubber enter',
             },
         },
     },
