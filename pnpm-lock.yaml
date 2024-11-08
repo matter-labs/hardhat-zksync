@@ -1458,8 +1458,8 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2(debug@4.3.5)
       cbor:
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^10.0.3
+        version: 10.0.3
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -2831,6 +2831,10 @@ packages:
   camelcase@6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
+
+  cbor@10.0.3:
+    resolution: {integrity: sha512-72Jnj81xMsqepqdcSdf2+fflz/UDsThOHy5hj2MW5F5xzHL8Oa0KQ6I6V9CwVUPxg5pf+W9xp6W2KilaRXWWtw==}
+    engines: {node: '>=18'}
 
   cbor@8.1.0:
     resolution: {integrity: sha512-DwGjNW9omn6EwP70aXsn7FQJx5kO12tX0bZkaTjzdVFM6/7nhA4t0EENocKGx6D2Bch9PE2KzCUf5SceBdeijg==}
@@ -6669,6 +6673,10 @@ snapshots:
   camelcase@5.3.1: {}
 
   camelcase@6.3.0: {}
+
+  cbor@10.0.3:
+    dependencies:
+      nofilter: 3.1.0
 
   cbor@8.1.0:
     dependencies:
