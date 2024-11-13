@@ -89,7 +89,7 @@ export class ZkSyncExplorerService extends VerificationService<
         try {
             const [verifyUrl, params] = extractQueryParams(this.verifyUrl);
             const request = this.generateRequest(req);
-            const response = await axios.post(verifyUrl, request, params);
+            const response = await axios.post(verifyUrl, request, { params });
             const zkSyncBlockExplorerResponse = new ZkSyncBlockExplorerVerificationIdResponse(response);
 
             if (!zkSyncBlockExplorerResponse.isOk()) {
