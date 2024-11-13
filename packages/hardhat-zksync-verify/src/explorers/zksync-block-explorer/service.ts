@@ -1,11 +1,7 @@
-import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 import axios from 'axios';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { COMPILATION_ERRORS, NO_MATCHING_CONTRACT } from '../../constants';
-import { ZkSyncVerifyPluginError } from '../../errors';
-import { ContractInformation } from '../../solc/types';
+import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 import { extractQueryParams, handleAxiosError } from '../../utils';
-import { ZksyncContractVerificationInvalidStatusCodeError } from '../errors';
 import {
     ContractVerifyDataInfo,
     VerificationService,
@@ -13,8 +9,12 @@ import {
     VerificationServiceVerificationIdResponse,
 } from '../service';
 import { ZkSyncExplorerVerifyRequest } from '../verify-contract-request';
-import { builtinChains } from './chain-config';
+import { ZkSyncVerifyPluginError } from '../../errors';
+import { ContractInformation } from '../../solc/types';
+import { COMPILATION_ERRORS, NO_MATCHING_CONTRACT } from '../../constants';
+import { ZksyncContractVerificationInvalidStatusCodeError } from '../errors';
 import { ZksyncBlockExplorerResponse } from './verification-status-response';
+import { builtinChains } from './chain-config';
 
 export class ZkSyncExplorerService extends VerificationService<
     number,
