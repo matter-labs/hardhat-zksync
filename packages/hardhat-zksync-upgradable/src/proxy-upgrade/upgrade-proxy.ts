@@ -91,7 +91,7 @@ async function upgradeProxy(
 
     const { impl: nextImpl } = await deployProxyImpl(hre, factory, opts, proxyAddress);
 
-    const upgradeTo = await getUpgrader(hre, proxyAddress, wallet);
+    const upgradeTo = await getUpgrader(hre, proxyAddress, wallet, opts);
     const call = encodeCall(factory, opts.call);
     const upgradeTx = await upgradeTo(nextImpl, call);
 
@@ -105,7 +105,12 @@ async function upgradeProxy(
     return inst as zk.Contract;
 }
 
-async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string, wallet: zk.Wallet): Promise<Upgrader> {
+async function getUpgrader(
+    hre: HardhatRuntimeEnvironment,
+    proxyAddress: string,
+    wallet: zk.Wallet,
+    opts?: UpgradeProxyOptions,
+): Promise<Upgrader> {
     const provider = wallet.provider as zk.Provider;
 
     const adminAddress = await getAdminAddress(provider, proxyAddress);
@@ -115,7 +120,12 @@ async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string,
         const upgradeInterfaceVersion = await getUpgradeInterfaceVersion(provider, proxyAddress);
         if (upgradeInterfaceVersion === '5.0.0') {
             const proxyV5 = await attachITransparentUpgradeableProxyV5(proxyAddress, wallet);
-            return (nextImpl, call) => proxyV5.upgradeToAndCall(nextImpl, call ?? '0x');
+            return (nextImpl, call) =>
+                proxyV5.upgradeToAndCall(nextImpl, call ?? '0x', {
+                    customData: {
+                        paymasterParams: opts?.paymasterParams,
+                    },
+                });
         }
         if (upgradeInterfaceVersion !== undefined) {
             // Log as debug if the interface version is an unknown string.
@@ -125,13 +135,29 @@ async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string,
             );
         }
         const proxyV4 = await attachITransparentUpgradeableProxyV4(proxyAddress, wallet);
-        return (nextImpl, call) => (call ? proxyV4.upgradeToAndCall(nextImpl, call) : proxyV4.upgradeTo(nextImpl));
+        return (nextImpl, call) =>
+            call
+                ? proxyV4.upgradeToAndCall(nextImpl, call, {
+                      customData: {
+                          paymasterParams: opts?.paymasterParams,
+                      },
+                  })
+                : proxyV4.upgradeTo(nextImpl, {
+                      customData: {
+                          paymasterParams: opts?.paymasterParams,
+                      },
+                  });
     } else {
         const upgradeInterfaceVersion = await getUpgradeInterfaceVersion(provider, adminAddress);
 
         if (upgradeInterfaceVersion === '5.0.0') {
             const adminV5 = await attachProxyAdminV5(adminAddress, wallet);
-            return (nextImpl, call) => adminV5.upgradeAndCall(proxyAddress, nextImpl, call ?? '0x');
+            return (nextImpl, call) =>
+                adminV5.upgradeAndCall(proxyAddress, nextImpl, call ?? '0x', {
+                    customData: {
+                        paymasterParams: opts?.paymasterParams,
+                    },
+                });
         }
         if (upgradeInterfaceVersion !== undefined) {
             // Log as debug if the interface version is an unknown string.
@@ -142,7 +168,17 @@ async function getUpgrader(hre: HardhatRuntimeEnvironment, proxyAddress: string,
         }
         const adminV4 = await attachProxyAdminV4(adminAddress, wallet);
         return (nextImpl, call) =>
-            call ? adminV4.upgradeAndCall(proxyAddress, nextImpl, call) : adminV4.upgrade(proxyAddress, nextImpl);
+            call
+                ? adminV4.upgradeAndCall(proxyAddress, nextImpl, call, {
+                      customData: {
+                          paymasterParams: opts?.paymasterParams,
+                      },
+                  })
+                : adminV4.upgrade(proxyAddress, nextImpl, {
+                      customData: {
+                          paymasterParams: opts?.paymasterParams,
+                      },
+                  });
     }
 }
 
