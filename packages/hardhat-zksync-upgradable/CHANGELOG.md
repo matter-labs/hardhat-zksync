@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.8.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.1...@matterlabs/hardhat-zksync-upgradable-v1.8.2) (2024-11-22)
+
+
+### Bug Fixes
+
+* add paymaster support for implementation upgrade ([#1545](https://github.com/matter-labs/hardhat-zksync/issues/1545)) ([ddf17c4](https://github.com/matter-labs/hardhat-zksync/commit/ddf17c4bc7722e50cb0521148310981c2bd1034f))
+
 ## [1.8.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.0...@matterlabs/hardhat-zksync-upgradable-v1.8.1) (2024-11-01)
 
 
