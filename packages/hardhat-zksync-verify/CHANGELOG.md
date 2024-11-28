@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.7.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.0...@matterlabs/hardhat-zksync-verify-v1.7.1) (2024-11-25)
+
+
+### Bug Fixes
+
+* verify contract params format ([#1536](https://github.com/matter-labs/hardhat-zksync/issues/1536)) ([02e751e](https://github.com/matter-labs/hardhat-zksync/commit/02e751e0f6150f2a335a278efca3bd4689f3f020))
+
 ## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.6.0...@matterlabs/hardhat-zksync-verify-v1.7.0) (2024-10-31)
 
 
