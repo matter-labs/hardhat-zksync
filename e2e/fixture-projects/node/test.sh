@@ -6,7 +6,7 @@ set -e
 
 echo "Running node"
 
-pnpm hardhat node-zksync &
+pnpm hardhat node-zksync --port 8012 &
 
 sleep 10
 
