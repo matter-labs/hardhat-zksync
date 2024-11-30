@@ -32,7 +32,7 @@ async function wrapTaskWithNode(taskArgs: TaskArguments, env: any, runSuper: Run
         return await runSuper(taskArgs);
     }
     const zkSyncGlobal = global as ZKSyncTasksWithWrappedNode;
-    const { commandArgs, server, port } = await startServer();
+    const { commandArgs, server, port } = await startServer(undefined, false, { quiet: true });
     try {
         await server.listen(commandArgs, false);
         await waitForNodeToBeReady(port);
