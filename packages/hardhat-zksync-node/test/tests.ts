@@ -187,18 +187,15 @@ describe('node-zksync plugin', async function () {
                     '--show-gas-details=all',
                     '--show-calls=user',
                     '--resolve-hashes',
+                    "--show-event-logs=true",
+                    "--show-node-config=false",
+                    "--show-tx-summary=false",
+                    "--quiet",
                     '--dev-use-local-contracts',
                     'fork',
                     'mainnet',
                     '--fork-at',
-                    '100',
-                    '--show-event-logs',
-                    'true',
-                    '--show-node-config',
-                    'false',
-                    '--show-tx-summary',
-                    'false',
-                    '--quiet'
+                    '100'
                 ]);
             });
 
