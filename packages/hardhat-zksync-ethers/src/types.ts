@@ -21,6 +21,7 @@ export interface ZkSyncArtifact extends Artifact {
 export interface ZkFactoryOptions {
     wallet?: Wallet;
     signer?: HardhatZksyncSigner;
+    libraries?: { [libraryName: string]: string };
 }
 
 export type HardhatZksyncSignerOrWallet = Wallet | HardhatZksyncSigner;
@@ -28,20 +29,20 @@ export type HardhatZksyncSignerOrWalletOrFactoryOptions = HardhatZksyncSignerOrW
 
 export type GetContractFactoryArtifactName<A extends any[] = any[], I = Contract> = (
     name: string,
-    walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+    walletOrSignerOrOptions?: HardhatZksyncSignerOrWalletOrFactoryOptions,
     deploymentType?: DeploymentType,
 ) => Promise<ContractFactory<A, I>>;
 
 export type GetContractFactoryAbiBytecode<A extends any[] = any[], I = Contract> = (
     abi: any[],
     bytecode: ethers.BytesLike,
-    walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+    walletOrSigner?: HardhatZksyncSignerOrWallet,
     deploymentType?: DeploymentType,
 ) => Promise<ContractFactory<A, I>>;
 
 export type GetContractFactoryArtifact<A extends any[] = any[], I = Contract> = (
     artifact: ZkSyncArtifact,
-    walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+    walletOrSignerOrOptions?: HardhatZksyncSignerOrWalletOrFactoryOptions,
     deploymentType?: DeploymentType,
 ) => Promise<ContractFactory<A, I>>;
 
@@ -104,7 +105,8 @@ export interface HardhatZksyncEthersHelpers {
     deployContract: (
         artifact: ZkSyncArtifact | string,
         constructorArguments: any[],
-        walletOrSigner?: HardhatZksyncSignerOrWallet,
+        walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+        deploymentType?: DeploymentType,
         overrides?: ethers.Overrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ) => Promise<Contract>;
