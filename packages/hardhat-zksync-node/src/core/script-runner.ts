@@ -19,7 +19,7 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const { commandArgs, server, port } = await startServer();
+    const { commandArgs, server, port } = await startServer(undefined, false, { showNodeConfig: false, showTxSummary: false });
     await server.listen(commandArgs, false);
     await waitForNodeToBeReady(port);
 

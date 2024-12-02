@@ -113,6 +113,10 @@ task(TASK_NODE, 'Start a ZKSync Node')
         types.string,
     )
     .addOptionalParam(
+        'showEventLogs',
+        'Show event logs',
+    )
+    .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
         undefined,
@@ -174,6 +178,10 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         types.string,
     )
     .addOptionalParam(
+        'showEventLogs',
+        'Show event logs',
+    )
+    .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
         undefined,
@@ -208,6 +216,10 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     .addOptionalParam('tag', 'Specified node release for use', undefined)
+    .addOptionalParam(
+        'quite',
+        'Disables logs',
+    )
     // .addFlag('force', 'Force download even if the binary already exists')
     .setAction(
         async (
@@ -219,6 +231,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cacheDir,
                 resetCache,
                 showCalls,
+                showEventLogs,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
@@ -228,6 +241,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 forkBlockNumber,
                 replayTx,
                 tag,
+                quiet,
             }: {
                 port: number;
                 log: string;
@@ -236,6 +250,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cacheDir: string;
                 resetCache: boolean;
                 showCalls: string;
+                showEventLogs: boolean;
                 showStorageLogs: string;
                 showVmDetails: string;
                 showGasDetails: string;
@@ -245,6 +260,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 forkBlockNumber: number;
                 replayTx: string;
                 tag: string;
+                quiet: boolean;
             },
             { run },
         ) => {
@@ -256,6 +272,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cacheDir,
                 resetCache,
                 showCalls,
+                showEventLogs,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
@@ -264,6 +281,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 fork,
                 forkBlockNumber,
                 replayTx,
+                quiet,
             });
 
             // Download the binary
@@ -335,7 +353,7 @@ task(
         const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
-        const commandArgs = constructCommandArgs({ port: currentPort });
+        const commandArgs = constructCommandArgs({ port: currentPort, showNodeConfig: false, showTxSummary: false });
 
         const server = new JsonRpcServer(binaryPath);
 
