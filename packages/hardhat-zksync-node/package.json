@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
-    "axios": "^1.7.2",
+    "axios": "^1.7.9",
     "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
     "proxyquire": "^2.1.3",

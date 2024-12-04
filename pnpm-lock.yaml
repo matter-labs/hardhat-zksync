@@ -1131,8 +1131,8 @@ importers:
         specifier: workspace:^
         version: link:../hardhat-zksync-solc
       axios:
-        specifier: ^1.7.2
-        version: 1.7.2(debug@4.3.5)
+        specifier: ^1.7.9
+        version: 1.7.9(debug@4.3.5)
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -1455,8 +1455,8 @@ importers:
         specifier: ^2.0.8
         version: 2.0.8(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       axios:
-        specifier: ^1.7.2
-        version: 1.7.2(debug@4.3.5)
+        specifier: ^1.7.9
+        version: 1.7.9(debug@4.3.5)
       cbor:
         specifier: ^9.0.2
         version: 9.0.2
@@ -1552,8 +1552,8 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6(hardhat@2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       axios:
-        specifier: ^1.7.2
-        version: 1.7.2(debug@4.3.5)
+        specifier: ^1.7.9
+        version: 1.7.9(debug@4.3.5)
       chai:
         specifier: ^4.3.4
         version: 4.4.1
@@ -2696,8 +2696,8 @@ packages:
   axios@0.21.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
 
-  axios@1.7.2:
-    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+  axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -5850,7 +5850,7 @@ snapshots:
   '@openzeppelin/defender-sdk-deploy-client@1.14.3':
     dependencies:
       '@openzeppelin/defender-sdk-base-client': 1.14.3
-      axios: 1.7.2(debug@4.3.5)
+      axios: 1.7.9(debug@4.3.5)
       lodash: 4.17.21
     transitivePeerDependencies:
       - debug
@@ -5859,7 +5859,7 @@ snapshots:
   '@openzeppelin/defender-sdk-deploy-client@1.14.4(debug@4.3.5)':
     dependencies:
       '@openzeppelin/defender-sdk-base-client': 1.14.4
-      axios: 1.7.2(debug@4.3.5)
+      axios: 1.7.9(debug@4.3.5)
       lodash: 4.17.21
     transitivePeerDependencies:
       - debug
@@ -5868,7 +5868,7 @@ snapshots:
   '@openzeppelin/defender-sdk-network-client@1.14.4(debug@4.3.5)':
     dependencies:
       '@openzeppelin/defender-sdk-base-client': 1.14.4
-      axios: 1.7.2(debug@4.3.5)
+      axios: 1.7.9(debug@4.3.5)
       lodash: 4.17.21
     transitivePeerDependencies:
       - debug
@@ -6492,7 +6492,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  axios@1.7.2(debug@4.3.5):
+  axios@1.7.9(debug@4.3.5):
     dependencies:
       follow-redirects: 1.15.6(debug@4.3.5)
       form-data: 4.0.0
