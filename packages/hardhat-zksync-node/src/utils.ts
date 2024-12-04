@@ -34,7 +34,7 @@ import { CommandArguments } from './types';
 import { RPCServerDownloader } from './downloader';
 import { JsonRpcServer } from './server';
 
-// Generates command arguments for running the era-test-node binary
+// Generates command arguments for running the anvil-zksync binary
 export function constructCommandArgs(args: CommandArguments): string[] {
     const commandArgs: string[] = [];
 
@@ -145,7 +145,7 @@ function getArch() {
     return process.arch === 'arm64' ? 'aarch64' : arch;
 }
 
-// Returns the path to the directory where the era-test-node binary is/will be located
+// Returns the path to the directory where the anvil-zksync binary is/will be located
 export async function getRPCServerBinariesDir(): Promise<string> {
     const compilersCachePath = await getCompilersDir();
     const basePath = path.dirname(compilersCachePath);
@@ -154,7 +154,7 @@ export async function getRPCServerBinariesDir(): Promise<string> {
     return rpcServerBinariesPath;
 }
 
-// Get latest release from GitHub of the era-test-node binary
+// Get latest release from GitHub of the anvil-zksync binary
 export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
     const url = `https://github.com/${owner}/${repo}/releases/latest`;
     const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
@@ -191,7 +191,7 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
     }
 }
 
-// Get the asset to download from the latest release of the era-test-node binary
+// Get the asset to download from the latest release of the anvil-zksync binary
 export async function getNodeUrl(repo: string, release: string): Promise<string> {
     const platform = getPlatform();
 

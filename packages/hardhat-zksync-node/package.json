@@ -1,7 +1,7 @@
 {
   "name": "@matterlabs/hardhat-zksync-node",
   "version": "1.2.0",
-  "description": "Hardhat plugin to run ZKsync era-test-node locally",
+  "description": "Hardhat plugin to run ZKsync anvil-zksync locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
   "author": "Matter Labs",

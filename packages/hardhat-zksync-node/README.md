@@ -1,6 +1,6 @@
 # hardhat-zksync-node 🚀
 
-ZKsync Era [Hardhat](https://hardhat.org/) plugin to run the ZKsync era-test-node locally.
+ZKsync Era [Hardhat](https://hardhat.org/) plugin to run the ZKsync anvil-zksync locally.
 
 ![Era Logo](https://github.com/matter-labs/era-contracts/raw/main/eraLogo.svg)
 
