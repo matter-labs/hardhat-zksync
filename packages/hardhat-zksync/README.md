@@ -33,7 +33,7 @@ Here is an overview of the plugins currently available in this package when inst
 | hardhat-zksync-deploy         | Facilitates the deployment of contracts on ZKsync, utilizing artifacts from hardhat-zksync-solc.                            |
 | hardhat-zksync-verify         | Automates the process of verifying smart contracts on the ZKsync network, enhancing transparency and trust.                       |
 | hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the ZKsync network, improving contract lifecycle management.        |
-| hardhat-zksync-node           | Convenient plugin to run the ZKsync anvil-zksync locally.                                                                        |
+| hardhat-zksync-node           | Convenient plugin to run anvil-zksync locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on ZKsync.                                   |
 
 
