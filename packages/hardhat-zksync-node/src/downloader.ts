@@ -90,10 +90,10 @@ export class RPCServerDownloader {
     private async _download(tag: any): Promise<void> {
         const url: any = await getNodeUrl(ZKNODE_BIN_REPOSITORY, tag);
         try {
-            console.info(chalk.yellow(`Downloading era-test-node binary, release: ${tag}`));
+            console.info(chalk.yellow(`Downloading anvil-zksync binary, release: ${tag}`));
             await download(url, await this._createBinaryPath(tag), PLUGIN_NAME, tag, 30000);
             await this._postProcessDownload(tag);
-            console.info(chalk.green('era-test-node binary downloaded successfully'));
+            console.info(chalk.green('anvil-zksync binary downloaded successfully'));
         } catch (error: any) {
             throw new ZkSyncNodePluginError(`Error downloading binary from URL ${url}: ${error.message}`);
         }

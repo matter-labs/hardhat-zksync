@@ -94,7 +94,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
-        'Path to the file where logs should be written - default: `era_test_node.log`',
+        'Path to the file where logs should be written - default: `anvil-zksync.log`',
         undefined,
         types.string,
     )
@@ -155,7 +155,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
-        'Path to the file where logs should be written - default: `era_test_node.log`',
+        'Path to the file where logs should be written - default: `anvil-zksync.log`',
         undefined,
         types.string,
     )

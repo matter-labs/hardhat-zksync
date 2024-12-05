@@ -20,7 +20,7 @@ Here is an overview of the plugins currently available:
 | hardhat-zksync-vyper          | Streamlines the compilation of Vyper contracts for deployment on the ZKsync network.                                              |
 | hardhat-zksync        | Offers a suite of ZKsync-related Hardhat plugins in one package, enhancing accessibility and efficiency.                          |
 | hardhat-zksync-upgradeable    | Enables easier deployment and upgrading of smart contracts on the ZKsync network, improving contract lifecycle management.        |
-| hardhat-zksync-node           | Convenient plugin to run the ZKsync era-test-node locally.                                                                        |
+| hardhat-zksync-node           | Convenient plugin to run the anvil-zksync locally.                                                                        |
 | hardhat-zksync-ethers         | A zksync-ethers SDK wrapper providing additional methods for accelerated development on ZKsync.                                   |
 
 You can find more detailed explanations on how to use hardhat ZKsync plugins on our [documentation page](https://docs.zksync.io/build/tooling/hardhat/getting-started) where each plugin has its own section:
