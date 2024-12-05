@@ -9,6 +9,7 @@ import type { Dispatcher } from 'undici';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import { createProvider } from 'hardhat/internal/core/providers/construction';
 import { HardhatConfig } from 'hardhat/types';
+import semver from 'semver';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -200,7 +201,9 @@ export async function getNodeUrl(repo: string, release: string): Promise<string>
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    return `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
+    return semver.gte(release, '0.1.0')
+        ? `${repo}/releases/download/v${release}/anvil-zksync-v${release}-${getArch()}-${platform}.tar.gz`
+        : `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
 }
 
 function isTarGzFile(filePath: string): boolean {
