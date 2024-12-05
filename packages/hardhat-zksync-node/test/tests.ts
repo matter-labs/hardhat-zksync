@@ -346,7 +346,7 @@ describe('node-zksync plugin', async function () {
         const mockRelease = '1.0.0';
 
         const mockUrl =
-            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz';
+            'https://github.com/matter-labs/anvil-zksync/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz';
 
         let downloadStub: sinon.SinonStub;
         let existsSyncStub: sinon.SinonStub;
