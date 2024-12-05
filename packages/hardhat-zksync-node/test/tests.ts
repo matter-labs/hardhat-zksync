@@ -230,7 +230,7 @@ describe('node-zksync plugin', async function () {
         it('should return the node URL for the given repo and release', async function () {
             const repo = 'example/repo';
             const release = '1.0.0';
-            const expectedUrl = `${repo}/releases/download/v${release}/era_test_node-v${release}-amd64-linux.tar.gz`;
+            const expectedUrl = `${repo}/releases/download/v${release}/anvil-zksync-v${release}-amd64-linux.tar.gz`;
 
             const url = await utils.getNodeUrl(repo, release);
 

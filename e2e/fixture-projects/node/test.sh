@@ -10,7 +10,7 @@ pnpm hardhat node-zksync --port 8012 &
 
 sleep 10
 
-LOG_FILE="./era_test_node.log"
+LOG_FILE="./anvil-zksync.log"
 
 if grep -q "Listening on 127.0.0.1:8012" "$LOG_FILE"; then
     echo "ZKsync node started successfully."

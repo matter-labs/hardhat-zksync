@@ -35,7 +35,7 @@ This command runs a local ZKsync In-memory node by initiating a JSON-RPC server.
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | --port                              | Port on which the server should listen. Defaults to 8011.                                                            |
 | --log                               | Log filter level. Accepted values are: error, warn, info, and debug. Defaults to info.                               |
-| --log-file-path                     | Path to the file where logs should be written. Defaults to era_test_node.log                                         |
+| --log-file-path                     | Path to the file where logs should be written. Defaults to anvil-zksync.log                                         |
 | --cache                             | Type of cache to use. Accepted values are: none, disk, and memory. Defaults to disk.                                 |
 | --cache-dir                         | Directory location for the disk cache. Defaults to .cache                                                            |
 | --reset-cache                       | Flag to reset the local disk cache.                                                                                  |
