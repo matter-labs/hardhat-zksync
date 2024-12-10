@@ -89,6 +89,8 @@ jobs:
 
       - name: Run anvil-zksync
         uses: dutterbutter/anvil-zksync-action@v1.1.0
+        with:
+          logFilePath: "anvil_zksync.log"
 
       - name: Run fixture-projects script
         run: |
