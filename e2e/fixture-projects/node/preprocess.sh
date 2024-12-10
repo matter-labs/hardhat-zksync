@@ -12,7 +12,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
 {
   "name": "@matterlabs/hardhat-zksync-node",
   "version": "1.0.3",
-  "description": "Hardhat plugin to run ZKsync era-test-node locally",
+  "description": "Hardhat plugin to run anvil-zksync locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
   "author": "Matter Labs",

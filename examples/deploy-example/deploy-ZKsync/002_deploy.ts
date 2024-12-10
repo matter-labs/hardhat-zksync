@@ -11,16 +11,15 @@ const deployScript = async function (hre: HardhatRuntimeEnvironment) {
     // This contract has no constructor arguments.
     const factoryContract = await hre.deployer.deploy(artifact, [], 'create2', {
         customData: {
-            salt: '0x7935910912126667836566922594852029127629416664760357073852948630'
-        }
+            salt: '0x7935910912126667836566922594852029127629416664760357073852948630',
+        },
     });
 
     // Show the contract info.
     const contractAddress = await factoryContract.getAddress();
     console.info(chalk.green(`${artifact.contractName} was deployed to ${contractAddress}!`));
-}
+};
 
 export default deployScript;
 
 deployScript.tags = ['first'];
-
