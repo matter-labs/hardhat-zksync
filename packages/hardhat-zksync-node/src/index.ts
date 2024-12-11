@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { task, subtask, types } from 'hardhat/config';
+import { task, subtask, types, extendConfig } from 'hardhat/config';
 import {
     TASK_COMPILE,
     TASK_NODE,
@@ -13,6 +13,7 @@ import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 import { TaskArguments } from 'hardhat/types';
 import path from 'path';
 import {
+    DEFAULT_ZKSYNC_ANVIL_VERSION,
     MAX_PORT_ATTEMPTS,
     START_PORT,
     TASK_NODE_ZKSYNC,
@@ -35,13 +36,19 @@ import { ZkSyncNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
 
+extendConfig((config, userConfig) => {
+    config.zksyncAnvil = {
+        version: userConfig.zksyncAnvil?.version || DEFAULT_ZKSYNC_ANVIL_VERSION,
+    };
+});
+
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
     if (!hre.network.zksync || hre.network.name !== HARDHAT_NETWORK_NAME) {
         await runSuper(args, hre);
         return;
     }
 
-    await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
+    await runScriptWithHardhat(hre.hardhatArguments, hre.config.zksyncAnvil.version!, path.resolve(args.script));
 });
 
 // Subtask to download the binary
@@ -61,9 +68,9 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
         ) => {
             // Directory where the binaries are stored
             const rpcServerBinaryDir = await getRPCServerBinariesDir();
-
+            const version = tag || _hre.config.zksyncAnvil.version!;
             // Get the latest release of the binary
-            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, version);
 
             // Download binary if needed
             await downloader.downloadIfNeeded(force);

@@ -15,3 +15,7 @@ export interface CommandArguments {
     forkBlockNumber?: number;
     replayTx?: string;
 }
+
+export interface ZkSyncAnvilConfig {
+    version?: string;
+}
