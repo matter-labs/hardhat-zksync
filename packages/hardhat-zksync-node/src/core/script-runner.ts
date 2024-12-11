@@ -6,6 +6,7 @@ import { startServer, waitForNodeToBeReady } from '../utils';
 
 export async function runScript(
     scriptPath: string,
+    zksyncAnvilVersion: string,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
     extraEnvVars: { [name: string]: string } = {},
@@ -19,7 +20,7 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const { commandArgs, server, port } = await startServer();
+    const { commandArgs, server, port } = await startServer(zksyncAnvilVersion);
     await server.listen(commandArgs, false);
     await waitForNodeToBeReady(port);
 
@@ -46,15 +47,22 @@ export async function runScript(
 
 export async function runScriptWithHardhat(
     hardhatArguments: HardhatArguments,
+    zksyncAnvilVersion: string,
     scriptPath: string,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
     extraEnvVars: { [name: string]: string } = {},
 ): Promise<number> {
-    return runScript(scriptPath, scriptArgs, [...extraNodeArgs, '--require', path.join(__dirname, 'register')], {
-        ...getEnvVariablesMap(hardhatArguments),
-        ...extraEnvVars,
-    });
+    return runScript(
+        scriptPath,
+        zksyncAnvilVersion,
+        scriptArgs,
+        [...extraNodeArgs, '--require', path.join(__dirname, 'register')],
+        {
+            ...getEnvVariablesMap(hardhatArguments),
+            ...extraEnvVars,
+        },
+    );
 }
 
 function withFixedInspectArg(argv: string[]) {
