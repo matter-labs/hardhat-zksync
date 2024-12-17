@@ -1,6 +1,6 @@
 # ZKsync Era node environment example
 
-This project demonstrates how to run [era-test-node](https://docs.zksync.io/build/test-and-debug/in-memory-node) locally using the zksync's `hardhat-zksync-node` Hardhat plugin for testing purposes.
+This project demonstrates how to run [anvil-zksync](https://docs.zksync.io/build/test-and-debug/in-memory-node) locally using the zksync's `hardhat-zksync-node` Hardhat plugin for testing purposes.
 
 ## Prerequisites
 
@@ -50,4 +50,4 @@ yarn hardhat test
 
 - `yarn hardhat compile`: compiles all the contracts in the `contracts` folder.
 - `yarn hardhat deploy-zksync`: runs all the deploy scripts in the `deploy` folder.
-- `yarn hardhat test`: runs all the tests against the era-test-node instance instantiated in a separate process.
+- `yarn hardhat test`: runs all the tests against the anvil-zksync instance instantiated in a separate process.
