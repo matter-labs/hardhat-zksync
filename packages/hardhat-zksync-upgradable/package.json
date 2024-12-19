@@ -40,7 +40,7 @@
     "@openzeppelin/hardhat-upgrades": "^3.2.1",
     "@openzeppelin/upgrades-core": "^1.37.0",
     "@openzeppelin/defender-sdk-base-client": "^1.10.0",
-    "@openzeppelin/defender-sdk-deploy-client": "^1.10.0",
+    "@openzeppelin/defender-sdk-deploy-client": "^2.0.0",
     "@openzeppelin/defender-sdk-network-client": "^1.10.0",
     "chalk": "^4.1.2",
     "compare-versions": "^6.1.0",
