@@ -41,7 +41,7 @@ This plugin enables access to all commands available for each specific plugin, m
 
 For certain tasks present in the plugins encompassed by this plugin, it overrides them with new features and parameters. These tasks streamline common functionalities into a simplified workflow.
 
-Here is a list of overriden tasks where this plugin adds new optional parameter `--verify`:
+Here is a list of overridden tasks where this plugin adds new optional parameter `--verify`:
 
 - `deploy-zksync:contract`
 - `deploy-zksync:proxy` 
