@@ -155,7 +155,7 @@ const config: HardhatUserConfig = {
 
 - `accounts` represents a list of the private keys or mnemonic object for the account used in the deployment process.
 
-`accounts` object will be automaticly be populated with rich accounts if used network is ZKsync Era Test Node or zksync-cli Local Node
+`accounts` object will be automatically be populated with rich accounts if used network is ZKsync Era Test Node or zksync-cli Local Node
 
 To establish a default index per network, which is by default `0`, you can include a `deployerAccounts` section in your `hardhat.config.ts` file. This enables the plugin to utilize the designated default indexes when accessing `deploy` method in deployment scripts, thereby granting greater control over the selection of the deployment account for each network.
 
