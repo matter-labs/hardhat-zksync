@@ -13,7 +13,7 @@
 ### Features
 
 * introducing ethers extension in hre ([#1283](https://github.com/matter-labs/hardhat-zksync/issues/1283)) ([8e471bc](https://github.com/matter-labs/hardhat-zksync/commit/8e471bcbbbf1ee712fe79cd5d5782c11e52e3b75))
-* remove zksync contracts dependecy ([#1450](https://github.com/matter-labs/hardhat-zksync/issues/1450)) ([a70bbaf](https://github.com/matter-labs/hardhat-zksync/commit/a70bbaf7205e91c3e6fe5cece3fb54f11100583e))
+* remove zksync contracts dependency ([#1450](https://github.com/matter-labs/hardhat-zksync/issues/1450)) ([a70bbaf](https://github.com/matter-labs/hardhat-zksync/commit/a70bbaf7205e91c3e6fe5cece3fb54f11100583e))
 
 
 ### Bug Fixes
