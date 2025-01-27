@@ -19,7 +19,16 @@ import {
     ZkSyncArtifact,
 } from './types';
 import { ZkSyncEthersPluginError } from './errors';
-import { getSignerAccounts, getSignerOrWallet, getWalletsFromAccount, isArtifact, isNumber, isString } from './utils';
+import {
+    getSignerAccounts,
+    getSignerOrWallet,
+    getWalletsFromAccount,
+    isArtifact,
+    isFactoryOptions,
+    isNumber,
+    isString,
+    linkLibrariesIfNeeded,
+} from './utils';
 import { ZKSOLC_ARTIFACT_FORMAT_VERSION, ZKVYPER_ARTIFACT_FORMAT_VERSION } from './constants';
 import { HardhatZksyncSigner } from './signers/hardhat-zksync-signer';
 
@@ -129,11 +138,19 @@ If you want to call a contract using ${artifact.contractName} as its interface u
         );
     }
 
+    const libraries: { [libraryName: string]: string } | undefined = isFactoryOptions(walletOrSignerOrOptions)
+        ? walletOrSignerOrOptions.libraries
+        : undefined;
+
+    const linkedBytecode = await linkLibrariesIfNeeded(hre, artifact, libraries);
+
+    const walletOrSigner: HardhatZksyncSignerOrWallet | undefined = getSignerOrWallet(walletOrSignerOrOptions);
+
     return getContractFactoryByAbiAndBytecode(
         hre,
         artifact.abi,
-        artifact.bytecode,
-        walletOrSignerOrOptions,
+        linkedBytecode ?? artifact.bytecode,
+        walletOrSigner,
         deploymentType,
     );
 }
@@ -142,11 +159,9 @@ async function getContractFactoryByAbiAndBytecode<A extends any[] = any[], I = C
     hre: HardhatRuntimeEnvironment,
     abi: any[],
     bytecode: ethers.BytesLike,
-    walletOrSignerOrOptions?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+    walletOrSigner?: HardhatZksyncSignerOrWallet,
     deploymentType?: DeploymentType,
 ): Promise<ContractFactory<A, I>> {
-    let walletOrSigner: HardhatZksyncSignerOrWallet | undefined = getSignerOrWallet(walletOrSignerOrOptions);
-
     if (!walletOrSigner) {
         walletOrSigner = (await getSigners(hre))[0];
     }
@@ -208,7 +223,8 @@ export async function deployContract(
     hre: HardhatRuntimeEnvironment,
     artifactOrContract: ZkSyncArtifact | string,
     constructorArguments: any[] = [],
-    walletOrSigner?: HardhatZksyncSignerOrWallet,
+    walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+    deploymentType?: DeploymentType,
     overrides?: ethers.Overrides,
     additionalFactoryDeps?: ethers.BytesLike[],
 ): Promise<Contract> {
@@ -219,7 +235,7 @@ export async function deployContract(
     const artifact =
         typeof artifactOrContract === 'string' ? await loadArtifact(hre, artifactOrContract) : artifactOrContract;
 
-    const factory = await getContractFactoryFromArtifact(hre, artifact, walletOrSigner);
+    const factory = await getContractFactoryFromArtifact(hre, artifact, walletOrSigner, deploymentType);
 
     const baseDeps = await extractFactoryDeps(hre, artifact);
     const additionalDeps = additionalFactoryDeps ? additionalFactoryDeps.map((val) => ethers.hexlify(val)) : [];
