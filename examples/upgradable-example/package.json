@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.15.0",
+    "zksync-ethers": "^6.16.1",
     "hardhat": "^2.22.5",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
