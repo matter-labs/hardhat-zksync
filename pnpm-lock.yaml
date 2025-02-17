@@ -1161,8 +1161,8 @@ importers:
         specifier: ^0.5.21
         version: 0.5.21
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.3.0
+        version: 7.3.0
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1261,8 +1261,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.3.0
+        version: 7.3.0
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1661,8 +1661,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.3.0
+        version: 7.3.0
     devDependencies:
       '@nomiclabs/hardhat-vyper':
         specifier: ^3.0.6
@@ -3997,9 +3997,11 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -4980,6 +4982,10 @@ packages:
   undici@6.18.2:
     resolution: {integrity: sha512-o/MQLTwRm9IVhOqhZ0NQ9oXax1ygPjw6Vs+Vq/4QRjbOAC3B1GCHy7TYxxbExKlb7bzDRzt9vBWU6BDz0RFfYg==}
     engines: {node: '>=18.17'}
+
+  undici@7.3.0:
+    resolution: {integrity: sha512-Qy96NND4Dou5jKoSJ2gm8ax8AJM/Ey9o9mz7KN1bb9GP+G0l20Zw8afxTnY2f4b7hmhn/z8aC2kfArVQlAhFBw==}
+    engines: {node: '>=20.18.1'}
 
   unfetch@4.2.0:
     resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
@@ -9147,6 +9153,8 @@ snapshots:
       '@fastify/busboy': 2.1.1
 
   undici@6.18.2: {}
+
+  undici@7.3.0: {}
 
   unfetch@4.2.0: {}
 
