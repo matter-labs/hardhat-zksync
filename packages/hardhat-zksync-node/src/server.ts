@@ -1,4 +1,4 @@
-import { spawn, ChildProcess, StdioOptions } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import chalk from 'chalk';
 
 import { PROCESS_TERMINATION_SIGNALS } from './constants';
@@ -27,11 +27,7 @@ export class JsonRpcServer implements RpcServer {
                 console.info(chalk.green(`Running command: ${command} ${commandArgs.join(' ')}`));
             }
 
-            let stdioConfig: StdioOptions = 'inherit';
-            if (!blockProcess) {
-                stdioConfig = ['ignore', 'ignore', 'ignore'];
-            }
-            this.serverProcess = spawn(command, commandArgs, { stdio: stdioConfig });
+            this.serverProcess = spawn(command, commandArgs, { stdio: 'inherit' });
 
             this.serverProcess.on('error', (error) => {
                 console.info(chalk.red('Error running the server:', error));

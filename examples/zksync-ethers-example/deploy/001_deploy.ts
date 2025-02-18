@@ -1,7 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import chalk from 'chalk';
-import { Wallet, utils } from 'zksync-ethers';
-import { ethers } from 'ethers';
+import { Wallet } from 'zksync-ethers';
 
 export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.yellow(`Running deploy`));
@@ -49,9 +48,9 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     console.info(chalk.green(`Greeter greeting set to: ${await greeter.greet()}`));
 
     const newContractFactory = new hre.zksyncEthers.ContractFactory(artifact.abi, artifact.bytecode, wallet);
-    const deployedContract = await newContractFactory.deploy("Hello World with new contract factory.");
-    console.info(chalk.green(`Contract with new ContractFactory deployed to ${await deployedContract.getAddress()}`))
+    const deployedContract = await newContractFactory.deploy('Hello World with new contract factory.');
+    console.info(chalk.green(`Contract with new ContractFactory deployed to ${await deployedContract.getAddress()}`));
 
-    const newContract = new hre.zksyncEthers.Contract(await deployedContract.getAddress(),artifact.abi,wallet);
+    const newContract = new hre.zksyncEthers.Contract(await deployedContract.getAddress(), artifact.abi, wallet);
     console.info(await newContract.greet());
 }

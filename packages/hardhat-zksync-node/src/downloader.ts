@@ -21,6 +21,7 @@ export class RPCServerDownloader {
     private readonly _initialTag: string;
     private readonly _tagsInfoFile: string = DEFAULT_RELEASE_CACHE_FILE_NAME;
     private readonly _tagsInfoFilePath: string;
+    private binaryPath?: string;
 
     constructor(binaryDir: string, initialTag: string) {
         this._binaryDir = binaryDir;
@@ -31,7 +32,12 @@ export class RPCServerDownloader {
         this._tagsInfoFilePath = path.join(this._binaryDir, this._tagsInfoFile);
     }
 
-    public async downloadIfNeeded(force: boolean): Promise<void> {
+    public async downloadIfNeeded(force: boolean, binaryPath?: string): Promise<void> {
+        if (binaryPath) {
+            this.binaryPath = binaryPath;
+            return;
+        }
+
         if (!(await this._isTagsInfoValid()) || force) {
             await this._downloadTagInfo();
         }
@@ -69,6 +75,10 @@ export class RPCServerDownloader {
     }
 
     public async getBinaryPath(tag?: string): Promise<string> {
+        if (this.binaryPath) {
+            return this.binaryPath;
+        }
+
         if (!tag && !this._tag) {
             throw new ZkSyncNodePluginError('Tag is not set');
         }

@@ -3,10 +3,11 @@ import { HardhatArguments } from 'hardhat/types';
 import { getEnvVariablesMap } from 'hardhat/internal/core/params/env-variables';
 import path from 'path';
 import { startServer, waitForNodeToBeReady } from '../utils';
+import { ZkSyncAnvilConfig } from '../types';
 
 export async function runScript(
     scriptPath: string,
-    zksyncAnvilVersion: string,
+    zksyncAnvilConfig: ZkSyncAnvilConfig,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
     extraEnvVars: { [name: string]: string } = {},
@@ -20,7 +21,7 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const { commandArgs, server, port } = await startServer(zksyncAnvilVersion);
+    const { commandArgs, server, port } = await startServer(zksyncAnvilConfig.version, zksyncAnvilConfig.binaryPath);
     await server.listen(commandArgs, false);
     await waitForNodeToBeReady(port);
 
@@ -47,7 +48,7 @@ export async function runScript(
 
 export async function runScriptWithHardhat(
     hardhatArguments: HardhatArguments,
-    zksyncAnvilVersion: string,
+    zksyncAnvilConfig: ZkSyncAnvilConfig,
     scriptPath: string,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
@@ -55,7 +56,7 @@ export async function runScriptWithHardhat(
 ): Promise<number> {
     return runScript(
         scriptPath,
-        zksyncAnvilVersion,
+        zksyncAnvilConfig,
         scriptArgs,
         [...extraNodeArgs, '--require', path.join(__dirname, 'register')],
         {

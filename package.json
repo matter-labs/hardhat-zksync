@@ -13,17 +13,15 @@
     "prettier": "^3.3.0",
     "typescript": "^5.3.0",
     "find-up": "^2.1.0",
-    "@types/find-up": "^2.1.1",
-    "wsrun": "^5.2.2"
+    "@types/find-up": "^2.1.1"
   },
   "scripts": {
     "build": "tsc --build packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-verify packages/hardhat-zksync-ethers packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
     "watch": "tsc --build --watch packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-verify packages/hardhat-zksync-ethers packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",
-    "clean": "wsrun --exclude-missing clean",
-    "lint": "wsrun --exclude-missing --stages lint",
-    "lint:fix": "wsrun --exclude-missing --stages lint:fix",
-    "prettier:check": "wsrun --exclude-missing --stages prettier:check",
-    "test:release-script": "mocha scripts/test/tests.js",
+    "clean": "pnpm run --recursive clean",
+    "lint": "pnpm run --recursive lint",
+    "lint:fix": "pnpm run --recursive lint:fix",
+    "prettier:check": "pnpm run --recursive prettier:check",
     "prepare": "pnpm husky install"
   },
   "type": "module",

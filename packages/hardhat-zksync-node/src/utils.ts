@@ -102,6 +102,22 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--resolve-hashes`);
     }
 
+    if (args.showEventLogs !== undefined) {
+        commandArgs.push(`--show-event-logs=${args.showEventLogs}`);
+    }
+
+    if (args.showNodeConfig !== undefined) {
+        commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
+    }
+
+    if (args.showTxSummary !== undefined) {
+        commandArgs.push(`--show-tx-summary=${args.showTxSummary}`);
+    }
+
+    if (args.quiet) {
+        commandArgs.push(`--quiet`);
+    }
+
     if (args.devUseLocalContracts) {
         commandArgs.push(`--dev-use-local-contracts`);
     }
@@ -447,7 +463,12 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
     network.provider = await createProvider(config, network.name);
 }
 
-export const startServer = async (tag?: string, force: boolean = false) => {
+export const startServer = async (
+    tag?: string,
+    existingBinaryPath?: string,
+    force: boolean = false,
+    args?: CommandArguments,
+) => {
     const platform = getPlatform();
     if (platform === 'windows' || platform === '') {
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
@@ -456,11 +477,11 @@ export const startServer = async (tag?: string, force: boolean = false) => {
 
     const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
 
-    await downloader.downloadIfNeeded(force);
+    await downloader.downloadIfNeeded(force, existingBinaryPath);
     const binaryPath = await downloader.getBinaryPath();
 
     const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
-    const commandArgs = constructCommandArgs({ port: currentPort });
+    const commandArgs = constructCommandArgs({ ...args, port: currentPort });
 
     return {
         commandArgs,
