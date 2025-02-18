@@ -236,7 +236,8 @@ export function resolveTag(tags: string[], latestTag: string, initialTag: string
     const [major, minor, patch] = initialTag.split('.');
     const tag = tags.find((t) => t.startsWith(patch === '*' ? `${major}.${minor}` : initialTag));
     if (!tag) {
-        throw new ZkSyncNodePluginError(`No release found for ${initialTag}`);
+        console.warn(`Couldn't find the specified tag: ${initialTag}. Using the latest tag: ${latestTag}`);
+        return latestTag;
     }
     return tag;
 }
