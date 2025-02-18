@@ -21,7 +21,12 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const { commandArgs, server, port } = await startServer(zksyncAnvilConfig.version, zksyncAnvilConfig.binaryPath);
+    const { commandArgs, server, port } = await startServer(
+        zksyncAnvilConfig.version,
+        zksyncAnvilConfig.binaryPath,
+        false,
+        { quiet: true },
+    );
     await server.listen(commandArgs, false);
     await waitForNodeToBeReady(port);
 

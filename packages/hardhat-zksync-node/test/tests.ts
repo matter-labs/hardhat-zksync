@@ -190,7 +190,7 @@ describe('node-zksync plugin', async function () {
                     '--show-event-logs=true',
                     '--show-node-config=false',
                     '--show-tx-summary=false',
-                    '--quiet',
+                    '--quiet=true',
                     '--dev-use-local-contracts',
                     'fork',
                     'mainnet',

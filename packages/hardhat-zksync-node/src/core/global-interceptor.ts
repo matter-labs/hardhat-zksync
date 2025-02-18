@@ -35,6 +35,8 @@ async function wrapTaskWithNode(taskArgs: TaskArguments, env: any, runSuper: Run
     const { commandArgs, server, port } = await startServer(
         env.config.zksyncAnvil.version,
         env.config.zksyncAnvil.binaryPath,
+        false,
+        { quiet: true },
     );
     try {
         await server.listen(commandArgs, false);

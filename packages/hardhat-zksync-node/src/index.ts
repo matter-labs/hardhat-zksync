@@ -226,7 +226,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     .addOptionalParam('tag', 'Specified node release for use', undefined)
-    .addOptionalParam('quite', 'Disables logs')
+    .addFlag('quite', 'Disables logs')
     .addFlag('force', 'Force download even if the binary already exists')
     .setAction(
         async (
@@ -360,7 +360,7 @@ task(
         const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
-        const commandArgs = constructCommandArgs({ port: currentPort, showNodeConfig: false, showTxSummary: false });
+        const commandArgs = constructCommandArgs({ port: currentPort, quiet: true });
 
         const server = new JsonRpcServer(binaryPath);
 

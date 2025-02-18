@@ -115,7 +115,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.quiet) {
-        commandArgs.push(`--quiet`);
+        commandArgs.push(`--quiet=true`);
     }
 
     if (args.devUseLocalContracts) {
@@ -249,7 +249,7 @@ export async function getNodeUrl(repo: string, release: string): Promise<string>
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    return semver.gte(release, ERA_TEST_NODE_BINARY_VERSION)
+    return semver.gt(release, ERA_TEST_NODE_BINARY_VERSION)
         ? `${repo}/releases/download/v${release}/anvil-zksync-v${release}-${getArch()}-${platform}.tar.gz`
         : `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
 }
