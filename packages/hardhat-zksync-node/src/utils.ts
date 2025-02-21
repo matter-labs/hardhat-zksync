@@ -66,7 +66,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.resetCache) {
-        commandArgs.push(`--reset-cache`);
+        commandArgs.push(`--reset-cache=${args.resetCache}`);
     }
 
     if (args.showStorageLogs) {
@@ -98,7 +98,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.resolveHashes) {
-        commandArgs.push(`--resolve-hashes`);
+        commandArgs.push(`--resolve-hashes=${args.resolveHashes}`);
     }
 
     if (args.showEventLogs !== undefined) {
@@ -114,11 +114,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.quiet) {
-        commandArgs.push(`--quiet`);
+        commandArgs.push(`--quiet=${args.quiet}`);
     }
 
     if (args.devUseLocalContracts) {
-        commandArgs.push(`--dev-use-local-contracts`);
+        commandArgs.push(`--dev-use-local-contracts=${args.devUseLocalContracts}`);
     }
 
     if (args.forkBlockNumber && args.replayTx) {
