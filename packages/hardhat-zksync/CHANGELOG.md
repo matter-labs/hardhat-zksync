@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync
 
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.3.0...@matterlabs/hardhat-zksync-v1.3.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* update naming from era_test_node to anvil-zksync ([6bfb1c2](https://github.com/matter-labs/hardhat-zksync/commit/6bfb1c26f8f01ecd1a3095d97b7858dfef8bb06a))
+* update naming from era_test_node to anvil-zksync ([d484fdd](https://github.com/matter-labs/hardhat-zksync/commit/d484fdda713d9c246c4a4639b6d6af84f63ceb15))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.2.0...@matterlabs/hardhat-zksync-v1.3.0) (2024-10-24)
 
 
