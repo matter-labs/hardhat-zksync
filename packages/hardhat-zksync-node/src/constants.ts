@@ -23,8 +23,8 @@ export const ALLOWED_SHOW_VM_DETAILS_VALUES = ['none', 'all'];
 export const ALLOWED_SHOW_GAS_DETAILS_VALUES = ['none', 'all'];
 
 export const DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD = 24 * 60 * 60 * 1000; // 24 hours
-export const DEFAULT_RELEASE_CACHE_FILE_NAME = 'latestRelease.json';
-
+export const DEFAULT_RELEASE_CACHE_FILE_NAME = 'list.json';
+export const ERA_TEST_NODE_BINARY_VERSION = '0.1.0';
 export const PLATFORM_MAP: Record<string, string> = {
     darwin: 'apple-darwin',
     linux: 'unknown-linux-gnu',
@@ -52,6 +52,8 @@ export const NETWORK_GAS_PRICE = {
 export const NETWORK_ETH = {
     LOCALHOST: 'localhost',
 };
+
+export const DEFAULT_ZKSYNC_ANVIL_VERSION = '0.3.*';
 
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 

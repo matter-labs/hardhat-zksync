@@ -1,4 +1,4 @@
-import { spawn, ChildProcess, StdioOptions } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import chalk from 'chalk';
 
 import { PROCESS_TERMINATION_SIGNALS } from './constants';

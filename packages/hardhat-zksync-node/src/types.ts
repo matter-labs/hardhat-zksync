@@ -19,3 +19,8 @@ export interface CommandArguments {
     showTxSummary?: boolean;
     quiet?: boolean;
 }
+
+export interface ZkSyncAnvilConfig {
+    version?: string;
+    binaryPath?: string;
+}

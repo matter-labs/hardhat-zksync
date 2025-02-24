@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { task, subtask, types } from 'hardhat/config';
+import { task, subtask, types, extendConfig } from 'hardhat/config';
 import {
     TASK_COMPILE,
     TASK_NODE,
@@ -12,7 +12,9 @@ import {
 import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 import { TaskArguments } from 'hardhat/types';
 import path from 'path';
+import chalk from 'chalk';
 import {
+    DEFAULT_ZKSYNC_ANVIL_VERSION,
     MAX_PORT_ATTEMPTS,
     START_PORT,
     TASK_NODE_ZKSYNC,
@@ -35,13 +37,20 @@ import { ZkSyncNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
 
+extendConfig((config, userConfig) => {
+    config.zksyncAnvil = {
+        version: userConfig.zksyncAnvil?.version || DEFAULT_ZKSYNC_ANVIL_VERSION,
+        binaryPath: userConfig.zksyncAnvil?.binaryPath || undefined,
+    };
+});
+
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
     if (!hre.network.zksync || hre.network.name !== HARDHAT_NETWORK_NAME) {
         await runSuper(args, hre);
         return;
     }
 
-    await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
+    await runScriptWithHardhat(hre.hardhatArguments, hre.config.zksyncAnvil, path.resolve(args.script));
 });
 
 // Subtask to download the binary
@@ -61,12 +70,19 @@ subtask(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, 'Downloads the JSON-RPC server binary'
         ) => {
             // Directory where the binaries are stored
             const rpcServerBinaryDir = await getRPCServerBinariesDir();
-
+            const version = tag || _hre.config.zksyncAnvil.version!;
             // Get the latest release of the binary
-            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+            const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, version);
 
+            if (_hre.config.zksyncAnvil.binaryPath) {
+                console.warn(
+                    chalk.yellow(
+                        'Binary path will have priority over the download of the binary file from the tag version',
+                    ),
+                );
+            }
             // Download binary if needed
-            await downloader.downloadIfNeeded(force);
+            await downloader.downloadIfNeeded(force, _hre.config.zksyncAnvil.binaryPath);
             return await downloader.getBinaryPath();
         },
     );
@@ -112,10 +128,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
         undefined,
         types.string,
     )
-    .addOptionalParam(
-        'showEventLogs',
-        'Show event logs',
-    )
+    .addOptionalParam('showEventLogs', 'Show event logs')
     .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
@@ -177,10 +190,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
-    .addOptionalParam(
-        'showEventLogs',
-        'Show event logs',
-    )
+    .addOptionalParam('showEventLogs', 'Show event logs')
     .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
@@ -216,11 +226,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     .addOptionalParam('tag', 'Specified node release for use', undefined)
-    .addOptionalParam(
-        'quite',
-        'Disables logs',
-    )
-    // .addFlag('force', 'Force download even if the binary already exists')
+    .addFlag('quite', 'Disables logs')
+    .addFlag('force', 'Force download even if the binary already exists')
     .setAction(
         async (
             {
@@ -242,6 +249,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 replayTx,
                 tag,
                 quiet,
+                force,
             }: {
                 port: number;
                 log: string;
@@ -261,6 +269,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 replayTx: string;
                 tag: string;
                 quiet: boolean;
+                force: boolean;
             },
             { run },
         ) => {
@@ -284,8 +293,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 quiet,
             });
 
-            // Download the binary
-            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false, tag });
+            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force, tag });
 
             // Create the server
             const server: RpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
@@ -349,11 +357,10 @@ task(
 
         const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
 
-        // Download the binary, if necessary
         const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force: false });
 
         const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
-        const commandArgs = constructCommandArgs({ port: currentPort, showNodeConfig: false, showTxSummary: false });
+        const commandArgs = constructCommandArgs({ port: currentPort, quiet: true });
 
         const server = new JsonRpcServer(binaryPath);
 

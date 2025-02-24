@@ -20,6 +20,7 @@ import {
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
     BASE_URL,
+    ERA_TEST_NODE_BINARY_VERSION,
     MAX_PORT_ATTEMPTS,
     NETWORK_ACCOUNTS,
     NETWORK_ETH,
@@ -171,14 +172,20 @@ export async function getRPCServerBinariesDir(): Promise<string> {
     return rpcServerBinariesPath;
 }
 
-// Get latest release from GitHub of the anvil-zksync binary
 export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
-    const url = `https://github.com/${owner}/${repo}/releases/latest`;
-    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
+    const finalUrl = await handleRedirect(`https://github.com/${owner}/${repo}/releases/latest`, userAgent, timeout);
+    const match = finalUrl.match(/\/releases\/tag\/v(.*)/);
+    if (match) {
+        return match[1];
+    }
+    throw new ZkSyncNodePluginError(`Couldn't find the latest release for URL: ${finalUrl}`);
+}
+
+export async function getAllTags(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
+    const finalUrl = await handleRedirect(`https://api.github.com/repos/${owner}/${repo}/tags`, userAgent, timeout);
 
     const { request } = await import('undici');
-
-    const response = await request(url, {
+    const response = await request(finalUrl, {
         headersTimeout: timeout,
         maxRedirections: 0,
         method: 'GET',
@@ -187,27 +194,53 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         },
     });
 
-    // Check if the response is a redirect
-    if (response.statusCode >= 300 && response.statusCode < 400) {
-        // Get the URL from the 'location' header
-        if (response.headers.location && typeof response.headers.location === 'string') {
-            // Check if the redirect URL matches the expected pattern
-            if (response.headers.location.startsWith(redirectUrlPattern)) {
-                // Extract the tag from the redirect URL
-                return response.headers.location.substring(redirectUrlPattern.length);
-            }
-
-            throw new ZkSyncNodePluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
-        } else {
-            // Throw an error if the 'location' header is missing in a redirect response
-            throw new ZkSyncNodePluginError(`Redirect location not found for URL: ${url}`);
-        }
+    if (response.statusCode === 200) {
+        return JSON.parse(await response.body.text()).map((tag: any) => tag.name.slice(1));
     } else {
-        // Throw an error for non-redirect responses
-        throw new ZkSyncNodePluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
+        throw new ZkSyncNodePluginError(`Unexpected response status: ${response.statusCode} for URL: ${finalUrl}`);
     }
 }
 
+async function handleRedirect(url: string, userAgent: string, timeout: number): Promise<string> {
+    const { request } = await import('undici');
+
+    let currentUrl = url;
+
+    while (true) {
+        const response = await request(currentUrl, {
+            headersTimeout: timeout,
+            maxRedirections: 0,
+            method: 'GET',
+            headers: {
+                'User-Agent': `${userAgent}`,
+            },
+        });
+
+        if (response.statusCode >= 300 && response.statusCode < 400) {
+            if (response.headers.location && typeof response.headers.location === 'string') {
+                currentUrl = response.headers.location;
+                continue;
+            } else {
+                throw new ZkSyncNodePluginError(`Redirect location not found for URL: ${currentUrl}`);
+            }
+        } else {
+            return currentUrl;
+        }
+    }
+}
+
+export function resolveTag(tags: string[], latestTag: string, initialTag: string): string {
+    if (initialTag === 'latest') {
+        return latestTag;
+    }
+    const [major, minor, patch] = initialTag.split('.');
+    const tag = tags.find((t) => t.startsWith(patch === '*' ? `${major}.${minor}` : initialTag));
+    if (!tag) {
+        console.warn(`Couldn't find the specified tag: ${initialTag}. Using the latest tag: ${latestTag}`);
+        return latestTag;
+    }
+    return tag;
+}
 // Get the asset to download from the latest release of the anvil-zksync binary
 export async function getNodeUrl(repo: string, release: string): Promise<string> {
     const platform = getPlatform();
@@ -217,7 +250,7 @@ export async function getNodeUrl(repo: string, release: string): Promise<string>
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    return semver.gte(release, '0.1.0')
+    return semver.gt(release, ERA_TEST_NODE_BINARY_VERSION)
         ? `${repo}/releases/download/v${release}/anvil-zksync-v${release}-${getArch()}-${platform}.tar.gz`
         : `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
 }
@@ -431,7 +464,12 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
     network.provider = await createProvider(config, network.name);
 }
 
-export const startServer = async (tag?: string, force: boolean = false, args?: CommandArguments) => {
+export const startServer = async (
+    tag?: string,
+    existingBinaryPath?: string,
+    force: boolean = false,
+    args?: CommandArguments,
+) => {
     const platform = getPlatform();
     if (platform === 'windows' || platform === '') {
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
@@ -440,7 +478,7 @@ export const startServer = async (tag?: string, force: boolean = false, args?: C
 
     const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
 
-    await downloader.downloadIfNeeded(force);
+    await downloader.downloadIfNeeded(force, existingBinaryPath);
     const binaryPath = await downloader.getBinaryPath();
 
     const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
