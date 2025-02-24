@@ -1149,8 +1149,8 @@ importers:
         specifier: ^2.1.3
         version: 2.1.3
       semver:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.7.1
+        version: 7.7.1
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
@@ -1252,8 +1252,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       semver:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.7.1
+        version: 7.7.1
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
@@ -1388,8 +1388,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       semver:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.7.1
+        version: 7.7.1
       solidity-ast:
         specifier: ^0.4.56
         version: 0.4.56
@@ -1476,8 +1476,8 @@ importers:
         specifier: ^4.3.5
         version: 4.3.5
       semver:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.7.1
+        version: 7.7.1
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
@@ -1652,8 +1652,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0
       semver:
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^7.7.1
+        version: 7.7.1
       sinon:
         specifier: ^18.0.0
         version: 18.0.0
@@ -4503,6 +4503,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.1:
+    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   serialize-javascript@6.0.0:
     resolution: {integrity: sha512-Qr3TosvguFt8ePWqsvRfrKyQXIiW+nGbYpy8XK24NQHE83caxWt+mIymTT19DGFbNWNLfEwsrkSmN64lVWB9ag==}
 
@@ -5150,7 +5155,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.6.2
+      semver: 7.7.1
 
   '@changesets/assemble-release-plan@6.0.2':
     dependencies:
@@ -5160,7 +5165,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.6.2
+      semver: 7.7.1
 
   '@changesets/changelog-git@0.2.0':
     dependencies:
@@ -5197,7 +5202,7 @@ snapshots:
       p-limit: 2.3.0
       preferred-pm: 3.1.3
       resolve-from: 5.0.0
-      semver: 7.6.2
+      semver: 7.7.1
       spawndamnit: 2.0.0
       term-size: 2.2.1
       tty-table: 4.2.3
@@ -5222,7 +5227,7 @@ snapshots:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.6.2
+      semver: 7.7.1
 
   '@changesets/get-release-plan@4.0.2':
     dependencies:
@@ -6124,7 +6129,7 @@ snapshots:
       debug: 4.3.5
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.6.2
+      semver: 7.7.1
       ts-api-utils: 1.3.0(typescript@5.4.5)
     optionalDependencies:
       typescript: 5.4.5
@@ -6139,7 +6144,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.4
-      semver: 7.6.2
+      semver: 7.7.1
       ts-api-utils: 1.3.0(typescript@5.4.5)
     optionalDependencies:
       typescript: 5.4.5
@@ -6155,7 +6160,7 @@ snapshots:
       '@typescript-eslint/types': 6.13.1
       '@typescript-eslint/typescript-estree': 6.13.1(typescript@5.4.5)
       eslint: 8.57.0
-      semver: 7.6.2
+      semver: 7.7.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -7969,7 +7974,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.6.2
+      semver: 7.7.1
 
   make-error@1.3.6: {}
 
@@ -8497,6 +8502,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.6.2: {}
+
+  semver@7.7.1: {}
 
   serialize-javascript@6.0.0:
     dependencies:
