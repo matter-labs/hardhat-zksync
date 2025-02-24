@@ -37,7 +37,7 @@
     "chalk": "^4.1.2",
     "dockerode": "^4.0.2",
     "fs-extra": "^11.2.0",
-    "chai": "^4.3.4",
+    "chai": "^5.2.0",
     "undici": "^6.18.2",
     "debug": "^4.3.5",
     "semver": "^7.6.2",
@@ -46,7 +46,7 @@
     "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^5.0.1",
     "@types/dockerode": "^3.3.29",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",
