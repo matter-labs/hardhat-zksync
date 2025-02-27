@@ -263,8 +263,8 @@ function ensureTarGzExtension(filePath: string): string {
     return filePath.endsWith('.tar.gz') ? filePath : `${filePath}.tar.gz`;
 }
 
-async function ensureDirectory(filePath: string): Promise<void> {
-    await fse.ensureDir(path.dirname(filePath));
+export async function ensureDirectory(filePath: string, options?: { mode: any }): Promise<void> {
+    await fse.ensureDir(path.dirname(filePath), options);
 }
 
 async function moveFile(sourcePath: string, destinationPath: string): Promise<void> {

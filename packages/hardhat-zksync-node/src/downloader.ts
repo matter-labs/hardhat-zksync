@@ -1,7 +1,7 @@
 import path from 'path';
 import fse from 'fs-extra';
 import chalk from 'chalk';
-import { download, getAllTags, getLatestRelease, getNodeUrl, resolveTag } from './utils';
+import { download, ensureDirectory, getAllTags, getLatestRelease, getNodeUrl, resolveTag } from './utils';
 import { ZkSyncNodePluginError } from './errors';
 import {
     DEFAULT_RELEASE_CACHE_FILE_NAME,
@@ -130,6 +130,7 @@ export class RPCServerDownloader {
             USER_AGENT,
             DEFAULT_TIMEOUT_MILISECONDS,
         );
+        await ensureDirectory(this._tagsInfoFilePath, { mode: 0o755 });
         await fse.writeJSON(this._tagsInfoFilePath, { tags: allTags, latest: latestTag });
     }
 }
