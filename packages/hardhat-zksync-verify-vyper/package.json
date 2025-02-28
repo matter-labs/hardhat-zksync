@@ -40,7 +40,7 @@
     "chalk": "^4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.6",
     "@ethersproject/abi":"^5.7.0",
-    "@ethersproject/address": "^5.7.0"
+    "@ethersproject/address": "^5.8.0"
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
