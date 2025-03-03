@@ -36,6 +36,7 @@ import { RPCServerDownloader } from './downloader';
 import { ZkSyncNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
+import './type-extensions';
 
 extendConfig((config, userConfig) => {
     config.zksyncAnvil = {
