@@ -124,6 +124,8 @@ export function updateBreakableCompilerConfig(
         compiler.settings.detectMissingLibraries = false;
         compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
         compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
+        compiler.settings.codegen = zksolc.settings.codegen;
+        compiler.settings.LLVMOptions = zksolc.settings.LLVMOptions;
     }
 
     solcUpdaters
