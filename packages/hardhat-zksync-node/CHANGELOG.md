@@ -1,5 +1,13 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.3.0...@matterlabs/hardhat-zksync-node-v1.3.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* add type extension to the index ([#1651](https://github.com/matter-labs/hardhat-zksync/issues/1651)) ([1304495](https://github.com/matter-labs/hardhat-zksync/commit/130449550c9096dee56015b12c59255d8a3cc390))
+* create node cache directory with permissions ([#1642](https://github.com/matter-labs/hardhat-zksync/issues/1642)) ([8711e0e](https://github.com/matter-labs/hardhat-zksync/commit/8711e0e2eb3076abecaeb511f44877b258183e09))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.2.1...@matterlabs/hardhat-zksync-node-v1.3.0) (2025-02-24)
 
 
