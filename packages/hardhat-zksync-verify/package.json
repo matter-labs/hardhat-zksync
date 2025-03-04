@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/abi": "^5.8.0",
     "@ethersproject/address": "5.7.0",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.8",
