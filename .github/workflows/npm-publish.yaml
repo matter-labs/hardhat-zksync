@@ -29,6 +29,7 @@ on:
           - hardhat-zksync-chai-matchers
           - hardhat-zksync-ethers
           - hardhat-zksync-verify-vyper
+          - hardhat-zksync-telemetry
 
 jobs:
   publish:

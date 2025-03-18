@@ -8,6 +8,7 @@ import { DEFAULT_DEPLOY_SCRIPTS_PATH, defaultAccountDeployerSettings } from './c
 import { DeployerExtension } from './deployer-extension';
 import { taskWithEraTestNode } from './core/config-env';
 export * from './deployer';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendConfig((config, userConfig) => {
     config.paths.deployPaths = userConfig.paths?.deployPaths ?? DEFAULT_DEPLOY_SCRIPTS_PATH;

@@ -27,6 +27,7 @@ import {
     ZKVYPER_COMPILER_PATH_VERSION,
 } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 const zkVyperCompilerDownloaderMutex = new Mutex();
 
