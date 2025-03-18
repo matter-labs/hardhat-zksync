@@ -385,7 +385,7 @@ jobs:
         os: [ubuntu, macos]
 
     runs-on: ${{ matrix.os }}-latest
-    name: node
+    name: telemetry
     steps:
       - uses: actions/checkout@v3
 
