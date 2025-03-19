@@ -264,28 +264,28 @@ export async function verifyContract(
 }
 
 export async function getContractInfo(
-    { contractFQN, deployedBytecode, matchingCompilerVersions, libraries }: TaskArguments,
+    { contract, deployedBytecode, matchingCompilerVersions, libraries }: TaskArguments,
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>,
 ): Promise<any> {
     if (!hre.network.zksync) {
-        return await runSuper({ contractFQN, deployedBytecode, matchingCompilerVersions, libraries });
+        return await runSuper({ contract, deployedBytecode, matchingCompilerVersions, libraries });
     }
 
     const artifacts = hre.artifacts;
     let contractInformation;
 
-    if (contractFQN !== undefined) {
-        const _ = checkContractName(artifacts, contractFQN);
+    if (contract !== undefined) {
+        const _ = checkContractName(artifacts, contract);
 
         // Process BuildInfo here to check version and throw an error if unexpected version is found.
-        const buildInfo: any = await artifacts.getBuildInfo(contractFQN);
+        const buildInfo: any = await artifacts.getBuildInfo(contract);
 
         if (buildInfo === undefined) {
-            throw new ZkSyncVerifyPluginError(BUILD_INFO_NOT_FOUND_ERROR(contractFQN));
+            throw new ZkSyncVerifyPluginError(BUILD_INFO_NOT_FOUND_ERROR(contract));
         }
 
-        const { sourceName, contractName } = parseFullyQualifiedName(contractFQN);
+        const { sourceName, contractName } = parseFullyQualifiedName(contract);
         contractInformation = await extractMatchingContractInformation(
             sourceName,
             contractName,

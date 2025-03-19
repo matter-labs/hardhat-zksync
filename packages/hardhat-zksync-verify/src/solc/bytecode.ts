@@ -99,10 +99,17 @@ export async function compareBytecode(
         runtimeBytecodeSymbols,
     );
 
-    if (
-        normalizedBytecode.slice(0, deployedExecutableSection.length) ===
-        referenceBytecode.slice(0, deployedExecutableSection.length)
-    ) {
+    // If we don't have metadata detected, it could still have keccak metadata hash.
+    // We cannot check that here, so we will assume that it's present. If not, it will be caught
+    // during verification.
+    // Keccak hash is 32 bytes, but given that we're working with hex strings, it's 64 characters.
+    const bytecodeLength = deployedBytecode.hasMetadata()
+        ? deployedExecutableSection.length
+        : deployedExecutableSection.length > 64
+          ? deployedExecutableSection.length - 64
+          : deployedExecutableSection.length;
+
+    if (normalizedBytecode.slice(0, bytecodeLength) === referenceBytecode.slice(0, bytecodeLength)) {
         // The bytecode matches
         return {
             normalizedBytecode,
