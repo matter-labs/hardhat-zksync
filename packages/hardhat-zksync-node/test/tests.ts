@@ -193,6 +193,7 @@ describe('node-zksync plugin', async function () {
                     '--quiet=true',
                     '--dev-use-local-contracts=true',
                     'fork',
+                    '--fork-url',
                     'mainnet',
                     '--fork-at',
                     '100',
@@ -221,7 +222,7 @@ describe('node-zksync plugin', async function () {
             it('should correctly construct command arguments with fork and replayTx', async function () {
                 const args = { fork: 'http://example.com', replayTx: '0x1234567890abcdef' };
                 const result = constructCommandArgs(args);
-                expect(result).to.deep.equal(['replay_tx', 'http://example.com', '--tx', '0x1234567890abcdef']);
+                expect(result).to.deep.equal(['replay_tx', '--fork-url', 'http://example.com', '0x1234567890abcdef']);
             });
 
             it('should throw error for invalid fork URL pattern', () => {
