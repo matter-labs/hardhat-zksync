@@ -297,7 +297,7 @@ describe('getContractInfo', async function () {
 
     it('should call runSuper if zksync is false', async function () {
         const args = {
-            contractFQN: 'Contract',
+            contract: 'Contract',
             deployedBytecode: '0x1234567890',
             matchingCompilerVersions: [],
             libraries: {},
@@ -317,7 +317,7 @@ describe('getContractInfo', async function () {
 
     it('should throw an error if contractFQN is undefined', async function () {
         const args = {
-            contractFQN: undefined,
+            contract: undefined,
             deployedBytecode: '0x1234567890',
             matchingCompilerVersions: [],
             libraries: {},
@@ -341,7 +341,7 @@ describe('getContractInfo', async function () {
 
     it('should throw an error if contractFQN is undefined', async function () {
         const args = {
-            contractFQN: 'Greeter',
+            contract: 'Greeter',
             deployedBytecode: '0x1234567890',
             matchingCompilerVersions: [],
             libraries: {},
@@ -364,7 +364,7 @@ describe('getContractInfo', async function () {
 
     it('should throw an error if no matching contract is found', async function () {
         const args = {
-            contractFQN: 'contracts/Contract2.sol:Contract2',
+            contract: 'contracts/Contract2.sol:Contract2',
             deployedBytecode: '0x1234567890',
             matchingCompilerVersions: [],
             libraries: {},
@@ -406,7 +406,7 @@ describe('getContractInfo', async function () {
 
     it('should return contract information if contractFQN is defined and matching contract is found', async function () {
         const args = {
-            contractFQN: 'contracts/Contract.sol:Contract',
+            contract: 'contracts/Contract.sol:Contract',
             deployedBytecode: '0x1234567890',
             matchingCompilerVersions: [],
             libraries: {},
