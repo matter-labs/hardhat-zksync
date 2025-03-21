@@ -315,7 +315,7 @@ jobs:
       - name: Test deploy package
         run: |
           cd packages/hardhat-zksync-deploy
-          ls ./node_modules/@matterlabs/hardhat-zksync-telemetry
+          ls ./node_modules/@matterlabs/hardhat-zksync-telemetry/dist
           pnpm test
 
   zksync-ethers:
