@@ -1161,8 +1161,8 @@ importers:
         specifier: ^0.5.21
         version: 0.5.21
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.5.0
+        version: 7.5.0
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1261,8 +1261,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.5.0
+        version: 7.5.0
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1661,8 +1661,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       undici:
-        specifier: ^6.18.2
-        version: 6.18.2
+        specifier: ^7.5.0
+        version: 7.5.0
     devDependencies:
       '@nomiclabs/hardhat-vyper':
         specifier: ^3.0.6
@@ -4885,6 +4885,10 @@ packages:
     resolution: {integrity: sha512-o/MQLTwRm9IVhOqhZ0NQ9oXax1ygPjw6Vs+Vq/4QRjbOAC3B1GCHy7TYxxbExKlb7bzDRzt9vBWU6BDz0RFfYg==}
     engines: {node: '>=18.17'}
 
+  undici@7.5.0:
+    resolution: {integrity: sha512-NFQG741e8mJ0fLQk90xKxFdaSM7z4+IQpAgsFI36bCDY9Z2+aXXZjVy2uUksMouWfMI9+w5ejOq5zYYTBCQJDQ==}
+    engines: {node: '>=20.18.1'}
+
   unfetch@4.2.0:
     resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
 
@@ -5033,6 +5037,7 @@ packages:
   yaeti@0.0.6:
     resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
     engines: {node: '>=0.10.32'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   yallist@2.1.2:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
@@ -8931,6 +8936,8 @@ snapshots:
       '@fastify/busboy': 2.1.1
 
   undici@6.18.2: {}
+
+  undici@7.5.0: {}
 
   unfetch@4.2.0: {}
 
