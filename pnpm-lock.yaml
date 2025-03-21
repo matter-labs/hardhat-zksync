@@ -1391,8 +1391,8 @@ importers:
         specifier: ^7.6.2
         version: 7.6.2
       solidity-ast:
-        specifier: ^0.4.56
-        version: 0.4.56
+        specifier: ^0.4.60
+        version: 0.4.60
       zksync-ethers:
         specifier: ^6.15.0
         version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -4588,6 +4588,9 @@ packages:
   solidity-ast@0.4.56:
     resolution: {integrity: sha512-HgmsA/Gfklm/M8GFbCX/J1qkVH0spXHgALCNZ8fA8x5X+MFdn/8CP2gr5OVyXjXw6RZTPC/Sxl2RUDQOXyNMeA==}
 
+  solidity-ast@0.4.60:
+    resolution: {integrity: sha512-UwhasmQ37ji1ul8cIp0XlrQ/+SVQhy09gGqJH4jnwdo2TgI6YIByzi0PI5QvIGcIdFOs1pbSmJW1pnWB7AVh2w==}
+
   source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
 
@@ -5033,6 +5036,7 @@ packages:
   yaeti@0.0.6:
     resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
     engines: {node: '>=0.10.32'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   yallist@2.1.2:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
@@ -8602,6 +8606,8 @@ snapshots:
   solidity-ast@0.4.56:
     dependencies:
       array.prototype.findlast: 1.2.5
+
+  solidity-ast@0.4.60: {}
 
   source-map-support@0.5.21:
     dependencies:
