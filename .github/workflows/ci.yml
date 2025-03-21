@@ -30,6 +30,7 @@ jobs:
       - name: Setup environment
         run: |
           pnpm install
+          pnpm build
 
       - name: Test zksolc compiler plugin
         run: |
@@ -60,6 +61,7 @@ jobs:
       - name: Setup environment
         run: |
           pnpm install
+          pnpm build
 
       - name: Test zkvyper compiler plugin
         run: |
