@@ -1355,8 +1355,8 @@ importers:
   packages/hardhat-zksync-telemetry:
     dependencies:
       '@matterlabs/zksync-telemetry-js':
-        specifier: git+https://github.com/Romsters/zksync-telemetry-js.git#994e00301b09bcd2c04c3bfba3b0f967fe945e4b
-        version: zksync-telemetry@https://codeload.github.com/Romsters/zksync-telemetry-js/tar.gz/994e00301b09bcd2c04c3bfba3b0f967fe945e4b
+        specifier: git+https://github.com/matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015
+        version: zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
@@ -5509,8 +5509,8 @@ packages:
     peerDependencies:
       ethers: ^6.7.1
 
-  zksync-telemetry@https://codeload.github.com/Romsters/zksync-telemetry-js/tar.gz/994e00301b09bcd2c04c3bfba3b0f967fe945e4b:
-    resolution: {tarball: https://codeload.github.com/Romsters/zksync-telemetry-js/tar.gz/994e00301b09bcd2c04c3bfba3b0f967fe945e4b}
+  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015:
+    resolution: {tarball: https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015}
     version: 1.0.0
 
   zksync@0.13.1:
@@ -10013,7 +10013,7 @@ snapshots:
     dependencies:
       ethers: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  zksync-telemetry@https://codeload.github.com/Romsters/zksync-telemetry-js/tar.gz/994e00301b09bcd2c04c3bfba3b0f967fe945e4b:
+  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015:
     dependencies:
       '@sentry/node': 8.55.0
       env-paths: 2.2.1
