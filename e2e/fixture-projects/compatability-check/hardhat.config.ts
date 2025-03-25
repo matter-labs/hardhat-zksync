@@ -5,7 +5,7 @@ import '@matterlabs/hardhat-zksync-upgradable';
 
 const config = {
     zksolc: {
-        verstion: "1.4.3",
+        verstion: "latest",
         compilerSource: 'binary',
         settings: {
             isSystem: true,

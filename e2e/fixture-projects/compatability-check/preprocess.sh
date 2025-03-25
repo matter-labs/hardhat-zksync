@@ -39,7 +39,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     },
     "dependencies": {
         "@matterlabs/hardhat-zksync-deploy": "0.8.0",
-        "@matterlabs/hardhat-zksync-solc": "1.1.4",
+        "@matterlabs/hardhat-zksync-solc": "1.2.6",
         "@matterlabs/hardhat-zksync-node": "0.1.0",
         "@matterlabs/hardhat-zksync-upgradable": "0.3.1",
         "hardhat": "^2.22.5",
