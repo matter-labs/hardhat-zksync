@@ -2,7 +2,7 @@ import { extendEnvironment, task } from 'hardhat/config';
 import { Telemetry } from '@matterlabs/zksync-telemetry-js';
 
 const TELEMETRY_CONFIG_NAME = 'zksync-tooling';
-const POSTHOG_API_KEY = 'phc_TsD52JxwkT2OXPHA2oKX2Lc3mf30hItCBrE9s9g1MKe';
+const POSTHOG_API_KEY = 'phc_nUZ2xCocs20EXLd8nrRGbzWv46txGI7IsvOl5mBaLuq';
 
 declare global {
     // eslint-disable-next-line no-var

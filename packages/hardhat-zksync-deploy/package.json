@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-deploy",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Hardhat plugin to deploy smart contracts into the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-deploy",
