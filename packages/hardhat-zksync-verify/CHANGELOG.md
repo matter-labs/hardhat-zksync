@@ -1,5 +1,17 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.1...@matterlabs/hardhat-zksync-verify-v1.8.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
+
+### Bug Fixes
+
+* support partial match verification for contracts with keccak metadata ([#1667](https://github.com/matter-labs/hardhat-zksync/issues/1667)) ([e0faf3e](https://github.com/matter-labs/hardhat-zksync/commit/e0faf3e3e6686d898f49a22b42d03b0577d5020c))
+
 ## [1.7.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.0...@matterlabs/hardhat-zksync-verify-v1.7.1) (2024-11-25)
 
 
