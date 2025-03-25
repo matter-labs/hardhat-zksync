@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.4.0...@matterlabs/hardhat-zksync-v1.5.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.3.0...@matterlabs/hardhat-zksync-v1.4.0) (2025-02-24)
 
 
