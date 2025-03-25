@@ -24,6 +24,7 @@ import {
     resolveArguments,
     getVerificationSubtasks,
 } from './task-actions';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendEnvironment((hre) => {
     if (hre.network.config.zksync) {

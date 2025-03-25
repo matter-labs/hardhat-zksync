@@ -34,6 +34,7 @@
     "README.md"
   ],
   "dependencies": {
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomiclabs/hardhat-docker": "^2.0.2",
     "chalk": "^4.1.2",
     "dockerode": "^4.0.2",

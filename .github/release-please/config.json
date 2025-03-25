@@ -5,6 +5,10 @@
     "bump-minor-pre-major": true,
     "bump-patch-for-minor-pre-major": false,
     "packages": {
+        "packages/hardhat-zksync-telemetry": {
+            "release-type": "node",
+            "component": "@matterlabs/hardhat-zksync-telemetry"
+        },
         "packages/hardhat-zksync-deploy": {
             "release-type": "node",
             "component": "@matterlabs/hardhat-zksync-deploy"
