@@ -5,7 +5,8 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zkvyper: {
-        version: 'latest',
+        // Since version from 1.5.8 doesn't produce the correct output where deployment fails, we use 1.5.7
+        version: '1.5.7',
         compilerSource: 'binary',
     },
     defaultNetwork:'inMemoryNode',
