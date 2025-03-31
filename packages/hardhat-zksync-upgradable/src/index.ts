@@ -19,6 +19,7 @@ import {
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import { ExtensionGenerator } from './generator';
 import { ZkSyncUpgradablePluginError } from './errors';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendEnvironment((hre) => {
     const extesionGenerator = new ExtensionGenerator(hre);

@@ -37,6 +37,7 @@ import { ZkSyncNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
 import './type-extensions';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendConfig((config, userConfig) => {
     config.zksyncAnvil = {

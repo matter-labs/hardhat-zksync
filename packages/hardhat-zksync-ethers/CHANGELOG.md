@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.1...@matterlabs/hardhat-zksync-ethers-v1.3.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
 ## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.0...@matterlabs/hardhat-zksync-ethers-v1.2.1) (2024-09-19)
 
 

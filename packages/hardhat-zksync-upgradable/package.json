@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-upgradable",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "description": "Hardhat plugin to deploy and update upgradable smart contracts for the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-upgradable",
@@ -36,6 +36,7 @@
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@openzeppelin/contracts-hardhat-zksync-upgradable": "npm:@openzeppelin/contracts@^5.0.2",
     "@openzeppelin/hardhat-upgrades": "^3.2.1",
     "@openzeppelin/upgrades-core": "^1.37.0",

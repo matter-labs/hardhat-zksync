@@ -67,6 +67,7 @@ import {
     SolcUserConfigExtractor,
 } from './config-extractor';
 import { FactoryDeps, ZkSyncCompilerInput } from './types';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 const logDebug = debug('hardhat:core:tasks:compile');
 

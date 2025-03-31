@@ -1,6 +1,7 @@
 import { extendEnvironment } from 'hardhat/config';
 import './type-extensions';
 import { ExtensionGenerator } from './generator';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendEnvironment((hre) => {
     const extensionGenerator = new ExtensionGenerator(hre);

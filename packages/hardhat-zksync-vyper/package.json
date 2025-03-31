@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-vyper",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Hardhat plugin to compile Vyper smart contracts for the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-vyper",
@@ -34,6 +34,7 @@
     "README.md"
   ],
   "dependencies": {
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomiclabs/hardhat-docker": "^2.0.2",
     "chalk": "^4.1.2",
     "dockerode": "^4.0.2",

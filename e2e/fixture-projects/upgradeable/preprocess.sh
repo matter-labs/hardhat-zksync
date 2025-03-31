@@ -45,7 +45,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "^1.4.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.1.4",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.6",
     "@openzeppelin/upgrades-core": "^1.31.3",
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
