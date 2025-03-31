@@ -123,6 +123,9 @@ task(TASK_NODE, 'Start a ZKSync Node')
         types.string,
     )
     .addFlag('resetCache', 'Reset the local `disk` cache')
+    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
+    .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
+    .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
     .addOptionalParam(
         'showCalls',
         'Show call debug information (none, user, system, all) - default: none',
@@ -148,17 +151,12 @@ task(TASK_NODE, 'Start a ZKSync Node')
         undefined,
         types.string,
     )
-    .addFlag(
-        'resolveHashes',
-        'Try to contact openchain to resolve the ABI & topic names. It enabled, it makes debug log more readable, but will decrease the performance',
-    )
-    .addFlag(
-        'devUseLocalContracts',
-        'Loads the locally compiled system contracts (useful when doing changes to system contracts or bootloader)',
+    .addOptionalParam(
+        'devSystemContracts',
+        'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
     )
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     .addOptionalParam('tag', 'Specified node release for use', undefined)
-    // .addOptionalParam('force', 'Force download', undefined, types.boolean)
     .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
         if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
             return await runSuper();
@@ -177,6 +175,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
+    .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
+    .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
     .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
     .addOptionalParam(
         'cacheDir',
@@ -185,6 +185,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         types.string,
     )
     .addFlag('resetCache', 'Reset the local `disk` cache')
+    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
     .addOptionalParam(
         'showCalls',
         'Show call debug information (none, user, system, all) - default: none',
@@ -210,13 +211,9 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
-    .addFlag(
-        'resolveHashes',
-        'Try to contact openchain to resolve the ABI & topic names. It enabled, it makes debug log more readable, but will decrease the performance',
-    )
-    .addFlag(
-        'devUseLocalContracts',
-        'Loads the locally compiled system contracts (useful when doing changes to system contracts or bootloader)',
+    .addOptionalParam(
+        'devSystemContracts',
+        'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
     )
     .addOptionalParam(
         'fork',
@@ -238,13 +235,14 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cache,
                 cacheDir,
                 resetCache,
+                spawnL1,
+                externalL1,
+                overrideBytecodesDir,
                 showCalls,
-                showEventLogs,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
-                resolveHashes,
-                devUseLocalContracts,
+                devSystemContracts,
                 fork,
                 forkBlockNumber,
                 replayTx,
@@ -258,13 +256,14 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cache: string;
                 cacheDir: string;
                 resetCache: boolean;
+                overrideBytecodesDir: string;
+                spawnL1: number;
+                externalL1: string;
                 showCalls: string;
-                showEventLogs: boolean;
                 showStorageLogs: string;
                 showVmDetails: string;
                 showGasDetails: string;
-                resolveHashes: boolean;
-                devUseLocalContracts: boolean;
+                devSystemContracts: string;
                 fork: string;
                 forkBlockNumber: number;
                 replayTx: string;
@@ -281,13 +280,14 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 cache,
                 cacheDir,
                 resetCache,
+                overrideBytecodesDir,
+                spawnL1,
+                externalL1,
                 showCalls,
-                showEventLogs,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
-                resolveHashes,
-                devUseLocalContracts,
+                devSystemContracts,
                 fork,
                 forkBlockNumber,
                 replayTx,

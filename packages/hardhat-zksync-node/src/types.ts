@@ -5,13 +5,14 @@ export interface CommandArguments {
     cache?: string;
     cacheDir?: string;
     resetCache?: boolean;
+    overrideBytecodesDir?: string;
+    spawnL1?: number;
+    externalL1?: string;
     showCalls?: string;
-    showEventLogs?: boolean;
     showStorageLogs?: string;
     showVmDetails?: string;
     showGasDetails?: string;
-    resolveHashes?: boolean;
-    devUseLocalContracts?: boolean;
+    devSystemContracts?: string;
     fork?: string;
     forkBlockNumber?: number;
     replayTx?: string;
