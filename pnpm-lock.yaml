@@ -66,8 +66,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -124,8 +124,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -182,8 +182,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -316,8 +316,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -392,8 +392,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -471,8 +471,8 @@ importers:
         specifier: ^0.13.1
         version: 0.13.1(@ethersproject/logger@5.7.0)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -550,8 +550,8 @@ importers:
         specifier: ^0.13.1
         version: 0.13.1(@ethersproject/logger@5.7.0)(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -620,8 +620,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -745,8 +745,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -806,8 +806,8 @@ importers:
         specifier: ^2.22.5
         version: 2.22.5(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@18.19.33)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/node':
         specifier: ^18.11.17
@@ -891,8 +891,8 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1037,8 +1037,8 @@ importers:
         specifier: ^5.3.0
         version: 5.4.5
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
 
   packages/hardhat-zksync-ethers:
     dependencies:
@@ -1131,8 +1131,8 @@ importers:
         specifier: ^5.3.0
         version: 5.4.5
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
 
   packages/hardhat-zksync-node:
     dependencies:
@@ -1356,7 +1356,7 @@ importers:
     dependencies:
       '@matterlabs/zksync-telemetry-js':
         specifier: git+https://github.com/matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015
-        version: zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015
+        version: zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
@@ -1476,8 +1476,8 @@ importers:
         specifier: ^0.4.56
         version: 0.4.56
       zksync-ethers:
-        specifier: ^6.15.0
-        version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: ^6.17.0
+        version: 6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -5503,14 +5503,14 @@ packages:
   zksync-crypto@0.6.2:
     resolution: {integrity: sha512-Ry8c9kixDu3rlGCZDOg1UhzKDYe93iOZ7/Z6N1bkkrVKhmZJTIc7h+1kOjOyyhaSaHwBt8quMeBAaZKjtUeB2Q==}
 
-  zksync-ethers@6.15.0:
-    resolution: {integrity: sha512-zafUxA/lysBO+9Wd6B3qNtDElsPwvAc2b4nBc/YiB4QY4H0pIBvV3/JqxHXXTppEo4gyHAX/+M5brW2qb4YnKA==}
+  zksync-ethers@6.17.0:
+    resolution: {integrity: sha512-HgBswwyiZs5sNg4o4CYfAjA6Zhs81XNfyHtujMFoMW+EI+IfbfgGsKCEmwDJprGzMxr7Ez91zAp0h4j7aXXUag==}
     engines: {node: '>=18.9.0'}
     peerDependencies:
       ethers: ^6.7.1
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015:
-    resolution: {tarball: https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015}
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015:
+    resolution: {commit: 65e272e5303e37f78aa46a53909fff7e9db1f015, repo: git@github.com:matter-labs/zksync-telemetry-js.git, type: git}
     version: 1.0.0
 
   zksync@0.13.1:
@@ -10009,11 +10009,11 @@ snapshots:
 
   zksync-crypto@0.6.2: {}
 
-  zksync-ethers@6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
+  zksync-ethers@6.17.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
     dependencies:
       ethers: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/65e272e5303e37f78aa46a53909fff7e9db1f015:
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015:
     dependencies:
       '@sentry/node': 8.55.0
       env-paths: 2.2.1
