@@ -47,7 +47,7 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "@matterlabs/zksync-telemetry-js": "git+https://github.com/matter-labs/zksync-telemetry-js.git#65e272e5303e37f78aa46a53909fff7e9db1f015"
+    "@matterlabs/zksync-telemetry-js": "git+https://github.com/matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11"
   },
   "peerDependencies": {
     "hardhat": "^2.22.5"
