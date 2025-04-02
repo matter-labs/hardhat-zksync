@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-telemetry",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Telemetry utils for hardhat ZKsync plugins",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-telemetry",

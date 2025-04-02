@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-telemetry-v1.1.0...@matterlabs/hardhat-zksync-telemetry-v1.1.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* update telemetry-js lib ([#1717](https://github.com/matter-labs/hardhat-zksync/issues/1717)) ([f1f16c7](https://github.com/matter-labs/hardhat-zksync/commit/f1f16c7597eb2927c8312e9871ba1b53db1474a9))
+
 ## [1.1.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-telemetry-v1.0.0...@matterlabs/hardhat-zksync-telemetry-v1.1.0) (2025-03-25)
 
 
