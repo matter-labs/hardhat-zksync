@@ -70,6 +70,10 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--reset-cache=${args.resetCache}`);
     }
 
+    if (args.overrideBytecodesDir) {
+        commandArgs.push(`--override-bytecodes-dir=${args.overrideBytecodesDir}`);
+    }
+
     if (args.showStorageLogs) {
         if (!ALLOWED_SHOW_STORAGE_LOGS_VALUES.includes(args.showStorageLogs)) {
             throw new ZkSyncNodePluginError(`Invalid showStorageLogs value: ${args.showStorageLogs}`);
@@ -98,12 +102,12 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--show-calls=${args.showCalls}`);
     }
 
-    if (args.resolveHashes) {
-        commandArgs.push(`--resolve-hashes=${args.resolveHashes}`);
+    if (args.externalL1 !== undefined) {
+        commandArgs.push(`--external-l1=${args.externalL1}`);
     }
 
-    if (args.showEventLogs !== undefined) {
-        commandArgs.push(`--show-event-logs=${args.showEventLogs}`);
+    if (args.spawnL1 !== undefined) {
+        commandArgs.push(`--spawn-l1=${args.spawnL1}`);
     }
 
     if (args.showNodeConfig !== undefined) {
@@ -118,8 +122,8 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--quiet=${args.quiet}`);
     }
 
-    if (args.devUseLocalContracts) {
-        commandArgs.push(`--dev-use-local-contracts=${args.devUseLocalContracts}`);
+    if (args.devSystemContracts) {
+        commandArgs.push(`--dev-system-contracts=${args.devSystemContracts}`);
     }
 
     if (args.forkBlockNumber && args.replayTx) {
@@ -141,11 +145,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         }
 
         if (args.forkBlockNumber) {
-            commandArgs.push('fork', args.fork, '--fork-at', args.forkBlockNumber.toString());
+            commandArgs.push('fork', '--fork-url', args.fork, '--fork-at', args.forkBlockNumber.toString());
         } else if (args.replayTx) {
-            commandArgs.push('replay_tx', args.fork, '--tx', args.replayTx);
+            commandArgs.push('replay_tx', '--fork-url', args.fork, args.replayTx);
         } else {
-            commandArgs.push('fork', args.fork);
+            commandArgs.push('fork', '--fork-url', args.fork);
         }
     } else {
         commandArgs.push('run');
