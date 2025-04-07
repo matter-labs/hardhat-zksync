@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.3.0...@matterlabs/hardhat-zksync-solc-v1.3.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* bump fallback zksolc version ([#1710](https://github.com/matter-labs/hardhat-zksync/issues/1710)) ([c1f8ec2](https://github.com/matter-labs/hardhat-zksync/commit/c1f8ec2e40b862fe8dc61f80b5a196a64fd000fd))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.6...@matterlabs/hardhat-zksync-solc-v1.3.0) (2025-03-25)
 
 
