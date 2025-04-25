@@ -77,6 +77,10 @@ export function isVersionInRange(version: string, versionInfo: CompilerVersionIn
     return semver.gte(version, minVersion) && semver.lte(version, latest);
 }
 
+export function isVersionForDeprecation(version: string): boolean {
+    return semver.lt(version, '1.4.0');
+}
+
 export function checkSupportedVyperVersions(vyper: MultiVyperConfig) {
     vyper.compilers.forEach((compiler) => {
         if (UNSUPPORTED_VYPER_VERSIONS.includes(compiler.version)) {

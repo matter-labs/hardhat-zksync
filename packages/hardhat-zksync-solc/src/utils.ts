@@ -223,6 +223,10 @@ export function isVersionInRange(version: string, versionInfo: CompilerVersionIn
     return semver.gte(version, minVersion) && semver.lte(version, latest);
 }
 
+export function isVersionForDeprecation(version: string): boolean {
+    return semver.lt(version, '1.4.0');
+}
+
 // Generate SolcJS executable code
 export function generateSolcJSExecutableCode(solcJsPath: string, workingDir: string): string {
     return SOLCJS_EXECUTABLE_CODE.replace(/SOLCJS_PATH/g, solcJsPath).replace(/WORKING_DIR/g, workingDir);

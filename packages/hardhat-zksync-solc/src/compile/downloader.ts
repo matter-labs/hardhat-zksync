@@ -11,6 +11,7 @@ import {
     saltFromUrl,
     saveDataToFile,
     getLatestRelease,
+    isVersionForDeprecation,
 } from '../utils';
 import {
     COMPILER_BINARY_CORRUPTION_ERROR,
@@ -26,6 +27,8 @@ import {
     USER_AGENT,
     ZKSOLC_COMPILER_PATH_VERSION,
     fallbackLatestZkSolcVersion,
+    COMPILER_ZKSOLC_LATEST_DEPRECATION,
+    COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION,
 } from '../constants';
 import { ZkSyncSolcPluginError } from './../errors';
 
@@ -67,6 +70,14 @@ export class ZksolcCompilerDownloader {
                 throw new ZkSyncSolcPluginError(
                     `The zksolc compiler path is not specified for local or remote origin.`,
                 );
+            }
+
+            if (version === 'latest') {
+                console.info(chalk.yellow(COMPILER_ZKSOLC_LATEST_DEPRECATION));
+            }
+
+            if (version !== 'latest' && isVersionForDeprecation(version)) {
+                console.info(chalk.yellow(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION(version)));
             }
 
             if (version === 'latest' || version === compilerVersionInfo.latest) {
