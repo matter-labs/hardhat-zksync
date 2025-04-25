@@ -38,7 +38,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.8",
-    "axios": "^1.7.2",
+    "axios": "^1.9.0",
     "semver": "^7.6.2",
     "cbor": "^9.0.2",
     "chai": "^4.3.4",
