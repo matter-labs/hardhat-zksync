@@ -80,7 +80,7 @@ export class ZkVyperCompilerDownloader {
                 console.info(chalk.yellow(COMPILER_ZKVYPER_LATEST_DEPRECATION));
             }
 
-            if (version !== 'latest' && isVersionForDeprecation(version)) {
+            if (version !== 'latest' && version !== ZKVYPER_COMPILER_PATH_VERSION && isVersionForDeprecation(version)) {
                 console.info(chalk.yellow(COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION(version)));
             }
 

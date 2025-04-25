@@ -76,7 +76,7 @@ export class ZksolcCompilerDownloader {
                 console.info(chalk.yellow(COMPILER_ZKSOLC_LATEST_DEPRECATION));
             }
 
-            if (version !== 'latest' && isVersionForDeprecation(version)) {
+            if (version !== 'latest' && version !== ZKSOLC_COMPILER_PATH_VERSION && isVersionForDeprecation(version)) {
                 console.info(chalk.yellow(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION(version)));
             }
 
