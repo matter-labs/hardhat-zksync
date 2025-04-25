@@ -8,6 +8,7 @@ import {
     getLatestRelease,
     getZkvyperUrl,
     isURL,
+    isVersionForDeprecation,
     isVersionInRange,
     saltFromUrl,
     saveDataToFile,
@@ -26,6 +27,8 @@ import {
     ZKVYPER_BIN_REPOSITORY_NAME,
     ZKVYPER_COMPILER_PATH_VERSION,
     ZKVYPER_COMPILER_VERSION_MIN_VERSION,
+    COMPILER_ZKVYPER_LATEST_DEPRECATION,
+    COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION,
 } from '../constants';
 import { ZkSyncVyperPluginError } from '../errors';
 
@@ -71,6 +74,14 @@ export class ZkVyperCompilerDownloader {
                 throw new ZkSyncVyperPluginError(
                     `The zkvyper compiler path is not specified for local or remote origin.`,
                 );
+            }
+
+            if (version === 'latest') {
+                console.info(chalk.yellow(COMPILER_ZKVYPER_LATEST_DEPRECATION));
+            }
+
+            if (version !== 'latest' && isVersionForDeprecation(version)) {
+                console.info(chalk.yellow(COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION(version)));
             }
 
             if (version === 'latest' || version === compilerVersionInfo.latest) {

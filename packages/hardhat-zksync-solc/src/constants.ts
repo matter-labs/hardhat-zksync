@@ -88,3 +88,9 @@ export const SOLCJS_EXECUTABLE_CODE = `#!/usr/bin/env node
 
 export const fallbackLatestZkSolcVersion = '1.5.12';
 export const fallbackLatestEraCompilerVersion = 'x.x.x-1.0.1';
+
+export const COMPILER_ZKSOLC_LATEST_DEPRECATION = `The 'latest' version specifier is deprecated. Please specify the version of zksolc explicitly.
+To see available versions and changelogs, visit https://github.com/matter-labs/era-compiler-solidity/releases.`;
+
+export const COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION = (version: string) =>
+    `The solc version ${version} is deprecated and will be removed for security reasons soon. Please update to v1.4.0 or newer.`;
