@@ -10,13 +10,14 @@ const config: HardhatUserConfig = {
         compilerSource: 'binary',
         settings: {},
     },
+    defaultNetwork: 'zkSyncNetwork',
     networks: {
         hardhat: {
             zksync: true,
         },
         zkSyncNetwork: {
             allowUnlimitedContractSize: true,
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
             ethNetwork: 'http://0.0.0.0:8545',
             zksync: true,
         },

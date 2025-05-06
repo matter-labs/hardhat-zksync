@@ -9,6 +9,7 @@ import type { Dispatcher } from 'undici';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import { createProvider } from 'hardhat/internal/core/providers/construction';
 import { HardhatConfig } from 'hardhat/types';
+import semver from 'semver';
 
 import {
     ALLOWED_CACHE_VALUES,
@@ -19,18 +20,23 @@ import {
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
     BASE_URL,
+    ERA_TEST_NODE_BINARY_VERSION,
+    MAX_PORT_ATTEMPTS,
     NETWORK_ACCOUNTS,
     NETWORK_ETH,
     NETWORK_GAS,
     NETWORK_GAS_PRICE,
     PLATFORM_MAP,
+    START_PORT,
     TEMP_FILE_PREFIX,
     ZKSYNC_ERA_TEST_NODE_NETWORK_NAME,
 } from './constants';
 import { ZkSyncNodePluginError } from './errors';
 import { CommandArguments } from './types';
+import { RPCServerDownloader } from './downloader';
+import { JsonRpcServer } from './server';
 
-// Generates command arguments for running the era-test-node binary
+// Generates command arguments for running the anvil-zksync binary
 export function constructCommandArgs(args: CommandArguments): string[] {
     const commandArgs: string[] = [];
 
@@ -61,7 +67,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.resetCache) {
-        commandArgs.push(`--reset-cache`);
+        commandArgs.push(`--reset-cache=${args.resetCache}`);
     }
 
     if (args.showStorageLogs) {
@@ -93,11 +99,27 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.resolveHashes) {
-        commandArgs.push(`--resolve-hashes`);
+        commandArgs.push(`--resolve-hashes=${args.resolveHashes}`);
+    }
+
+    if (args.showEventLogs !== undefined) {
+        commandArgs.push(`--show-event-logs=${args.showEventLogs}`);
+    }
+
+    if (args.showNodeConfig !== undefined) {
+        commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
+    }
+
+    if (args.showTxSummary !== undefined) {
+        commandArgs.push(`--show-tx-summary=${args.showTxSummary}`);
+    }
+
+    if (args.quiet) {
+        commandArgs.push(`--quiet=${args.quiet}`);
     }
 
     if (args.devUseLocalContracts) {
-        commandArgs.push(`--dev-use-local-contracts`);
+        commandArgs.push(`--dev-use-local-contracts=${args.devUseLocalContracts}`);
     }
 
     if (args.forkBlockNumber && args.replayTx) {
@@ -141,7 +163,7 @@ function getArch() {
     return process.arch === 'arm64' ? 'aarch64' : arch;
 }
 
-// Returns the path to the directory where the era-test-node binary is/will be located
+// Returns the path to the directory where the anvil-zksync binary is/will be located
 export async function getRPCServerBinariesDir(): Promise<string> {
     const compilersCachePath = await getCompilersDir();
     const basePath = path.dirname(compilersCachePath);
@@ -150,14 +172,20 @@ export async function getRPCServerBinariesDir(): Promise<string> {
     return rpcServerBinariesPath;
 }
 
-// Get latest release from GitHub of the era-test-node binary
 export async function getLatestRelease(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
-    const url = `https://github.com/${owner}/${repo}/releases/latest`;
-    const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/v`;
+    const finalUrl = await handleRedirect(`https://github.com/${owner}/${repo}/releases/latest`, userAgent, timeout);
+    const match = finalUrl.match(/\/releases\/tag\/v(.*)/);
+    if (match) {
+        return match[1];
+    }
+    throw new ZkSyncNodePluginError(`Couldn't find the latest release for URL: ${finalUrl}`);
+}
+
+export async function getAllTags(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
+    const finalUrl = await handleRedirect(`https://api.github.com/repos/${owner}/${repo}/tags`, userAgent, timeout);
 
     const { request } = await import('undici');
-
-    const response = await request(url, {
+    const response = await request(finalUrl, {
         headersTimeout: timeout,
         maxRedirections: 0,
         method: 'GET',
@@ -166,28 +194,54 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
         },
     });
 
-    // Check if the response is a redirect
-    if (response.statusCode >= 300 && response.statusCode < 400) {
-        // Get the URL from the 'location' header
-        if (response.headers.location && typeof response.headers.location === 'string') {
-            // Check if the redirect URL matches the expected pattern
-            if (response.headers.location.startsWith(redirectUrlPattern)) {
-                // Extract the tag from the redirect URL
-                return response.headers.location.substring(redirectUrlPattern.length);
-            }
-
-            throw new ZkSyncNodePluginError(`Unexpected redirect URL: ${response.headers.location} for URL: ${url}`);
-        } else {
-            // Throw an error if the 'location' header is missing in a redirect response
-            throw new ZkSyncNodePluginError(`Redirect location not found for URL: ${url}`);
-        }
+    if (response.statusCode === 200) {
+        return JSON.parse(await response.body.text()).map((tag: any) => tag.name.slice(1));
     } else {
-        // Throw an error for non-redirect responses
-        throw new ZkSyncNodePluginError(`Unexpected response status: ${response.statusCode} for URL: ${url}`);
+        throw new ZkSyncNodePluginError(`Unexpected response status: ${response.statusCode} for URL: ${finalUrl}`);
     }
 }
 
-// Get the asset to download from the latest release of the era-test-node binary
+async function handleRedirect(url: string, userAgent: string, timeout: number): Promise<string> {
+    const { request } = await import('undici');
+
+    let currentUrl = url;
+
+    while (true) {
+        const response = await request(currentUrl, {
+            headersTimeout: timeout,
+            maxRedirections: 0,
+            method: 'GET',
+            headers: {
+                'User-Agent': `${userAgent}`,
+            },
+        });
+
+        if (response.statusCode >= 300 && response.statusCode < 400) {
+            if (response.headers.location && typeof response.headers.location === 'string') {
+                currentUrl = response.headers.location;
+                continue;
+            } else {
+                throw new ZkSyncNodePluginError(`Redirect location not found for URL: ${currentUrl}`);
+            }
+        } else {
+            return currentUrl;
+        }
+    }
+}
+
+export function resolveTag(tags: string[], latestTag: string, initialTag: string): string {
+    if (initialTag === 'latest') {
+        return latestTag;
+    }
+    const [major, minor, patch] = initialTag.split('.');
+    const tag = tags.find((t) => t.startsWith(patch === '*' ? `${major}.${minor}` : initialTag));
+    if (!tag) {
+        console.warn(`Couldn't find the specified tag: ${initialTag}. Using the latest tag: ${latestTag}`);
+        return latestTag;
+    }
+    return tag;
+}
+// Get the asset to download from the latest release of the anvil-zksync binary
 export async function getNodeUrl(repo: string, release: string): Promise<string> {
     const platform = getPlatform();
 
@@ -196,7 +250,9 @@ export async function getNodeUrl(repo: string, release: string): Promise<string>
         throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
     }
 
-    return `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
+    return semver.gt(release, ERA_TEST_NODE_BINARY_VERSION)
+        ? `${repo}/releases/download/v${release}/anvil-zksync-v${release}-${getArch()}-${platform}.tar.gz`
+        : `${repo}/releases/download/v${release}/era_test_node-v${release}-${getArch()}-${platform}.tar.gz`;
 }
 
 function isTarGzFile(filePath: string): boolean {
@@ -207,8 +263,8 @@ function ensureTarGzExtension(filePath: string): string {
     return filePath.endsWith('.tar.gz') ? filePath : `${filePath}.tar.gz`;
 }
 
-async function ensureDirectory(filePath: string): Promise<void> {
-    await fse.ensureDir(path.dirname(filePath));
+export async function ensureDirectory(filePath: string, options?: { mode: any }): Promise<void> {
+    await fse.ensureDir(path.dirname(filePath), options);
 }
 
 async function moveFile(sourcePath: string, destinationPath: string): Promise<void> {
@@ -384,7 +440,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
     return taskArgs;
 }
 
-function getNetworkConfig(url: string) {
+export function getNetworkConfig(url: string) {
     return {
         accounts: NETWORK_ACCOUNTS.REMOTE,
         gas: NETWORK_GAS.AUTO,
@@ -394,6 +450,7 @@ function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
+        chainId: 260,
         zksync: true,
     };
 }
@@ -406,3 +463,30 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
     config.networks[network.name] = network.config;
     network.provider = await createProvider(config, network.name);
 }
+
+export const startServer = async (
+    tag?: string,
+    existingBinaryPath?: string,
+    force: boolean = false,
+    args?: CommandArguments,
+) => {
+    const platform = getPlatform();
+    if (platform === 'windows' || platform === '') {
+        throw new ZkSyncNodePluginError(`Unsupported platform: ${platform}`);
+    }
+    const rpcServerBinaryDir = await getRPCServerBinariesDir();
+
+    const downloader: RPCServerDownloader = new RPCServerDownloader(rpcServerBinaryDir, tag || 'latest');
+
+    await downloader.downloadIfNeeded(force, existingBinaryPath);
+    const binaryPath = await downloader.getBinaryPath();
+
+    const currentPort = await getAvailablePort(START_PORT, MAX_PORT_ATTEMPTS);
+    const commandArgs = constructCommandArgs({ ...args, port: currentPort });
+
+    return {
+        commandArgs,
+        server: new JsonRpcServer(binaryPath),
+        port: currentPort,
+    };
+};

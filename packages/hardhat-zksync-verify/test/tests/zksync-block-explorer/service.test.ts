@@ -1,25 +1,178 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
+import sinon, { SinonSandbox } from 'sinon';
 import axios from 'axios';
-import {
-    checkVerificationStatusService,
-    verifyContractRequest,
-    getSupportedCompilerVersions,
-    ZkSyncBlockExplorerResponse,
-} from '../../../src/zksync-block-explorer/service';
-import { VerificationStatusResponse } from '../../../src/zksync-block-explorer/verification-status-response';
-import { ZkSyncBlockExplorerVerifyRequest } from '../../../src/zksync-block-explorer/verify-contract-request';
+import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
+import { EthereumProvider } from 'hardhat/types';
+import assert from 'assert';
+import { ZksyncBlockExplorerResponse } from '../../../src/explorers/zksync-block-explorer/verification-status-response';
+import { ZkSyncExplorerService } from '../../../src/explorers/zksync-block-explorer/service';
+import * as utils from '../../../src/utils';
+import * as metadata from '../../../src/solc/metadata';
 
 describe('ZkSyncBlockExplorer Service', () => {
+    describe('fromChainConfig', () => {
+        let hre: any;
+        let chainConfig: ChainConfig;
+        beforeEach(() => {
+            hre = {};
+            chainConfig = {
+                network: 'sepolia',
+                chainId: 300,
+                urls: {
+                    apiURL: 'https://api.example.com',
+                    browserURL: 'https://browser.example.com',
+                },
+            };
+        });
+
+        it('should create an instance of ZkSyncExplorerService with valid config', async () => {
+            const service = await ZkSyncExplorerService.fromChainConfig(hre, chainConfig);
+            expect(service).instanceOf(ZkSyncExplorerService);
+        });
+    });
+
+    describe('getCurrentChainConfig', () => {
+        const customChains: ChainConfig[] = [
+            {
+                network: 'customChain1',
+                chainId: 5000,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+            {
+                network: 'customChain2',
+                chainId: 5000,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+            {
+                network: 'customChain3',
+                chainId: 4999,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+        ];
+
+        const defaultChains: ChainConfig[] = [
+            {
+                network: 'defaultChains1',
+                chainId: 300,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+            {
+                network: 'defaultChains2',
+                chainId: 260,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+            {
+                network: 'defaultChains3',
+                chainId: 250,
+                urls: {
+                    apiURL: '<api-url>',
+                    browserURL: '<browser-url>',
+                },
+            },
+        ];
+
+        it('should return the last matching custom chain defined by the user', async function () {
+            const networkName = 'customChain2';
+            const ethereumProvider = {
+                async send() {
+                    return (5000).toString(16);
+                },
+            } as unknown as EthereumProvider;
+
+            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+                ethereumProvider,
+                customChains,
+                defaultChains,
+            );
+
+            assert.equal(currentChainConfig.network, networkName);
+            assert.equal(currentChainConfig.chainId, 5000);
+        });
+
+        it('should return a built-in chain if no custom chain matches', async function () {
+            const networkName = 'defaultChains2';
+            const ethereumProvider = {
+                async send() {
+                    return (260).toString(16);
+                },
+            } as unknown as EthereumProvider;
+            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+                ethereumProvider,
+                customChains,
+                defaultChains,
+            );
+
+            assert.equal(currentChainConfig.network, networkName);
+            assert.equal(currentChainConfig.chainId, 260);
+        });
+
+        it('should return hardhat if the selected network is hardhat and it was added as a custom chain', async () => {
+            const networkName = 'hardhat';
+            const ethereumProvider = {
+                async send() {
+                    return (31337).toString(16);
+                },
+            } as unknown as EthereumProvider;
+
+            const currentChainConfig = await ZkSyncExplorerService.getCurrentChainConfig(
+                ethereumProvider,
+                [
+                    ...customChains,
+                    {
+                        network: 'hardhat',
+                        chainId: 31337,
+                        urls: {
+                            apiURL: '<api-url>',
+                            browserURL: '<browser-url>',
+                        },
+                    },
+                ],
+                defaultChains,
+            );
+
+            assert.equal(currentChainConfig.network, networkName);
+            assert.equal(currentChainConfig.chainId, 31337);
+        });
+
+        it('should throw if there are no matches at all', async () => {
+            const ethereumProvider = {
+                async send() {
+                    return (21343214123).toString(16);
+                },
+            } as unknown as EthereumProvider;
+
+            try {
+                await ZkSyncExplorerService.getCurrentChainConfig(ethereumProvider, customChains, defaultChains);
+            } catch (e: any) {
+                expect(e.message).to.contains('The provided chain with id 21343214123 is not supported by default!');
+            }
+        });
+    });
+
     describe('checkVerificationStatusService', () => {
+        const sandbox: SinonSandbox = sinon.createSandbox();
         afterEach(() => {
-            sinon.restore();
+            sandbox.restore();
         });
 
         it('should return the verification status response', async () => {
             const requestId = 123;
-            const verifyURL = 'https://example.com/verify';
-
+            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
             const response = {
                 status: 200,
                 data: {
@@ -30,20 +183,21 @@ describe('ZkSyncBlockExplorer Service', () => {
                 },
             };
 
-            sinon.stub(axios, 'get').resolves(response);
-
-            const result = await checkVerificationStatusService(requestId, verifyURL);
+            sandbox.stub(axios, 'get').resolves(response);
+            const result = await explorer.getVerificationStatus(requestId, {
+                contractAddress: '0x0000000000000001',
+                contractName: 'contracts/Example.sol:Example',
+            });
 
             expect(!result.errorExists());
-            expect(result).to.be.instanceOf(VerificationStatusResponse);
+            expect(result).to.be.instanceOf(ZksyncBlockExplorerResponse);
             expect(result.status).to.equal(response.data.status);
-            expect(result.isVerificationSuccess()).to.equal(true);
+            expect(result.isSuccess()).to.equal(true);
         });
 
         it('should return the error', async () => {
             const requestId = 123;
-            const verifyURL = 'https://example.com/verify';
-
+            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
             const response = {
                 status: 400,
                 data: {
@@ -54,25 +208,30 @@ describe('ZkSyncBlockExplorer Service', () => {
                 },
             };
 
-            sinon.stub(axios, 'get').resolves(response);
+            sandbox.stub(axios, 'get').resolves(response);
 
-            const result = await checkVerificationStatusService(requestId, verifyURL);
-
-            expect(!result.isPending());
-            expect(!result.isQueued());
-            expect(result.getError().includes('already verified'));
+            try {
+                await explorer.getVerificationStatus(requestId, {
+                    contractAddress: '0x0000000000000001',
+                    contractName: 'contracts/Example.sol:Example',
+                });
+            } catch (error: any) {
+                expect(error.message).to.contains(`Failed to send contract verification request`);
+            }
         });
 
         it('should handle axios error', async () => {
             const requestId = 123;
-            const verifyURL = 'https://example.com/verify';
-
+            const explorer = new ZkSyncExplorerService({} as any, 'https://example.com/verify', 'https://example.com/');
             const error = new Error('Network error');
 
-            sinon.stub(axios, 'get').rejects(error);
+            sandbox.stub(axios, 'get').rejects(error);
 
             try {
-                await checkVerificationStatusService(requestId, verifyURL);
+                await explorer.getVerificationStatus(requestId, {
+                    contractAddress: '0x0000000000000001',
+                    contractName: 'contracts/Example.sol:Example',
+                });
             } catch (err: any) {
                 expect(err.message).to.equal(err.message);
             }
@@ -80,121 +239,240 @@ describe('ZkSyncBlockExplorer Service', () => {
     });
 
     describe('verifyContractRequest', () => {
+        const sandbox: SinonSandbox = sinon.createSandbox();
+        beforeEach(() => {
+            sandbox.stub(utils, 'retrieveContractBytecode').resolves('0x1234567890');
+            sandbox.stub(metadata, 'inferSolcVersion').resolves('0.8.0');
+        });
         afterEach(() => {
-            sinon.restore();
+            sandbox.restore();
         });
 
         it('should return the ZkSyncBlockExplorerResponse when verification is successful', async () => {
-            const req: ZkSyncBlockExplorerVerifyRequest = {
-                codeFormat: 'solidity-standard-json-input',
-                compilerSolcVersion: '0.8.0',
-                compilerZksolcVersion: '0.1.0',
-                contractName: 'MyContract',
-                constructorArguments: '[]',
-                contractAddress: '0x123456',
-                optimizationUsed: true,
-                sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
-            };
-            const verifyURL = 'https://example.com/verify';
-
-            const response = {
+            sandbox.stub(axios, 'post').resolves({
                 status: 200,
-                data: 'Verification successful',
+                data: '24444',
+            });
+            sandbox.stub(axios, 'get').resolves({
+                status: 200,
+                data: ['0.8.0'],
+            });
+
+            sandbox.stub().resolves(0);
+            const hre = {
+                config: {
+                    paths: {
+                        sources: 'contracts',
+                        root: 'root',
+                    },
+                    zksolc: {
+                        version: '1.5.4',
+                        settings: {
+                            contractsToCompile: [],
+                        },
+                    },
+                },
+                network: {
+                    config: {
+                        url: 'http://localhost:3000',
+                    },
+                    zksync: true,
+                    verifyURL: 'http://localhost:3000/verify',
+                },
+                run: sandbox
+                    .stub()
+                    .onSecondCall()
+                    .resolves(['0.8.0'])
+                    .onThirdCall()
+                    .resolves({
+                        contractName: 'Contract',
+                        sourceName: 'contracts/Contract.sol',
+                        compilerInput: {
+                            language: 'Solidity',
+                            sources: {
+                                'contracts/Contract.sol': {
+                                    content: 'contract Contract {}',
+                                },
+                            },
+                            settings: {
+                                optimizer: {
+                                    enabled: true,
+                                },
+                                outputSelection: {
+                                    '*': {
+                                        '*': ['evm'],
+                                    },
+                                },
+                            },
+                        },
+                        contractOutput: {
+                            abi: [],
+                            metadata: {
+                                zk_version: '0.1.0',
+                                solc_metadata: '0x1234567890',
+                                optimizer_settings: '0x1234567890',
+                            },
+                            evm: {
+                                bytecode: {
+                                    linkReferences: {},
+                                    object: '0x1234567890',
+                                    opcodes: '0x1234567890',
+                                    sourceMap: '0x1234567890',
+                                },
+                                deployedBytecode: {
+                                    linkReferences: {},
+                                    object: '0x1234567890',
+                                    opcodes: '0x1234567890',
+                                    sourceMap: '0x1234567890',
+                                },
+                                methodIdentifiers: {},
+                            },
+                        },
+                        solcVersion: '0.8.0',
+                    })
+                    .onCall(3)
+                    .resolves({
+                        getResolvedFiles: sandbox.stub().resolves([
+                            {
+                                sourceName: 'contracts/Contract.sol',
+                                content: {
+                                    rawContent: 'contract Contract {}',
+                                },
+                            },
+                        ]),
+                    }),
             };
+            const explorer = new ZkSyncExplorerService(
+                hre as any,
+                'https://example.com/verify',
+                'https://example.com/',
+            );
 
-            sinon.stub(axios, 'post').resolves(response);
+            const result = await explorer.verify(
+                '0x275a050Fd05883dbB572D76F8B5E53A892b370AD',
+                'contracts/Contract.sol',
+                [],
+                {},
+                false,
+            );
 
-            const result = await verifyContractRequest(req, verifyURL);
-
-            expect(result).to.be.instanceOf(ZkSyncBlockExplorerResponse);
-            expect(result.status).to.equal(response.status);
-            expect(result.message).to.equal(response.data);
+            expect(result.verificationId).to.equal(24444);
+            expect(result.contractVerifyDataInfo.contractAddress).to.equal(
+                '0x275a050Fd05883dbB572D76F8B5E53A892b370AD',
+            );
+            expect(result.contractVerifyDataInfo.contractName).to.equal('contracts/Contract.sol:Contract');
         });
 
-        it('should throw ZkSyncVerifyPluginError when verification fails', async () => {
-            const req: ZkSyncBlockExplorerVerifyRequest = {
-                codeFormat: 'solidity-standard-json-input',
-                compilerSolcVersion: '0.8.0',
-                compilerZksolcVersion: '0.1.0',
-                contractName: 'MyContract',
-                constructorArguments: '[]',
-                contractAddress: '0x123456',
-                optimizationUsed: true,
-                sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
-            };
-            const verifyURL = 'https://example.com/verify';
+        it('should throw the error when verification is unsuccessful', async () => {
+            sandbox.stub(axios, 'post').resolves({
+                status: 500,
+                data: 'Cannot verify contract',
+            });
+            sandbox.stub(axios, 'get').resolves({
+                status: 200,
+                data: ['0.8.0'],
+            });
 
-            const response = {
-                status: 400,
-                data: 'Verification failed',
+            sandbox.stub().resolves(0);
+            const hre = {
+                config: {
+                    paths: {
+                        sources: 'contracts',
+                        root: 'root',
+                    },
+                    zksolc: {
+                        version: '1.5.4',
+                        settings: {
+                            contractsToCompile: [],
+                        },
+                    },
+                },
+                network: {
+                    config: {
+                        url: 'http://localhost:3000',
+                    },
+                    zksync: true,
+                    verifyURL: 'http://localhost:3000/verify',
+                },
+                run: sandbox
+                    .stub()
+                    .onSecondCall()
+                    .resolves(['0.8.0'])
+                    .onThirdCall()
+                    .resolves({
+                        contractName: 'Contract',
+                        sourceName: 'contracts/Contract.sol',
+                        compilerInput: {
+                            language: 'Solidity',
+                            sources: {
+                                'contracts/Contract.sol': {
+                                    content: 'contract Contract {}',
+                                },
+                            },
+                            settings: {
+                                optimizer: {
+                                    enabled: true,
+                                },
+                                outputSelection: {
+                                    '*': {
+                                        '*': ['evm'],
+                                    },
+                                },
+                            },
+                        },
+                        contractOutput: {
+                            abi: [],
+                            metadata: {
+                                zk_version: '0.1.0',
+                                solc_metadata: '0x1234567890',
+                                optimizer_settings: '0x1234567890',
+                            },
+                            evm: {
+                                bytecode: {
+                                    linkReferences: {},
+                                    object: '0x1234567890',
+                                    opcodes: '0x1234567890',
+                                    sourceMap: '0x1234567890',
+                                },
+                                deployedBytecode: {
+                                    linkReferences: {},
+                                    object: '0x1234567890',
+                                    opcodes: '0x1234567890',
+                                    sourceMap: '0x1234567890',
+                                },
+                                methodIdentifiers: {},
+                            },
+                        },
+                        solcVersion: '0.8.0',
+                    })
+                    .onCall(3)
+                    .resolves({
+                        getResolvedFiles: sandbox.stub().resolves([
+                            {
+                                sourceName: 'contracts/Contract.sol',
+                                content: {
+                                    rawContent: 'contract Contract {}',
+                                },
+                            },
+                        ]),
+                    }),
             };
-
-            sinon.stub(axios, 'post').resolves(response);
+            const explorer = new ZkSyncExplorerService(
+                hre as any,
+                'https://example.com/verify',
+                'https://example.com/',
+            );
 
             try {
-                await verifyContractRequest(req, verifyURL);
-                expect.fail('Expected ZkSyncVerifyPluginError to be thrown');
-            } catch (error: any) {
-                expect(error.message).to.includes(
-                    'Failed to send contract verification request\n Reason: ZkSyncVerifyPluginError: Verification failed',
+                await explorer.verify(
+                    '0x275a050Fd05883dbB572D76F8B5E53A892b370AD',
+                    'contracts/Contract.sol',
+                    [],
+                    {},
+                    false,
                 );
-            }
-        });
-
-        it('should handle axios error', async () => {
-            const req: ZkSyncBlockExplorerVerifyRequest = {
-                codeFormat: 'solidity-standard-json-input',
-                compilerSolcVersion: '0.8.0',
-                compilerZksolcVersion: '0.1.0',
-                contractName: 'MyContract',
-                constructorArguments: '[]',
-                contractAddress: '0x123456',
-                optimizationUsed: true,
-                sourceCode: 'pragma solidity ^0.8.0; contract MyContract {}',
-            };
-            const verifyURL = 'https://example.com/verify';
-
-            const error = new Error('Network error');
-
-            sinon.stub(axios, 'post').rejects(error);
-
-            try {
-                await verifyContractRequest(req, verifyURL);
-            } catch (err: any) {
-                expect(err.message).to.equal(err.message);
-            }
-        });
-    });
-
-    describe('getSupportedCompilerVersions', () => {
-        afterEach(() => {
-            sinon.restore();
-        });
-
-        it('should return the list of supported compiler versions', async () => {
-            const verifyURL = 'https://example.com/verify';
-
-            const response = {
-                data: ['0.7.0', '0.8.0', '0.8.1'],
-            };
-
-            sinon.stub(axios, 'get').resolves(response);
-
-            const result = await getSupportedCompilerVersions(verifyURL);
-
-            expect(result).to.deep.equal(response.data);
-        });
-
-        it('should fail the get the supported compiler versions', async () => {
-            const verifyURL = 'https://example.com/verify';
-
-            sinon.stub(axios, 'get').rejects(new Error('Network Error'));
-
-            try {
-                await getSupportedCompilerVersions(verifyURL);
-                throw new Error('Expected getSupportedCompilerVersions to throw');
-            } catch (error) {
-                expect(error).to.be.an('error');
+            } catch (e: any) {
+                expect(e.message).to.contains('Reason: ZkSyncVerifyPluginError: Cannot verify contract');
             }
         });
     });

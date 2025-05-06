@@ -14,7 +14,7 @@ declare module 'mocha' {
     }
 }
 
-export function useEnvironment(fixtureProjectName: string, networkName = 'hardhat') {
+export function useEnvironment(fixtureProjectName: string, networkName = 'zkSyncNetwork') {
     before('Loading hardhat environment', async function () {
         process.chdir(path.join(__dirname, 'fixture-projects', fixtureProjectName));
         process.env.HARDHAT_NETWORK = networkName;
@@ -22,7 +22,9 @@ export function useEnvironment(fixtureProjectName: string, networkName = 'hardha
         this.env = require('hardhat');
         await this.env.run(TASK_COMPILE);
 
-        const zkSyncProvider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK);
+        const zkSyncProvider = new Provider(LOCAL_SETUP_ZKSYNC_NETWORK, undefined, {
+            cacheTimeout: -1,
+        });
 
         const zkWallet = new Wallet(richWallets[0].privateKey, zkSyncProvider);
         this.deployer = new Deployer(this.env, zkWallet);

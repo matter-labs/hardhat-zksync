@@ -19,6 +19,7 @@ import {
 import { deployZkSyncBeacon, deployZkSyncProxy, upgradeZkSyncBeacon, upgradeZkSyncProxy } from './task-actions';
 import { ExtensionGenerator } from './generator';
 import { ZkSyncUpgradablePluginError } from './errors';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendEnvironment((hre) => {
     const extesionGenerator = new ExtensionGenerator(hre);
@@ -107,16 +108,26 @@ subtask('verify:etherscan').setAction(async (args, hre, runSuper) => {
         return await verify(args, hre, runSuper);
     }
 
-    throw new ZkSyncUpgradablePluginError(
-        'This task is only available for zkSync network, use `verify:verify` instead',
-    );
+    const { verify } = await import('./verify/verify-proxy');
+    return await verify(args, hre, runSuper);
 });
 
-subtask('verify:verify').setAction(async (args, hre, runSuper) => {
+subtask('verify:zksync-etherscan').setAction(async (args, hre, runSuper) => {
     if (!hre.network.zksync) {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const { verify } = await import('@openzeppelin/hardhat-upgrades/dist/verify-proxy');
-        return await verify(args, hre, runSuper);
+        throw new ZkSyncUpgradablePluginError(
+            'This task is only available for zkSync network, use `verify:verify` instead',
+        );
+    }
+
+    const { verify } = await import('./verify/verify-proxy');
+    return await verify(args, hre, runSuper);
+});
+
+subtask('verify:zksync-blockexplorer').setAction(async (args, hre, runSuper) => {
+    if (!hre.network.zksync) {
+        throw new ZkSyncUpgradablePluginError(
+            'This task is only available for zkSync network, use `verify:verify` instead',
+        );
     }
 
     const { verify } = await import('./verify/verify-proxy');

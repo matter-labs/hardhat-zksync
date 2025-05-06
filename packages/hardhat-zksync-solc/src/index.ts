@@ -69,6 +69,7 @@ import {
 } from './config-extractor';
 import { FactoryDeps, ZkSyncCompilerInput } from './types';
 import { compileLink } from './plugin';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 const logDebug = debug('hardhat:core:tasks:compile');
 

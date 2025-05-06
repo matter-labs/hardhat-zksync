@@ -29,6 +29,7 @@ import {
 } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
 import { ZkSyncVyperPluginError } from './errors';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 const zkVyperCompilerDownloaderMutex = new Mutex();
 

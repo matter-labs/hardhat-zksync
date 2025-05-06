@@ -22,6 +22,15 @@ const config: HardhatUserConfig = {
             ethNetwork: 'sepolia',
             url: 'https://sepolia.era.zksync.dev',
         },
+        ethNetwork: {
+            url: 'http://0.0.0.0:8545',
+        },
+        zkSyncNetwork: {
+            url: 'http://0.0.0.0:8011',
+            ethNetwork: 'ethNetwork',
+            zksync: true,
+            forceDeploy: true,
+        },
     },
     solidity: {
         version: '0.8.20',

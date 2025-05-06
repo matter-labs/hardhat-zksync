@@ -1,7 +1,7 @@
 import path from 'path';
 import fse from 'fs-extra';
 import chalk from 'chalk';
-import { download, getLatestRelease, getNodeUrl } from './utils';
+import { download, ensureDirectory, getAllTags, getLatestRelease, getNodeUrl, resolveTag } from './utils';
 import { ZkSyncNodePluginError } from './errors';
 import {
     DEFAULT_RELEASE_CACHE_FILE_NAME,
@@ -15,96 +15,74 @@ import {
 } from './constants';
 
 export class RPCServerDownloader {
+    private readonly _tagRegex: RegExp = /^\d+\.\d+\.(\d+)(-[A-Za-z0-9.]+)?$|^\d+\.\d+\.\*(?!-)[A-Za-z0-9.]*$/;
     private readonly _binaryDir: string;
-    private readonly _tag: string;
-    private readonly _releaseInfoFile: string = DEFAULT_RELEASE_CACHE_FILE_NAME;
-    private readonly _releaseInfoFilePath: string;
+    private _tag?: string;
+    private readonly _initialTag: string;
+    private readonly _tagsInfoFile: string = DEFAULT_RELEASE_CACHE_FILE_NAME;
+    private readonly _tagsInfoFilePath: string;
+    private binaryPath?: string;
 
-    constructor(binaryDir: string, tag: string) {
+    constructor(binaryDir: string, initialTag: string) {
         this._binaryDir = binaryDir;
-        this._tag = tag;
-        this._releaseInfoFilePath = path.join(this._binaryDir, this._releaseInfoFile);
+        if (!this._tagRegex.test(initialTag) && initialTag !== 'latest') {
+            throw new ZkSyncNodePluginError(`Invalid tag format: ${initialTag}`);
+        }
+        this._initialTag = initialTag;
+        this._tagsInfoFilePath = path.join(this._binaryDir, this._tagsInfoFile);
     }
 
-    public async downloadIfNeeded(force: boolean): Promise<void> {
+    public async downloadIfNeeded(force: boolean, binaryPath?: string): Promise<void> {
+        if (binaryPath) {
+            this.binaryPath = binaryPath;
+            return;
+        }
+
+        if (!(await this._isTagsInfoValid()) || force) {
+            await this._downloadTagInfo();
+        }
+
+        const tagsInfo = await this._getTagsInfo();
+        this._tag = resolveTag(tagsInfo.tags, tagsInfo.latest, this._initialTag);
+
         if (force) {
-            const releaseTag = this._isLatestTag()
-                ? await getLatestRelease(
-                      ZKNODE_BIN_OWNER,
-                      ZKNODE_BIN_REPOSITORY_NAME,
-                      USER_AGENT,
-                      DEFAULT_TIMEOUT_MILISECONDS,
-                  )
-                : this._tag;
-            await this._download(releaseTag);
-            return;
-        }
-
-        if (this._isLatestTag()) {
-            if (!(await this._isLatestReleaseInfoValid())) {
-                const latestTag = await getLatestRelease(
-                    ZKNODE_BIN_OWNER,
-                    ZKNODE_BIN_REPOSITORY_NAME,
-                    USER_AGENT,
-                    DEFAULT_TIMEOUT_MILISECONDS,
-                );
-
-                if (await this._isBinaryPathExists(latestTag)) {
-                    await this._postProcessDownload(latestTag);
-                    return;
-                }
-
-                await this._download(latestTag);
-                return;
-            }
-
-            const info = await this._getLatestReleaseInfo();
-            if (info && (await this._isBinaryPathExists(info.latest))) {
-                return;
-            }
-
-            const latestTagForLatestRelease = await getLatestRelease(
-                ZKNODE_BIN_OWNER,
-                ZKNODE_BIN_REPOSITORY_NAME,
-                USER_AGENT,
-                DEFAULT_TIMEOUT_MILISECONDS,
-            );
-
-            if (
-                info &&
-                info.latest === latestTagForLatestRelease &&
-                (await this._isBinaryPathExists(latestTagForLatestRelease))
-            ) {
-                await this._postProcessDownload(latestTagForLatestRelease);
-                return;
-            }
-            await this._download(latestTagForLatestRelease);
-            return;
-        }
-
-        if (!(await this._isBinaryPathExists(this._tag))) {
             await this._download(this._tag);
+            return;
         }
+
+        if (await this._isBinaryPathExists(this._tag)) {
+            await this._postProcessDownload(this._tag);
+            return;
+        }
+
+        await this._download(this._tag);
     }
 
     private async _download(tag: any): Promise<void> {
         const url: any = await getNodeUrl(ZKNODE_BIN_REPOSITORY, tag);
         try {
-            console.info(chalk.yellow(`Downloading era-test-node binary, release: ${tag}`));
+            console.info(chalk.yellow(`Downloading anvil-zksync binary, release: ${tag}`));
             await download(url, await this._createBinaryPath(tag), PLUGIN_NAME, tag, 30000);
             await this._postProcessDownload(tag);
-            console.info(chalk.green('era-test-node binary downloaded successfully'));
+            console.info(chalk.green('anvil-zksync binary downloaded successfully'));
         } catch (error: any) {
             throw new ZkSyncNodePluginError(`Error downloading binary from URL ${url}: ${error.message}`);
         }
     }
 
-    private async _isBinaryPathExists(version?: string): Promise<boolean> {
-        return fse.existsSync(await this.getBinaryPath(version));
+    private async _isBinaryPathExists(tag?: string): Promise<boolean> {
+        return fse.existsSync(await this.getBinaryPath(tag));
     }
 
-    public async getBinaryPath(version?: string): Promise<string> {
-        return path.join(this._binaryDir, version || (await this._getReleaseTag()));
+    public async getBinaryPath(tag?: string): Promise<string> {
+        if (this.binaryPath) {
+            return this.binaryPath;
+        }
+
+        if (!tag && !this._tag) {
+            throw new ZkSyncNodePluginError('Tag is not set');
+        }
+        return path.join(this._binaryDir, tag || this._tag!);
     }
 
     private async _createBinaryPath(version: string): Promise<string> {
@@ -114,40 +92,45 @@ export class RPCServerDownloader {
     private async _postProcessDownload(tag: string): Promise<void> {
         const binaryPath = await this.getBinaryPath(tag);
         fse.chmodSync(binaryPath, 0o755);
-
-        if (this._isLatestTag()) {
-            await fse.writeJSON(this._releaseInfoFilePath, { latest: tag });
-        }
     }
 
-    private async _getReleaseTag() {
-        return this._isLatestTag() ? (await this._getLatestReleaseInfo()).latest : this._tag;
-    }
-
-    private async _isLatestReleaseInfoValid() {
-        if (!fse.existsSync(this._releaseInfoFilePath)) {
+    private async _isTagsInfoValid() {
+        if (!(await this._isTagsInfoExists())) {
             return false;
         }
 
-        const stats = await fse.stat(this._releaseInfoFilePath);
+        const stats = await fse.stat(this._tagsInfoFilePath);
         const age = new Date().valueOf() - stats.ctimeMs;
 
         return age < DEFAULT_RELEASE_VERSION_INFO_CACHE_PERIOD;
     }
 
-    private async _isLatestReleaseInfoExists() {
-        return fse.existsSync(this._releaseInfoFilePath);
+    private async _isTagsInfoExists() {
+        return fse.existsSync(this._tagsInfoFilePath);
     }
 
-    private async _getLatestReleaseInfo() {
-        if (!(await this._isLatestReleaseInfoExists())) {
+    private async _getTagsInfo() {
+        if (!(await this._isTagsInfoValid())) {
             return undefined;
         }
 
-        return await fse.readJSON(this._releaseInfoFilePath);
+        return await fse.readJSON(this._tagsInfoFilePath);
     }
 
-    private _isLatestTag() {
-        return this._tag === 'latest';
+    private async _downloadTagInfo() {
+        const allTags = await getAllTags(
+            ZKNODE_BIN_OWNER,
+            ZKNODE_BIN_REPOSITORY_NAME,
+            USER_AGENT,
+            DEFAULT_TIMEOUT_MILISECONDS,
+        );
+        const latestTag = await getLatestRelease(
+            ZKNODE_BIN_OWNER,
+            ZKNODE_BIN_REPOSITORY_NAME,
+            USER_AGENT,
+            DEFAULT_TIMEOUT_MILISECONDS,
+        );
+        await ensureDirectory(this._tagsInfoFilePath, { mode: 0o755 });
+        await fse.writeJSON(this._tagsInfoFilePath, { tags: allTags, latest: latestTag });
     }
 }

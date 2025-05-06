@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-verify",
-  "version": "1.6.0",
+  "version": "1.8.0",
   "description": "Hardhat plugin to verify smart contracts for the ZKsync network",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-verify",
@@ -36,6 +36,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/address": "5.7.0",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.8",
     "axios": "^1.7.2",
     "semver": "^7.6.2",

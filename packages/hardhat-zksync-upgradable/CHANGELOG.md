@@ -1,5 +1,39 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.9.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.2...@matterlabs/hardhat-zksync-upgradable-v1.9.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
+
+### Bug Fixes
+
+* update naming from era_test_node to anvil-zksync ([6bfb1c2](https://github.com/matter-labs/hardhat-zksync/commit/6bfb1c26f8f01ecd1a3095d97b7858dfef8bb06a))
+* update naming from era_test_node to anvil-zksync ([d484fdd](https://github.com/matter-labs/hardhat-zksync/commit/d484fdda713d9c246c4a4639b6d6af84f63ceb15))
+
+## [1.8.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.1...@matterlabs/hardhat-zksync-upgradable-v1.8.2) (2024-11-22)
+
+
+### Bug Fixes
+
+* add paymaster support for implementation upgrade ([#1545](https://github.com/matter-labs/hardhat-zksync/issues/1545)) ([ddf17c4](https://github.com/matter-labs/hardhat-zksync/commit/ddf17c4bc7722e50cb0521148310981c2bd1034f))
+
+## [1.8.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.8.0...@matterlabs/hardhat-zksync-upgradable-v1.8.1) (2024-11-01)
+
+
+### Bug Fixes
+
+* provide paymaster params for the beacon deployment ([#1523](https://github.com/matter-labs/hardhat-zksync/issues/1523)) ([6453bfa](https://github.com/matter-labs/hardhat-zksync/commit/6453bfa4ade4ad31879fd99f4556b1e727088927))
+
+## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.7.0...@matterlabs/hardhat-zksync-upgradable-v1.8.0) (2024-10-31)
+
+
+### Features
+
+* add etherscan as verification interface ([#1518](https://github.com/matter-labs/hardhat-zksync/issues/1518)) ([cb38fa2](https://github.com/matter-labs/hardhat-zksync/commit/cb38fa2f87d524de89106f4727e13a446d1be936))
+
 ## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.6.0...@matterlabs/hardhat-zksync-upgradable-v1.7.0) (2024-10-01)
 
 

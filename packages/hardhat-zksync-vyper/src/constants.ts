@@ -56,3 +56,9 @@ export const COMPILING_INFO_MESSAGE = (zksolcVersion: string, solcVersion: strin
 
 export const VYPER_VERSION_ERROR =
     'Vyper versions 0.3.4 to 0.3.7 are not supported by zkvyper. Please use vyper 0.3.3 or >=0.3.8 in your hardhat.config file instead.';
+
+export const COMPILER_ZKVYPER_LATEST_DEPRECATION = `The 'latest' version specifier is deprecated. Please specify the version of zkvyper explicitly.
+To see available versions and changelogs, visit https://github.com/matter-labs/era-compiler-vyper/releases.`;
+
+export const COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION = (version: string) =>
+    `The vyper version ${version} is deprecated and will be removed for security reasons soon. Please update to v1.4.0 or newer.`;

@@ -1,5 +1,26 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.3.0...@matterlabs/hardhat-zksync-solc-v1.3.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* bump fallback zksolc version ([#1710](https://github.com/matter-labs/hardhat-zksync/issues/1710)) ([c1f8ec2](https://github.com/matter-labs/hardhat-zksync/commit/c1f8ec2e40b862fe8dc61f80b5a196a64fd000fd))
+
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.6...@matterlabs/hardhat-zksync-solc-v1.3.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
+## [1.2.6](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.5...@matterlabs/hardhat-zksync-solc-v1.2.6) (2025-03-03)
+
+
+### Bug Fixes
+
+* add new compiler properties in the zksolc hardhat config object ([#1652](https://github.com/matter-labs/hardhat-zksync/issues/1652)) ([f5ec774](https://github.com/matter-labs/hardhat-zksync/commit/f5ec7748fd81b570b76146747358e5214559c00f))
+
 ## [1.2.5](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.2.4...@matterlabs/hardhat-zksync-solc-v1.2.5) (2024-09-25)
 
 

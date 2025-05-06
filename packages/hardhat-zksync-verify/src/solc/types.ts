@@ -10,6 +10,7 @@ export type ContractName = string;
 
 export interface ContractInformation {
     compilerInput: CompilerInput;
+    solcLongVersion: string;
     solcVersion: string;
     sourceName: string;
     contractName: string;

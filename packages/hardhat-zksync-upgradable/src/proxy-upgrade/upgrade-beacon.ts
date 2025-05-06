@@ -81,7 +81,11 @@ async function upgradeBeacon(
     const upgradeableBeaconFactory = await getUpgradeableBeaconFactory(hre, wallet);
 
     const beaconContract = upgradeableBeaconFactory.attach(beaconImplementationAddress);
-    const upgradeTx = await beaconContract.upgradeTo(nextImpl);
+    const upgradeTx = await beaconContract.upgradeTo(nextImpl, {
+        customData: {
+            paymasterParams: opts?.paymasterParams,
+        },
+    });
 
     // @ts-ignore Won't be readonly because beaconContract was created through attach.
     beaconContract.deployTransaction = upgradeTx;

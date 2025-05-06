@@ -6,6 +6,7 @@ export interface CommandArguments {
     cacheDir?: string;
     resetCache?: boolean;
     showCalls?: string;
+    showEventLogs?: boolean;
     showStorageLogs?: string;
     showVmDetails?: string;
     showGasDetails?: string;
@@ -14,4 +15,12 @@ export interface CommandArguments {
     fork?: string;
     forkBlockNumber?: number;
     replayTx?: string;
+    showNodeConfig?: boolean;
+    showTxSummary?: boolean;
+    quiet?: boolean;
+}
+
+export interface ZkSyncAnvilConfig {
+    version?: string;
+    binaryPath?: string;
 }

@@ -85,7 +85,7 @@ describe('node-zksync plugin', async function () {
                 assert.fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.be.equal(
-                    'Unexpected response status: 404 for URL: https://github.com/owner/repo/releases/latest',
+                    "Couldn't find the latest release for URL: https://github.com/owner/repo/releases/latest",
                 );
             }
         });
@@ -139,7 +139,7 @@ describe('node-zksync plugin', async function () {
                 assert.fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.be.equal(
-                    'Unexpected redirect URL: https://github.com/owner/wrong/ for URL: https://github.com/owner/repo/releases/latest',
+                    "Couldn't find the latest release for URL: https://github.com/owner/wrong/",
                 );
             }
         });
@@ -168,6 +168,10 @@ describe('node-zksync plugin', async function () {
                     devUseLocalContracts: true,
                     fork: 'mainnet',
                     forkBlockNumber: 100,
+                    showEventLogs: true,
+                    showNodeConfig: false,
+                    showTxSummary: false,
+                    quiet: true,
                 };
 
                 const result = constructCommandArgs(args);
@@ -177,13 +181,17 @@ describe('node-zksync plugin', async function () {
                     '--log-file-path=/path/to/log',
                     '--cache=disk',
                     '--cache-dir=/path/to/cache',
-                    '--reset-cache',
+                    '--reset-cache=true',
                     '--show-storage-logs=all',
                     '--show-vm-details=none',
                     '--show-gas-details=all',
                     '--show-calls=user',
-                    '--resolve-hashes',
-                    '--dev-use-local-contracts',
+                    '--resolve-hashes=true',
+                    '--show-event-logs=true',
+                    '--show-node-config=false',
+                    '--show-tx-summary=false',
+                    '--quiet=true',
+                    '--dev-use-local-contracts=true',
                     'fork',
                     'mainnet',
                     '--fork-at',
@@ -230,7 +238,7 @@ describe('node-zksync plugin', async function () {
         it('should return the node URL for the given repo and release', async function () {
             const repo = 'example/repo';
             const release = '1.0.0';
-            const expectedUrl = `${repo}/releases/download/v${release}/era_test_node-v${release}-amd64-linux.tar.gz`;
+            const expectedUrl = `${repo}/releases/download/v${release}/anvil-zksync-v${release}-amd64-linux.tar.gz`;
 
             const url = await utils.getNodeUrl(repo, release);
 
@@ -346,19 +354,29 @@ describe('node-zksync plugin', async function () {
         const mockRelease = '1.0.0';
 
         const mockUrl =
-            'https://github.com/matter-labs/era-test-node/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz';
+            'https://github.com/matter-labs/anvil-zksync/releases/download/v0.1.0/era_test_node-v0.1.0-aarch64-apple-darwin.tar.gz';
 
         let downloadStub: sinon.SinonStub;
         let existsSyncStub: sinon.SinonStub;
         let postProcessDownloadStub: sinon.SinonStub;
         let releaseStub: sinon.SinonStub;
+        let getAllTagsStub: sinon.SinonStub;
         let urlStub: sinon.SinonStub;
+        let isTagsInfoExistsStub: sinon.SinonStub;
+        let isTagsInfoValidStub: sinon.SinonStub;
+        let getTagsInfoStub: sinon.SinonStub;
+        let downloadTagInfoStub: sinon.SinonStub;
 
         beforeEach(() => {
             downloadStub = sinon.stub(utils, 'download');
             releaseStub = sinon.stub(utils, 'getLatestRelease');
+            getAllTagsStub = sinon.stub(utils, 'getAllTags');
             urlStub = sinon.stub(utils, 'getNodeUrl');
             existsSyncStub = sinon.stub(fs, 'existsSync');
+            isTagsInfoExistsStub = sinon.stub(RPCServerDownloader.prototype as any, '_isTagsInfoExists');
+            isTagsInfoValidStub = sinon.stub(RPCServerDownloader.prototype as any, '_isTagsInfoValid');
+            getTagsInfoStub = sinon.stub(RPCServerDownloader.prototype as any, '_getTagsInfo');
+            downloadTagInfoStub = sinon.stub(RPCServerDownloader.prototype as any, '_downloadTagInfo');
             postProcessDownloadStub = sinon
                 .stub(RPCServerDownloader.prototype as any, '_postProcessDownload')
                 .resolves(); // Stubbing the private method
@@ -373,15 +391,40 @@ describe('node-zksync plugin', async function () {
                 const downloader = new RPCServerDownloader('../cache/node', 'latest');
 
                 existsSyncStub.resolves(false);
+                isTagsInfoExistsStub.resolves(true);
+                isTagsInfoValidStub.resolves(true);
+                getTagsInfoStub.resolves({ tags: ['v1.0.0', 'v1.0.1', 'v1.0.2'], latest: 'v1.0.2' });
                 releaseStub.resolves(mockRelease);
                 urlStub.resolves(mockUrl);
-                downloadStub.resolves('v1.0.0');
+                getAllTagsStub.resolves(['v1.0.0', 'v1.0.1', 'v1.0.2']);
+                downloadStub.resolves('v1.0.2');
 
                 await downloader.downloadIfNeeded(false);
 
+                sinon.assert.calledOnce(getTagsInfoStub);
                 sinon.assert.calledOnce(downloadStub);
                 sinon.assert.calledOnce(postProcessDownloadStub);
-                sinon.assert.calledOnce(releaseStub);
+            });
+
+            it('should download the binary if not already downloaded without list.json', async function () {
+                const downloader = new RPCServerDownloader('../cache/node', 'latest');
+
+                existsSyncStub.resolves(false);
+                isTagsInfoExistsStub.resolves(false);
+                isTagsInfoValidStub.resolves(false);
+                getTagsInfoStub.resolves({ tags: ['v1.0.0', 'v1.0.1', 'v1.0.2'], latest: 'v1.0.2' });
+                releaseStub.resolves(mockRelease);
+                urlStub.resolves(mockUrl);
+                getAllTagsStub.resolves(['v1.0.0', 'v1.0.1', 'v1.0.2']);
+                downloadStub.resolves('v1.0.2');
+                downloadTagInfoStub.resolves();
+
+                await downloader.downloadIfNeeded(false);
+
+                sinon.assert.calledOnce(downloadTagInfoStub);
+                sinon.assert.calledOnce(getTagsInfoStub);
+                sinon.assert.calledOnce(downloadStub);
+                sinon.assert.calledOnce(postProcessDownloadStub);
             });
 
             it('should force download the binary', async function () {
@@ -390,13 +433,18 @@ describe('node-zksync plugin', async function () {
                 existsSyncStub.resolves(false);
                 releaseStub.resolves(mockRelease);
                 urlStub.resolves(mockUrl);
-                downloadStub.resolves('v1.0.0');
+                isTagsInfoExistsStub.resolves(true);
+                isTagsInfoValidStub.resolves(true);
+                getTagsInfoStub.resolves({ tags: ['v1.0.0', 'v1.0.1', 'v1.0.2'], latest: 'v1.0.2' });
+                getAllTagsStub.resolves(['v1.0.0', 'v1.0.1', 'v1.0.2']);
+                downloadStub.resolves('v1.0.2');
+                downloadTagInfoStub.resolves();
 
                 await downloader.downloadIfNeeded(true);
 
                 sinon.assert.calledOnce(downloadStub);
                 sinon.assert.calledOnce(postProcessDownloadStub);
-                sinon.assert.calledOnce(releaseStub);
+                sinon.assert.calledOnce(downloadTagInfoStub);
             });
 
             it('should throw an error if download fails', async function () {
@@ -405,6 +453,10 @@ describe('node-zksync plugin', async function () {
                 downloadStub.throws(new Error('Mocked download failure'));
                 existsSyncStub.resolves(false);
                 releaseStub.resolves(mockRelease);
+                isTagsInfoExistsStub.resolves(true);
+                isTagsInfoValidStub.resolves(true);
+                getTagsInfoStub.resolves({ tags: ['v1.0.0', 'v1.0.1', 'v1.0.2'], latest: 'v1.0.2' });
+                getAllTagsStub.resolves(['v1.0.0', 'v1.0.1', 'v1.0.2']);
                 urlStub.resolves(mockRelease);
 
                 try {
@@ -441,7 +493,7 @@ describe('node-zksync plugin', async function () {
 
         describe('listen', async function () {
             it('should start the JSON-RPC server with the provided arguments', async function () {
-                const server = new JsonRpcServer('/path/to/binary');
+                const server = new JsonRpcServer('/path/to/binary', 'latest');
                 const args = ['--arg1=value1', '--arg2=value2'];
 
                 server.listen(args);
@@ -450,14 +502,14 @@ describe('node-zksync plugin', async function () {
             });
 
             it('should print a starting message when server starts', () => {
-                const server = new JsonRpcServer('/path/to/binary');
+                const server = new JsonRpcServer('/path/to/binary', 'latest');
                 server.listen();
 
                 sinon.assert.calledWith(consoleInfoStub, chalk.green('Starting the JSON-RPC server at 127.0.0.1:8011'));
             });
 
             it.skip('should handle termination signals gracefully', async function () {
-                const server = new JsonRpcServer('/path/to/binary');
+                const server = new JsonRpcServer('/path/to/binary', 'latest');
                 const error = new Error('Mocked error') as SpawnSyncError;
                 error.signal = PROCESS_TERMINATION_SIGNALS[0]; // Let's simulate the first signal, e.g., 'SIGINT'
                 spawnStub.throws(error);
@@ -476,7 +528,7 @@ describe('node-zksync plugin', async function () {
             });
 
             it('should throw an error if the server process exits with an error', async function () {
-                const server = new JsonRpcServer('/path/to/binary');
+                const server = new JsonRpcServer('/path/to/binary', 'latest');
                 const error = new Error('Mocked error');
                 spawnStub.throws(error);
 

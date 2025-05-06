@@ -1,5 +1,36 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.1...@matterlabs/hardhat-zksync-verify-v1.8.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
+
+### Bug Fixes
+
+* support partial match verification for contracts with keccak metadata ([#1667](https://github.com/matter-labs/hardhat-zksync/issues/1667)) ([e0faf3e](https://github.com/matter-labs/hardhat-zksync/commit/e0faf3e3e6686d898f49a22b42d03b0577d5020c))
+
+## [1.7.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.0...@matterlabs/hardhat-zksync-verify-v1.7.1) (2024-11-25)
+
+
+### Bug Fixes
+
+* verify contract params format ([#1536](https://github.com/matter-labs/hardhat-zksync/issues/1536)) ([02e751e](https://github.com/matter-labs/hardhat-zksync/commit/02e751e0f6150f2a335a278efca3bd4689f3f020))
+
+## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.6.0...@matterlabs/hardhat-zksync-verify-v1.7.0) (2024-10-31)
+
+
+### Features
+
+* add etherscan as verification interface ([#1518](https://github.com/matter-labs/hardhat-zksync/issues/1518)) ([cb38fa2](https://github.com/matter-labs/hardhat-zksync/commit/cb38fa2f87d524de89106f4727e13a446d1be936))
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.5.0...@matterlabs/hardhat-zksync-verify-v1.6.0) (2024-07-15)
 
 

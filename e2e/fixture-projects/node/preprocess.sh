@@ -12,7 +12,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
 {
   "name": "@matterlabs/hardhat-zksync-node",
   "version": "1.0.3",
-  "description": "Hardhat plugin to run ZKsync era-test-node locally",
+  "description": "Hardhat plugin to run anvil-zksync locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
   "author": "Matter Labs",
@@ -45,6 +45,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
   ],
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "^1.1.4",
+    "@matterlabs/hardhat-zksync-node": "^1.1.1",
     "axios": "^1.7.2",
     "chalk": "^4.1.2",
     "fs-extra": "^11.2.0",
@@ -74,12 +75,14 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0",
-    "zksync-ethers": "^6.8.0",
+    "zksync-ethers": "^6.15.0",
+    "ethers": "^6.12.2",
     "c8": "^9.1.0"
   },
   "peerDependencies": {
     "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.8.0"
+    "zksync-ethers": "^6.15.0",
+    "ethers": "^6.12.2"
   },
   "prettier": {
     "tabWidth": 4,

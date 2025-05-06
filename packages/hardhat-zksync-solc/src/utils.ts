@@ -124,6 +124,8 @@ export function updateBreakableCompilerConfig(
         compiler.settings.detectMissingLibraries = false;
         compiler.settings.forceEVMLA = zksolc.settings.forceEVMLA;
         compiler.settings.enableEraVMExtensions = zksolc.settings.enableEraVMExtensions;
+        compiler.settings.codegen = zksolc.settings.codegen;
+        compiler.settings.LLVMOptions = zksolc.settings.LLVMOptions;
     }
 
     solcUpdaters
@@ -219,6 +221,10 @@ export function isVersionInRange(version: string, versionInfo: CompilerVersionIn
     const minVersion = versionInfo.minVersion;
 
     return semver.gte(version, minVersion) && semver.lte(version, latest);
+}
+
+export function isVersionForDeprecation(version: string): boolean {
+    return semver.lt(version, '1.4.0');
 }
 
 // Generate SolcJS executable code

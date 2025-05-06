@@ -5,6 +5,7 @@ import '@matterlabs/hardhat-zksync-upgradable';
 
 const config = {
     zksolc: {
+        verstion: "latest",
         compilerSource: 'binary',
         settings: {
             isSystem: true,
@@ -13,20 +14,16 @@ const config = {
             },
         }
     },
+    defaultNetwork: 'inMemoryNode',
     networks: {
         hardhat: {
             zksync: true,
         },
         inMemoryNode: {
             url: "http://0.0.0.0:8011",
-            ethNetwork: "",
-            zksync: true,
-        },
-        dockerizedNode: {
-            url: "http://0.0.0.0:3050",
             ethNetwork: "http://0.0.0.0:8545",
             zksync: true,
-          },
+        },
     },
     solidity: {
         version: '0.8.17',

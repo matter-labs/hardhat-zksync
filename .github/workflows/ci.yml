@@ -30,6 +30,7 @@ jobs:
       - name: Setup environment
         run: |
           pnpm install
+          pnpm build
 
       - name: Test zksolc compiler plugin
         run: |
@@ -60,6 +61,7 @@ jobs:
       - name: Setup environment
         run: |
           pnpm install
+          pnpm build
 
       - name: Test zkvyper compiler plugin
         run: |
@@ -84,25 +86,19 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
+
       - uses: actions/checkout@v3
+
+      - name: Run anvil-zksync
+        uses: dutterbutter/anvil-zksync-action@v1.1.0
         with:
-          repository: matter-labs/local-setup
-          path: local-setup
+          logFilePath: "anvil_zksync.log"
 
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-      
       - name: Run fixture-projects script
         run: |
-            cd e2e
-            chmod +x run-fixture-projects.sh
-            ./run-fixture-projects.sh
+          cd e2e
+          chmod +x run-fixture-projects.sh
+          ./run-fixture-projects.sh
         shell: bash
 
   examples:
@@ -116,15 +112,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run anvil-zksync
+        uses: dutterbutter/anvil-zksync-action@v1.1.0
 
       - uses: pnpm/action-setup@v3
 
@@ -137,10 +126,6 @@ jobs:
         run: |
           pnpm install
           pnpm build
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksolc example
         run: |
@@ -164,9 +149,9 @@ jobs:
 
       - name: Test node example
         run: |
-         cd examples/node-example
-          pnpm hardhat compile
-          pnpm hardhat test
+          cd examples/node-example
+           pnpm hardhat compile
+           pnpm hardhat test
 
       - name: Test noninline libraries example
         run: |
@@ -197,7 +182,7 @@ jobs:
           pnpm hardhat run scripts/deploy-box-uups-factory.ts 
           pnpm hardhat run scripts/upgrade-box-uups-factory.ts 
           pnpm hardhat run scripts/upgrade-box-beacon-factory.ts 
-          pnpm hardhat run scripts/upgrade-box-factory.ts 
+          pnpm hardhat run scripts/upgrade-box-factory.ts
 
       - name: Test upgradable example
         run: |
@@ -208,18 +193,13 @@ jobs:
           pnpm hardhat run scripts/deploy-box-uups.ts 
           pnpm hardhat run scripts/upgrade-box-beacon.ts 
           pnpm hardhat run scripts/upgrade-box-uups.ts 
-          pnpm hardhat run scripts/upgrade-box.ts 
+          pnpm hardhat run scripts/upgrade-box.ts
 
       - name: Test zksync-ethers example
         run: |
           cd examples/zksync-ethers-example
           pnpm hardhat compile
           pnpm hardhat deploy-zksync
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   upgradable:
     strategy:
@@ -232,15 +212,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run anvil-zksync
+        uses: dutterbutter/anvil-zksync-action@v1.1.0
 
       - uses: pnpm/action-setup@v3
 
@@ -253,10 +226,6 @@ jobs:
         run: |
           pnpm install
           pnpm build
-
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
 
       - name: Test zksync upgradable plugin
         run: |
@@ -330,15 +299,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
-
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run anvil-zksync
+        uses: dutterbutter/anvil-zksync-action@v1.1.0
 
       - uses: pnpm/action-setup@v3
 
@@ -352,19 +314,10 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-
       - name: Test deploy package
         run: |
           cd packages/hardhat-zksync-deploy
           pnpm test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   zksync-ethers:
     strategy:
@@ -378,14 +331,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions/checkout@v3
-        with:
-          repository: matter-labs/local-setup
-          path: local-setup
 
-      - name: Run server
-        run: |
-          cd local-setup
-          ./start.sh &>../server.log &
+      - name: Run anvil-zksync
+        uses: dutterbutter/anvil-zksync-action@v1.1.0
 
       - uses: pnpm/action-setup@v3
 
@@ -399,19 +347,10 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: Wait until server is up
-        run: |
-          while ! curl -s -X POST -d '{"jsonrpc":"2.0","method":"net_version","id":1}' -H 'Content-Type: application/json' 0.0.0.0:3050; do sleep 1; done
-
       - name: Test zksync-ethers example
         run: |
           cd packages/hardhat-zksync-ethers
           pnpm test
-
-      - name: Show logs
-        if: always()
-        run: |
-          cat server.log
 
   node:
     strategy:
@@ -439,4 +378,32 @@ jobs:
       - name: Test zksync node plugin
         run: |
           cd packages/hardhat-zksync-node
+          pnpm test
+
+  telemetry:
+    strategy:
+      matrix:
+        node: ["18"]
+        os: [ubuntu, macos]
+
+    runs-on: ${{ matrix.os }}-latest
+    name: telemetry
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: Setup environment
+        run: |
+          pnpm install
+          pnpm build
+
+      - name: Test telemetry utils
+        run: |
+          cd packages/hardhat-zksync-telemetry
           pnpm test

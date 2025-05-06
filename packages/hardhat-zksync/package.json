@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "ZKsync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync",
@@ -40,10 +40,11 @@
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@openzeppelin/upgrades-core": "^1.37.0",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.11.2",
+    "zksync-ethers": "^6.15.0",
     "chai": "^4.3.4",
     "sinon-chai": "^3.7.0",
     "sinon": "^18.0.0"
@@ -73,7 +74,8 @@
     "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "@matterlabs/hardhat-zksync-node": "workspace:^",
-    "@matterlabs/hardhat-zksync-ethers": "workspace:^"
+    "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^"
   },
   "prettier": {
     "tabWidth": 4,

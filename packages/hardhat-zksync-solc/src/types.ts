@@ -48,10 +48,14 @@ export interface ZkSolcConfig {
         forceContractsToCompile?: string[];
         // Dump all IR (Yul, EVMLA, LLVM IR, assembly) to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
-        // Suppress specified warnings. Currently supported: txorigin, sendtransfer
+        // Suppress specified warnings. Currently supported: txorigin
         suppressedWarnings?: string[];
-        // Suppress specified errors. Currently supported: txorigin, sendtransfer
+        // Suppress specified errors. Currently supported: assemblycreate, sendtransfer
         suppressedErrors?: string[];
+        // Optional, zksolc: extra LLVM settings.
+        LLVMOptions?: string[];
+        // Can be "evmla" or "yul".In contract to solc, zksolc uses "Yul" codegen by default for solc v0.8.0 and newer.
+        codegen?: string;
     };
 }
 

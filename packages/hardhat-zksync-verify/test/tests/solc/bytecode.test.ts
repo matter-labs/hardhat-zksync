@@ -144,6 +144,7 @@ describe('extractMatchingContractInformation', () => {
                 },
             },
             solcVersion: 'solcVersion',
+            solcLongVersion: 'solcLongVersion',
         };
         const deployedBytecode: Bytecode = new Bytecode('deployedBytecode');
 
@@ -159,6 +160,7 @@ describe('extractMatchingContractInformation', () => {
             compilerInput: 'compilerInput',
             contractOutput: buildInfo.output.contracts[sourceName][contractName],
             solcVersion: 'solcVersion',
+            solcLongVersion: 'solcLongVersion',
             sourceName,
             contractName,
         });

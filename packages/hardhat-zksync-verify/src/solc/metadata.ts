@@ -24,7 +24,7 @@ export function inferSolcVersion(bytecode: Buffer): MetadataDescription {
         solcMetadata = metadata.decoded.solc;
     } catch {
         // The decoding failed. Unfortunately, our only option is to assume that this bytecode was emitted by an old version.
-        // Technically, this bytecode could have been emitted by a compiler for another language altogether.
+        // This could also mean that contract has keccak metadata instead of ipfs.
 
         log('Could not decode metadata.');
         return {

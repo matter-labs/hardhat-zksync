@@ -77,7 +77,7 @@ describe('deployer-helper', () => {
             expect(providers.zkWeb3Provider).to.be.instanceOf(Provider);
         });
 
-        it.only('should throw an error for unsupported network', () => {
+        it('should throw an error for unsupported network', () => {
             const unsupportedNetwork = {
                 ...network,
                 config: { url: 'https://unsupported.zksync.dev', ethNetwork: 'unsupported' },

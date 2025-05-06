@@ -13,6 +13,7 @@ import {
 
 import { verify, getConstructorArguments, verifyContract, getArtifact } from './task-actions';
 import { checkVerificationStatus } from './plugin';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 extendEnvironment((hre: HardhatRuntimeEnvironment) => {
     hre.network.verifyURL = hre.network.config.verifyURL ?? TESTNET_VERIFY_URL;

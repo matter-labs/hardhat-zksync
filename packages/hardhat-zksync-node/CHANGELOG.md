@@ -1,5 +1,55 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.3.1...@matterlabs/hardhat-zksync-node-v1.4.0) (2025-03-25)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+
+## [1.3.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.3.0...@matterlabs/hardhat-zksync-node-v1.3.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* add type extension to the index ([#1651](https://github.com/matter-labs/hardhat-zksync/issues/1651)) ([1304495](https://github.com/matter-labs/hardhat-zksync/commit/130449550c9096dee56015b12c59255d8a3cc390))
+* create node cache directory with permissions ([#1642](https://github.com/matter-labs/hardhat-zksync/issues/1642)) ([8711e0e](https://github.com/matter-labs/hardhat-zksync/commit/8711e0e2eb3076abecaeb511f44877b258183e09))
+
+## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.2.1...@matterlabs/hardhat-zksync-node-v1.3.0) (2025-02-24)
+
+
+### Features
+
+* set default version and handle github repo redirects ([#1577](https://github.com/matter-labs/hardhat-zksync/issues/1577)) ([fcf16d2](https://github.com/matter-labs/hardhat-zksync/commit/fcf16d21f67ed5212669ead7ae183adb155a1007))
+
+
+### Bug Fixes
+
+* apply anvil cli args with values ([291e80a](https://github.com/matter-labs/hardhat-zksync/commit/291e80a4bea49864840bebf602942e5a3a87978b))
+* tests ([8a7d79c](https://github.com/matter-labs/hardhat-zksync/commit/8a7d79ce5483c3ed14a66dfc4dcc554d74e8c5f0))
+
+## [1.2.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.2.0...@matterlabs/hardhat-zksync-node-v1.2.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* tests ([0e07b7e](https://github.com/matter-labs/hardhat-zksync/commit/0e07b7e0c8a26f2152229fc6f0efb4181b7dd3a4))
+* update naming from era_test_node to anvil-zksync ([6bfb1c2](https://github.com/matter-labs/hardhat-zksync/commit/6bfb1c26f8f01ecd1a3095d97b7858dfef8bb06a))
+* update naming from era_test_node to anvil-zksync ([d484fdd](https://github.com/matter-labs/hardhat-zksync/commit/d484fdda713d9c246c4a4639b6d6af84f63ceb15))
+* update release url for anvil-zksync and era-test-node releases ([b57b9cc](https://github.com/matter-labs/hardhat-zksync/commit/b57b9cc3ab1e638901901120b91761666b8761af))
+
+## [1.2.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.1...@matterlabs/hardhat-zksync-node-v1.2.0) (2024-10-24)
+
+
+### Features
+
+* override run task for zksync hardhat network ([#1462](https://github.com/matter-labs/hardhat-zksync/issues/1462)) ([a49c593](https://github.com/matter-labs/hardhat-zksync/commit/a49c5932abcb7e5244314471c9b7f701c1c90a20))
+
+
+### Bug Fixes
+
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.1.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.1.0...@matterlabs/hardhat-zksync-node-v1.1.1) (2024-07-15)
 
 

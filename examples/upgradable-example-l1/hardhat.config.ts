@@ -24,7 +24,7 @@ const config: HardhatUserConfig = {
         zkSyncNetwork: {
             zksync: true,
             ethNetwork: 'eth',
-            url: 'http://0.0.0.0:3050',
+            url: 'http://0.0.0.0:8011',
         },
     },
     solidity: {

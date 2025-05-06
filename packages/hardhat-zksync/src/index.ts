@@ -6,6 +6,7 @@ import '@matterlabs/hardhat-zksync-deploy';
 import '@matterlabs/hardhat-zksync-verify';
 import '@matterlabs/hardhat-zksync-upgradable';
 import '@matterlabs/hardhat-zksync-ethers';
+import '@matterlabs/hardhat-zksync-telemetry';
 
 import { TASK_DEPLOY_ZKSYNC_CONTRACT } from '@matterlabs/hardhat-zksync-deploy/dist/task-names';
 import {
