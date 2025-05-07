@@ -53,7 +53,7 @@ export const NETWORK_ETH = {
     LOCALHOST: 'localhost',
 };
 
-export const DEFAULT_ZKSYNC_ANVIL_VERSION = '0.3.*';
+export const DEFAULT_ZKSYNC_ANVIL_VERSION = '0.6.*';
 
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 
