@@ -163,7 +163,7 @@ describe('node-zksync plugin', async function () {
                     showStorageLogs: 'all',
                     showVmDetails: 'none',
                     showGasDetails: 'all',
-                    showCalls: 'user',
+                    verbosity: 'vv',
                     devSystemContracts: 'built-in',
                     fork: 'mainnet',
                     forkBlockNumber: 100,
@@ -183,7 +183,7 @@ describe('node-zksync plugin', async function () {
                     '--show-storage-logs=all',
                     '--show-vm-details=none',
                     '--show-gas-details=all',
-                    '--show-calls=user',
+                    '-vv',
                     '--show-node-config=false',
                     '--show-tx-summary=false',
                     '--quiet=true',
@@ -219,14 +219,6 @@ describe('node-zksync plugin', async function () {
                 const args = { fork: 'http://example.com', replayTx: '0x1234567890abcdef' };
                 const result = constructCommandArgs(args);
                 expect(result).to.deep.equal(['replay_tx', '--fork-url', 'http://example.com', '0x1234567890abcdef']);
-            });
-
-            it('should throw error for invalid fork URL pattern', () => {
-                const args = {
-                    fork: 'invalidURL',
-                };
-
-                expect(() => constructCommandArgs(args)).to.throw('Invalid fork network value: invalidURL');
             });
         });
     });

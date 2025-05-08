@@ -127,12 +127,15 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
     .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
     .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
-    .addOptionalParam(
-        'showCalls',
-        'Show call debug information (none, user, system, all) - default: none',
-        undefined,
-        types.string,
-    )
+    .addFlag('noRequestSizeLimit', 'Disable request size limit')
+    .addFlag('autoExecuteL1', 'Auto-execute L1 batches after L2 sealing')
+    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
+    .addOptionalParam('blockTime', 'Seal blocks at a fixed interval', undefined, types.bigint)
+    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
+    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
+    .addOptionalParam('accounts', 'Pre-funded dev accounts', undefined, types.bigint)
+    .addOptionalParam('balance', 'Pre-funded dev accounts balance', undefined, types.bigint)
+    .addOptionalParam('verbosity', 'Verbosity level traces (vv, vvv)', undefined, types.string)
     .addOptionalParam('showEventLogs', 'Show event logs')
     .addOptionalParam(
         'showStorageLogs',
@@ -178,6 +181,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     )
     .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
     .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
+    .addFlag('noRequestSizeLimit', 'Disable request size limit')
+    .addFlag('autoExecuteL1', 'Auto-execute L1 batches after L2 sealing')
+    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
+    .addOptionalParam('blockTime', 'Seal blocks at a fixed interval', undefined, types.bigint)
+    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
+    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
+    .addOptionalParam('accounts', 'Pre-funded dev accounts', undefined, types.bigint)
+    .addOptionalParam('balance', 'Pre-funded dev accounts balance', undefined, types.bigint)
+    .addOptionalParam('verbosity', 'Verbosity level traces (vv, vvv)', undefined, types.string)
     .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
     .addOptionalParam(
         'cacheDir',
@@ -187,12 +199,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     )
     .addFlag('resetCache', 'Reset the local `disk` cache')
     .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
-    .addOptionalParam(
-        'showCalls',
-        'Show call debug information (none, user, system, all) - default: none',
-        undefined,
-        types.string,
-    )
     .addOptionalParam('showEventLogs', 'Show event logs')
     .addOptionalParam(
         'showStorageLogs',
@@ -239,7 +245,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 spawnL1,
                 externalL1,
                 overrideBytecodesDir,
-                showCalls,
+                verbosity,
+                noRequestSizeLimit,
+                autoExecuteL1,
+                noMining,
+                blockTime,
+                state,
+                timestamp,
+                accounts,
+                balance,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
@@ -260,7 +274,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 overrideBytecodesDir: string;
                 spawnL1: number;
                 externalL1: string;
-                showCalls: string;
+                verbosity: string;
+                noRequestSizeLimit: boolean;
+                autoExecuteL1: boolean;
+                noMining: boolean;
+                blockTime: number;
+                state: string;
+                timestamp: number;
+                accounts: number;
+                balance: number;
                 showStorageLogs: string;
                 showVmDetails: string;
                 showGasDetails: string;
@@ -284,7 +306,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 overrideBytecodesDir,
                 spawnL1,
                 externalL1,
-                showCalls,
+                verbosity,
+                noRequestSizeLimit,
+                autoExecuteL1,
+                noMining,
+                blockTime,
+                state,
+                timestamp,
+                accounts,
+                balance,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,

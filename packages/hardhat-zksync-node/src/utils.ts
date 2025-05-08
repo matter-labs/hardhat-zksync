@@ -13,9 +13,7 @@ import semver from 'semver';
 
 import {
     ALLOWED_CACHE_VALUES,
-    ALLOWED_FORK_VALUES,
     ALLOWED_LOG_VALUES,
-    ALLOWED_SHOW_CALLS_VALUES,
     ALLOWED_SHOW_GAS_DETAILS_VALUES,
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
@@ -95,11 +93,8 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--show-gas-details=${args.showGasDetails}`);
     }
 
-    if (args.showCalls) {
-        if (!ALLOWED_SHOW_CALLS_VALUES.includes(args.showCalls)) {
-            throw new ZkSyncNodePluginError(`Invalid showCalls value: ${args.showCalls}`);
-        }
-        commandArgs.push(`--show-calls=${args.showCalls}`);
+    if (args.verbosity) {
+        commandArgs.push(`-${args.verbosity}`);
     }
 
     if (args.externalL1 !== undefined) {
@@ -108,6 +103,38 @@ export function constructCommandArgs(args: CommandArguments): string[] {
 
     if (args.spawnL1 !== undefined) {
         commandArgs.push(`--spawn-l1=${args.spawnL1}`);
+    }
+
+    if (args.noRequestSizeLimit) {
+        commandArgs.push(`--no-request-size-limit`);
+    }
+
+    if (args.autoExecuteL1) {
+        commandArgs.push(`--auto-execute-l1=true`);
+    }
+
+    if (args.noMining) {
+        commandArgs.push(`--no-mining`);
+    }
+
+    if (args.blockTime) {
+        commandArgs.push(`--block-time=${args.blockTime}`);
+    }
+
+    if (args.state) {
+        commandArgs.push(`--state=${args.state}`);
+    }
+
+    if (args.timestamp) {
+        commandArgs.push(`--timestamp=${args.timestamp}`);
+    }
+
+    if (args.accounts) {
+        commandArgs.push(`--accounts=${args.accounts}`);
+    }
+
+    if (args.balance) {
+        commandArgs.push(`--balance=${args.balance}`);
     }
 
     if (args.showNodeConfig !== undefined) {
@@ -139,11 +166,6 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.fork) {
-        const urlPattern = /^http(s)?:\/\/[^\s]+$/;
-        if (!ALLOWED_FORK_VALUES.includes(args.fork) && !urlPattern.test(args.fork)) {
-            throw new ZkSyncNodePluginError(`Invalid fork network value: ${args.fork}`);
-        }
-
         if (args.forkBlockNumber) {
             commandArgs.push('fork', '--fork-url', args.fork, '--fork-at', args.forkBlockNumber.toString());
         } else if (args.replayTx) {
