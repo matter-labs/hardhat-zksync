@@ -26,7 +26,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
-    "ethers": "^6.7.1",
+    "ethers": "^6.14.0",
     "hardhat": "^2.22.5"
   },
   "prettier": {
