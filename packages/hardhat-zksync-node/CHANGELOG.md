@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.4.0...@matterlabs/hardhat-zksync-node-v1.4.1) (2025-05-09)
+
+
+### Bug Fixes
+
+* anvil-zksync bumped default version ([#1751](https://github.com/matter-labs/hardhat-zksync/issues/1751)) ([4279487](https://github.com/matter-labs/hardhat-zksync/commit/4279487f409e45ac8767d50cbf9644455d9be5cb))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.3.1...@matterlabs/hardhat-zksync-node-v1.4.0) (2025-03-25)
 
 
