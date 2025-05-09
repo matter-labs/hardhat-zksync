@@ -141,16 +141,132 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
     }
 
-    if (args.showTxSummary !== undefined) {
-        commandArgs.push(`--show-tx-summary=${args.showTxSummary}`);
-    }
-
     if (args.quiet) {
         commandArgs.push(`--quiet=${args.quiet}`);
     }
 
     if (args.devSystemContracts) {
         commandArgs.push(`--dev-system-contracts=${args.devSystemContracts}`);
+    }
+
+    if (args.baseTokenSymbol) {
+        commandArgs.push(`--base-token-symbol=${args.baseTokenSymbol}`);
+    }
+
+    if (args.baseTokenRatio) {
+        commandArgs.push(`--base-token-ratio=${args.baseTokenRatio}`);
+    }
+
+    if (args.autoImpersonate) {
+        commandArgs.push(`--auto-impersonate`);
+    }
+
+    if (args.l1GasPrice) {
+        commandArgs.push(`--l1-gas-price=${args.l1GasPrice}`);
+    }
+
+    if (args.l2GasPrice) {
+        commandArgs.push(`--l2-gas-price=${args.l2GasPrice}`);
+    }
+
+    if (args.l1PubDataPrice) {
+        commandArgs.push(`--l1-pub-data-price=${args.l1PubDataPrice}`);
+    }
+
+    if (args.priceScaleFactor) {
+        commandArgs.push(`--price-scale-factor=${args.priceScaleFactor}`);
+    }
+
+    if (args.limitScaleFactor) {
+        commandArgs.push(`--limit-scale-factor=${args.limitScaleFactor}`);
+    }
+
+    if (args.baseTokenRatio) {
+        commandArgs.push(`--base-token-ratio=${args.baseTokenRatio}`);
+    }
+
+    if (args.baseTokenSymbol) {
+        commandArgs.push(`--base-token-symbol=${args.baseTokenSymbol}`);
+    }
+
+    if (args.version) {
+        commandArgs.push(`--version`);
+    }
+
+    if (args.help) {
+        commandArgs.push(`--help`);
+    }
+
+    if (args.configOut) {
+        commandArgs.push(`--config-out=${args.configOut}`);
+    }
+
+    if (args.healthCheckEndpoint) {
+        commandArgs.push(`--health-check-endpoint=${args.healthCheckEndpoint}`);
+    }
+
+    if (args.offline) {
+        commandArgs.push(`--offline`);
+    }
+
+    if (args.noCors) {
+        commandArgs.push(`--no-cors`);
+    }
+
+    if (args.allowOrigin) {
+        commandArgs.push(`--allow-origin=${args.allowOrigin}`);
+    }
+
+    if (args.host) {
+        commandArgs.push(`--host=${args.host}`);
+    }
+
+    if (args.chainId) {
+        commandArgs.push(`--chain-id=${args.chainId}`);
+    }
+
+    if (args.init) {
+        commandArgs.push(`--init=${args.init}`);
+    }
+
+    if (args.stateInterval) {
+        commandArgs.push(`--state-interval=${args.stateInterval}`);
+    }
+
+    if (args.preserveHistoricalStates) {
+        commandArgs.push(`--preserve-historical-states=${args.preserveHistoricalStates}`);
+    }
+
+    if (args.order) {
+        commandArgs.push(`--order=${args.order}`);
+    }
+
+    if (args.logFilePath) {
+        commandArgs.push(`--log-file-path=${args.logFilePath}`);
+    }
+
+    if (args.silent) {
+        commandArgs.push(`--silent=${args.silent}`);
+    }
+
+    if (args.showNodeConfig) {
+        commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
+    }
+
+    if (args.protocolVersion) {
+        commandArgs.push(`--protocol-version=${args.protocolVersion}`);
+    }
+
+    if (args.emulateEvm) {
+        commandArgs.push(`--emulate-evm`);
+    }
+
+    if (args.enforceBytecodeCompression) {
+        commandArgs.push(`--enforce-bytecode-compression=${args.enforceBytecodeCompression}`);
+    }
+
+    if (args.systemContractsPath) {
+        commandArgs.push(`--system-contracts-path=${args.systemContractsPath}`);
     }
 
     if (args.forkBlockNumber && args.replayTx) {

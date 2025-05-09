@@ -22,7 +22,7 @@ import {
     TASK_NODE_ZKSYNC_DOWNLOAD_BINARY,
     TASK_RUN_NODE_ZKSYNC_IN_SEPARATE_PROCESS,
 } from './constants';
-import { JsonRpcServer, RpcServer } from './server';
+import { JsonRpcServer } from './server';
 import {
     adjustTaskArgsForPort,
     configureNetwork,
@@ -109,6 +109,9 @@ subtask(TASK_NODE_ZKSYNC_CREATE_SERVER, 'Creates a JSON-RPC server for ZKsync no
     );
 
 task(TASK_NODE, 'Start a ZKSync Node')
+    // Network Options
+    .addOptionalParam('chainId', 'Chain ID to use - default: 260', undefined, types.int)
+    // Logging Options
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
@@ -116,6 +119,43 @@ task(TASK_NODE, 'Start a ZKSync Node')
         undefined,
         types.string,
     )
+    .addFlag('silent', 'Disables logs')
+    // Options
+    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
+    .addOptionalParam(
+        'init',
+        ' Initialize the genesis block with the given `genesis.json` file',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
+    .addOptionalParam('stateInterval', 'Interval to dump state', undefined, types.bigint)
+    .addFlag('preserveHistoricalStates', 'Preserve historical states')
+    .addOptionalParam('order', 'Transaction ordering in the mempool - default: fifo', undefined, types.string)
+    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
+    .addFlag('version', 'Print version and exit')
+    .addFlag('help', 'Print help and exit')
+    // General Options
+    .addFlag('offline', 'Run in offline mode')
+    .addFlag('healthCheckEndpoint', 'Enable health check endpoint')
+    .addOptionalParam(
+        'configOut',
+        'Writes output of `anvil-zksync` as json to user-specified file',
+        undefined,
+        types.string,
+    )
+    // L1 Options
+    .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
+    .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
+    .addFlag('noRequestSizeLimit', 'Disable request size limit')
+    .addFlag('autoExecuteL1', 'Auto-execute L1 batches after L2 sealing')
+    // Block Options
+    .addOptionalParam('blockTime', 'Seal blocks at a fixed interval', undefined, types.bigint)
+    // Accounts Options
+    .addOptionalParam('accounts', 'Pre-funded dev accounts', undefined, types.bigint)
+    .addOptionalParam('balance', 'Pre-funded dev accounts balance', undefined, types.bigint)
+    .addFlag('autoImpersonate', 'Auto-impersonate accounts')
+    // Cache Options
     .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
     .addOptionalParam(
         'cacheDir',
@@ -124,19 +164,9 @@ task(TASK_NODE, 'Start a ZKSync Node')
         types.string,
     )
     .addFlag('resetCache', 'Reset the local `disk` cache')
-    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
-    .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
-    .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
-    .addFlag('noRequestSizeLimit', 'Disable request size limit')
-    .addFlag('autoExecuteL1', 'Auto-execute L1 batches after L2 sealing')
-    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
-    .addOptionalParam('blockTime', 'Seal blocks at a fixed interval', undefined, types.bigint)
-    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
-    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
-    .addOptionalParam('accounts', 'Pre-funded dev accounts', undefined, types.bigint)
-    .addOptionalParam('balance', 'Pre-funded dev accounts balance', undefined, types.bigint)
+    // Debugging Options
     .addOptionalParam('verbosity', 'Verbosity level traces (vv, vvv)', undefined, types.string)
-    .addOptionalParam('showEventLogs', 'Show event logs')
+    .addFlag('showNodeConfig', 'Show node configuration')
     .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
@@ -155,11 +185,51 @@ task(TASK_NODE, 'Start a ZKSync Node')
         undefined,
         types.string,
     )
+    // Gas configuration
+    .addOptionalParam('l1GasPrice', 'L1 gas price', undefined, types.bigint)
+    .addOptionalParam('l2GasPrice', 'L2 gas price', undefined, types.bigint)
+    .addOptionalParam('l1PubDataPrice', 'L1 pub data price', undefined, types.bigint)
+    .addOptionalParam('priceScaleFactor', 'Gas price estimation scale factor', undefined, types.bigint)
+    .addOptionalParam('limitScaleFactor', 'Gas limit estimation scale factor', undefined, types.bigint)
+    // System Configuration
     .addOptionalParam(
         'devSystemContracts',
         'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
     )
+    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
+    .addOptionalParam(
+        'devSystemContracts',
+        'Option for system contracts (built-in, local, built-in-without-security) default: built-in',
+        undefined,
+        types.string,
+    )
+    .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
+    .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
+    .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
+    .addFlag('emulateEvm', 'Emulate EVM')
+    // Fork Configuration
+    .addOptionalParam(
+        'fork',
+        'Starts a local network that is a fork of another network (testnet, mainnet, http://XXX:YY)',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
+    // Logging Options
+    .addFlag('quite', 'Disables logs')
+    .addFlag('log', 'Log filter level (trace, debug, info, warn, error, none) - default: info')
+    .addFlag('logFilePath', 'Path to the file where logs should be written - default: `anvil-zksync.log`')
+    .addFlag('silent', 'Disables logs')
+    // Server Options
+    .addFlag('noCors', 'Disable CORS')
+    .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
+    // Custom base token configuration
+    .addOptionalParam('baseTokenSymbol', 'Custom base token symbol', undefined, types.string)
+    .addOptionalParam('baseTokenRatio', 'Custom base token ratio', undefined, types.string)
+    // Plugin specific configuration
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
+    .addFlag('force', 'Force download even if the binary already exists')
     .addOptionalParam('tag', 'Specified node release for use', undefined)
     .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
         if (network.zksync !== true || network.name !== HARDHAT_NETWORK_NAME) {
@@ -171,7 +241,11 @@ task(TASK_NODE, 'Start a ZKSync Node')
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
+    // Network Options
     .addOptionalParam('port', 'Port to listen on - default: 8011', undefined, types.int)
+    .addOptionalParam('host', 'Host to listen on - default: 0.0.0.0', undefined, types.string)
+    .addOptionalParam('chainId', 'Chain ID to use - default: 260', undefined, types.int)
+    // Logging Options
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
@@ -179,17 +253,43 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
+    .addFlag('silent', 'Disables logs')
+    // Options
+    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
+    .addOptionalParam(
+        'init',
+        ' Initialize the genesis block with the given `genesis.json` file',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
+    .addOptionalParam('stateInterval', 'Interval to dump state', undefined, types.bigint)
+    .addFlag('preserveHistoricalStates', 'Preserve historical states')
+    .addOptionalParam('order', 'Transaction ordering in the mempool - default: fifo', undefined, types.string)
+    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
+    .addFlag('version', 'Print version and exit')
+    .addFlag('help', 'Print help and exit')
+    // General Options
+    .addFlag('offline', 'Run in offline mode')
+    .addFlag('healthCheckEndpoint', 'Enable health check endpoint')
+    .addOptionalParam(
+        'configOut',
+        'Writes output of `anvil-zksync` as json to user-specified file',
+        undefined,
+        types.string,
+    )
+    // L1 Options
     .addOptionalParam('spawnL1', 'Launch an Anvil L1 node on a specified port', undefined, types.int)
     .addOptionalParam('externalL1', 'Use an external L1 node', undefined, types.string)
     .addFlag('noRequestSizeLimit', 'Disable request size limit')
     .addFlag('autoExecuteL1', 'Auto-execute L1 batches after L2 sealing')
-    .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
+    // Block Options
     .addOptionalParam('blockTime', 'Seal blocks at a fixed interval', undefined, types.bigint)
-    .addOptionalParam('state', 'Load + dump snapshot on exit', undefined, types.string)
-    .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
+    // Accounts Options
     .addOptionalParam('accounts', 'Pre-funded dev accounts', undefined, types.bigint)
     .addOptionalParam('balance', 'Pre-funded dev accounts balance', undefined, types.bigint)
-    .addOptionalParam('verbosity', 'Verbosity level traces (vv, vvv)', undefined, types.string)
+    .addFlag('autoImpersonate', 'Auto-impersonate accounts')
+    // Cache Options
     .addOptionalParam('cache', 'Cache type (none, disk, memory) - default: disk', undefined, types.string)
     .addOptionalParam(
         'cacheDir',
@@ -198,8 +298,9 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         types.string,
     )
     .addFlag('resetCache', 'Reset the local `disk` cache')
-    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
-    .addOptionalParam('showEventLogs', 'Show event logs')
+    // Debugging Options
+    .addOptionalParam('verbosity', 'Verbosity level traces (vv, vvv)', undefined, types.string)
+    .addFlag('showNodeConfig', 'Show node configuration')
     .addOptionalParam(
         'showStorageLogs',
         'Show storage log information (none, read, write, all) - default: none',
@@ -218,10 +319,29 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
+    // Gas configuration
+    .addOptionalParam('l1GasPrice', 'L1 gas price', undefined, types.bigint)
+    .addOptionalParam('l2GasPrice', 'L2 gas price', undefined, types.bigint)
+    .addOptionalParam('l1PubDataPrice', 'L1 pub data price', undefined, types.bigint)
+    .addOptionalParam('priceScaleFactor', 'Gas price estimation scale factor', undefined, types.bigint)
+    .addOptionalParam('limitScaleFactor', 'Gas limit estimation scale factor', undefined, types.bigint)
+    // System Configuration
     .addOptionalParam(
         'devSystemContracts',
         'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
     )
+    .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
+    .addOptionalParam(
+        'devSystemContracts',
+        'Option for system contracts (built-in, local, built-in-without-security) default: built-in',
+        undefined,
+        types.string,
+    )
+    .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
+    .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
+    .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
+    .addFlag('emulateEvm', 'Emulate EVM')
+    // Fork Configuration
     .addOptionalParam(
         'fork',
         'Starts a local network that is a fork of another network (testnet, mainnet, http://XXX:YY)',
@@ -230,34 +350,61 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     )
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
-    .addOptionalParam('tag', 'Specified node release for use', undefined)
+    // Logging Options
     .addFlag('quite', 'Disables logs')
+    .addFlag('log', 'Log filter level (trace, debug, info, warn, error, none) - default: info')
+    .addFlag('logFilePath', 'Path to the file where logs should be written - default: `anvil-zksync.log`')
+    .addFlag('silent', 'Disables logs')
+    // Server Options
+    .addFlag('noCors', 'Disable CORS')
+    .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
+    // Custom base token configuration
+    .addOptionalParam('baseTokenSymbol', 'Custom base token symbol', undefined, types.string)
+    .addOptionalParam('baseTokenRatio', 'Custom base token ratio', undefined, types.string)
+    // Plugin specific configuration
+    .addOptionalParam('tag', 'Specified node release for use', undefined)
     .addFlag('force', 'Force download even if the binary already exists')
     .setAction(
         async (
             {
                 port,
+                host,
+                chainId,
                 log,
                 logFilePath,
+                timestamp,
+                init,
+                state,
+                stateInterval,
+                preserveHistoricalStates,
+                order,
+                noMining,
+                version,
+                help,
+                offline,
+                healthCheckEndpoint,
+                configOut,
+                spawnL1,
+                externalL1,
+                noRequestSizeLimit,
+                autoExecuteL1,
+                blockTime,
+                accounts,
+                balance,
+                autoImpersonate,
                 cache,
                 cacheDir,
                 resetCache,
-                spawnL1,
-                externalL1,
-                overrideBytecodesDir,
                 verbosity,
-                noRequestSizeLimit,
-                autoExecuteL1,
-                noMining,
-                blockTime,
-                state,
-                timestamp,
-                accounts,
-                balance,
+                showNodeConfig,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
                 devSystemContracts,
+                enforceBytecodeCompression,
+                systemContractsPath,
+                protocolVersion,
+                emulateEvm,
                 fork,
                 forkBlockNumber,
                 replayTx,
@@ -265,70 +412,104 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 quiet,
                 force,
             }: {
-                port: number;
-                log: string;
-                logFilePath: string;
-                cache: string;
-                cacheDir: string;
-                resetCache: boolean;
-                overrideBytecodesDir: string;
-                spawnL1: number;
-                externalL1: string;
-                verbosity: string;
-                noRequestSizeLimit: boolean;
-                autoExecuteL1: boolean;
-                noMining: boolean;
-                blockTime: number;
-                state: string;
-                timestamp: number;
-                accounts: number;
-                balance: number;
-                showStorageLogs: string;
-                showVmDetails: string;
-                showGasDetails: string;
-                devSystemContracts: string;
-                fork: string;
-                forkBlockNumber: number;
-                replayTx: string;
-                tag: string;
-                quiet: boolean;
-                force: boolean;
+                port?: number;
+                host?: string;
+                chainId?: number;
+                log?: string;
+                logFilePath?: string;
+                timestamp?: bigint;
+                init?: string;
+                state?: string;
+                stateInterval?: bigint;
+                preserveHistoricalStates?: boolean;
+                order?: string;
+                noMining?: boolean;
+                version?: boolean;
+                help?: boolean;
+                offline?: boolean;
+                healthCheckEndpoint?: boolean;
+                configOut?: string;
+                spawnL1?: number;
+                externalL1?: string;
+                noRequestSizeLimit?: boolean;
+                autoExecuteL1?: boolean;
+                blockTime?: bigint;
+                accounts?: bigint;
+                balance?: bigint;
+                autoImpersonate?: boolean;
+                cache?: string;
+                cacheDir?: string;
+                resetCache?: boolean;
+                verbosity?: string;
+                showNodeConfig?: boolean;
+                showStorageLogs?: string;
+                showVmDetails?: string;
+                showGasDetails?: string;
+                devSystemContracts?: string;
+                enforceBytecodeCompression?: boolean;
+                systemContractsPath?: string;
+                protocolVersion?: number;
+                emulateEvm?: boolean;
+                fork?: string;
+                forkBlockNumber?: number;
+                replayTx?: string;
+                tag?: string;
+                quiet?: boolean;
+                force?: boolean;
             },
             { run },
         ) => {
             const commandArgs = constructCommandArgs({
                 port,
+                host,
+                chainId,
                 log,
                 logFilePath,
+                timestamp,
+                init,
+                state,
+                stateInterval,
+                preserveHistoricalStates,
+                order,
+                noMining,
+                version,
+                help,
+                offline,
+                healthCheckEndpoint,
+                configOut,
+                spawnL1,
+                externalL1,
+                noRequestSizeLimit,
+                autoExecuteL1,
+                blockTime,
+                accounts,
+                balance,
+                autoImpersonate,
                 cache,
                 cacheDir,
                 resetCache,
-                overrideBytecodesDir,
-                spawnL1,
-                externalL1,
                 verbosity,
-                noRequestSizeLimit,
-                autoExecuteL1,
-                noMining,
-                blockTime,
-                state,
-                timestamp,
-                accounts,
-                balance,
+                showNodeConfig,
                 showStorageLogs,
                 showVmDetails,
                 showGasDetails,
                 devSystemContracts,
+                enforceBytecodeCompression,
+                systemContractsPath,
+                protocolVersion,
+                emulateEvm,
                 fork,
                 forkBlockNumber,
                 replayTx,
                 quiet,
+                force,
+                tag,
             });
 
-            const binaryPath: string = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force, tag });
+            const binaryPath = await run(TASK_NODE_ZKSYNC_DOWNLOAD_BINARY, { force, tag });
 
             // Create the server
-            const server: RpcServer = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
+            const server = await run(TASK_NODE_ZKSYNC_CREATE_SERVER, { binaryPath });
 
             try {
                 await server.listen(commandArgs);
