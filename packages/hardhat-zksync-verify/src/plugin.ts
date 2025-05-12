@@ -7,7 +7,7 @@ import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/con
 import path from 'path';
 import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
-import { Bytecode, extractMatchingContractInformation, resolveLibraries } from './solc/bytecode';
+import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
 import { FormatedLibrariesForConfig, Libraries } from './types';
 

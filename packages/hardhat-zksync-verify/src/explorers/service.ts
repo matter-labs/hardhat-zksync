@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import { ChainConfig } from '@nomicfoundation/hardhat-verify/types';
 import { delay, encodeArguments, nextAttemptDelay, retrieveContractBytecode } from '../utils';
 import { ZkSyncVerifyPluginError } from '../errors';
-import { Bytecode, resolveLibraries } from '../solc/bytecode';
+import { Bytecode } from '../solc/bytecode';
 import {
     COMPILER_VERSION_NOT_SUPPORTED,
     CONST_ARGS_ARRAY_ERROR,
