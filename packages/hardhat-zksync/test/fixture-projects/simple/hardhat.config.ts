@@ -2,10 +2,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '../../../src/index';
 
 const config: HardhatUserConfig = {
-    zksolc: {
-        version: 'latest',
-        compilerSource: 'binary',
-    },
+    zksolc: {},
     networks: {
         ethNetwork: {
             url: 'http://0.0.0.0:8545',
