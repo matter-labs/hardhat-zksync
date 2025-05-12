@@ -15,8 +15,8 @@ export interface CommandArguments {
     preserveHistoricalStates?: boolean;
     order?: string;
     noMining?: boolean;
-    version?: boolean;
-    help?: boolean;
+    anvilZksyncVersion?: boolean;
+    anvilZksyncHelp?: boolean;
     // General Options
     offline?: boolean;
     healthCheckEndpoint?: boolean;
@@ -45,7 +45,7 @@ export interface CommandArguments {
     // Gas configuration
     l1GasPrice?: bigint;
     l2GasPrice?: bigint;
-    l1PubDataPrice?: bigint;
+    l1PubdataPrice?: bigint;
     priceScaleFactor?: bigint;
     limitScaleFactor?: bigint;
     // System Configuration

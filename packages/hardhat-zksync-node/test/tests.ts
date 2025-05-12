@@ -152,7 +152,7 @@ describe('node-zksync plugin', async function () {
                 expect(result).to.deep.equal(['run']);
             });
 
-            it('should correctly construct command arguments with all args', async function () {
+            it('should correctly construct command arguments with some args', async function () {
                 const args = {
                     port: 8012,
                     log: 'error',
@@ -168,7 +168,6 @@ describe('node-zksync plugin', async function () {
                     fork: 'mainnet',
                     forkBlockNumber: 100,
                     showNodeConfig: false,
-                    showTxSummary: false,
                     quiet: true,
                 };
 
@@ -184,8 +183,6 @@ describe('node-zksync plugin', async function () {
                     '--show-vm-details=none',
                     '--show-gas-details=all',
                     '-vv',
-                    '--show-node-config=false',
-                    '--show-tx-summary=false',
                     '--quiet=true',
                     '--dev-system-contracts=built-in',
                     'fork',
@@ -196,7 +193,114 @@ describe('node-zksync plugin', async function () {
                 ]);
             });
 
-            it('should throw error when both forkBlockNumber and replayTx are specified in all args', async function () {
+            it('should correctly construct network options', async function () {
+                const args = {
+                    port: 8012,
+                    host: '127.0.0.1',
+                    chainId: 260,
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal(['--port=8012', '--host=127.0.0.1', '--chain-id=260', 'run']);
+            });
+
+            it('should correctly construct logging options', async function () {
+                const args = {
+                    log: 'debug',
+                    logFilePath: '/var/log/zksync.log',
+                    silent: true,
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal([
+                    '--log=debug',
+                    '--log-file-path=/var/log/zksync.log',
+                    '--silent=true',
+                    'run',
+                ]);
+            });
+
+            it('should correctly construct L1 options', async function () {
+                const args = {
+                    spawnL1: 8545,
+                    externalL1: 'http://localhost:8545',
+                    noRequestSizeLimit: true,
+                    autoExecuteL1: true,
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal([
+                    '--external-l1=http://localhost:8545',
+                    '--spawn-l1=8545',
+                    '--no-request-size-limit',
+                    '--auto-execute-l1=true',
+                    'run',
+                ]);
+            });
+
+            it('should correctly construct gas configuration options', async function () {
+                const args = {
+                    l1GasPrice: BigInt(1000000000),
+                    l2GasPrice: BigInt(500000000),
+                    l1PubdataPrice: BigInt(800000000),
+                    priceScaleFactor: BigInt(2),
+                    limitScaleFactor: BigInt(3),
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal([
+                    '--l1-gas-price=1000000000',
+                    '--l2-gas-price=500000000',
+                    '--l1-pubdata-price=800000000',
+                    '--price-scale-factor=2',
+                    '--limit-scale-factor=3',
+                    'run',
+                ]);
+            });
+
+            it('should correctly construct system configuration options', async function () {
+                const args = {
+                    devSystemContracts: 'local',
+                    overrideBytecodesDir: '/path/to/bytecodes',
+                    protocolVersion: 26,
+                    emulateEvm: true,
+                    enforceBytecodeCompression: true,
+                    systemContractsPath: '/path/to/contracts',
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal([
+                    '--override-bytecodes-dir=/path/to/bytecodes',
+                    '--dev-system-contracts=local',
+                    '--protocol-version=26',
+                    '--emulate-evm',
+                    '--enforce-bytecode-compression=true',
+                    '--system-contracts-path=/path/to/contracts',
+                    'run',
+                ]);
+            });
+
+            it('should correctly construct server options', async function () {
+                const args = {
+                    noCors: true,
+                    allowOrigin: '*',
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal(['--no-cors', '--allow-origin=*', 'run']);
+            });
+
+            it('should correctly construct custom base token configuration', async function () {
+                const args = {
+                    baseTokenSymbol: 'ETH',
+                    baseTokenRatio: '1.0',
+                };
+
+                const result = constructCommandArgs(args);
+                expect(result).to.deep.equal(['--base-token-ratio=1.0', '--base-token-symbol=ETH', 'run']);
+            });
+
+            it('should throw error when both forkBlockNumber and replayTx are specified', async function () {
                 const args = { fork: 'mainnet', forkBlockNumber: 100, replayTx: '0x1234567890abcdef' };
                 expect(() => constructCommandArgs(args)).to.throw(
                     'Cannot specify both --fork-block-number and --replay-tx. Please specify only one of them.',

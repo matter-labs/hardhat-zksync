@@ -137,7 +137,7 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--balance=${args.balance}`);
     }
 
-    if (args.showNodeConfig !== undefined) {
+    if (args.showNodeConfig) {
         commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
     }
 
@@ -147,14 +147,6 @@ export function constructCommandArgs(args: CommandArguments): string[] {
 
     if (args.devSystemContracts) {
         commandArgs.push(`--dev-system-contracts=${args.devSystemContracts}`);
-    }
-
-    if (args.baseTokenSymbol) {
-        commandArgs.push(`--base-token-symbol=${args.baseTokenSymbol}`);
-    }
-
-    if (args.baseTokenRatio) {
-        commandArgs.push(`--base-token-ratio=${args.baseTokenRatio}`);
     }
 
     if (args.autoImpersonate) {
@@ -169,8 +161,8 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--l2-gas-price=${args.l2GasPrice}`);
     }
 
-    if (args.l1PubDataPrice) {
-        commandArgs.push(`--l1-pub-data-price=${args.l1PubDataPrice}`);
+    if (args.l1PubdataPrice) {
+        commandArgs.push(`--l1-pubdata-price=${args.l1PubdataPrice}`);
     }
 
     if (args.priceScaleFactor) {
@@ -189,11 +181,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--base-token-symbol=${args.baseTokenSymbol}`);
     }
 
-    if (args.version) {
+    if (args.anvilZksyncVersion) {
         commandArgs.push(`--version`);
     }
 
-    if (args.help) {
+    if (args.anvilZksyncHelp) {
         commandArgs.push(`--help`);
     }
 
@@ -234,15 +226,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.preserveHistoricalStates) {
-        commandArgs.push(`--preserve-historical-states=${args.preserveHistoricalStates}`);
+        commandArgs.push(`--preserve-historical-states`);
     }
 
     if (args.order) {
         commandArgs.push(`--order=${args.order}`);
-    }
-
-    if (args.logFilePath) {
-        commandArgs.push(`--log-file-path=${args.logFilePath}`);
     }
 
     if (args.silent) {

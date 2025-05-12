@@ -133,8 +133,8 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addFlag('preserveHistoricalStates', 'Preserve historical states')
     .addOptionalParam('order', 'Transaction ordering in the mempool - default: fifo', undefined, types.string)
     .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
-    .addFlag('version', 'Print version and exit')
-    .addFlag('help', 'Print help and exit')
+    .addFlag('anvilZksyncVersion', 'Print version and exit')
+    .addFlag('anvilZksyncHelp', 'Print help and exit')
     // General Options
     .addFlag('offline', 'Run in offline mode')
     .addFlag('healthCheckEndpoint', 'Enable health check endpoint')
@@ -192,10 +192,6 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('priceScaleFactor', 'Gas price estimation scale factor', undefined, types.bigint)
     .addOptionalParam('limitScaleFactor', 'Gas limit estimation scale factor', undefined, types.bigint)
     // System Configuration
-    .addOptionalParam(
-        'devSystemContracts',
-        'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
-    )
     .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
     .addOptionalParam(
         'devSystemContracts',
@@ -207,20 +203,8 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
     .addFlag('emulateEvm', 'Emulate EVM')
-    // Fork Configuration
-    .addOptionalParam(
-        'fork',
-        'Starts a local network that is a fork of another network (testnet, mainnet, http://XXX:YY)',
-        undefined,
-        types.string,
-    )
-    .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
-    .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     // Logging Options
     .addFlag('quite', 'Disables logs')
-    .addFlag('log', 'Log filter level (trace, debug, info, warn, error, none) - default: info')
-    .addFlag('logFilePath', 'Path to the file where logs should be written - default: `anvil-zksync.log`')
-    .addFlag('silent', 'Disables logs')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
     .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
@@ -228,7 +212,6 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('baseTokenSymbol', 'Custom base token symbol', undefined, types.string)
     .addOptionalParam('baseTokenRatio', 'Custom base token ratio', undefined, types.string)
     // Plugin specific configuration
-    .addOptionalParam('tag', 'Specified node release for use', undefined)
     .addFlag('force', 'Force download even if the binary already exists')
     .addOptionalParam('tag', 'Specified node release for use', undefined)
     .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
@@ -245,15 +228,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('port', 'Port to listen on - default: 8011', undefined, types.int)
     .addOptionalParam('host', 'Host to listen on - default: 0.0.0.0', undefined, types.string)
     .addOptionalParam('chainId', 'Chain ID to use - default: 260', undefined, types.int)
-    // Logging Options
-    .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
-    .addOptionalParam(
-        'logFilePath',
-        'Path to the file where logs should be written - default: `anvil-zksync.log`',
-        undefined,
-        types.string,
-    )
-    .addFlag('silent', 'Disables logs')
     // Options
     .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
     .addOptionalParam(
@@ -267,8 +241,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addFlag('preserveHistoricalStates', 'Preserve historical states')
     .addOptionalParam('order', 'Transaction ordering in the mempool - default: fifo', undefined, types.string)
     .addFlag('noMining', 'Mine blocks only when RPC clients call evm_mine')
-    .addFlag('version', 'Print version and exit')
-    .addFlag('help', 'Print help and exit')
+    .addFlag('anvilZksyncVersion', 'Print version and exit')
+    .addFlag('anvilZksyncHelp', 'Print help and exit')
     // General Options
     .addFlag('offline', 'Run in offline mode')
     .addFlag('healthCheckEndpoint', 'Enable health check endpoint')
@@ -322,14 +296,10 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     // Gas configuration
     .addOptionalParam('l1GasPrice', 'L1 gas price', undefined, types.bigint)
     .addOptionalParam('l2GasPrice', 'L2 gas price', undefined, types.bigint)
-    .addOptionalParam('l1PubDataPrice', 'L1 pub data price', undefined, types.bigint)
+    .addOptionalParam('l1PubdataPrice', 'L1 pub data price', undefined, types.bigint)
     .addOptionalParam('priceScaleFactor', 'Gas price estimation scale factor', undefined, types.bigint)
     .addOptionalParam('limitScaleFactor', 'Gas limit estimation scale factor', undefined, types.bigint)
     // System Configuration
-    .addOptionalParam(
-        'devSystemContracts',
-        'Load locally compiled system contracts (built-in/built-in-no-verify/local)',
-    )
     .addOptionalParam('overrideBytecodesDir', 'Override the bytecodes directory', undefined, types.string)
     .addOptionalParam(
         'devSystemContracts',
@@ -352,8 +322,18 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     // Logging Options
     .addFlag('quite', 'Disables logs')
-    .addFlag('log', 'Log filter level (trace, debug, info, warn, error, none) - default: info')
-    .addFlag('logFilePath', 'Path to the file where logs should be written - default: `anvil-zksync.log`')
+    .addOptionalParam(
+        'log',
+        'Log filter level (trace, debug, info, warn, error, none) - default: info',
+        undefined,
+        types.string,
+    )
+    .addOptionalParam(
+        'logFilePath',
+        'Path to the file where logs should be written - default: `anvil-zksync.log`',
+        undefined,
+        types.string,
+    )
     .addFlag('silent', 'Disables logs')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
@@ -379,8 +359,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 preserveHistoricalStates,
                 order,
                 noMining,
-                version,
-                help,
+                anvilZksyncVersion,
+                anvilZksyncHelp,
                 offline,
                 healthCheckEndpoint,
                 configOut,
@@ -392,6 +372,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 accounts,
                 balance,
                 autoImpersonate,
+                l1GasPrice,
+                l2GasPrice,
+                l1PubdataPrice,
+                baseTokenSymbol,
+                baseTokenRatio,
+                priceScaleFactor,
+                limitScaleFactor,
+                allowOrigin,
+                noCors,
                 cache,
                 cacheDir,
                 resetCache,
@@ -424,8 +413,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 preserveHistoricalStates?: boolean;
                 order?: string;
                 noMining?: boolean;
-                version?: boolean;
-                help?: boolean;
+                anvilZksyncVersion?: boolean;
+                anvilZksyncHelp?: boolean;
                 offline?: boolean;
                 healthCheckEndpoint?: boolean;
                 configOut?: string;
@@ -437,6 +426,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 accounts?: bigint;
                 balance?: bigint;
                 autoImpersonate?: boolean;
+                l1GasPrice?: bigint;
+                l2GasPrice?: bigint;
+                l1PubdataPrice?: bigint;
+                priceScaleFactor?: bigint;
+                limitScaleFactor?: bigint;
+                baseTokenSymbol?: string;
+                baseTokenRatio?: string;
+                allowOrigin?: string;
+                noCors?: boolean;
                 cache?: string;
                 cacheDir?: string;
                 resetCache?: boolean;
@@ -472,8 +470,8 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 preserveHistoricalStates,
                 order,
                 noMining,
-                version,
-                help,
+                anvilZksyncVersion,
+                anvilZksyncHelp,
                 offline,
                 healthCheckEndpoint,
                 configOut,
@@ -485,6 +483,15 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 accounts,
                 balance,
                 autoImpersonate,
+                l1GasPrice,
+                l2GasPrice,
+                l1PubdataPrice,
+                priceScaleFactor,
+                limitScaleFactor,
+                baseTokenSymbol,
+                baseTokenRatio,
+                allowOrigin,
+                noCors,
                 cache,
                 cacheDir,
                 resetCache,
