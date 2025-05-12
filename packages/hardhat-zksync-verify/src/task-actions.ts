@@ -287,17 +287,25 @@ export async function getContractInfo(
 
         const { sourceName, contractName } = parseFullyQualifiedName(contract);
         contractInformation = await extractMatchingContractInformation(
+            hre,
             sourceName,
             contractName,
             buildInfo,
             deployedBytecode,
+            libraries,
         );
 
         if (contractInformation === undefined || contractInformation === null) {
             throw new ZkSyncVerifyPluginError(NO_MATCHING_CONTRACT);
         }
     } else {
-        contractInformation = await inferContractArtifacts(artifacts, matchingCompilerVersions, deployedBytecode);
+        contractInformation = await inferContractArtifacts(
+            hre,
+            artifacts,
+            matchingCompilerVersions,
+            deployedBytecode,
+            libraries,
+        );
     }
     return contractInformation;
 }

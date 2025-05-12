@@ -87,11 +87,19 @@ describe('extractMatchingContractInformation', () => {
         };
         const deployedBytecode: Bytecode = new Bytecode('deployedBytecode');
 
+        const hre: {
+            run: sinon.SinonStub;
+        } = {
+            run: sinon.stub(),
+        };
+
         const result = await extractMatchingContractInformation(
+            hre as any,
             sourceName,
             contractName,
             buildInfo as any,
             deployedBytecode,
+            {},
         );
 
         expect(result).to.equal(null);
@@ -115,11 +123,18 @@ describe('extractMatchingContractInformation', () => {
         };
         const deployedBytecode: Bytecode = new Bytecode('deployedBytecode');
 
+        const hre: {
+            run: sinon.SinonStub;
+        } = {
+            run: sinon.stub(),
+        };
         const result = await extractMatchingContractInformation(
+            hre as any,
             sourceName,
             contractName,
             buildInfo as any,
             deployedBytecode,
+            {},
         );
 
         expect(result).to.equal(null);
@@ -148,11 +163,19 @@ describe('extractMatchingContractInformation', () => {
         };
         const deployedBytecode: Bytecode = new Bytecode('deployedBytecode');
 
-        const result = await bytecodes.extractMatchingContractInformation(
+        const hre: {
+            run: sinon.SinonStub;
+        } = {
+            run: sinon.stub(),
+        };
+
+        const result = await extractMatchingContractInformation(
+            hre as any,
             sourceName,
             contractName,
             buildInfo as any,
             deployedBytecode,
+            {},
         );
 
         expect(result).to.deep.equal({

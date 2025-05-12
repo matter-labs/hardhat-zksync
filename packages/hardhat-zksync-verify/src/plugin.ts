@@ -7,13 +7,16 @@ import { isFullyQualifiedName, parseFullyQualifiedName } from 'hardhat/utils/con
 import path from 'path';
 import { isBreakableCompilerVersion } from '@matterlabs/hardhat-zksync-solc/dist/src/utils';
 import { CONTRACT_NAME_NOT_FOUND, NO_MATCHING_CONTRACT, LIBRARIES_EXPORT_ERROR } from './constants';
-import { Bytecode, extractMatchingContractInformation } from './solc/bytecode';
+import { Bytecode, extractMatchingContractInformation, resolveLibraries } from './solc/bytecode';
 import { ZkSyncVerifyPluginError } from './errors';
+import { FormatedLibrariesForConfig, Libraries } from './types';
 
 export async function inferContractArtifacts(
+    hre: HardhatRuntimeEnvironment,
     artifacts: Artifacts,
     matchingCompilerVersions: string[],
     deployedBytecode: Bytecode,
+    libraries: Libraries,
 ): Promise<any> {
     const contractMatches = [];
     const fqNames = await artifacts.getAllFullyQualifiedNames();
@@ -32,10 +35,12 @@ export async function inferContractArtifacts(
         const { sourceName, contractName } = parseFullyQualifiedName(fqName);
 
         const contractInformation = await extractMatchingContractInformation(
+            hre,
             sourceName,
             contractName,
             buildInfo,
             deployedBytecode,
+            libraries,
         );
         if (contractInformation !== null) {
             contractMatches.push(contractInformation);
@@ -86,6 +91,7 @@ export function getSolidityStandardJsonInput(
     hre: HardhatRuntimeEnvironment,
     resolvedFiles: ResolvedFile[],
     input: CompilerInput,
+    resolvedLibraries?: FormatedLibrariesForConfig,
 ): any {
     const standardInput = {
         language: input.language,
@@ -103,6 +109,10 @@ export function getSolidityStandardJsonInput(
         : {
               ...input.settings,
           };
+
+    if (resolvedLibraries) {
+        Object.assign((standardInput.settings as any).libraries, resolvedLibraries);
+    }
 
     return standardInput;
 }
