@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.4.1...@matterlabs/hardhat-zksync-node-v1.5.0) (2025-05-12)
+
+
+### Features
+
+* bump anvil-zksync version and add new parameters ([#1709](https://github.com/matter-labs/hardhat-zksync/issues/1709)) ([99676f5](https://github.com/matter-labs/hardhat-zksync/commit/99676f533af5f0e07147242dfc5e30e19d29a33d))
+
 ## [1.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.4.0...@matterlabs/hardhat-zksync-node-v1.4.1) (2025-05-09)
 
 
