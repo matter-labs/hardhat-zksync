@@ -41,7 +41,7 @@
     "chai": "^4.3.4",
     "undici": "^6.18.2",
     "debug": "^4.3.5",
-    "semver": "^7.6.2",
+    "semver": "^7.7.2",
     "sinon": "^18.0.0",
     "sinon-chai": "^3.7.0",
     "proper-lockfile": "^4.1.2"
@@ -51,7 +51,7 @@
     "@types/dockerode": "^3.3.29",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.0",
     "@types/fs-extra": "^11.0.4",
     "@types/sinon": "^17.0.3",
     "@types/sinon-chai": "^3.2.12",

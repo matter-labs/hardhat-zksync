@@ -52,7 +52,7 @@
     "zksync-ethers": "^6.15.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
-    "semver": "^7.6.2"
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
