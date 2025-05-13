@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import * as zk from 'zksync-ethers';
 import * as ethers from 'ethers';
 
-import { ZkSyncArtifact } from './types';
+import { ZkSyncArtifact, ZkSyncOverrides } from './types';
 import {
     Providers,
     createProviders,
@@ -56,7 +56,7 @@ export class Deployer implements AbstractDeployer {
         contractNameOrArtifact: ZkSyncArtifact | string,
         constructorArguments: any[] = [],
         deploymentType?: zk.types.DeploymentType,
-        overrides?: ethers.Overrides,
+        overrides?: ZkSyncOverrides,
         additionalFactoryDeps?: ethers.BytesLike[],
     ): Promise<zk.Contract> {
         return await deploy(

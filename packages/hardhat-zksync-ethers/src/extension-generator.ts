@@ -57,7 +57,8 @@ export class ZkSyncGenerator implements Generator {
                 deployContract: (
                     artifact: ZkSyncArtifact,
                     constructorArguments: any[],
-                    walletOrSigner?: HardhatZksyncSignerOrWallet,
+                    walletOrSigner?: HardhatZksyncSignerOrWalletOrFactoryOptions,
+                    deploymentType?: DeploymentType,
                     overrides?: Overrides,
                     additionalFactoryDeps?: BytesLike[],
                 ) =>
@@ -66,6 +67,7 @@ export class ZkSyncGenerator implements Generator {
                         artifact,
                         constructorArguments,
                         walletOrSigner,
+                        deploymentType,
                         overrides,
                         additionalFactoryDeps,
                     ),
