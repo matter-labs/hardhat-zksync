@@ -141,10 +141,6 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
     }
 
-    if (args.quiet) {
-        commandArgs.push(`--quiet=${args.quiet}`);
-    }
-
     if (args.devSystemContracts) {
         commandArgs.push(`--dev-system-contracts=${args.devSystemContracts}`);
     }
@@ -233,8 +229,8 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--order=${args.order}`);
     }
 
-    if (args.silent) {
-        commandArgs.push(`--silent=${args.silent}`);
+    if (args.quiet) {
+        commandArgs.push(`--silent=${args.quiet}`);
     }
 
     if (args.showNodeConfig) {

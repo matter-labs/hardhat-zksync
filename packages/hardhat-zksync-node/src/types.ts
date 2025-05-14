@@ -6,7 +6,7 @@ export interface CommandArguments {
     // Logging Options
     log?: string;
     logFilePath?: string;
-    silent?: boolean;
+    quiet?: boolean;
     // Options
     timestamp?: bigint;
     init?: string;
@@ -68,7 +68,6 @@ export interface CommandArguments {
     // Plugin specific configuration
     tag?: string;
     force?: boolean;
-    quiet?: boolean;
 }
 
 export interface ZkSyncAnvilConfig {
