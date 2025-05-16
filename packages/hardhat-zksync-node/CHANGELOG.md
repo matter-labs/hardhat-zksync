@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.5.0...@matterlabs/hardhat-zksync-node-v1.5.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* rename silent param to quiet ([#1759](https://github.com/matter-labs/hardhat-zksync/issues/1759)) ([28fc526](https://github.com/matter-labs/hardhat-zksync/commit/28fc5262763158ee3fd350260163323eb5d1d84a))
+
 ## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.4.1...@matterlabs/hardhat-zksync-node-v1.5.0) (2025-05-12)
 
 
