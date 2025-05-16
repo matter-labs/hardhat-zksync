@@ -36,7 +36,7 @@
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
-    "ethers": "^6.12.2",
+    "ethers": "^6.14.1",
     "zksync-ethers": "^6.15.0"
   },
   "prettier": {
