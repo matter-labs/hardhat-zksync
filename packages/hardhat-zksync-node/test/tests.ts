@@ -183,8 +183,8 @@ describe('node-zksync plugin', async function () {
                     '--show-vm-details=none',
                     '--show-gas-details=all',
                     '-vv',
-                    '--quiet=true',
                     '--dev-system-contracts=built-in',
+                    '--silent=true',
                     'fork',
                     '--fork-url',
                     'mainnet',
@@ -208,7 +208,7 @@ describe('node-zksync plugin', async function () {
                 const args = {
                     log: 'debug',
                     logFilePath: '/var/log/zksync.log',
-                    silent: true,
+                    quiet: true,
                 };
 
                 const result = constructCommandArgs(args);

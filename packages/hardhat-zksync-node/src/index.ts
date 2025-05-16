@@ -112,6 +112,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
     // Network Options
     .addOptionalParam('chainId', 'Chain ID to use - default: 260', undefined, types.int)
     // Logging Options
+    .addFlag('quiet', 'Disables logs')
     .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
     .addOptionalParam(
         'logFilePath',
@@ -119,7 +120,6 @@ task(TASK_NODE, 'Start a ZKSync Node')
         undefined,
         types.string,
     )
-    .addFlag('silent', 'Disables logs')
     // Options
     .addOptionalParam('timestamp', 'Override genesis timestamp', undefined, types.bigint)
     .addOptionalParam(
@@ -203,8 +203,6 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
     .addFlag('emulateEvm', 'Emulate EVM')
-    // Logging Options
-    .addFlag('quite', 'Disables logs')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
     .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
@@ -321,7 +319,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .addOptionalParam('replayTx', 'Transaction hash to replay', undefined, types.string)
     // Logging Options
-    .addFlag('quite', 'Disables logs')
+    .addFlag('quiet', 'Disables logs')
     .addOptionalParam(
         'log',
         'Log filter level (trace, debug, info, warn, error, none) - default: info',
@@ -334,7 +332,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
         undefined,
         types.string,
     )
-    .addFlag('silent', 'Disables logs')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
     .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
@@ -350,6 +347,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 port,
                 host,
                 chainId,
+                quiet,
                 log,
                 logFilePath,
                 timestamp,
@@ -398,7 +396,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 forkBlockNumber,
                 replayTx,
                 tag,
-                quiet,
                 force,
             }: {
                 port?: number;
@@ -406,6 +403,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 chainId?: number;
                 log?: string;
                 logFilePath?: string;
+                quiet?: boolean;
                 timestamp?: bigint;
                 init?: string;
                 state?: string;
@@ -452,7 +450,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 forkBlockNumber?: number;
                 replayTx?: string;
                 tag?: string;
-                quiet?: boolean;
                 force?: boolean;
             },
             { run },
@@ -461,6 +458,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 port,
                 host,
                 chainId,
+                quiet,
                 log,
                 logFilePath,
                 timestamp,
@@ -508,7 +506,6 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 fork,
                 forkBlockNumber,
                 replayTx,
-                quiet,
                 force,
                 tag,
             });
