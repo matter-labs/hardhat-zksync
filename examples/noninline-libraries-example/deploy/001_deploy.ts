@@ -18,7 +18,11 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Deploy this contract. The returned object will be of a `Contract` type, similarly to ones in `ethers`.
     // `greeting` is an argument for contract constructor.
-    const greeterContract = await deployer.deploy(artifact, []);
+    const greeterContract = await deployer.deploy(artifact, [], 'create', {
+        libraries: {
+            MathLib: '0x1234567890123456789012345678901234567890',
+        },
+    });
 
     // Show the contract info.
     const contractAddress = await greeterContract.getAddress();

@@ -76,7 +76,7 @@ export async function extractMatchingContractInformation(
         }
 
         // Checking a elf header 0x7F followed by ELF(45 4c 46) in ASCII
-        const isElfWrapper = runtimeBytecodeSymbols.object.slice(0, 8) === '7f454c46';
+        const isElfWrapper = runtimeBytecodeSymbols?.object.slice(0, 8) === '7f454c46';
         if (!isElfWrapper) {
             return null;
         }
