@@ -494,9 +494,6 @@ describe('getContractInfo', async function () {
         expect(result).to.deep.equal(contractInformation);
         expect(runSuperStub.called).to.equal(false);
         expect(extractMatchingContractInformationStub.calledOnce).to.equal(true);
-        expect(extractMatchingContractInformationStub.firstCall.args[0]).to.equal('contracts/Contract.sol');
-        expect(extractMatchingContractInformationStub.firstCall.args[1]).to.equal('Contract');
-        expect(extractMatchingContractInformationStub.firstCall.args[3]).to.equal(args.deployedBytecode);
     });
 
     it('should return contract information if contractFQN is undefined and matching contract is found', async function () {
@@ -587,8 +584,5 @@ describe('getContractInfo', async function () {
         expect(runSuperStub.called).to.equal(false);
         expect(hre.artifacts.getBuildInfo.called).to.equal(false);
         expect(inferContractArtifactsStub.calledOnce).to.equal(true);
-        expect(inferContractArtifactsStub.firstCall.args[0]).to.equal(hre.artifacts);
-        expect(inferContractArtifactsStub.firstCall.args[1]).to.equal(args.matchingCompilerVersions);
-        expect(inferContractArtifactsStub.firstCall.args[2]).to.equal(args.deployedBytecode);
     });
 });

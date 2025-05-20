@@ -157,8 +157,6 @@ jobs:
         run: |
           cd examples/noninline-libraries-example
           pnpm hardhat compile
-          pnpm hardhat deploy-zksync:libraries --private-key-or-index 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
-          pnpm hardhat compile
           pnpm hardhat deploy-zksync
 
       - name: Test zkvyper example

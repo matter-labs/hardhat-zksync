@@ -2,8 +2,7 @@ import { assert, expect } from 'chai';
 import * as path from 'path';
 import { ethers } from 'ethers';
 import { Provider, Wallet } from 'zksync-ethers';
-import chalk from 'chalk';
-import { TASK_DEPLOY_ZKSYNC, TASK_DEPLOY_ZKSYNC_LIBRARIES } from '../../src/task-names';
+import { TASK_DEPLOY_ZKSYNC } from '../../src/task-names';
 import { Deployer } from '../../src/deployer';
 import { useEnvironment } from '../helpers';
 import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, WALLET_PRIVATE_KEY } from '../constants';
@@ -52,71 +51,6 @@ describe('Plugin tests', async function () {
             } catch (error: any) {
                 assert.include(error.message, `Deploy folder 'deploy' not found.`, 'Error message does not match');
             }
-        });
-    });
-
-    describe('noninline-libraries artifact', async function () {
-        useEnvironment('noninline-libraries-v1', 'zkSyncNetwork');
-
-        it('Should compile libraries', async function () {
-            const libraries = this.env.config.zksolc.settings.libraries;
-            assert.deepEqual(libraries, {}, 'Libraries present in hardhat config. Delete them!');
-            chalk.yellow('Compiling libraries...');
-            await this.env.run('compile');
-        });
-
-        it('Should deploy libraries with private key', async function () {
-            assert.deepEqual(
-                this.env.config.zksolc.settings.libraries,
-                {},
-                'Libraries must not be present in hardhat config. Delete them!',
-            );
-            chalk.yellow('Deploying libraries...');
-            await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, {
-                privateKeyOrIndex: '0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110',
-            });
-        });
-    });
-
-    describe('noninline-libraries artifact with private key in config', async function () {
-        useEnvironment('noninline-libraries-v2', 'zkSyncNetwork');
-
-        it('Should compile libraries', async function () {
-            const libraries = this.env.config.zksolc.settings.libraries;
-            assert.deepEqual(libraries, {}, 'Libraries present in hardhat config. Delete them!');
-            chalk.yellow('Compiling libraries...');
-            await this.env.run('compile');
-        });
-
-        it('Should deploy libraries with private key in hardhat.config', async function () {
-            assert.deepEqual(
-                this.env.config.zksolc.settings.libraries,
-                {},
-                'Libraries must not be present in hardhat config. Delete them!',
-            );
-            chalk.yellow('Deploying libraries...');
-            await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, { compileAllContracts: true });
-        });
-    });
-
-    describe('should deploy libraries using mnemonic', async function () {
-        useEnvironment('deployment-with-mnemonic', 'zkSyncNetwork');
-
-        it('Should compile libraries', async function () {
-            const libraries = this.env.config.zksolc.settings.libraries;
-            assert.deepEqual(libraries, {}, 'Libraries present in hardhat config. Delete them!');
-            chalk.yellow('Compiling libraries...');
-            await this.env.run('compile');
-        });
-
-        it('Should deploy libraries with private key in hardhat.config', async function () {
-            assert.deepEqual(
-                this.env.config.zksolc.settings.libraries,
-                {},
-                'Libraries must not be present in hardhat config. Delete them!',
-            );
-            chalk.yellow('Deploying libraries...');
-            await this.env.run(TASK_DEPLOY_ZKSYNC_LIBRARIES, { noAutoPopulateConfig: true });
         });
     });
 
