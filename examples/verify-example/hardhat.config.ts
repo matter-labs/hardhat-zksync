@@ -11,7 +11,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
-        version: 'latest',
+        version: '1.5.15',
         settings: {
             enableEraVMExtensions: true,
             optimizer: {

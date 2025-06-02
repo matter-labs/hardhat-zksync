@@ -73,11 +73,13 @@ export class ZksolcCompilerDownloader {
             }
 
             if (version === 'latest') {
-                console.info(chalk.yellow(COMPILER_ZKSOLC_LATEST_DEPRECATION));
+                throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_LATEST_DEPRECATION);
+                // console.info(chalk.yellow(COMPILER_ZKSOLC_LATEST_DEPRECATION));
             }
 
             if (version !== 'latest' && version !== ZKSOLC_COMPILER_PATH_VERSION && isVersionForDeprecation(version)) {
-                console.info(chalk.yellow(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION(version)));
+                throw new ZkSyncSolcPluginError(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION(version));
+                // console.info(chalk.yellow(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION(version)));
             }
 
             if (version === 'latest' || version === compilerVersionInfo.latest) {

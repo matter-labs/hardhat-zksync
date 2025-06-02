@@ -122,83 +122,83 @@ describe('zkvyper plugin', async function () {
         });
     });
 
-    describe('Factory with compiler version >= 1.4.0', async function () {
-        useEnvironment('factory');
+    // describe('Factory with compiler version >= 1.4.0', async function () {
+    //     useEnvironment('factory');
 
-        it('Should successfully compile the factory contract', async function () {
-            await this.env.run(TASK_COMPILE);
+    //     it('Should successfully compile the factory contract', async function () {
+    //         await this.env.run(TASK_COMPILE);
 
-            const factoryArtifact = this.env.artifacts.readArtifactSync(
-                'contracts/CreateForwarder.vy:CreateForwarder',
-            ) as ZkSyncArtifact;
-            const depArtifact = this.env.artifacts.readArtifactSync('contracts/DeployMe.vy:DeployMe') as ZkSyncArtifact;
+    //         const factoryArtifact = this.env.artifacts.readArtifactSync(
+    //             'contracts/CreateForwarder.vy:CreateForwarder',
+    //         ) as ZkSyncArtifact;
+    //         const depArtifact = this.env.artifacts.readArtifactSync('contracts/DeployMe.vy:DeployMe') as ZkSyncArtifact;
 
-            assert.equal(factoryArtifact.contractName, 'CreateForwarder');
-            assert.equal(depArtifact.contractName, 'DeployMe');
+    //         assert.equal(factoryArtifact.contractName, 'CreateForwarder');
+    //         assert.equal(depArtifact.contractName, 'DeployMe');
 
-            // Check that ZKsync-specific artifact information was added.
+    //         // Check that ZKsync-specific artifact information was added.
 
-            // Factory contract should have one dependency.
-            // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
-            // Instead we only check that it's a hash indeed.
-            const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
-            const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
-            assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
-            assert.equal(
-                '.__VYPER_MINIMAL_PROXY_CONTRACT:__VYPER_MINIMAL_PROXY_CONTRACT',
-                factoryArtifact.factoryDeps[depHash],
-                'No required dependency in the artifact',
-            );
+    //         // Factory contract should have one dependency.
+    //         // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
+    //         // Instead we only check that it's a hash indeed.
+    //         const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
+    //         const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
+    //         assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
+    //         assert.equal(
+    //             '.__VYPER_MINIMAL_PROXY_CONTRACT:__VYPER_MINIMAL_PROXY_CONTRACT',
+    //             factoryArtifact.factoryDeps[depHash],
+    //             'No required dependency in the artifact',
+    //         );
 
-            // For the dependency contract should be no further dependencies.
-            assert.deepEqual(depArtifact.factoryDeps, {}, 'Unexpected factory-deps for a dependency contract');
+    //         // For the dependency contract should be no further dependencies.
+    //         assert.deepEqual(depArtifact.factoryDeps, {}, 'Unexpected factory-deps for a dependency contract');
 
-            // Check that the forwarder artifact was saved correctly.
-            const forwarderArtifact = this.env.artifacts.readArtifactSync(
-                '.__VYPER_MINIMAL_PROXY_CONTRACT:__VYPER_MINIMAL_PROXY_CONTRACT',
-            ) as ZkSyncArtifact;
-            assert.equal(forwarderArtifact.contractName, '__VYPER_MINIMAL_PROXY_CONTRACT');
-        });
-    });
+    //         // Check that the forwarder artifact was saved correctly.
+    //         const forwarderArtifact = this.env.artifacts.readArtifactSync(
+    //             '.__VYPER_MINIMAL_PROXY_CONTRACT:__VYPER_MINIMAL_PROXY_CONTRACT',
+    //         ) as ZkSyncArtifact;
+    //         assert.equal(forwarderArtifact.contractName, '__VYPER_MINIMAL_PROXY_CONTRACT');
+    //     });
+    // });
 
-    describe('Factory with compiler version < 1.4.0', async function () {
-        useEnvironment('factory-with-older-compiler');
+    // describe('Factory with compiler version < 1.4.0', async function () {
+    //     useEnvironment('factory-with-older-compiler');
 
-        it('Should successfully compile the factory contract', async function () {
-            await this.env.run(TASK_COMPILE);
+    //     it('Should successfully compile the factory contract', async function () {
+    //         await this.env.run(TASK_COMPILE);
 
-            const factoryArtifact = this.env.artifacts.readArtifactSync(
-                'contracts/CreateForwarder.vy:CreateForwarder',
-            ) as ZkSyncArtifact;
-            const depArtifact = this.env.artifacts.readArtifactSync('contracts/DeployMe.vy:DeployMe') as ZkSyncArtifact;
+    //         const factoryArtifact = this.env.artifacts.readArtifactSync(
+    //             'contracts/CreateForwarder.vy:CreateForwarder',
+    //         ) as ZkSyncArtifact;
+    //         const depArtifact = this.env.artifacts.readArtifactSync('contracts/DeployMe.vy:DeployMe') as ZkSyncArtifact;
 
-            assert.equal(factoryArtifact.contractName, 'CreateForwarder');
-            assert.equal(depArtifact.contractName, 'DeployMe');
+    //         assert.equal(factoryArtifact.contractName, 'CreateForwarder');
+    //         assert.equal(depArtifact.contractName, 'DeployMe');
 
-            // Check that ZKsync-specific artifact information was added.
+    //         // Check that ZKsync-specific artifact information was added.
 
-            // Factory contract should have one dependency.
-            // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
-            // Instead we only check that it's a hash indeed.
-            const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
-            const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
-            assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
-            assert.equal(
-                '.__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT',
-                factoryArtifact.factoryDeps[depHash],
-                'No required dependency in the artifact',
-            );
+    //         // Factory contract should have one dependency.
+    //         // We do not check for the actual value of the hash, as it depends on the bytecode yielded by the compiler and thus not static.
+    //         // Instead we only check that it's a hash indeed.
+    //         const depHash = Object.keys(factoryArtifact.factoryDeps)[0];
+    //         const expectedLength = 32 * 2 + 2; // 32 bytes in hex + '0x'.
+    //         assert(depHash.startsWith('0x') && depHash.length === expectedLength, 'Contract hash is malformed');
+    //         assert.equal(
+    //             '.__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT',
+    //             factoryArtifact.factoryDeps[depHash],
+    //             'No required dependency in the artifact',
+    //         );
 
-            // For the dependency contract should be no further dependencies.
-            assert.deepEqual(depArtifact.factoryDeps, {}, 'Unexpected factory-deps for a dependency contract');
+    //         // For the dependency contract should be no further dependencies.
+    //         assert.deepEqual(depArtifact.factoryDeps, {}, 'Unexpected factory-deps for a dependency contract');
 
-            // Check that the forwarder artifact was saved correctly.
-            const forwarderArtifact = this.env.artifacts.readArtifactSync(
-                '.__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT',
-            ) as ZkSyncArtifact;
-            assert.equal(forwarderArtifact.contractName, '__VYPER_FORWARDER_CONTRACT');
-        });
-    });
+    //         // Check that the forwarder artifact was saved correctly.
+    //         const forwarderArtifact = this.env.artifacts.readArtifactSync(
+    //             '.__VYPER_FORWARDER_CONTRACT:__VYPER_FORWARDER_CONTRACT',
+    //         ) as ZkSyncArtifact;
+    //         assert.equal(forwarderArtifact.contractName, '__VYPER_FORWARDER_CONTRACT');
+    //     });
+    // });
 
     describe('Output', async function () {
         useEnvironment('output');

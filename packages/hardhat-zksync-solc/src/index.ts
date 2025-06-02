@@ -22,6 +22,7 @@ import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artif
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import fs from 'fs';
 import chalk from 'chalk';
+import semver from 'semver';
 import {
     ArtifactsEmittedPerFile,
     CompilationJob,
@@ -33,6 +34,7 @@ import {
     TaskArguments,
 } from 'hardhat/types';
 import debug from 'debug';
+
 import { compile } from './compile';
 import {
     zeroxlify,
@@ -43,7 +45,6 @@ import {
     updateDefaultCompilerConfig,
     getZkVmNormalizedVersion,
     updateBreakableCompilerConfig,
-    getLatestEraVersion,
 } from './utils';
 import {
     defaultZkSolcConfig,
@@ -58,6 +59,7 @@ import {
     TASK_UPDATE_SOLIDITY_COMPILERS,
     TASK_DOWNLOAD_ZKSOLC,
 } from './constants';
+
 import { ZksolcCompilerDownloader } from './compile/downloader';
 import { ZkVmSolcCompilerDownloader } from './compile/zkvm-solc-downloader';
 import {
@@ -169,13 +171,13 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
-    const latestEraVersion = await getLatestEraVersion();
+    // const latestEraVersion = await getLatestEraVersion();
 
     hre.config.solidity.compilers.forEach(async (compiler) =>
         updateBreakableCompilerConfig(
             { compiler },
             hre.config.zksolc,
-            latestEraVersion,
+            semver.gte(hre.config.zksolc.version, '1.5.12') ? '1.0.2' : '1.0.1',
             extractedConfigs?.compilers ?? [],
         ),
     );
@@ -184,7 +186,7 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
         updateBreakableCompilerConfig(
             { compiler, file },
             hre.config.zksolc,
-            latestEraVersion,
+            semver.gte(hre.config.zksolc.version, '1.5.13') ? '1.0.2' : '1.0.1',
             extractedConfigs?.overides ?? new Map(),
         );
     }
