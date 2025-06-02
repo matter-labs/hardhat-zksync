@@ -3,6 +3,10 @@ import { HardhatUserConfig } from 'hardhat/types';
 import { ETH_NETWORK_RPC_URL, ZKSYNC_NETWORK_NAME, ZKSYNC_NETWORK_RPC_URL } from '../../constants';
 
 const config: HardhatUserConfig = {
+    zksolc: {
+        version: '1.5.15',
+        settings: {},
+    },
     networks: {
         hardhat: {
             zksync: true,
