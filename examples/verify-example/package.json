@@ -35,7 +35,7 @@
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
     "chalk": "^4.1.2",
-    "hardhat": "^2.22.5",
+    "hardhat": "^2.24.2",
     "ethers": "^6.12.2",
     "zksync-ethers": "^6.15.0"
   },
