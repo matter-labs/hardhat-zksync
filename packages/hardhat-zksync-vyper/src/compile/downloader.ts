@@ -78,12 +78,10 @@ export class ZkVyperCompilerDownloader {
 
             if (version === 'latest') {
                 throw new ZkSyncVyperPluginError(COMPILER_ZKVYPER_LATEST_DEPRECATION);
-                // console.info(chalk.yellow(COMPILER_ZKVYPER_LATEST_DEPRECATION));
             }
 
             if (version !== 'latest' && version !== ZKVYPER_COMPILER_PATH_VERSION && isVersionForDeprecation(version)) {
                 throw new ZkSyncVyperPluginError(COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION(version));
-                // console.info(chalk.yellow(COMPILER_ZKVYPER_DEPRECATION_FOR_VYPER_VERSION(version)));
             }
 
             if (version === 'latest' || version === compilerVersionInfo.latest) {

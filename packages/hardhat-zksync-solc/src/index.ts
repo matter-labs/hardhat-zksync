@@ -171,13 +171,11 @@ subtask(TASK_UPDATE_SOLIDITY_COMPILERS, async (_args: any, hre: HardhatRuntimeEn
         .find((extractor) => extractor.suitable(userSolidityConfig))
         ?.extract(userSolidityConfig);
 
-    // const latestEraVersion = await getLatestEraVersion();
-
     hre.config.solidity.compilers.forEach(async (compiler) =>
         updateBreakableCompilerConfig(
             { compiler },
             hre.config.zksolc,
-            semver.gte(hre.config.zksolc.version, '1.5.12') ? '1.0.2' : '1.0.1',
+            semver.gte(hre.config.zksolc.version, '1.5.13') ? '1.0.2' : '1.0.1',
             extractedConfigs?.compilers ?? [],
         ),
     );

@@ -4,7 +4,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zkvyper: {
-        version: '1.5.7',
+        version: '1.5.10',
         compilerSource: 'docker',
     },
     networks: {
