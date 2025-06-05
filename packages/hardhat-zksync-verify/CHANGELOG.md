@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.8.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.8.0...@matterlabs/hardhat-zksync-verify-v1.8.1) (2025-06-05)
+
+
+### Bug Fixes
+
+* compare proper bytecode execution parts ([#1773](https://github.com/matter-labs/hardhat-zksync/issues/1773)) ([84267c0](https://github.com/matter-labs/hardhat-zksync/commit/84267c0a67450c06d92c79b84eaa68d254f70316))
+
 ## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.7.1...@matterlabs/hardhat-zksync-verify-v1.8.0) (2025-03-25)
 
 
