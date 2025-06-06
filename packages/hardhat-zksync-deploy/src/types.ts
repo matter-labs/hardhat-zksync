@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { Artifact } from 'hardhat/types';
 
 /**
@@ -41,4 +42,8 @@ export interface ContractFullQualifiedName {
 
 export interface DeployerAccount {
     [networkName: string]: number | undefined;
+}
+
+export interface ZkSyncOverrides extends ethers.Overrides {
+    libraries?: { [libraryName: string]: string };
 }

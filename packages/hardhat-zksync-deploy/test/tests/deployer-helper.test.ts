@@ -165,6 +165,7 @@ describe('deployer-helper', () => {
             network: {
                 forceDeploy: false,
             },
+            run: sandbox.stub(),
         } as any;
 
         const contractNameOrArtifact: ZkSyncArtifact = {
