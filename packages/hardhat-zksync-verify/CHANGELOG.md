@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.9.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.8.1...@matterlabs/hardhat-zksync-verify-v1.9.0) (2025-06-06)
+
+
+### Features
+
+* throw errors for older versions of the compiler ([#1770](https://github.com/matter-labs/hardhat-zksync/issues/1770)) ([19ddeb2](https://github.com/matter-labs/hardhat-zksync/commit/19ddeb26796da51adf4b0f1d895ef754424b6bf9))
+
 ## [1.8.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.8.0...@matterlabs/hardhat-zksync-verify-v1.8.1) (2025-06-05)
 
 
