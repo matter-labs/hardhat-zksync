@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-deploy
 
+## [1.8.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.7.0...@matterlabs/hardhat-zksync-deploy-v1.8.0) (2025-06-06)
+
+
+### Features
+
+* throw errors for older versions of the compiler ([#1770](https://github.com/matter-labs/hardhat-zksync/issues/1770)) ([19ddeb2](https://github.com/matter-labs/hardhat-zksync/commit/19ddeb26796da51adf4b0f1d895ef754424b6bf9))
+
 ## [1.7.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-deploy-v1.6.0...@matterlabs/hardhat-zksync-deploy-v1.7.0) (2025-03-25)
 
 
