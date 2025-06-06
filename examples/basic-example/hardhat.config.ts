@@ -7,6 +7,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
     zksolc: {
+        version: '1.5.15',
         compilerSource: 'binary',
         settings: {
             enableEraVMExtensions: true,
@@ -37,7 +38,6 @@ const config: HardhatUserConfig = {
         compilers: [
             {
                 version: '0.8.17',
-                eraVersion: '1.0.0'
             },
             {
                 version: '0.7.6',

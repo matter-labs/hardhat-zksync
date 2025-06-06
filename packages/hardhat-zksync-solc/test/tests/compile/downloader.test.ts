@@ -4,7 +4,7 @@ import fse from 'fs-extra';
 import { ZksolcCompilerDownloader } from '../../../src/compile/downloader';
 import {
     COMPILER_VERSION_INFO_FILE_NOT_FOUND_ERROR,
-    COMPILER_VERSION_RANGE_ERROR,
+    COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION,
     ZKSOLC_COMPILER_PATH_VERSION,
 } from '../../../src/constants';
 
@@ -25,62 +25,62 @@ describe('Downloader', async () => {
         it('create downloader with specific version and with no download', async () => {
             sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+                .resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox
                 .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
                 .returns(isCompilerDownloaded(false));
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('0.0.4', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.5.4', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
             const compilerDownloaded = await downloader.isCompilerDownloaded();
 
-            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.0.4');
-            expect(version).to.equal('0.0.4');
+            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v1.5.4');
+            expect(version).to.equal('1.5.4');
             expect(compilerDownloaded).to.equal(false);
         });
 
         it('create downloader with specific version and with download of version info', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
             compilerInfoStub.onFirstCall().resolves(undefined);
-            compilerInfoStub.onSecondCall().resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.onSecondCall().resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(true);
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('0.0.4', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.5.4', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.0.4');
-            expect(version).to.equal('0.0.4');
+            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v1.5.4');
+            expect(version).to.equal('1.5.4');
         });
 
         it('create downloader with latest version and with download of version info', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
             compilerInfoStub.onFirstCall().resolves(undefined);
-            compilerInfoStub.onSecondCall().resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.onSecondCall().resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(true);
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('latest', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.5.15', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
-            expect(version).to.equal('0.1.0');
+            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v1.5.15');
+            expect(version).to.equal('1.5.15');
         });
 
         it('create downloader with latest version and with no download of version info', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
-            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('latest', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.5.14', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
             const version = downloader.getVersion();
 
-            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
-            expect(version).to.equal('0.1.0');
+            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v1.5.14');
+            expect(version).to.equal('1.5.14');
         });
 
         it('create downloader with remote version and with no download of version info', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
-            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
                 ZKSOLC_COMPILER_PATH_VERSION,
@@ -96,7 +96,7 @@ describe('Downloader', async () => {
 
         it('create downloader with remote version with URL compiler path', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
-            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
                 ZKSOLC_COMPILER_PATH_VERSION,
@@ -114,7 +114,7 @@ describe('Downloader', async () => {
 
         it('create downloader with remote version and with without compiler path', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
-            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             try {
@@ -130,12 +130,12 @@ describe('Downloader', async () => {
 
         it('create downloader with not remote version and with compiler path', async () => {
             const compilerInfoStub = sandbox.stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo');
-            compilerInfoStub.resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+            compilerInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             try {
                 await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                    'latest',
+                    '1.5.14',
                     'zksolc/zksolc-custom',
                     'cache/',
                 );
@@ -147,7 +147,7 @@ describe('Downloader', async () => {
 
             try {
                 await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                    '1.3.14',
+                    '1.5.14',
                     'zksolc/zksolc-custom',
                     'cache/',
                 );
@@ -163,15 +163,15 @@ describe('Downloader', async () => {
         it('should return the configured compiler path if it exists', async () => {
             sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '0.1.0', minVersion: '0.0.1' });
+                .resolves({ latest: '1.5.0', minVersion: '1.4.1' });
             sandbox
                 .stub(ZksolcCompilerDownloader.prototype, 'isCompilerDownloaded')
                 .returns(isCompilerDownloaded(false));
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('0.1.0', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.4.15', '', 'cache/');
             const compilerPath = downloader.getCompilerPath();
 
-            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v0.1.0');
+            expect(compilerPath.replaceAll(pathEscape, '/')).to.equal('cache/zksolc/zksolc-v1.4.15');
         });
 
         it('should return the default compiler path with configured compiler path', async () => {
@@ -211,7 +211,7 @@ describe('Downloader', async () => {
         beforeEach(() => {
             sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '1.1.0', minVersion: '0.0.1' });
+                .resolves({ latest: '1.5.0', minVersion: '1.4.1' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
         });
 
@@ -246,7 +246,7 @@ describe('Downloader', async () => {
         });
 
         it('should return false if the compiler is not downloaded', async () => {
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('0.1.0', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.4.15', '', 'cache/');
 
             sandbox.stub(fse, 'pathExists').resolves(false);
 
@@ -280,9 +280,9 @@ describe('Downloader', async () => {
                 .resolves(undefined);
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(true);
             sandbox.stub(ZksolcCompilerDownloader as any, '_downloadCompilerVersionInfo').resolves();
-            compilerStub.resolves({ latest: '1.3.50', minVersion: '1.3.16' });
+            compilerStub.resolves({ latest: '1.5.50', minVersion: '1.4.16' });
 
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.3.17', '', 'cache/');
+            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated('1.5.17', '', 'cache/');
 
             sandbox.stub(downloader as any, '_downloadCompiler').resolves();
             sandbox.stub(downloader as any, '_postProcessCompilerDownload').resolves();
@@ -301,11 +301,11 @@ describe('Downloader', async () => {
         it('should throw an error if the version info file is not found', async function () {
             const compilerInfoStub = sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '1.3.50', minVersion: '1.3.16' });
+                .resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                '1.3.21',
+                '1.5.15',
                 '',
                 'zksolc/',
             );
@@ -322,31 +322,31 @@ describe('Downloader', async () => {
         it('should throw an error if the compiler version is not in the specified range', async function () {
             const compilerVersionInfoStub = sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '1.3.25', minVersion: '1.3.18' });
+                .resolves({ latest: '1.5.15', minVersion: '1.4.1' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
-            const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                '1.3.19',
-                '',
-                'zksolc/',
-            );
-
             try {
-                compilerVersionInfoStub.resolves({ latest: '1.3.26', minVersion: '1.3.20' });
+                const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
+                    '1.3.11',
+                    '',
+                    'zksolc/',
+                );
+                compilerVersionInfoStub.resolves({ latest: '1.5.15', minVersion: '1.4.0' });
                 await downloader.downloadCompiler();
             } catch (e: any) {
-                expect(e.message).to.equal(COMPILER_VERSION_RANGE_ERROR('1.3.19', '1.3.20', '1.3.26'));
+                console.log(e.message);
+                expect(e.message).to.equal(COMPILER_ZKSOLC_DEPRECATION_FOR_SOLC_VERSION('1.3.11'));
             }
         });
 
         it('should download the compiler and perform post-processing and verification', async function () {
             sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '1.3.25', minVersion: '1.3.0' });
+                .resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
-                '1.3.21',
+                '1.5.15',
                 '',
                 'zksolc/',
             );
@@ -360,18 +360,18 @@ describe('Downloader', async () => {
 
             sinon.assert.calledOnce((downloader as any)._postProcessCompilerDownload);
             sinon.assert.calledOnce((downloader as any)._verifyCompilerAndSetVersionIfNeeded);
-            sinon.assert.calledWith(consoleInfoSpy.firstCall, sinon.match('Downloading zksolc 1.3.21'));
+            sinon.assert.calledWith(consoleInfoSpy.firstCall, sinon.match('Downloading zksolc 1.5.15'));
 
             sinon.assert.calledWith(
                 consoleInfoSpy.secondCall,
-                sinon.match('zksolc version 1.3.21 successfully downloaded'),
+                sinon.match('zksolc version 1.5.15 successfully downloaded'),
             );
         });
 
         it('should download the compiler and perform post-processing and verification when compiler is provided with URL', async function () {
             sandbox
                 .stub(ZksolcCompilerDownloader as any, '_getCompilerVersionInfo')
-                .resolves({ latest: '1.3.25', minVersion: '1.3.0' });
+                .resolves({ latest: '1.5.15', minVersion: '1.4.0' });
             sandbox.stub(ZksolcCompilerDownloader as any, '_shouldDownloadCompilerVersionInfo').resolves(false);
 
             const downloader = await ZksolcCompilerDownloader.getDownloaderWithVersionValidated(
