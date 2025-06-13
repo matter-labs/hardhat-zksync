@@ -39,7 +39,7 @@
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
-    "ethers": "^6.12.2",
+    "ethers": "^6.14.4",
     "zksync-ethers": "^6.15.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^5.0.2",

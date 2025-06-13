@@ -34,7 +34,7 @@
     "@matterlabs/hardhat-zksync-verify-vyper": "workspace:^",
     "chalk": "^4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
-    "ethers": "^6.7.1",
+    "ethers": "^6.14.4",
     "hardhat": "^2.22.5"
   },
   "prettier": {
