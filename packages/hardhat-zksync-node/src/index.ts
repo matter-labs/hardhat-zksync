@@ -202,7 +202,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
-    .addFlag('emulateEvm', 'Emulate EVM')
+    .addFlag('evmInterpreter', 'EVM Interpreter')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
     .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
@@ -308,7 +308,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
-    .addFlag('emulateEvm', 'Emulate EVM')
+    .addFlag('evmInterpreter', 'EVM Interpreter')
     // Fork Configuration
     .addOptionalParam(
         'fork',
@@ -391,7 +391,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression,
                 systemContractsPath,
                 protocolVersion,
-                emulateEvm,
+                evmInterpreter,
                 fork,
                 forkBlockNumber,
                 replayTx,
@@ -445,7 +445,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression?: boolean;
                 systemContractsPath?: string;
                 protocolVersion?: number;
-                emulateEvm?: boolean;
+                evmInterpreter?: boolean;
                 fork?: string;
                 forkBlockNumber?: number;
                 replayTx?: string;
@@ -502,7 +502,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression,
                 systemContractsPath,
                 protocolVersion,
-                emulateEvm,
+                evmInterpreter,
                 fork,
                 forkBlockNumber,
                 replayTx,
