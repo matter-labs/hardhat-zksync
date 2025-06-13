@@ -241,8 +241,8 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--protocol-version=${args.protocolVersion}`);
     }
 
-    if (args.emulateEvm) {
-        commandArgs.push(`--emulate-evm`);
+    if (args.evmInterpreter) {
+        commandArgs.push(`--evm-interpreter`);
     }
 
     if (args.enforceBytecodeCompression) {

@@ -263,7 +263,7 @@ describe('node-zksync plugin', async function () {
                     devSystemContracts: 'local',
                     overrideBytecodesDir: '/path/to/bytecodes',
                     protocolVersion: 26,
-                    emulateEvm: true,
+                    evmInterpreter: true,
                     enforceBytecodeCompression: true,
                     systemContractsPath: '/path/to/contracts',
                 };
@@ -273,7 +273,7 @@ describe('node-zksync plugin', async function () {
                     '--override-bytecodes-dir=/path/to/bytecodes',
                     '--dev-system-contracts=local',
                     '--protocol-version=26',
-                    '--emulate-evm',
+                    '--evm-interpreter',
                     '--enforce-bytecode-compression=true',
                     '--system-contracts-path=/path/to/contracts',
                     'run',
