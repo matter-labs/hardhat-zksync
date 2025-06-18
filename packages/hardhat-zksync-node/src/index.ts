@@ -203,6 +203,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
     .addFlag('evmInterpreter', 'EVM Interpreter')
+    .addFlag('emulateEvm', 'Emulate EVM')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
     .addOptionalParam('allowOrigin', 'Allow origin', undefined, types.string)
@@ -309,6 +310,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
     .addFlag('evmInterpreter', 'EVM Interpreter')
+    .addFlag('emulateEvm', 'Emulate EVM')
     // Fork Configuration
     .addOptionalParam(
         'fork',
@@ -392,6 +394,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 systemContractsPath,
                 protocolVersion,
                 evmInterpreter,
+                emulateEvm,
                 fork,
                 forkBlockNumber,
                 replayTx,
@@ -446,6 +449,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 systemContractsPath?: string;
                 protocolVersion?: number;
                 evmInterpreter?: boolean;
+                emulateEvm?: boolean;
                 fork?: string;
                 forkBlockNumber?: number;
                 replayTx?: string;
@@ -503,6 +507,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 systemContractsPath,
                 protocolVersion,
                 evmInterpreter,
+                emulateEvm,
                 fork,
                 forkBlockNumber,
                 replayTx,

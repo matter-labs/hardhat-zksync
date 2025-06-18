@@ -244,6 +244,10 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     if (args.evmInterpreter) {
         commandArgs.push(`--evm-interpreter`);
     }
+    if (args.emulateEvm) {
+        console.warn('[DEPRECATION] --emulate-evm flag is deprecated. Use --evm-interpreter instead.');
+        commandArgs.push(`--emulate-evm`);
+    }
 
     if (args.enforceBytecodeCompression) {
         commandArgs.push(`--enforce-bytecode-compression=${args.enforceBytecodeCompression}`);

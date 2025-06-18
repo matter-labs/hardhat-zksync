@@ -53,6 +53,7 @@ export interface CommandArguments {
     overrideBytecodesDir?: string;
     protocolVersion?: number;
     evmInterpreter?: boolean;
+    emulateEvm?: boolean;
     enforceBytecodeCompression?: boolean;
     systemContractsPath?: string;
     // Fork Configuration
