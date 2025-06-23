@@ -241,7 +241,11 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--protocol-version=${args.protocolVersion}`);
     }
 
+    if (args.evmInterpreter) {
+        commandArgs.push(`--evm-interpreter`);
+    }
     if (args.emulateEvm) {
+        console.warn('[DEPRECATION] --emulate-evm flag is deprecated. Use --evm-interpreter instead.');
         commandArgs.push(`--emulate-evm`);
     }
 

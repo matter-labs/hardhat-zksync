@@ -52,6 +52,7 @@ export interface CommandArguments {
     devSystemContracts?: string;
     overrideBytecodesDir?: string;
     protocolVersion?: number;
+    evmInterpreter?: boolean;
     emulateEvm?: boolean;
     enforceBytecodeCompression?: boolean;
     systemContractsPath?: string;

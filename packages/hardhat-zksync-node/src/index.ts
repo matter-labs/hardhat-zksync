@@ -202,6 +202,7 @@ task(TASK_NODE, 'Start a ZKSync Node')
     .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
+    .addFlag('evmInterpreter', 'EVM Interpreter')
     .addFlag('emulateEvm', 'Emulate EVM')
     // Server Options
     .addFlag('noCors', 'Disable CORS')
@@ -308,6 +309,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
     .addFlag('enforceBytecodeCompression', 'Enforce bytecode compression')
     .addOptionalParam('systemContractsPath', 'Path to the system contracts', undefined, types.string)
     .addOptionalParam('protocolVersion', 'Protocol version to use for new blocks (default: 26)', undefined, types.int)
+    .addFlag('evmInterpreter', 'EVM Interpreter')
     .addFlag('emulateEvm', 'Emulate EVM')
     // Fork Configuration
     .addOptionalParam(
@@ -391,6 +393,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression,
                 systemContractsPath,
                 protocolVersion,
+                evmInterpreter,
                 emulateEvm,
                 fork,
                 forkBlockNumber,
@@ -445,6 +448,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression?: boolean;
                 systemContractsPath?: string;
                 protocolVersion?: number;
+                evmInterpreter?: boolean;
                 emulateEvm?: boolean;
                 fork?: string;
                 forkBlockNumber?: number;
@@ -502,6 +506,7 @@ task(TASK_NODE_ZKSYNC, 'Starts a JSON-RPC server for ZKsync node')
                 enforceBytecodeCompression,
                 systemContractsPath,
                 protocolVersion,
+                evmInterpreter,
                 emulateEvm,
                 fork,
                 forkBlockNumber,
