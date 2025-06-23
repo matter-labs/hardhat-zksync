@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.5.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.5.1...@matterlabs/hardhat-zksync-node-v1.5.2) (2025-06-23)
+
+
+### Bug Fixes
+
+* add offline mode to global and rename emulateEVM to corrected name ([8ac15f1](https://github.com/matter-labs/hardhat-zksync/commit/8ac15f19f9d7bcce1b76ce8dae6752ab3691fda2))
+
 ## [1.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.5.0...@matterlabs/hardhat-zksync-node-v1.5.1) (2025-05-16)
 
 
