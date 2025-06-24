@@ -7,8 +7,7 @@ set -e
 echo "Running tests: $(basename "$(pwd)")"
 
 echo "Adding missing dependencies..."
-pnpm add @matterlabs/hardhat-zksync-upgradable@1.9.0
-pnpm add @openzeppelin/contracts@5.0.2
+pnpm add @openzeppelin/contracts-upgradeable@5.0.2
 
 run_test_and_handle_failure "pnpm hardhat compile" 0
 
