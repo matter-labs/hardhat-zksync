@@ -5,10 +5,10 @@ import '@matterlabs/hardhat-zksync-upgradable';
 
 const config = {
     zksolc: {
-        verstion: "latest",
+        version: "1.5.15",
         compilerSource: 'binary',
         settings: {
-            isSystem: true,
+            enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,
             },
