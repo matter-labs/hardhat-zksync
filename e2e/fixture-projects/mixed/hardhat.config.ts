@@ -40,11 +40,7 @@ const config: HardhatUserConfig = {
     },
       vyper: {
         version: "0.3.3"
-      },
-    solidity: {
-        version: '0.8.20',
-
-    },
+      }
 };
 
 export default config;
