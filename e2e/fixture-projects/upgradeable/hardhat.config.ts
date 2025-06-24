@@ -34,6 +34,9 @@ const config: HardhatUserConfig = {
             zksync: true,
         },
     },
+    solidity: {
+        version: '0.8.20',
+    },
 };
 
 export default config;
