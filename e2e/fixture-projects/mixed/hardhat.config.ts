@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
         },
     },
     zkvyper: {
-        version: 'latest',
+        version: '1.5.7',
         compilerSource: 'binary',
     },
       vyper: {
