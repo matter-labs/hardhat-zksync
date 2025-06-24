@@ -42,15 +42,15 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
       "@matterlabs/hardhat-zksync-solc": "1.4.0",
       "@matterlabs/hardhat-zksync-node":"1.5.1",
       "@matterlabs/hardhat-zksync-upgradable":"1.9.0",
+      "@openzeppelin/hardhat-upgrades": "^3.2.1",
       "@matterlabs/hardhat-zksync-vyper": "1.3.0",
       "@nomiclabs/hardhat-vyper": "^3.0.5",
       "chalk": "4.1.2",
       "hardhat": "^2.22.5",
       "ethers": "^6.12.2",
       "zksync-ethers": "^6.15.0",
-      "@matterlabs/zksync-contracts": "^0.6.1",
-      "@openzeppelin/contracts": "^4.9.2",
-      "@openzeppelin/contracts-upgradeable": "^4.9.2"
+      "@openzeppelin/contracts": "^5.0.2",
+      "@openzeppelin/contracts-upgradeable": "^5.0.2"
     },
     "prettier": {
       "tabWidth": 4,
