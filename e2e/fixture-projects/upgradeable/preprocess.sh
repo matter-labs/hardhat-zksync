@@ -44,9 +44,10 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "README.md"
   ],
   "dependencies": {
-    "@matterlabs/hardhat-zksync-deploy": "^1.4.0",
-    "@matterlabs/hardhat-zksync-solc": "^1.2.6",
-    "@openzeppelin/upgrades-core": "^1.31.3",
+    "@matterlabs/hardhat-zksync-deploy": "^1.7.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.4.0",
+    "@matterlabs/hardhat-zksync-upgradable": "^1.9.0",
+    "@openzeppelin/hardhat-upgrades": "^3.2.1",
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
     "fs-extra": "^11.2.0",
@@ -58,7 +59,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "compare-versions": "^6.1.0"
   },
   "devDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/contracts": "^5.0.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
@@ -77,7 +78,7 @@ cat <<EOF > "$SCRIPT_DIR/package.json"
     "c8": "^8.0.1"
   },
   "peerDependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.9.2"
+    "@openzeppelin/contracts": "^5.0.2"
   },
   "prettier": {
     "tabWidth": 4,
