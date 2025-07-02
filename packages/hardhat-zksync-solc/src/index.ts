@@ -83,7 +83,9 @@ const zkVmSolcCompilerDownloaderMutex = new Mutex();
 const zkSolcCompilerDownloaderMutex = new Mutex();
 
 extendConfig((config, userConfig) => {
-    defaultZkSolcConfig.version = userConfig.zksolc?.settings?.compilerPath ? ZKSOLC_COMPILER_PATH_VERSION : 'latest';
+    if (userConfig.zksolc?.settings?.compilerPath) {
+        defaultZkSolcConfig.version = ZKSOLC_COMPILER_PATH_VERSION;
+    }
     config.zksolc = { ...defaultZkSolcConfig, ...userConfig?.zksolc };
     config.zksolc.settings = { ...defaultZkSolcConfig.settings, ...userConfig?.zksolc?.settings };
     config.zksolc.settings.optimizer = {
