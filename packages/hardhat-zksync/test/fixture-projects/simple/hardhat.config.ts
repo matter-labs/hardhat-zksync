@@ -2,7 +2,12 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '../../../src/index';
 
 const config: HardhatUserConfig = {
-    zksolc: {},
+    zksolc: {
+        version: '1.5.15',
+        settings: {
+            codegen: 'yul',
+        },
+    },
     networks: {
         ethNetwork: {
             url: 'http://0.0.0.0:8545',
@@ -15,7 +20,7 @@ const config: HardhatUserConfig = {
         },
     },
     solidity: {
-        version: '0.8.17',
+        version: '0.8.30',
     },
 };
 
