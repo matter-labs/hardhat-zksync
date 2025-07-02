@@ -90,7 +90,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run anvil-zksync
-        uses: dutterbutter/anvil-zksync-action@v1.1.0
+        uses: dutterbutter/anvil-zksync-action@v1.2.0
         with:
           logFilePath: "anvil_zksync.log"
 
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run anvil-zksync
-        uses: dutterbutter/anvil-zksync-action@v1.1.0
+        uses: dutterbutter/anvil-zksync-action@v1.2.0
 
       - uses: pnpm/action-setup@v3
 
@@ -213,7 +213,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run anvil-zksync
-        uses: dutterbutter/anvil-zksync-action@v1.1.0
+        uses: dutterbutter/anvil-zksync-action@v1.2.0
 
       - uses: pnpm/action-setup@v3
 
@@ -300,7 +300,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run anvil-zksync
-        uses: dutterbutter/anvil-zksync-action@v1.1.0
+        uses: dutterbutter/anvil-zksync-action@v1.2.0
 
       - uses: pnpm/action-setup@v3
 
@@ -333,7 +333,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run anvil-zksync
-        uses: dutterbutter/anvil-zksync-action@v1.1.0
+        uses: dutterbutter/anvil-zksync-action@v1.2.0
 
       - uses: pnpm/action-setup@v3
 
