@@ -38,7 +38,7 @@
     "@nomicfoundation/hardhat-ethers": "3.0.6",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "chalk": "^4.1.2",
-    "ethers": "^6.12.2",
+    "ethers": "^6.15.0",
     "hardhat": "^2.22.5",
     "zksync": "^0.13.1",
     "zksync-ethers": "^6.15.0"
