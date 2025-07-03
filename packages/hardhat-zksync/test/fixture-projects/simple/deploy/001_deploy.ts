@@ -9,5 +9,5 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     const deployer = new Deployer(hre, zkWallet);
     const artifact = await deployer.loadArtifact('Greeter');
 
-    console.log(`${artifact.contractName} was loaded`);
+    console.log('Contract loaded:', artifact.contractName);
 }
