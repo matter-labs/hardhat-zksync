@@ -15,7 +15,7 @@ import {
     TASK_COMPILE,
     TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT,
 } from 'hardhat/builtin-tasks/task-names';
-import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
+import { extendEnvironment, extendConfig, subtask, task, types } from 'hardhat/internal/core/config/config-env';
 import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import './type-extensions';
 import { Artifacts, getArtifactFromContractOutput } from 'hardhat/internal/artifacts';
@@ -58,6 +58,7 @@ import {
     ZKSOLC_COMPILER_PATH_VERSION,
     TASK_UPDATE_SOLIDITY_COMPILERS,
     TASK_DOWNLOAD_ZKSOLC,
+    TASK_COMPILE_LINK,
 } from './constants';
 
 import { ZksolcCompilerDownloader } from './compile/downloader';
@@ -69,6 +70,7 @@ import {
     SolcUserConfigExtractor,
 } from './config-extractor';
 import { FactoryDeps, ZkSyncCompilerInput } from './types';
+import { compileLink } from './plugin';
 import '@matterlabs/hardhat-zksync-telemetry';
 
 const logDebug = debug('hardhat:core:tasks:compile');
@@ -137,6 +139,13 @@ task(TASK_COMPILE).setAction(
         await runSuper(compilationArgs);
     },
 );
+
+subtask(TASK_COMPILE_LINK)
+    .addParam('sourceName', 'Source name of the artifact')
+    .addParam('contractName', 'Contract name of the artifact')
+    .addOptionalParam('libraries', undefined, undefined, types.any)
+    .addFlag('withoutError', undefined)
+    .setAction(compileLink);
 
 subtask(TASK_DOWNLOAD_ZKSOLC, async (_args: any, hre: HardhatRuntimeEnvironment) => {
     if (!hre.network.zksync) {
@@ -397,7 +406,7 @@ subtask(
 
         if (compiler && compiler.eraVersion) {
             const compilersCache = await getCompilersDir();
-            let path: string = '';
+            let compilerPath: string = '';
             let version: string = '';
             let normalizedVersion: string = '';
 
@@ -413,7 +422,7 @@ subtask(
                     await zkVmSolcCompilerDownloader.downloadCompiler();
                 }
 
-                path = zkVmSolcCompilerDownloader.getCompilerPath();
+                compilerPath = zkVmSolcCompilerDownloader.getCompilerPath();
                 version = zkVmSolcCompilerDownloader.getVersion();
                 normalizedVersion = getZkVmNormalizedVersion(
                     zkVmSolcCompilerDownloader.getSolcVersion(),
@@ -423,7 +432,7 @@ subtask(
             console.info(chalk.yellow(COMPILING_INFO_MESSAGE_ZKVM_SOLC(hre.config.zksolc.version, version)));
 
             return {
-                compilerPath: path,
+                compilerPath,
                 isSolcJs: false,
                 version,
                 longVersion: normalizedVersion,
