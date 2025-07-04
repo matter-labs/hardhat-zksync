@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "ZKsync bundle of Hardhat plugins",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync",

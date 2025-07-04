@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync
 
+## [1.6.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.6.0...@matterlabs/hardhat-zksync-v1.6.1) (2025-07-03)
+
+
+### Bug Fixes
+
+* fix log issue ([e9a694e](https://github.com/matter-labs/hardhat-zksync/commit/e9a694eadcc2e8c701b1741f3d327650a1ef8e2a))
+
 ## [1.6.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-v1.5.0...@matterlabs/hardhat-zksync-v1.6.0) (2025-05-12)
 
 
