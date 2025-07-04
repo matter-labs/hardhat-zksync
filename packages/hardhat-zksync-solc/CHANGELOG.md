@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.4.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.4.0...@matterlabs/hardhat-zksync-solc-v1.4.1) (2025-07-04)
+
+
+### Bug Fixes
+
+* remove latest version leftovers ([a5ef140](https://github.com/matter-labs/hardhat-zksync/commit/a5ef140599af15305169ed1a5efed3be84c52990))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.3.2...@matterlabs/hardhat-zksync-solc-v1.4.0) (2025-06-06)
 
 
