@@ -41,17 +41,23 @@ describe('getCompilerVersions', async function () {
                     version: '1.5.0',
                 },
                 solidity: {
-                    compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],
+                    compilers: [
+                        { version: '0.8.0', eraVersion: '1.0.2' },
+                        { version: '0.7.0', eraVersion: '1.0.2' },
+                    ],
                     overrides: {
-                        'contracts/Contract.sol': { version: '0.6.0' },
+                        'contracts/Contract.sol': { version: '0.6.0', eraVersion: '1.0.2' },
                     },
                 },
             },
             userConfig: {
                 solidity: {
-                    compilers: [{ version: '0.8.0' }, { version: '0.7.0' }],
+                    compilers: [
+                        { version: '0.8.0', eraVersion: '1.0.2' },
+                        { version: '0.7.0', eraVersion: '1.0.2' },
+                    ],
                     overrides: {
-                        'contracts/Contract.sol': { version: '0.6.0' },
+                        'contracts/Contract.sol': { version: '0.6.0', eraVersion: '1.0.2' },
                     },
                 },
             },
@@ -59,7 +65,7 @@ describe('getCompilerVersions', async function () {
         };
 
         const result = await getCompilerVersions({}, hre as any, runSuperStub as any);
-        expect(result).to.deep.equal(['zkVM-0.8.0-1.0.1', 'zkVM-0.7.0-1.0.1', 'zkVM-0.6.0-1.0.1']);
+        expect(result).to.deep.equal(['zkVM-0.8.0-1.0.2', 'zkVM-0.7.0-1.0.2', 'zkVM-0.6.0-1.0.2']);
         expect(runSuperStub.called).to.equal(false);
     });
 

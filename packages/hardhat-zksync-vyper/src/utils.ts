@@ -36,7 +36,7 @@ export function getZkvyperUrl(repo: string, version: string, isRelease: boolean 
     const ext = process.platform === 'win32' ? '.exe' : '';
 
     if (isRelease) {
-        return `${repo}/releases/download/v${version}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;
+        return `${repo}/releases/download/${version}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;
     }
 
     return `${repo}/raw/main/${platform}-${arch}/zkvyper-${platform}-${arch}${toolchain}-v${version}${ext}`;

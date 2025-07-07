@@ -13,9 +13,7 @@ import semver from 'semver';
 
 import {
     ALLOWED_CACHE_VALUES,
-    ALLOWED_FORK_VALUES,
     ALLOWED_LOG_VALUES,
-    ALLOWED_SHOW_CALLS_VALUES,
     ALLOWED_SHOW_GAS_DETAILS_VALUES,
     ALLOWED_SHOW_STORAGE_LOGS_VALUES,
     ALLOWED_SHOW_VM_DETAILS_VALUES,
@@ -70,6 +68,10 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--reset-cache=${args.resetCache}`);
     }
 
+    if (args.overrideBytecodesDir) {
+        commandArgs.push(`--override-bytecodes-dir=${args.overrideBytecodesDir}`);
+    }
+
     if (args.showStorageLogs) {
         if (!ALLOWED_SHOW_STORAGE_LOGS_VALUES.includes(args.showStorageLogs)) {
             throw new ZkSyncNodePluginError(`Invalid showStorageLogs value: ${args.showStorageLogs}`);
@@ -91,35 +93,168 @@ export function constructCommandArgs(args: CommandArguments): string[] {
         commandArgs.push(`--show-gas-details=${args.showGasDetails}`);
     }
 
-    if (args.showCalls) {
-        if (!ALLOWED_SHOW_CALLS_VALUES.includes(args.showCalls)) {
-            throw new ZkSyncNodePluginError(`Invalid showCalls value: ${args.showCalls}`);
-        }
-        commandArgs.push(`--show-calls=${args.showCalls}`);
+    if (args.verbosity) {
+        commandArgs.push(`-${args.verbosity}`);
     }
 
-    if (args.resolveHashes) {
-        commandArgs.push(`--resolve-hashes=${args.resolveHashes}`);
+    if (args.externalL1 !== undefined) {
+        commandArgs.push(`--external-l1=${args.externalL1}`);
     }
 
-    if (args.showEventLogs !== undefined) {
-        commandArgs.push(`--show-event-logs=${args.showEventLogs}`);
+    if (args.spawnL1 !== undefined) {
+        commandArgs.push(`--spawn-l1=${args.spawnL1}`);
     }
 
-    if (args.showNodeConfig !== undefined) {
+    if (args.noRequestSizeLimit) {
+        commandArgs.push(`--no-request-size-limit`);
+    }
+
+    if (args.autoExecuteL1) {
+        commandArgs.push(`--auto-execute-l1=true`);
+    }
+
+    if (args.noMining) {
+        commandArgs.push(`--no-mining`);
+    }
+
+    if (args.blockTime) {
+        commandArgs.push(`--block-time=${args.blockTime}`);
+    }
+
+    if (args.state) {
+        commandArgs.push(`--state=${args.state}`);
+    }
+
+    if (args.timestamp) {
+        commandArgs.push(`--timestamp=${args.timestamp}`);
+    }
+
+    if (args.accounts) {
+        commandArgs.push(`--accounts=${args.accounts}`);
+    }
+
+    if (args.balance) {
+        commandArgs.push(`--balance=${args.balance}`);
+    }
+
+    if (args.showNodeConfig) {
         commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
     }
 
-    if (args.showTxSummary !== undefined) {
-        commandArgs.push(`--show-tx-summary=${args.showTxSummary}`);
+    if (args.devSystemContracts) {
+        commandArgs.push(`--dev-system-contracts=${args.devSystemContracts}`);
+    }
+
+    if (args.autoImpersonate) {
+        commandArgs.push(`--auto-impersonate`);
+    }
+
+    if (args.l1GasPrice) {
+        commandArgs.push(`--l1-gas-price=${args.l1GasPrice}`);
+    }
+
+    if (args.l2GasPrice) {
+        commandArgs.push(`--l2-gas-price=${args.l2GasPrice}`);
+    }
+
+    if (args.l1PubdataPrice) {
+        commandArgs.push(`--l1-pubdata-price=${args.l1PubdataPrice}`);
+    }
+
+    if (args.priceScaleFactor) {
+        commandArgs.push(`--price-scale-factor=${args.priceScaleFactor}`);
+    }
+
+    if (args.limitScaleFactor) {
+        commandArgs.push(`--limit-scale-factor=${args.limitScaleFactor}`);
+    }
+
+    if (args.baseTokenRatio) {
+        commandArgs.push(`--base-token-ratio=${args.baseTokenRatio}`);
+    }
+
+    if (args.baseTokenSymbol) {
+        commandArgs.push(`--base-token-symbol=${args.baseTokenSymbol}`);
+    }
+
+    if (args.anvilZksyncVersion) {
+        commandArgs.push(`--version`);
+    }
+
+    if (args.anvilZksyncHelp) {
+        commandArgs.push(`--help`);
+    }
+
+    if (args.configOut) {
+        commandArgs.push(`--config-out=${args.configOut}`);
+    }
+
+    if (args.healthCheckEndpoint) {
+        commandArgs.push(`--health-check-endpoint=${args.healthCheckEndpoint}`);
+    }
+
+    if (args.offline) {
+        commandArgs.push(`--offline`);
+    }
+
+    if (args.noCors) {
+        commandArgs.push(`--no-cors`);
+    }
+
+    if (args.allowOrigin) {
+        commandArgs.push(`--allow-origin=${args.allowOrigin}`);
+    }
+
+    if (args.host) {
+        commandArgs.push(`--host=${args.host}`);
+    }
+
+    if (args.chainId) {
+        commandArgs.push(`--chain-id=${args.chainId}`);
+    }
+
+    if (args.init) {
+        commandArgs.push(`--init=${args.init}`);
+    }
+
+    if (args.stateInterval) {
+        commandArgs.push(`--state-interval=${args.stateInterval}`);
+    }
+
+    if (args.preserveHistoricalStates) {
+        commandArgs.push(`--preserve-historical-states`);
+    }
+
+    if (args.order) {
+        commandArgs.push(`--order=${args.order}`);
     }
 
     if (args.quiet) {
-        commandArgs.push(`--quiet=${args.quiet}`);
+        commandArgs.push(`--silent=${args.quiet}`);
     }
 
-    if (args.devUseLocalContracts) {
-        commandArgs.push(`--dev-use-local-contracts=${args.devUseLocalContracts}`);
+    if (args.showNodeConfig) {
+        commandArgs.push(`--show-node-config=${args.showNodeConfig}`);
+    }
+
+    if (args.protocolVersion) {
+        commandArgs.push(`--protocol-version=${args.protocolVersion}`);
+    }
+
+    if (args.evmInterpreter) {
+        commandArgs.push(`--evm-interpreter`);
+    }
+    if (args.emulateEvm) {
+        console.warn('[DEPRECATION] --emulate-evm flag is deprecated. Use --evm-interpreter instead.');
+        commandArgs.push(`--emulate-evm`);
+    }
+
+    if (args.enforceBytecodeCompression) {
+        commandArgs.push(`--enforce-bytecode-compression=${args.enforceBytecodeCompression}`);
+    }
+
+    if (args.systemContractsPath) {
+        commandArgs.push(`--system-contracts-path=${args.systemContractsPath}`);
     }
 
     if (args.forkBlockNumber && args.replayTx) {
@@ -135,17 +270,12 @@ export function constructCommandArgs(args: CommandArguments): string[] {
     }
 
     if (args.fork) {
-        const urlPattern = /^http(s)?:\/\/[^\s]+$/;
-        if (!ALLOWED_FORK_VALUES.includes(args.fork) && !urlPattern.test(args.fork)) {
-            throw new ZkSyncNodePluginError(`Invalid fork network value: ${args.fork}`);
-        }
-
         if (args.forkBlockNumber) {
-            commandArgs.push('fork', args.fork, '--fork-at', args.forkBlockNumber.toString());
+            commandArgs.push('fork', '--fork-url', args.fork, '--fork-at', args.forkBlockNumber.toString());
         } else if (args.replayTx) {
-            commandArgs.push('replay_tx', args.fork, '--tx', args.replayTx);
+            commandArgs.push('replay_tx', '--fork-url', args.fork, args.replayTx);
         } else {
-            commandArgs.push('fork', args.fork);
+            commandArgs.push('fork', '--fork-url', args.fork);
         }
     } else {
         commandArgs.push('run');

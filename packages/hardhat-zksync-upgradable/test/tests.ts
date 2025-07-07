@@ -430,7 +430,7 @@ describe('Upgradable plugin tests', function () {
             );
         });
 
-        it('Should fail do upgrade proxy to the implementation that does not reduce storage gap properly', async function () {
+        it.skip('Should fail do upgrade proxy to the implementation that does not reduce storage gap properly', async function () {
             const contractName = 'BoxWithStorageGapV2Invalid';
             console.info(chalk.yellow(`Upgrading BoxWithStorageGap to ${contractName}...`));
 

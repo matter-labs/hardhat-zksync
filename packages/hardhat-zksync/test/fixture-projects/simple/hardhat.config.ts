@@ -3,8 +3,10 @@ import '../../../src/index';
 
 const config: HardhatUserConfig = {
     zksolc: {
-        version: 'latest',
-        compilerSource: 'binary',
+        version: '1.5.15',
+        settings: {
+            codegen: 'yul',
+        },
     },
     networks: {
         ethNetwork: {
@@ -18,7 +20,7 @@ const config: HardhatUserConfig = {
         },
     },
     solidity: {
-        version: '0.8.17',
+        version: '0.8.30',
     },
 };
 

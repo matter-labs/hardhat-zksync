@@ -7,9 +7,11 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 contract BoxWithStorageGapV2 is Initializable {
     uint256 private value;
     uint256 private secondValue;
-    uint256[10] private __gap;
     uint256 private thirdValue;
+    uint256 private fourthValue;
+    uint256 private fifthValue;
     address private newAddress;
+    uint256[10] private __gap;
 
     // Emitted when the stored value changes
     event ValueChanged(uint256 newValue);
@@ -26,29 +28,16 @@ contract BoxWithStorageGapV2 is Initializable {
 
     // Reads the last stored value and returns it with a prefix
     function retrieve() public view returns (string memory) {
-        return string(abi.encodePacked("V2: ", uint2str(value)));
+        return string(abi.encodePacked("V2: ", _uint2str(value)));
     }
 
     // Converts a uint to a string
-    function uint2str(uint _i) internal pure returns (string memory) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len;
-        while (_i != 0) {
-            k = k - 1;
-            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
+    function _uint2str(uint256 _i) private pure returns (string memory str) {
+        if (_i == 0) return "0";
+        uint256 j = _i; uint256 len;
+        while (j != 0) { len++; j /= 10; }
+        bytes memory b = new bytes(len);
+        while (_i != 0) { len--; b[len] = bytes1(uint8(48 + _i % 10)); _i /= 10; }
+        str = string(b);
     }
 }

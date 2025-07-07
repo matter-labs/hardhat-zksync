@@ -373,14 +373,14 @@ describe('getZksolcUrl', () => {
         archStub.value('x64');
         const repo = 'example/repo';
         const version = '1.0.0';
-        let expectedUrl = 'example/repo/releases/download/v1.0.0/zksolc-linux-amd64-musl-v1.0.0';
+        let expectedUrl = 'example/repo/releases/download/1.0.0/zksolc-linux-amd64-musl-v1.0.0';
 
         const url = getZksolcUrl(repo, version, true);
 
         expect(url).to.equal(expectedUrl);
 
         platformStub.value('darwin'); // Mock the process.platform property
-        expectedUrl = 'example/repo/releases/download/v1.0.0/zksolc-macosx-amd64-v1.0.0';
+        expectedUrl = 'example/repo/releases/download/1.0.0/zksolc-macosx-amd64-v1.0.0';
 
         const urlMac = getZksolcUrl(repo, version, true);
 

@@ -140,9 +140,9 @@ export async function compareBytecode(
 ): Promise<BytecodeExtractedData | null> {
     // We will ignore metadata information when comparing. Etherscan seems to do the same.
     const deployedExecutableSection = deployedBytecode.getExecutableSection();
-    const runtimeBytecodeExecutableSectionLength = runtimeBytecodeSymbols.object.length;
+    const runtimeBytecode = new Bytecode(runtimeBytecodeSymbols.object);
 
-    if (deployedExecutableSection.length !== runtimeBytecodeExecutableSectionLength) {
+    if (deployedExecutableSection.length !== runtimeBytecode.getExecutableSection().length) {
         return null;
     }
 

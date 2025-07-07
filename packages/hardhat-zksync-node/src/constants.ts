@@ -16,8 +16,6 @@ export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGKILL'];
 
 export const ALLOWED_LOG_VALUES = ['error', 'warn', 'info', 'debug'];
 export const ALLOWED_CACHE_VALUES = ['none', 'disk', 'memory'];
-export const ALLOWED_FORK_VALUES = ['sepolia-testnet', 'mainnet'];
-export const ALLOWED_SHOW_CALLS_VALUES = ['none', 'user', 'system', 'all'];
 export const ALLOWED_SHOW_STORAGE_LOGS_VALUES = ['none', 'read', 'write', 'all'];
 export const ALLOWED_SHOW_VM_DETAILS_VALUES = ['none', 'all'];
 export const ALLOWED_SHOW_GAS_DETAILS_VALUES = ['none', 'all'];
@@ -53,7 +51,7 @@ export const NETWORK_ETH = {
     LOCALHOST: 'localhost',
 };
 
-export const DEFAULT_ZKSYNC_ANVIL_VERSION = '0.3.*';
+export const DEFAULT_ZKSYNC_ANVIL_VERSION = '0.6.*';
 
 export const DEFAULT_TIMEOUT_MILISECONDS = 30000;
 

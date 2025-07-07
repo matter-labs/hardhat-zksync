@@ -5,6 +5,7 @@ import '@matterlabs/hardhat-zksync-solc';
 
 const config: HardhatUserConfig = {
     zksolc: {
+        version: '1.5.15',
         compilerSource: 'binary',
         settings: {
             enableEraVMExtensions: true,

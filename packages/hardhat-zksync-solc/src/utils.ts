@@ -8,7 +8,6 @@ import path from 'path';
 import util from 'util';
 import type { Dispatcher } from 'undici';
 import chalk from 'chalk';
-import { CompilerVersionInfo } from './compile/downloader';
 import { CompilerOutputSelection, MissingLibrary, ZkSolcConfig } from './types';
 import {
     ZKSOLC_COMPILERS_SELECTOR_MAP,
@@ -180,7 +179,7 @@ export function getZksolcUrl(repo: string, version: string, isRelease: boolean =
     const ext = process.platform === 'win32' ? '.exe' : '';
 
     if (isRelease) {
-        return `${repo}/releases/download/v${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+        return `${repo}/releases/download/${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
     }
 
     return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
@@ -214,13 +213,6 @@ export function pluralize(n: number, singular: string, plural?: string) {
 export function getVersionComponents(version: string): number[] {
     const versionComponents = version.split('.');
     return [parseInt(versionComponents[0], 10), parseInt(versionComponents[1], 10), parseInt(versionComponents[2], 10)];
-}
-
-export function isVersionInRange(version: string, versionInfo: CompilerVersionInfo): boolean {
-    const latest = versionInfo.latest;
-    const minVersion = versionInfo.minVersion;
-
-    return semver.gte(version, minVersion) && semver.lte(version, latest);
 }
 
 export function isVersionForDeprecation(version: string): boolean {

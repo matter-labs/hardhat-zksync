@@ -10,8 +10,9 @@ import { HardhatUserConfig } from 'hardhat/config';
 const config: HardhatUserConfig = {
     zksolc: {
         compilerSource: 'binary',
+        version: '1.5.15',
         settings: {
-            isSystem: true,
+            enableEraVMExtensions: true,
             optimizer: {
                 enabled: true,
             },
@@ -34,14 +35,15 @@ const config: HardhatUserConfig = {
         },
     },
     zkvyper: {
-        version: 'latest',
+        version: '1.5.7',
         compilerSource: 'binary',
     },
       vyper: {
         version: "0.3.3"
       },
     solidity: {
-        version: '0.8.17',
+        version: '0.8.22',
+
     },
 };
 
