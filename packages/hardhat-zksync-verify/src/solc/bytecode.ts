@@ -54,63 +54,79 @@ export async function extractMatchingContractInformation(
     deployedBytecode: Bytecode,
     libraries: Libraries,
 ): Promise<ContractInformation | null> {
-    const contract = buildInfo.output.contracts[sourceName][contractName];
+    const contract: any = buildInfo.output.contracts[sourceName][contractName];
 
-    if (contract.hasOwnProperty('evm')) {
-        const { bytecode: runtimeBytecodeSymbols } = contract.evm;
+    let deployBytecodeSymbols: CompilerOutputBytecode | null = null;
 
-        let analyzedBytecode = runtimeBytecodeSymbols
-            ? await compareBytecode(deployedBytecode, runtimeBytecodeSymbols)
-            : null;
+    if (contract?.evm?.bytecode) {
+        // Classic Solidity / Foundry artifact
+        deployBytecodeSymbols = contract.evm.bytecode as CompilerOutputBytecode;
+    } else if (contract?.bytecode) {
+        // zkSolc artifact: flat "bytecode" string at top level
+        deployBytecodeSymbols = {
+            object: contract.bytecode as string,
+            opcodes: '',
+            sourceMap: '',
+            linkReferences: {},
+        };
+    }
 
-        if (analyzedBytecode !== null) {
-            return {
-                ...analyzedBytecode,
-                compilerInput: buildInfo.input,
-                contractOutput: buildInfo.output.contracts[sourceName][contractName],
-                solcVersion: buildInfo.solcVersion,
-                solcLongVersion: buildInfo.solcLongVersion,
-                sourceName,
-                contractName,
-            };
-        }
+    if (!deployBytecodeSymbols || !deployBytecodeSymbols.object) {
+        return null; // nothing to compare against
+    }
 
-        // Checking a elf header 0x7F followed by ELF(45 4c 46) in ASCII
-        const isElfWrapper = runtimeBytecodeSymbols?.object.slice(0, 8) === '7f454c46';
-        if (!isElfWrapper) {
-            return null;
-        }
+    let analyzedBytecode =
+        deployBytecodeSymbols !== null ? await compareBytecode(deployedBytecode, deployBytecodeSymbols) : null;
 
-        const linkedbytecode: string = await hre.run('compile:link', {
+    if (analyzedBytecode !== null) {
+        return {
+            ...analyzedBytecode,
+            compilerInput: buildInfo.input,
+            contractOutput: contract,
+            solcVersion: buildInfo.solcVersion,
+            solcLongVersion: buildInfo.solcLongVersion,
+            sourceName,
+            contractName,
+        };
+    }
+
+    // The comparison failed, which means the contract likely relies on
+    // deploy-time library linking.  Let `solc` perform the ELF-linking step via
+    // `hardhat compile:link`.  If the bytecode is *not* an ELF object, `solc`
+    // will throw and we'll simply propagate the failure.
+    let linkedBytecode: string | undefined;
+    try {
+        linkedBytecode = await hre.run('compile:link', {
             sourceName,
             contractName,
             libraries,
             withoutError: true,
         });
-
-        analyzedBytecode = linkedbytecode
-            ? await compareBytecode(deployedBytecode, {
-                  object: linkedbytecode,
-                  opcodes: '',
-                  sourceMap: '',
-                  linkReferences: {},
-              })
-            : null;
-
-        if (analyzedBytecode !== null) {
-            return {
-                ...analyzedBytecode,
-                compilerInput: buildInfo.input,
-                contractOutput: buildInfo.output.contracts[sourceName][contractName],
-                solcVersion: buildInfo.solcVersion,
-                solcLongVersion: buildInfo.solcLongVersion,
-                sourceName,
-                contractName,
-                libraries: await resolveLibraries(hre, libraries),
-            };
-        }
-
+    } catch {
+        // Any error here (including "not an ELF object") means we cannot verify.
         return null;
+    }
+
+    if (linkedBytecode) {
+        analyzedBytecode = await compareBytecode(deployedBytecode, {
+            object: linkedBytecode,
+            opcodes: '',
+            sourceMap: '',
+            linkReferences: {},
+        });
+    }
+
+    if (analyzedBytecode !== null) {
+        return {
+            ...analyzedBytecode,
+            compilerInput: buildInfo.input,
+            contractOutput: contract,
+            solcVersion: buildInfo.solcVersion,
+            solcLongVersion: buildInfo.solcLongVersion,
+            sourceName,
+            contractName,
+            libraries: await resolveLibraries(hre, libraries),
+        };
     }
 
     return null;

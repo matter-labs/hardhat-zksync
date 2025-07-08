@@ -20,43 +20,26 @@ import {
 import { compileWithBinary, linkWithBinary } from './binary';
 
 export async function compile(zksolcConfig: ZkSolcConfig, input: CompilerInput, solcPath?: string) {
-    let compiler: ICompiler;
-    if (
-        zksolcConfig.settings.optimizer?.fallback_to_optimizing_for_size &&
-        semver.lt(zksolcConfig.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
-    ) {
-        throw new ZkSyncSolcPluginError(
-            `fallback_to_optimizing_for_size option in optimizer is not supported for zksolc compiler version ${zksolcConfig.version}. Please use version ${ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
-        );
-    }
-    if (zksolcConfig.compilerSource === 'binary') {
-        if (solcPath === null) {
-            throw new ZkSyncSolcPluginError('solc executable is not specified');
-        }
-        compiler = new BinaryCompiler(solcPath!);
-    } else if (zksolcConfig.compilerSource === 'docker') {
-        compiler = await DockerCompiler.initialize(zksolcConfig);
-    } else {
-        throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
-    }
+    validateFallbackOZOption(zksolcConfig);
 
-    return await compiler.compile(input, zksolcConfig);
+    const compiler = await resolveCompiler(zksolcConfig, solcPath);
+    return compiler.compile(input, zksolcConfig);
 }
 
 export async function link(zksolcConfig: ZkSolcConfig, linkLibraries: LinkLibraries) {
-    let compiler: ICompiler;
-
-    if (zksolcConfig.compilerSource === 'binary') {
-        compiler = new BinaryCompiler('');
-    } else {
-        throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${zksolcConfig.compilerSource}`);
+    if (zksolcConfig.compilerSource !== 'binary') {
+        throw new ZkSyncSolcPluginError('Linking is only supported with binary compiler');
     }
 
-    return await compiler.link(zksolcConfig, linkLibraries);
+    const linker: ILinker = new BinaryLinker();
+    return linker.link(zksolcConfig, linkLibraries);
 }
 
 export interface ICompiler {
     compile(input: CompilerInput, config: ZkSolcConfig): Promise<any>;
+}
+
+export interface ILinker {
     link(config: ZkSolcConfig, linkLibraries: LinkLibraries): Promise<any>;
 }
 
@@ -90,7 +73,14 @@ export class BinaryCompiler implements ICompiler {
         config.settings.areLibrariesMissing = false;
         return await compileWithBinary(input, config, this.solcPath);
     }
+}
 
+/**
+ * Dedicated linker for binary builds.
+ * Linking does not require the local `solc` binary, only the `zksolc` executable
+ * referenced by `config.settings.compilerPath`, therefore no constructor arguments.
+ */
+export class BinaryLinker implements ILinker {
     public async link(config: ZkSolcConfig, linkLibraries: LinkLibraries) {
         return await linkWithBinary(config, linkLibraries);
     }
@@ -123,8 +113,39 @@ export class DockerCompiler implements ICompiler {
         const version = longVersion.split('+')[0];
         return { version, longVersion };
     }
+}
 
-    public async link(_: ZkSolcConfig, __: LinkLibraries) {
-        throw new ZkSyncSolcPluginError('Linking is not supported with docker compiler');
+/**
+ * Throws if the `fallback_to_optimizing_for_size` optimizer flag is used with an old compiler.
+ */
+function validateFallbackOZOption(config: ZkSolcConfig) {
+    if (
+        config.settings.optimizer?.fallback_to_optimizing_for_size &&
+        semver.lt(config.version, ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ)
+    ) {
+        throw new ZkSyncSolcPluginError(
+            `fallback_to_optimizing_for_size option in optimizer is not supported for zksolc compiler version ${config.version}. ` +
+                `Please use version ${ZKSOLC_COMPILER_MIN_VERSION_WITH_FALLBACK_OZ} or higher.`,
+        );
+    }
+}
+
+/**
+ * Factory that returns the appropriate compiler implementation
+ * based on the user‑supplied configuration.
+ */
+async function resolveCompiler(config: ZkSolcConfig, solcPath?: string): Promise<ICompiler> {
+    switch (config.compilerSource) {
+        case 'binary':
+            if (!solcPath) {
+                throw new ZkSyncSolcPluginError('solc executable is not specified');
+            }
+            return new BinaryCompiler(solcPath);
+
+        case 'docker':
+            return DockerCompiler.initialize(config);
+
+        default:
+            throw new ZkSyncSolcPluginError(`Incorrect compiler source: ${config.compilerSource}`);
     }
 }
