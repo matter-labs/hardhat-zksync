@@ -49,7 +49,7 @@
     "ethers": "^6.12.2",
     "fs-extra": "^11.2.0",
     "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.15.0",
+    "zksync-ethers": "^6.19.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
     "semver": "^7.6.2"
