@@ -1,6 +1,6 @@
 {
     "packages/hardhat-zksync-telemetry": "1.1.1",
-    "packages/hardhat-zksync-deploy": "1.7.0",
+    "packages/hardhat-zksync-deploy": "1.8.0",
     "packages/hardhat-zksync-solc": "1.4.0",
     "packages/hardhat-zksync-upgradable": "1.9.0",
     "packages/hardhat-zksync-vyper": "1.3.0",
