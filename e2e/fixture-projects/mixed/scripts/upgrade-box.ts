@@ -3,33 +3,27 @@ import { Provider, Wallet } from 'zksync-ethers';
 import * as hre from 'hardhat';
 
 async function main() {
-    const testMnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
-    const provider = new Provider("http://0.0.0.0:8011",undefined,{cacheTimeout:-1})
-    const zkWallet = Wallet.fromMnemonic(testMnemonic,provider);
+  const mnemonic = 'stuff slice staff easily soup parent arm payment cotton trade scatter struggle';
+  const provider = new Provider('http://127.0.0.1:8011');
+  const zkWallet = Wallet.fromMnemonic(mnemonic).connect(provider);
 
-    const deployer = new Deployer(hre, zkWallet);
-    // deploy proxy
-    const contractName = 'Box';
+  const deployer = new Deployer(hre, zkWallet);
+  console.log('Deployer address:', zkWallet.address);
 
-    const contract = await deployer.loadArtifact(contractName);
-    const box = await hre.zkUpgrades.deployProxy(deployer.zkWallet, contract, [42], { initializer: 'store' });
+  // ── deploy v1 ─────────────────────────────────────────────────────────────
+  const Box = await deployer.loadArtifact('Box');
+  const box = await hre.zkUpgrades.deployProxy(zkWallet, Box, [42], { initializer: 'store' });
+  await box.waitForDeployment();
+  console.log('Box value (v1):', await box.retrieve());
 
-    await box.waitForDeployment();
-
-    // upgrade proxy implementation
-
-    const BoxV2 = await deployer.loadArtifact('BoxV2');
-    const upgradedBox = await hre.zkUpgrades.upgradeProxy(deployer.zkWallet, await box.getAddress(), BoxV2);
-    console.info('Successfully upgraded Box to BoxV2');
-
-    upgradedBox.connect(zkWallet);
-    // wait some time before the next call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    const value = await upgradedBox.retrieve();
-    console.info('Box value is', value);
+  // ── upgrade to v2 ─────────────────────────────────────────────────────────
+  const BoxV2 = await deployer.loadArtifact('BoxV2');
+  const upgraded = await hre.zkUpgrades.upgradeProxy(zkWallet, await box.getAddress(), BoxV2);
+  await upgraded.waitForDeployment(); 
+  console.info('Successfully upgraded Box to BoxV2');
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
+main().catch(err => {
+  console.error(err);
+  process.exitCode = 1;
 });
