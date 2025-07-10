@@ -16,6 +16,7 @@ const config: HardhatUserConfig = {
             optimizer: {
                 enabled: true,
             },
+            codegen: "yul",
         }
     },
     defaultNetwork: 'inMemoryNode',
