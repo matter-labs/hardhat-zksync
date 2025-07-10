@@ -37,7 +37,7 @@
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "axios": "^1.7.2",
-    "chai": "^4.3.4",
+    "chai": "^5.2.1",
     "chalk": "^4.1.2",
     "@nomiclabs/hardhat-vyper": "^3.0.6",
     "@ethersproject/abi": "^5.7.0",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^5.2.2",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.3",
     "@types/fs-extra": "^11.0.4",
