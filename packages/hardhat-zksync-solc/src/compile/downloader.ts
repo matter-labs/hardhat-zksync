@@ -140,23 +140,22 @@ export class ZksolcCompilerDownloader {
     private async _downloadCompiler(): Promise<string> {
         const downloadPath = this.getCompilerPath();
 
-        const url = this._getCompilerUrl(true);
+        const url = this._getCompilerUrl();
         try {
             await this._attemptDownload(url, downloadPath);
         } catch (e: any) {
             if (!this._isCompilerPathURL) {
-                const fallbackUrl = this._getCompilerUrl(false);
-                await this._attemptDownload(fallbackUrl, downloadPath);
+                await this._attemptDownload(url, downloadPath);
             }
         }
         return downloadPath;
     }
 
-    private _getCompilerUrl(useGithubRelease: boolean): string {
+    private _getCompilerUrl(): string {
         if (this._isCompilerPathURL) {
             return this._configCompilerPath;
         }
-        return getZksolcUrl(ZKSOLC_BIN_REPOSITORY, this._version, useGithubRelease);
+        return getZksolcUrl(ZKSOLC_BIN_REPOSITORY, this._version);
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {
