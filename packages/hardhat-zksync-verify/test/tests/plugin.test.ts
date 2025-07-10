@@ -96,8 +96,13 @@ describe('Plugin', () => {
             expect(!bytecode.hasMetadata());
             expect(bytecode.getInferredSolcVersion() !== undefined);
 
+            const hre: {
+                run: sinon.SinonStub;
+            } = {
+                run: sinon.stub(),
+            };
             try {
-                await inferContractArtifacts(artifacts, [], bytecode);
+                await inferContractArtifacts(hre as any, artifacts, [], bytecode, {});
                 fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).to.equal(NO_MATCHING_CONTRACT);
@@ -157,10 +162,18 @@ describe('Plugin', () => {
 
             const matchingCompilerVersions = ['0.8.0'];
 
+            const hre: {
+                run: sinon.SinonStub;
+            } = {
+                run: sinon.stub(),
+            };
+
             const contractInformation: ContractInformation = await inferContractArtifacts(
+                hre as any,
                 artifacts,
                 matchingCompilerVersions,
                 bytecode,
+                {},
             );
 
             expect(contractInformation.contractName).to.equal('Contract');

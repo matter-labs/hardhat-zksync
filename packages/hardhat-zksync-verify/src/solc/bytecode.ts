@@ -1,5 +1,5 @@
-import { CompilerOutputBytecode } from 'hardhat/types';
-
+import { CompilerOutputBytecode, HardhatRuntimeEnvironment } from 'hardhat/types';
+import { FormatedLibrariesForConfig, Libraries } from '../types';
 import { inferSolcVersion } from './metadata';
 import {
     BuildInfo,
@@ -47,36 +47,107 @@ export class Bytecode {
 }
 
 export async function extractMatchingContractInformation(
+    hre: HardhatRuntimeEnvironment,
     sourceName: SourceName,
     contractName: ContractName,
     buildInfo: BuildInfo,
     deployedBytecode: Bytecode,
+    libraries: Libraries,
 ): Promise<ContractInformation | null> {
-    const contract = buildInfo.output.contracts[sourceName][contractName];
+    const contract: any = buildInfo.output.contracts[sourceName][contractName];
 
-    if (contract.hasOwnProperty('evm')) {
-        const { bytecode: runtimeBytecodeSymbols } = contract.evm;
+    let deployBytecodeSymbols: CompilerOutputBytecode | null = null;
 
-        const analyzedBytecode = runtimeBytecodeSymbols
-            ? await compareBytecode(deployedBytecode, runtimeBytecodeSymbols)
-            : null;
+    if (contract?.evm?.bytecode) {
+        // Classic Solidity / Foundry artifact
+        deployBytecodeSymbols = contract.evm.bytecode as CompilerOutputBytecode;
+    } else if (contract?.bytecode) {
+        // zkSolc artifact: flat "bytecode" string at top level
+        deployBytecodeSymbols = {
+            object: contract.bytecode as string,
+            opcodes: '',
+            sourceMap: '',
+            linkReferences: {},
+        };
+    }
 
-        if (analyzedBytecode !== null) {
-            return {
-                ...analyzedBytecode,
-                compilerInput: buildInfo.input,
-                contractOutput: buildInfo.output.contracts[sourceName][contractName],
-                solcVersion: buildInfo.solcVersion,
-                solcLongVersion: buildInfo.solcLongVersion,
-                sourceName,
-                contractName,
-            };
-        }
+    if (!deployBytecodeSymbols || !deployBytecodeSymbols.object) {
+        return null; // nothing to compare against
+    }
 
+    let analyzedBytecode =
+        deployBytecodeSymbols !== null ? await compareBytecode(deployedBytecode, deployBytecodeSymbols) : null;
+
+    if (analyzedBytecode !== null) {
+        return {
+            ...analyzedBytecode,
+            compilerInput: buildInfo.input,
+            contractOutput: contract,
+            solcVersion: buildInfo.solcVersion,
+            solcLongVersion: buildInfo.solcLongVersion,
+            sourceName,
+            contractName,
+        };
+    }
+
+    // The comparison failed, which means the contract likely relies on
+    // deploy-time library linking.  Let `solc` perform the ELF-linking step via
+    // `hardhat compile:link`.  If the bytecode is *not* an ELF object, `solc`
+    // will throw and we'll simply propagate the failure.
+    let linkedBytecode: string | undefined;
+    try {
+        linkedBytecode = await hre.run('compile:link', {
+            sourceName,
+            contractName,
+            libraries,
+            withoutError: true,
+        });
+    } catch {
+        // Any error here (including "not an ELF object") means we cannot verify.
         return null;
     }
 
+    if (linkedBytecode) {
+        analyzedBytecode = await compareBytecode(deployedBytecode, {
+            object: linkedBytecode,
+            opcodes: '',
+            sourceMap: '',
+            linkReferences: {},
+        });
+    }
+
+    if (analyzedBytecode !== null) {
+        return {
+            ...analyzedBytecode,
+            compilerInput: buildInfo.input,
+            contractOutput: contract,
+            solcVersion: buildInfo.solcVersion,
+            solcLongVersion: buildInfo.solcLongVersion,
+            sourceName,
+            contractName,
+            libraries: await resolveLibraries(hre, libraries),
+        };
+    }
+
     return null;
+}
+
+export async function resolveLibraries(
+    hre: HardhatRuntimeEnvironment,
+    libraries: Libraries,
+): Promise<FormatedLibrariesForConfig> {
+    const populatedLibraries: FormatedLibrariesForConfig = {};
+
+    await Promise.all(
+        Object.entries(libraries).map(async (libraryInfo) => {
+            const artifact = await hre.artifacts.readArtifact(libraryInfo[0]);
+            populatedLibraries[artifact.sourceName] = {
+                [artifact.contractName]: libraryInfo[1],
+            };
+        }),
+    );
+
+    return populatedLibraries;
 }
 
 export async function compareBytecode(

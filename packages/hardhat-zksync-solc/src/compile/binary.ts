@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { ZkSolcConfig } from '../types';
+import { LinkLibraries, ZkSolcConfig } from '../types';
 import { isBreakableCompilerVersion } from '../utils';
 
 export async function compileWithBinary(
@@ -43,5 +43,32 @@ export async function compileWithBinary(
         process.stdin!.end();
     });
 
+    return JSON.parse(output);
+}
+
+export async function linkWithBinary(config: ZkSolcConfig, linkLibraries: LinkLibraries): Promise<any> {
+    const { compilerPath } = config.settings;
+
+    let processCommand = `${compilerPath} --link ${linkLibraries.contractZbinPath}`;
+    if (linkLibraries.libraries) {
+        processCommand += ` --libraries ${Object.entries(linkLibraries.libraries)
+            .map((lib) => `${lib[0]}=${lib[1]}`)
+            .join(' ')}`;
+    }
+    const output: string = await new Promise((resolve, reject) => {
+        const process = exec(
+            processCommand,
+            {
+                maxBuffer: 1024 * 1024 * 500,
+            },
+            (err, stdout, _stderr) => {
+                if (err !== null) {
+                    return reject(err);
+                }
+                resolve(stdout);
+            },
+        );
+        process.stdin!.end();
+    });
     return JSON.parse(output);
 }

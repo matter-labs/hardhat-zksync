@@ -1263,6 +1263,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       proper-lockfile:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1291,6 +1294,9 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.17.4
       '@types/mocha':
         specifier: ^10.0.6
         version: 10.0.6

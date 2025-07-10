@@ -1,6 +1,6 @@
 import semver from 'semver';
 import crypto from 'crypto';
-import { SolcUserConfig } from 'hardhat/types';
+import { HardhatRuntimeEnvironment, SolcUserConfig } from 'hardhat/types';
 import fse from 'fs-extra';
 import lockfile from 'proper-lockfile';
 import fs from 'fs';
@@ -411,4 +411,34 @@ export async function getLatestEraVersion(): Promise<string> {
             '',
         )
     ).split('-')[1];
+}
+
+export function generateFQN(sourceName: string, contractName: string): string {
+    return `${sourceName}:${contractName}`;
+}
+
+export async function getLibraryLink(
+    hre: HardhatRuntimeEnvironment,
+    libraries: { [contractName: string]: string } | undefined,
+    contractZbinPath: string,
+) {
+    if (libraries === undefined || Object.keys(libraries).length === 0) {
+        return {
+            contractZbinPath,
+        };
+    }
+
+    const populatedLibraries: { [contractName: string]: string } = {};
+
+    await Promise.all(
+        Object.entries(libraries).map(async (libraryInfo) => {
+            const artifact = await hre.artifacts.readArtifact(libraryInfo[0]);
+            populatedLibraries[generateFQN(artifact.sourceName, artifact.contractName)] = libraryInfo[1] as string;
+        }),
+    );
+
+    return {
+        contractZbinPath,
+        libraries: populatedLibraries,
+    };
 }

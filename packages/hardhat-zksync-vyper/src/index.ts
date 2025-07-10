@@ -14,19 +14,21 @@ import { getCompilersDir } from 'hardhat/internal/util/global-dir';
 import { Mutex } from 'hardhat/internal/vendor/await-semaphore';
 import './type-extensions';
 import chalk from 'chalk';
-import { CompilationJob, TaskArguments } from 'hardhat/types';
+import { CompilationJob, HardhatRuntimeEnvironment, TaskArguments } from 'hardhat/types';
 import { PROXY_NAME, ProxtContractOutput, ZkArtifacts, proxyNames } from './artifacts';
 import { compile } from './compile';
 import { checkSupportedVyperVersions, pluralize } from './utils';
 import {
     COMPILING_INFO_MESSAGE,
     defaultZkVyperConfig,
+    TASK_COMPILE_LINK,
     TASK_COMPILE_VYPER_CHECK_ERRORS,
     TASK_COMPILE_VYPER_LOG_COMPILATION_ERRORS,
     TASK_DOWNLOAD_ZKVYPER,
     ZKVYPER_COMPILER_PATH_VERSION,
 } from './constants';
 import { ZkVyperCompilerDownloader } from './compile/downloader';
+import { ZkSyncVyperPluginError } from './errors';
 import '@matterlabs/hardhat-zksync-telemetry';
 
 const zkVyperCompilerDownloaderMutex = new Mutex();
@@ -65,6 +67,19 @@ extendEnvironment((hre) => {
         (hre as any).artifacts = new ZkArtifacts(artifactsPath);
     }
 });
+
+subtask(TASK_COMPILE_LINK)
+    .addParam('sourceName', 'Source name of the artifact')
+    .addParam('contractName', 'Contract name of the artifact')
+    .addOptionalParam('libraries', undefined, undefined, types.any)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .setAction(async ({ sourceName, contractName, libraries }, hre: HardhatRuntimeEnvironment) => {
+        if (!hre.network.zksync) {
+            throw new ZkSyncVyperPluginError('This task is only available for zkSync network');
+        }
+        // Libraries are not supported for vyper
+        return undefined;
+    });
 
 subtask(TASK_COMPILE_VYPER).setAction(async (args: TaskArguments, hre, runSuper) => {
     if (hre.network.zksync) {

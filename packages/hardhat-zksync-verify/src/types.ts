@@ -28,3 +28,5 @@ export interface Libraries {
     // This may be a fully qualified name
     [libraryName: string]: string;
 }
+
+export type FormatedLibrariesForConfig = Record<string, Record<string, string>>;

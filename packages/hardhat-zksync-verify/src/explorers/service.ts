@@ -136,6 +136,7 @@ export abstract class VerificationService<
                 this.hre,
                 await getMinimalResolvedFiles(this.hre, contractInformation.sourceName),
                 contractInformation.compilerInput,
+                contractInformation.libraries,
             ),
             codeFormat: JSON_INPUT_CODE_FORMAT,
             contractName: `${contractInformation.sourceName}:${contractInformation.contractName}`,
