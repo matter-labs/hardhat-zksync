@@ -12,6 +12,7 @@ const config = {
             optimizer: {
                 enabled: true,
             },
+            codegen: "yul",
         }
     },
     defaultNetwork: 'inMemoryNode',

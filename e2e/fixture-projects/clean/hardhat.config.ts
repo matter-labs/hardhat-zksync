@@ -9,6 +9,7 @@ const config = {
             optimizer: {
                 enabled: true,
             },
+            codegen: "yul",
         }
     },
     defaultNework: 'inMemoryNode',

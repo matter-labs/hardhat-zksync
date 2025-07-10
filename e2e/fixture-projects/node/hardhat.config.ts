@@ -12,6 +12,7 @@ const config: HardhatUserConfig = {
             optimizer: {
                 enabled: true,
             },
+            codegen: "yul",
         }
     },
     networks: {
