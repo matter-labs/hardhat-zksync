@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0-alpha.6](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-vyper-v0.1.0-alpha.6...@matterlabs/hardhat-zksync-verify-vyper-v0.2.0-alpha.6) (2025-07-10)
+
+
+### Features
+
+* throw errors for older versions of the compiler ([#1770](https://github.com/matter-labs/hardhat-zksync/issues/1770)) ([19ddeb2](https://github.com/matter-labs/hardhat-zksync/commit/19ddeb26796da51adf4b0f1d895ef754424b6bf9))
+
 ## [0.1.0-alpha.6](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-vyper-v0.0.1-alpha.6...@matterlabs/hardhat-zksync-verify-vyper-v0.1.0-alpha.6) (2025-03-25)
 
 

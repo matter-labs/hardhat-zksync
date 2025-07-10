@@ -87,18 +87,13 @@ export class ZkVmSolcCompilerDownloader {
     private async _downloadCompiler(): Promise<string> {
         const downloadPath = this.getCompilerPath();
 
-        const url = this._getCompilerUrl(true);
-        try {
-            await this._attemptDownload(url, downloadPath);
-        } catch (e: any) {
-            const fallbackUrl = this._getCompilerUrl(false);
-            await this._attemptDownload(fallbackUrl, downloadPath);
-        }
+        const url = this._getCompilerUrl();
+        await this._attemptDownload(url, downloadPath);
         return downloadPath;
     }
 
-    private _getCompilerUrl(useGithubRelease: boolean): string {
-        return getZkVmSolcUrl(ZKVM_SOLC_BIN_REPOSITORY, this.version, useGithubRelease);
+    private _getCompilerUrl(): string {
+        return getZkVmSolcUrl(ZKVM_SOLC_BIN_REPOSITORY, this.version);
     }
 
     private async _attemptDownload(url: string, downloadPath: string): Promise<void> {

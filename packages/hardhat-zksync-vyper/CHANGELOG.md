@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.3.0...@matterlabs/hardhat-zksync-vyper-v1.4.0) (2025-07-10)
+
+
+### Features
+
+* support for deploy time library linking ([#1505](https://github.com/matter-labs/hardhat-zksync/issues/1505)) ([5958825](https://github.com/matter-labs/hardhat-zksync/commit/59588255976ba81dfdd245bff6b64d58bd2aa13d))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.2.1...@matterlabs/hardhat-zksync-vyper-v1.3.0) (2025-06-06)
 
 

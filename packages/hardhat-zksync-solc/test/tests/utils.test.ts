@@ -367,7 +367,7 @@ describe('Utils', () => {
 describe('getZksolcUrl', () => {
     const platformStub = sinon.stub(process, 'platform');
 
-    it('should return the release URL when isRelease is true', () => {
+    it('should return the release URL', () => {
         platformStub.value('linux'); // Mock the process.platform property
         const archStub = sinon.stub(process, 'arch');
         archStub.value('x64');
@@ -375,34 +375,14 @@ describe('getZksolcUrl', () => {
         const version = '1.0.0';
         let expectedUrl = 'example/repo/releases/download/1.0.0/zksolc-linux-amd64-musl-v1.0.0';
 
-        const url = getZksolcUrl(repo, version, true);
+        const url = getZksolcUrl(repo, version);
 
         expect(url).to.equal(expectedUrl);
 
         platformStub.value('darwin'); // Mock the process.platform property
         expectedUrl = 'example/repo/releases/download/1.0.0/zksolc-macosx-amd64-v1.0.0';
 
-        const urlMac = getZksolcUrl(repo, version, true);
-
-        expect(urlMac).to.equal(expectedUrl);
-    });
-
-    it('should return the raw URL when isRelease is false', () => {
-        platformStub.value('linux'); // Mock the process.platform property
-        const archStub = sinon.stub(process, 'arch');
-        archStub.value('x64');
-        const repo = 'example/repo';
-        const version = '1.0.0';
-        let expectedUrl = 'example/repo/raw/main/linux-amd64/zksolc-linux-amd64-musl-v1.0.0';
-
-        const url = getZksolcUrl(repo, version, false);
-
-        expect(url).to.equal(expectedUrl);
-
-        platformStub.value('darwin'); // Mock the process.platform property
-        expectedUrl = 'example/repo/raw/main/macosx-amd64/zksolc-macosx-amd64-v1.0.0';
-
-        const urlMac = getZksolcUrl(repo, version, false);
+        const urlMac = getZksolcUrl(repo, version);
 
         expect(urlMac).to.equal(expectedUrl);
     });
