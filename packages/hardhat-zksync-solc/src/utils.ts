@@ -167,7 +167,7 @@ export function saltFromUrl(url: string): string {
     return sha1(url);
 }
 
-export function getZksolcUrl(repo: string, version: string, isRelease: boolean = true): string {
+export function getZksolcUrl(repo: string, version: string): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     const toolchain = semver.lt(version, COMPILER_MIN_LINUX_VERSION_WITH_GNU_TOOLCHAIN)
@@ -178,24 +178,17 @@ export function getZksolcUrl(repo: string, version: string, isRelease: boolean =
     const arch = process.arch === 'x64' ? 'amd64' : process.arch;
     const ext = process.platform === 'win32' ? '.exe' : '';
 
-    if (isRelease) {
-        return `${repo}/releases/download/${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
-    }
-
-    return `${repo}/raw/main/${platform}-${arch}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
+    return `${repo}/releases/download/${version}/zksolc-${platform}-${arch}${toolchain}-v${version}${ext}`;
 }
 
-export function getZkVmSolcUrl(repo: string, version: string, isRelease: boolean = true): string {
+export function getZkVmSolcUrl(repo: string, version: string): string {
     // @ts-ignore
     const platform = { darwin: 'macosx', linux: 'linux', win32: 'windows' }[process.platform];
     // @ts-ignore
     const arch = process.arch === 'x64' ? 'amd64' : process.arch;
     const ext = process.platform === 'win32' ? '.exe' : '';
-    if (isRelease) {
-        return `${repo}/releases/download/${version}/solc-${platform}-${arch}-${version}${ext}`;
-    }
-
-    return `${repo}/raw/main/${platform}-${arch}/solc-${platform}-${arch}-${version}${ext}`;
+    
+    return `${repo}/releases/download/${version}/solc-${platform}-${arch}-${version}${ext}`;
 }
 
 export function pluralize(n: number, singular: string, plural?: string) {
