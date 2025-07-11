@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.3.0...@matterlabs/hardhat-zksync-ethers-v1.4.0) (2025-07-10)
+
+
+### Features
+
+* support for deploy time library linking ([#1505](https://github.com/matter-labs/hardhat-zksync/issues/1505)) ([5958825](https://github.com/matter-labs/hardhat-zksync/commit/59588255976ba81dfdd245bff6b64d58bd2aa13d))
+* throw errors for older versions of the compiler ([#1770](https://github.com/matter-labs/hardhat-zksync/issues/1770)) ([19ddeb2](https://github.com/matter-labs/hardhat-zksync/commit/19ddeb26796da51adf4b0f1d895ef754424b6bf9))
+
 ## [1.3.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-ethers-v1.2.1...@matterlabs/hardhat-zksync-ethers-v1.3.0) (2025-03-25)
 
 
