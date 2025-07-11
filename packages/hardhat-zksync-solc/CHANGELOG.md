@@ -1,5 +1,18 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.4.0...@matterlabs/hardhat-zksync-solc-v1.5.0) (2025-07-11)
+
+
+### Features
+
+* support for deploy time library linking ([#1505](https://github.com/matter-labs/hardhat-zksync/issues/1505)) ([5958825](https://github.com/matter-labs/hardhat-zksync/commit/59588255976ba81dfdd245bff6b64d58bd2aa13d))
+
+
+### Bug Fixes
+
+* remove latest version leftovers ([a5ef140](https://github.com/matter-labs/hardhat-zksync/commit/a5ef140599af15305169ed1a5efed3be84c52990))
+* removes the old zksolc/zkvyper URL format ([#1813](https://github.com/matter-labs/hardhat-zksync/issues/1813)) ([1a33687](https://github.com/matter-labs/hardhat-zksync/commit/1a336879d27638d6a2aa775b2e98abbfde71b1d2))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.3.2...@matterlabs/hardhat-zksync-solc-v1.4.0) (2025-06-06)
 
 
