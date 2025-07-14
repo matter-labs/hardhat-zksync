@@ -10,7 +10,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // Create zkWallet object
     const zkWallet = new zk.Wallet('0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110');
 
-    // // Create deployer object and load desired artifact.
+    // Create deployer object and load desired artifact.
     const deployer = new Deployer(hre, zkWallet);
 
     // Load the artifact we want to deploy.
