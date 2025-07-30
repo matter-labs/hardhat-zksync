@@ -187,7 +187,7 @@ export function getZkVmSolcUrl(repo: string, version: string): string {
     // @ts-ignore
     const arch = process.arch === 'x64' ? 'amd64' : process.arch;
     const ext = process.platform === 'win32' ? '.exe' : '';
-    
+
     return `${repo}/releases/download/${version}/solc-${platform}-${arch}-${version}${ext}`;
 }
 
