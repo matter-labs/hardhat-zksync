@@ -297,10 +297,9 @@ describe('Utils', () => {
                 .intercept({
                     path: '/',
                     method: 'GET',
-                    headers: {},
-                    body: JSON.stringify({
+                    headers: {
                         'User-Agent': `${userAgent}`,
-                    }),
+                    },
                 })
                 .reply(200, {
                     message: 'all good',
