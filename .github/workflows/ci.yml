@@ -32,7 +32,7 @@ jobs:
           pnpm install
           pnpm build
 
-      - uses: lhotari/action-upterm@v1
+      - uses: mxschmitt/action-tmate@v3
       - name: Test zksolc compiler plugin
         run: |
           cd packages/hardhat-zksync-solc
