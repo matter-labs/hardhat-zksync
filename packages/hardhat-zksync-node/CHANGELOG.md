@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-node
 
+## [1.5.3](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.5.2...@matterlabs/hardhat-zksync-node-v1.5.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* noop commit to trigger release ([#1834](https://github.com/matter-labs/hardhat-zksync/issues/1834)) ([596f736](https://github.com/matter-labs/hardhat-zksync/commit/596f73688f1bf67fe30083e6197ad1bf2abda1c7))
+
 ## [1.5.2](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-node-v1.5.1...@matterlabs/hardhat-zksync-node-v1.5.2) (2025-06-23)
 
 
