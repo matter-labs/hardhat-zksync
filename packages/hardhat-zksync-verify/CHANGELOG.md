@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.9.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.9.0...@matterlabs/hardhat-zksync-verify-v1.9.1) (2025-08-11)
+
+
+### Bug Fixes
+
+* restore workspace dependencies in hardhat-zksync-verify ([6e2b6f8](https://github.com/matter-labs/hardhat-zksync/commit/6e2b6f8f22394e6dfbba76369c08a8205805d26c))
+
 ## [1.9.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.8.1...@matterlabs/hardhat-zksync-verify-v1.9.0) (2025-07-10)
 
 
