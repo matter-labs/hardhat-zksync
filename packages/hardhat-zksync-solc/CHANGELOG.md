@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-solc
 
+## [1.5.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.5.0...@matterlabs/hardhat-zksync-solc-v1.5.1) (2025-08-11)
+
+
+### Bug Fixes
+
+* noop commit to trigger release ([#1834](https://github.com/matter-labs/hardhat-zksync/issues/1834)) ([596f736](https://github.com/matter-labs/hardhat-zksync/commit/596f73688f1bf67fe30083e6197ad1bf2abda1c7))
+
 ## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-solc-v1.4.0...@matterlabs/hardhat-zksync-solc-v1.5.0) (2025-07-11)
 
 
