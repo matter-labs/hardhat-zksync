@@ -11,7 +11,7 @@ contract FactoryUups is Initializable, UUPSUpgradeable, OwnableUpgradeable  {
     address[] public deployedContracts;
 
     function initialize() public initializer{
-        __Ownable_init(msg.sender);
+        __Ownable_init();
         __UUPSUpgradeable_init();
         deployEmptyContract();
     }
