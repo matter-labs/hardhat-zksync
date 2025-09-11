@@ -273,8 +273,8 @@ describe('Plugin tests', async function () {
                 );
             });
             it('should return the transaction count of the account', async function () {
-                // we use the second signer because the first one is used in previous tests
-                const [, signer] = await this.env.ethers.getSigners();
+                // we use the third signer because the first and second ones are used in previous tests
+                const [, , signer] = await this.env.ethers.getSigners();
 
                 assert.strictEqual(await this.env.ethers.provider.getTransactionCount(signer), 0);
             });
