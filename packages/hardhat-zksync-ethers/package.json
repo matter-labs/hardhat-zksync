@@ -40,7 +40,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
-    "@nomicfoundation/hardhat-ethers": "^3.0.6"
+    "@nomicfoundation/hardhat-ethers": "^4.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
