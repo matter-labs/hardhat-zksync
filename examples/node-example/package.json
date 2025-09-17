@@ -38,7 +38,7 @@
     "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
     "chalk": "^4.1.2",
-    "hardhat": "^2.22.5",
+    "hardhat": "^3.0.6",
     "ethers": "^6.12.2",
     "zksync-ethers": "^6.15.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
