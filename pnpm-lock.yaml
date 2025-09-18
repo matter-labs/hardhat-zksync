@@ -888,8 +888,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       zksync-ethers:
         specifier: ^6.15.0
         version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -973,8 +973,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       ts-morph:
         specifier: ^22.0.0
         version: 22.0.0
@@ -1167,8 +1167,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -1195,8 +1195,8 @@ importers:
         specifier: ^7.5.8
         version: 7.5.8
       '@types/sinon-chai':
-        specifier: ^3.2.10
-        version: 3.2.12
+        specifier: ^4.0.0
+        version: 4.0.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
         version: 7.12.0(@typescript-eslint/parser@7.12.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -1276,8 +1276,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       undici:
         specifier: ^6.18.2
         version: 6.18.2
@@ -1313,8 +1313,8 @@ importers:
         specifier: ^17.0.3
         version: 17.0.3
       '@types/sinon-chai':
-        specifier: ^3.2.12
-        version: 3.2.12
+        specifier: ^4.0.0
+        version: 4.0.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
         version: 7.12.0(@typescript-eslint/parser@7.12.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -1362,7 +1362,7 @@ importers:
     dependencies:
       '@matterlabs/zksync-telemetry-js':
         specifier: git+https://github.com/matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
-        version: zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
+        version: zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
@@ -1413,8 +1413,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@18.19.33)(typescript@5.4.5)
@@ -1573,8 +1573,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
     devDependencies:
       '@types/chai':
         specifier: ^4.3.16
@@ -1755,8 +1755,8 @@ importers:
         specifier: ^18.0.0
         version: 18.0.0
       sinon-chai:
-        specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+        specifier: ^4.0.1
+        version: 4.0.1(chai@4.4.1)(sinon@18.0.0)
       undici:
         specifier: ^6.18.2
         version: 6.18.2
@@ -2754,11 +2754,14 @@ packages:
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
 
-  '@types/sinon-chai@3.2.12':
-    resolution: {integrity: sha512-9y0Gflk3b0+NhQZ/oxGtaAJDvRywCa5sIyaVnounqLvmf93yBF4EgIRspePtkMs3Tr844nCclYMlcCNmLCvjuQ==}
+  '@types/sinon-chai@4.0.0':
+    resolution: {integrity: sha512-Uar+qk3TmeFsUWCwtqRNqNUE7vf34+MCJiQJR5M2rd4nCbhtE8RgTiHwN/mVwbfCjhmO6DiOel/MgzHkRMJJFg==}
 
   '@types/sinon@17.0.3':
     resolution: {integrity: sha512-j3uovdn8ewky9kRBG19bOwaZbexJu/XjtkHyjvUgt4xfPFz18dcORIMqnYh66Fx3Powhcr85NT5+er3+oViapw==}
+
+  '@types/sinon@17.0.4':
+    resolution: {integrity: sha512-RHnIrhfPO3+tJT0s7cFaXGZvsL4bbR3/k7z3P312qMS4JaS2Tk+KiwiLx1S0rQ56ERj00u1/BtdyVd0FY+Pdew==}
 
   '@types/sinonjs__fake-timers@8.1.5':
     resolution: {integrity: sha512-mQkU2jY8jJEF7YHjHvsQO8+3ughTL1mcnn96igfhONmR+fUPSKIkefQYpSe8bsly2Ep7oQbn/6VG5/9/0qcArQ==}
@@ -5021,10 +5024,10 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  sinon-chai@3.7.0:
-    resolution: {integrity: sha512-mf5NURdUaSdnatJx3uhoBOrY9dtL19fiOtAdT1Azxg3+lNJFiuN0uzaU3xX1LeAfL17kHQhTAJgpsfhbMJMY2g==}
+  sinon-chai@4.0.1:
+    resolution: {integrity: sha512-xMKEEV3cYHC1G+boyr7QEqi80gHznYsxVdC9CdjP5JnCWz/jPGuXQzJz3PtBcb0CcHAxar15Y5sjLBoAs6a0yA==}
     peerDependencies:
-      chai: ^4.0.0
+      chai: ^5.0.0 || ^6.0.0
       sinon: '>=4.0.0'
 
   sinon@18.0.0:
@@ -5554,8 +5557,8 @@ packages:
     peerDependencies:
       ethers: ^6.7.1
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
-    resolution: {tarball: https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11}
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
+    resolution: {commit: 2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11, repo: git@github.com:matter-labs/zksync-telemetry-js.git, type: git}
     version: 1.0.0
 
   zksync@0.13.1:
@@ -6851,12 +6854,16 @@ snapshots:
 
   '@types/shimmer@1.2.0': {}
 
-  '@types/sinon-chai@3.2.12':
+  '@types/sinon-chai@4.0.0':
     dependencies:
       '@types/chai': 4.3.16
-      '@types/sinon': 17.0.3
+      '@types/sinon': 17.0.4
 
   '@types/sinon@17.0.3':
+    dependencies:
+      '@types/sinonjs__fake-timers': 8.1.5
+
+  '@types/sinon@17.0.4':
     dependencies:
       '@types/sinonjs__fake-timers': 8.1.5
 
@@ -9516,7 +9523,7 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  sinon-chai@3.7.0(chai@4.4.1)(sinon@18.0.0):
+  sinon-chai@4.0.1(chai@4.4.1)(sinon@18.0.0):
     dependencies:
       chai: 4.4.1
       sinon: 18.0.0
@@ -10102,7 +10109,7 @@ snapshots:
     dependencies:
       ethers: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
     dependencies:
       '@sentry/node': 8.55.0
       env-paths: 2.2.1

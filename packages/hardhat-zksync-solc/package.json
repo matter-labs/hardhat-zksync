@@ -44,7 +44,7 @@
     "semver": "^7.6.2",
     "lodash": "^4.17.21",
     "sinon": "^18.0.0",
-    "sinon-chai": "^3.7.0",
+    "sinon-chai": "^4.0.1",
     "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
     "@types/semver": "^7.5.8",
     "@types/fs-extra": "^11.0.4",
     "@types/sinon": "^17.0.3",
-    "@types/sinon-chai": "^3.2.12",
+    "@types/sinon-chai": "^4.0.0",
     "@types/debug": "^4.1.12",
     "@types/proper-lockfile": "^4.1.4",
     "@types/lodash": "^4.14.202",
