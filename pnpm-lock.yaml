@@ -1362,7 +1362,7 @@ importers:
     dependencies:
       '@matterlabs/zksync-telemetry-js':
         specifier: git+https://github.com/matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
-        version: zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
+        version: zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.12.0
@@ -1479,8 +1479,8 @@ importers:
         specifier: ^7.6.2
         version: 7.6.2
       solidity-ast:
-        specifier: ^0.4.56
-        version: 0.4.56
+        specifier: ^0.4.61
+        version: 0.4.61
       zksync-ethers:
         specifier: ^6.15.0
         version: 6.15.0(ethers@6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -5055,6 +5055,9 @@ packages:
   solidity-ast@0.4.56:
     resolution: {integrity: sha512-HgmsA/Gfklm/M8GFbCX/J1qkVH0spXHgALCNZ8fA8x5X+MFdn/8CP2gr5OVyXjXw6RZTPC/Sxl2RUDQOXyNMeA==}
 
+  solidity-ast@0.4.61:
+    resolution: {integrity: sha512-OYBJYcYyG7gLV0VuXl9CUrvgJXjV/v0XnR4+1YomVe3q+QyENQXJJxAEASUz4vN6lMAl+C8RSRSr5MBAz09f6w==}
+
   source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
 
@@ -5554,8 +5557,8 @@ packages:
     peerDependencies:
       ethers: ^6.7.1
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
-    resolution: {tarball: https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11}
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
+    resolution: {commit: 2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11, repo: git@github.com:matter-labs/zksync-telemetry-js.git, type: git}
     version: 1.0.0
 
   zksync@0.13.1:
@@ -9567,6 +9570,8 @@ snapshots:
     dependencies:
       array.prototype.findlast: 1.2.5
 
+  solidity-ast@0.4.61: {}
+
   source-map-support@0.5.21:
     dependencies:
       buffer-from: 1.1.2
@@ -10102,7 +10107,7 @@ snapshots:
     dependencies:
       ethers: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  zksync-telemetry@https://codeload.github.com/matter-labs/zksync-telemetry-js/tar.gz/2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
+  zksync-telemetry@git+https://git@github.com:matter-labs/zksync-telemetry-js.git#2fd9edbe6b9a5e0c2caeda4b04dd5631d7546a11:
     dependencies:
       '@sentry/node': 8.55.0
       env-paths: 2.2.1
