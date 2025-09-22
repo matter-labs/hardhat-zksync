@@ -5,7 +5,7 @@ export const builtinChains: ChainConfig[] = [
         network: 'zksyncmainnet',
         chainId: 324,
         urls: {
-            apiURL: 'https://api-era.zksync.network/api',
+            apiURL: 'https://api.etherscan.io/v2/api',
             browserURL: 'https://era.zksync.network/',
         },
     },
@@ -13,7 +13,7 @@ export const builtinChains: ChainConfig[] = [
         network: 'zksyncsepolia',
         chainId: 300,
         urls: {
-            apiURL: 'https://api-sepolia-era.zksync.network/api',
+            apiURL: 'https://api.etherscan.io/v2/api',
             browserURL: 'https://sepolia-era.zksync.network/',
         },
     },

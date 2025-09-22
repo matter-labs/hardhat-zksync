@@ -27,6 +27,7 @@ export class ZkSyncEtherscanExplorerService extends VerificationService<
         hre: HardhatRuntimeEnvironment,
         private apikey: string,
         verifyUrl: string,
+        private chainId: number,
         browserUrl?: string,
     ) {
         super(hre, verifyUrl, browserUrl);
@@ -43,7 +44,7 @@ export class ZkSyncEtherscanExplorerService extends VerificationService<
             ? chainConfig.urls.browserURL.trim().replace(/\/$/, '')
             : undefined;
 
-        return new ZkSyncEtherscanExplorerService(hre, resolvedApiKey, apiUrl, browserUrl);
+        return new ZkSyncEtherscanExplorerService(hre, resolvedApiKey, apiUrl, chainConfig.chainId, browserUrl);
     }
 
     public async getVerificationStatus(
@@ -54,6 +55,7 @@ export class ZkSyncEtherscanExplorerService extends VerificationService<
             const [verifyUrl, params] = extractQueryParams(this.verifyUrl);
             const response = await axios.get(verifyUrl, {
                 params: {
+                    chainid: this.chainId,
                     apikey: this.apikey,
                     module: 'contract',
                     action: 'checkverifystatus',
@@ -116,7 +118,9 @@ export class ZkSyncEtherscanExplorerService extends VerificationService<
 
     protected async getVerificationId(req: VerificationServiceInitialVerifyRequest): Promise<string> {
         try {
-            const [verifyUrl, params] = extractQueryParams(this.verifyUrl);
+            const [baseUrl, params] = extractQueryParams(this.verifyUrl);
+            const urlParams = new URLSearchParams({ chainid: this.chainId.toString(), ...params });
+            const verifyUrl = `${baseUrl}?${urlParams.toString()}`;
             const request = this.generateRequest(req);
             const response = await axios.post(
                 verifyUrl,

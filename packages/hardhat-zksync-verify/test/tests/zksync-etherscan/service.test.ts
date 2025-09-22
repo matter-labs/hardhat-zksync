@@ -178,7 +178,9 @@ describe('ZkSyncEtherscan Service', () => {
             const requestId = '123';
             const explorer = new ZkSyncEtherscanExplorerService(
                 {} as any,
+                'test-api-key',
                 'https://example.com/verify',
+                300,
                 'https://example.com/',
             );
             const response = {
@@ -205,7 +207,9 @@ describe('ZkSyncEtherscan Service', () => {
             const requestId = '123';
             const explorer = new ZkSyncEtherscanExplorerService(
                 {} as any,
+                'test-api-key',
                 'https://example.com/verify',
+                300,
                 'https://example.com/',
             );
             const response = {
@@ -234,7 +238,9 @@ describe('ZkSyncEtherscan Service', () => {
             const requestId = '123';
             const explorer = new ZkSyncEtherscanExplorerService(
                 {} as any,
+                'test-api-key',
                 'https://example.com/verify',
+                300,
                 'https://example.com/',
             );
             const error = new Error('Network error');
@@ -361,7 +367,9 @@ describe('ZkSyncEtherscan Service', () => {
             };
             const explorer = new ZkSyncEtherscanExplorerService(
                 hre as any,
+                'test-api-key',
                 'https://example.com/verify',
+                300,
                 'https://example.com/',
             );
 
@@ -479,7 +487,9 @@ describe('ZkSyncEtherscan Service', () => {
             };
             const explorer = new ZkSyncEtherscanExplorerService(
                 hre as any,
+                'test-api-key',
                 'https://example.com/verify',
+                300,
                 'https://example.com/',
             );
 
