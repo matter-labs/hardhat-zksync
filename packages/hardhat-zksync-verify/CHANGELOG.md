@@ -1,5 +1,11 @@
 # @matterlabs/hardhat-zksync-verify
 
+## 1.9.2
+
+### Patch Changes
+
+-   Migrate zkSync Etherscan verification to V2 API
+
 ## [1.9.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.9.0...@matterlabs/hardhat-zksync-verify-v1.9.1) (2025-08-11)
 
 

@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync
 
+## 1.6.3
+
+### Patch Changes
+
+-   Update hardhat-zksync umbrella package to include hardhat-zksync-verify v1.9.2
+    -   Includes zkSync Etherscan V2 API migration
+
 ## 1.6.2
 
 ### Patch Changes
