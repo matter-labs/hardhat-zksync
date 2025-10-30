@@ -40,7 +40,7 @@
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
-    "@nomicfoundation/hardhat-ethers": "^4.0.2"
+    "@nomicfoundation/hardhat-ethers": "^3.0.6"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
@@ -63,13 +63,13 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.21.0",
+    "zksync-ethers": "^6.15.0",
     "rlp": "3.0.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.21.0"
+    "zksync-ethers": "^6.15.0"
   },
   "prettier": {
     "tabWidth": 4,
