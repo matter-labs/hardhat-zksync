@@ -63,13 +63,13 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.15.0",
+    "zksync-ethers": "^6.21.0",
     "rlp": "3.0.0",
     "c8": "^8.0.1"
   },
   "peerDependencies": {
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.15.0"
+    "zksync-ethers": "^6.21.0"
   },
   "prettier": {
     "tabWidth": 4,
