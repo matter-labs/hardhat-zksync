@@ -49,15 +49,16 @@
     "ethers": "^6.12.2",
     "fs-extra": "^11.3.2",
     "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.15.0",
-    "solidity-ast": "^0.4.56",
+    "zksync-ethers": "^6.21.0",
+    "solidity-ast": "^0.4.61",
     "proper-lockfile": "^4.1.2",
-    "semver": "^7.6.2"
+    "semver": "^7.7.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^18.11.17",
     "@types/proper-lockfile": "^4.1.2",
+    "@types/semver": "^7.7.1",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
     "c8": "^8.0.1",
