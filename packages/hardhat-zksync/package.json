@@ -1,4 +1,5 @@
 {
+  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0 and @types/semver to ^7.7.1.",
   "name": "@matterlabs/hardhat-zksync",
   "version": "1.6.2",
   "description": "ZKsync bundle of Hardhat plugins",
@@ -33,29 +34,30 @@
     "README.md"
   ],
   "dependencies": {
-    "hardhat": "^2.22.5",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "workspace:^",
-    "@matterlabs/hardhat-zksync-verify": "workspace:^",
-    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
-    "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-node": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
+    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@openzeppelin/upgrades-core": "^1.37.0",
-    "ethers": "^6.12.2",
-    "zksync-ethers": "^6.15.0",
     "chai": "^4.3.4",
+    "ethers": "^6.12.2",
+    "hardhat": "^2.22.5",
+    "sinon": "^18.0.0",
     "sinon-chai": "^3.7.0",
-    "sinon": "^18.0.0"
+    "zksync-ethers": "^6.21.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.1",
     "@typescript-eslint/eslint-plugin": "7.12.0",
     "@typescript-eslint/parser": "7.12.0",
+    "c8": "^9.1.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -65,17 +67,16 @@
     "prettier": "^3.3.0",
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.0",
-    "c8": "^9.1.0"
+    "typescript": "^5.3.0"
   },
   "peerDependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "workspace:^",
-    "@matterlabs/hardhat-zksync-verify": "workspace:^",
-    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
-    "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
-    "@matterlabs/hardhat-zksync-telemetry": "workspace:^"
+    "@matterlabs/hardhat-zksync-node": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
+    "@matterlabs/hardhat-zksync-upgradable": "workspace:^",
+    "@matterlabs/hardhat-zksync-verify": "workspace:^"
   },
   "prettier": {
     "tabWidth": 4,

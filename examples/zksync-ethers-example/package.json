@@ -1,4 +1,5 @@
 {
+  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0.",
   "name": "hardhat-zksync-ethers-example",
   "version": "0.1.0",
   "author": "Matter Labs",
@@ -30,12 +31,12 @@
   },
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
-    "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
+    "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "chalk": "^4.1.2",
-    "hardhat": "^2.22.5",
     "ethers": "^6.12.2",
-    "zksync-ethers": "^6.15.0"
+    "hardhat": "^2.22.5",
+    "zksync-ethers": "^6.21.0"
   },
   "prettier": {
     "tabWidth": 4,

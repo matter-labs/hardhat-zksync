@@ -1,4 +1,5 @@
 {
+  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0.",
   "name": "hardhat-zksync-upgradable-example",
   "version": "0.1.0",
   "author": "Matter Labs",
@@ -41,7 +42,7 @@
     "ethers": "^6.12.2",
     "hardhat": "^2.22.5",
     "zksync": "^0.13.1",
-    "zksync-ethers": "^6.15.0"
+    "zksync-ethers": "^6.21.0"
   },
   "prettier": {
     "tabWidth": 4,
