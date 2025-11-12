@@ -1,5 +1,4 @@
 {
-  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0.",
   "name": "hardhat-zksync-upgradable-example",
   "version": "0.1.0",
   "author": "Matter Labs",

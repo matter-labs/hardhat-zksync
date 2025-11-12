@@ -1,5 +1,4 @@
 {
-  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0.",
   "name": "hardhat-zksync-example-vyper",
   "version": "0.1.0",
   "author": "Matter Labs",
@@ -34,8 +33,8 @@
     "@matterlabs/hardhat-zksync-vyper": "workspace:^",
     "@nomiclabs/hardhat-vyper": "^3.0.5",
     "chalk": "^4.1.2",
-    "ethers": "^6.12.2",
     "hardhat": "^2.22.5",
+    "ethers": "^6.12.2",
     "zksync-ethers": "^6.21.0"
   },
   "prettier": {

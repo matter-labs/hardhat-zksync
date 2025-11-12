@@ -1,5 +1,4 @@
 {
-  "_comment": "Updated dependencies: zksync-ethers to ^6.21.0.",
   "name": "hardhat-zksync-example-noninline-libraries",
   "version": "0.1.0",
   "author": "Matter Labs",
@@ -32,13 +31,13 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
+    "chalk": "^4.1.2",
+    "hardhat": "^2.22.5",
+    "ethers": "^6.12.2",
+    "zksync-ethers": "^6.21.0",
     "@matterlabs/zksync-contracts": "^0.6.1",
     "@openzeppelin/contracts": "^5.4.0",
-    "@openzeppelin/contracts-upgradeable": "^5.4.0",
-    "chalk": "^4.1.2",
-    "ethers": "^6.12.2",
-    "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.21.0"
+    "@openzeppelin/contracts-upgradeable": "^5.4.0"
   },
   "prettier": {
     "tabWidth": 4,

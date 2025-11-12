@@ -1,5 +1,4 @@
 {
-  "_comment": "Updated dependencies: cbor to ^10.0.11, debug to ^4.4.3, and semver to ^7.7.3.",
   "name": "@matterlabs/hardhat-zksync-verify",
   "version": "1.9.1",
   "description": "Hardhat plugin to verify smart contracts for the ZKsync network",
@@ -40,11 +39,11 @@
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
     "@nomicfoundation/hardhat-verify": "^2.0.8",
     "axios": "^1.12.2",
+    "semver": "^7.7.3",
     "cbor": "^10.0.11",
     "chai": "^4.3.4",
     "chalk": "^4.1.2",
     "debug": "^4.4.3",
-    "semver": "^7.7.3",
     "sinon": "^18.0.0",
     "sinon-chai": "^3.7.0"
   },
@@ -67,6 +66,7 @@
     "mocha": "^10.4.0",
     "prettier": "^3.3.0",
     "rimraf": "^5.0.7",
+    "hardhat": "^2.22.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0"
   },
