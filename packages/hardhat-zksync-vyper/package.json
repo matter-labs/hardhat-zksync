@@ -42,7 +42,7 @@
     "sinon": "^18.0.0",
     "chai": "^4.3.4",
     "undici": "^6.18.2",
-    "semver": "^7.6.2",
+    "semver": "^7.7.3",
     "sinon-chai": "^3.7.0"
   },
   "devDependencies": {
@@ -52,7 +52,7 @@
     "@types/dockerode": "^3.3.29",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.11.17",
-    "@types/semver": "^7.5.8",
+    "@types/semver": "^7.7.1",
     "@types/sinon": "^17.0.3",
     "@types/fs-extra": "^11.0.4",
     "@typescript-eslint/eslint-plugin": "^7.12.0",

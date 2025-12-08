@@ -49,10 +49,10 @@
     "ethers": "^6.12.2",
     "fs-extra": "^11.3.2",
     "hardhat": "^2.22.5",
-    "zksync-ethers": "^6.15.0",
+    "zksync-ethers": "^6.21.0",
     "solidity-ast": "^0.4.56",
     "proper-lockfile": "^4.1.2",
-    "semver": "^7.6.2"
+    "semver": "^7.7.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
