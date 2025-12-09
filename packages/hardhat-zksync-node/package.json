@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/hardhat-zksync-node",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Hardhat plugin to run anvil-zksync locally",
   "repository": "github:matter-labs/hardhat-zksync",
   "homepage": "https://github.com/matter-labs/hardhat-zksync/tree/main/packages/hardhat-zksync-node",
