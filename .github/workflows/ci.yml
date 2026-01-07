@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
+
       - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v3
@@ -51,6 +54,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
+
       - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v3
@@ -79,6 +85,9 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
 
       - uses: pnpm/action-setup@v3
 
@@ -246,6 +255,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
+
       - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v3
@@ -273,6 +285,9 @@ jobs:
     name: verify
     steps:
       - uses: actions/checkout@v3
+
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
 
       - uses: pnpm/action-setup@v3
 
@@ -370,6 +385,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
+
       - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v3
@@ -397,6 +415,9 @@ jobs:
     name: telemetry
     steps:
       - uses: actions/checkout@v3
+
+      - name: Configure git to use HTTPS instead of SSH
+        run: git config --global url.https://github.com/.insteadof git@github.com:
 
       - uses: pnpm/action-setup@v3
 
