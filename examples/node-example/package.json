@@ -32,7 +32,7 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "chai": "^4.3.4",
+    "chai": "^6.2.1",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-node": "workspace:^",

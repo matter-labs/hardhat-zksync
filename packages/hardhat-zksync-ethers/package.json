@@ -36,7 +36,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "hardhat": "^2.22.5",
-    "chai": "^4.3.4",
+    "chai": "^6.2.1",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
