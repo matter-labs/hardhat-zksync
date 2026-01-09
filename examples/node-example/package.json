@@ -32,7 +32,7 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "chai": "^4.3.4",
+    "chai": "^6.2.1",
     "@matterlabs/hardhat-zksync-deploy": "workspace:^",
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-node": "workspace:^",
@@ -41,7 +41,7 @@
     "hardhat": "^2.22.5",
     "ethers": "^6.12.2",
     "zksync-ethers": "^6.21.0",
-    "@matterlabs/zksync-contracts": "^0.6.1",
+    "@matterlabs/zksync-contracts": "^29.0.0",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2"
   },
