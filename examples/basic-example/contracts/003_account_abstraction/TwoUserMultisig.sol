@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@matterlabs/zksync-contracts/l2/system-contracts/interfaces/IAccount.sol";
-import "@matterlabs/zksync-contracts/l2/system-contracts/libraries/TransactionHelper.sol";
+import "@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IAccount.sol";
+import "@matterlabs/zksync-contracts/contracts/system-contracts/libraries/TransactionHelper.sol";
 
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 // Access ZKsync system contracts, in this case for nonce validation vs NONCE_HOLDER_SYSTEM_CONTRACT
-import "@matterlabs/zksync-contracts/l2/system-contracts/Constants.sol";
+import "@matterlabs/zksync-contracts/contracts/system-contracts/Constants.sol";
 // to call non-view method of system contracts
-import "@matterlabs/zksync-contracts/l2/system-contracts/libraries/SystemContractsCaller.sol";
+import "@matterlabs/zksync-contracts/contracts/system-contracts/libraries/SystemContractsCaller.sol";
 
 contract TwoUserMultisig is IAccount, IERC1271 {
     // to get transaction hash
