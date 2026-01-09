@@ -41,7 +41,7 @@
     "@matterlabs/hardhat-zksync-node": "workspace:^",
     "@matterlabs/hardhat-zksync-ethers": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-verify": "^3.0.8",
     "@openzeppelin/upgrades-core": "^1.37.0",
     "ethers": "^6.12.2",
     "zksync-ethers": "^6.21.0",
