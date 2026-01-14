@@ -1,5 +1,26 @@
 # @matterlabs/hardhat-zksync-vyper
 
+## [1.5.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.4.1...@matterlabs/hardhat-zksync-vyper-v1.5.0) (2026-01-14)
+
+
+### Features
+
+* add telemetry ([a345d09](https://github.com/matter-labs/hardhat-zksync/commit/a345d09e2150ac5b2b96b9e77edbe18dc0f3e7f4))
+* bump ethers, zksync-ethers, hardaht and other dependencies to newer versions ([#1111](https://github.com/matter-labs/hardhat-zksync/issues/1111)) ([a2d503a](https://github.com/matter-labs/hardhat-zksync/commit/a2d503abe3f504859651f22998046576eddf6579))
+* support for deploy time library linking ([#1505](https://github.com/matter-labs/hardhat-zksync/issues/1505)) ([5958825](https://github.com/matter-labs/hardhat-zksync/commit/59588255976ba81dfdd245bff6b64d58bd2aa13d))
+* throw errors for older versions of the compiler ([#1770](https://github.com/matter-labs/hardhat-zksync/issues/1770)) ([19ddeb2](https://github.com/matter-labs/hardhat-zksync/commit/19ddeb26796da51adf4b0f1d895ef754424b6bf9))
+
+
+### Bug Fixes
+
+* add check for local binary compiler ([318cce4](https://github.com/matter-labs/hardhat-zksync/commit/318cce4f585e5fc8741e7405e072dd1b9146a874))
+* add gnu toolchain for linux as default from compiler version 1.5.4 ([#1359](https://github.com/matter-labs/hardhat-zksync/issues/1359)) ([4272477](https://github.com/matter-labs/hardhat-zksync/commit/4272477e9a132ba7f36c24a14a4ac15ea65f1c65))
+* add warnings for depricated versions ([1db166c](https://github.com/matter-labs/hardhat-zksync/commit/1db166c7eea0563e3aba242e6261d854d2c793fc))
+* download zkvyper if needed before compilation ([#1484](https://github.com/matter-labs/hardhat-zksync/issues/1484)) ([9763aba](https://github.com/matter-labs/hardhat-zksync/commit/9763aba2c84cc2c53915e1aa9ca9e3be81ea083e))
+* set zkvyper compiler version for specified compiler path ([#817](https://github.com/matter-labs/hardhat-zksync/issues/817)) ([293dfba](https://github.com/matter-labs/hardhat-zksync/commit/293dfba9287ab94400a954784093a2b5720ca716))
+* support new naming for proxy at forwarder contracts ([#809](https://github.com/matter-labs/hardhat-zksync/issues/809)) ([1e31289](https://github.com/matter-labs/hardhat-zksync/commit/1e31289d3011f5e71a843455a12ba1062f1d6050))
+* update links to new doc site ([276740b](https://github.com/matter-labs/hardhat-zksync/commit/276740ba5abf8b5775e135b5653824d6456a7e4f))
+
 ## [1.4.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-vyper-v1.3.0...@matterlabs/hardhat-zksync-vyper-v1.4.0) (2025-07-10)
 
 
