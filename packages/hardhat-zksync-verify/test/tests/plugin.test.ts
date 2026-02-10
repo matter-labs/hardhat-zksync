@@ -241,7 +241,7 @@ Instead, this name was received: ${contractFQN}`);
 
             try {
                 await checkContractName(artifacts, contractFQN);
-            } catch (error: any) {
+            } catch (_error: any) {
                 fail('Expected no error to be thrown');
             }
         });

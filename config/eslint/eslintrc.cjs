@@ -19,7 +19,7 @@ module.exports = {
       },
     ],
     "@typescript-eslint/await-thenable": "error",
-    "@typescript-eslint/ban-types": [
+    "@typescript-eslint/no-restricted-types": [
       "error",
       {
         types: {
@@ -43,7 +43,6 @@ module.exports = {
             message: "Avoid using the `Symbol` type. Did you mean `symbol`?",
           },
         },
-        extendDefaults: false,
       },
     ],
     "@typescript-eslint/consistent-type-assertions": "error",
@@ -125,6 +124,7 @@ module.exports = {
       {
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
       },
     ],
     "@typescript-eslint/prefer-for-of": "error",
