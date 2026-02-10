@@ -35,17 +35,17 @@
   "dependencies": {
     "@matterlabs/hardhat-zksync-solc": "workspace:^",
     "@matterlabs/hardhat-zksync-telemetry": "workspace:^",
-    "chai": "^6.2.1",
+    "chai": "^6.2.2",
     "chalk": "^4.1.2",
     "fs-extra": "^11.3.3",
     "glob": "^10.4.1",
     "lodash": "^4.17.23",
-    "sinon": "^18.0.0",
-    "sinon-chai": "^3.7.0",
+    "sinon": "^21.0.1",
+    "sinon-chai": "^4.0.1",
     "ts-morph": "^27.0.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^5.2.3",
     "@types/glob": "^8.1.0",
     "@types/lodash": "^4.17.23",
     "@types/mocha": "^10.0.10",
