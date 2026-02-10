@@ -5,15 +5,15 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@changesets/cli": "^2.26.1",
+    "@changesets/cli": "^2.29.8",
     "@npmcli/promise-spawn": "^6.0.2",
+    "@types/find-up": "^2.1.1",
     "commander": "^10.0.0",
-    "get-monorepo-packages": "^1.2.0",
-    "husky": "^8.0.3",
-    "prettier": "^3.3.0",
-    "typescript": "^5.3.0",
     "find-up": "^2.1.0",
-    "@types/find-up": "^2.1.1"
+    "get-monorepo-packages": "^1.3.0",
+    "husky": "^8.0.3",
+    "prettier": "^3.8.1",
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "build": "tsc --build packages/hardhat-zksync-telemetry packages/hardhat-zksync-solc packages/hardhat-zksync-deploy packages/hardhat-zksync-vyper packages/hardhat-zksync-verify packages/hardhat-zksync-ethers packages/hardhat-zksync-upgradable packages/hardhat-zksync-verify-vyper packages/hardhat-zksync-node packages/hardhat-zksync",

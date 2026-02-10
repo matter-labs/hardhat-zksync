@@ -36,8 +36,8 @@ export interface ContractVerifyDataInfo {
 }
 
 export abstract class VerificationService<
-    ReturnVerificationIdType extends
-        VerificationServiceVerificationIdReturnType = VerificationServiceVerificationIdReturnType,
+    ReturnVerificationIdType extends VerificationServiceVerificationIdReturnType =
+        VerificationServiceVerificationIdReturnType,
     ContractVerifyRequestType extends VerificationServiceVerifyRequest = VerificationServiceVerifyRequest,
     VerificationStatusType extends VerificationServiceVerificationStatus = VerificationServiceVerificationStatus,
     VerificationServiceVerifyResponseType = VerificationServiceVerifyResponse<ReturnVerificationIdType>,
