@@ -314,10 +314,11 @@ export async function getLatestRelease(owner: string, repo: string, userAgent: s
 export async function getAllTags(owner: string, repo: string, userAgent: string, timeout: number): Promise<any> {
     const finalUrl = await handleRedirect(`https://api.github.com/repos/${owner}/${repo}/tags`, userAgent, timeout);
 
-    const { request } = await import('undici');
+    const { request, interceptors } = await import('undici');
+    const dispatcher = interceptors.redirect({ maxRedirections: 0 });
     const response = await request(finalUrl, {
+        dispatcher,
         headersTimeout: timeout,
-        maxRedirections: 0,
         method: 'GET',
         headers: {
             'User-Agent': `${userAgent}`,
@@ -332,14 +333,15 @@ export async function getAllTags(owner: string, repo: string, userAgent: string,
 }
 
 async function handleRedirect(url: string, userAgent: string, timeout: number): Promise<string> {
-    const { request } = await import('undici');
+    const { request, interceptors } = await import('undici');
 
     let currentUrl = url;
 
     while (true) {
+        const dispatcher = interceptors.redirect({ maxRedirections: 0 });
         const response = await request(currentUrl, {
+            dispatcher,
             headersTimeout: timeout,
-            maxRedirections: 0,
             method: 'GET',
             headers: {
                 'User-Agent': `${userAgent}`,
@@ -449,16 +451,16 @@ export async function download(
     extraHeaders: { [name: string]: string } = {},
 ) {
     const { pipeline } = await import('stream');
-    const { getGlobalDispatcher, request } = await import('undici');
+    const { getGlobalDispatcher, request, interceptors } = await import('undici');
     const streamPipeline = util.promisify(pipeline);
 
-    const dispatcher: Dispatcher = getGlobalDispatcher();
+    const dispatcher: Dispatcher = getGlobalDispatcher()
+        .compose(interceptors.redirect({ maxRedirections: 10 }));
 
     // Fetch the url
     const response = await request(url, {
         dispatcher,
         headersTimeout: timeoutMillis,
-        maxRedirections: 10,
         method: 'GET',
         headers: {
             ...extraHeaders,

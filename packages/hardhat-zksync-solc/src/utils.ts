@@ -302,16 +302,16 @@ export async function download(
     extraHeaders: { [name: string]: string } = {},
 ) {
     const { pipeline } = await import('stream');
-    const { getGlobalDispatcher, request } = await import('undici');
+    const { getGlobalDispatcher, request, interceptors } = await import('undici');
     const streamPipeline = util.promisify(pipeline);
 
-    const dispatcher: Dispatcher = getGlobalDispatcher();
+    const dispatcher: Dispatcher = getGlobalDispatcher()
+        .compose(interceptors.redirect({ maxRedirections: 10 }));
 
     // Fetch the url
     const response = await request(url, {
         dispatcher,
         headersTimeout: timeoutMillis,
-        maxRedirections: 10,
         method: 'GET',
         headers: {
             ...extraHeaders,
@@ -347,12 +347,13 @@ export async function getLatestRelease(
     const url = `https://github.com/${owner}/${repo}/releases/latest`;
     const redirectUrlPattern = `https://github.com/${owner}/${repo}/releases/tag/${tagPrefix}`;
 
-    const { request } = await import('undici');
+    const { request, interceptors } = await import('undici');
 
     try {
+        const dispatcher = interceptors.redirect({ maxRedirections: 0 });
         const response = await request(url, {
+            dispatcher,
             headersTimeout: timeout,
-            maxRedirections: 0,
             method: 'GET',
             headers: {
                 'User-Agent': `${userAgent}`,
