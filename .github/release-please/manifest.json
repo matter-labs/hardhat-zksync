@@ -8,5 +8,5 @@
     "packages/hardhat-zksync": "1.6.2",
     "packages/hardhat-zksync-node": "1.5.4",
     "packages/hardhat-zksync-ethers": "1.4.1",
-    "packages/hardhat-zksync-verify-vyper": "0.2.0-alpha.7"
+    "packages/hardhat-zksync-verify-vyper": "0.3.0-alpha.7"
 }
