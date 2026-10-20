@@ -17,4 +17,12 @@ export const builtinChains: ChainConfig[] = [
             browserURL: 'https://sepolia.explorer.zksync.io/',
         },
     },
+    {
+        network: 'zksynceratestnet',
+        chainId: 312,
+        urls: {
+            apiURL: 'https://explorer-api.zksync-era-testnet.zksync.dev/contract_verification',
+            browserURL: 'https://block-explorer.zksync-era-testnet.zksync.dev/',
+        },
+    },
 ];
