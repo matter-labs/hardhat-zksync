@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-verify
 
+## [1.10.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.9.1...@matterlabs/hardhat-zksync-verify-v1.10.0) (2026-10-22)
+
+
+### Features
+
+* add ZKsync Era Testnet (chain 312) to verify chain config ([#1904](https://github.com/matter-labs/hardhat-zksync/issues/1904)) ([7425b20](https://github.com/matter-labs/hardhat-zksync/commit/7425b206be0f677f73a939e7f5600e16a02594f5))
+
 ## [1.9.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-verify-v1.9.0...@matterlabs/hardhat-zksync-verify-v1.9.1) (2025-08-11)
 
 
