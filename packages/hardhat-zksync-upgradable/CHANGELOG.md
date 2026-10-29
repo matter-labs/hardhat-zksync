@@ -1,5 +1,12 @@
 # @matterlabs/hardhat-zksync-upgradable
 
+## [1.10.1](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.10.0...@matterlabs/hardhat-zksync-upgradable-v1.10.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* add ZKsync Era Testnet (chain 312) to the network name map
+
 ## [1.10.0](https://github.com/matter-labs/hardhat-zksync/compare/@matterlabs/hardhat-zksync-upgradable-v1.9.0...@matterlabs/hardhat-zksync-upgradable-v1.10.0) (2025-07-11)
 
 
