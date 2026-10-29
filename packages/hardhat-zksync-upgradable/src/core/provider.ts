@@ -10,5 +10,6 @@ export const networkNames: { [chainId in number]?: string } = Object.freeze({
     280: 'ZKsync-testnet-goerli',
     270: 'ZKsync-local-setup',
     300: 'ZKsync-testnet-sepolia',
+    312: 'ZKsync-era-testnet',
     260: 'ZKsync-anvil',
 });
